@@ -1,0 +1,208 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Mar 21 16:04:40 PDT 2013
+
+  System load:  3.7                Processes:           110
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+107 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Warmup vertx
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 10 sec, 393 millisec and 85 microsec, 9621 req/s, 2161 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 23000000 bytes total, 8700000 bytes http, 14300000 bytes data
+
+---------------------------------------------------------
+ Queries: 1 for vertx
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 4 sec, 663 millisec and 363 microsec, 21443 req/s, 3308 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 15800000 bytes total, 8600000 bytes http, 7200000 bytes data
+
+---------------------------------------------------------
+ Queries: 5 for vertx
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 26 sec, 387 millisec and 952 microsec, 3789 req/s, 1639 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 44300000 bytes total, 8700000 bytes http, 35600000 bytes data
+
+---------------------------------------------------------
+ Queries: 10 for vertx
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 49 sec, 714 millisec and 176 microsec, 2011 req/s, 1567 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 79800000 bytes total, 8700000 bytes http, 71100000 bytes data
+
+---------------------------------------------------------
+ Queries: 15 for vertx
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 79 sec, 969 millisec and 616 microsec, 1250 req/s, 1409 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 115400000 bytes total, 8800000 bytes http, 106600000 bytes data
+
+---------------------------------------------------------
+ Queries: 20 for vertx
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 104 sec, 903 millisec and 827 microsec, 953 req/s, 1404 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 150900000 bytes total, 8800000 bytes http, 142100000 bytes data

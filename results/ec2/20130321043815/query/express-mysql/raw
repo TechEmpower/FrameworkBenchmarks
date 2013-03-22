@@ -1,0 +1,210 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Mar 21 21:29:18 UTC 2013
+
+  System load:  0.1                Processes:           69
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.13.137
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup express-mysql
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/sequelize?queries=2
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 152 sec, 346 millisec and 323 microsec, 656 req/s, 150 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 23456487 bytes total, 17000000 bytes http, 6456487 bytes data
+
+---------------------------------------------------------
+ Queries: 1 for express-mysql
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/sequelize?queries=1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 125 sec, 241 millisec and 834 microsec, 798 req/s, 158 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 20278192 bytes total, 17000000 bytes http, 3278192 bytes data
+
+---------------------------------------------------------
+ Queries: 5 for express-mysql
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/sequelize?queries=5
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 447 sec, 393 millisec and 842 microsec, 223 req/s, 72 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 33090762 bytes total, 17100000 bytes http, 15990762 bytes data
+
+---------------------------------------------------------
+ Queries: 10 for express-mysql
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/sequelize?queries=10
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 862 sec, 657 millisec and 775 microsec, 115 req/s, 55 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 48981718 bytes total, 17100000 bytes http, 31881718 bytes data
+
+---------------------------------------------------------
+ Queries: 15 for express-mysql
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/sequelize?queries=15
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 1271 sec, 31 millisec and 382 microsec, 78 req/s, 49 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 64873030 bytes total, 17100000 bytes http, 47773030 bytes data
+
+---------------------------------------------------------
+ Queries: 20 for express-mysql
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/sequelize?queries=20
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 1510 sec, 98 millisec and 233 microsec, 66 req/s, 52 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 80764938 bytes total, 17100000 bytes http, 63664938 bytes data

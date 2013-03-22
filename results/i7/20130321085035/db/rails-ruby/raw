@@ -1,0 +1,240 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Mar 21 14:02:27 PDT 2013
+
+  System load:  0.14               Processes:           110
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+107 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Warmup rails-ruby
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 39 sec, 668 millisec and 148 microsec, 2520 req/s, 1152 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 9046 succeeded, 90954 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 46804592 bytes total, 46300000 bytes http, 504592 bytes data
+
+---------------------------------------------------------
+ Concurrency: 8 for rails-ruby
+ weighttp -k -n 100000 -c 8 -t 8 172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 1 concurrent requests, 12500 total requests
+spawning thread #2: 1 concurrent requests, 12500 total requests
+spawning thread #3: 1 concurrent requests, 12500 total requests
+spawning thread #4: 1 concurrent requests, 12500 total requests
+spawning thread #5: 1 concurrent requests, 12500 total requests
+spawning thread #6: 1 concurrent requests, 12500 total requests
+spawning thread #7: 1 concurrent requests, 12500 total requests
+spawning thread #8: 1 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 42 sec, 72 millisec and 391 microsec, 2376 req/s, 1181 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 82635 succeeded, 17365 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 50909047 bytes total, 46299985 bytes http, 4609062 bytes data
+
+---------------------------------------------------------
+ Concurrency: 16 for rails-ruby
+ weighttp -k -n 100000 -c 16 -t 8 172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 2 concurrent requests, 12500 total requests
+spawning thread #2: 2 concurrent requests, 12500 total requests
+spawning thread #3: 2 concurrent requests, 12500 total requests
+spawning thread #4: 2 concurrent requests, 12500 total requests
+spawning thread #5: 2 concurrent requests, 12500 total requests
+spawning thread #6: 2 concurrent requests, 12500 total requests
+spawning thread #7: 2 concurrent requests, 12500 total requests
+spawning thread #8: 2 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 39 sec, 732 millisec and 185 microsec, 2516 req/s, 1186 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 35424 succeeded, 64576 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 48275754 bytes total, 46300000 bytes http, 1975754 bytes data
+
+---------------------------------------------------------
+ Concurrency: 32 for rails-ruby
+ weighttp -k -n 100000 -c 32 -t 8 172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 4 concurrent requests, 12500 total requests
+spawning thread #2: 4 concurrent requests, 12500 total requests
+spawning thread #3: 4 concurrent requests, 12500 total requests
+spawning thread #4: 4 concurrent requests, 12500 total requests
+spawning thread #5: 4 concurrent requests, 12500 total requests
+spawning thread #6: 4 concurrent requests, 12500 total requests
+spawning thread #7: 4 concurrent requests, 12500 total requests
+spawning thread #8: 4 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 38 sec, 497 millisec and 92 microsec, 2597 req/s, 1197 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 16052 succeeded, 83948 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 47195383 bytes total, 46300000 bytes http, 895383 bytes data
+
+---------------------------------------------------------
+ Concurrency: 64 for rails-ruby
+ weighttp -k -n 100000 -c 64 -t 8 172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 8 concurrent requests, 12500 total requests
+spawning thread #2: 8 concurrent requests, 12500 total requests
+spawning thread #3: 8 concurrent requests, 12500 total requests
+spawning thread #4: 8 concurrent requests, 12500 total requests
+spawning thread #5: 8 concurrent requests, 12500 total requests
+spawning thread #6: 8 concurrent requests, 12500 total requests
+spawning thread #7: 8 concurrent requests, 12500 total requests
+spawning thread #8: 8 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 39 sec, 256 millisec and 549 microsec, 2547 req/s, 1165 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 9747 succeeded, 90253 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 46843602 bytes total, 46300000 bytes http, 543602 bytes data
+
+---------------------------------------------------------
+ Concurrency: 128 for rails-ruby
+ weighttp -k -n 100000 -c 128 -t 8 172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 16 concurrent requests, 12500 total requests
+spawning thread #2: 16 concurrent requests, 12500 total requests
+spawning thread #3: 16 concurrent requests, 12500 total requests
+spawning thread #4: 16 concurrent requests, 12500 total requests
+spawning thread #5: 16 concurrent requests, 12500 total requests
+spawning thread #6: 16 concurrent requests, 12500 total requests
+spawning thread #7: 16 concurrent requests, 12500 total requests
+spawning thread #8: 16 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 39 sec, 449 millisec and 498 microsec, 2534 req/s, 1159 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 9403 succeeded, 90597 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 46824422 bytes total, 46300000 bytes http, 524422 bytes data
+
+---------------------------------------------------------
+ Concurrency: 256 for rails-ruby
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 39 sec, 511 millisec and 435 microsec, 2530 req/s, 1156 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 8719 succeeded, 91281 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 46786268 bytes total, 46300000 bytes http, 486268 bytes data

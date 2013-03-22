@@ -1,0 +1,210 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Mar 21 23:00:34 UTC 2013
+
+  System load:  0.62               Processes:           69
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.13.137
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup grails
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/grails/hello/db?queries=2
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 66 sec, 727 millisec and 243 microsec, 1498 req/s, 391 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 4046 succeeded, 95954 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 26784580 bytes total, 26292784 bytes http, 491796 bytes data
+
+---------------------------------------------------------
+ Queries: 1 for grails
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/grails/hello/db?queries=1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 50 sec, 468 millisec and 713 microsec, 1981 req/s, 414 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 5521 succeeded, 94479 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 21416934 bytes total, 21042715 bytes http, 374219 bytes data
+
+---------------------------------------------------------
+ Queries: 5 for grails
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/grails/hello/db?queries=5
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 93 sec, 243 millisec and 790 microsec, 1072 req/s, 449 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 4649 succeeded, 95351 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 42923274 bytes total, 41608095 bytes http, 1315179 bytes data
+
+---------------------------------------------------------
+ Queries: 10 for grails
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/grails/hello/db?queries=10
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 150 sec, 869 millisec and 127 microsec, 662 req/s, 451 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 4664 succeeded, 95336 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 69815019 bytes total, 67241270 bytes http, 2573749 bytes data
+
+---------------------------------------------------------
+ Queries: 15 for grails
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/grails/hello/db?queries=15
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 203 sec, 922 millisec and 50 microsec, 490 req/s, 463 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 5363 succeeded, 94637 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 96710270 bytes total, 92308776 bytes http, 4401494 bytes data
+
+---------------------------------------------------------
+ Queries: 20 for grails
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/grails/hello/db?queries=20
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 261 sec, 601 millisec and 92 microsec, 382 req/s, 461 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 4849 succeeded, 95151 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 123597755 bytes total, 118313881 bytes http, 5283874 bytes data

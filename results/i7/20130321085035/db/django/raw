@@ -1,0 +1,240 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Mar 21 11:36:26 PDT 2013
+
+  System load:  0.53               Processes:           110
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+107 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Warmup django
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 40 sec, 552 millisec and 142 microsec, 2465 req/s, 519 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 67118 succeeded, 32882 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 21555774 bytes total, 16000000 bytes http, 5555774 bytes data
+
+---------------------------------------------------------
+ Concurrency: 8 for django
+ weighttp -k -n 100000 -c 8 -t 8 172.16.98.122:8080/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 1 concurrent requests, 12500 total requests
+spawning thread #2: 1 concurrent requests, 12500 total requests
+spawning thread #3: 1 concurrent requests, 12500 total requests
+spawning thread #4: 1 concurrent requests, 12500 total requests
+spawning thread #5: 1 concurrent requests, 12500 total requests
+spawning thread #6: 1 concurrent requests, 12500 total requests
+spawning thread #7: 1 concurrent requests, 12500 total requests
+spawning thread #8: 1 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 49 sec, 959 millisec and 532 microsec, 2001 req/s, 432 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 73740 succeeded, 26260 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 22103954 bytes total, 16000000 bytes http, 6103954 bytes data
+
+---------------------------------------------------------
+ Concurrency: 16 for django
+ weighttp -k -n 100000 -c 16 -t 8 172.16.98.122:8080/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 2 concurrent requests, 12500 total requests
+spawning thread #2: 2 concurrent requests, 12500 total requests
+spawning thread #3: 2 concurrent requests, 12500 total requests
+spawning thread #4: 2 concurrent requests, 12500 total requests
+spawning thread #5: 2 concurrent requests, 12500 total requests
+spawning thread #6: 2 concurrent requests, 12500 total requests
+spawning thread #7: 2 concurrent requests, 12500 total requests
+spawning thread #8: 2 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 41 sec, 59 millisec and 614 microsec, 2435 req/s, 512 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 66795 succeeded, 33205 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 21528798 bytes total, 16000000 bytes http, 5528798 bytes data
+
+---------------------------------------------------------
+ Concurrency: 32 for django
+ weighttp -k -n 100000 -c 32 -t 8 172.16.98.122:8080/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 4 concurrent requests, 12500 total requests
+spawning thread #2: 4 concurrent requests, 12500 total requests
+spawning thread #3: 4 concurrent requests, 12500 total requests
+spawning thread #4: 4 concurrent requests, 12500 total requests
+spawning thread #5: 4 concurrent requests, 12500 total requests
+spawning thread #6: 4 concurrent requests, 12500 total requests
+spawning thread #7: 4 concurrent requests, 12500 total requests
+spawning thread #8: 4 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 40 sec, 583 millisec and 824 microsec, 2464 req/s, 518 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 66829 succeeded, 33171 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 21531808 bytes total, 16000000 bytes http, 5531808 bytes data
+
+---------------------------------------------------------
+ Concurrency: 64 for django
+ weighttp -k -n 100000 -c 64 -t 8 172.16.98.122:8080/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 8 concurrent requests, 12500 total requests
+spawning thread #2: 8 concurrent requests, 12500 total requests
+spawning thread #3: 8 concurrent requests, 12500 total requests
+spawning thread #4: 8 concurrent requests, 12500 total requests
+spawning thread #5: 8 concurrent requests, 12500 total requests
+spawning thread #6: 8 concurrent requests, 12500 total requests
+spawning thread #7: 8 concurrent requests, 12500 total requests
+spawning thread #8: 8 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 40 sec, 572 millisec and 505 microsec, 2464 req/s, 518 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 66808 succeeded, 33192 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 21530027 bytes total, 16000000 bytes http, 5530027 bytes data
+
+---------------------------------------------------------
+ Concurrency: 128 for django
+ weighttp -k -n 100000 -c 128 -t 8 172.16.98.122:8080/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 16 concurrent requests, 12500 total requests
+spawning thread #2: 16 concurrent requests, 12500 total requests
+spawning thread #3: 16 concurrent requests, 12500 total requests
+spawning thread #4: 16 concurrent requests, 12500 total requests
+spawning thread #5: 16 concurrent requests, 12500 total requests
+spawning thread #6: 16 concurrent requests, 12500 total requests
+spawning thread #7: 16 concurrent requests, 12500 total requests
+spawning thread #8: 16 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 40 sec, 558 millisec and 943 microsec, 2465 req/s, 518 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 66985 succeeded, 33015 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 21544567 bytes total, 16000000 bytes http, 5544567 bytes data
+
+---------------------------------------------------------
+ Concurrency: 256 for django
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/db
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 40 sec, 562 millisec and 241 microsec, 2465 req/s, 518 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 66968 succeeded, 33032 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 21543565 bytes total, 16000000 bytes http, 5543565 bytes data

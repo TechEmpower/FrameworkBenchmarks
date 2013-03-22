@@ -1,0 +1,21 @@
+{
+  "framework": "sinatra",
+  "tests": [{
+    "ruby": {
+      "setup_file": "setup_ruby",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 8080,
+      "sort": 20
+    },
+    "jruby": {
+      "setup_file": "setup_jruby",
+      "json_url": "/sinatra/json",
+      "db_url": "/sinatra/db",
+      "query_url": "/sinatra/db?queries=",
+      "port": 8080,
+      "sort": 21
+    }
+  }]
+}

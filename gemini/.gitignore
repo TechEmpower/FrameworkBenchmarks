@@ -1,0 +1,9 @@
+Docroot/WEB-INF/classes/
+Docroot/WEB-INF/work/
+Logs/
+jdbc-alerts.log
+Thumbs.db
+resin-data
+Thread Dumps/
+.settings/
+build.properties

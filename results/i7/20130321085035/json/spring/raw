@@ -1,0 +1,240 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Mar 21 15:56:24 PDT 2013
+
+  System load:  0.19               Processes:           110
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+107 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Warmup spring
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 12 sec, 100 millisec and 51 microsec, 8264 req/s, 1380 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 14915 succeeded, 85085 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 17104405 bytes total, 16522720 bytes http, 581685 bytes data
+
+---------------------------------------------------------
+ Concurrency: 8 for spring
+ weighttp -k -n 100000 -c 8 -t 8 172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 1 concurrent requests, 12500 total requests
+spawning thread #2: 1 concurrent requests, 12500 total requests
+spawning thread #3: 1 concurrent requests, 12500 total requests
+spawning thread #4: 1 concurrent requests, 12500 total requests
+spawning thread #5: 1 concurrent requests, 12500 total requests
+spawning thread #6: 1 concurrent requests, 12500 total requests
+spawning thread #7: 1 concurrent requests, 12500 total requests
+spawning thread #8: 1 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 5 sec, 194 millisec and 635 microsec, 19250 req/s, 3300 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 79209 succeeded, 20791 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 17554463 bytes total, 14465312 bytes http, 3089151 bytes data
+
+---------------------------------------------------------
+ Concurrency: 16 for spring
+ weighttp -k -n 100000 -c 16 -t 8 172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 2 concurrent requests, 12500 total requests
+spawning thread #2: 2 concurrent requests, 12500 total requests
+spawning thread #3: 2 concurrent requests, 12500 total requests
+spawning thread #4: 2 concurrent requests, 12500 total requests
+spawning thread #5: 2 concurrent requests, 12500 total requests
+spawning thread #6: 2 concurrent requests, 12500 total requests
+spawning thread #7: 2 concurrent requests, 12500 total requests
+spawning thread #8: 2 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 2 sec, 23 millisec and 46 microsec, 49430 req/s, 8469 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 77784 succeeded, 22216 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 17544488 bytes total, 14510912 bytes http, 3033576 bytes data
+
+---------------------------------------------------------
+ Concurrency: 32 for spring
+ weighttp -k -n 100000 -c 32 -t 8 172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 4 concurrent requests, 12500 total requests
+spawning thread #2: 4 concurrent requests, 12500 total requests
+spawning thread #3: 4 concurrent requests, 12500 total requests
+spawning thread #4: 4 concurrent requests, 12500 total requests
+spawning thread #5: 4 concurrent requests, 12500 total requests
+spawning thread #6: 4 concurrent requests, 12500 total requests
+spawning thread #7: 4 concurrent requests, 12500 total requests
+spawning thread #8: 4 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 1 sec, 831 millisec and 449 microsec, 54601 req/s, 9337 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 73083 succeeded, 26917 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 17511581 bytes total, 14661344 bytes http, 2850237 bytes data
+
+---------------------------------------------------------
+ Concurrency: 64 for spring
+ weighttp -k -n 100000 -c 64 -t 8 172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 8 concurrent requests, 12500 total requests
+spawning thread #2: 8 concurrent requests, 12500 total requests
+spawning thread #3: 8 concurrent requests, 12500 total requests
+spawning thread #4: 8 concurrent requests, 12500 total requests
+spawning thread #5: 8 concurrent requests, 12500 total requests
+spawning thread #6: 8 concurrent requests, 12500 total requests
+spawning thread #7: 8 concurrent requests, 12500 total requests
+spawning thread #8: 8 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 1 sec, 828 millisec and 850 microsec, 54679 req/s, 9349 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 72693 succeeded, 27307 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 17508851 bytes total, 14673824 bytes http, 2835027 bytes data
+
+---------------------------------------------------------
+ Concurrency: 128 for spring
+ weighttp -k -n 100000 -c 128 -t 8 172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 16 concurrent requests, 12500 total requests
+spawning thread #2: 16 concurrent requests, 12500 total requests
+spawning thread #3: 16 concurrent requests, 12500 total requests
+spawning thread #4: 16 concurrent requests, 12500 total requests
+spawning thread #5: 16 concurrent requests, 12500 total requests
+spawning thread #6: 16 concurrent requests, 12500 total requests
+spawning thread #7: 16 concurrent requests, 12500 total requests
+spawning thread #8: 16 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 1 sec, 870 millisec and 15 microsec, 53475 req/s, 9141 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 72256 succeeded, 27744 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 17505792 bytes total, 14687808 bytes http, 2817984 bytes data
+
+---------------------------------------------------------
+ Concurrency: 256 for spring
+ weighttp -k -n 100000 -c 256 -t 8 172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 1 sec, 894 millisec and 339 microsec, 52788 req/s, 9022 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 71752 succeeded, 28248 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 17502264 bytes total, 14703936 bytes http, 2798328 bytes data

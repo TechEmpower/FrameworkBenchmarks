@@ -1,0 +1,25 @@
+{
+  "framework": "express",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8080,
+      "sort": 4
+    },
+    "mongodb": {
+      "setup_file": "setup",
+      "db_url": "/mongoose",
+      "query_url": "/mongoose?queries=",
+      "port": 8080,
+      "sort": 5
+    },
+    "mysql": {
+      "setup_file": "setup",
+      "db_url": "/sequelize",
+      "query_url": "/sequelize?queries=",
+      "port": 8080,
+      "sort": 6
+    }
+  }]
+}

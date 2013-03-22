@@ -1,0 +1,74 @@
+description = "hello application"
+
+apply plugin: "war"
+apply plugin: "java"
+apply plugin: "jetty"
+
+sourceCompatibility = "1.5"
+targetCompatibility = "1.5"
+
+group = "hello"
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+
+    // All things JBoss/Hibernate
+    mavenRepo name: "JBoss", url: "http://repository.jboss.org/nexus/content/groups/public/"
+
+    // For stable versions of the tapx libraries
+    mavenRepo name: "HLS", url: "http://howardlewisship.com/repository/"
+
+    // For non-stable versions of the tapx libraries
+    mavenRepo name: "HLS Snapshots", url: "http://howardlewisship.com/snapshot-repository/"
+
+    // For access to Apache Staging (Preview) packages
+    mavenRepo name: "Apache Staging", url: "https://repository.apache.org/content/groups/staging"
+}
+
+// This simulates Maven's "provided" scope, until it is officially supported by Gradle
+// See http://jira.codehaus.org/browse/GRADLE-784
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+    test {
+        compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
+    }
+}
+
+dependencies {
+
+    compile "org.apache.tapestry:tapestry-core:5.3.6"
+
+    // This adds automatic compression of JavaScript and CSS in production mode:
+    compile "org.apache.tapestry:tapestry-yuicompressor:5.3.6"
+
+    // Uncomment this to add support for file uploads:
+    // compile "org.apache.tapestry:tapestry-upload:5.3.6"
+
+    provided "javax.servlet:servlet-api:2.5"
+}
+
+test {
+    useTestNG()
+
+    options.suites("src/test/conf/testng.xml")
+
+    systemProperties["tapestry.service-reloading-enabled"] = "false"
+    systemProperties["tapestry.execution-mode"] = "development"
+
+    maxHeapSize = "600M"
+
+    jvmArgs("-XX:MaxPermSize=256M")
+
+    enableAssertions = true
+}
+
+// TODO: Configure execution mode for jettyRun task

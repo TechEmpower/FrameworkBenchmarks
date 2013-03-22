@@ -1,0 +1,169 @@
+<!--
+  
+  Ant build script for GeminiHello.  Running this script produces a .zip archive 
+  with the following structure:
+  
+    GeminiHello-yyyy-MM-dd.zip
+       |~ GeminiHello.war
+       |~ Source
+       |~~~ (The current source code of GeminiHello and Gemini.)
+  
+-->
+<project default="build" name="geminihello">
+
+  <target name="compile">
+    
+    <!-- Import environment variables. -->
+    <property environment="Environment" />
+    
+    <!-- Declare other variables which can be overridden in a personalized
+         build.properties file. -->
+    <property name="Resin" value="${Environment.RESIN_HOME}" />
+    <property name="GeminiHello" value="." />
+    
+    <!-- Compile the source into WEB-INF/classes. -->
+    <javac srcdir="${GeminiHello}/Source" destdir="${GeminiHello}/Docroot/WEB-INF/classes" includes="**/*">
+      <classpath>
+        <pathelement location="${Resin}/lib/javaee-16.jar" />
+        <pathelement location="${Resin}/lib/resin.jar" />
+        <fileset dir="${GeminiHello}/Docroot/WEB-INF/lib">
+          <include name="**/*.jar" />
+        </fileset>
+     </classpath>
+    </javac>
+    
+  </target>
+  
+  <target name="build">
+    
+    <!-- Import environment variables. -->
+    <property environment="Environment" />
+    
+    <!-- Declare other variables which can be overridden in a personalized
+         build.properties file. -->
+    <property name="Resin" value="${Environment.RESIN_HOME}" />
+    <property name="GeminiHello" value="." />
+  
+    <!-- Define some timestamps.  These are used to name the zip archive produced
+         by this script, and to assign a version string for static assets. -->
+    <tstamp>
+      <format property="TIMESTAMP_LONG" pattern="yyyy-MM-dd-hh-mm-ss" locale="en" />
+      <format property="TIMESTAMP_SHORT" pattern="yyyyMMddhhmm" locale="en" />
+    </tstamp>
+  
+    <!-- Set the version for this build in GeminiHello-Version.conf.  This will
+         later be copied into the .war file, overriding the placeholder
+         GeminiHello-Version.conf file there for development. -->
+    <mkdir dir="temp/version" />
+    <echo message="StaticsVersion = ${TIMESTAMP_SHORT}" file="temp/version/GeminiHello-Version.conf" append="false" />
+    
+    <!-- Build geminihello.jar. -->
+    <mkdir dir="temp/work" />
+    <javac srcdir="${GeminiHello}/Source" destdir="temp/work" includes="**/*">
+      <classpath>
+        <pathelement location="${Resin}/lib/javaee-16.jar" />
+        <pathelement location="${Resin}/lib/resin.jar" />
+        <fileset dir="${GeminiHello}/Docroot/WEB-INF/lib">
+          <include name="**/*.jar" />
+        </fileset>
+     </classpath>
+    </javac>
+    <jar jarfile="temp/geminihello" basedir="temp/work" />
+    <delete dir="temp/work" />
+    
+    <!-- Prepare for minification. -->
+    <mkdir dir="temp/min" />
+    <copy todir="temp/min/css">
+      <fileset dir="${GeminiHello}/Docroot/css" />
+    </copy>
+    <copy todir="temp/min/js">
+      <fileset dir="${GeminiHello}/Docroot/js" />
+    </copy>
+    <copy todir="temp/min/jsp">
+      <fileset dir="${GeminiHello}/Docroot/WEB-INF/jsp" />
+    </copy>
+    
+    <!-- Minify CSS files using YUI Compressor. -->
+    <apply executable="java" parallel="false" force="true" dest="temp/min/css/">
+      <fileset dir="${GeminiHello}/Docroot/css" includes="**/*.css" />
+      <arg value="-jar" />
+      <arg value="${GeminiHello}/Docroot/WEB-INF/lib/yuicompressor-2.4.4.jar" />
+      <arg value="--type" />
+      <arg value="css" />
+      <srcfile />
+      <arg value="-o" />
+      <mapper type="identity" />
+      <targetfile />
+    </apply>
+    
+    <!-- Minify JS files using Closure Compiler. -->
+    <apply executable="java" parallel="false" force="true" dest="temp/min/js/">
+      <fileset dir="${GeminiHello}/Docroot/js" includes="**/*.js" />
+      <arg value="-jar" />
+      <arg value="${GeminiHello}/Docroot/WEB-INF/lib/closure-compiler.jar" />
+      <arg value="--warning_level=QUIET" />
+      <arg value="--js" />
+      <srcfile />
+      <arg value="--js_output_file" />
+      <mapper type="identity" />
+      <targetfile />
+    </apply>
+    
+    <!-- Minify JSP files using HtmlCompressor. -->
+    <!-- If any JSPs are used to render something other than HTML, then 
+         the <fileset> tag below should be modified to exclude them. -->
+    <apply executable="java" parallel="false" force="true" dest="temp/min/jsp/">
+      <fileset dir="${GeminiHello}/Docroot/WEB-INF/jsp" includes="**/*.jsp" />
+      <arg value="-jar" />
+      <arg value="${GeminiHello}/Docroot/WEB-INF/lib/htmlcompressor-1.1.jar" />
+      <arg value="--preserve-server-script" />
+      <arg value="--type" />
+      <arg value="html" />
+      <srcfile />
+      <arg value="-o" />
+      <mapper type="identity" />
+      <targetfile />
+    </apply>
+    
+    <!-- Build GeminiHello.war. -->
+    <war destfile="temp/GeminiHello.war" webxml="${GeminiHello}/Docroot/WEB-INF/web.xml">
+      <zipfileset dir="${GeminiHello}/Docroot" prefix="">
+        <exclude name="WEB-INF/**/*" />
+        <exclude name="js/**/*" />
+        <exclude name="css/**/*" />
+      </zipfileset>
+      <zipfileset dir="${GeminiHello}/Docroot/WEB-INF" prefix="WEB-INF">
+        <include name="*.conf" />
+        <include name="*.resources" />
+        <include name="*.tld" />
+        <include name="*.txt" />
+        <include name="*.xml" />
+        <include name="emails/**" />
+        <include name="jsp/**" />
+        <include name="lib/**" />
+        <exclude name="resin.xml" />
+        <exclude name="GeminiHello-Version.conf" />
+      </zipfileset>
+      <zipfileset dir="temp" prefix="WEB-INF/lib">
+        <include name="*.jar" />
+      </zipfileset>
+      <zipfileset dir="temp/min/css" prefix="css" />
+      <zipfileset dir="temp/min/js" prefix="js" />
+      <zipfileset dir="temp/min/jsp" prefix="WEB-INF/jsp" />
+      <zipfileset dir="temp/version" prefix="WEB-INF" />
+    </war>
+    
+    <!-- Zip it up. -->
+    <zip destfile="${GeminiHello}/GeminiHello-${TIMESTAMP_LONG}.zip">
+      <zipfileset dir="temp">
+        <include name="*.war" />
+      </zipfileset>
+      <zipfileset dir="${GeminiHello}/Source" prefix="Source" />
+    </zip>
+    
+    <!-- Delete the temporary directory. -->
+    <delete dir="temp" />
+    
+  </target>
+  
+</project>

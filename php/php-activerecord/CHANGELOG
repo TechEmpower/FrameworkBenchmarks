@@ -1,0 +1,25 @@
+Version 1.0 - June 27, 2010
+
+- d2bed65 fixed an error with eager loading when no records exist
+- c225942 fixed set methods on DateTime objects to properly flag attributes as dirty
+- 46a1219 fixed a memory leak when using validations
+- c225942 fixed problem with some model functionality not working correctly after being deserialized 
+- 3e26749 fixed validates_numericality_of to not ignore other options when only_integer is present and matches
+- 53ad5ec fixed ambiguous id error when finding by pk with a join option
+- 26e40f4 fixed conditions to accept DateTime values
+- 41e52fe changed serialization to serialize datetime fields as strings instead of the actual DateTime objects
+- dbee94b Model::transaction() now returns true if commit was successful otherwise false
+
+Versio 1.0 RC1 - May 7, 2010
+
+- support for Oracle
+- support for PostgreSQL
+- added delegators
+- added setters
+- added getters
+- added HAVING as a finder option
+- added ability to find using a hash
+- added find_or_create_by
+- added validates_uniqueness_of
+- added dynamic count_by
+- added eager loading

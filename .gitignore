@@ -1,0 +1,11 @@
+.DS_Store
+*.pyc
+installs/
+*.log
+*.lock
+node_modules/
+*.war
+target/
+*.out
+*.class
+mods/

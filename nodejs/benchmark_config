@@ -1,0 +1,32 @@
+{
+  "framework": "nodejs",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8080,
+      "sort": 8
+    },
+    "mongodb": {
+      "setup_file": "setup",
+      "db_url": "/mongoose",
+      "query_url": "/mongoose?queries=",
+      "port": 8080,
+      "sort": 9
+    },
+    "mysql": {
+      "setup_file": "setup",
+      "db_url": "/sequelize",
+      "query_url": "/sequelize?queries=",
+      "port": 8080,
+      "sort": 10
+    },
+    "mysql-raw": {
+      "setup_file": "setup",
+      "db_url": "/mysql",
+      "query_url": "/mysql?queries=",
+      "port": 8080,
+      "sort": 28
+    }
+  }]
+}

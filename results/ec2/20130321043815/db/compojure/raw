@@ -1,0 +1,242 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Mar 21 18:33:27 UTC 2013
+
+  System load:  0.01               Processes:           69
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.13.137
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup compojure
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/compojure/db/1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 62 sec, 437 millisec and 934 microsec, 1601 req/s, 254 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 16278215 bytes total, 13000000 bytes http, 3278215 bytes data
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure
+ weighttp -k -n 100000 -c 8 -t 8 10.252.153.72:8080/compojure/db/1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 1 concurrent requests, 12500 total requests
+spawning thread #2: 1 concurrent requests, 12500 total requests
+spawning thread #3: 1 concurrent requests, 12500 total requests
+spawning thread #4: 1 concurrent requests, 12500 total requests
+spawning thread #5: 1 concurrent requests, 12500 total requests
+spawning thread #6: 1 concurrent requests, 12500 total requests
+spawning thread #7: 1 concurrent requests, 12500 total requests
+spawning thread #8: 1 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 32 sec, 37 millisec and 50 microsec, 3121 req/s, 496 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 16278285 bytes total, 13000000 bytes http, 3278285 bytes data
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure
+ weighttp -k -n 100000 -c 16 -t 8 10.252.153.72:8080/compojure/db/1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 2 concurrent requests, 12500 total requests
+spawning thread #2: 2 concurrent requests, 12500 total requests
+spawning thread #3: 2 concurrent requests, 12500 total requests
+spawning thread #4: 2 concurrent requests, 12500 total requests
+spawning thread #5: 2 concurrent requests, 12500 total requests
+spawning thread #6: 2 concurrent requests, 12500 total requests
+spawning thread #7: 2 concurrent requests, 12500 total requests
+spawning thread #8: 2 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 27 sec, 958 millisec and 894 microsec, 3576 req/s, 568 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 16277937 bytes total, 13000000 bytes http, 3277937 bytes data
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure
+ weighttp -k -n 100000 -c 32 -t 8 10.252.153.72:8080/compojure/db/1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 4 concurrent requests, 12500 total requests
+spawning thread #2: 4 concurrent requests, 12500 total requests
+spawning thread #3: 4 concurrent requests, 12500 total requests
+spawning thread #4: 4 concurrent requests, 12500 total requests
+spawning thread #5: 4 concurrent requests, 12500 total requests
+spawning thread #6: 4 concurrent requests, 12500 total requests
+spawning thread #7: 4 concurrent requests, 12500 total requests
+spawning thread #8: 4 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 25 sec, 963 millisec and 57 microsec, 3851 req/s, 612 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 16277749 bytes total, 13000000 bytes http, 3277749 bytes data
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure
+ weighttp -k -n 100000 -c 64 -t 8 10.252.153.72:8080/compojure/db/1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 8 concurrent requests, 12500 total requests
+spawning thread #2: 8 concurrent requests, 12500 total requests
+spawning thread #3: 8 concurrent requests, 12500 total requests
+spawning thread #4: 8 concurrent requests, 12500 total requests
+spawning thread #5: 8 concurrent requests, 12500 total requests
+spawning thread #6: 8 concurrent requests, 12500 total requests
+spawning thread #7: 8 concurrent requests, 12500 total requests
+spawning thread #8: 8 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 25 sec, 274 millisec and 551 microsec, 3956 req/s, 628 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 16278309 bytes total, 13000000 bytes http, 3278309 bytes data
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure
+ weighttp -k -n 100000 -c 128 -t 8 10.252.153.72:8080/compojure/db/1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 16 concurrent requests, 12500 total requests
+spawning thread #2: 16 concurrent requests, 12500 total requests
+spawning thread #3: 16 concurrent requests, 12500 total requests
+spawning thread #4: 16 concurrent requests, 12500 total requests
+spawning thread #5: 16 concurrent requests, 12500 total requests
+spawning thread #6: 16 concurrent requests, 12500 total requests
+spawning thread #7: 16 concurrent requests, 12500 total requests
+spawning thread #8: 16 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 27 sec, 974 millisec and 462 microsec, 3574 req/s, 568 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 16278120 bytes total, 13000000 bytes http, 3278120 bytes data
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/compojure/db/1
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 26 sec, 115 millisec and 741 microsec, 3829 req/s, 608 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 100000 succeeded, 0 failed, 0 errored
+status codes: 100000 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 16278201 bytes total, 13000000 bytes http, 3278201 bytes data

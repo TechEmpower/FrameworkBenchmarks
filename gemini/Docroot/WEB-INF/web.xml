@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	<web-app version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+-->
+
+<!--
+
+  GeminiHello web.xml
+
+-->
+<web-app xmlns:resin="urn:java:com.caucho.resin"
+         xmlns:gemini="urn:java:com.techempower.gemini">
+  
+  <!-- These lines will force assets to be served be resin -->
+  <servlet-mapping url-pattern="/css/*" servlet-name="resin-file" />
+  <servlet-mapping url-pattern="/js/*" servlet-name="resin-file" />
+  <servlet-mapping url-pattern="/images/*" servlet-name="resin-file" />
+  <servlet-mapping url-pattern="/html/*" servlet-name="resin-file" />
+  <servlet-mapping url-pattern="favicon.ico" servlet-name="resin-file" />
+  
+  <!-- Assets located in "/static/" are files that should be cached forever, by
+       convention. -->
+  <servlet-mapping url-pattern="/static/*" servlet-name="resin-file" />
+  <resin:Forward regexp="^/static/([\d|-]+)/(css|js|images|html)/(.*)$" target="/$2/$3">
+    <gemini:filter.ExpiresFilter>
+      <expirationDelta>31556926000</expirationDelta>
+    </gemini:filter.ExpiresFilter>
+  </resin:Forward>
+  
+  <!-- Disallow Resin 4 from compiling PHP or JSP pages directly. -->
+  <mime-mapping extension=".php" mime-type="text/plain" />
+  <mime-mapping extension=".jsp" mime-type="text/plain" />
+  <mime-mapping extension=".jspf" mime-type="text/plain" />
+  <mime-mapping extension=".jspx" mime-type="text/plain" />
+  <servlet-mapping url-pattern="*.php" servlet-name="resin-file" />
+  <servlet-mapping url-pattern="*.jsp" servlet-name="resin-file" />
+  <servlet-mapping url-pattern="*.jspf" servlet-name="resin-file" />
+  <servlet-mapping url-pattern="*.jspx" servlet-name="resin-file" />
+  <servlet-mapping url-pattern="/WEB-INF/*.jsp" servlet-name="resin-jsp" />
+  <servlet-mapping url-pattern="/WEB-INF/*.jspf" servlet-name="resin-jsp" />
+  <servlet-mapping url-pattern="/WEB-INF/*.jspx" servlet-name="resin-jspx" />
+
+  <!-- Disallow URL rewriting for sessions.-->
+  <session-config enable-url-rewriting="false" />
+
+  <!-- Use UTF-8 for everything. -->
+  <character-encoding>UTF-8</character-encoding>
+
+  <!-- Enable GZIP compression. -->
+  <!--
+  <filter filter-name="gzip" filter-class="com.caucho.filters.GzipFilter">
+    <init>
+      <use-vary>true</use-vary>
+    </init>
+  </filter>
+  <filter-mapping url-pattern='*' filter-name="gzip" />
+  -->
+
+</web-app>

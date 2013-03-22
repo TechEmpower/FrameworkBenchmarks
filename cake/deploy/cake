@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /cake/ "/home/ubuntu/FrameworkBenchmarks/cake/app/webroot/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/cake/app/webroot/>
+          Options Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>

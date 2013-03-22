@@ -1,0 +1,473 @@
+/* Standard style-sheet for the basic administration section. */
+
+/* Standard representation of the administration sub-navigation.  This can 
+   be replaced by a custom rendering of the sub-navigation.  See 
+   include-subnav.jsp for more detail. */
+nav#admnav
+{
+  background-color: #F8F8FF;
+  font-family: Tahoma, Verdana, Arial, Helvetica;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+nav#admnav a
+{
+  background-color: #DDDDEE;
+  display: inline-block;
+  padding: 0px 10px 0px 10px;
+  margin: 0px 4px 0px 0px;
+  color: black;
+  text-decoration: none;
+}
+
+nav#admnav a:hover
+{
+  background-color: #777788;
+  color: white;
+}
+
+/* The main administrative content div. */
+div#admcontent
+{
+  font-family: Tahoma, Verdana, Arial, Helvetica;
+  font-size: 11px;
+  line-height: 1.2em;
+  min-height: 450px;
+}
+
+div#admcontent input,
+div#admcontent select,
+div#admcontent textarea
+{
+  border: 1px solid black;
+  font-family: Tahoma, Verdana, Arial, Helvetica;
+  font-size: 12px;
+}
+
+div#admcontent textarea.largedetails
+{
+  width: 100%;
+  height: 400px;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  padding: 6px 0px 6px 6px;
+  border: none;
+  margin: 0px 0px;
+  font-family: monospace;
+  line-height: 1.2em;
+  font-size: 11px;
+}
+
+div.admmenusection
+{
+  position: relative;
+  padding-bottom: 25px;
+}
+
+div.admmenusection div.admbanner
+{
+  font-size: 14px;
+  color: #303040;
+  margin-bottom: 3px;
+}
+
+div.admmenusection div.admlabel
+{
+  z-index: 2;
+}
+
+div.admmenusection div.admaccent
+{
+  position: absolute;
+  font-family: Verdana, Tahoma, Arial, Helvetica;
+  font-size: 72px;
+  font-weight: bold;
+  color: #DDDDEE;
+  top: -10px;
+  z-index: 0;
+  right: 0px;
+}
+
+div.admmenusection:hover div.admaccent
+{
+  color: #D0D0E1;
+}
+
+div.admmenusection div.admoptions
+{
+  border-top: 1px solid #DDDDEE;
+  position: relative;
+  background-color: #F8F8FF;
+  z-index: 1;
+}
+
+div.admoptions td
+{
+  padding: 1px 2px 1px 2px;
+  vertical-align: center;
+}
+
+div.admoptions a,
+a.admbutton
+{
+  display: inline-block;
+  min-width: 100px;
+  border: 1px solid #DDDDEE;
+  background-color: #FCFCFF;
+  padding: 2px 4px 2px 4px;
+  text-decoration: none;
+  white-space: nowrap;
+  color: black;
+}
+
+div.admoptions a:hover,
+a.admbutton:hover
+{
+  color: white;
+  border: 1px solid #777788;
+  background-color: #777788;
+}
+
+tr.admheader td
+{
+  border-top: 1px solid #707080;
+  border-bottom: 1px solid #505060;
+  padding: 1px 4px 1px 4px;
+  background-color: #606070;
+  color: white;
+  font-weight: bold;
+}
+
+tr.admheader td.separator
+{
+  border-top: none;
+  border-bottom: none;
+  background: none;
+}
+
+tr.admsubheader td
+{
+  border-top: 9px solid white;
+  border-bottom: 1px solid #9090A0;
+  padding: 1px 4px 1px 4px;
+  background-color: #A0A0B0;
+  color: white;
+  font-weight: bold;
+}
+
+tr.admplainsubheader td
+{
+  border-top: 9px solid white;
+  border-bottom: 1px solid #A0A0B0;
+  font-weight: bold;
+}
+
+td.admconfitem
+{
+  vertical-align: top;
+  padding-right: 4px;
+  background-color: white;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  margin: 1px 0px 1px 0px;
+}
+
+td.admconfvalue,
+td.admconfintvalue
+{
+  vertical-align: top;
+  background-color: #F8F8FF;
+  padding: 1px 4px 1px 4px;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  margin: 1px 0px 1px 0px;
+}
+
+td.admnowrap
+{
+  text-wrap: avoid;
+  white-space: nowrap;
+}
+
+td.admconfintvalue
+{
+  text-align: right;
+}
+
+td.exceptional
+{
+  color: #C00000;
+  background-color: #FFF0F0;
+}
+
+td.inactive
+{
+  color: #9898A8;
+}
+
+div.admform
+{
+}
+
+div.admform label
+{
+  width: 150px;
+}
+
+div.admform label, 
+div.admform input,
+div.admform select,
+div.admform textarea
+{
+  display: block;
+  float: left;
+  margin-bottom: 10px;
+}
+
+div.admform br
+{
+  clear: left;
+}
+
+div.admformv
+{
+}
+
+div.admformv ol
+{
+  list-style: none;
+  padding-left: 0px;
+}
+
+div.admformv ol li
+{
+  float: left;
+  margin-right: 10px;
+}
+
+div.admformv label
+{
+  font-size: 10px;
+}
+
+div.admformv label, div.admformv input
+{
+  display: block;
+}
+
+div.admformv div.clear
+{
+  clear: both;
+}
+
+p.admformvend
+{
+  clear: both;
+}
+
+.admmessage
+{
+  padding: 2px 6px 2px 6px;
+  margin: 12px 0px 12px 0px;
+  border: 1px solid #669966;
+  background-color: #EEFFEE;
+  color: black;
+  font-family: Tahoma, Arial, Helvetica;
+  font-size: 14px;
+}
+
+.admconfirm0 #desc,
+.admconfirm5 #desc,
+.admconfirm10 #desc
+{
+  text-align: left;
+  padding: 5px 5px 5px 5px;
+}
+
+.admconfirm0 #link,
+.admconfirm5 #link,
+.admconfirm10 #link
+{
+  text-align: left;
+  padding: 5px 5px 10px 5px;
+}
+
+.admconfirm0 #auxmessage,
+.admconfirm5 #auxmessage,
+.admconfirm10 #auxmessage
+{
+  text-align: left;
+  font-weight: bold;
+  background-color: #F0F0F0;
+  padding: 4px 4px 4px 4px;
+  border: 3px solid red;
+  color: black;
+}
+
+.admconfirm10
+{
+  width: 400px;
+  border: 1px solid #EE6666;
+  background-color: #FFE8E8;
+  color: black;
+  font-family: Tahoma, Arial, Helvetica;
+  font-size: 12px;
+}
+
+.admconfirm10 #banner
+{
+  padding: 5px 5px 5px 5px;
+  text-align: center;
+  font-family: Verdana, Tahoma, Arial, Helvetica;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #EE6666;
+  color: white;
+}
+
+.admconfirm10 #action
+{
+  text-align: center;
+  font-weight: bold;
+  background-color: #EE6666;
+  padding-bottom: 4px;
+  color: white;
+}
+
+.admconfirm10 #link a
+{
+  border: 1px solid #EE6666;
+  padding: 2px 10px 2px 10px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.admconfirm10 #link a:hover
+{
+  color: white;
+  background-color: #EE6666;
+}
+
+.admconfirm5
+{
+  width: 400px;
+  border: 1px solid #669966;
+  background-color: #EEFFEE;
+  color: black;
+  font-family: Tahoma, Arial, Helvetica;
+  font-size: 12px;
+}
+
+.admconfirm5 #banner
+{
+  padding: 5px 5px 5px 5px;
+  text-align: center;
+  font-family: Verdana, Tahoma, Arial, Helvetica;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #669966;
+  color: white;
+}
+
+.admconfirm5 #action
+{
+  text-align: center;
+  font-weight: bold;
+  background-color: #669966;
+  padding-bottom: 4px;
+  color: white;
+}
+
+.admconfirm5 #link a
+{
+  border: 1px solid #669966;
+  padding: 2px 10px 2px 10px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.admconfirm5 #link a:hover
+{
+  color: white;
+  background-color: #669966;
+}
+
+.admconfirm0
+{
+  width: 400px;
+  border: 1px solid #226699;
+  background-color: #DDEEFF;
+  color: black;
+  font-family: Tahoma, Arial, Helvetica;
+  font-size: 12px;
+}
+
+.admconfirm0 #banner
+{
+  padding: 5px 5px 5px 5px;
+  text-align: center;
+  font-family: Verdana, Tahoma, Arial, Helvetica;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #226699;
+  color: white;
+}
+
+.admconfirm0 #action
+{
+  text-align: center;
+  font-weight: bold;
+  background-color: #226699;
+  padding-bottom: 4px;
+  color: white;
+}
+
+.admconfirm0 #link a
+{
+  border: 1px solid #226699;
+  padding: 2px 10px 2px 10px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.admconfirm0 #link a:hover
+{
+  color: white;
+  background-color: #226699;
+}
+
+div#admcontent table.threadlist .highpri
+{
+  background-color: #FFE8E8;
+}
+
+div#admcontent table.threadlist .lowpri
+{
+  background-color: #E0FFF0;
+}
+
+div#admcontent table.threadlist .medpri
+{
+  background-color: #E0F0FF;
+}
+
+div#admcontent table.threadlist .pausepending
+{
+  background-color: #C0B0B0;
+}
+
+div#admcontent table.threadlist .paused
+{
+  background-color: #706060;
+  color: white;
+}
+
+div#admcontent span.alert
+{
+  color: #FF0000;
+}

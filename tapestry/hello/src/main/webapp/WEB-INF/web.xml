@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+        PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+    <display-name>hello Tapestry 5 Application</display-name>
+    <context-param>
+        <!-- The only significant configuration for Tapestry 5, this informs Tapestry
+of where to look for pages, components and mixins. -->
+        <param-name>tapestry.app-package</param-name>
+        <param-value>hello</param-value>
+    </context-param>
+    <!--
+    Specify some additional Modules for two different execution
+    modes: development and qa.
+    Remember that the default execution mode is production
+    -->
+    <context-param>
+        <param-name>tapestry.development-modules</param-name>
+        <param-value>
+            hello.services.DevelopmentModule
+        </param-value>
+    </context-param>
+    <context-param>
+        <param-name>tapestry.qa-modules</param-name>
+        <param-value>
+            hello.services.QaModule
+        </param-value>
+    </context-param>
+    <filter>
+        <filter-name>app</filter-name>
+        <filter-class>org.apache.tapestry5.TapestryFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>app</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>
+      

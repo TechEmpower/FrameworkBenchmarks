@@ -1,0 +1,17 @@
+{
+  "framework": "rack",
+  "tests": [{
+    "ruby": {
+      "setup_file": "setup_ruby",
+      "json_url": "/json",
+      "port": 8080,
+      "sort": 14
+    },
+    "jruby": {
+      "setup_file": "setup_jruby",
+      "json_url": "/rack/json",
+      "port": 8080,
+      "sort": 15
+    }
+  }]
+}

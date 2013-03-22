@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/jackson-annotations-2.1.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/jackson-core-2.1.1.jar"/>
+	<classpathentry kind="lib" path="docroot/WEB-INF/lib/jackson-databind-2.1.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="Resin4"/>
+	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
+</classpath>

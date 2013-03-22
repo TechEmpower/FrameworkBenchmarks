@@ -1,0 +1,14 @@
+<web-app>
+  <servlet>
+    <servlet-name>json</servlet-name>
+    <servlet-class>hello.JsonServlet</servlet-class>
+    <load-on-startup/>
+  </servlet>
+  <servlet-mapping url-regexp='^/json$' servlet-name='json'/>
+  <servlet>
+    <servlet-name>db</servlet-name>
+    <servlet-class>hello.DbPoolServlet</servlet-class>
+    <load-on-startup/>
+  </servlet>
+  <servlet-mapping url-regexp='^/db$' servlet-name='db'/>
+</web-app>

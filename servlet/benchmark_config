@@ -1,0 +1,18 @@
+{
+  "framework": "servlet",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/servlet/json",
+      "port": 8080,
+      "sort": 18
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/servlet/db",
+      "query_url": "/servlet/db?queries=",
+      "port": 8080,
+      "sort": 19
+    }
+  }]
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.datasource">java:comp/env/jdbc/hello_world</property>
+ 
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+ 
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">false</property>
+        <property name="hibernate.cache.use_query_cache">false</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+    </session-factory>
+</hibernate-configuration>

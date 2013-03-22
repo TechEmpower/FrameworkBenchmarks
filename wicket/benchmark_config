@@ -1,0 +1,13 @@
+{
+  "framework": "wicket",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/wicket/json",
+      "db_url": "/wicket/db",
+      "query_url": "/wicket/db?queries=",
+      "port": 8080,
+      "sort": 26
+    }
+  }]
+}

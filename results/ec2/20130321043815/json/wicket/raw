@@ -1,0 +1,245 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Mar 22 12:52:03 UTC 2013
+
+  System load:  0.7                Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.253.13.137
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+51 packages can be updated.
+18 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup wicket
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/wicket/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 53 sec, 70 millisec and 703 microsec, 1884 req/s, 555 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 60151 succeeded, 39849 failed, 0 errored
+status codes: 60220 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 30171610 bytes total, 28104566 bytes http, 2067044 bytes data
+
+---------------------------------------------------------
+ Concurrency: 8 for wicket
+ weighttp -k -n 100000 -c 8 -t 8 10.252.153.72:8080/wicket/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 1 concurrent requests, 12500 total requests
+spawning thread #2: 1 concurrent requests, 12500 total requests
+spawning thread #3: 1 concurrent requests, 12500 total requests
+spawning thread #4: 1 concurrent requests, 12500 total requests
+spawning thread #5: 1 concurrent requests, 12500 total requests
+spawning thread #6: 1 concurrent requests, 12500 total requests
+spawning thread #7: 1 concurrent requests, 12500 total requests
+spawning thread #8: 1 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 27 sec, 486 millisec and 340 microsec, 3638 req/s, 1092 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 64564 succeeded, 35436 failed, 0 errored
+status codes: 71051 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 30743634 bytes total, 28428295 bytes http, 2315339 bytes data
+
+---------------------------------------------------------
+ Concurrency: 16 for wicket
+ weighttp -k -n 100000 -c 16 -t 8 10.252.153.72:8080/wicket/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 2 concurrent requests, 12500 total requests
+spawning thread #2: 2 concurrent requests, 12500 total requests
+spawning thread #3: 2 concurrent requests, 12500 total requests
+spawning thread #4: 2 concurrent requests, 12500 total requests
+spawning thread #5: 2 concurrent requests, 12500 total requests
+spawning thread #6: 2 concurrent requests, 12500 total requests
+spawning thread #7: 2 concurrent requests, 12500 total requests
+spawning thread #8: 2 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 16 sec, 198 millisec and 148 microsec, 6173 req/s, 1861 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 65566 succeeded, 34434 failed, 0 errored
+status codes: 73645 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 30871659 bytes total, 28499091 bytes http, 2372568 bytes data
+
+---------------------------------------------------------
+ Concurrency: 32 for wicket
+ weighttp -k -n 100000 -c 32 -t 8 10.252.153.72:8080/wicket/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 4 concurrent requests, 12500 total requests
+spawning thread #2: 4 concurrent requests, 12500 total requests
+spawning thread #3: 4 concurrent requests, 12500 total requests
+spawning thread #4: 4 concurrent requests, 12500 total requests
+spawning thread #5: 4 concurrent requests, 12500 total requests
+spawning thread #6: 4 concurrent requests, 12500 total requests
+spawning thread #7: 4 concurrent requests, 12500 total requests
+spawning thread #8: 4 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 13 sec, 99 millisec and 771 microsec, 7633 req/s, 2330 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 70846 succeeded, 29154 failed, 0 errored
+status codes: 83278 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 31260462 bytes total, 28614557 bytes http, 2645905 bytes data
+
+---------------------------------------------------------
+ Concurrency: 64 for wicket
+ weighttp -k -n 100000 -c 64 -t 8 10.252.153.72:8080/wicket/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 8 concurrent requests, 12500 total requests
+spawning thread #2: 8 concurrent requests, 12500 total requests
+spawning thread #3: 8 concurrent requests, 12500 total requests
+spawning thread #4: 8 concurrent requests, 12500 total requests
+spawning thread #5: 8 concurrent requests, 12500 total requests
+spawning thread #6: 8 concurrent requests, 12500 total requests
+spawning thread #7: 8 concurrent requests, 12500 total requests
+spawning thread #8: 8 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 11 sec, 860 millisec and 854 microsec, 8431 req/s, 2576 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 69438 succeeded, 30562 failed, 0 errored
+status codes: 83571 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 31296884 bytes total, 28703868 bytes http, 2593016 bytes data
+
+---------------------------------------------------------
+ Concurrency: 128 for wicket
+ weighttp -k -n 100000 -c 128 -t 8 10.252.153.72:8080/wicket/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 16 concurrent requests, 12500 total requests
+spawning thread #2: 16 concurrent requests, 12500 total requests
+spawning thread #3: 16 concurrent requests, 12500 total requests
+spawning thread #4: 16 concurrent requests, 12500 total requests
+spawning thread #5: 16 concurrent requests, 12500 total requests
+spawning thread #6: 16 concurrent requests, 12500 total requests
+spawning thread #7: 16 concurrent requests, 12500 total requests
+spawning thread #8: 16 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 12 sec, 107 millisec and 286 microsec, 8259 req/s, 2523 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 67946 succeeded, 32054 failed, 0 errored
+status codes: 83358 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 31289499 bytes total, 28756218 bytes http, 2533281 bytes data
+
+---------------------------------------------------------
+ Concurrency: 256 for wicket
+ weighttp -k -n 100000 -c 256 -t 8 10.252.153.72:8080/wicket/json
+---------------------------------------------------------
+
+weighttp - a lightweight and simple webserver benchmarking tool
+
+starting benchmark...
+spawning thread #1: 32 concurrent requests, 12500 total requests
+spawning thread #2: 32 concurrent requests, 12500 total requests
+spawning thread #3: 32 concurrent requests, 12500 total requests
+spawning thread #4: 32 concurrent requests, 12500 total requests
+spawning thread #5: 32 concurrent requests, 12500 total requests
+spawning thread #6: 32 concurrent requests, 12500 total requests
+spawning thread #7: 32 concurrent requests, 12500 total requests
+spawning thread #8: 32 concurrent requests, 12500 total requests
+progress:  10% done
+progress:  20% done
+progress:  30% done
+progress:  40% done
+progress:  50% done
+progress:  60% done
+progress:  70% done
+progress:  80% done
+progress:  90% done
+progress: 100% done
+
+finished in 11 sec, 901 millisec and 198 microsec, 8402 req/s, 2569 kbyte/s
+requests: 100000 total, 100000 started, 100000 done, 67246 succeeded, 32754 failed, 0 errored
+status codes: 84473 2xx, 0 3xx, 0 4xx, 0 5xx
+traffic: 31308410 bytes total, 28794792 bytes http, 2513618 bytes data
