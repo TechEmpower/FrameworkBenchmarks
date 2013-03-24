@@ -3,3 +3,4 @@ source 'http://rubygems.org'
 gem 'rack', '1.5.1'
 gem 'json', '1.7.6'
 gem 'passenger', '3.9.5.rc3'
+gem "unicorn", "4.6.2"
