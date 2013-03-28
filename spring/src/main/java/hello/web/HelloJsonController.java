@@ -21,10 +21,26 @@ public class HelloJsonController
 
   @RequestMapping(value = "/json", produces = "application/json")
   @ResponseBody
-  public Map<String, String> json()
+  public Message json()
   {
-    Map<String, String> map = new HashMap<String, String>();
-    map.put("message", "Hello, world");
-    return map;
+    return new Message("Hello, world");
   }
+
+  public static class Message
+  {
+
+    private final String message;
+
+    public Message(String message)
+    {
+      this.message = message;
+    }
+
+    public String getMessage()
+    {
+      return message;
+    }
+
+  }
+
 }
