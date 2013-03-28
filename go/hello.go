@@ -1,24 +1,24 @@
 package main
 
 import (
-  "net/http";
-  "encoding/json";
-  "runtime";
-  "fmt";
+  "encoding/json"
+	"fmt"
+	"net/http"
+	"runtime"
 )
 
 type MessageStruct struct {
-    Message string
+	Message string
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-  m := MessageStruct{"Hello, world"}
-  enc := json.NewEncoder(w)
-  enc.Encode(m)
+	m := MessageStruct{"Hello, world"}
+	enc := json.NewEncoder(w)
+	enc.Encode(m)
 }
 
 func main() {
-  runtime.GOMAXPROCS(runtime.NumCPU())
-  http.HandleFunc("/json", hello)
-  http.ListenAndServe(":8080", nil)
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	http.HandleFunc("/json", hello)
+	http.ListenAndServe(":8080", nil)
 }
