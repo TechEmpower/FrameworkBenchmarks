@@ -2,7 +2,7 @@
 
 Guesses and anecdotes can dominate discussions about the performance of web application frameworks.  Here we attempt to provide some objective performance measures across a wide field of frameworks, covering several platforms: Go, Python, Java, Ruby, PHP, Clojure, Groovy, and JavaScript.  The tests exercise the frameworks' JSON seralization and object-relational model (ORM).  Future versions will exercise server-side template libraries and other computation.
 
-See results data we've collected from Amazon EC2 instances and our physical hardware at our blog.  (LINK TBD)
+See results data we've collected from Amazon EC2 instances and our physical hardware at our blog. http://www.techempower.com/blog/2013/03/28/framework-benchmarks/
 
 ## Running the test suite
 
@@ -48,7 +48,7 @@ Next, we're going to setup the servers with all the necessary software:
     go get github.com/hoisie/web
 	mongo --host client-private-ip < config/create.js
 
-Assuming The above finished without error, we're ready to start the test suite:
+Assuming the above finished without error, we're ready to start the test suite:
 
 	nohup ./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --max-threads number-of-cores &
 
