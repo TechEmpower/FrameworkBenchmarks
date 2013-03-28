@@ -13,8 +13,8 @@ type MessageStruct struct {
 
 func hello(w http.ResponseWriter, r *http.Request) {
   m := MessageStruct{"Hello, world"}
-  j, _ := json.Marshal(m)
-  fmt.Fprintf(w, string(j))
+  enc := json.NewEncoder(w)
+  enc.Encode(m)
 }
 
 func main() {
