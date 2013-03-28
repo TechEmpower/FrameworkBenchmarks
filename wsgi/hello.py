@@ -1,11 +1,11 @@
-import simplejson
+import ujson
 
 
 def app(environ, start_response):
     response = {
       "message": "Hello, World!"
     }
-    data = simplejson.dumps(response)
+    data = ujson.dumps(response)
     response_headers = [
         ('Content-type', 'text/plain'),
         ('Content-Length', str(len(data)))
