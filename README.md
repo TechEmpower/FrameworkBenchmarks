@@ -172,7 +172,7 @@ This test will:
 * Set the response Content-Type to application/json.
 * Serialize the row to JSON and send the resulting string as the response.
 
-By convnetion, if the test does not use an ORM, and instead uses the raw database connectivity provided by the platform (e.g., JDBC), we append a "-raw" to the test name in the [benchmark_config](#the-benchmark_config-file) file.  For example, "php-raw".
+By convention, if the test does not use an ORM, and instead uses the raw database connectivity provided by the platform (e.g., JDBC), we append a "-raw" to the test name in the [benchmark_config](#the-benchmark_config-file) file.  For example, "php-raw".
 
 Pseudo-code:
 

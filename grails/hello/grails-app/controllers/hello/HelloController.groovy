@@ -13,8 +13,8 @@ class HelloController {
     }
 
     def db() {
-      def queries = params.queries ? params.int('queries') : 1
-      def worlds = []
+      int queries = params.queries ? params.int('queries') : 1
+      def worlds = new ArrayList(queries)
       def random = ThreadLocalRandom.current();
 
       for (int i = 0; i < queries; i++) {
