@@ -6,10 +6,9 @@ def app(environ, start_response):
       "message": "Hello, World!"
     }
     data = simplejson.dumps(response)
-    status = '200 OK'
     response_headers = [
         ('Content-type', 'text/plain'),
         ('Content-Length', str(len(data)))
     ]
-    start_response(status, response_headers)
+    start_response('200 OK', response_headers)
     return [data]
