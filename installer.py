@@ -176,6 +176,12 @@ class Installer:
     self.__run_command("wget http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
     self.__run_command("unzip -o grails-2.1.1.zip")
     self.__run_command("rm grails-2.1.1.zip")
+    
+
+    ##############################
+    # Flask
+    ##############################
+    self.__run_command("sudo pip install flask flask-sqlalchemy")
 
     ##############################
     # Play
