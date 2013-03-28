@@ -9,13 +9,13 @@
 
 ; Database connection
 (defdb db (mysql {:db "hello_world"
-                       :user "benchmarkdbuser"
-                       :password "benchmarkdbpass"
-                       ;;OPTIONAL KEYS
-                       :host "localhost"
-                       :port "3306"
-                       :delimiters "" ;; remove delimiters
-                       :maximum-pool-size 256
+                  :user "benchmarkdbuser"
+                  :password "benchmarkdbpass"
+                  ;;OPTIONAL KEYS
+                  :host "localhost"
+                  :port "3306"
+                  :delimiters "" ;; remove delimiters
+                  :maximum-pool-size 256
                   }))
 
 ; Set up entity World and the database representation
