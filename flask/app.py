@@ -22,7 +22,7 @@ def get_random_world():
   worlds = []
   for i in range(int(num_queries)):
     wid = randint(1, 10000)
-    worlds[i] = World.query.get(wid)
+    worlds.append(World.query.get(wid))
   return jsonify(worlds=worlds)
   
 if __name__ == "__main__":
