@@ -21,11 +21,10 @@ get '/json' do
 end
 
 get '/db' do
-  queries = params[:queries] || 1
+  queries = (params[:queries] || 1).to_i
 
-  results = []
-  (1..queries.to_i).each do
-    results << World.find(Random.rand(10000) + 1)
+  results = (1..queries).map do
+    World.find(Random.rand(10000) + 1)
   end
   
   results.to_json
