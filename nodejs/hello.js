@@ -46,45 +46,50 @@ if (cluster.isMaster) {
   cluster.on('exit', function(worker, code, signal) {
     console.log('worker ' + worker.pid + ' died');
   });
-} else {
-  http.createServer(function (req, res) {
 
+  return;
+}
+
+function mongooseQuery(callback) {
+  MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1)}).exec(function (err, world) {
+    callback(err, world);
+  });
+}
+
+  http.createServer(function (req, res) {
     // JSON response object
     var hello = {message: "Hello, world"};
 
     var path = url.parse(req.url).pathname;
-    if (path === '/json') {
+
+    switch (path) {
+    case '/json':
       // JSON Response Test
       res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
       // Write JSON object to response
       res.end(JSON.stringify(hello));
-    } else if (path === '/mongoose') {
-      // Database Test
-      var queries = 1,
-        worlds  = [],
-        queryFunctions = [],
-        values = url.parse(req.url, true);
+      break;
 
-      if (values.query.queries) {
-        queries = values.query.queries;
+    case '/mongoose':
+      // Database Test
+      var values = url.parse(req.url, true);
+      var queries = values.query.queries || 1;
+
+      var queryFunctions = new Array(queries);
+
+      for (var i = 0; i < queries; i += 1) {
+        queryFunctions[i] = mongooseQuery;
       }
 
       res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
 
-      for (var i = 1; i <= queries; i++ ) {
-        queryFunctions.push(function(callback) {
-          MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1 )}).exec(function (err, world) {
-            worlds.push(world);
-            callback(null, 'success');
-          });
-        });
-      }
-
       async.parallel(queryFunctions, function(err, results) {
-        res.end(JSON.stringify(worlds));
+        res.end(JSON.stringify(results));
       });
-    } else if (path === '/sequelize') {
-      var queries = 1,
+      break;
+
+    case '/sequelize':
+        var queries = 1,
         worlds  = [],
         queryFunctions = [],
         values = url.parse(req.url, true);
@@ -107,8 +112,10 @@ if (cluster.isMaster) {
       async.parallel(queryFunctions, function(err, results) {
         res.end(JSON.stringify(worlds));
       });
-    }  else if (path === '/mysql') {
-      var queries = 1,
+      break;
+
+    case '/mysql':
+        var queries = 1,
         worlds  = [],
         queryFunctions = [],
         values = url.parse(req.url, true);
@@ -134,10 +141,12 @@ if (cluster.isMaster) {
           connection.end();
         });
       });
-    } else {
+      break;
+
+    default:
       // File not found handler
       res.writeHead(404, {'Content-Type': 'text/html; charset=UTF-8'});
       res.end("NOT IMPLEMENTED");
     }
   }).listen(8080);
-}
+

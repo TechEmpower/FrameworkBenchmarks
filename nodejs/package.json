@@ -8,4 +8,5 @@
     , "async": "0.2.5"
     , "mysql": "2.0.0-alpha7"
   }
+  , "main": "hello.js"
 }
