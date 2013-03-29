@@ -10,6 +10,15 @@ class World(db.Model):
   __tablename__ = "World"
   id = db.Column(db.Integer, primary_key=True)
   randomNumber = db.Column(db.Integer)
+  
+  # http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
+  @property
+  def serialize(self):
+     """Return object data in easily serializeable format"""
+     return {
+         'id'         : self.id,
+         'randomNumber': self.randomNumber
+     }
 
 @app.route("/json")
 def hello():
@@ -22,7 +31,7 @@ def get_random_world():
   worlds = []
   for i in range(int(num_queries)):
     wid = randint(1, 10000)
-    worlds.append(World.query.get(wid))
+    worlds.append(World.query.get(wid).serialize)
   return jsonify(worlds=worlds)
   
 if __name__ == "__main__":
