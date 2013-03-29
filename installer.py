@@ -48,13 +48,13 @@ class Installer:
     # nodejs
     #
 
-    self.__run_command("curl http://nodejs.org/dist/v0.10.0/node-v0.10.0-linux-x64.tar.gz | tar xvz")
+    self.__run_command("curl http://nodejs.org/dist/v0.10.2/node-v0.10.2-linux-x64.tar.gz | tar xvz")
 
     #
     # Java
     #
     
-    self.__run_command("sudo apt-get install openjdk-7-jdk", True)
+    self.__run_command("sudo apt-get install openjdk-7-jdk=", True)
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
     
     #
@@ -169,6 +169,7 @@ class Installer:
     self.__run_command("curl http://www.djangoproject.com/m/releases/1.4/Django-1.4.tar.gz | tar xvz")
     self.__run_command("sudo rm -rf /usr/local/lib/python2.7/site-packages/django")
     self.__run_command("sudo python setup.py install", cwd="Django-1.4")
+    self.__run_command("sudo easy_install -U 'ujson==1.30'")
 
     ##############################
     # Grails
