@@ -1,6 +1,20 @@
 var cluster = require('cluster')
-  , numCPUs = require('os').cpus().length
-  , http = require('http')
+  , numCPUs = require('os').cpus().length;
+
+if (cluster.isMaster) {
+  // Fork workers.
+  for (var i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', function(worker, code, signal) {
+    console.log('worker ' + worker.pid + ' died');
+  });
+
+  return;
+}
+
+var http = require('http')
   , url = require('url')
   , async = require('async')
   , mongoose = require('mongoose')
@@ -37,18 +51,7 @@ var WorldSchema = new Schema({
 }, { collection : 'world' });
 var MWorld = conn.model('World', WorldSchema);
 
-if (cluster.isMaster) {
-  // Fork workers.
-  for (var i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
 
-  cluster.on('exit', function(worker, code, signal) {
-    console.log('worker ' + worker.pid + ' died');
-  });
-
-  return;
-}
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 10000) + 1;
@@ -114,21 +117,25 @@ http.createServer(function (req, res) {
     break;
 
   case '/mysql':
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    var queryFunctions = new Array(queries);
-
-    for (var i = 0; i < queries; i += 1) {
-      queryFunctions[i] = mysqlQuery;
-    }
-
     res.writeHead(200, {'Content-Type': 'application/json'});
     
     pool.getConnection(function(err, connection) {
+      if (err || !connection) {
+        return res.end('MYSQL CONNECTION ERROR.');
+      } 
+
       function mysqlQuery(callback) {
-        connection.query("SELECT * FROM World WHERE id = " + getRandomNumber()), function(err, rows) {
+        connection.query("SELECT * FROM World WHERE id = " + getRandomNumber(), function(err, rows) {
           callback(null, rows[0]);
         });
+      }
+
+      var values = url.parse(req.url, true);
+      var queries = values.query.queries || 1;
+      var queryFunctions = new Array(queries);
+
+      for (var i = 0; i < queries; i += 1) {
+        queryFunctions[i] = mysqlQuery;
       }
 
       async.parallel(queryFunctions, function(err, results) {
