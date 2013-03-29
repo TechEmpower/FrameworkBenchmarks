@@ -17,7 +17,7 @@ def stop():
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if 'play' in line and 'scala' in line:
+    if './start' in line or ('play' in line and 'java' in line):
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 9)
   try:
