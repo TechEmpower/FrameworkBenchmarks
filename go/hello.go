@@ -17,7 +17,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	runtime.GOMAXPROCS(runtime.NumCPU() * 5) // per mailing list thread results
 	http.HandleFunc("/json", hello)
 	http.ListenAndServe(":8080", nil)
 }
