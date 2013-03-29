@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"runtime"
+	"strconv"
 )
 
 type MessageStruct struct {
@@ -11,9 +12,10 @@ type MessageStruct struct {
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	m := MessageStruct{"Hello, world"}
-	enc := json.NewEncoder(w)
-	enc.Encode(m)
+	w.Header().Set("Content-Type", "application/javascript")
+	j, _ := json.Marshal(&MessageStruct{"Hello, world"})
+	w.Header().Set("Content-Length", strconv.Itoa(len(j)))
+	w.Write(j)
 }
 
 func main() {
