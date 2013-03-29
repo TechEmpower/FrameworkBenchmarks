@@ -19,18 +19,20 @@ import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class HelloDbController 
+public class HelloDbController
 {
+
   private static final int    DB_ROWS                = 10000;
 
-  @RequestMapping(value = "/db")
-  public Object index(HttpServletRequest request, HttpServletResponse response, Integer queries)
+  @RequestMapping(value = "/db", produces = "application/json")
+  @ResponseBody
+  public World[] index(Integer queries)
   {
     if (queries == null)
     {
       queries = 1;
     }
-    
+
     final World[] worlds = new World[queries];
     final Random random = ThreadLocalRandom.current();
     final Session session = HibernateUtil.getSessionFactory().openSession();
@@ -41,17 +43,7 @@ public class HelloDbController
     }
 
     session.close();
-    
-    try 
-    {
-      new MappingJackson2HttpMessageConverter().write(
-          worlds, MediaType.APPLICATION_JSON, new ServletServerHttpResponse(response));
-    } 
-    catch (IOException e) 
-    {
-      // do nothing
-    }
-    
-    return null;
+
+    return worlds;
   }
 }
