@@ -7,7 +7,7 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 9000,
-      "sort": 13
+      "sort": 32
     }
   }]
 }
