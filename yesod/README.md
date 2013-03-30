@@ -2,21 +2,13 @@
 
 This is the Yesod portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-### JSON Encoding Test
-
-* [JSON test source](hello/world/views.py)
-
-
-### Data-Store/Database Mapping Test
-
-* [DB test controller](hello/world/views.py)
-* [DB test model](hello/world/models.py)
-
+* [Controllers](bench/Application.hs)
+* [Model](bench/config/models)
 
 ## Infrastructure Software Versions
 The tests were run with:
 * GHC 7.4.1
-* Yesod
+* Yesod 1.1.9.2
 
 ## Test URLs
 ### JSON Encoding Test

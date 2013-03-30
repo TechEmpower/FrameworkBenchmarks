@@ -54,7 +54,7 @@ class Installer:
     # Java
     #
     
-    self.__run_command("sudo apt-get install openjdk-7-jdk=", True)
+    self.__run_command("sudo apt-get install openjdk-7-jdk", True)
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
     
     #
@@ -210,7 +210,8 @@ class Installer:
     ##############################
     # Yesod
     ##############################
-    self.__run_command("cabal install yesod")
+    self.__run_command("cabal update")
+    self.__run_command("cabal install yesod persistent-mysql")
 
     ##############################################################
     #
