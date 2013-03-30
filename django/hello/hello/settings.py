@@ -11,6 +11,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
+        # https://pypi.python.org/pypi/django-mysqlpool/0.1-8  
+        # http://stackoverflow.com/questions/2636536/how-to-make-django-work-with-unsupported-mysql-drivers-such-as-gevent-mysql-or-c
+        # https://github.com/esnme/ultramysql
+        # you can do it
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'hello_world',                      # Or path to database file if using sqlite3.
         'USER': 'benchmarkdbuser',                      # Not used with sqlite3.
