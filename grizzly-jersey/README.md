@@ -1,9 +1,9 @@
-# Netty Benchmarking Test
+# Grizzly+Jersey Benchmarking Test
 
 This is the Grizzly+Jersey portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### JSON Encoding Test
-* [JSON test source](src/main/java/hello/HelloServerHandler.java)
+* [JSON test source](src/main/java/hello/HelloResource.java)
 
 ## Versions
 
