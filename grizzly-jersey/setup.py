@@ -5,7 +5,7 @@ import os
 
 def start(args):
   try:
-    subprocess.check_call("mvn clean package shade:shade", shell=True, cwd="grizzly-jersey")
+    subprocess.check_call("mvn clean package", shell=True, cwd="grizzly-jersey")
     subprocess.Popen("java -jar target/grizzly-jersey-example-0.1.jar".rsplit(" "), cwd="grizzly-jersey")
     return 0
   except subprocess.CalledProcessError:
