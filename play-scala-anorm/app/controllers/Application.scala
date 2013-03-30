@@ -22,7 +22,7 @@ object Application extends Controller {
         val random = ThreadLocalRandom.current()
 
         val worlds = Future {
-            (0 to queries) map {
+            (1 to queries) map {
                 _ => World.findById(random.nextInt(TEST_DATABASE_ROWS) + 1)
             }
         }
