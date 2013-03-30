@@ -86,6 +86,12 @@ class Installer:
 
     self.__run_command("sudo apt-get install php5 php5-mysql", True)
 
+    #
+    # Haskell
+    #
+
+    self.__run_command("sudo apt-get install ghc cabal-install", True)
+
     #######################################
     # Webservers
     #######################################
@@ -200,6 +206,11 @@ class Installer:
     # WebGO
     ##############################
     self.__run_command("go/bin/go get github.com/hoisie/web")
+
+    ##############################
+    # Yesod
+    ##############################
+    self.__run_command("cabal install yesod")
 
     ##############################################################
     #
