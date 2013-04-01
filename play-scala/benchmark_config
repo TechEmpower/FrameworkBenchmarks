@@ -1,0 +1,11 @@
+{
+  "framework": "play-scala",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 9000,
+      "sort": 32
+    }
+  }]
+}

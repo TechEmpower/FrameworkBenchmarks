@@ -11,7 +11,7 @@ This is the netty portion of a [benchmarking test suite](../) comparing a variet
 * [Netty 4.0.0.Beta2](http://netty.io/)
 
 ## References
-* shttps://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/http/snoop
+* https://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/http/snoop
 
 ## Test URLs
 

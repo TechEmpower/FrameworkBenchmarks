@@ -1,6 +1,6 @@
 package hello;
 
-import io.netty.buffer.ByteBuf;
+import io.netty.buffer.MessageBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,14 +17,11 @@ import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.LastHttpContent;
-import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.handler.codec.http.ServerCookieEncoder;
 import io.netty.util.CharsetUtil;
 
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import java.io.*;
@@ -43,13 +40,22 @@ public class HelloServerHandler extends ChannelInboundMessageHandlerAdapter<Obje
     private final StringBuilder buf = new StringBuilder();
     private static final ObjectMapper mapper = new ObjectMapper();
 
+    private boolean flush;
+
+    @Override
+    public boolean beginMessageReceived(ChannelHandlerContext ctx) throws Exception {
+        flush = false;
+        return super.beginMessageReceived(ctx);
+    }
+
     @Override
     public void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
+        MessageBuf<Object> out = ctx.nextOutboundMessageBuffer();
         if (msg instanceof HttpRequest) {
             HttpRequest request = this.request = (HttpRequest) msg;
 
             if (is100ContinueExpected(request)) {
-                send100Continue(ctx);
+                send100Continue(out);
             }
             
             Map<String, String> data = new HashMap<String, String>();
@@ -71,7 +77,7 @@ public class HelloServerHandler extends ChannelInboundMessageHandlerAdapter<Obje
         if (msg instanceof HttpContent) {
             if (msg instanceof LastHttpContent) {
               LastHttpContent trailer = (LastHttpContent) msg;
-              writeResponse(ctx, trailer);
+              writeResponse(ctx, out, trailer);
             }
         }
     }
@@ -87,7 +93,7 @@ public class HelloServerHandler extends ChannelInboundMessageHandlerAdapter<Obje
         buf.append("\r\n");
     }
 
-    private void writeResponse(ChannelHandlerContext ctx, HttpObject currentObj) {
+    private void writeResponse(ChannelHandlerContext ctx, MessageBuf<Object> out, HttpObject currentObj) {
         // Decide whether to close the connection or not.
         boolean keepAlive = isKeepAlive(request);
         // Build the response object.
@@ -122,22 +128,28 @@ public class HelloServerHandler extends ChannelInboundMessageHandlerAdapter<Obje
         }
 
         // Write the response.
-        ctx.nextOutboundMessageBuffer().add(response);
+        out.add(response);
 
         // Close the non-keep-alive connection after the write operation is done.
         if (!keepAlive) {
+            flush = false;
             ctx.flush().addListener(ChannelFutureListener.CLOSE);
+        } else {
+            flush = true;
         }
     }
 
-    private static void send100Continue(ChannelHandlerContext ctx) {
+    private void send100Continue(MessageBuf<Object> out) {
         HttpResponse response = new DefaultHttpResponse(HTTP_1_1, CONTINUE);
-        ctx.nextOutboundMessageBuffer().add(response);
+        out.add(response);
+        flush = true;
     }
 
     @Override
     public void endMessageReceived(ChannelHandlerContext ctx) throws Exception {
-        ctx.flush();
+        if (flush) {
+            ctx.flush();
+        }
     }
 
     @Override
