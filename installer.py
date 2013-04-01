@@ -100,13 +100,22 @@ class Installer:
     self.__run_command("sudo mv /etc/apache2/ports.conf /etc/apache2/ports.conf.orig")
     self.__run_command("sudo sh -c \"cat ../config/ports.conf > /etc/apache2/ports.conf\"")
     self.__run_command("sudo /etc/init.d/apache2 stop")
-
+    
+    #
+    # Nginx
+    #
+    self.__run_command("curl http://nginx.org/download/nginx-1.2.7.tar.gz | tar xvz")
+    self.__run_command("./configure", cwd="nginx-1.2.7")
+    self.__run_command("make", cwd="nginx-1.2.7")
+    self.__run_command("sudo make install", cwd="nginx-1.2.7")
+    
     #
     # Gunicorn
     #
 
     self.__run_command("sudo easy_install -U 'gunicorn==0.17.2'")
     self.__run_command("sudo easy_install -U 'eventlet==0.12.1'")
+    self.__run_command("sudo pip install --upgrade 'gevent==0.13.8'")
 
     #
     # Resin
@@ -177,6 +186,12 @@ class Installer:
     self.__run_command("wget http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
     self.__run_command("unzip -o grails-2.1.1.zip")
     self.__run_command("rm grails-2.1.1.zip")
+    
+
+    ##############################
+    # Flask
+    ##############################
+    self.__run_command("sudo pip install flask flask-sqlalchemy")
 
     ##############################
     # Play

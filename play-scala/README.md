@@ -8,7 +8,7 @@ This is the Play portion of a [benchmarking test suite](../) comparing a variety
 
 ### Data-Store/Database Mapping Test
 
-* [Database test controller](app/controllers/Application.java)
+* [Database test controller](app/controllers/Application.scala)
 * [Database test model](app/models/World.java)
 
 ## Infrastructure Software Versions
