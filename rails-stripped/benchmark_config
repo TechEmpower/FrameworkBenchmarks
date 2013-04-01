@@ -1,5 +1,5 @@
 {
-  "framework": "rails-optimized",
+  "framework": "rails-stripped",
   "tests": [{
     "ruby": {
       "setup_file": "setup_ruby",

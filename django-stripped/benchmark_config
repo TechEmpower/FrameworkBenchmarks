@@ -1,5 +1,5 @@
 {
-  "framework": "django-optimized",
+  "framework": "django-stripped",
   "tests": [{
     "default": {
       "setup_file": "setup",
