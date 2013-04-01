@@ -23,7 +23,7 @@
       "db_url": "/hello_world/db",
       "query_url": "/hello_world/db?queries=",
       "port": 8080,
-      "sort": 32
+      "sort": 37
     }
   }]
 }

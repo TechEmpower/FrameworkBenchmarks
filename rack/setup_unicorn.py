@@ -2,7 +2,7 @@
 import subprocess
 import sys
 import re
-import osresults/i7/20130323205325
+import os
 
 def start(args):
 
