@@ -24,7 +24,7 @@ $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id = :id');
 $statement->bindParam(':id', $id, PDO::PARAM_INT);
 
 // For each query, store the result set values in the response array
-while (0 < --$query_count) {
+while (0 < $query_count--) {
   $statement->execute();
   
   // Store result in array.
