@@ -1,4 +1,7 @@
-class HelloWorldController < ApplicationController
+class HelloWorldController < ActionController::Metal
+  include ActionController::Rendering
+  include ActionController::Renderers::All
+
   def json
     render :json => {:message => "Hello World!"}
   end
