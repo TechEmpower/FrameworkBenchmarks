@@ -71,7 +71,7 @@ class Installer:
     # We need a newer version of jruby-rack
     self.__run_command("git clone git://github.com/jruby/jruby-rack.git")
     subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do bundle install"])
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do jruby -S rake clean gem SKIP_SPECS=true"])
+    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"])
     subprocess.call(["bash", "-c", "cd installs/jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem"])
 
     #
