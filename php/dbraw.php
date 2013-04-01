@@ -11,29 +11,25 @@ $pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'be
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
-if (!empty($_GET)) {
-  $query_count = $_GET["queries"];
+if (TRUE === isset($_GET['queries'])) {
+  $query_count = $_GET['queries'];
 }
 
 // Create an array with the response string.
 $arr = array();
+$id = mt_rand(1, 10000);
 
 // Define query
-$statement = $pdo->prepare("SELECT * FROM World WHERE id = :id");
+$statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id = :id');
+$statement->bindParam(':id', $id, PDO::PARAM_INT);
 
 // For each query, store the result set values in the response array
-for ($i = 0; $i < $query_count; $i++) {
-  // Choose a random row
-  // http://www.php.net/mt_rand
-  $id = mt_rand(1, 10000);
-
-  // Bind id to query
-  $statement->bindValue(':id', $id, PDO::PARAM_INT);
+while (0 < --$query_count) {
   $statement->execute();
-  $row = $statement->fetch(PDO::FETCH_ASSOC);
   
   // Store result in array.
-  $arr[] = array("id" => $id, "randomNumber" => $row['randomNumber']);
+  $arr[] = array('id' => $id, 'randomNumber' => $statement->fetchColumn());
+  $id = mt_rand(1, 10000);
 }
 
 // Use the PHP standard JSON encoder.
