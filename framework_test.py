@@ -241,24 +241,26 @@ class FrameworkTest:
                 results['latency']['stdevPercent'] = m[3]
             
             if "Req/Sec" in line:
-              m = re.findall("([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
+              m = re.findall("([0-9]+\.*[0-9]*[k|%]*)", line)
               if len(m) == 4:
                 results['requests']['avg'] = m[0]
                 results['requests']['stdev'] = m[1]
                 results['requests']['max'] = m[2]
                 results['requests']['stdevPercent'] = m[3]
               
-            if "requests in," in line:
-              m = re.search("requests in ([0-9]+\.*[0-9]*[s|m|h]+) ,", line)
+            if "requests in" in line:
+              m = re.search("requests in ([0-9]+\.*[0-9]*[ms|s|m|h]+)", line)
               if m != None: 
                 # parse out the raw time, which may be in minutes or seconds
                 raw_time = m.group(1)
-                if "s" in raw_time:
-                  results['total_time'] += float(raw_time[:1])
-                else if "m" in raw_time:
-                  results['total_time'] += float(raw_time[:1]) * 60.0
-                else if "h" in raw_time:
-                  results['total_time'] += float(raw_time[:1]) * 3600.0
+                if "ms" in raw_time:
+                  results['total_time'] += float(raw_time[:len(raw_time)-2]) / 1000.0
+                elif "s" in raw_time:
+                  results['total_time'] += float(raw_time[:len(raw_time)-1])
+                elif "m" in raw_time:
+                  results['total_time'] += float(raw_time[:len(raw_time)-1]) * 60.0
+                elif "h" in raw_time:
+                  results['total_time'] += float(raw_time[:len(raw_time)-1]) * 3600.0
 
       return results
     except IOError:
