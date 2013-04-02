@@ -272,6 +272,16 @@ class Installer:
     ./waf build
     sudo ./waf install
     cd ~
+    
+    ##############################
+    # wrk
+    ##############################
+
+    git clone https://github.com/wg/wrk.git
+    cd wrk
+    make
+    sudo cp wrk /usr/local/bin
+    cd ~
 
     ##############################
     # MongoDB

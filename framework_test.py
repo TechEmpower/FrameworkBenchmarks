@@ -16,19 +16,19 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}"
+    echo " wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"
     echo "---------------------------------------------------------"
     echo ""
-    weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}
+    wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " weighttp -k -n {runs} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) {server_host}:{port}{url}"
+      echo " wrk -n {runs} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) http://{server_host}:{port}{url}"
       echo "---------------------------------------------------------"
       echo ""
-      weighttp -k -n {runs} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" {server_host}:{port}{url}
+      wrk -r {runs} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
     done
   """
 
@@ -38,19 +38,19 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}2"
+    echo " wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}2"
     echo "---------------------------------------------------------"
     echo ""
-    weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}2
+    wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}2
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}$c"
+      echo " wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}$c"
       echo "---------------------------------------------------------"
       echo ""
-      weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}"$c"
+      wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"$c"
     done
   """
 
@@ -216,14 +216,14 @@ class FrameworkTest:
       with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
         found_warmup = False
         for line in raw_data:
-          # weighttp outputs a line with the "req/s" number for each run
-          if "req/s" in line:
+          # wrk outputs a line with the "Requests/sec:" number for each run
+          if "Requests/sec:" in line:
             # Every raw data file first has a warmup run, so we need to pass over that before we begin parsing
             if not found_warmup:
               found_warmup = True
               continue
 
-            m = re.search("([0-9]+) req/s", line)
+            m = re.search("Requests/sec: ([0-9]+)", line)
             results['results'].append(m.group(1))
 
           if found_warmup:
