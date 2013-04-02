@@ -19,14 +19,14 @@ def start(args):
     #subprocess.check_call("sudo chown -R www-data:www-data php", shell=True)
     #subprocess.check_call("sudo /etc/init.d/apache2 start", shell=True)
     subprocess.check_call("sudo php-fpm --fpm-config config/php-fpm.conf", shell=True)
-    subprocess.check_call("sudo /usr/local/nginx/sbin nginx -c " + home + "FrameworkBenchmarks/php/deploy/nginx.conf", shell=True)
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "FrameworkBenchmarks/php/deploy/nginx.conf", shell=True)
     
     return 0
   except subprocess.CalledProcessError:
     return 1
 def stop():
   try:
-    subprocess.check_call("sudo /usr/local/nginx/sbin nginx -s stop", shell=True)
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():
