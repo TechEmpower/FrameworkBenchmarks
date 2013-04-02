@@ -84,7 +84,15 @@ class Installer:
     # php
     #
 
-    self.__run_command("sudo apt-get install php5 php5-mysql", True)
+    self.__run_command("wget --trust-server-names http://www.php.net/get/php-5.4.13.tar.gz/from/a/mirror")
+    self.__run_command("tar xvf php-5.4.13.tar.gz")
+    self.__run_command("./configure --with-pdo-mysql --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
+    self.__run_command("make", cwd="php-5.4.13")
+    self.__run_command("sudo make install", cwd="php-5.4.13")
+    self.__run_command("sudo pecl install apc-beta", cwd="php-5.4.13")
+    self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
+    self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
+    self.__run_command("rm php-5.4.13.tar.gz")
 
     #######################################
     # Webservers
