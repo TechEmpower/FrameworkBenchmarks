@@ -3,8 +3,10 @@ import sys
 import os
 
 def start(args):
+	os.putenv("ONION_LOG","noinfo")
   os.system("make && ./hello &")
   return 0
+
 def stop():
   
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)

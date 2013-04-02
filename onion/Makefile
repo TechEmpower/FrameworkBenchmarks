@@ -6,7 +6,7 @@ LDFLAGS=-lonion -ljson -lmysqlclient -lpthread -L/usr/lib64/mysql/ -Lonion/build
 hello: hello.c
 
 clean:
-	rm *.o hello
+	rm -f *.o hello
 
 	
 onion:
