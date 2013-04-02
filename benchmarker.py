@@ -175,7 +175,7 @@ class Benchmarker:
   ############################################################
   # report_results
   ############################################################
-  def report_results(self, framework, test, results, success, failed, errored, response_2xx, response_3xx, response_4xx, response_5xx, total_time):
+  def report_results(self, framework, test, results, latency, requests, total_time):
     # Try to get the id in the result array if it exists.
     try:
       framework_id = str(self.results['frameworks'].index(framework.name))
@@ -185,13 +185,8 @@ class Benchmarker:
     
     self.results['rawData'][test][framework_id] = results
     self.results['weighttpData'][test][framework_id] = dict()
-    self.results['weighttpData'][test][framework_id]['success'] = success
-    self.results['weighttpData'][test][framework_id]['failed'] = failed
-    self.results['weighttpData'][test][framework_id]['errored'] = errored
-    self.results['weighttpData'][test][framework_id]['2xx'] = response_2xx
-    self.results['weighttpData'][test][framework_id]['3xx'] = response_3xx
-    self.results['weighttpData'][test][framework_id]['4xx'] = response_4xx
-    self.results['weighttpData'][test][framework_id]['5xx'] = response_5xx
+    self.results['weighttpData'][test][framework_id]['latency'] = latency
+    self.results['weighttpData'][test][framework_id]['requests'] = requests
     self.results['weighttpData'][test][framework_id]['totalTime'] = total_time
 
   ############################################################
