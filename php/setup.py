@@ -12,6 +12,7 @@ def start(args):
   setup_util.replace_text("php/dbraw.php", "host=.*;", "host=" + args.database_host + ";")
   setup_util.replace_text("php/deploy/php", "\".*\/FrameworkBenchmarks", "\"" + home + "/FrameworkBenchmarks")
   setup_util.replace_text("php/deploy/php", "Directory .*\/FrameworkBenchmarks", "Directory " + home + "/FrameworkBenchmarks")
+  setup_util.replace_text("php/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
   
   try:
     #subprocess.check_call("sudo cp php/deploy/php /etc/apache2/sites-available/", shell=True)
