@@ -1,0 +1,8 @@
+##any db drop and create data true/false
+db.schemify=true
+
+db.driver= com.mysql.jdbc.Driver
+db.url="jdbc:mysql://localhost:3306/hello_world"
+db.user=benchmarkdbuser
+db.password=benchmarkdbpass
+
