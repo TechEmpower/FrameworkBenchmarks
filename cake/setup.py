@@ -10,6 +10,7 @@ def start(args):
   setup_util.replace_text("cake/app/Config/database.php", "'host' => '.*',", "'host' => '" + args.database_host + "',")
   setup_util.replace_text("cake/deploy/cake", "\".*\/FrameworkBenchmarks", "\"" + home + "/FrameworkBenchmarks")
   setup_util.replace_text("cake/deploy/cake", "Directory .*\/FrameworkBenchmarks", "Directory " + home + "/FrameworkBenchmarks")
+  setup_util.replace_text("cake/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
 
   try:
     #subprocess.check_call("sudo cp cake/deploy/cake /etc/apache2/sites-available/", shell=True)
