@@ -243,9 +243,9 @@ class FrameworkTest:
             if "Req/Sec" in line:
               m = re.findall("([0-9]+\.*[0-9]*[k|%]*)", line)
               if len(m) == 4:
-                results['requests']['avg'] = m[0]
-                results['requests']['stdev'] = m[1]
-                results['requests']['max'] = m[2]
+                results['requests']['avg'] = m[0] * self.benchmarker.max_threads
+                results['requests']['stdev'] = m[1] * self.benchmarker.max_threads
+                results['requests']['max'] = m[2] * self.benchmarker.max_threads
                 results['requests']['stdevPercent'] = m[3]
               
             if "requests in" in line:
