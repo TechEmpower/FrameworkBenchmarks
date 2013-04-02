@@ -54,7 +54,7 @@ class Installer:
     # Java
     #
     
-    self.__run_command("sudo apt-get install openjdk-7-jdk=", True)
+    self.__run_command("sudo apt-get install openjdk-7-jdk", True)
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
     
     #
@@ -93,6 +93,12 @@ class Installer:
     self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
     self.__run_command("rm php-5.4.13.tar.gz")
+
+    #
+    # Haskell
+    #
+
+    self.__run_command("sudo apt-get install ghc cabal-install", True)
 
     #######################################
     # Webservers
@@ -217,6 +223,12 @@ class Installer:
     # WebGO
     ##############################
     self.__run_command("go/bin/go get github.com/hoisie/web")
+
+    ##############################
+    # Yesod
+    ##############################
+    self.__run_command("cabal update")
+    self.__run_command("cabal install yesod persistent-mysql")
 
     ##############################################################
     #

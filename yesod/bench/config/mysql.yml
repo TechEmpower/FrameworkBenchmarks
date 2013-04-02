@@ -1,0 +1,21 @@
+Default: &defaults
+  user: benchmarkdbuser
+  password: benchmarkdbpass
+  host: 127.0.0.1
+  port: 3306
+  database: hello_world
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  <<: *defaults
+
+Staging:
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  poolsize: 100
+  <<: *defaults
