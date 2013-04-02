@@ -39,7 +39,7 @@
 
 
 (defn start-server [{:keys [port worker db-host]}]
-  (db/use-database! (str "jdbc:mysql://" db-host "localhost/hello_world")
+  (db/use-database! (str "jdbc:mysql://" db-host "/hello_world")
                     "benchmarkdbuser"
                     "benchmarkdbpass")
   ;; Format responses as JSON

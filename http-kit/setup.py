@@ -5,13 +5,11 @@ import setup_util
 
 def start(args):
 
-  setup_util.replace_text("compojure/hello/src/hello/handler.clj", ":host \".*\"", ":host \"" + args.database_host + "\"")
-
   try:
     subprocess.check_call("lein deps", shell=True, cwd="http-kit/hello")
     # lein run -- --help for more options
     command = "lein run -- --db-host " + args.database_host
-    subprocess.check_call(command, shell=True, cwd="http-kit/hello")
+    subprocess.Popen(command, shell=True, cwd="http-kit/hello")
     return 0
   except subprocess.CalledProcessError:
     return 1
