@@ -17,7 +17,7 @@ def start(args):
     return 1
 def stop():
   try:
-    subprocess.check_call("killall beam", shell=True, cwd="/usr/bin")
+    subprocess.check_call("killall beam.smp", shell=True, cwd="/usr/bin")
     return 0
   except subprocess.CalledProcessError:
     return 1
