@@ -17,12 +17,12 @@ handle('GET',[<<"db">>], Req) ->
         random:seed(erlang:now()),
         JSON = case elli_request:get_arg(<<"queries">>, Req) of
 		undefined ->
-			{result_packet, _, _, [Res], _} = emysql:execute(test_pool, db_stmt, [random:uniform(10000)]),
-			Res;
+			{result_packet, _, _, [[ID, Rand]], _} = emysql:execute(test_pool, db_stmt, [random:uniform(10000)]),
+			{[{<<"id">>, ID}, {<<"randomNumber">>, Rand}]};
 		N ->
 			I = list_to_integer(binary_to_list(N)),
-			Res = [ Res || 
-			        {result_packet, _, _, [Res], _} <- [emysql:execute(test_pool, db_stmt, [random:uniform(10000)]) || _ <- lists:seq(1, I) ]],
+			Res = [ {[{<<"id">>, ID}, {<<"randomNumber">>, Rand}]} || 
+			        {result_packet, _, _, [[ID, Rand]], _} <- [emysql:execute(test_pool, db_stmt, [random:uniform(10000)]) || _ <- lists:seq(1, I) ]],
 			Res
 		end,
     {ok, [{<<"Content-Type">>, <<"application/json">>}], jiffy:encode(JSON)};
