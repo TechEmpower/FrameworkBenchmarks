@@ -1,7 +1,7 @@
 %% Feel free to use, reuse and abuse the code in this file.
 
 %% @doc Hello world handler.
--module(toppage_handler).
+-module(json_handler).
 
 -export([init/3]).
 -export([handle/2]).
