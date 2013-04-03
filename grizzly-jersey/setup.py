@@ -15,7 +15,7 @@ def stop():
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if 'grizzly-jersey' in line:
+    if 'grizzly-jersey' in line and 'jar' in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 9)
   return 0

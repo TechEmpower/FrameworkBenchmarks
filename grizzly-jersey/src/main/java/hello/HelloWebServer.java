@@ -26,7 +26,7 @@ public class HelloWebServer {
   }
 
   private static URI getBaseUrl(int port) {
-    return UriBuilder.fromUri("http://localhost/").port(port).build();
+    return UriBuilder.fromUri("http://0.0.0.0/").port(port).build();
   }
 
   public static void main(String[] args) throws Exception {
