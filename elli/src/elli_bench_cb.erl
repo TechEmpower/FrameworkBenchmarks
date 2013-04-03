@@ -18,7 +18,7 @@ handle('GET',[<<"db">>], Req) ->
         JSON = case elli_request:get_arg(<<"queries">>, Req) of
 		undefined ->
 			{result_packet, _, _, [[ID, Rand]], _} = emysql:execute(test_pool, db_stmt, [random:uniform(10000)]),
-			{[{<<"id">>, ID}, {<<"randomNumber">>, Rand}]};
+			[{[{<<"id">>, ID}, {<<"randomNumber">>, Rand}]}];
 		N ->
 			I = list_to_integer(binary_to_list(N)),
 			Res = [ {[{<<"id">>, ID}, {<<"randomNumber">>, Rand}]} || 
