@@ -4,12 +4,12 @@ This is the Play portion of a [benchmarking test suite](../) comparing a variety
 
 ### JSON Encoding Test
 
-* [JSON test source](app/controllers/Application.java)
+* [JSON test source](app/controllers/Application.scala)
 
 ### Data-Store/Database Mapping Test
 
 * [Database test controller](app/controllers/Application.scala)
-* [Database test model](app/models/World.java)
+* [Database test model](app/models/World.scala)
 
 ## Infrastructure Software Versions
 The tests were run with:
