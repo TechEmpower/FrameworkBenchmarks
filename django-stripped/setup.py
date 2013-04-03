@@ -5,9 +5,9 @@ import setup_util
 import os
 
 def start(args):
-  setup_util.replace_text("django-optimized/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
+  setup_util.replace_text("django-stripped/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
 
-  subprocess.Popen("gunicorn hello.wsgi:application -k gevent -b 0.0.0.0:8080 -w " + str((args.max_threads * 2)) + " --log-level=critical", shell=True, cwd="django-optimized/hello")
+  subprocess.Popen("gunicorn hello.wsgi:application -k gevent -b 0.0.0.0:8080 -w " + str((args.max_threads * 2)) + " --log-level=critical", shell=True, cwd="django-stripped/hello")
   return 0
 def stop():
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
