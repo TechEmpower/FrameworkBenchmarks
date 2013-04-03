@@ -306,7 +306,10 @@ class Installer:
     ##############################
     # MongoDB
     ##############################
-    yes | sudo apt-get install mongodb
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+    sudo cp config/10gen.list /etc/apt/sources.list.d/10gen.list
+    sudo apt-get update 
+    yes | sudo apt-get install mongodb-10gen
     
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf

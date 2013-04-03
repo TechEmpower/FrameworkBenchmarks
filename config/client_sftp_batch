@@ -2,3 +2,4 @@ put config/my.cnf
 put config/mongodb.conf
 put config/create.sql
 put config/create.js
+put config/10gen.list
