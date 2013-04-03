@@ -11,7 +11,7 @@ init(_Transport, Req, []) ->
 	{ok, Req, undefined}.
 
 handle(Req, State) ->
-	{ok, Req2} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"application/json">>}], jsx:encode([{<<"message">>, <<"Hello, World!">>}]), Req),
+	{ok, Req2} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"application/json">>}], jiffy:encode({[{<<"message">>, <<"Hello, World!">>}]}), Req),
 	{ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->

@@ -22,7 +22,7 @@ handle(Req, State) ->
 			        {result_packet, _, _, [Res], _} <- [emysql:execute(test_pool, db_stmt, [random:uniform(10000)]) || _ <- lists:seq(1, I) ]],
 			{Res, Req1}
 		end,
-	{ok, Req3} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"application/json">>}], jsx:encode(JSON), Req2),
+	{ok, Req3} = cowboy_req:reply(200, [{<<"Content-Type">>, <<"application/json">>}], jiffy:encode(JSON), Req2),
 	{ok, Req3, State}.
 
 terminate(_Reason, _Req, _State) ->

@@ -13,7 +13,6 @@
 start(_Type, _Args) ->
         crypto:start(),
         application:start(emysql),
-        application:start(jiffy),
         emysql:add_pool(test_pool, 32,
           "benchmarkdbuser", "benchmarkdbpass", "localhost", 3306,
           "hello_world", utf8),
