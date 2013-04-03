@@ -14,7 +14,7 @@ def start(args):
     subprocess.check_call("cp config/database-jruby.yml config/database.yml", shell=True, cwd="rails-stripped")
     subprocess.check_call("rvm jruby-1.7.3 do warble war", shell=True, cwd="rails-stripped")
     subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
-    subprocess.check_call("cp rails-optimized.war $RESIN_HOME/webapps/rails.war", shell=True, cwd="rails-stripped")
+    subprocess.check_call("cp rails-stripped.war $RESIN_HOME/webapps/rails.war", shell=True, cwd="rails-stripped")
     subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
     return 0
   except subprocess.CalledProcessError:

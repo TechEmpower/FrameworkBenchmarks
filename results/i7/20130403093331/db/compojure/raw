@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 21:28:10 PDT 2013
+
+  System load:  0.87               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/compojure/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.30ms   55.08ms 627.57ms   94.46%
+    Req/Sec   698.96    765.60     2.00k    81.31%
+  100001 requests in 5.46s, 16.95MB read
+Requests/sec:  18303.47
+Transfer/sec:      3.10MB
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/compojure/db/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   685.04us  133.65us   1.21ms   67.32%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  100000 requests in 8.71s, 16.95MB read
+Requests/sec:  11480.90
+Transfer/sec:      1.95MB
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/compojure/db/1
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   741.46us  301.53us   2.78ms   86.83%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  100000 requests in 4.58s, 16.95MB read
+Requests/sec:  21846.62
+Transfer/sec:      3.70MB
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/compojure/db/1
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms  707.82us   7.13ms   89.12%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  100002 requests in 3.68s, 16.95MB read
+Requests/sec:  27196.10
+Transfer/sec:      4.61MB
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/compojure/db/1
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.20ms    2.21ms  19.26ms   88.89%
+    Req/Sec     3.09k   586.63     5.00k    76.02%
+  100001 requests in 3.35s, 16.95MB read
+Requests/sec:  29890.49
+Transfer/sec:      5.07MB
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/compojure/db/1
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.26ms    7.03ms  54.76ms   91.06%
+    Req/Sec     3.11k   308.89     4.00k    89.39%
+  100001 requests in 3.40s, 16.95MB read
+Requests/sec:  29445.91
+Transfer/sec:      4.99MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/compojure/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.65ms   18.40ms 115.17ms   89.58%
+    Req/Sec     3.06k   233.01     4.00k    94.27%
+  100004 requests in 3.60s, 16.98MB read
+Requests/sec:  27772.73
+Transfer/sec:      4.71MB

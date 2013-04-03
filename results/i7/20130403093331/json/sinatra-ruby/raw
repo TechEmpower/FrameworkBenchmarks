@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+
+---------------------------------------------------------
+ Running Warmup sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    55.83ms    5.77ms  87.91ms   73.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 21.84s, 30.04MB read
+Requests/sec:   4578.12
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Concurrency: 8 for sinatra-ruby
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.13ms    1.05ms  21.70ms   98.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 15.20s, 30.04MB read
+Requests/sec:   6578.50
+Transfer/sec:      1.98MB
+
+---------------------------------------------------------
+ Concurrency: 16 for sinatra-ruby
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.56ms    1.24ms  22.83ms   93.93%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 16.30s, 30.04MB read
+Requests/sec:   6133.27
+Transfer/sec:      1.84MB
+
+---------------------------------------------------------
+ Concurrency: 32 for sinatra-ruby
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.34ms    1.96ms  23.07ms   78.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100002 requests in 20.00s, 30.04MB read
+Requests/sec:   5000.88
+Transfer/sec:      1.50MB
+
+---------------------------------------------------------
+ Concurrency: 64 for sinatra-ruby
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.64ms    3.14ms  33.38ms   77.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100004 requests in 21.34s, 30.04MB read
+Requests/sec:   4686.66
+Transfer/sec:      1.41MB
+
+---------------------------------------------------------
+ Concurrency: 128 for sinatra-ruby
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.87ms    4.53ms  58.63ms   76.40%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 21.69s, 30.04MB read
+Requests/sec:   4609.53
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Concurrency: 256 for sinatra-ruby
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    55.24ms    6.50ms  79.18ms   78.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100003 requests in 21.77s, 30.04MB read
+Requests/sec:   4593.84
+Transfer/sec:      1.38MB

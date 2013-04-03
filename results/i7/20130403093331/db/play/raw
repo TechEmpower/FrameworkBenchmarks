@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+
+---------------------------------------------------------
+ Running Warmup play
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.48ms   17.80ms 287.17ms   86.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 15.93s, 11.33MB read
+Requests/sec:   6278.80
+Transfer/sec:    728.31KB
+
+---------------------------------------------------------
+ Concurrency: 8 for play
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.46ms  389.31us   7.80ms   87.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 17.91s, 11.33MB read
+Requests/sec:   5582.24
+Transfer/sec:    647.53KB
+
+---------------------------------------------------------
+ Concurrency: 16 for play
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:9000/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.38ms    1.02ms  24.08ms   94.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 14.87s, 11.33MB read
+Requests/sec:   6727.07
+Transfer/sec:    780.33KB
+
+---------------------------------------------------------
+ Concurrency: 32 for play
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:9000/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.71ms    1.98ms  40.67ms   90.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100003 requests in 14.60s, 11.33MB read
+Requests/sec:   6851.82
+Transfer/sec:    794.79KB
+
+---------------------------------------------------------
+ Concurrency: 64 for play
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:9000/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.04ms    2.81ms  19.29ms   71.45%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 14.55s, 11.33MB read
+Requests/sec:   6870.97
+Transfer/sec:    797.01KB
+
+---------------------------------------------------------
+ Concurrency: 128 for play
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:9000/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.37ms   11.79ms 226.12ms   96.18%
+    Req/Sec    21.63    145.56     1.00k    97.84%
+  100001 requests in 14.63s, 11.33MB read
+Requests/sec:   6836.01
+Transfer/sec:    792.95KB
+
+---------------------------------------------------------
+ Concurrency: 256 for play
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.73ms   10.18ms  85.06ms   88.29%
+    Req/Sec    55.34    228.79     1.00k    94.47%
+  100004 requests in 14.57s, 11.33MB read
+Requests/sec:   6862.48
+Transfer/sec:    796.02KB
