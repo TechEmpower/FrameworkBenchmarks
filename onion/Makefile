@@ -1,6 +1,6 @@
 all: hello
 
-CFLAGS=-O2 -Ionion/include
+CFLAGS=-O2 -Ionion/src/
 LDFLAGS=-lonion -ljson -lmysqlclient -lpthread -L/usr/lib64/mysql/ -Lonion/build/src/onion
 
 hello: hello.c
