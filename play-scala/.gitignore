@@ -1,7 +1,10 @@
 logs
 project/project
 project/target
+public
 target
+test
 tmp
 .history
 dist
+conf/evolutions

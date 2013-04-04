@@ -16,19 +16,21 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}"
+    echo " wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"
     echo "---------------------------------------------------------"
     echo ""
-    weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}
+    wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}
+    sleep 5
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " weighttp -k -n {runs} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) {server_host}:{port}{url}"
+      echo " wrk -n {runs} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) http://{server_host}:{port}{url}"
       echo "---------------------------------------------------------"
       echo ""
-      weighttp -k -n {runs} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" {server_host}:{port}{url}
+      wrk -r {runs} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      sleep 2
     done
   """
 
@@ -38,19 +40,21 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}2"
+    echo " wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}2"
     echo "---------------------------------------------------------"
     echo ""
-    weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}2
+    wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}2
+    sleep 5
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}$c"
+      echo " wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}$c"
       echo "---------------------------------------------------------"
       echo ""
-      weighttp -k -n {runs} -c {max_concurrency} -t {max_threads} {server_host}:{port}{url}"$c"
+      wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"$c"
+      sleep 2
     done
   """
 
@@ -136,9 +140,8 @@ class FrameworkTest:
         remote_script = self.__generate_concurrency_script(self.json_url, self.port)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'json'))
         results = self.__parse_test('json')
-        self.benchmarker.report_results(framework=self, test="json", success=results['succeeded'], 
-          failed=results['failed'], errored=results['errored'], response_2xx=results['2xx'], response_3xx=results['3xx'], 
-          response_4xx=results['4xx'], response_5xx=results['5xx'], results=results['results'], total_time=results['total_time'])
+        self.benchmarker.report_results(framework=self, test="json", requests=results['requests'], latency=results['latency'],
+          results=results['results'], total_time=results['total_time'])
 
         print "Complete"
     except AttributeError:
@@ -151,9 +154,8 @@ class FrameworkTest:
         remote_script = self.__generate_concurrency_script(self.db_url, self.port)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'db'))
         results = self.__parse_test('db')
-        self.benchmarker.report_results(framework=self, test="db", success=results['succeeded'], 
-          failed=results['failed'], errored=results['errored'], response_2xx=results['2xx'], response_3xx=results['3xx'], 
-          response_4xx=results['4xx'], response_5xx=results['5xx'], results=results['results'], total_time=results['total_time'])
+        self.benchmarker.report_results(framework=self, test="db", requests=results['requests'], latency=results['latency'],
+          results=results['results'], total_time=results['total_time'])
 
         print "Complete"
     except AttributeError:
@@ -166,9 +168,8 @@ class FrameworkTest:
         remote_script = self.__generate_query_script(self.query_url, self.port)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'query'))
         results = self.__parse_test('query')
-        self.benchmarker.report_results(framework=self, test="query", success=results['succeeded'], 
-          failed=results['failed'], errored=results['errored'], response_2xx=results['2xx'], response_3xx=results['3xx'], 
-          response_4xx=results['4xx'], response_5xx=results['5xx'], results=results['results'], total_time=results['total_time'])
+        self.benchmarker.report_results(framework=self, test="query", requests=results['requests'], latency=results['latency'],
+          results=results['results'], total_time=results['total_time'])
         print "Complete"
     except AttributeError:
       pass
@@ -184,23 +185,20 @@ class FrameworkTest:
     # JSON
     if os.path.exists(self.benchmarker.output_file(self.name, 'json')):
       results = self.__parse_test('json')
-      self.benchmarker.report_results(framework=self, test="json", success=results['succeeded'], 
-        failed=results['failed'], errored=results['errored'], response_2xx=results['2xx'], response_3xx=results['3xx'], 
-        response_4xx=results['4xx'], response_5xx=results['5xx'], results=results['results'], total_time=results['total_time'])
+      self.benchmarker.report_results(framework=self, test="json", requests=results['requests'], latency=results['latency'],
+        results=results['results'], total_time=results['total_time'])
     
     # DB
     if os.path.exists(self.benchmarker.output_file(self.name, 'db')):
       results = self.__parse_test('db')
-      self.benchmarker.report_results(framework=self, test="db", success=results['succeeded'], 
-        failed=results['failed'], errored=results['errored'], response_2xx=results['2xx'], response_3xx=results['3xx'], 
-        response_4xx=results['4xx'], response_5xx=results['5xx'], results=results['results'], total_time=results['total_time'])
+      self.benchmarker.report_results(framework=self, test="db", requests=results['requests'], latency=results['latency'],
+        results=results['results'], total_time=results['total_time'])
     
     # Query
     if os.path.exists(self.benchmarker.output_file(self.name, 'query')):
       results = self.__parse_test('query')
-      self.benchmarker.report_results(framework=self, test="query", success=results['succeeded'], 
-        failed=results['failed'], errored=results['errored'], response_2xx=results['2xx'], response_3xx=results['3xx'], 
-        response_4xx=results['4xx'], response_5xx=results['5xx'], results=results['results'], total_time=results['total_time'])
+      self.benchmarker.report_results(framework=self, test="query", requests=results['requests'], latency=results['latency'],
+        results=results['results'], total_time=results['total_time'])
   ############################################################
   # End parse_all
   ############################################################
@@ -213,49 +211,60 @@ class FrameworkTest:
       results = dict()
       results['results'] = []
       results['total_time'] = 0
+      results['latency'] = dict()
+      results['latency']['avg'] = 0
+      results['latency']['stdev'] = 0
+      results['latency']['max'] = 0
+      results['latency']['stdevPercent'] = 0
+      results['requests'] = dict()
+      results['requests']['avg'] = 0
+      results['requests']['stdev'] = 0
+      results['requests']['max'] = 0
+      results['requests']['stdevPercent'] = 0
       with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
         found_warmup = False
         for line in raw_data:
-          # weighttp outputs a line with the "req/s" number for each run
-          if "req/s" in line:
+          # wrk outputs a line with the "Requests/sec:" number for each run
+          if "Requests/sec:" in line:
             # Every raw data file first has a warmup run, so we need to pass over that before we begin parsing
             if not found_warmup:
               found_warmup = True
               continue
 
-            m = re.search("([0-9]+) req/s", line)
+            m = re.search("Requests/sec:\s+([0-9]+)", line)
             results['results'].append(m.group(1))
 
           if found_warmup:
             # search for weighttp data such as succeeded and failed.
-            if "succeeded" in line:
-              m = re.search("([0-9]+) succeeded", line)
-              if m != None: results['succeeded'] = m.group(1)
-            if "failed" in line:
-              m = re.search("([0-9]+) failed", line)
-              if m != None: results['failed'] = m.group(1)
-            if "errored" in line:
-              m = re.search("([0-9]+) errored", line)
-              if m != None: results['errored'] = m.group(1)
-            if "2xx" in line:
-              m = re.search("([0-9]+) 2xx", line)
-              if m != None: results['2xx'] = m.group(1)
-            if "3xx" in line:
-              m = re.search("([0-9]+) 3xx", line)
-              if m != None: results['3xx'] = m.group(1)
-            if "4xx" in line:
-              m = re.search("([0-9]+) 4xx", line)
-              if m != None: results['4xx'] = m.group(1)
-            if "5xx" in line:
-              m = re.search("([0-9]+) 5xx", line)
-              if m != None: results['5xx'] = m.group(1)
-            if "sec," in line:
-              m = re.search("([0-9]+) sec,", line)
-              if m != None: results['total_time'] += int(m.group(1))
-            if "millisec" in line:
-              m = re.search("([0-9]+) millisec", line)
-              if m != None: results['total_time'] += ( float(m.group(1)) / 1000.0 )
+            if "Latency" in line:
+              m = re.findall("([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
+              if len(m) == 4:
+                results['latency']['avg'] = m[0]
+                results['latency']['stdev'] = m[1]
+                results['latency']['max'] = m[2]
+                results['latency']['stdevPercent'] = m[3]
             
+            if "Req/Sec" in line:
+              m = re.findall("([0-9]+\.*[0-9]*[k|%]*)", line)
+              if len(m) == 4:
+                results['requests']['avg'] = m[0]
+                results['requests']['stdev'] = m[1]
+                results['requests']['max'] = m[2]
+                results['requests']['stdevPercent'] = m[3]
+              
+            if "requests in" in line:
+              m = re.search("requests in ([0-9]+\.*[0-9]*[ms|s|m|h]+)", line)
+              if m != None: 
+                # parse out the raw time, which may be in minutes or seconds
+                raw_time = m.group(1)
+                if "ms" in raw_time:
+                  results['total_time'] += float(raw_time[:len(raw_time)-2]) / 1000.0
+                elif "s" in raw_time:
+                  results['total_time'] += float(raw_time[:len(raw_time)-1])
+                elif "m" in raw_time:
+                  results['total_time'] += float(raw_time[:len(raw_time)-1]) * 60.0
+                elif "h" in raw_time:
+                  results['total_time'] += float(raw_time[:len(raw_time)-1]) * 3600.0
 
       return results
     except IOError:

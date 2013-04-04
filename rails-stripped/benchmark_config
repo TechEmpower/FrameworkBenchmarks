@@ -1,0 +1,21 @@
+{
+  "framework": "rails-stripped",
+  "tests": [{
+    "ruby": {
+      "setup_file": "setup_ruby",
+      "json_url": "/hello_world/json",
+      "db_url": "/hello_world/db",
+      "query_url": "/hello_world/db?queries=",
+      "port": 8080,
+      "sort": 34
+    },
+    "jruby": {
+      "setup_file": "setup_jruby",
+      "json_url": "/rails/hello_world/json",
+      "db_url": "/rails/hello_world/db",
+      "query_url": "/rails/hello_world/db?queries=",
+      "port": 8080,
+      "sort": 35
+    }
+  }]
+}

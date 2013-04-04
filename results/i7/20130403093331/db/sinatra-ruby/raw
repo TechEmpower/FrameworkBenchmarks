@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 23:32:14 PDT 2013
+
+  System load:  5.38               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    70.78ms    7.92ms 105.82ms   75.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100002 requests in 27.75s, 38.03MB read
+Requests/sec:   3604.17
+Transfer/sec:      1.37MB
+
+---------------------------------------------------------
+ Concurrency: 8 for sinatra-ruby
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.30ms    2.01ms  26.67ms   97.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 29.13s, 38.03MB read
+Requests/sec:   3433.06
+Transfer/sec:      1.31MB
+
+---------------------------------------------------------
+ Concurrency: 16 for sinatra-ruby
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.42ms    3.00ms  35.32ms   94.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 27.22s, 38.03MB read
+Requests/sec:   3673.34
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Concurrency: 32 for sinatra-ruby
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.79ms    3.58ms  46.88ms   81.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100002 requests in 27.36s, 38.03MB read
+Requests/sec:   3655.21
+Transfer/sec:      1.39MB
+
+---------------------------------------------------------
+ Concurrency: 64 for sinatra-ruby
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.77ms    4.40ms  48.03ms   80.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 27.62s, 38.03MB read
+Requests/sec:   3620.95
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Concurrency: 128 for sinatra-ruby
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.37ms    5.23ms  61.49ms   74.05%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 27.58s, 38.03MB read
+Requests/sec:   3626.37
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Concurrency: 256 for sinatra-ruby
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    70.75ms    8.16ms 108.28ms   76.55%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 27.85s, 38.03MB read
+Requests/sec:   3590.23
+Transfer/sec:      1.37MB

@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 00:11:51 PDT 2013
+
+  System load:  0.27               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup flask
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    80.18ms    9.27ms 124.39ms   95.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 32.00s, 21.91MB read
+Requests/sec:   3125.46
+Transfer/sec:    701.34KB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.73ms  744.73us  15.47ms   84.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 35.53s, 21.91MB read
+Requests/sec:   2814.79
+Transfer/sec:    631.62KB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.10ms    2.44ms  22.25ms   82.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 32.17s, 21.91MB read
+Requests/sec:   3108.43
+Transfer/sec:    697.51KB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.14ms    2.28ms  29.16ms   77.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 31.93s, 21.91MB read
+Requests/sec:   3131.83
+Transfer/sec:    702.78KB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.30ms    2.25ms  34.29ms   76.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 31.92s, 21.91MB read
+Requests/sec:   3133.06
+Transfer/sec:    703.04KB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.83ms    2.59ms  67.77ms   82.59%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 31.97s, 21.91MB read
+Requests/sec:   3128.01
+Transfer/sec:    701.91KB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    81.40ms    3.18ms 105.19ms   89.59%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 31.96s, 21.91MB read
+Requests/sec:   3129.24
+Transfer/sec:    702.19KB

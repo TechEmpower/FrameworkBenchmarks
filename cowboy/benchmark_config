@@ -1,0 +1,12 @@
+{
+  "framework": "cowboy",
+  "tests": [{
+    "default": {
+      "setup_file": "setup_erlang",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 8080,
+      "sort": 40
+  }}]
+}
