@@ -7,6 +7,6 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 38
+      "sort": 40
   }}]
 }
