@@ -216,9 +216,9 @@ class Installer:
     ##############################
     # Play
     ##############################
-    self.__run_command("wget http://downloads.typesafe.com/play/2.1.0/play-2.1.0.zip")
-    self.__run_command("unzip -o play-2.1.0.zip")
-    self.__run_command("rm play-2.1.0.zip")
+    self.__run_command("wget http://downloads.typesafe.com/play/2.1.1/play-2.1.1.zip")
+    self.__run_command("unzip -o play-2.1.1.zip")
+    self.__run_command("rm play-2.1.1.zip")
 
     ##############################
     # Vert.x
