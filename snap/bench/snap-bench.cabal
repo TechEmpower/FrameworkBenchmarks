@@ -9,8 +9,6 @@ Stability:           Experimental
 Category:            Web
 Build-type:          Simple
 Cabal-version:       >=1.2
-data-dir:            cfg
-data-files:          db.cfg
 
 Executable snap-bench
   hs-source-dirs: src

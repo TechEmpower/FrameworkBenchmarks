@@ -9,7 +9,6 @@ import Database.HDBC.MySQL
 import Data.Configurator
 import Data.Int
 import Data.Pool
-import Paths_snap_bench
 import Prelude hiding (lookup)
 import qualified Data.ByteString.Char8 as B
 import Snap.Core
@@ -19,8 +18,7 @@ import Text.JSON
 
 main :: IO ()
 main = do
-    fp <- getDataFileName "db.cfg"
-    db <- load [Required fp]
+    db <- load [Required "cfg/db.cfg"]
     foos <- mapM (lookup db) ["host", "uname", "pword", "dbase", "dport"]
     let foos' = sequence foos
     maybe (putStrLn "No foo") dbSetup foos'
