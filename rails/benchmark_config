@@ -16,6 +16,14 @@
       "query_url": "/rails/hello_world/db?queries=",
       "port": 8080,
       "sort": 17
+    },
+    "unicorn": {
+      "setup_file": "setup_unicorn",
+      "json_url": "/hello_world/json",
+      "db_url": "/hello_world/db",
+      "query_url": "/hello_world/db?queries=",
+      "port": 8080,
+      "sort": 37
     }
   }]
 }
