@@ -31,6 +31,12 @@ class Installer:
     #######################################
 
     #
+    # Erlang
+    #
+    self.__run_command("curl -klO https://elearning.erlang-solutions.com/couchdb//rbingen_adapter//package_R16B_precise64_1361901944/esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
+    self.__run_command("sudo /usr/bin/dpkg --install esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
+
+    #
     # Python
     #
 
