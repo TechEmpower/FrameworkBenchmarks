@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class Application extends Controller {
 
@@ -39,7 +40,7 @@ public class Application extends Controller {
                         for (int i = 0; i < queries; ++i) {
                             promises.add(future(findWorld(Long.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1))));
                         }
-                        final List<World> worlds = F.Promise.sequence(promises).get();
+                        final List<World> worlds = F.Promise.sequence(promises).get(5L * queries, TimeUnit.SECONDS);
                         return ok(Json.toJson(worlds));
                     }
 
