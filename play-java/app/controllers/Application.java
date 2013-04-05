@@ -22,16 +22,9 @@ public class Application extends Controller {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static Result json() {
-        return async(
-          future(new Callable<Result>() {
-              @Override
-              public Result call() {
-                  final ObjectNode result = objectMapper.createObjectNode();
-                  result.put("message", "Hello World!");
-                  return ok(result);
-              }
-          })
-        );
+        final ObjectNode result = objectMapper.createObjectNode();
+        result.put("message", "Hello World!");
+        return ok(result);
     }
 
     public static Result db(final Integer queries) {
