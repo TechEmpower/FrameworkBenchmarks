@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 21:01:46 UTC 2013
+
+  System load:  0.11               Processes:           70
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/servlet/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   130.28ms  215.65ms   4.62s    95.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 0.89m, 15.58MB read
+  Socket errors: connect 0, read 0, write 0, timeout 119
+Requests/sec:   1870.99
+Transfer/sec:    298.50KB
+
+---------------------------------------------------------
+ Concurrency: 8 for servlet-raw
+ wrk -n 100000 -c 8 -t 4 http://10.253.68.28:8080/servlet/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.32ms    1.75ms  16.36ms   91.27%
+    Req/Sec    98.41    298.11     1.00k    90.16%
+  100000 requests in 23.36s, 15.52MB read
+Requests/sec:   4280.81
+Transfer/sec:    680.48KB
+
+---------------------------------------------------------
+ Concurrency: 16 for servlet-raw
+ wrk -n 100000 -c 16 -t 4 http://10.253.68.28:8080/servlet/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.04ms    1.39ms  11.41ms   88.53%
+    Req/Sec     1.28k   450.81     2.00k    71.76%
+  100000 requests in 12.65s, 15.52MB read
+Requests/sec:   7902.35
+Transfer/sec:      1.23MB
+
+---------------------------------------------------------
+ Concurrency: 32 for servlet-raw
+ wrk -n 100000 -c 32 -t 4 http://10.253.68.28:8080/servlet/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.98ms    5.34ms  38.87ms   94.15%
+    Req/Sec     1.59k   491.87     2.00k    59.38%
+  100000 requests in 12.25s, 15.52MB read
+Requests/sec:   8160.54
+Transfer/sec:      1.27MB
+
+---------------------------------------------------------
+ Concurrency: 64 for servlet-raw
+ wrk -n 100000 -c 64 -t 4 http://10.253.68.28:8080/servlet/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.12ms   12.61ms 127.59ms   94.13%
+    Req/Sec     1.39k   489.13     2.00k    60.70%
+  100000 requests in 12.63s, 15.52MB read
+Requests/sec:   7916.99
+Transfer/sec:      1.23MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servlet-raw
+ wrk -n 100000 -c 128 -t 4 http://10.253.68.28:8080/servlet/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.67ms   21.67ms 206.85ms   94.10%
+    Req/Sec     1.04k   205.95     2.00k    95.58%
+  100003 requests in 12.84s, 15.52MB read
+Requests/sec:   7787.74
+Transfer/sec:      1.21MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet-raw
+ wrk -n 100000 -c 256 -t 4 http://10.253.68.28:8080/servlet/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.87ms   97.44ms 771.81ms   93.05%
+    Req/Sec     1.00k    49.81     2.00k    99.75%
+  100000 requests in 15.18s, 16.04MB read
+Requests/sec:   6588.82
+Transfer/sec:      1.06MB

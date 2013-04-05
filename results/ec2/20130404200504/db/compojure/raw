@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 08:16:21 UTC 2013
+
+  System load:  0.0                Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/compojure/db/1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   192.29ms  241.50ms   2.18s    89.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.11m, 16.95MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:   1500.52
+Transfer/sec:    260.51KB
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure
+ wrk -n 100000 -c 8 -t 4 http://10.253.68.28:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/compojure/db/1
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.77ms    2.12ms  21.78ms   93.52%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 31.55s, 16.95MB read
+Requests/sec:   3169.97
+Transfer/sec:    550.32KB
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure
+ wrk -n 100000 -c 16 -t 4 http://10.253.68.28:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/compojure/db/1
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.26ms    2.11ms  23.55ms   79.08%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 26.83s, 16.95MB read
+Requests/sec:   3727.60
+Transfer/sec:    647.14KB
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure
+ wrk -n 100000 -c 32 -t 4 http://10.253.68.28:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/compojure/db/1
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.21ms    2.41ms  29.84ms   90.20%
+    Req/Sec     8.65     92.65     1.00k    99.14%
+  100000 requests in 25.54s, 16.95MB read
+Requests/sec:   3915.20
+Transfer/sec:    679.71KB
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure
+ wrk -n 100000 -c 64 -t 4 http://10.253.68.28:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/compojure/db/1
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.78ms    4.12ms  60.46ms   89.77%
+    Req/Sec     0.91k   288.50     1.00k    90.85%
+  100000 requests in 24.28s, 16.95MB read
+Requests/sec:   4119.01
+Transfer/sec:    715.09KB
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure
+ wrk -n 100000 -c 128 -t 4 http://10.253.68.28:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/compojure/db/1
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.83ms   12.77ms 226.51ms   91.89%
+    Req/Sec     0.96k   187.84     1.00k    96.34%
+  100000 requests in 23.91s, 16.95MB read
+Requests/sec:   4181.87
+Transfer/sec:    726.01KB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk -n 100000 -c 256 -t 4 http://10.253.68.28:8080/compojure/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/compojure/db/1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.11ms   62.78ms 831.23ms   87.84%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 25.47s, 16.97MB read
+Requests/sec:   3926.45
+Transfer/sec:    682.30KB

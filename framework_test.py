@@ -19,6 +19,8 @@ class FrameworkTest:
     echo " wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"
     echo "---------------------------------------------------------"
     echo ""
+    wrk -r 1000 -c 8 -t 8 http://{server_host}:{port}{url}
+    sleep 5
     wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}
     for c in {interval}
     do
