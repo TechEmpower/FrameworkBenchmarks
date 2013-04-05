@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 15:41:56 UTC 2013
+
+  System load:  0.06               Processes:           70
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup rack-jruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/rack/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/rack/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   333.51ms  404.13ms   6.83s    88.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.37m, 17.03MB read
+  Socket errors: connect 0, read 0, write 0, timeout 234
+Requests/sec:    702.23
+Transfer/sec:    122.49KB
+
+---------------------------------------------------------
+ Concurrency: 8 for rack-jruby
+ wrk -n 100000 -c 8 -t 4 http://10.253.68.28:8080/rack/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/rack/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.80ms    3.83ms  51.30ms   91.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 36.56s, 16.88MB read
+Requests/sec:   2735.18
+Transfer/sec:    472.78KB
+
+---------------------------------------------------------
+ Concurrency: 16 for rack-jruby
+ wrk -n 100000 -c 16 -t 4 http://10.253.68.28:8080/rack/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/rack/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.90ms    4.88ms  88.11ms   98.37%
+    Req/Sec     0.98k   126.88     1.00k    98.37%
+  100000 requests in 22.87s, 16.88MB read
+Requests/sec:   4371.95
+Transfer/sec:    755.71KB
+
+---------------------------------------------------------
+ Concurrency: 32 for rack-jruby
+ wrk -n 100000 -c 32 -t 4 http://10.253.68.28:8080/rack/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/rack/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.03ms    4.93ms  97.65ms   91.23%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  100000 requests in 21.86s, 16.88MB read
+Requests/sec:   4573.90
+Transfer/sec:    790.61KB
+
+---------------------------------------------------------
+ Concurrency: 64 for rack-jruby
+ wrk -n 100000 -c 64 -t 4 http://10.253.68.28:8080/rack/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/rack/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.46ms    9.11ms 117.18ms   88.04%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  100000 requests in 21.63s, 16.88MB read
+Requests/sec:   4623.92
+Transfer/sec:    799.25KB
+
+---------------------------------------------------------
+ Concurrency: 128 for rack-jruby
+ wrk -n 100000 -c 128 -t 4 http://10.253.68.28:8080/rack/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/rack/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.95ms   20.79ms 206.88ms   82.56%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  100000 requests in 21.64s, 16.88MB read
+Requests/sec:   4621.67
+Transfer/sec:    798.86KB
+
+---------------------------------------------------------
+ Concurrency: 256 for rack-jruby
+ wrk -n 100000 -c 256 -t 4 http://10.253.68.28:8080/rack/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/rack/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.94ms   57.07ms 336.66ms   71.82%
+    Req/Sec   785.22    411.02     1.00k    78.52%
+  100000 requests in 22.25s, 16.99MB read
+  Socket errors: connect 0, read 120, write 0, timeout 735
+Requests/sec:   4494.56
+Transfer/sec:    781.90KB

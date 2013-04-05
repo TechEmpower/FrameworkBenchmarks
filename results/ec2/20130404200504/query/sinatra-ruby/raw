@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Apr  5 02:40:42 UTC 2013
+
+  System load:  0.02               Processes:           70
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://10.253.68.28:8080/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   493.39ms   65.12ms   1.51s    84.93%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 3.22m, 43.25MB read
+Requests/sec:    517.15
+Transfer/sec:    229.04KB
+
+---------------------------------------------------------
+ Queries: 1 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://10.253.68.28:8080/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   399.69ms   45.65ms 712.32ms   77.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.62m, 38.03MB read
+Requests/sec:    636.25
+Transfer/sec:    247.75KB
+
+---------------------------------------------------------
+ Queries: 5 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://10.253.68.28:8080/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   753.07ms   66.82ms   1.13s    80.22%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 4.92m, 58.64MB read
+Requests/sec:    338.41
+Transfer/sec:    203.20KB
+
+---------------------------------------------------------
+ Queries: 10 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://10.253.68.28:8080/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.23s    91.59ms   1.73s    87.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 8.06m, 84.28MB read
+Requests/sec:    206.86
+Transfer/sec:    178.52KB
+
+---------------------------------------------------------
+ Queries: 15 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://10.253.68.28:8080/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.77s   121.75ms   2.50s    89.59%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 11.55m, 109.92MB read
+  Socket errors: connect 0, read 0, write 0, timeout 113
+Requests/sec:    144.34
+Transfer/sec:    162.47KB
+
+---------------------------------------------------------
+ Queries: 20 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://10.253.68.28:8080/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.22s   149.41ms   3.16s    90.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 14.53m, 135.66MB read
+  Socket errors: connect 0, read 0, write 0, timeout 11414
+Requests/sec:    114.69
+Transfer/sec:    159.32KB

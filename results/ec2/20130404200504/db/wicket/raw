@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Apr  4 02:41:17 UTC 2013
+
+  System load:  0.27               Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup wicket
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/wicket/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   185.97ms  110.02ms   2.34s    85.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.25m, 31.01MB read
+  Socket errors: connect 0, read 0, write 0, timeout 22
+Requests/sec:   1329.32
+Transfer/sec:    422.06KB
+
+---------------------------------------------------------
+ Concurrency: 8 for wicket
+ wrk -n 100000 -c 8 -t 4 http://10.253.68.28:8080/wicket/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/db
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.46ms    3.55ms  78.88ms   90.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 47.95s, 30.97MB read
+Requests/sec:   2085.58
+Transfer/sec:    661.49KB
+
+---------------------------------------------------------
+ Concurrency: 16 for wicket
+ wrk -n 100000 -c 16 -t 4 http://10.253.68.28:8080/wicket/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/db
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.56ms    2.19ms  25.24ms   92.97%
+    Req/Sec     1.00k    43.60     1.00k    99.81%
+  100000 requests in 20.05s, 30.97MB read
+Requests/sec:   4987.35
+Transfer/sec:      1.54MB
+
+---------------------------------------------------------
+ Concurrency: 32 for wicket
+ wrk -n 100000 -c 32 -t 4 http://10.253.68.28:8080/wicket/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/db
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.62ms    2.15ms  25.92ms   86.92%
+    Req/Sec     1.00k    61.08     1.00k    99.63%
+  100000 requests in 20.15s, 30.98MB read
+Requests/sec:   4961.68
+Transfer/sec:      1.54MB
+
+---------------------------------------------------------
+ Concurrency: 64 for wicket
+ wrk -n 100000 -c 64 -t 4 http://10.253.68.28:8080/wicket/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/db
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.21ms    6.67ms  95.36ms   88.76%
+    Req/Sec     1.00k    44.02     1.00k    99.81%
+  100000 requests in 19.38s, 30.98MB read
+Requests/sec:   5159.86
+Transfer/sec:      1.60MB
+
+---------------------------------------------------------
+ Concurrency: 128 for wicket
+ wrk -n 100000 -c 128 -t 4 http://10.253.68.28:8080/wicket/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/db
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.54ms   10.48ms 108.29ms   90.13%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  100000 requests in 20.43s, 30.99MB read
+Requests/sec:   4895.78
+Transfer/sec:      1.52MB
+
+---------------------------------------------------------
+ Concurrency: 256 for wicket
+ wrk -n 100000 -c 256 -t 4 http://10.253.68.28:8080/wicket/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.22ms   35.53ms 431.55ms   89.82%
+    Req/Sec   754.39    430.83     1.00k    75.44%
+  100000 requests in 21.58s, 31.14MB read
+Requests/sec:   4633.92
+Transfer/sec:      1.44MB

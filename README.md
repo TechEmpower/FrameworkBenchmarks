@@ -23,6 +23,7 @@ When propmted to create a security group for the instances, here are the ports t
 * 3306 (MySQL)
 * 9000 (Play Framework)
 * 27017 (MongoDB)
+* 3000 (yesod)
 
 #### 2. Setting up the servers
 

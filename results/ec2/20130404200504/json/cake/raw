@@ -1,0 +1,115 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.25s   532.93ms   4.60s    71.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 8.25m, 21.07MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1479
+Requests/sec:    202.06
+Transfer/sec:     43.60KB
+
+---------------------------------------------------------
+ Concurrency: 8 for cake
+ wrk -n 100000 -c 8 -t 4 http://10.253.68.28:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.59ms   20.51ms 326.36ms   73.23%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 7.50m, 21.07MB read
+Requests/sec:    222.36
+Transfer/sec:     47.98KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cake
+ wrk -n 100000 -c 16 -t 4 http://10.253.68.28:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    74.45ms   43.74ms   1.77s    76.53%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 7.68m, 21.07MB read
+Requests/sec:    217.00
+Transfer/sec:     46.82KB
+
+---------------------------------------------------------
+ Concurrency: 32 for cake
+ wrk -n 100000 -c 32 -t 4 http://10.253.68.28:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   155.72ms   81.16ms   1.19s    73.84%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 7.99m, 21.07MB read
+Requests/sec:    208.54
+Transfer/sec:     45.00KB
+
+---------------------------------------------------------
+ Concurrency: 64 for cake
+ wrk -n 100000 -c 64 -t 4 http://10.253.68.28:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   286.39ms  155.89ms   1.59s    74.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 7.47m, 21.07MB read
+Requests/sec:    223.10
+Transfer/sec:     48.14KB
+
+---------------------------------------------------------
+ Concurrency: 128 for cake
+ wrk -n 100000 -c 128 -t 4 http://10.253.68.28:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   578.74ms  299.84ms   3.13s    72.24%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 7.61m, 21.07MB read
+  Socket errors: connect 0, read 0, write 0, timeout 21
+Requests/sec:    219.01
+Transfer/sec:     47.26KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cake
+ wrk -n 100000 -c 256 -t 4 http://10.253.68.28:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.18s   547.32ms   4.40s    70.67%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 7.74m, 21.07MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1367
+Requests/sec:    215.41
+Transfer/sec:     46.48KB

@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 13:38:11 UTC 2013
+
+  System load:  0.08               Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 4%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.php
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    63.70ms   87.73ms   1.91s    97.31%
+    Req/Sec   254.11    435.69     1.00k    74.59%
+  100000 requests in 24.97s, 21.45MB read
+  Socket errors: connect 0, read 0, write 0, timeout 18
+Requests/sec:   4005.32
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php
+ wrk -n 100000 -c 8 -t 4 http://10.253.68.28:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.php
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.12ms    3.54ms  36.57ms   93.38%
+    Req/Sec    93.53    291.38     1.00k    90.65%
+  100000 requests in 26.18s, 21.45MB read
+Requests/sec:   3820.17
+Transfer/sec:    839.21KB
+
+---------------------------------------------------------
+ Concurrency: 16 for php
+ wrk -n 100000 -c 16 -t 4 http://10.253.68.28:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.php
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.69ms   13.04ms 178.96ms   95.14%
+    Req/Sec   175.26    380.47     1.00k    82.47%
+  100000 requests in 25.37s, 21.45MB read
+Requests/sec:   3941.61
+Transfer/sec:    865.88KB
+
+---------------------------------------------------------
+ Concurrency: 32 for php
+ wrk -n 100000 -c 32 -t 4 http://10.253.68.28:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.php
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.13ms   36.36ms 491.46ms   94.04%
+    Req/Sec   438.15    496.53     1.00k    56.18%
+  100000 requests in 25.43s, 21.45MB read
+Requests/sec:   3932.02
+Transfer/sec:    863.78KB
+
+---------------------------------------------------------
+ Concurrency: 64 for php
+ wrk -n 100000 -c 64 -t 4 http://10.253.68.28:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.php
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.54ms   52.73ms 926.17ms   93.45%
+    Req/Sec   544.40    498.39     1.00k    54.44%
+  100000 requests in 25.74s, 21.45MB read
+Requests/sec:   3885.63
+Transfer/sec:    853.59KB
+
+---------------------------------------------------------
+ Concurrency: 128 for php
+ wrk -n 100000 -c 128 -t 4 http://10.253.68.28:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.php
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.11ms  142.89ms   1.60s    97.32%
+    Req/Sec   513.39    500.19     1.00k    51.34%
+  100000 requests in 25.37s, 21.45MB read
+Requests/sec:   3940.98
+Transfer/sec:    865.76KB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk -n 100000 -c 256 -t 4 http://10.253.68.28:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/json.php
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.98ms  106.66ms   1.22s    95.93%
+    Req/Sec   340.87    483.82     2.00k    66.37%
+  100000 requests in 25.36s, 21.45MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:   3943.34
+Transfer/sec:    866.29KB
