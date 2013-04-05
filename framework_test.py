@@ -15,12 +15,19 @@ class FrameworkTest:
     
     echo ""
     echo "---------------------------------------------------------"
-    echo " Running Warmup {name}"
-    echo " wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"
+    echo " Running Primer {name}"
+    echo " wrk -r 1000 -c 8 -t 8 http://{server_host}:{port}{url}"
     echo "---------------------------------------------------------"
     echo ""
     wrk -r 1000 -c 8 -t 8 http://{server_host}:{port}{url}
     sleep 5
+    
+    echo ""
+    echo "---------------------------------------------------------"
+    echo " Running Warmup {name}"
+    echo " wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"
+    echo "---------------------------------------------------------"
+    echo ""
     wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}
     sleep 5
     for c in {interval}
@@ -38,7 +45,16 @@ class FrameworkTest:
 
   query_template = """
     mysqladmin flush-hosts -uroot -psecret
-
+    
+    echo ""
+    echo "---------------------------------------------------------"
+    echo " Running Primer {name}"
+    echo " wrk -r 1000 -c 8 -t 8 http://{server_host}:{port}{url}2"
+    echo "---------------------------------------------------------"
+    echo ""
+    wrk -r 1000 -c 8 -t 8 http://{server_host}:{port}{url}2
+    sleep 5
+    
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
@@ -224,19 +240,21 @@ class FrameworkTest:
       results['requests']['max'] = 0
       results['requests']['stdevPercent'] = 0
       with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
-        found_warmup = False
+        is_warmup = False
         for line in raw_data:
-          # wrk outputs a line with the "Requests/sec:" number for each run
-          if "Requests/sec:" in line:
-            # Every raw data file first has a warmup run, so we need to pass over that before we begin parsing
-            if not found_warmup:
-              found_warmup = True
-              continue
 
-            m = re.search("Requests/sec:\s+([0-9]+)", line)
-            results['results'].append(m.group(1))
+          if "Queries:" in line or "Concurrency:" in line:
+            is_warmup = False
+            continue
+          if "Warmup" in line or "Primer" in line:
+            is_warmup = True
+            continue
 
-          if found_warmup:
+          if not is_warmup:
+            if "Requests/sec:" in line:
+              m = re.search("Requests/sec:\s+([0-9]+)", line)
+              results['results'].append(m.group(1))
+              
             # search for weighttp data such as succeeded and failed.
             if "Latency" in line:
               m = re.findall("([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
