@@ -5,7 +5,7 @@ import os
 
 def start(args):
   setup_util.replace_text("flask/app.py", "DBHOSTNAME", args.database_host)
-  subprocess.Popen("gunicorn app:app -b 0.0.0.0:8080 -w " + str((args.max_threads * 2)) + " --worker-class gevent --log-level=critical", shell=True, cwd="flask")
+  subprocess.Popen("gunicorn app:app -b 0.0.0.0:8080 -w " + str((args.max_threads * 2)) + " --worker-class=gevent --preload=True --log-level=critical", shell=True, cwd="flask")
   
   return 0
 
