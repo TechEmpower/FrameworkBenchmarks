@@ -1,0 +1,97 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 23:35:29 PDT 2013
+
+  System load:  0.77               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    89.87ms    8.25ms 136.32ms   75.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 35.18s, 43.25MB read
+Requests/sec:   2842.33
+Transfer/sec:      1.23MB
+
+---------------------------------------------------------
+ Queries: 1 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.79ms    7.80ms  99.09ms   81.92%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 28.79s, 38.03MB read
+Requests/sec:   3472.98
+Transfer/sec:      1.32MB
+
+---------------------------------------------------------
+ Queries: 5 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   141.82ms   13.61ms 230.82ms   83.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 0.93m, 58.64MB read
+Requests/sec:   1793.86
+Transfer/sec:      1.05MB
+
+---------------------------------------------------------
+ Queries: 10 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   247.90ms   24.86ms 401.27ms   86.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.62m, 84.28MB read
+Requests/sec:   1027.29
+Transfer/sec:      0.87MB
+
+---------------------------------------------------------
+ Queries: 15 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   341.47ms   29.63ms 534.07ms   88.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.24m, 109.93MB read
+Requests/sec:    745.30
+Transfer/sec:    838.95KB
+
+---------------------------------------------------------
+ Queries: 20 for sinatra-ruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   433.32ms   32.64ms 621.52ms   87.53%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.84m, 135.67MB read
+Requests/sec:    587.59
+Transfer/sec:    816.31KB

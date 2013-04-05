@@ -22,6 +22,7 @@ class FrameworkTest:
     wrk -r 1000 -c 8 -t 8 http://{server_host}:{port}{url}
     sleep 5
     wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}
+    sleep 5
     for c in {interval}
     do
       echo ""
@@ -31,6 +32,7 @@ class FrameworkTest:
       echo "---------------------------------------------------------"
       echo ""
       wrk -r {runs} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      sleep 2
     done
   """
 
@@ -44,6 +46,7 @@ class FrameworkTest:
     echo "---------------------------------------------------------"
     echo ""
     wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}2
+    sleep 5
     for c in {interval}
     do
       echo ""
@@ -53,6 +56,7 @@ class FrameworkTest:
       echo "---------------------------------------------------------"
       echo ""
       wrk -r {runs} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"$c"
+      sleep 2
     done
   """
 

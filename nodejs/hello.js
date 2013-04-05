@@ -18,10 +18,10 @@ var http = require('http')
   , url = require('url')
   , async = require('async')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://localhost/hello_world')
+  , conn = mongoose.connect('mongodb://172.16.234.132/hello_world')
   , mysql = require('mysql')
   , pool  = mysql.createPool({
-      host: 'localhost',
+      host: '172.16.234.132',
       user     : 'benchmarkdbuser',
       password : 'benchmarkdbpass',
       database : 'hello_world',
@@ -29,7 +29,7 @@ var http = require('http')
     })
   , Sequelize = require("sequelize")
   , sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-    host: 'localhost',
+    host: '172.16.234.132',
     logging: false,
     define: { timestamps: false },
     maxConcurrentQueries: 100,

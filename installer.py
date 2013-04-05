@@ -22,13 +22,19 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)    
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
 
     #######################################
     # Languages
     #######################################
+
+    #
+    # Erlang
+    #
+    self.__run_command("curl -klO https://elearning.erlang-solutions.com/couchdb//rbingen_adapter//package_R16B_precise64_1361901944/esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
+    self.__run_command("sudo /usr/bin/dpkg --install esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
 
     #
     # Python
@@ -210,9 +216,9 @@ class Installer:
     ##############################
     # Play
     ##############################
-    self.__run_command("wget http://downloads.typesafe.com/play/2.1.0/play-2.1.0.zip")
-    self.__run_command("unzip -o play-2.1.0.zip")
-    self.__run_command("rm play-2.1.0.zip")
+    self.__run_command("wget http://downloads.typesafe.com/play/2.1.1/play-2.1.1.zip")
+    self.__run_command("unzip -o play-2.1.1.zip")
+    self.__run_command("rm play-2.1.1.zip")
 
     ##############################
     # Vert.x
@@ -306,7 +312,10 @@ class Installer:
     ##############################
     # MongoDB
     ##############################
-    yes | sudo apt-get install mongodb
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+    sudo cp config/10gen.list /etc/apt/sources.list.d/10gen.list
+    sudo apt-get update 
+    yes | sudo apt-get install mongodb-10gen
     
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf
