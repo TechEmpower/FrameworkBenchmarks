@@ -3,7 +3,9 @@ package controllers;
 import models.World;
 import play.libs.F;
 import play.libs.Json;
+
 import static play.libs.Akka.future;
+
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import play.mvc.Controller;
@@ -29,27 +31,27 @@ public class Application extends Controller {
 
     public static Result db(final Integer queries) {
         return async(
-          future(new Callable<Result>() {
-              @Override
-              public Result call() {
-                  final Random random = ThreadLocalRandom.current();
-                  final List<F.Promise<? extends World>> promises = new ArrayList<F.Promise<? extends World>>(queries);
-                  for (int i = 0; i < queries; ++i) {
-                      promises.add(future(findWorld(Long.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1))));
-                  }
-                  final List<World> worlds = F.Promise.sequence(promises).get();
-                  return ok(Json.toJson(worlds));
-              }
+                future(new Callable<Result>() {
+                    @Override
+                    public Result call() {
+                        final Random random = ThreadLocalRandom.current();
+                        final List<F.Promise<? extends World>> promises = new ArrayList<F.Promise<? extends World>>(queries);
+                        for (int i = 0; i < queries; ++i) {
+                            promises.add(future(findWorld(Long.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1))));
+                        }
+                        final List<World> worlds = F.Promise.sequence(promises).get();
+                        return ok(Json.toJson(worlds));
+                    }
 
-              private Callable<World> findWorld(final Long id) {
-                  return new Callable<World>() {
-                      @Override
-                      public World call() {
-                          return World.find.byId(id);
-                      }
-                  };
-              }
-          })
+                    private Callable<World> findWorld(final Long id) {
+                        return new Callable<World>() {
+                            @Override
+                            public World call() {
+                                return World.find.byId(id);
+                            }
+                        };
+                    }
+                })
         );
 
     }
