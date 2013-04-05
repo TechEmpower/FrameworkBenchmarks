@@ -37,7 +37,7 @@ object DbBenchmark {
             case r @ Req("db" :: queries :: Nil, _ , _) => () => customQuery(queries.toInt)
     }
 
-  def customQuery(count: Int) : Box[LiftResponse] = {
+  def customQuery(count: Int) : Box[LiftResponse] = DB.exec {
     val tlc = ThreadLocalRandom.current()
     val randoms = for(i <- (1 to count)) yield tlc.nextLong(DB_ROWS)
     val result = (for {
@@ -48,7 +48,7 @@ object DbBenchmark {
     Full(JsonResponse(JArray(result.map(_.toJson))))
   }
 
-  def singleQuery() : Box[LiftResponse] = {
+  def singleQuery() : Box[LiftResponse] = DB.exec {
     val tlc = ThreadLocalRandom.current()
     val random = tlc.nextLong(DB_ROWS)
 

@@ -27,14 +27,14 @@ class Boot {
     lib.DbBenchmark.init()
 
     // wrap the request in db
-    S.addAround( new LoanWrapper {
+/*    S.addAround( new LoanWrapper {
       def apply[T](f: => T): T = {
         code.db.DB.exec {
           f
         }
       }
     })
-
+*/
     sys.addShutdownHook {
       code.Main.server.stop() // jetty server isn't smart enough to stop itself on sigterm
     }
