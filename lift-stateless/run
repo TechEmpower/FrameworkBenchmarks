@@ -1,0 +1,1 @@
+java -XX:+CMSClassUnloadingEnabled -Xmx1024M -Xss2M -XX:MaxPermSize=512m -jar `dirname $0`/target/lift-stateless-assembly-0.0.1.jar
