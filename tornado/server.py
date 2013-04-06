@@ -45,15 +45,6 @@ class QueryTestHandler(tornado.web.RequestHandler):
 
         self.write(worlds if queries > 0 else world)
 
-
-class SingleQueryTestHandler(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
-    @gen.coroutine
-    def get(self):
-        worlds = []
-        random_id = random.randint(1, 10000)
-        self.write(world[0][0])
-
 application = tornado.web.Application([
     (r"/json", JsonSerializeTestHandler),
     (r"/db", QueryTestHandler),
