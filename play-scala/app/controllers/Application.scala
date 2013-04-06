@@ -25,8 +25,9 @@ object Application extends Controller {
       val random = ThreadLocalRandom.current()
 
       val worlds = Future.sequence( (for {
-        _ <- (1 to queries).par
-      } yield Future(World.findById(random.nextInt(TEST_DATABASE_ROWS) + 1))(dbEc)).toList)
+            _ <- 1 to queries
+          } yield Future(World.findById(random.nextInt(TEST_DATABASE_ROWS) + 1))(dbEc)
+        ).toList)
 
       worlds map {
         w => Ok(Json.toJson(w))  
