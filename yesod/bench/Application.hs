@@ -33,7 +33,7 @@ getDB2R n = do
     os <- runDB $
         forM is $ \i-> do
             Just o <- get $ Key $ PersistInt64 i
-            return $ object [("id", .= i, "randomNumber" .= worldRandomNumber o]
+            return $ object ["id" .= i, "randomNumber" .= worldRandomNumber o]
 
     jsonToRepJson $ array os
 
