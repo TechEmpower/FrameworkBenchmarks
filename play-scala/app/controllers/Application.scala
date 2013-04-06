@@ -12,14 +12,14 @@ object Application extends Controller {
   
   private val TEST_DATABASE_ROWS = 10000
 
+  private val dbEc = Akka.system.dispatchers.lookup("akka.actor.db")
+
   def json() = Action {
     Ok(Json.obj("message" -> "Hello World!"))   
   }
 
   def db(queries: Int) = Action {
     import play.api.libs.concurrent.Execution.Implicits._
-
-    val dbEc = Akka.system.dispatchers.lookup("akka.actor.db")
 
     Async {
       val random = ThreadLocalRandom.current()
