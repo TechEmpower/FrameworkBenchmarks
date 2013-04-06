@@ -29,14 +29,14 @@ class QueryTestHandler(tornado.web.RequestHandler):
 
         if queries == 0:
             random_id = random.randint(1, 10000)
-            world = yield gen.Task(db.world.find_one,{"randomNumber": random_id}, fields={"_id": 0, "id": 1, "randomNumber": 1})
+            world = yield gen.Task(db.world.find_one,{"id": random_id}, fields={"_id": 0, "id": 1, "randomNumber": 1})
             # Get first postion on arguments, and so first postion in mongo return
             world = world[0][0]
         else:
             worlds = []
             for i in xrange(int(queries)):
                 random_id = random.randint(1, 10000)
-                world = yield gen.Task(db.world.find_one,{"randomNumber": random_id}, fields={"_id": 0, "id": 1, "randomNumber": 1})
+                world = yield gen.Task(db.world.find_one,{"id": random_id}, fields={"_id": 0, "id": 1, "randomNumber": 1})
                 # Get first postion on arguments, and so first postion in mongo return
                 worlds.append(world[0][0])
 
