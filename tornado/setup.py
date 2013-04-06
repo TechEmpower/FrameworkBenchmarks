@@ -14,10 +14,10 @@ def start(args):
 
     subprocess.check_call("pip install -r %s/requirements.txt")
 
-    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8000" % home, shell=True, cwd=cwd)
-    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8001" % home, shell=True, cwd=cwd)
-    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8002" % home, shell=True, cwd=cwd)
-    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8003" % home, shell=True, cwd=cwd)
+    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8000 --logging=error" % home, shell=True, cwd=cwd)
+    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8001 --logging=error" % home, shell=True, cwd=cwd)
+    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8002 --logging=error" % home, shell=True, cwd=cwd)
+    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8003 --logging=error" % home, shell=True, cwd=cwd)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php/deploy/nginx.conf", shell=True)
 
     return 0
