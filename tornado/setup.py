@@ -12,6 +12,8 @@ def start(args):
     setup_util.replace_text(
         cwd + "/server.py", "127.0.0.1", args.database_host)
 
+    subprocess.check_call("pip install -r %s/requirements.txt")
+
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8000" % home, shell=True, cwd=cwd)
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8001" % home, shell=True, cwd=cwd)
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8002" % home, shell=True, cwd=cwd)
