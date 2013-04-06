@@ -236,12 +236,6 @@ class Installer:
     self.__run_command("cabal update")
     self.__run_command("cabal install yesod persistent-mysql")
 
-    ##############################
-    # Snap
-    ##############################
-    self.__run_command("cabal update")
-    self.__run_commnad("cabal install HDBC HDBC-mysql MonadCatchIO-transformers configurator json snap-core snap-server resource-pool")
-
     ##############################################################
     #
     # System Tools
