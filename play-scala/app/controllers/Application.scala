@@ -19,7 +19,7 @@ object Application extends Controller {
   def db(queries: Int) = Action {
     import play.api.libs.concurrent.Execution.Implicits._
 
-    val dbEc: ExecutionContext = Akka.system.dispatchers.lookup("db")
+    val dbEc = Akka.system.dispatchers.lookup("akka.actor.db")
 
     Async {
       val random = ThreadLocalRandom.current()
