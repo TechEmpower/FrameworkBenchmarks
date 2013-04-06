@@ -19,6 +19,8 @@ class Boot {
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
 
 
+    LiftRules.setSiteMap(SiteMap())
+
     lib.JsonBenchmark.init()
     lib.DbBenchmark.init()
 

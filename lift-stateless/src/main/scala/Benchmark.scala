@@ -23,7 +23,7 @@ object JsonBenchmark {
     }
 
   def sayHello() = Full(JsonResponse(
-    JE.JsObj("message" -> "Hello World!")
+    JObject(List(JField("message", JString("Hello World!"))))
   ))
 }
 
@@ -37,24 +37,28 @@ object DbBenchmark {
             case r @ Req("db" :: queries :: Nil, _ , _) => () => customQuery(queries.toInt)
     }
 
-  def customQuery(count: Int) : Box[LiftResponse] = DB.exec {
+  def customQuery(count: Int) : Box[LiftResponse] = {
     val tlc = ThreadLocalRandom.current()
     val randoms = for(i <- (1 to count)) yield tlc.nextLong(DB_ROWS)
-    val result = (for {
-      w <- WorldTable
-      if w.id inSetBind randoms
-    } yield w).list
+    val result = DB.exec {
+      (for {
+        w <- WorldTable
+        if w.id inSetBind randoms
+      } yield w).list
+    }
 
     Full(JsonResponse(JArray(result.map(_.toJson))))
   }
 
-  def singleQuery() : Box[LiftResponse] = DB.exec {
+  def singleQuery() : Box[LiftResponse] = {
     val tlc = ThreadLocalRandom.current()
     val random = tlc.nextLong(DB_ROWS)
 
-    val result  = (for {
-      w <- WorldTable if w.id === random
-    } yield w).list
+    val result = DB.exec {
+      (for {
+        w <- WorldTable if w.id === random
+      } yield w).list
+    }
 
 
     Full(JsonResponse(result(0).toJson))

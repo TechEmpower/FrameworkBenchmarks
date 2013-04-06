@@ -8,7 +8,6 @@ import Main.config
 import scala.slick.driver.MySQLDriver.simple._
 
 import Database.threadLocalSession
-import net.liftweb.json.Extraction
 
 
 object DB {
@@ -41,15 +40,15 @@ object DB {
     database withTransaction {
       fn
     }
-
-
-
-
 }
 
   case class World(id: Option[Long], randomNumber: Long) {
-    private implicit val formats = net.liftweb.json.DefaultFormats
-    def toJson = Extraction.decompose(this)
+    import net.liftweb.json._
+
+    def toJson = JObject(List(
+      JField("id", JInt(id.get)),
+      JField("randomNumber", JInt(randomNumber))
+    ))
   }
 
    object WorldTable extends Table[World]("World") {
