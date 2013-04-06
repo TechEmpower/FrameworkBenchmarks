@@ -28,7 +28,7 @@ getDBR = do
 
 getDB2R :: Int -> Handler RepJson
 getDB2R n = do
-    is <- force . take n . randomRs (1, 10000) <$> newStdGen
+    is <- force . take n . randomRs (1, 10000) <$> liftIO newStdGen
 
     os <- runDB $
         forM is $ \i-> do
