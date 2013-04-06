@@ -6,6 +6,7 @@ module Application
 
 import Import
 import Control.Monad
+import Control.DeepSeq (force)
 import System.Random
 
 import qualified Database.Persist.Store
@@ -21,17 +22,18 @@ getJsonR = jsonToRepJson $ object ["message" .= ("Hello, World!" :: Text)]
 
 getDBR :: Handler RepJson
 getDBR = do
-    (i, _) <- liftIO $ randomR (1, 10000) <$> newStdGen
-    liftIO $ print i
+    (i, _) <- liftIO $ randomRIO (1, 10000)
     Just o <- runDB $ get $ Key $ PersistInt64 i
     jsonToRepJson $ object ["id" .= i, "randomNumber" .= worldRandomNumber o]
 
 getDB2R :: Int -> Handler RepJson
 getDB2R n = do
-    os <- runDB $ replicateM n $ do
-        (i, _) <- liftIO $ randomR (1, 10000) <$> newStdGen
-        Just o <- get $ Key $ PersistInt64 i
-        return $ object ["id" .= i, "randomNumber" .= worldRandomNumber o]
+    is <- force . take n . randomRs (1, 10000) <$> newStdGen
+
+    os <- runDB $
+        forM is $ \i-> do
+            Just o <- get $ Key $ PersistInt64 i
+            return $ object [("id", .= i, "randomNumber" .= worldRandomNumber o]
 
     jsonToRepJson $ array os
 
