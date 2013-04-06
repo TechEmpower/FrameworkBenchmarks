@@ -25,7 +25,7 @@ getDBR :: Handler RepJson
 getDBR = do
     !i <- liftIO $ randomRIO (1, 10000)
     Just o <- runDB $ get $ Key $ PersistInt64 i
-    jsonToRepJson $ object [("id", i), ("randomNumber", worldRandomNumber o)]
+    jsonToRepJson $ object ["id" .= i, "randomNumber" .= worldRandomNumber o]
 
 getDB2R :: Int -> Handler RepJson
 getDB2R n = do
@@ -34,7 +34,7 @@ getDB2R n = do
     os <- runDB $
         forM is $ \i-> do
             Just o <- get $ Key $ PersistInt64 i
-            return $ object [("id", i), ("randomNumber", worldRandomNumber o)]
+            return $ object ["id" .= i, "randomNumber" .= worldRandomNumber o]
 
     jsonToRepJson $ array os
 
