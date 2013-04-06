@@ -15,19 +15,19 @@ Executable snap-bench
   main-is: Main.hs
 
   Build-depends:
-    base                      >= 4     && < 5,
-    bytestring                >= 0.9.1 && < 0.11,
-    MonadCatchIO-transformers >= 0.2.1 && < 0.4,
-    mtl                       >= 2     && < 3,
-    snap-core                 >= 0.9   && < 0.10,
-    snap-server               >= 0.9   && < 0.10,
-    json                      >= 0.7   && < 0.8,
-    configurator              >= 0.2   && < 0.3,
-    resource-pool             >= 0.2   && < 0.3,
-    HDBC-mysql                >= 0.6   && < 0.7,
-    HDBC                      >= 2     && < 3,
-    transformers              >= 0.3   && < 0.4,
-    random                    >= 1     && < 2
+    aeson                     >= 0.6.1.0  && < 0.7,
+    base                      >= 4        && < 5,
+    bytestring                >= 0.9.1    && < 0.11,
+    MonadCatchIO-transformers >= 0.2.1    && < 0.4,
+    mtl                       >= 2        && < 3,
+    snap-core                 >= 0.9      && < 0.10,
+    snap-server               >= 0.9      && < 0.10,
+    configurator              >= 0.2      && < 0.3,
+    resource-pool             >= 0.2      && < 0.3,
+    mysql-simple              >= 0.2.2.4  && < 0.3,
+    text                      >= 0.11.0.0 && < 0.12,
+    transformers              >= 0.3      && < 0.4,
+    random                    >= 1        && < 2
 
   if impl(ghc >= 6.12.0)
     ghc-options: -threaded -Wall -fwarn-tabs -funbox-strict-fields -O2
