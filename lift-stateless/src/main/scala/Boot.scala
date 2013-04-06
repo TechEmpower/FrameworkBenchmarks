@@ -18,10 +18,6 @@ class Boot {
     LiftRules.htmlProperties.default.set((r: Req) => new Html5Properties(r.userAgent))
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
 
-    val pages = List(
-      Menu("Main") / "index"
-    )
-    LiftRules.setSiteMap(SiteMap(pages:_*))
 
     lib.JsonBenchmark.init()
     lib.DbBenchmark.init()
