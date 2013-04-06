@@ -22,7 +22,7 @@ getJsonR = jsonToRepJson $ object ["message" .= ("Hello, World!" :: Text)]
 
 getDBR :: Handler RepJson
 getDBR = do
-    (i, _) <- liftIO $ randomRIO (1, 10000)
+    i <- liftIO $ randomRIO (1, 10000)
     Just o <- runDB $ get $ Key $ PersistInt64 i
     jsonToRepJson $ object ["id" .= i, "randomNumber" .= worldRandomNumber o]
 
