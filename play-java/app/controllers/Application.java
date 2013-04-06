@@ -26,7 +26,7 @@ public class Application extends Controller {
     //http://stackoverflow.com/questions/3907929/should-i-make-jacksons-objectmapper-as-static-final
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final ExecutionContext dbEc = Akka.system().dispatchers().lookup("db");
+    private static final ExecutionContext dbEc = Akka.system().dispatchers().lookup("akka.actor.db");
 
     public static Result json() {
         final ObjectNode result = objectMapper.createObjectNode();
