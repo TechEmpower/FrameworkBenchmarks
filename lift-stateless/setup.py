@@ -15,12 +15,7 @@ def stop():
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if './sbt' in line:
+    if './run' in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 9)
-  try:
-    os.remove("lift-stateless/RUNNING_PID")
-  except OSError:
-    pass
-
   return 0
