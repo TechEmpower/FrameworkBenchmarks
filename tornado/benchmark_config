@@ -1,5 +1,5 @@
 {
-  "framework": "tornado3-raw",
+  "framework": "tornado-raw",
   "tests": [{
     "default": {
       "setup_file": "setup",
