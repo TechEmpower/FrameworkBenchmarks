@@ -2,7 +2,6 @@ var cluster = require('cluster')
   , numCPUs = require('os').cpus().length;
 
 var host = "172.16.234.132"
-  host = "127.0.0.1";
 
 if(cluster.isMaster) {
   // Fork workers.
@@ -23,27 +22,27 @@ var http = require('http')
   , mongoose = require('mongoose')
   , conn = mongoose.connect('mongodb://' + host + '/hello_world')
   , MongoClient = require('mongodb').MongoClient
-  // , mysql = require('mysql')
-  // , pool  = mysql.createPool({
-  //     host: host,
-  //     user     : 'benchmarkdbuser',
-  //     password : 'benchmarkdbpass',
-  //     database : 'hello_world',
-  //     connectionLimit : 256
-  //   })
-  // , Sequelize = require("sequelize")
-  // , sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  //   host: host,
-  //   logging: false,
-  //   define: { timestamps: false },
-  //   maxConcurrentQueries: 100,
-  //   pool: { maxConnections: 800, maxIdleTime: 30 }
-  // })
-  // , World      = sequelize.define('World', {
-  //   randomNumber: Sequelize.INTEGER
-  // }, {
-  //   freezeTableName: true
-  // });
+  , mysql = require('mysql')
+  , pool  = mysql.createPool({
+      host: host,
+      user     : 'benchmarkdbuser',
+      password : 'benchmarkdbpass',
+      database : 'hello_world',
+      connectionLimit : 256
+    })
+  , Sequelize = require("sequelize")
+  , sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
+    host: host,
+    logging: false,
+    define: { timestamps: false },
+    maxConcurrentQueries: 100,
+    pool: { maxConnections: 800, maxIdleTime: 30 }
+  })
+  , World      = sequelize.define('World', {
+    randomNumber: Sequelize.INTEGER
+  }, {
+    freezeTableName: true
+  });
 
 var collection = null;
 
