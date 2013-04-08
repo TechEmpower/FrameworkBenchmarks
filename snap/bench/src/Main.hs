@@ -1,93 +1,88 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, OverloadedStrings #-}
+
 module Main where
 
-import Control.Applicative
 import Control.Monad
 import Control.Monad.IO.Class
-import Database.HDBC
-import Database.HDBC.MySQL
+import Data.Aeson
 import Data.Configurator
 import Data.Int
+import Data.Text                                 (Text)
 import Data.Pool
-import Paths_snap_bench
-import Prelude hiding (lookup)
-import qualified Data.ByteString.Char8 as B
+import Database.MySQL.Simple
+import Database.MySQL.Simple.Result
+import Database.MySQL.Simple.QueryResults
+import Prelude                            hiding (lookup)
 import Snap.Core
 import Snap.Http.Server
 import System.Random
-import Text.JSON
+
+import qualified Data.ByteString.Char8 as B
+
+data RandQuery = RQ !Int !Int
+
+instance ToJSON RandQuery where
+    toJSON (RQ i n) = object ["id" .= i, "randomNumber" .= n]
+
+instance QueryResults RandQuery where
+    convertResults [fa, fb] [va, vb] = RQ a b
+        where
+          !a = convert fa va
+          !b = convert fb vb
+    convertResults fs vs = convertError fs vs 2
 
 main :: IO ()
 main = do
-    fp <- getDataFileName "db.cfg"
-    db <- load [Required fp]
+    db <- load [Required "cfg/db.cfg"]
     foos <- mapM (lookup db) ["host", "uname", "pword", "dbase", "dport"]
     let foos' = sequence foos
     maybe (putStrLn "No foo") dbSetup foos'
 
 dbSetup :: [String] -> IO ()
-dbSetup sets = let info = getConnInfo sets
-                   config = setAccessLog ConfigNoLog $
-                            setErrorLog ConfigNoLog $
-                            setPort 8000 $
-                            defaultConfig
-                in do pool <- createPool (connectMySQL info) disconnect 1 10 50
-                      httpServe config $ site pool
+dbSetup sets = do
+    pool <- createPool (connect $ getConnInfo sets) close 1 10 50
+    gen  <- newStdGen
+    httpServe config $ site pool gen
 
-getConnInfo :: [String] -> MySQLConnectInfo
-getConnInfo [host,uname,pword,dbase,dport] = defaultMySQLConnectInfo {
-    mysqlHost     = host,
-    mysqlUser     = uname,
-    mysqlPassword = pword,
-    mysqlDatabase = dbase,
-    mysqlPort     = read dport
+config :: Config Snap a
+config = setAccessLog ConfigNoLog
+    . setErrorLog ConfigNoLog
+    . setPort 8000
+    $ defaultConfig
+
+getConnInfo :: [String] -> ConnectInfo
+getConnInfo [host, user, pwd, db, port] = defaultConnectInfo
+    { connectHost     = host
+    , connectUser     = user
+    , connectPassword = pwd
+    , connectDatabase = db
+    , connectPort     = read port
     }
-getConnInfo _ = defaultMySQLConnectInfo
+getConnInfo _ = defaultConnectInfo
 
-site :: IConnection a => Pool a -> Snap ()
-site pool = route [ ("json", jsonHandler)
-                  , ("db", dbHandler pool)
-                  ]
+site :: Pool Connection -> StdGen -> Snap ()
+site pool gen = route
+    [ ("json", jsonHandler)
+    , ("db",   dbHandler pool gen)
+    ]
 
 jsonHandler :: Snap ()
 jsonHandler = do
     modifyResponse (setContentType "application/json")
-    writeBS $ B.pack $ encode $ toJSObject [("message", "Hello, World!" :: String)]
+    writeLBS $ encode [ "message" .= ("Hello, World!" :: Text) ]
 
-dbHandler :: IConnection a => Pool a -> Snap ()
-dbHandler pool = do
+dbHandler :: Pool Connection -> StdGen -> Snap ()
+dbHandler pool gen = do
     modifyResponse (setContentType "application/json")
-    queries <- getQueryParam "queries"
-    maybe (db 1) fn (gn queries)
-    where fn q = db q
-          gn s = fmap fst $ s >>= B.readInt
-          db = dbHandler' pool
+    qs <- getQueryParam "queries"
+    runAll pool gen $ maybe 1 fst (qs >>= B.readInt)
 
-dbHandler' :: IConnection a => Pool a -> Int -> Snap ()
-dbHandler' pool i = do
-    rows <- liftIO $ withResource pool runQuery
-    writeBS $ B.pack $ encode $ map jsonRow $ concat rows
-    where runQuery conn = replicateM i $ do
-              (ix,_) <- randomR (1, 10000 :: Int32) <$> newStdGen
-              withSB $ quickQuery' conn query [SqlInt32 ix]
-          withSB = withRTSSignalsBlocked
-          query = "SELECT * FROM World where id=?"
+runAll :: Pool Connection -> StdGen -> Int -> Snap ()
+runAll pool gen i = do
+    qry <- liftIO $ withResource pool (forM rs . runOne)
+    writeLBS $ encode qry
+  where
+    rs = take i $ randomRs (1, 10000) gen
 
-jsonRow :: [SqlValue] -> JSValue
-jsonRow [i, v] = JSObject $ toJSObject [("id", showJSON i), ("randomNumber", showJSON v)]
-jsonRow _ = JSNull
-
-instance JSON SqlValue where
-    readJSON = undefined -- Poor form, but unneeded
-    showJSON v = case v of -- We're just doing the obvious stuff since this is a 1-off
-        SqlString s -> JSString $ toJSString s
-        SqlByteString s -> showJSON s
-        SqlWord32 i -> showJSON i
-        SqlWord64 i -> showJSON i
-        SqlInt32 i -> showJSON i
-        SqlInt64 i -> showJSON i
-        SqlInteger i -> showJSON i
-        SqlChar c -> showJSON c
-        SqlBool b -> showJSON b
-        SqlDouble d -> showJSON d
-        _ -> JSNull
+runOne :: Connection -> Int -> IO RandQuery
+runOne conn = fmap head . query conn "SELECT * FROM World where id=?" . Only

@@ -2,13 +2,14 @@
 import subprocess
 import sys
 import time
+import os
 
 def start(args=None):
 
 
     
     subprocess.check_call("./sbt update compile", shell=True, cwd="finagle")
-    subprocess.Popen("nohup ./sbt -Ddb.host=" + args.database_host + " run &", cwd="finagle", shell=True)
+    subprocess.Popen("./sbt -Ddb.host=" + args.database_host + " run", cwd="finagle", shell=True)
     time.sleep(5)
     return 0
 
