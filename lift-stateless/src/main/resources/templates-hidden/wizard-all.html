@@ -1,0 +1,47 @@
+<div class="form-horizontal" style="text-align: left; padding-top: 2em;">
+  <wizard:wizard_top> <div> <wizard:bind/> </div> </wizard:wizard_top> 
+  <wizard:wizard_top> <div> <wizard:bind/> </div> </wizard:wizard_top> 
+  <wizard:screen_top> <div> <wizard:bind/> </div> </wizard:screen_top> 
+  <wizard:errors>
+    <div>
+      <ul>
+        <wizard:item>
+          <li><wizard:bind/></li>
+        </wizard:item>
+      </ul>
+    </div>
+  </wizard:errors>
+  <fieldset>
+    <div lift:bind="wizard:fields"> 
+      <div class="control-group" lift:bind="wizard:line">
+        <span class="control-label">
+          <wizard:label>
+            <label wizard:for=""><wizard:bind></wizard:bind></label>
+          </wizard:label>
+        </span>
+        <div class="controls">
+          <wizard:form></wizard:form> 
+          <wizard:help><p class="help-block"><wizard:bind></wizard:bind></p></wizard:help> 
+          <wizard:field_errors>
+            <ul class="form-error">
+              <wizard:error><li><wizard:bind/></li></wizard:error>
+            </ul>
+          </wizard:field_errors>
+        </div>
+      </div>
+    </div>
+    <div class="form-actions" style="margin-bottom: 0;">
+      <span class="form-prev-button"><wizard:prev></wizard:prev></span>
+      <span class="form-next-button"><wizard:next></wizard:next></span>
+      <span class="form-cancel-button"><wizard:cancel></wizard:cancel></span>
+    </div>
+  </fieldset>
+  <wizard:screen_bottom><div><wizard:bind></wizard:bind></div></wizard:screen_bottom> 
+  <wizard:wizard_bottom><div><wizard:bind></wizard:bind></div></wizard:wizard_bottom>
+<script type="text/javascript"> 
+// <![CDATA[
+  $(".form-next-button button").addClass("btn btn-primary");
+  $(".form-cancel-button button").addClass("btn");
+//]]>
+</script>
+</div>
