@@ -6,7 +6,7 @@ import os
 
 def start(args):
   setup_util.replace_text("unfiltered/src/main/resources/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
-  setup_util.replace_text("unfiltered/src/main/resources/application.conf", "{threads}", args.max_threads)
+  setup_util.replace_text("unfiltered/src/main/resources/application.conf", "maxThreads = \\d+", "maxThreads = " + str(args.max_threads))
 
   subprocess.check_call("chmod u+x sbt", shell=True, cwd="unfiltered")
   subprocess.check_call("./sbt assembly", shell=True, cwd="unfiltered")
