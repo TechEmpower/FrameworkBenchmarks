@@ -37,7 +37,7 @@ getDB2R n = do
             return (i, worldRandomNumber o)
 
     jsonToRepJson $ array
-        [ object ["id" .= i, "randomNumber" .= n] | (i, n) <- ns ]
+        [ object ["id" .= i, "randomNumber" .= rn] | (i, rn) <- ns ]
 
 mkYesodDispatch "App" resourcesApp
 
