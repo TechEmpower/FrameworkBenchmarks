@@ -17,7 +17,7 @@ def stop():
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if './start' in line or 'java' in line:
+    if 'bench-assembly' in line or 'java' in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 9)
 
