@@ -1,8 +1,6 @@
 var cluster = require('cluster')
   , numCPUs = require('os').cpus().length;
 
-var host = "172.16.234.132"
-
 if(cluster.isMaster) {
   // Fork workers.
   for (var i = 0; i < numCPUs; i++) {
@@ -20,11 +18,11 @@ var http = require('http')
   , url = require('url')
   , async = require('async')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://' + host + '/hello_world')
+  , conn = mongoose.connect('mongodb://localhost/hello_world')
   , MongoClient = require('mongodb').MongoClient
   , mysql = require('mysql')
   , pool  = mysql.createPool({
-      host: host,
+      host: 'localhost',
       user     : 'benchmarkdbuser',
       password : 'benchmarkdbpass',
       database : 'hello_world',
@@ -32,7 +30,7 @@ var http = require('http')
     })
   , Sequelize = require("sequelize")
   , sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-    host: host,
+    host: 'localhost',
     logging: false,
     define: { timestamps: false },
     maxConcurrentQueries: 100,
@@ -46,7 +44,7 @@ var http = require('http')
 
 var collection = null;
 
-MongoClient.connect('mongodb://' + host + '/hello_world?maxPoolSize=5', function(err, db) {
+MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
 
