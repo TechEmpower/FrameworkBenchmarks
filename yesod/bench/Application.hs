@@ -32,7 +32,7 @@ getDB2R n = do
     !is <- force . take n . randomRs (1, 10000) <$> liftIO newStdGen
 
     ns <- runDB $
-        forM is $\i -> do
+        forM is $ \i -> do
             Just o <- get $ Key $ PersistInt64 i
             return (i, worldRandomNumber o)
 
