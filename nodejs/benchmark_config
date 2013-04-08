@@ -9,8 +9,8 @@
     },
     "mongodb": {
       "setup_file": "setup",
-      "db_url": "/mongoose",
-      "query_url": "/mongoose?queries=",
+      "db_url": "/mongodbdriver",
+      "query_url": "/mongodbdriver?queries=",
       "port": 8080,
       "sort": 9
     },
