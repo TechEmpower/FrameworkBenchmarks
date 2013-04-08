@@ -45,7 +45,7 @@ object FinagleBenchmark extends App {
 //  }
   
   
-  val database = Database.forURL("jdbc:mysql://" + System.getProperty("db.host", "localhost") + ":3306/hello_world", user = "root", driver="com.mysql.jdbc.Driver")
+  val database = Database.forURL("jdbc:mysql://" + System.getProperty("db.host", "localhost") + ":3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true", user = "benchmarkdbuser", password = "benchmarkdbpass", driver="com.mysql.jdbc.Driver")
   
   def serialize(value: Any) = {
     val writer = new StringWriter()
