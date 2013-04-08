@@ -1,7 +1,9 @@
 var cluster = require('cluster')
   , numCPUs = require('os').cpus().length;
 
-if (cluster.isMaster) {
+var host = "172.16.234.132"
+
+if(cluster.isMaster) {
   // Fork workers.
   for (var i = 0; i < numCPUs; i++) {
     cluster.fork();
@@ -18,10 +20,11 @@ var http = require('http')
   , url = require('url')
   , async = require('async')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://172.16.234.132/hello_world')
+  , conn = mongoose.connect('mongodb://' + host + '/hello_world')
+  , MongoClient = require('mongodb').MongoClient
   , mysql = require('mysql')
   , pool  = mysql.createPool({
-      host: '172.16.234.132',
+      host: host,
       user     : 'benchmarkdbuser',
       password : 'benchmarkdbpass',
       database : 'hello_world',
@@ -29,7 +32,7 @@ var http = require('http')
     })
   , Sequelize = require("sequelize")
   , sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-    host: '172.16.234.132',
+    host: host,
     logging: false,
     define: { timestamps: false },
     maxConcurrentQueries: 100,
@@ -40,6 +43,12 @@ var http = require('http')
   }, {
     freezeTableName: true
   });
+
+var collection = null;
+
+MongoClient.connect('mongodb://' + host + '/hello_world?maxPoolSize=5', function(err, db) {
+  collection = db.collection('world');
+});
 
 // define model
 var Schema = mongoose.Schema
@@ -63,6 +72,14 @@ function mongooseQuery(callback) {
   });
 }
 
+function mongodbDriverQuery(callback) {
+  process.nextTick(function() {
+  collection.find({ id: getRandomNumber()}).toArray(function(err, world) {
+    callback(err, world[0]);
+  });    
+  })
+}
+
 function sequelizeQuery(callback) {
   World.find(getRandomNumber()).success(function (world) {
     callback(null, world);
@@ -81,6 +98,23 @@ http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
     // Write JSON object to response
     res.end(JSON.stringify(hello));
+    break;
+
+  case '/mongodbdriver':
+    // Database Test
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    var queryFunctions = new Array(queries);
+
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = mongodbDriverQuery;
+    }
+
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+
+    async.parallel(queryFunctions, function(err, results) {
+      res.end(JSON.stringify(results));
+    });    
     break;
 
   case '/mongoose':
