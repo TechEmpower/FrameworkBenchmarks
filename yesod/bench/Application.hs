@@ -31,12 +31,13 @@ getDB2R :: Int -> Handler RepJson
 getDB2R n = do
     !is <- force . take n . randomRs (1, 10000) <$> liftIO newStdGen
 
-    os <- runDB $
-        forM is $ \i-> do
+    ns <- runDB $
+        forM is $\i -> do
             Just o <- get $ Key $ PersistInt64 i
-            return $ object ["id" .= i, "randomNumber" .= worldRandomNumber o]
+            return (i, worldRandomNumber o)
 
-    jsonToRepJson $ array os
+    jsonToRepJson $ array
+        [ object ["id" .= i, "randomNumber" .= n] | (i, n) <- ns ]
 
 mkYesodDispatch "App" resourcesApp
 
