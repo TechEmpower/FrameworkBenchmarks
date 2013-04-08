@@ -48,8 +48,8 @@ object FinagleBenchmark extends App {
   val dataSource: DataSource = {
     val ds = new BasicDataSource
     ds.setDriverClassName("com.mysql.jdbc.Driver")
-    ds.setUsername("root")
-    ds.setPassword("")
+    ds.setUsername("benchmarkdbuser")
+    ds.setPassword("benchmarkdbpass")
     ds.setMaxActive(20);
     ds.setMaxIdle(10);
     ds.setInitialSize(20);
