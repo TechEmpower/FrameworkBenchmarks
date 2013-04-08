@@ -7,11 +7,11 @@ import os
 def start(args):
   setup_util.replace_text("yesod/bench/config/mysql.yml", "host: .*", "host: " + args.database_host)
   
-  subprocess.check_call("cabal configure", shell=True, cwd="yesod/bench")
+  subprocess.check_call("cabal update", shell=True, cwd="yesod/bench")
+  subprocess.check_call("cabal install --only-dependencies", shell=True, cwd="yesod/bench")
   subprocess.check_call("cabal build", shell=True, cwd="yesod/bench")
 
-  heap = args.max_threads
-  subprocess.Popen("dist/build/bench/bench Production +RTS -A"+str(heap)+"m -N" + str(args.max_threads) + " > /dev/null", shell=True, cwd="yesod/bench")
+  subprocess.Popen("dist/build/bench/bench Production +RTS -A4M -N -qg2 -I0 -G2 > /dev/null", shell=True, cwd="yesod/bench")
   return 0
 
 def stop():
