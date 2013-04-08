@@ -16,9 +16,11 @@ import scala.reflect.macros.Context
 import java.io.StringWriter
 import org.jboss.netty.util.CharsetUtil.UTF_8
 import scala.slick.driver.MySQLDriver.simple._
-//import slick.session.Database.threadLocalSession
 import scala.util.Random
-
+import org.apache.commons.dbcp.BasicDataSource
+import javax.sql.DataSource
+import com.twitter.util.FuturePool
+import java.util.concurrent.Executors
 
 case class World(id: Int, randomNumber: Int)
 
@@ -43,9 +45,21 @@ object FinagleBenchmark extends App {
 //          writer.toString()
 //    }.tree)
 //  }
+  val dataSource: DataSource = {
+    val ds = new BasicDataSource
+    ds.setDriverClassName("com.mysql.jdbc.Driver")
+    ds.setUsername("benchmarkdbuser")
+    ds.setPassword("benchmarkdbpass")
+    ds.setMaxActive(20);
+    ds.setMaxIdle(10);
+    ds.setInitialSize(20);
+    //ds.setValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS")
+    //new java.io.File("target").mkdirs // ensure that folder for database exists
+    ds.setUrl("jdbc:mysql://" + System.getProperty("db.host", "localhost") + ":3306/hello_world")
+    ds
+  }
   
-  
-  val database = Database.forURL("jdbc:mysql://" + System.getProperty("db.host", "localhost") + ":3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true", user = "benchmarkdbuser", password = "benchmarkdbpass", driver="com.mysql.jdbc.Driver")
+  val database = Database.forDataSource(dataSource)
   
   def serialize(value: Any) = {
     val writer = new StringWriter()
@@ -65,30 +79,48 @@ object FinagleBenchmark extends App {
     }
 
   }
+  
+  val diskIoFuturePool = FuturePool(Executors.newFixedThreadPool(8))
+ 
 
   val db = new Service[Request, Response] {
     def apply(req: Request): Future[Response] = {
-      
       val n = req.params.getIntOrElse("queries", 1)
       val resp = Response()
       database withSession {implicit session: Session =>
         val rand = new Random()
-
         val q = Query(Worlds).where(_.id inSet( for (i <- 0 to n) yield rand.nextInt(10000)))
-        
         resp.setContent(copiedBuffer(serialize(if (n == 1) q.first else q.list), UTF_8))
-        
         resp.setContentTypeJson
+        Future.value(resp)
       }
-      Future.value(resp)
     }
   }
+  
+  val poolingdb = new Service[Request, Response] {
+    def apply(req: Request): Future[Response] = {
+      val n = req.params.getIntOrElse("queries", 1)
+      val query = {
+	      val resp = Response()
+	      database withSession {implicit session: Session =>
+	        val rand = new Random()
+	        val q = Query(Worlds).where(_.id inSet( for (i <- 0 to n) yield rand.nextInt(10000)))
+	        resp.setContent(copiedBuffer(serialize(if (n == 1) q.first else q.list), UTF_8))
+	        resp.setContentTypeJson
+	        resp
+	      	}
+      	}
+      diskIoFuturePool(query)
+    }
+  }
+  
 
   val service =
     RoutingService byPath {
 
       case "/json" => json
       case "/db" => db
+      case "/pooling" => poolingdb
 
     }
 

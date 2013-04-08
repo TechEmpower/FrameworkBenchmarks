@@ -9,6 +9,16 @@
             "port": 8080,
             "sort": 44
             }
+        },
+        {
+        "future-pool" : {
+            "setup_file" : "setup.py",
+            "json_url" : "/json",
+            "db_url" : "/pooling",
+            "query_url" : "/pooling?queries=",
+            "port": 8080,
+            "sort": 43
+            }
         }
         ]
 
