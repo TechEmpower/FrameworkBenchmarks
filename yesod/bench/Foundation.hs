@@ -22,6 +22,7 @@ type Form x = Html -> MForm App App (FormResult x, Widget)
 
 instance Yesod App where
     approot = ApprootMaster $ appRoot . settings
+    logLevel _ = LevelError
 
 instance YesodPersist App where
     type YesodPersistBackend App = SqlPersist
