@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<project name="Doctrine2" default="build" basedir=".">
+    <taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2" />
+    <import file="${project.basedir}/lib/vendor/doctrine-build-common/packaging.xml" />
+
+    <property file="build.properties" />
+    
+    <!-- 
+        Fileset for artifacts shared across all distributed packages.
+    -->
+    <fileset id="shared-artifacts" dir=".">
+        <include name="LICENSE"/>
+        <include name="COPYRIGHT"/>
+        <include name="CHANGELOG"/>
+    </fileset>
+
+    <!-- 
+        Fileset for the sources of the Doctrine Common package.
+    -->
+    <fileset id="common-sources" dir="./lib">
+        <include name="Doctrine/Common/**"/>
+    </fileset>
+
+    <!--
+        Builds Common package, preparing it for distribution.
+    -->
+    <target name="copy-files" depends="prepare">
+        <copy todir="${build.dir}/${project.name}-${version}">
+            <fileset refid="shared-artifacts"/>
+        </copy>
+        <copy todir="${build.dir}/${project.name}-${version}">
+            <fileset refid="common-sources"/>
+        </copy>
+    </target>
+
+    <!-- 
+        Builds distributable PEAR packages.
+    -->
+    <target name="define-pear-package" depends="copy-files">
+        <d51pearpkg2 baseinstalldir="/" dir="${build.dir}/${project.name}-${version}">
+           <name>DoctrineCommon</name>
+           <summary>Doctrine Common PHP Extensions</summary>
+           <channel>pear.doctrine-project.org</channel>
+           <description>The Doctrine Common package contains shared code between the other packages.</description>
+           <lead user="jwage" name="Jonathan H. Wage" email="jonwage@gmail.com" />
+           <lead user="guilhermeblanco" name="Guilherme Blanco" email="guilhermeblanco@gmail.com" />
+           <lead user="romanb" name="Roman Borschel" email="roman@code-factory.org" />
+           <lead user="beberlei" name="Benjamin Eberlei" email="kontakt@beberlei.de" />
+           <license>LGPL</license>
+           <version release="${pear.version}" api="${pear.version}" />
+           <stability release="${pear.stability}" api="${pear.stability}" />
+           <notes>-</notes>
+           <dependencies>
+               <php minimum_version="5.3.0" />
+               <pear minimum_version="1.6.0" recommended_version="1.6.1" />
+           </dependencies>
+        </d51pearpkg2>
+    </target>
+</project>

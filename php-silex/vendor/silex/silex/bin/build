@@ -1,0 +1,67 @@
+#!/bin/sh
+
+PHP=`which php`
+GIT=`which git`
+DIR=`$PHP -r "echo dirname(dirname(realpath('$0')));"`
+
+if [ ! -d "$DIR/build" ]; then
+    mkdir -p $DIR/build
+fi
+
+cd $DIR/build
+
+if [ ! -f "composer.phar" ]; then
+    curl -s http://getcomposer.org/installer 2>/dev/null | $PHP >/dev/null 2>/dev/null
+else
+    $PHP composer.phar self-update >/dev/null 2>/dev/null
+fi
+
+for TYPE in slim fat
+do
+    if [ -d "$DIR/build/skeleton" ]; then
+        rm -rf $DIR/build/skeleton
+    fi
+    mkdir -p $DIR/build/skeleton
+
+    cd "$DIR/build/skeleton"
+
+    mkdir -p web/
+    COMPOSER=$TYPE"_composer.json"
+    cp $DIR/bin/skeleton/$COMPOSER composer.json
+    cp $DIR/bin/skeleton/index.php web/index.php
+
+    $PHP ../composer.phar install -q
+
+    if [ -d "$DIR/build/tmp/silex" ]; then
+        rm -rf $DIR/build/tmp/silex
+    fi
+    mkdir -p $DIR/build/tmp/silex
+
+    cd "$DIR/build/tmp/silex"
+    cp -r ../../skeleton/* .
+
+    find . -name .DS_Store | xargs rm -rf -
+    find . -name .git | xargs rm -rf -
+    find . -name phpunit.xml.* | xargs rm -rf -
+    find . -type d -name Tests | xargs rm -rf -
+    find . -type d -name test* | xargs rm -rf -
+    find . -type d -name doc | xargs rm -rf -
+    find . -type d -name ext | xargs rm -rf -
+
+    export COPY_EXTENDED_ATTRIBUTES_DISABLE=true
+    export COPYFILE_DISABLE=true
+
+    cd "$DIR/build/tmp"
+
+    if [ "slim" = "$TYPE" ]; then
+        NAME="silex"
+    else
+        NAME="silex_fat"
+    fi
+
+    rm -f "$DIR/build/$NAME.*"
+    tar zcpf "$DIR/build/$NAME.tgz" silex
+    zip -rq "$DIR/build/$NAME.zip" silex
+    rm -rf "$DIR/build/tmp"
+    rm -rf "$DIR/build/skeleton"
+done

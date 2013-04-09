@@ -254,6 +254,14 @@ class Installer:
     self.__run_command("wget https://raw.github.com/technomancy/leiningen/stable/bin/lein")
     self.__run_command("mv lein bin/lein")
     self.__run_command("chmod +x bin/lein")
+
+    ##############################
+    # Composer
+    ##############################
+    # we need composer to install the dependencies for Symfony 2
+    self.__run_command("curl -sS https://getcomposer.org/installer | php")
+    self.__run_command("sudo mv composer.phar /usr/local/bin/composer")
+
   ############################################################
   # End __install_server_software
   ############################################################
