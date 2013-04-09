@@ -33,8 +33,13 @@ class Installer:
     #
     # Erlang
     #
-    self.__run_command("curl -klO https://elearning.erlang-solutions.com/couchdb//rbingen_adapter//package_R16B_precise64_1361901944/esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
-    self.__run_command("sudo /usr/bin/dpkg --install esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
+    self.__run_command("sudo cp ../config/erlang.list /etc/apt/sources.list.d/erlang.list")
+    self.__run_command("wget -O - http://binaries.erlang-solutions.com/debian/erlang_solutions.asc | sudo apt-key add -")
+    self.__run_command("sudo apt-get update")
+    self.__run_command("sudo apt-get install esl-erlang")
+    
+    #self.__run_command("curl -klO https://elearning.erlang-solutions.com/couchdb//rbingen_adapter//package_R16B_precise64_1361901944/esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
+    #self.__run_command("sudo /usr/bin/dpkg --install esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
 
     #
     # Python
@@ -224,11 +229,6 @@ class Installer:
     # Vert.x
     ##############################
     self.__run_command("curl http://vertx.io/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
-
-    ##############################
-    # WebGO
-    ##############################
-    self.__run_command("go/bin/go get github.com/hoisie/web")
 
     ##############################
     # Yesod
