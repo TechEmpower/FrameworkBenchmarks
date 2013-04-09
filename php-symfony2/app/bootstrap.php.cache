@@ -1,0 +1,1137 @@
+<?php
+
+namespace { $loader = require_once __DIR__.'/autoload.php'; }
+
+ 
+namespace Symfony\Component\DependencyInjection
+{
+interface ContainerAwareInterface
+{
+public function setContainer(ContainerInterface $container = null);
+}
+}
+namespace Symfony\Component\DependencyInjection
+{
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+interface ContainerInterface
+{
+const EXCEPTION_ON_INVALID_REFERENCE = 1;
+const NULL_ON_INVALID_REFERENCE = 2;
+const IGNORE_ON_INVALID_REFERENCE = 3;
+const SCOPE_CONTAINER ='container';
+const SCOPE_PROTOTYPE ='prototype';
+public function set($id, $service, $scope = self::SCOPE_CONTAINER);
+public function get($id, $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE);
+public function has($id);
+public function getParameter($name);
+public function hasParameter($name);
+public function setParameter($name, $value);
+public function enterScope($name);
+public function leaveScope($name);
+public function addScope(ScopeInterface $scope);
+public function hasScope($name);
+public function isScopeActive($name);
+}
+}
+namespace Symfony\Component\DependencyInjection
+{
+interface IntrospectableContainerInterface extends ContainerInterface
+{
+public function initialized($id);
+}
+}
+namespace Symfony\Component\DependencyInjection
+{
+use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
+class Container implements IntrospectableContainerInterface
+{
+protected $parameterBag;
+protected $services;
+protected $scopes;
+protected $scopeChildren;
+protected $scopedServices;
+protected $scopeStacks;
+protected $loading = array();
+public function __construct(ParameterBagInterface $parameterBag = null)
+{
+$this->parameterBag = null === $parameterBag ? new ParameterBag() : $parameterBag;
+$this->services = array();
+$this->scopes = array();
+$this->scopeChildren = array();
+$this->scopedServices = array();
+$this->scopeStacks = array();
+$this->set('service_container', $this);
+}
+public function compile()
+{
+$this->parameterBag->resolve();
+$this->parameterBag = new FrozenParameterBag($this->parameterBag->all());
+}
+public function isFrozen()
+{
+return $this->parameterBag instanceof FrozenParameterBag;
+}
+public function getParameterBag()
+{
+return $this->parameterBag;
+}
+public function getParameter($name)
+{
+return $this->parameterBag->get($name);
+}
+public function hasParameter($name)
+{
+return $this->parameterBag->has($name);
+}
+public function setParameter($name, $value)
+{
+$this->parameterBag->set($name, $value);
+}
+public function set($id, $service, $scope = self::SCOPE_CONTAINER)
+{
+if (self::SCOPE_PROTOTYPE === $scope) {
+throw new InvalidArgumentException(sprintf('You cannot set service "%s" of scope "prototype".', $id));
+}
+$id = strtolower($id);
+if (self::SCOPE_CONTAINER !== $scope) {
+if (!isset($this->scopedServices[$scope])) {
+throw new RuntimeException(sprintf('You cannot set service "%s" of inactive scope.', $id));
+}
+$this->scopedServices[$scope][$id] = $service;
+}
+$this->services[$id] = $service;
+}
+public function has($id)
+{
+$id = strtolower($id);
+return isset($this->services[$id]) || method_exists($this,'get'.strtr($id, array('_'=>'','.'=>'_')).'Service');
+}
+public function get($id, $invalidBehavior = self::EXCEPTION_ON_INVALID_REFERENCE)
+{
+$id = strtolower($id);
+if (isset($this->services[$id])) {
+return $this->services[$id];
+}
+if (isset($this->loading[$id])) {
+throw new ServiceCircularReferenceException($id, array_keys($this->loading));
+}
+if (method_exists($this, $method ='get'.strtr($id, array('_'=>'','.'=>'_')).'Service')) {
+$this->loading[$id] = true;
+try {
+$service = $this->$method();
+} catch (\Exception $e) {
+unset($this->loading[$id]);
+if (isset($this->services[$id])) {
+unset($this->services[$id]);
+}
+throw $e;
+}
+unset($this->loading[$id]);
+return $service;
+}
+if (self::EXCEPTION_ON_INVALID_REFERENCE === $invalidBehavior) {
+throw new ServiceNotFoundException($id);
+}
+}
+public function initialized($id)
+{
+return isset($this->services[strtolower($id)]);
+}
+public function getServiceIds()
+{
+$ids = array();
+$r = new \ReflectionClass($this);
+foreach ($r->getMethods() as $method) {
+if (preg_match('/^get(.+)Service$/', $method->name, $match)) {
+$ids[] = self::underscore($match[1]);
+}
+}
+return array_unique(array_merge($ids, array_keys($this->services)));
+}
+public function enterScope($name)
+{
+if (!isset($this->scopes[$name])) {
+throw new InvalidArgumentException(sprintf('The scope "%s" does not exist.', $name));
+}
+if (self::SCOPE_CONTAINER !== $this->scopes[$name] && !isset($this->scopedServices[$this->scopes[$name]])) {
+throw new RuntimeException(sprintf('The parent scope "%s" must be active when entering this scope.', $this->scopes[$name]));
+}
+if (isset($this->scopedServices[$name])) {
+$services = array($this->services, $name => $this->scopedServices[$name]);
+unset($this->scopedServices[$name]);
+foreach ($this->scopeChildren[$name] as $child) {
+if (isset($this->scopedServices[$child])) {
+$services[$child] = $this->scopedServices[$child];
+unset($this->scopedServices[$child]);
+}
+}
+$this->services = call_user_func_array('array_diff_key', $services);
+array_shift($services);
+if (!isset($this->scopeStacks[$name])) {
+$this->scopeStacks[$name] = new \SplStack();
+}
+$this->scopeStacks[$name]->push($services);
+}
+$this->scopedServices[$name] = array();
+}
+public function leaveScope($name)
+{
+if (!isset($this->scopedServices[$name])) {
+throw new InvalidArgumentException(sprintf('The scope "%s" is not active.', $name));
+}
+$services = array($this->services, $this->scopedServices[$name]);
+unset($this->scopedServices[$name]);
+foreach ($this->scopeChildren[$name] as $child) {
+if (!isset($this->scopedServices[$child])) {
+continue;
+}
+$services[] = $this->scopedServices[$child];
+unset($this->scopedServices[$child]);
+}
+$this->services = call_user_func_array('array_diff_key', $services);
+if (isset($this->scopeStacks[$name]) && count($this->scopeStacks[$name]) > 0) {
+$services = $this->scopeStacks[$name]->pop();
+$this->scopedServices += $services;
+array_unshift($services, $this->services);
+$this->services = call_user_func_array('array_merge', $services);
+}
+}
+public function addScope(ScopeInterface $scope)
+{
+$name = $scope->getName();
+$parentScope = $scope->getParentName();
+if (self::SCOPE_CONTAINER === $name || self::SCOPE_PROTOTYPE === $name) {
+throw new InvalidArgumentException(sprintf('The scope "%s" is reserved.', $name));
+}
+if (isset($this->scopes[$name])) {
+throw new InvalidArgumentException(sprintf('A scope with name "%s" already exists.', $name));
+}
+if (self::SCOPE_CONTAINER !== $parentScope && !isset($this->scopes[$parentScope])) {
+throw new InvalidArgumentException(sprintf('The parent scope "%s" does not exist, or is invalid.', $parentScope));
+}
+$this->scopes[$name] = $parentScope;
+$this->scopeChildren[$name] = array();
+while ($parentScope !== self::SCOPE_CONTAINER) {
+$this->scopeChildren[$parentScope][] = $name;
+$parentScope = $this->scopes[$parentScope];
+}
+}
+public function hasScope($name)
+{
+return isset($this->scopes[$name]);
+}
+public function isScopeActive($name)
+{
+return isset($this->scopedServices[$name]);
+}
+public static function camelize($id)
+{
+return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) { return ('.'=== $match[1] ?'_':'').strtoupper($match[2]); }, $id);
+}
+public static function underscore($id)
+{
+return strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/','/([a-z\d])([A-Z])/'), array('\\1_\\2','\\1_\\2'), strtr($id,'_','.')));
+}
+}
+}
+namespace Symfony\Component\HttpKernel
+{
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+interface HttpKernelInterface
+{
+const MASTER_REQUEST = 1;
+const SUB_REQUEST = 2;
+public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true);
+}
+}
+namespace Symfony\Component\HttpKernel
+{
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
+interface KernelInterface extends HttpKernelInterface, \Serializable
+{
+public function registerBundles();
+public function registerContainerConfiguration(LoaderInterface $loader);
+public function boot();
+public function shutdown();
+public function getBundles();
+public function isClassInActiveBundle($class);
+public function getBundle($name, $first = true);
+public function locateResource($name, $dir = null, $first = true);
+public function getName();
+public function getEnvironment();
+public function isDebug();
+public function getRootDir();
+public function getContainer();
+public function getStartTime();
+public function getCacheDir();
+public function getLogDir();
+public function getCharset();
+}
+}
+namespace Symfony\Component\HttpKernel
+{
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+interface TerminableInterface
+{
+public function terminate(Request $request, Response $response);
+}
+}
+namespace Symfony\Component\HttpKernel
+{
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\Config\FileLocator;
+use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
+use Symfony\Component\HttpKernel\DependencyInjection\AddClassesToCachePass;
+use Symfony\Component\HttpKernel\Debug\ErrorHandler;
+use Symfony\Component\HttpKernel\Debug\ExceptionHandler;
+use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\ClassLoader\ClassCollectionLoader;
+use Symfony\Component\ClassLoader\DebugClassLoader;
+abstract class Kernel implements KernelInterface, TerminableInterface
+{
+protected $bundles;
+protected $bundleMap;
+protected $container;
+protected $rootDir;
+protected $environment;
+protected $debug;
+protected $booted;
+protected $name;
+protected $startTime;
+protected $classes;
+protected $errorReportingLevel;
+const VERSION ='2.2.1';
+const VERSION_ID ='20101';
+const MAJOR_VERSION ='2';
+const MINOR_VERSION ='2';
+const RELEASE_VERSION ='1';
+const EXTRA_VERSION ='';
+public function __construct($environment, $debug)
+{
+$this->environment = $environment;
+$this->debug = (Boolean) $debug;
+$this->booted = false;
+$this->rootDir = $this->getRootDir();
+$this->name = $this->getName();
+$this->classes = array();
+$this->bundles = array();
+if ($this->debug) {
+$this->startTime = microtime(true);
+}
+$this->init();
+}
+public function init()
+{
+ini_set('display_errors', 0);
+if ($this->debug) {
+error_reporting(-1);
+DebugClassLoader::enable();
+ErrorHandler::register($this->errorReportingLevel);
+if ('cli'!== php_sapi_name()) {
+ExceptionHandler::register();
+} else {
+ini_set('display_errors', 1);
+}
+}
+}
+public function __clone()
+{
+if ($this->debug) {
+$this->startTime = microtime(true);
+}
+$this->booted = false;
+$this->container = null;
+}
+public function boot()
+{
+if (true === $this->booted) {
+return;
+}
+$this->initializeBundles();
+$this->initializeContainer();
+foreach ($this->getBundles() as $bundle) {
+$bundle->setContainer($this->container);
+$bundle->boot();
+}
+$this->booted = true;
+}
+public function terminate(Request $request, Response $response)
+{
+if (false === $this->booted) {
+return;
+}
+if ($this->getHttpKernel() instanceof TerminableInterface) {
+$this->getHttpKernel()->terminate($request, $response);
+}
+}
+public function shutdown()
+{
+if (false === $this->booted) {
+return;
+}
+$this->booted = false;
+foreach ($this->getBundles() as $bundle) {
+$bundle->shutdown();
+$bundle->setContainer(null);
+}
+$this->container = null;
+}
+public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+{
+if (false === $this->booted) {
+$this->boot();
+}
+return $this->getHttpKernel()->handle($request, $type, $catch);
+}
+protected function getHttpKernel()
+{
+return $this->container->get('http_kernel');
+}
+public function getBundles()
+{
+return $this->bundles;
+}
+public function isClassInActiveBundle($class)
+{
+foreach ($this->getBundles() as $bundle) {
+if (0 === strpos($class, $bundle->getNamespace())) {
+return true;
+}
+}
+return false;
+}
+public function getBundle($name, $first = true)
+{
+if (!isset($this->bundleMap[$name])) {
+throw new \InvalidArgumentException(sprintf('Bundle "%s" does not exist or it is not enabled. Maybe you forgot to add it in the registerBundles() method of your %s.php file?', $name, get_class($this)));
+}
+if (true === $first) {
+return $this->bundleMap[$name][0];
+}
+return $this->bundleMap[$name];
+}
+public function locateResource($name, $dir = null, $first = true)
+{
+if ('@'!== $name[0]) {
+throw new \InvalidArgumentException(sprintf('A resource name must start with @ ("%s" given).', $name));
+}
+if (false !== strpos($name,'..')) {
+throw new \RuntimeException(sprintf('File name "%s" contains invalid characters (..).', $name));
+}
+$bundleName = substr($name, 1);
+$path ='';
+if (false !== strpos($bundleName,'/')) {
+list($bundleName, $path) = explode('/', $bundleName, 2);
+}
+$isResource = 0 === strpos($path,'Resources') && null !== $dir;
+$overridePath = substr($path, 9);
+$resourceBundle = null;
+$bundles = $this->getBundle($bundleName, false);
+$files = array();
+foreach ($bundles as $bundle) {
+if ($isResource && file_exists($file = $dir.'/'.$bundle->getName().$overridePath)) {
+if (null !== $resourceBundle) {
+throw new \RuntimeException(sprintf('"%s" resource is hidden by a resource from the "%s" derived bundle. Create a "%s" file to override the bundle resource.',
+$file,
+$resourceBundle,
+$dir.'/'.$bundles[0]->getName().$overridePath
+));
+}
+if ($first) {
+return $file;
+}
+$files[] = $file;
+}
+if (file_exists($file = $bundle->getPath().'/'.$path)) {
+if ($first && !$isResource) {
+return $file;
+}
+$files[] = $file;
+$resourceBundle = $bundle->getName();
+}
+}
+if (count($files) > 0) {
+return $first && $isResource ? $files[0] : $files;
+}
+throw new \InvalidArgumentException(sprintf('Unable to find file "%s".', $name));
+}
+public function getName()
+{
+if (null === $this->name) {
+$this->name = preg_replace('/[^a-zA-Z0-9_]+/','', basename($this->rootDir));
+}
+return $this->name;
+}
+public function getEnvironment()
+{
+return $this->environment;
+}
+public function isDebug()
+{
+return $this->debug;
+}
+public function getRootDir()
+{
+if (null === $this->rootDir) {
+$r = new \ReflectionObject($this);
+$this->rootDir = str_replace('\\','/', dirname($r->getFileName()));
+}
+return $this->rootDir;
+}
+public function getContainer()
+{
+return $this->container;
+}
+public function loadClassCache($name ='classes', $extension ='.php')
+{
+if (!$this->booted && is_file($this->getCacheDir().'/classes.map')) {
+ClassCollectionLoader::load(include($this->getCacheDir().'/classes.map'), $this->getCacheDir(), $name, $this->debug, false, $extension);
+}
+}
+public function setClassCache(array $classes)
+{
+file_put_contents($this->getCacheDir().'/classes.map', sprintf('<?php return %s;', var_export($classes, true)));
+}
+public function getStartTime()
+{
+return $this->debug ? $this->startTime : -INF;
+}
+public function getCacheDir()
+{
+return $this->rootDir.'/cache/'.$this->environment;
+}
+public function getLogDir()
+{
+return $this->rootDir.'/logs';
+}
+public function getCharset()
+{
+return'UTF-8';
+}
+protected function initializeBundles()
+{
+$this->bundles = array();
+$topMostBundles = array();
+$directChildren = array();
+foreach ($this->registerBundles() as $bundle) {
+$name = $bundle->getName();
+if (isset($this->bundles[$name])) {
+throw new \LogicException(sprintf('Trying to register two bundles with the same name "%s"', $name));
+}
+$this->bundles[$name] = $bundle;
+if ($parentName = $bundle->getParent()) {
+if (isset($directChildren[$parentName])) {
+throw new \LogicException(sprintf('Bundle "%s" is directly extended by two bundles "%s" and "%s".', $parentName, $name, $directChildren[$parentName]));
+}
+if ($parentName == $name) {
+throw new \LogicException(sprintf('Bundle "%s" can not extend itself.', $name));
+}
+$directChildren[$parentName] = $name;
+} else {
+$topMostBundles[$name] = $bundle;
+}
+}
+if (count($diff = array_values(array_diff(array_keys($directChildren), array_keys($this->bundles))))) {
+throw new \LogicException(sprintf('Bundle "%s" extends bundle "%s", which is not registered.', $directChildren[$diff[0]], $diff[0]));
+}
+$this->bundleMap = array();
+foreach ($topMostBundles as $name => $bundle) {
+$bundleMap = array($bundle);
+$hierarchy = array($name);
+while (isset($directChildren[$name])) {
+$name = $directChildren[$name];
+array_unshift($bundleMap, $this->bundles[$name]);
+$hierarchy[] = $name;
+}
+foreach ($hierarchy as $bundle) {
+$this->bundleMap[$bundle] = $bundleMap;
+array_pop($bundleMap);
+}
+}
+}
+protected function getContainerClass()
+{
+return $this->name.ucfirst($this->environment).($this->debug ?'Debug':'').'ProjectContainer';
+}
+protected function getContainerBaseClass()
+{
+return'Container';
+}
+protected function initializeContainer()
+{
+$class = $this->getContainerClass();
+$cache = new ConfigCache($this->getCacheDir().'/'.$class.'.php', $this->debug);
+$fresh = true;
+if (!$cache->isFresh()) {
+$container = $this->buildContainer();
+$this->dumpContainer($cache, $container, $class, $this->getContainerBaseClass());
+$fresh = false;
+}
+require_once $cache;
+$this->container = new $class();
+$this->container->set('kernel', $this);
+if (!$fresh && $this->container->has('cache_warmer')) {
+$this->container->get('cache_warmer')->warmUp($this->container->getParameter('kernel.cache_dir'));
+}
+}
+protected function getKernelParameters()
+{
+$bundles = array();
+foreach ($this->bundles as $name => $bundle) {
+$bundles[$name] = get_class($bundle);
+}
+return array_merge(
+array('kernel.root_dir'=> $this->rootDir,'kernel.environment'=> $this->environment,'kernel.debug'=> $this->debug,'kernel.name'=> $this->name,'kernel.cache_dir'=> $this->getCacheDir(),'kernel.logs_dir'=> $this->getLogDir(),'kernel.bundles'=> $bundles,'kernel.charset'=> $this->getCharset(),'kernel.container_class'=> $this->getContainerClass(),
+),
+$this->getEnvParameters()
+);
+}
+protected function getEnvParameters()
+{
+$parameters = array();
+foreach ($_SERVER as $key => $value) {
+if (0 === strpos($key,'SYMFONY__')) {
+$parameters[strtolower(str_replace('__','.', substr($key, 9)))] = $value;
+}
+}
+return $parameters;
+}
+protected function buildContainer()
+{
+foreach (array('cache'=> $this->getCacheDir(),'logs'=> $this->getLogDir()) as $name => $dir) {
+if (!is_dir($dir)) {
+if (false === @mkdir($dir, 0777, true)) {
+throw new \RuntimeException(sprintf("Unable to create the %s directory (%s)\n", $name, $dir));
+}
+} elseif (!is_writable($dir)) {
+throw new \RuntimeException(sprintf("Unable to write in the %s directory (%s)\n", $name, $dir));
+}
+}
+$container = $this->getContainerBuilder();
+$extensions = array();
+foreach ($this->bundles as $bundle) {
+if ($extension = $bundle->getContainerExtension()) {
+$container->registerExtension($extension);
+$extensions[] = $extension->getAlias();
+}
+if ($this->debug) {
+$container->addObjectResource($bundle);
+}
+}
+foreach ($this->bundles as $bundle) {
+$bundle->build($container);
+}
+$container->addObjectResource($this);
+$container->getCompilerPassConfig()->setMergePass(new MergeExtensionConfigurationPass($extensions));
+if (null !== $cont = $this->registerContainerConfiguration($this->getContainerLoader($container))) {
+$container->merge($cont);
+}
+$container->addCompilerPass(new AddClassesToCachePass($this));
+$container->compile();
+return $container;
+}
+protected function getContainerBuilder()
+{
+return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
+}
+protected function dumpContainer(ConfigCache $cache, ContainerBuilder $container, $class, $baseClass)
+{
+$dumper = new PhpDumper($container);
+$content = $dumper->dump(array('class'=> $class,'base_class'=> $baseClass));
+if (!$this->debug) {
+$content = self::stripComments($content);
+}
+$cache->write($content, $container->getResources());
+}
+protected function getContainerLoader(ContainerInterface $container)
+{
+$locator = new FileLocator($this);
+$resolver = new LoaderResolver(array(
+new XmlFileLoader($container, $locator),
+new YamlFileLoader($container, $locator),
+new IniFileLoader($container, $locator),
+new PhpFileLoader($container, $locator),
+new ClosureLoader($container),
+));
+return new DelegatingLoader($resolver);
+}
+public static function stripComments($source)
+{
+if (!function_exists('token_get_all')) {
+return $source;
+}
+$rawChunk ='';
+$output ='';
+$tokens = token_get_all($source);
+for (reset($tokens); false !== $token = current($tokens); next($tokens)) {
+if (is_string($token)) {
+$rawChunk .= $token;
+} elseif (T_START_HEREDOC === $token[0]) {
+$output .= preg_replace(array('/\s+$/Sm','/\n+/S'),"\n", $rawChunk) . $token[1];
+do {
+$token = next($tokens);
+$output .= $token[1];
+} while ($token[0] !== T_END_HEREDOC);
+$rawChunk ='';
+} elseif (!in_array($token[0], array(T_COMMENT, T_DOC_COMMENT))) {
+$rawChunk .= $token[1];
+}
+}
+$output .= preg_replace(array('/\s+$/Sm','/\n+/S'),"\n", $rawChunk);
+return $output;
+}
+public function serialize()
+{
+return serialize(array($this->environment, $this->debug));
+}
+public function unserialize($data)
+{
+list($environment, $debug) = unserialize($data);
+$this->__construct($environment, $debug);
+}
+}
+}
+namespace Symfony\Component\ClassLoader
+{
+class ApcClassLoader
+{
+private $prefix;
+protected $decorated;
+public function __construct($prefix, $decorated)
+{
+if (!extension_loaded('apc')) {
+throw new \RuntimeException('Unable to use ApcClassLoader as APC is not enabled.');
+}
+if (!method_exists($decorated,'findFile')) {
+throw new \InvalidArgumentException('The class finder must implement a "findFile" method.');
+}
+$this->prefix = $prefix;
+$this->decorated = $decorated;
+}
+public function register($prepend = false)
+{
+spl_autoload_register(array($this,'loadClass'), true, $prepend);
+}
+public function unregister()
+{
+spl_autoload_unregister(array($this,'loadClass'));
+}
+public function loadClass($class)
+{
+if ($file = $this->findFile($class)) {
+require $file;
+return true;
+}
+}
+public function findFile($class)
+{
+if (false === $file = apc_fetch($this->prefix.$class)) {
+apc_store($this->prefix.$class, $file = $this->decorated->findFile($class));
+}
+return $file;
+}
+public function __call($method, $args)
+{
+return call_user_func_array(array($this->decorated, $method), $args);
+}
+}
+}
+namespace Symfony\Component\HttpKernel\Bundle
+{
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+interface BundleInterface extends ContainerAwareInterface
+{
+public function boot();
+public function shutdown();
+public function build(ContainerBuilder $container);
+public function getContainerExtension();
+public function getParent();
+public function getName();
+public function getNamespace();
+public function getPath();
+}
+}
+namespace Symfony\Component\DependencyInjection
+{
+abstract class ContainerAware implements ContainerAwareInterface
+{
+protected $container;
+public function setContainer(ContainerInterface $container = null)
+{
+$this->container = $container;
+}
+}
+}
+namespace Symfony\Component\HttpKernel\Bundle
+{
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+abstract class Bundle extends ContainerAware implements BundleInterface
+{
+protected $name;
+protected $reflected;
+protected $extension;
+public function boot()
+{
+}
+public function shutdown()
+{
+}
+public function build(ContainerBuilder $container)
+{
+}
+public function getContainerExtension()
+{
+if (null === $this->extension) {
+$basename = preg_replace('/Bundle$/','', $this->getName());
+$class = $this->getNamespace().'\\DependencyInjection\\'.$basename.'Extension';
+if (class_exists($class)) {
+$extension = new $class();
+$expectedAlias = Container::underscore($basename);
+if ($expectedAlias != $extension->getAlias()) {
+throw new \LogicException(sprintf('The extension alias for the default extension of a '.'bundle must be the underscored version of the '.'bundle name ("%s" instead of "%s")',
+$expectedAlias, $extension->getAlias()
+));
+}
+$this->extension = $extension;
+} else {
+$this->extension = false;
+}
+}
+if ($this->extension) {
+return $this->extension;
+}
+}
+public function getNamespace()
+{
+if (null === $this->reflected) {
+$this->reflected = new \ReflectionObject($this);
+}
+return $this->reflected->getNamespaceName();
+}
+public function getPath()
+{
+if (null === $this->reflected) {
+$this->reflected = new \ReflectionObject($this);
+}
+return dirname($this->reflected->getFileName());
+}
+public function getParent()
+{
+return null;
+}
+final public function getName()
+{
+if (null !== $this->name) {
+return $this->name;
+}
+$name = get_class($this);
+$pos = strrpos($name,'\\');
+return $this->name = false === $pos ? $name : substr($name, $pos + 1);
+}
+public function registerCommands(Application $application)
+{
+if (!is_dir($dir = $this->getPath().'/Command')) {
+return;
+}
+$finder = new Finder();
+$finder->files()->name('*Command.php')->in($dir);
+$prefix = $this->getNamespace().'\\Command';
+foreach ($finder as $file) {
+$ns = $prefix;
+if ($relativePath = $file->getRelativePath()) {
+$ns .='\\'.strtr($relativePath,'/','\\');
+}
+$r = new \ReflectionClass($ns.'\\'.$file->getBasename('.php'));
+if ($r->isSubclassOf('Symfony\\Component\\Console\\Command\\Command') && !$r->isAbstract()) {
+$application->add($r->newInstance());
+}
+}
+}
+}
+}
+namespace Symfony\Component\Config
+{
+use Symfony\Component\Config\Resource\ResourceInterface;
+class ConfigCache
+{
+private $debug;
+private $file;
+public function __construct($file, $debug)
+{
+$this->file = $file;
+$this->debug = (Boolean) $debug;
+}
+public function __toString()
+{
+return $this->file;
+}
+public function isFresh()
+{
+if (!is_file($this->file)) {
+return false;
+}
+if (!$this->debug) {
+return true;
+}
+$metadata = $this->file.'.meta';
+if (!is_file($metadata)) {
+return false;
+}
+$time = filemtime($this->file);
+$meta = unserialize(file_get_contents($metadata));
+foreach ($meta as $resource) {
+if (!$resource->isFresh($time)) {
+return false;
+}
+}
+return true;
+}
+public function write($content, array $metadata = null)
+{
+$dir = dirname($this->file);
+if (!is_dir($dir)) {
+if (false === @mkdir($dir, 0777, true)) {
+throw new \RuntimeException(sprintf('Unable to create the %s directory', $dir));
+}
+} elseif (!is_writable($dir)) {
+throw new \RuntimeException(sprintf('Unable to write in the %s directory', $dir));
+}
+$tmpFile = tempnam($dir, basename($this->file));
+if (false !== @file_put_contents($tmpFile, $content) && @rename($tmpFile, $this->file)) {
+@chmod($this->file, 0666 & ~umask());
+} else {
+throw new \RuntimeException(sprintf('Failed to write cache file "%s".', $this->file));
+}
+if (null !== $metadata && true === $this->debug) {
+$file = $this->file.'.meta';
+$tmpFile = tempnam($dir, basename($file));
+if (false !== @file_put_contents($tmpFile, serialize($metadata)) && @rename($tmpFile, $file)) {
+@chmod($file, 0666 & ~umask());
+}
+}
+}
+}
+}
+namespace Symfony\Component\HttpKernel
+{
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+class HttpKernel implements HttpKernelInterface, TerminableInterface
+{
+protected $dispatcher;
+protected $resolver;
+public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver)
+{
+$this->dispatcher = $dispatcher;
+$this->resolver = $resolver;
+}
+public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+{
+try {
+return $this->handleRaw($request, $type);
+} catch (\Exception $e) {
+if (false === $catch) {
+throw $e;
+}
+return $this->handleException($e, $request, $type);
+}
+}
+public function terminate(Request $request, Response $response)
+{
+$this->dispatcher->dispatch(KernelEvents::TERMINATE, new PostResponseEvent($this, $request, $response));
+}
+private function handleRaw(Request $request, $type = self::MASTER_REQUEST)
+{
+$event = new GetResponseEvent($this, $request, $type);
+$this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
+if ($event->hasResponse()) {
+return $this->filterResponse($event->getResponse(), $request, $type);
+}
+if (false === $controller = $this->resolver->getController($request)) {
+throw new NotFoundHttpException(sprintf('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getPathInfo()));
+}
+$event = new FilterControllerEvent($this, $controller, $request, $type);
+$this->dispatcher->dispatch(KernelEvents::CONTROLLER, $event);
+$controller = $event->getController();
+$arguments = $this->resolver->getArguments($request, $controller);
+$response = call_user_func_array($controller, $arguments);
+if (!$response instanceof Response) {
+$event = new GetResponseForControllerResultEvent($this, $request, $type, $response);
+$this->dispatcher->dispatch(KernelEvents::VIEW, $event);
+if ($event->hasResponse()) {
+$response = $event->getResponse();
+}
+if (!$response instanceof Response) {
+$msg = sprintf('The controller must return a response (%s given).', $this->varToString($response));
+if (null === $response) {
+$msg .=' Did you forget to add a return statement somewhere in your controller?';
+}
+throw new \LogicException($msg);
+}
+}
+return $this->filterResponse($response, $request, $type);
+}
+private function filterResponse(Response $response, Request $request, $type)
+{
+$event = new FilterResponseEvent($this, $request, $type, $response);
+$this->dispatcher->dispatch(KernelEvents::RESPONSE, $event);
+return $event->getResponse();
+}
+private function handleException(\Exception $e, $request, $type)
+{
+$event = new GetResponseForExceptionEvent($this, $request, $type, $e);
+$this->dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
+$e = $event->getException();
+if (!$event->hasResponse()) {
+throw $e;
+}
+$response = $event->getResponse();
+if ($response->headers->has('X-Status-Code')) {
+$response->setStatusCode($response->headers->get('X-Status-Code'));
+$response->headers->remove('X-Status-Code');
+} elseif (!$response->isClientError() && !$response->isServerError() && !$response->isRedirect()) {
+if ($e instanceof HttpExceptionInterface) {
+$response->setStatusCode($e->getStatusCode());
+$response->headers->add($e->getHeaders());
+} else {
+$response->setStatusCode(500);
+}
+}
+try {
+return $this->filterResponse($response, $request, $type);
+} catch (\Exception $e) {
+return $response;
+}
+}
+private function varToString($var)
+{
+if (is_object($var)) {
+return sprintf('Object(%s)', get_class($var));
+}
+if (is_array($var)) {
+$a = array();
+foreach ($var as $k => $v) {
+$a[] = sprintf('%s => %s', $k, $this->varToString($v));
+}
+return sprintf("Array(%s)", implode(', ', $a));
+}
+if (is_resource($var)) {
+return sprintf('Resource(%s)', get_resource_type($var));
+}
+if (null === $var) {
+return'null';
+}
+if (false === $var) {
+return'false';
+}
+if (true === $var) {
+return'true';
+}
+return (string) $var;
+}
+}
+}
+namespace Symfony\Component\HttpKernel\DependencyInjection
+{
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+class ContainerAwareHttpKernel extends HttpKernel
+{
+protected $container;
+public function __construct(EventDispatcherInterface $dispatcher, ContainerInterface $container, ControllerResolverInterface $controllerResolver)
+{
+parent::__construct($dispatcher, $controllerResolver);
+$this->container = $container;
+}
+public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+{
+$request->headers->set('X-Php-Ob-Level', ob_get_level());
+$this->container->enterScope('request');
+$this->container->set('request', $request,'request');
+try {
+$response = parent::handle($request, $type, $catch);
+} catch (\Exception $e) {
+$this->container->leaveScope('request');
+throw $e;
+}
+$this->container->leaveScope('request');
+return $response;
+}
+}
+}
+namespace Symfony\Bundle\FrameworkBundle
+{
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel;
+class HttpKernel extends ContainerAwareHttpKernel
+{
+public function forward($controller, array $attributes = array(), array $query = array())
+{
+trigger_error('forward() is deprecated since version 2.2 and will be removed in 2.3.', E_USER_DEPRECATED);
+$attributes['_controller'] = $controller;
+$subRequest = $this->container->get('request')->duplicate($query, null, $attributes);
+return $this->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+}
+public function render($uri, array $options = array())
+{
+trigger_error('render() is deprecated since version 2.2 and will be removed in 2.3. Use Symfony\Component\HttpKernel\Fragment\FragmentHandler::render() instead.', E_USER_DEPRECATED);
+$options = $this->renderer->fixOptions($options);
+$strategy = isset($options['strategy']) ? $options['strategy'] :'default';
+unset($options['strategy']);
+$this->container->get('fragment.handler')->render($uri, $strategy, $options);
+}
+}
+}
+
+namespace { return $loader; }
+            
