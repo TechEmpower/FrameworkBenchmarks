@@ -1,0 +1,60 @@
+{
+    "name": "silex/silex",
+    "description": "The PHP micro-framework based on the Symfony2 Components",
+    "keywords": ["microframework"],
+    "homepage": "http://silex.sensiolabs.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Igor Wiedler",
+            "email": "igor@wiedler.ch"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "pimple/pimple": "1.*",
+        "symfony/event-dispatcher": ">=2.1,<2.3-dev",
+        "symfony/http-foundation": ">=2.1,<2.3-dev",
+        "symfony/http-kernel": ">=2.1,<2.3-dev",
+        "symfony/routing": ">=2.1,<2.3-dev"
+    },
+    "require-dev": {
+        "symfony/security": ">=2.1,<2.3-dev",
+        "symfony/config": ">=2.1,<2.3-dev",
+        "symfony/locale": ">=2.1,<2.3-dev",
+        "symfony/form": ">=2.1.4,<2.3-dev",
+        "symfony/browser-kit": ">=2.1,<2.3-dev",
+        "symfony/css-selector": ">=2.1,<2.3-dev",
+        "symfony/dom-crawler": ">=2.1,<2.3-dev",
+        "symfony/finder": ">=2.1,<2.3-dev",
+        "symfony/monolog-bridge": ">=2.1,<2.3-dev",
+        "symfony/options-resolver": ">=2.1,<2.3-dev",
+        "symfony/process": ">=2.1,<2.3-dev",
+        "symfony/serializer": ">=2.1,<2.3-dev",
+        "symfony/translation": ">=2.1,<2.3-dev",
+        "symfony/twig-bridge": ">=2.1,<2.3-dev",
+        "symfony/validator": ">=2.1,<2.3-dev",
+        "twig/twig": ">=1.8.0,<2.0-dev",
+        "doctrine/dbal": ">=2.2.0,<2.4.0-dev",
+        "swiftmailer/swiftmailer": "4.2.*",
+        "monolog/monolog": "~1.4,>=1.4.1"
+    },
+    "suggest": {
+        "symfony/browser-kit": ">=2.1,<2.3-dev",
+        "symfony/css-selector": ">=2.1,<2.3-dev",
+        "symfony/dom-crawler": ">=2.1,<2.3-dev",
+        "symfony/form": "To make use of the FormServiceProvider, >= 2.1.4 is required"
+    },
+    "autoload": {
+        "psr-0": { "Silex": "src/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
