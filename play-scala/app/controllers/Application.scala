@@ -10,6 +10,7 @@ import utils._
 import scala.concurrent.Future
 
 import play.api.libs.concurrent.Execution.Implicits._
+import play.core.NamedThreadFactory
 
 object Application extends Controller {
 
@@ -23,7 +24,8 @@ object Application extends Controller {
 
   private val tpe = new ThreadPoolExecutor(minConnections, maxConnections,
     0L, TimeUnit.MILLISECONDS,
-    new LinkedBlockingQueue[Runnable]())
+    new LinkedBlockingQueue[Runnable](),
+    new NamedThreadFactory("dbEc"))
   private val dbEc = ExecutionContext.fromExecutorService(tpe)
 
   // A predicate for checking our ability to service database requests is determined by ensuring that the request
