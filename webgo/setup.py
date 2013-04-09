@@ -4,7 +4,7 @@ import sys
 import os
 
 def start(args):
-  
+  subprocess.call("go get ./...", shell=True, cwd="webgo")
   subprocess.Popen("go run src/hello/hello.go".rsplit(" "), cwd="webgo")
   return 0
 def stop():
