@@ -4,7 +4,7 @@ import os
 
 def start(args):
   
-  subprocess.Popen("go run hello.go".rsplit(" "), cwd="go")
+  subprocess.Popen("go run src/hello/hello.go".rsplit(" "), cwd="go")
   return 0
 def stop():
   
