@@ -1,0 +1,34 @@
+<classpath>
+  <classpathentry output="target/scala-2.10/classes" path="src/main/scala" kind="src"></classpathentry>
+  <classpathentry output="target/scala-2.10/classes" path="src/main/java" kind="src"></classpathentry>
+  <classpathentry output="target/scala-2.10/test-classes" path="src/test/scala" kind="src"></classpathentry>
+  <classpathentry output="target/scala-2.10/test-classes" path="src/test/java" kind="src"></classpathentry>
+  <classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.twitter/finagle-http_2.10/jars/finagle-http_2.10-6.2.1.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.twitter/finagle-core_2.10/jars/finagle-core_2.10-6.2.1.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/io.netty/netty/bundles/netty-3.5.12.Final.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.twitter/util-core_2.10/jars/util-core_2.10-6.2.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.twitter/util-collection_2.10/jars/util-collection_2.10-6.2.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/commons-collections/commons-collections/jars/commons-collections-3.2.1.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.twitter/util-hashing_2.10/jars/util-hashing_2.10-6.2.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.twitter/util-jvm_2.10/jars/util-jvm_2.10-6.2.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.twitter/util-logging_2.10/jars/util-logging_2.10-6.2.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.twitter/util-app_2.10/jars/util-app_2.10-6.2.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.twitter/util-codec_2.10/jars/util-codec_2.10-6.2.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.5.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/commons-lang/commons-lang/jars/commons-lang-2.6.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.fasterxml.jackson.module/jackson-module-scala_2.10/jars/jackson-module-scala_2.10-2.1.3.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.fasterxml.jackson.core/jackson-core/jars/jackson-core-2.1.2.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.fasterxml.jackson.core/jackson-annotations/jars/jackson-annotations-2.1.2.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.fasterxml.jackson.core/jackson-databind/jars/jackson-databind-2.1.2.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.thoughtworks.paranamer/paranamer/jars/paranamer-2.3.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.google.guava/guava/jars/guava-13.0.1.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.10.0.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/com.typesafe.slick/slick_2.10/jars/slick_2.10-1.0.0.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.6.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/mysql/mysql-connector-java/jars/mysql-connector-java-5.1.24.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/commons-dbcp/commons-dbcp/jars/commons-dbcp-1.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/dknapp/.ivy2/cache/commons-pool/commons-pool/jars/commons-pool-1.5.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"></classpathentry>
+  <classpathentry path="bin" kind="output"></classpathentry>
+</classpath>

@@ -59,6 +59,7 @@ library
                  , monad-logger                  >= 0.3
                  , fast-logger                   >= 0.3
                  , random                        >= 1.0
+                 , deepseq                       >= 1.3
 
 executable         bench
     if flag(library-only)

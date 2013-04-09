@@ -38,20 +38,21 @@
   (route/not-found "Not Found"))
 
 
-(defn start-server [{:keys [port worker db-host]}]
+(defn start-server [{:keys [port db-host]}]
   (db/use-database! (str "jdbc:mysql://" db-host "/hello_world")
                     "benchmarkdbuser"
                     "benchmarkdbpass")
   ;; Format responses as JSON
-  (let [handler (wrap-json-response app-routes)]
-    (run-server handler {:port port :worker worker})))
-
+  (let [handler (wrap-json-response app-routes)
+        cpu (.availableProcessors (Runtime/getRuntime))]
+    ;; double worker threads should increase database access performance
+    (run-server handler {:port port :thread (* 2 cpu)})
+    (println (str "http-kit server listens at :" port))))
 
 (defn -main [& args]
   (let [[options _ banner]
         (cli args
              ["-p" "--port" "Port to listen" :default 8080 :parse-fn to-int]
-             ["--worker" "Http worker thread count" :default 6 :parse-fn to-int]
              ["--db-host" "MySQL database host" :default "localhost"]
              ["--[no-]help" "Print this help"])]
     (when (:help options) (println banner) (System/exit 0))
