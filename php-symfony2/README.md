@@ -18,7 +18,7 @@ Uses the Symfony 2/Doctrine 2 Entity functionality.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Symfony Version 2.2.1](http://cakephp.org/)
+* [Symfony Version 2.2.1](http://symfony.com/)
 * [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
 * [nginx 1.2.7](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
