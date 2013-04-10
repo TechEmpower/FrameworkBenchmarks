@@ -7,7 +7,7 @@ import play.api.mvc._
  * condition is not satisfied then a supplied status result is yielded.
  */
 class PredicatedActionBuilder {
-  def apply[A](p: => Boolean, failed: Result)(action: Action[A]): Action[A] = new Action[A] {
+  def apply[A](p: Boolean, failed: Result)(action: Action[A]): Action[A] = new Action[A] {
     def apply(request: Request[A]): Result = {
       if (p) action(request) else failed
     }
