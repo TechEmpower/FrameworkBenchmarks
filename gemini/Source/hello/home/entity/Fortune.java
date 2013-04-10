@@ -45,8 +45,7 @@ public class   Fortune
   };
 
   /**
-   * For our purposes, the default sort order for messages of the day is
-   * sorting by the Fortune's message text. 
+   * For our purposes, Fortunes sort by their message text. 
    */
   @Override
   public int compareTo(Fortune other)
