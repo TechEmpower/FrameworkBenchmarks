@@ -9,3 +9,6 @@ target/
 *.out
 *.class
 mods/
+/.settings
+/.buildpath
+/.project
