@@ -154,7 +154,7 @@ http.createServer(function (req, res) {
     function mysqlQuery(callback) {
       pool.getConnection(function(err, connection) {
         if (err) callback(err);
-        connection.query("SELECT * FROM foos WHERE id = " + getRandomNumber(), function(err, rows) {
+        connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function(err, rows) {
           callback(null, rows[0]);
           connection.end();
         });
