@@ -25,6 +25,7 @@ class Installer:
     self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
+    self.__run_command("sudo sh -c \"echo '*               soft    nofile          4096' >> /etc/security/limits.conf\"")
 
     #######################################
     # Languages
@@ -268,6 +269,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev
+    sudo sh -c "echo '*               soft    nofile          4096' >> /etc/security/limits.conf"
 
     ##############################
     # MySQL
