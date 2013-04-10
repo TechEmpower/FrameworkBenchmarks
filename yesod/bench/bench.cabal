@@ -3,87 +3,28 @@ version:           0.0.0
 cabal-version:     >= 1.8
 build-type:        Simple
 
-Flag dev
-    Description:   Turn on development settings, like auto-reload templates.
-    Default:       False
+executable         bench
+    main-is:           yesod.hs
+    hs-source-dirs:    src
 
-Flag library-only
-    Description:   Build for use with "yesod devel"
-    Default:       False
-
-library
-    exposed-modules: Application
-                     Foundation
-                     Import
-                     Model
-                     Settings
-
-    if flag(dev) || flag(library-only)
-        cpp-options:   -DDEVELOPMENT
-        ghc-options:   -Wall -O0
-    else
-        ghc-options:   -Wall -O2
+    ghc-options:       -threaded -O2 -rtsopts
 
     extensions: TemplateHaskell
                 QuasiQuotes
                 OverloadedStrings
-                NoImplicitPrelude
-                CPP
                 MultiParamTypeClasses
                 TypeFamilies
                 GADTs
-                GeneralizedNewtypeDeriving
-                FlexibleContexts
                 EmptyDataDecls
-                NoMonomorphismRestriction
 
     build-depends: base                          >= 4          && < 5
-                 -- , yesod-platform                >= 1.1        && < 1.2
                  , yesod                         >= 1.1.5      && < 1.2
-                 , yesod-core                    >= 1.1.7      && < 1.2
-                 , yesod-default                 >= 1.1        && < 1.2
                  , text                          >= 0.11       && < 0.12
                  , persistent                    >= 1.1        && < 1.2
                  , persistent-mysql              >= 1.1        && < 1.2
-                 , persistent-template           >= 1.1.1      && < 1.2
-                 , template-haskell
-                 , monad-control                 >= 0.3        && < 0.4
-                 , wai-extra                     >= 1.3        && < 1.4
-                 , yaml                          >= 0.8        && < 0.9
-                 , http-conduit                  >= 1.8        && < 1.10
-                 , directory                     >= 1.1        && < 1.3
                  , warp                          >= 1.3        && < 1.4
-                 , data-default
-                 , aeson
-                 , conduit                       >= 1.0
-                 , monad-logger                  >= 0.3
-                 , fast-logger                   >= 0.3
-                 , random                        >= 1.0
-
-executable         bench
-    if flag(library-only)
-        Buildable: False
-
-    main-is:           main.hs
-    hs-source-dirs:    app
-    build-depends:     base
-                     , bench
-                     , yesod-default
-
-    ghc-options:       -threaded -O2 -rtsopts
-
-test-suite test
-    type:              exitcode-stdio-1.0
-    main-is:           main.hs
-    hs-source-dirs:    tests
-    ghc-options:       -Wall
-
-    build-depends: base
-                 , bench
-                 , yesod-test >= 0.3 && < 0.4
-                 , yesod-default
-                 , yesod-core
-                 , persistent
-                 , persistent-mysql
-                 , resourcet
-                 , monad-logger
+                 , unix                          >= 2.5
+                 , network-conduit               >= 1.0
+                 , primitive                     >= 0.5
+                 , mwc-random                    >= 0.12
+                 , pool-conduit                  >= 0.1
