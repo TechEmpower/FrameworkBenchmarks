@@ -27,7 +27,7 @@ parser.add_argument('--max-concurrency', default=256, help='the maximum concurre
 parser.add_argument('--max-queries', default=20, help='The maximum number of queries to run during the query test', type=int)
 parser.add_argument('--query-interval', default=5, type=int)
 parser.add_argument('--max-threads', default=8, help='The max number of threads to run weight at, this shoul dbe set to the number of cores for your system.', type=int)
-parser.add_argument('--number-of-runs', default=100000, help='the number of requests to make per test run.')
+parser.add_argument('--duration', default=60, help='Time in seconds that each test should run for.')
 parser.add_argument('--starting-concurrency', default=8, type=int)
 parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
 parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
