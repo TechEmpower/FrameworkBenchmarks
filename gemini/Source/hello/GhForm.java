@@ -58,9 +58,9 @@ public class GhForm
   }
 
   @Override
-  protected <C extends Context> void onValidlySubmitted(C arg0)
+  protected void onValidlySubmitted()
   {
-    // Does nothing.    
+    // Does nothing.
   }
 
 }   // End GhForm.

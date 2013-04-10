@@ -5,7 +5,6 @@ import hello.home.entity.*;
 import com.techempower.*;
 import com.techempower.cache.*;
 import com.techempower.data.*;
-import com.techempower.gemini.cluster.client.handler.*;
 import com.techempower.log.*;
 
 /**
@@ -48,6 +47,7 @@ public class GhStore
     
     // Use EntityGroup rather than CacheGroup to ensure World entities are not cached.
     register(EntityGroup.of(World.class));
+    register(EntityGroup.of(Fortune.class));
 
     // Register relationships.
     // We have no relationships in this application.
