@@ -52,7 +52,7 @@ func main() {
 	var err error
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	db, err = sql.Open("mysql", "benchmarkdbuser:benchmarkdbpass@/hello_world?charset=utf8")
+	db, err = sql.Open("mysql", "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8")
 	if err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
