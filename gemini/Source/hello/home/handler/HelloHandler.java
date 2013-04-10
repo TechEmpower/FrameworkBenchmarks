@@ -70,7 +70,6 @@ public class HelloHandler
   {
     final List<Fortune> fortunes = store.list(Fortune.class);
     Collections.sort(fortunes);
-    //return mustache("fortunes", Collections.singletonMap("fortunes", fortunes));   
     return mustache("fortunes", fortunes);
   }
 
