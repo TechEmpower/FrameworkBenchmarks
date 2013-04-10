@@ -1,0 +1,9 @@
+/app/cache
+/app/logs
+/bin
+/vendors
+/build
+/dist
+.DS_Store
+/tags
+.idea
