@@ -40,7 +40,7 @@ object Application extends Controller {
     Ok(Json.obj("message" -> "Hello World!"))
   }
 
-  def db(queries: Int) = PredicatedAction(isDbAvailable, Results.ServiceUnavailable) {
+  def db(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
     Action {
       Async {
         val random = ThreadLocalRandom.current()
