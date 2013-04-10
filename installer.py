@@ -94,7 +94,7 @@ class Installer:
 
     self.__run_command("wget --trust-server-names http://www.php.net/get/php-5.4.13.tar.gz/from/us1.php.net/mirror")
     self.__run_command("tar xvf php-5.4.13.tar.gz")
-    self.__run_command("./configure --with-pdo-mysql --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
+    self.__run_command("./configure --with-pdo-mysql --with-mysql --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
     self.__run_command("sudo make install", cwd="php-5.4.13")
     self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13")

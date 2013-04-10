@@ -7,7 +7,7 @@
       "db_url": "/phreeze/db",
       "query_url": "/phreeze/db?queries=",
       "port": 8080,
-      "sort": 1
+      "sort": 49
     }
   }]
 }
