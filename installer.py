@@ -133,6 +133,14 @@ class Installer:
     self.__run_command("sudo make install", cwd="nginx-1.2.7")
     
     #
+    # Openresty (nginx with openresty stuff)
+    #
+    self.__run_command("curl http://openresty.org/download/ngx_openresty-1.2.7.5.tar.gz | tar xvz")
+    self.__run_command("./configure --with-luajit", cwd="ngx_openresty-1.2.7.5")
+    self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
+    self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
+    
+    #
     # Gunicorn
     #
 
