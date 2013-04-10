@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /phreeze/ "/home/ubuntu/FrameworkBenchmarks/phreeze/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/phreeze/>
+          Options Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>
