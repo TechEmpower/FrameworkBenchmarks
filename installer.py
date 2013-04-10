@@ -103,6 +103,9 @@ class Installer:
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
     self.__run_command("rm php-5.4.13.tar.gz")
 
+    # Composer
+    self.__run_command("curl -sS https://getcomposer.org/installer | php -- --install-dir=bin")
+
     #
     # Haskell
     #
