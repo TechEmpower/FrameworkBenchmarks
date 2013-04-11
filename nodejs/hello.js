@@ -74,7 +74,7 @@ function mongodbDriverQuery(callback) {
   process.nextTick(function() {
   collection.find({ id: getRandomNumber()}).toArray(function(err, world) {
     callback(err, world[0]);
-  });    
+  });
   })
 }
 
@@ -112,7 +112,7 @@ http.createServer(function (req, res) {
 
     async.parallel(queryFunctions, function(err, results) {
       res.end(JSON.stringify(results));
-    });    
+    });
     break;
 
   case '/mongoose':
@@ -150,30 +150,30 @@ http.createServer(function (req, res) {
 
   case '/mysql':
     res.writeHead(200, {'Content-Type': 'application/json'});
-    
-    pool.getConnection(function(err, connection) {
-      if (err || !connection) {
-        return res.end('MYSQL CONNECTION ERROR.');
-      } 
 
-      function mysqlQuery(callback) {
-        connection.query("SELECT * FROM World WHERE id = " + getRandomNumber(), function(err, rows) {
+    function mysqlQuery(callback) {
+      pool.getConnection(function(err, connection) {
+        if (err) callback(err);
+        connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function(err, rows) {
           callback(null, rows[0]);
+          connection.end();
         });
-      }
-
-      var values = url.parse(req.url, true);
-      var queries = values.query.queries || 1;
-      var queryFunctions = new Array(queries);
-
-      for (var i = 0; i < queries; i += 1) {
-        queryFunctions[i] = mysqlQuery;
-      }
-
-      async.parallel(queryFunctions, function(err, results) {
-        res.end(JSON.stringify(results));
-        connection.end();
       });
+    }
+
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    var queryFunctions = new Array(queries);
+
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = mysqlQuery;
+    }
+    async.parallel(queryFunctions, function(err, results) {
+      if (err) {
+        res.writeHead(500);
+        return res.end('MYSQL CONNECTION ERROR.');
+      }
+      res.end(JSON.stringify(results));
     });
     break;
 
