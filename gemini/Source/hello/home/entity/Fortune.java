@@ -15,11 +15,20 @@ public class   Fortune
   private String message;
   
   /**
+   * Default Constructor.
+   */
+  public Fortune()
+  {
+    // Does nothing.
+  }
+  
+  /**
    * Set the message.  
    */
-  public void setMessage(String message)
+  public Fortune setMessage(String message)
   {
     this.message = message;
+    return this;
   }
   
   /**
