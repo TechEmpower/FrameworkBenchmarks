@@ -1,5 +1,5 @@
 {
-  "framework": "php-silex",
+  "framework": "silex",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -7,7 +7,7 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 14
+      "sort": 54
     }
   }]
 }
