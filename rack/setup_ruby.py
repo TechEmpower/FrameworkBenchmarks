@@ -16,6 +16,7 @@ def start(args):
   except subprocess.CalledProcessError:
     return 1
 def stop():
+  subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
   try:
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()

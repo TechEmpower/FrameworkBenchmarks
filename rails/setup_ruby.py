@@ -4,6 +4,9 @@ import sys
 import re
 import os
 import setup_util
+from os.path import expanduser
+
+home = expanduser("~")
 
 def start(args):
   setup_util.replace_text("rails/config/database-ruby.yml", "host: .*", "host: " + args.database_host)
@@ -18,6 +21,7 @@ def start(args):
   except subprocess.CalledProcessError:
     return 1
 def stop():
+  subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
   try:
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
