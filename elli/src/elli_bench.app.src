@@ -1,0 +1,12 @@
+{application, elli_bench,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { elli_bench_app, []}},
+  {env, []}
+ ]}.

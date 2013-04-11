@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 14:45:17 UTC 2013
+
+  System load:  1.04               Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup php-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/dbraw.php?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/dbraw.php?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   149.16ms  245.49ms   3.14s    94.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 44.47s, 25.13MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:   2248.72
+Transfer/sec:    578.66KB
+
+---------------------------------------------------------
+ Queries: 1 for php-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/dbraw.php?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/dbraw.php?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   118.83ms  173.23ms   1.97s    93.71%
+    Req/Sec     1.91     43.64     1.00k    99.81%
+  100000 requests in 39.32s, 21.72MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:   2543.37
+Transfer/sec:    565.63KB
+
+---------------------------------------------------------
+ Queries: 5 for php-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/dbraw.php?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/dbraw.php?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   203.30ms  361.37ms   6.66s    93.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 0.96m, 35.37MB read
+  Socket errors: connect 0, read 0, write 0, timeout 248
+Requests/sec:   1743.25
+Transfer/sec:    631.31KB
+
+---------------------------------------------------------
+ Queries: 10 for php-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/dbraw.php?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/dbraw.php?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   253.68ms  261.46ms   1.87s    86.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.40m, 52.52MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:   1188.07
+Transfer/sec:    638.94KB
+
+---------------------------------------------------------
+ Queries: 15 for php-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/dbraw.php?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/dbraw.php?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   344.87ms  308.80ms   1.82s    67.03%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.07m, 69.58MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    804.09
+Transfer/sec:    572.91KB
+
+---------------------------------------------------------
+ Queries: 20 for php-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/dbraw.php?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/dbraw.php?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   459.61ms  392.73ms   2.53s    64.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.71m, 86.64MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:    614.38
+Transfer/sec:    545.06KB

@@ -15,29 +15,29 @@ Use the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-e
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [PHP Version 5.3.10](http://www.php.net/)
-* [Apache Version 2.2.22](http://httpd.apache.org/)
+* [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
+* [nginx 1.2.7](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 * [PHP ActiveRecord Nightly 20121221](http://www.phpactiverecord.org/)
 
 ## Test URLs
 ### JSON Encoding Test
 
-http://localhost/php/json.php
+http://localhost/json.php
 
 
 ### Data-Store/Database Mapping Test
 
 Raw:
-http://localhost/php/dbraw.php
+http://localhost/dbraw.php
 
 ORM:
-http://localhost/php/dborm.php
+http://localhost/dborm.php
 
 ### Variable Query Test
 
 Raw:
-http://localhost/php/dbraw.php?queries=5
+http://localhost/dbraw.php?queries=5
 
 ORM:
-http://localhost/php/dborm.php?queries=5
+http://localhost/dborm.php?queries=5

@@ -1,0 +1,119 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Apr  4 13:47:30 UTC 2013
+
+  System load:  0.29               Processes:           70
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup django-stripped
+ wrk -r 100000 -c 256 -t 8 http://10.253.68.28:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   666.98ms  420.29ms   1.64s    56.20%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.84m, 23.63MB read
+Requests/sec:    586.97
+Transfer/sec:    142.03KB
+
+---------------------------------------------------------
+ Concurrency: 8 for django-stripped
+ wrk -n 100000 -c 8 -t 8 http://10.253.68.28:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.17ms   11.20ms 841.53ms   89.72%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 3.88m, 23.63MB read
+Requests/sec:    429.58
+Transfer/sec:    103.94KB
+
+---------------------------------------------------------
+ Concurrency: 16 for django-stripped
+ wrk -n 100000 -c 16 -t 8 http://10.253.68.28:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.92ms   17.12ms 106.36ms   72.65%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 4.37m, 23.63MB read
+Requests/sec:    380.96
+Transfer/sec:     92.18KB
+
+---------------------------------------------------------
+ Concurrency: 32 for django-stripped
+ wrk -n 100000 -c 32 -t 8 http://10.253.68.28:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.72ms   33.62ms 209.29ms   69.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 3.55m, 23.63MB read
+Requests/sec:    470.00
+Transfer/sec:    113.73KB
+
+---------------------------------------------------------
+ Concurrency: 64 for django-stripped
+ wrk -n 100000 -c 64 -t 8 http://10.253.68.28:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   166.11ms   88.84ms 561.09ms   78.06%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 3.87m, 23.63MB read
+Requests/sec:    430.47
+Transfer/sec:    104.16KB
+
+---------------------------------------------------------
+ Concurrency: 128 for django-stripped
+ wrk -n 100000 -c 128 -t 8 http://10.253.68.28:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   395.13ms  296.38ms   1.06s    56.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 3.37m, 23.63MB read
+Requests/sec:    494.77
+Transfer/sec:    119.72KB
+
+---------------------------------------------------------
+ Concurrency: 256 for django-stripped
+ wrk -n 100000 -c 256 -t 8 http://10.253.68.28:8080/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   567.96ms  280.10ms   1.28s    67.37%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.92m, 23.63MB read
+Requests/sec:    571.20
+Transfer/sec:    138.21KB

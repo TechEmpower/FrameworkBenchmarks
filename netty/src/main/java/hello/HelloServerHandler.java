@@ -43,7 +43,7 @@ public class HelloServerHandler extends ChannelInboundMessageHandlerAdapter<Obje
     private boolean flush;
 
     @Override
-    protected boolean beginMessageReceived(ChannelHandlerContext ctx) throws Exception {
+    public boolean beginMessageReceived(ChannelHandlerContext ctx) throws Exception {
         flush = false;
         return super.beginMessageReceived(ctx);
     }

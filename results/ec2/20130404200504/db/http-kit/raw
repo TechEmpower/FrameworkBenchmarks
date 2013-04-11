@@ -1,0 +1,119 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Apr  4 18:18:16 UTC 2013
+
+  System load:  0.1                Processes:           70
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup http-kit
+ wrk -r 100000 -c 256 -t 8 http://10.253.68.28:8080/http-kit/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/http-kit/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.56ms    6.74ms 128.84ms   94.04%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100002 requests in 27.36s, 15.63MB read
+Requests/sec:   3654.64
+Transfer/sec:    584.92KB
+
+---------------------------------------------------------
+ Concurrency: 8 for http-kit
+ wrk -n 100000 -c 8 -t 8 http://10.253.68.28:8080/http-kit/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/http-kit/db/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.17ms    0.86ms  11.98ms   94.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 27.30s, 15.63MB read
+Requests/sec:   3662.80
+Transfer/sec:    586.22KB
+
+---------------------------------------------------------
+ Concurrency: 16 for http-kit
+ wrk -n 100000 -c 16 -t 8 http://10.253.68.28:8080/http-kit/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/http-kit/db/1
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.39ms    1.01ms  18.22ms   92.84%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 27.69s, 15.63MB read
+Requests/sec:   3611.41
+Transfer/sec:    578.00KB
+
+---------------------------------------------------------
+ Concurrency: 32 for http-kit
+ wrk -n 100000 -c 32 -t 8 http://10.253.68.28:8080/http-kit/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/http-kit/db/1
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.10ms    1.62ms  22.29ms   85.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 28.51s, 15.63MB read
+Requests/sec:   3507.89
+Transfer/sec:    561.44KB
+
+---------------------------------------------------------
+ Concurrency: 64 for http-kit
+ wrk -n 100000 -c 64 -t 8 http://10.253.68.28:8080/http-kit/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/http-kit/db/1
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.50ms    2.45ms  78.49ms   91.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 27.36s, 15.63MB read
+Requests/sec:   3655.06
+Transfer/sec:    584.98KB
+
+---------------------------------------------------------
+ Concurrency: 128 for http-kit
+ wrk -n 100000 -c 128 -t 8 http://10.253.68.28:8080/http-kit/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/http-kit/db/1
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.92ms    2.92ms  60.43ms   86.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 27.26s, 15.63MB read
+Requests/sec:   3668.76
+Transfer/sec:    587.18KB
+
+---------------------------------------------------------
+ Concurrency: 256 for http-kit
+ wrk -n 100000 -c 256 -t 8 http://10.253.68.28:8080/http-kit/db/1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/http-kit/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.92ms    5.27ms  89.45ms   89.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 27.51s, 15.63MB read
+Requests/sec:   3635.53
+Transfer/sec:    581.86KB

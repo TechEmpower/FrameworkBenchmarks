@@ -1,0 +1,30 @@
+name:              bench
+version:           0.0.0
+cabal-version:     >= 1.8
+build-type:        Simple
+
+executable         bench
+    main-is:           yesod.hs
+    hs-source-dirs:    src
+
+    ghc-options:       -threaded -O2 -rtsopts
+
+    extensions: TemplateHaskell
+                QuasiQuotes
+                OverloadedStrings
+                MultiParamTypeClasses
+                TypeFamilies
+                GADTs
+                EmptyDataDecls
+
+    build-depends: base                          >= 4          && < 5
+                 , yesod                         >= 1.1.5      && < 1.2
+                 , text                          >= 0.11       && < 0.12
+                 , persistent                    >= 1.1        && < 1.2
+                 , persistent-mysql              >= 1.1        && < 1.2
+                 , warp                          >= 1.3        && < 1.4
+                 , unix                          >= 2.5
+                 , network-conduit               >= 1.0
+                 , primitive                     >= 0.5
+                 , mwc-random                    >= 0.12
+                 , pool-conduit                  >= 0.1

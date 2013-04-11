@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 22:37:47 PDT 2013
+
+  System load:  0.14               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.01ms   82.93ms   1.00s    99.31%
+    Req/Sec     3.33k   782.95     4.00k    85.42%
+  100002 requests in 2.76s, 21.45MB read
+Requests/sec:  36176.91
+Transfer/sec:      7.76MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   337.56us  109.07us   1.00ms   79.34%
+    Req/Sec     2.53k   500.24     3.00k    53.05%
+  100000 requests in 4.03s, 21.45MB read
+Requests/sec:  24785.17
+Transfer/sec:      5.32MB
+
+---------------------------------------------------------
+ Concurrency: 16 for php
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   500.91us  232.46us   2.20ms   83.33%
+    Req/Sec     3.35k   799.63     4.00k    85.80%
+  100000 requests in 3.00s, 21.45MB read
+Requests/sec:  33320.04
+Transfer/sec:      7.15MB
+
+---------------------------------------------------------
+ Concurrency: 32 for php
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.97ms  812.14us   9.01ms   92.57%
+    Req/Sec     3.54k   750.31     4.00k    88.51%
+  100002 requests in 2.74s, 21.45MB read
+Requests/sec:  36433.56
+Transfer/sec:      7.82MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.98ms    2.52ms  30.22ms   97.37%
+    Req/Sec     2.97k   825.25     4.00k    46.05%
+  100002 requests in 2.94s, 21.45MB read
+Requests/sec:  34052.87
+Transfer/sec:      7.31MB
+
+---------------------------------------------------------
+ Concurrency: 128 for php
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.42ms    2.62ms  14.80ms   75.52%
+    Req/Sec     3.50k   786.10     5.00k    84.62%
+  100005 requests in 2.77s, 21.45MB read
+Requests/sec:  36094.09
+Transfer/sec:      7.74MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.49ms   16.52ms 154.18ms   96.45%
+    Req/Sec     2.59k   612.40     4.00k    95.86%
+  100002 requests in 3.25s, 21.45MB read
+Requests/sec:  30738.56
+Transfer/sec:      6.59MB

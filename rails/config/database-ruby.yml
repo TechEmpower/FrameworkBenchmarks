@@ -18,5 +18,5 @@ production:
   username: benchmarkdbuser
   password: benchmarkdbpass
   host: localhost
-  pool: 200
+  pool: 256
   timeout: 5000

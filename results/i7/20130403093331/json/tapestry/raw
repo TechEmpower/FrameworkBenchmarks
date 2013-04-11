@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 23:49:02 PDT 2013
+
+  System load:  1.52               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup tapestry
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellojson
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellojson
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.37ms   85.58ms 865.10ms   93.18%
+    Req/Sec   793.18    410.70     2.00k    78.89%
+  100001 requests in 8.93s, 19.80MB read
+Requests/sec:  11192.96
+Transfer/sec:      2.22MB
+
+---------------------------------------------------------
+ Concurrency: 8 for tapestry
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/tapestry/hellojson
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellojson
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   356.62us  270.34us   1.94ms   86.29%
+    Req/Sec     1.82k   788.38     3.00k    34.86%
+  100000 requests in 3.37s, 18.31MB read
+Requests/sec:  29652.89
+Transfer/sec:      5.43MB
+
+---------------------------------------------------------
+ Concurrency: 16 for tapestry
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/tapestry/hellojson
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellojson
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   203.12us  135.65us 774.00us   90.91%
+    Req/Sec     9.65k   644.32    10.00k    74.24%
+  100002 requests in 1.21s, 18.31MB read
+Requests/sec:  82520.05
+Transfer/sec:     15.11MB
+
+---------------------------------------------------------
+ Concurrency: 32 for tapestry
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/tapestry/hellojson
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellojson
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   381.05us  460.39us   2.32ms   88.52%
+    Req/Sec    12.54k     1.84k   16.00k    63.93%
+  100003 requests in 1.14s, 18.31MB read
+Requests/sec:  87840.67
+Transfer/sec:     16.08MB
+
+---------------------------------------------------------
+ Concurrency: 64 for tapestry
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/tapestry/hellojson
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellojson
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   681.85us  628.68us   2.69ms   87.80%
+    Req/Sec    14.02k     1.93k   16.00k    63.41%
+  100002 requests in 871.60ms, 18.31MB read
+Requests/sec: 114734.35
+Transfer/sec:     21.01MB
+
+---------------------------------------------------------
+ Concurrency: 128 for tapestry
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/tapestry/hellojson
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellojson
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.20ms    0.96ms   4.35ms   88.37%
+    Req/Sec    14.09k     1.11k   17.00k    86.05%
+  100005 requests in 855.98ms, 18.31MB read
+Requests/sec: 116831.14
+Transfer/sec:     21.39MB
+
+---------------------------------------------------------
+ Concurrency: 256 for tapestry
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellojson
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellojson
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.43ms   11.82ms  61.83ms   95.83%
+    Req/Sec    13.33k     1.65k   18.00k    64.58%
+  100002 requests in 916.28ms, 18.31MB read
+Requests/sec: 109139.13
+Transfer/sec:     19.98MB

@@ -22,14 +22,23 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)    
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
+    self.__run_command("sudo sh -c \"echo '*               soft    nofile          4096' >> /etc/security/limits.conf\"")
 
     #######################################
     # Languages
     #######################################
 
+    #
+    # Erlang
+    #
+    self.__run_command("sudo cp ../config/erlang.list /etc/apt/sources.list.d/erlang.list")
+    self.__run_command("wget -O - http://binaries.erlang-solutions.com/debian/erlang_solutions.asc | sudo apt-key add -")
+    self.__run_command("sudo apt-get update")
+    self.__run_command("sudo apt-get install esl-erlang", True)
+    
     #
     # Python
     #
@@ -48,7 +57,7 @@ class Installer:
     # nodejs
     #
 
-    self.__run_command("curl http://nodejs.org/dist/v0.10.0/node-v0.10.0-linux-x64.tar.gz | tar xvz")
+    self.__run_command("curl http://nodejs.org/dist/v0.10.2/node-v0.10.2-linux-x64.tar.gz | tar xvz")
 
     #
     # Java
@@ -71,20 +80,37 @@ class Installer:
     # We need a newer version of jruby-rack
     self.__run_command("git clone git://github.com/jruby/jruby-rack.git")
     subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do bundle install"])
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do jruby -S rake clean gem SKIP_SPECS=true"])
+    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"])
     subprocess.call(["bash", "-c", "cd installs/jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem"])
 
     #
     # go
     #
 
-    self.__run_command("curl http://go.googlecode.com/files/go1.0.3.linux-amd64.tar.gz | tar xvz")
+    self.__run_command("curl http://go.googlecode.com/files/go1.1beta1.linux-amd64.tar.gz | tar xvz")
 
     #
     # php
     #
 
-    self.__run_command("sudo apt-get install php5 php5-mysql", True)
+    self.__run_command("wget --trust-server-names http://www.php.net/get/php-5.4.13.tar.gz/from/us1.php.net/mirror")
+    self.__run_command("tar xvf php-5.4.13.tar.gz")
+    self.__run_command("./configure --with-pdo-mysql --with-mysql --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
+    self.__run_command("make", cwd="php-5.4.13")
+    self.__run_command("sudo make install", cwd="php-5.4.13")
+    self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13")
+    self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
+    self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
+    self.__run_command("rm php-5.4.13.tar.gz")
+
+    # Composer
+    self.__run_command("curl -sS https://getcomposer.org/installer | php -- --install-dir=bin")
+
+    #
+    # Haskell
+    #
+
+    self.__run_command("sudo apt-get install ghc cabal-install", True)
 
     #######################################
     # Webservers
@@ -100,13 +126,30 @@ class Installer:
     self.__run_command("sudo mv /etc/apache2/ports.conf /etc/apache2/ports.conf.orig")
     self.__run_command("sudo sh -c \"cat ../config/ports.conf > /etc/apache2/ports.conf\"")
     self.__run_command("sudo /etc/init.d/apache2 stop")
-
+    
+    #
+    # Nginx
+    #
+    self.__run_command("curl http://nginx.org/download/nginx-1.2.7.tar.gz | tar xvz")
+    self.__run_command("./configure", cwd="nginx-1.2.7")
+    self.__run_command("make", cwd="nginx-1.2.7")
+    self.__run_command("sudo make install", cwd="nginx-1.2.7")
+    
+    #
+    # Openresty (nginx with openresty stuff)
+    #
+    self.__run_command("curl http://openresty.org/download/ngx_openresty-1.2.7.5.tar.gz | tar xvz")
+    self.__run_command("./configure --with-luajit", cwd="ngx_openresty-1.2.7.5")
+    self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
+    self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
+    
     #
     # Gunicorn
     #
 
     self.__run_command("sudo easy_install -U 'gunicorn==0.17.2'")
     self.__run_command("sudo easy_install -U 'eventlet==0.12.1'")
+    self.__run_command("sudo pip install --upgrade 'gevent==0.13.8'")
 
     #
     # Resin
@@ -169,6 +212,7 @@ class Installer:
     self.__run_command("curl http://www.djangoproject.com/m/releases/1.4/Django-1.4.tar.gz | tar xvz")
     self.__run_command("sudo rm -rf /usr/local/lib/python2.7/site-packages/django")
     self.__run_command("sudo python setup.py install", cwd="Django-1.4")
+    self.__run_command("sudo easy_install -U 'ujson==1.30'")
 
     ##############################
     # Grails
@@ -176,13 +220,19 @@ class Installer:
     self.__run_command("wget http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
     self.__run_command("unzip -o grails-2.1.1.zip")
     self.__run_command("rm grails-2.1.1.zip")
+    
+
+    ##############################
+    # Flask
+    ##############################
+    self.__run_command("sudo pip install flask flask-sqlalchemy")
 
     ##############################
     # Play
     ##############################
-    self.__run_command("wget http://downloads.typesafe.com/play/2.1.0/play-2.1.0.zip")
-    self.__run_command("unzip -o play-2.1.0.zip")
-    self.__run_command("rm play-2.1.0.zip")
+    self.__run_command("wget http://downloads.typesafe.com/play/2.1.1/play-2.1.1.zip")
+    self.__run_command("unzip -o play-2.1.1.zip")
+    self.__run_command("rm play-2.1.1.zip")
 
     ##############################
     # Vert.x
@@ -190,9 +240,10 @@ class Installer:
     self.__run_command("curl http://vertx.io/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
 
     ##############################
-    # WebGO
+    # Yesod
     ##############################
-    self.__run_command("go/bin/go get github.com/hoisie/web")
+    self.__run_command("cabal update")
+    self.__run_command("cabal install yesod persistent-mysql")
 
     ##############################################################
     #
@@ -229,6 +280,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev
+    sudo sh -c "echo '*               soft    nofile          4096' >> /etc/security/limits.conf"
 
     ##############################
     # MySQL
@@ -256,11 +308,24 @@ class Installer:
     ./waf build
     sudo ./waf install
     cd ~
+    
+    ##############################
+    # wrk
+    ##############################
+
+    git clone https://github.com/wg/wrk.git
+    cd wrk
+    make
+    sudo cp wrk /usr/local/bin
+    cd ~
 
     ##############################
     # MongoDB
     ##############################
-    yes | sudo apt-get install mongodb
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+    sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
+    sudo apt-get update 
+    yes | sudo apt-get install mongodb-10gen
     
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf

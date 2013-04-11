@@ -1,0 +1,106 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 11:00:12 UTC 2013
+
+  System load:  1.32               Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 4%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup grails
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/grails/hello/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/grails/hello/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   187.78ms  108.06ms   1.46s    92.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.20m, 26.18MB read
+Requests/sec:   1391.63
+Transfer/sec:    373.12KB
+
+---------------------------------------------------------
+ Queries: 1 for grails
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/grails/hello/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/grails/hello/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   127.62ms   60.49ms 494.38ms   84.51%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 0.90m, 21.11MB read
+  Socket errors: connect 0, read 57, write 0, timeout 884
+Requests/sec:   1850.63
+Transfer/sec:    400.11KB
+
+---------------------------------------------------------
+ Queries: 5 for grails
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/grails/hello/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/grails/hello/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   249.67ms   90.09ms   1.43s    90.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.60m, 41.59MB read
+Requests/sec:   1040.13
+Transfer/sec:    443.02KB
+
+---------------------------------------------------------
+ Queries: 10 for grails
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/grails/hello/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/grails/hello/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   384.30ms   76.17ms   1.07s    87.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.48m, 67.23MB read
+Requests/sec:    672.54
+Transfer/sec:    462.97KB
+
+---------------------------------------------------------
+ Queries: 15 for grails
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/grails/hello/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/grails/hello/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   524.51ms   95.91ms   1.28s    88.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 3.38m, 92.86MB read
+Requests/sec:    493.37
+Transfer/sec:    469.14KB
+
+---------------------------------------------------------
+ Queries: 20 for grails
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/grails/hello/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/grails/hello/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   660.52ms  113.40ms   1.56s    87.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 4.25m, 118.50MB read
+Requests/sec:    391.81
+Transfer/sec:    475.44KB

@@ -1,0 +1,100 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.57ms   16.25ms 155.46ms   93.06%
+    Req/Sec   781.49      0.91k    2.00k    67.10%
+  100000 requests in 19.07s, 20.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 452
+Requests/sec:   5244.63
+Transfer/sec:      1.05MB
+
+---------------------------------------------------------
+ Queries: 1 for gemini
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.86ms   17.65ms 212.99ms   85.67%
+    Req/Sec     1.73k   453.76     2.00k    72.93%
+  100000 requests in 11.65s, 17.05MB read
+Requests/sec:   8580.52
+Transfer/sec:      1.46MB
+
+---------------------------------------------------------
+ Queries: 5 for gemini
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   120.16ms   59.05ms 784.50ms   82.53%
+    Req/Sec     0.83     28.77     1.00k    99.92%
+  100000 requests in 44.82s, 29.27MB read
+Requests/sec:   2231.16
+Transfer/sec:    668.64KB
+
+---------------------------------------------------------
+ Queries: 10 for gemini
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   187.91ms   95.22ms 631.33ms   74.51%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.20m, 44.42MB read
+Requests/sec:   1387.59
+Transfer/sec:    631.12KB
+
+---------------------------------------------------------
+ Queries: 15 for gemini
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   274.36ms  137.77ms 996.54ms   74.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.76m, 59.57MB read
+Requests/sec:    944.86
+Transfer/sec:    576.37KB
+
+---------------------------------------------------------
+ Queries: 20 for gemini
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   362.36ms  206.05ms   3.60s    83.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.33m, 74.72MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    714.61
+Transfer/sec:    546.78KB

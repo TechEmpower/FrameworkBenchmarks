@@ -1,0 +1,3 @@
+_bench:
+    resource: "@SkamanderBenchmarkBundle/Controller/BenchController.php"
+    type:     annotation

@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   172.92ms  141.98ms   1.04s    71.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 1.12m, 21.07MB read
+Requests/sec:   1490.42
+Transfer/sec:    321.60KB
+
+---------------------------------------------------------
+ Concurrency: 8 for cake
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.73ms    4.25ms 114.50ms   97.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.19m, 21.07MB read
+Requests/sec:   1403.91
+Transfer/sec:    302.92KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cake
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.61ms    7.42ms 131.92ms   91.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100002 requests in 1.10m, 21.07MB read
+Requests/sec:   1510.69
+Transfer/sec:    325.97KB
+
+---------------------------------------------------------
+ Concurrency: 32 for cake
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.96ms   19.01ms 197.40ms   89.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.08m, 21.07MB read
+Requests/sec:   1547.28
+Transfer/sec:    333.86KB
+
+---------------------------------------------------------
+ Concurrency: 64 for cake
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.45ms   47.26ms 429.85ms   87.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.08m, 21.07MB read
+Requests/sec:   1546.64
+Transfer/sec:    333.72KB
+
+---------------------------------------------------------
+ Concurrency: 128 for cake
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.51ms   92.96ms   1.02s    86.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.09m, 21.07MB read
+Requests/sec:   1528.97
+Transfer/sec:    329.91KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cake
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   166.21ms  147.16ms   1.01s    73.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100001 requests in 1.10m, 21.07MB read
+Requests/sec:   1513.67
+Transfer/sec:    326.62KB
