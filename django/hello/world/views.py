@@ -4,14 +4,14 @@ from django.template import Context, loader
 from django.http import HttpResponse
 from django.core import serializers
 from world.models import World
-import simplejson
+import ujson
 import random
 
 def json(request):
   response = {
     "message": "Hello, World!"
   }
-  return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+  return HttpResponse(ujson.dumps(response), mimetype="application/json")
 
 def db(request):
   queries = int(request.GET.get('queries', 1))
