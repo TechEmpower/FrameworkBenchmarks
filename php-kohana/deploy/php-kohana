@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /php-kohana/ "/home/ubuntu/FrameworkBenchmarks/php-kohana/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/php-kohana>
+          Options Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>
