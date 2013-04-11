@@ -1,13 +1,18 @@
 {
-  "framework": "tornado-raw",
+  "framework": "tornado",
   "tests": [{
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
+      "port": 8080,
+      "sort": 52
+    },
+    "raw": {
+      "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 44
+      "sort": 53
     }
   }]
 }
