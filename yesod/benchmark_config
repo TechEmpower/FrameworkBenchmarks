@@ -5,8 +5,8 @@
       "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/db2/",
-      "port": 3000,
+      "query_url": "/dbs/",
+      "port": 8000,
       "sort": 37
     }
   }]
