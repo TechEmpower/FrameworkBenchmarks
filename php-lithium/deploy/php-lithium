@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /php-lithium/ "/home/ubuntu/FrameworkBenchmarks/php-lithium/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/php-lithium>
+          Options Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>
