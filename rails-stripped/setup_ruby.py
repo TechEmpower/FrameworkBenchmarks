@@ -4,6 +4,9 @@ import sys
 import re
 import os
 import setup_util
+from os.path import expanduser
+
+home = expanduser("~")
 
 def start(args):
   setup_util.replace_text("rails-stripped/config/database-ruby.yml", "host: .*", "host: " + args.database_host)
@@ -12,11 +15,13 @@ def start(args):
     subprocess.check_call("cp Gemfile-ruby Gemfile", shell=True, cwd="rails-stripped")
     subprocess.check_call("cp Gemfile-ruby.lock Gemfile.lock", shell=True, cwd="rails-stripped")
     subprocess.check_call("cp config/database-ruby.yml config/database.yml", shell=True, cwd="rails-stripped")
-    subprocess.Popen("rvm ruby-2.0.0-p0 do bundle exec unicorn_rails -E production -c config/unicorn.rb", shell=True, cwd="rails-stripped")
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/rails-stripped/config/nginx.conf", shell=True)
+    subprocess.Popen("rvm ruby-2.0.0-p0 do bundle exec unicorn_rails-stripped -E production -c config/unicorn.rb", shell=True, cwd="rails-stripped")
     return 0
   except subprocess.CalledProcessError:
     return 1
 def stop():
+  subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
   try:
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
