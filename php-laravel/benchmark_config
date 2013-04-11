@@ -1,5 +1,5 @@
 {
-  "framework": "php-laravel",
+  "framework": "laravel",
   "tests": [{
     "default": {
       "setup_file": "setup",
