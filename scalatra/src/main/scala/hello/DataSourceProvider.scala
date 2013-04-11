@@ -29,6 +29,6 @@ trait TestDataSourceProvider extends DataSourceProvider {
  */
 trait JndiDataSourceProvider extends DataSourceProvider {
 
-  lazy val dataSource = new InitialContext().lookup("jdbc/hello_world").asInstanceOf[DataSource]
+  lazy val dataSource = new InitialContext().lookup("java:comp/env/jdbc/hello_world").asInstanceOf[DataSource]
 
 }
