@@ -6,3 +6,4 @@ gem 'rack', '1.5.1'
 gem 'mysql2', '0.3.11'
 gem 'passenger', '3.9.5.rc3'
 gem "sinatra-activerecord", "1.2.2"
+gem "unicorn", "4.6.2"

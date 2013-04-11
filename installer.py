@@ -25,6 +25,7 @@ class Installer:
     self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
+    self.__run_command("sudo sh -c \"echo '*               soft    nofile          4096' >> /etc/security/limits.conf\"")
 
     #######################################
     # Languages
@@ -94,13 +95,16 @@ class Installer:
 
     self.__run_command("wget --trust-server-names http://www.php.net/get/php-5.4.13.tar.gz/from/us1.php.net/mirror")
     self.__run_command("tar xvf php-5.4.13.tar.gz")
-    self.__run_command("./configure --with-pdo-mysql --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
+    self.__run_command("./configure --with-pdo-mysql --with-mysql --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
     self.__run_command("sudo make install", cwd="php-5.4.13")
     self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13")
     self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
     self.__run_command("rm php-5.4.13.tar.gz")
+
+    # Composer
+    self.__run_command("curl -sS https://getcomposer.org/installer | php -- --install-dir=bin")
 
     #
     # Haskell
@@ -130,6 +134,14 @@ class Installer:
     self.__run_command("./configure", cwd="nginx-1.2.7")
     self.__run_command("make", cwd="nginx-1.2.7")
     self.__run_command("sudo make install", cwd="nginx-1.2.7")
+    
+    #
+    # Openresty (nginx with openresty stuff)
+    #
+    self.__run_command("curl http://openresty.org/download/ngx_openresty-1.2.7.5.tar.gz | tar xvz")
+    self.__run_command("./configure --with-luajit", cwd="ngx_openresty-1.2.7.5")
+    self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
+    self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
     
     #
     # Gunicorn
@@ -268,6 +280,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev
+    sudo sh -c "echo '*               soft    nofile          4096' >> /etc/security/limits.conf"
 
     ##############################
     # MySQL

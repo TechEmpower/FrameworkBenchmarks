@@ -44,6 +44,8 @@ Next, we're going to setup the servers with all the necessary software:
 
 	./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --install-software --list-tests
     source ~/.bash_profile
+    # For your first time through the tests, set the ulimit for open files
+    ulimit -n 4096
     # Most software is installed autormatically by the script, but running the mongo command below from 
     # the install script was causing some errors. For now this needs to be run manually.
     cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"
@@ -94,6 +96,8 @@ Next, we're going to setup the servers with all the necessary software:
 
 	./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --install-software --list-tests
     source ~/.bash_profile
+    # For your first time through the tests, set the ulimit for open files
+    ulimit -n 4096
     # Most software is installed autormatically by the script, but running the mongo command below from
     # the install script was causing some errors. For now this needs to be run manually.
     cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"
