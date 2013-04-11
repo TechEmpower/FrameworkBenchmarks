@@ -18,7 +18,7 @@ return array
              *
              * Ports and sockets may be appended to the hostname.
              */
-            'hostname'   => '192.168.100.102',
+            'hostname'   => 'localhost',
             'database'   => 'hello_world',
             'username'   => 'benchmarkdbuser',
             'password'   => 'benchmarkdbpass',
