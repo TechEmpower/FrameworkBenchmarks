@@ -1,0 +1,626 @@
+/*-------------------------------------------------------------------------------------------------
+   Lithium: the most rad php framework
+
+   @copyright     Copyright 2013, Union of RAD (http://union-of-rad.org)
+   @license       http://opensource.org/licenses/bsd-license.php The BSD License
+-------------------------------------------------------------------------------------------------*/
+
+/*--- Reset ---*/
+* { margin: 0; padding: 0; }
+html, body { height: 100%; min-height: 100%; }
+
+/*--- Test Dashboard ---*/
+body.test-dashboard {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 1.5em;
+	color: #0d0d0d;
+	background-color: #fff;
+	margin: 0;
+	min-width: 800px;
+}
+
+body.test-dashboard a {
+	color: #333;
+}
+
+body.test-dashboard #header h1 {
+	margin: .25em 1% 0 0;
+	float:right;
+	font-weight: normal;
+}
+
+body.test-dashboard #header h1 a {
+	text-decoration: none;
+	display: block;
+	padding: .45em 0.75em 0 0;
+	color: rgba(0,0,0,.15);
+}
+
+body.test-dashboard .triangle:before {
+	content: '\25B2';
+	font-size: 1em;
+}
+
+body.test-dashboard #header {
+	padding: 0;
+}
+
+body.test-dashboard #header:after {
+	display: block;
+	content: ' ';
+	clear: both;
+}
+
+body.test-dashboard .article {
+	clear:both;
+}
+
+body.test-dashboard .test-content {
+	float:left;
+	padding: 0 2% 4em;
+	width: 74%;
+}
+
+.test-content h2 {
+	font-weight: normal;
+	font-size: 1.45em;
+	margin-bottom: .5em;
+	float: left;
+}
+.test-content h2 span {
+	color: #bbb;
+	display: block;
+	font-size: .55em;
+}
+.test-content h3 {
+	font-weight: normal;
+	margin: 1.5em 0 1em;
+}
+
+body.test-dashboard a.test-button,
+body.test-dashboard a.test-button:link,
+body.test-dashboard a.test-button:visited,
+body.test-dashboard a.test-button:hover,
+body.test-dashboard a.test-button:active {
+	display: block;
+	float: right;
+	font-weight: bold;
+	font-size: 1.25em;
+	background-color:#f5f5f5;
+	border-color: #e6e6e6;
+	color: #999;
+	padding: .5em 1em;
+	margin: 0;
+	background-color: white;
+	border: 1px solid #e5e5e5;
+	text-decoration: none;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	-moz-box-shadow: 0 0 6px rgba(0,0,0,.1);
+	-webkit-box-shadow: 0 0 6px rgba(0,0,0,.1);
+	box-shadow: 0 0 6px rgba(0,0,0,.1);
+}
+
+body.test-dashboard a.test-button:hover,
+body.test-dashboard a.test-button:active {
+	color: black;
+	background: white;
+	-moz-box-shadow: inset 0 0 6px rgba(0,0,0,.15);
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.15);
+	box-shadow: inset 0 0 6px rgba(0,0,0,.15);
+}
+
+body.test-dashboard ul {
+	margin: .25em 0;
+	padding: 0.2em 0 0 0;
+}
+
+body.test-dashboard ul ul li {
+	display: block;
+	margin: 0 0 1px .5em;
+	padding: 0.25em 0 0 0.75em;
+	border: 1px solid rgba(0,0,0,0.05);
+	border-width: 0 0 0 1px;
+}
+
+/*--- Test Dashboard: Menu ---*/
+body.test-dashboard .test-menu {
+	float: left;
+	padding: .75em 0 1em 1%;
+	width: 20%;
+	background: #f6f6f6;
+}
+
+.test-dashboard .test-menu > ul {
+	margin-top: 0;
+	padding-top: 1px;
+}
+.test-dashboard .test-menu ul li ul {
+	margin-top: .1em;
+}
+.test-dashboard .test-menu li:hover {
+}
+.test-dashboard .test-menu li > ul {
+	display: block;
+}
+.test-dashboard .test-menu li:hover > ul {
+	display: block;
+}
+ul.menu, ul.menu ul {
+	list-style: none;
+}
+ul.menu a {
+	color: #666;
+	text-decoration: none;
+	display: block;
+}
+
+ul.menu a:hover, ul.menu a:active, ul.menu a.menu-folder:hover {
+	color: black;
+}
+
+ul.menu a.menu-folder {
+	color: #333;
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 1.2em;
+}
+
+/*--- Test Dashboard: Test All ---*/
+a.test-all {
+	display: block;
+	float: left;
+	font-size: 1.5em;
+	text-align: center;
+	text-decoration: none;
+	padding: .75em 0;
+	width: 21%;
+	color: #666;
+	background: #e6e6e6;
+}
+a.test-all:hover {
+	background: #00a6f5;
+	-moz-box-shadow: inset 0 0 12px rgba(0,0,0,.25);
+	-webkit-box-shadow: inset 0 0 12px rgba(0,0,0,.25);
+	box-shadow: inset 0 0 12px rgba(0,0,0,.25);
+	color: white !important;
+	text-shadow: 0px 0px 6px rgba(0,0,0,.5);
+}
+
+/*--- Menu ---*/
+ul.menu a {
+	display: block;
+	padding: 0.1em 0;
+}
+
+ul.menu a:before, a.menu-folder:before, ul.metrics li:before {
+	display: inline !important;
+	float: none !important;
+	padding: 0 0.5em 0 0;
+	content: '\25B4';
+	font-weight: normal;
+	color: rgba(0,0,0,.1);
+}
+a.menu-folder:before {
+	padding: 0 !important;
+	content: '\25B2' !important;
+}
+ul.menu a:hover:before, a.menu-folder:hover:before, ul.metrics li:hover:before {
+	color: #00A6F5;
+}
+
+/*--- Benchmarking ---*/
+table.metrics {
+	border: 1px solid #e6e6e6;
+}
+table.metrics {
+	border-collapse: collapse;
+}
+table.metrics th {
+	padding: .5em 	1em;
+	color: black;
+	background: #e6e6e6;
+	font-weight: normal;
+}
+table.metrics th, table.metrics td {
+	border-bottom: 1px solid rgba(0,0,0,.05);
+}
+
+td.metric-name {
+	text-align: left;
+	white-space: nowrap;
+	padding: 6px 8px;
+	background: #e6e6e6;
+	width: 35%;
+}
+tr:hover td.metric-name {
+	background: #f5f5f5;
+}
+td.metric {
+	font-family: 'Andale Mono', Monaco, Courier, monospace !important;
+	font-weight: bold;
+	padding: 6px 8px;
+	text-align: right;
+	width: 65%;
+	background: #f5f5f5;
+}
+tr:hover td.metric {
+	background: white;
+}
+
+ul.classes, ul.files {
+	list-style-type: none;
+	font-family: 'Andale Mono', Monaco, Courier, monospace !important;
+}
+
+ul.metrics {
+	list-style-type: none;
+	padding: .5em !important;
+}
+
+ul.metrics li {
+	padding: .25em;
+}
+
+/*--- Test Results ---*/
+div.test-result {
+	clear: both;
+	margin: 1em 0 1.5em;
+	padding: .75em 1em .55em;
+	color: #FFFFFF;
+	background: #666;
+	border-radius: 4px;
+}
+
+.test-dashboard .test-result {
+	font-size: 1.15em;
+}
+.test-dashboard .digit {
+	font-weight: bold;
+}
+
+div.test-result-success {
+	background-color: #4ddb4a;
+	border-color: #467F0D;
+}
+
+div.test-result-fail {
+	background-color: #d13ef2;
+	border-color: #7F0D0D;
+}
+
+div.test-result-exception {
+	background-color: #E58F16;
+	border-color: #995F0F;
+}
+div.test-result-notice {
+	background-color: #00a6f5;
+	border-color: #8EA7CF;
+}
+
+div.test-assert, div.test-exception, div.test-skip {
+	margin: 0 0 1.5em -14px;
+	padding: 0 0 0 10px;
+	color: #000000;
+	border: 1px solid rgba(0,0,0,.05);
+	border-width: 0 0 0 4px;
+	font-size: 16px;
+}
+
+div.test-assert-passed {
+	border-left-color: #D0F9E0;
+}
+
+div.test-assert-failed {
+	color: #7F0D0D;
+	border-left-color: #CC1414;
+}
+
+div.test-exception {
+	color: #995F0F;
+	border-left-color: #E58F16;
+}
+
+div.test-skip {
+	background-color: #fafafa;
+	color: #666;
+}
+
+.test-assert span.content,
+.test-exception span.content,
+.test-skip span.content,
+.test-assert span.trace,
+.test-exception span.trace,
+.test-skip span.trace {
+	display: block;
+	clear: both;
+	white-space: pre;
+	color: #111;
+	font-size: 12px;
+	padding: .5em 1em;
+	margin: .5em 0;
+	background: #fafafa;
+	border: 1px solid rgba(0,0,0,.1);
+	font-family: 'Andale Mono', Monaco, Courier, monospace !important;
+}
+
+.test-assert span.trace {
+	padding: 0 .5em;
+	margin: .25em 0 .25em .5em;
+	background: #FAFAFA;
+}
+
+div.test-skip span.content {
+	color: #999;
+	padding: 0 1em;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	border: none;
+}
+
+/*--- SQL Dumps ---*/
+.lithium-sql-log table {
+	background: #f4f4f4;
+}
+
+.lithium-sql-log td {
+	padding: 4px 8px;
+	text-align: left;
+}
+
+
+/*--- Debugger Dumps ---*/
+pre {
+	color: #000;
+	background: #f0f0f0;
+	padding: 1em;
+}
+
+pre.lithium-debug {
+	background: #ffcc00;
+	font-size: 1.2em;
+	line-height: 1.5em;
+	margin-top: 1em;
+	overflow: auto;
+	position: relative;
+}
+
+div.lithium-exception-class, div.lithium-exception-location {
+	font-weight: bold;
+}
+
+div.lithium-exception-message {
+	color: #000;
+	background: #f0f0f0;
+	padding: 1em;
+}
+
+div.lithium-stack-trace {
+	background: #fff;
+	border: 4px dotted #ffcc00;
+	color: #333;
+	margin: 0px;
+	padding: 6px;
+	font-size: 1.2em;
+	line-height: 1.5em;
+	overflow: auto;
+	position: relative;
+}
+
+/*--- Code Highlighting ---*/
+div.lithium-code-dump pre {
+	position: relative;
+	overflow: auto;
+}
+
+div.lithium-stack-trace pre, div.lithium-code-dump pre {
+	color: #000;
+	background-color: #F0F0F0;
+	margin: 0px;
+	padding: 1em;
+	overflow: auto;
+}
+
+div.lithium-code-dump pre, div.lithium-code-dump pre code {
+	clear: both;
+	font-size: 1em;
+	line-height: 1.5em;
+	margin: 4px 2px;
+	padding: 4px;
+	overflow: auto;
+}
+
+div.lithium-code-dump span.code-highlight {
+	background-color: #ff0;
+}
+
+/*--- Code Coverage Analysis ---*/
+span.filters {
+	display: block;
+	float: right;
+	margin: 1em 0 .5em 0;
+}
+span.filters a {
+	display: block;
+	float: left;
+	padding: .5em 1em;
+	margin-left: .25em;
+	text-decoration:none;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background: #e6e6e6;
+	color: #666;
+}
+span.filters a:hover, span.filters a.active {
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	color: black;
+	background: #f5f5f5;
+}
+
+span.filters a.active {
+	background: #00a6f5;
+	text-shadow: 0px 0px 6px rgba(0,0,0,.5);
+	color: white;
+}
+
+div.code-coverage-results, h4.code-coverage-name {
+	clear: both;
+	color: #000000;
+	font-size: .8em;
+	font-family: 'Andale Mono', Monaco, Courier, monospace !important;
+	background-color: #fafafa;
+	border: 1px solid #e6e6e6;
+	border: 1px solid rgba(0,0,0,.1);
+	-moz-box-shadow: 0 0 6px rgba(0,0,0,.15);
+	-webkit-box-shadow: 0 0 6px rgba(0,0,0,.15);
+	box-shadow: 0 0 6px rgba(0,0,0,.15);
+}
+
+h4.coverage {
+	clear: both;
+	color: #454545;
+	font-weight: normal;
+	margin-bottom: .5em;
+}
+
+h4.code-coverage-name {
+	color: #999;
+	background-color: #ECECEC;
+	border-top: none;
+	padding: 0.25em 0.5em;
+	margin: 0 1px 0 0;
+	font-weight: normal;
+	float: right;
+}
+
+div.code-coverage-results div.code-line {
+	display: block;
+	float: none;
+	clear: both;
+}
+
+div.code-coverage-results span.content {
+	display: block;
+	clear: right;
+	white-space: pre;
+	line-height: 1.5em;
+	min-height: 1.5em;
+	color: #111;
+}
+
+div.code-coverage-results div.uncovered span.line-num {
+	border-color: #CC1414;
+}
+div.code-coverage-results div.uncovered span.content {
+	color: #7F0D0D;
+}
+div.code-coverage-results div.ignored span.content {
+	color: #999;
+	background: #ececec;
+}
+
+div.code-coverage-results span.line-num {
+	display: block;
+	float: left;
+	width: 3em;
+	color: #999;
+	background-color: #ECECEC;
+	text-align: right;
+	border-right: 1px solid #ccc;
+	padding-right: 4px;
+	margin-right: 5px;
+	line-height: 1.5em;
+}
+
+div.code-coverage-results .code-line:hover span.line-num {
+	background: #ddd;
+	color: #666;
+}
+
+div.code-coverage-results span.line-num strong {
+	color: #666;
+}
+
+div.code-coverage-results div.start {
+	margin-top: 30px;
+	padding-top: 5px;
+	border: 1px solid #aaa;
+	border-width: 1px 1px 0px 1px;
+}
+
+div.code-coverage-results div.end {
+	margin-bottom: 30px;
+	padding-bottom: 5px;
+	border: 1px solid #aaa;
+	border-width: 0px 1px 1px 1px;
+}
+
+div.code-coverage-results div.realstart {
+	margin-top: 0px;
+}
+
+div.code-coverage-results p.note {
+	color: #bbb;
+	padding: 5px;
+	margin: 5px 0 10px;
+	font-size: .8em;
+}
+
+div.code-coverage-results span.result-bad {
+	color: #a00;
+}
+
+div.code-coverage-results span.result-ok {
+	color: #fa0;
+}
+
+div.code-coverage-results span.result-good {
+	color: #0a0;
+}
+
+/*--- Application Home Page ---*/
+.app .test-result {
+	width: 640px;
+	margin-bottom: 0;
+}
+.app .test-result.solution {
+	padding: 0;
+	margin: .5em 0 1.5em 0;
+	color: #111;
+	background: none;
+}
+.app .test-result.solution ol {
+	margin-left: 1.5em;
+}
+.app .additional-resources {
+	width: 560px;
+	list-style: none;
+	margin: 0;
+}
+.app .additional-resources li {
+	margin-bottom: .5em;
+}
+.app .indicated {
+	margin: 0;
+	list-style: none;
+}
+.app .indicated li {
+	display: inline;
+}
+.app .indicated li + li:before {
+	content: " / ";
+}
+.app .indicated .enabled:after {
+	content: "\0020 \2714";
+	color: #4ddb4a;
+}
+.app .indicated .disabled:after {
+	content: "\0020 \2718";
+	color: #d13ef2;
+}
