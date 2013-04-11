@@ -13,12 +13,12 @@ The tests were run with:
 ## Test URLs
 ### JSON Encoding Test
 
-http://localhost:3000/json
+http://localhost:8000/json
 
 ### Data-Store/Database Mapping Test
 
-http://localhost:3000/db
+http://localhost:8000/db
 
 ### Variable Query Test
 
-http://localhost:3000/db2/2
+http://localhost:8000/db2/2
