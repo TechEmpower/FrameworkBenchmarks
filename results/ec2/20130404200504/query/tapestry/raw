@@ -1,0 +1,98 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup tapestry
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/tapestry/hellodb?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/tapestry/hellodb?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   113.93ms   48.00ms 616.92ms   84.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 43.74s, 22.01MB read
+Requests/sec:   2286.20
+Transfer/sec:    515.38KB
+
+---------------------------------------------------------
+ Queries: 1 for tapestry
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/tapestry/hellodb?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/tapestry/hellodb?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.22ms   58.26ms 520.83ms   84.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 30.97s, 19.03MB read
+Requests/sec:   3229.33
+Transfer/sec:    629.35KB
+
+---------------------------------------------------------
+ Queries: 5 for tapestry
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/tapestry/hellodb?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/tapestry/hellodb?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   163.98ms   91.52ms   1.03s    81.20%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.03m, 31.10MB read
+Requests/sec:   1621.40
+Transfer/sec:    516.40KB
+
+---------------------------------------------------------
+ Queries: 10 for tapestry
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/tapestry/hellodb?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/tapestry/hellodb?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   257.21ms   82.90ms   1.10s    80.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.67m, 46.26MB read
+Requests/sec:    997.70
+Transfer/sec:    472.61KB
+
+---------------------------------------------------------
+ Queries: 15 for tapestry
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/tapestry/hellodb?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/tapestry/hellodb?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   359.30ms  147.25ms   1.40s    81.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.32m, 61.42MB read
+Requests/sec:    718.82
+Transfer/sec:    452.07KB
+
+---------------------------------------------------------
+ Queries: 20 for tapestry
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/tapestry/hellodb?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/tapestry/hellodb?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   454.14ms  106.86ms   1.13s    80.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.94m, 76.55MB read
+Requests/sec:    567.72
+Transfer/sec:    445.03KB

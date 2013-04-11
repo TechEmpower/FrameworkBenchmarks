@@ -1,0 +1,100 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 09:42:09 PDT 2013
+
+  System load:  0.38               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+111 packages can be updated.
+54 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Warmup rails-stripped-jruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/rails/hello_world/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   130.82ms   52.41ms 310.85ms   64.71%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 0.86m, 42.52MB read
+Requests/sec:   1930.19
+Transfer/sec:    840.40KB
+
+---------------------------------------------------------
+ Queries: 1 for rails-stripped-jruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/rails/hello_world/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   108.92ms   44.93ms 226.22ms   68.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 42.74s, 38.35MB read
+Requests/sec:   2339.89
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Queries: 5 for rails-stripped-jruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/rails/hello_world/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   195.50ms   66.95ms 594.36ms   68.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.28m, 55.04MB read
+Requests/sec:   1302.04
+Transfer/sec:    733.87KB
+
+---------------------------------------------------------
+ Queries: 10 for rails-stripped-jruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/rails/hello_world/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   298.97ms   83.75ms 751.09ms   68.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.95m, 75.91MB read
+Requests/sec:    854.21
+Transfer/sec:    663.97KB
+
+---------------------------------------------------------
+ Queries: 15 for rails-stripped-jruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/rails/hello_world/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   395.51ms   98.36ms 908.49ms   69.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.61m, 96.79MB read
+Requests/sec:    638.56
+Transfer/sec:    632.90KB
+
+---------------------------------------------------------
+ Queries: 20 for rails-stripped-jruby
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/rails/hello_world/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   497.13ms  114.44ms   1.04s    70.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 3.27m, 117.66MB read
+Requests/sec:    510.17
+Transfer/sec:    614.69KB

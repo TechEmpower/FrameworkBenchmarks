@@ -1,0 +1,99 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.52ms   38.22ms 376.55ms   79.79%
+    Req/Sec     0.99k   117.33     1.00k    98.61%
+  100000 requests in 21.73s, 18.56MB read
+Requests/sec:   4602.92
+Transfer/sec:      0.85MB
+
+---------------------------------------------------------
+ Queries: 1 for servlet-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/servlet/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.87ms   62.31ms 499.17ms   92.88%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  100001 requests in 14.56s, 16.08MB read
+  Socket errors: connect 0, read 55, write 0, timeout 98
+Requests/sec:   6869.20
+Transfer/sec:      1.10MB
+
+---------------------------------------------------------
+ Queries: 5 for servlet-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/servlet/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   116.78ms   57.96ms 469.02ms   78.05%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 44.65s, 27.75MB read
+Requests/sec:   2239.48
+Transfer/sec:    636.32KB
+
+---------------------------------------------------------
+ Queries: 10 for servlet-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/servlet/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   216.53ms  113.81ms 911.31ms   78.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.38m, 42.90MB read
+Requests/sec:   1206.67
+Transfer/sec:    530.09KB
+
+---------------------------------------------------------
+ Queries: 15 for servlet-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/servlet/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   307.58ms  136.54ms   1.00s    77.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.98m, 58.05MB read
+Requests/sec:    843.65
+Transfer/sec:    501.50KB
+
+---------------------------------------------------------
+ Queries: 20 for servlet-raw
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/servlet/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/servlet/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   407.75ms  162.97ms   1.40s    77.74%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.62m, 73.20MB read
+Requests/sec:    635.73
+Transfer/sec:    476.52KB

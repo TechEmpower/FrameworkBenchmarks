@@ -1,0 +1,7 @@
+Makefile works for ubuntu. Other distros may need tweak. These extra packages are needed:
+
+libgnutls-dev
+libmysqlclient-dev
+libjson0-dev
+
+Any question or comment to dmoreno@coralbits.com.

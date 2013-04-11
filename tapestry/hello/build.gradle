@@ -3,6 +3,7 @@ description = "hello application"
 apply plugin: "war"
 apply plugin: "java"
 apply plugin: "jetty"
+apply plugin: "idea"
 
 sourceCompatibility = "1.5"
 targetCompatibility = "1.5"
@@ -15,15 +16,6 @@ repositories {
 
     // All things JBoss/Hibernate
     mavenRepo name: "JBoss", url: "http://repository.jboss.org/nexus/content/groups/public/"
-
-    // For stable versions of the tapx libraries
-    mavenRepo name: "HLS", url: "http://howardlewisship.com/repository/"
-
-    // For non-stable versions of the tapx libraries
-    mavenRepo name: "HLS Snapshots", url: "http://howardlewisship.com/snapshot-repository/"
-
-    // For access to Apache Staging (Preview) packages
-    mavenRepo name: "Apache Staging", url: "https://repository.apache.org/content/groups/staging"
 }
 
 // This simulates Maven's "provided" scope, until it is officially supported by Gradle
@@ -45,7 +37,10 @@ sourceSets {
 
 dependencies {
 
-    compile "org.apache.tapestry:tapestry-core:5.3.6"
+    compile "mysql:mysql-connector-java:5.1.19"
+    compile "org.hibernate:hibernate-core:3.6.3.Final"
+    compile "org.apache.tapestry:tapestry-hibernate:5.3.6"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.1.4"
 
     // This adds automatic compression of JavaScript and CSS in production mode:
     compile "org.apache.tapestry:tapestry-yuicompressor:5.3.6"

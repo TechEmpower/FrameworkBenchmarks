@@ -1,10 +1,25 @@
 var cluster = require('cluster')
-  , numCPUs = require('os').cpus().length
-  , http = require('http')
+  , numCPUs = require('os').cpus().length;
+
+if(cluster.isMaster) {
+  // Fork workers.
+  for (var i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', function(worker, code, signal) {
+    console.log('worker ' + worker.pid + ' died');
+  });
+
+  return;
+}
+
+var http = require('http')
   , url = require('url')
   , async = require('async')
   , mongoose = require('mongoose')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
+  , MongoClient = require('mongodb').MongoClient
   , mysql = require('mysql')
   , pool  = mysql.createPool({
       host: 'localhost',
@@ -27,6 +42,12 @@ var cluster = require('cluster')
     freezeTableName: true
   });
 
+var collection = null;
+
+MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
+  collection = db.collection('world');
+});
+
 // define model
 var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId;
@@ -37,107 +58,128 @@ var WorldSchema = new Schema({
 }, { collection : 'world' });
 var MWorld = conn.model('World', WorldSchema);
 
-if (cluster.isMaster) {
-  // Fork workers.
-  for (var i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
 
-  cluster.on('exit', function(worker, code, signal) {
-    console.log('worker ' + worker.pid + ' died');
+
+function getRandomNumber() {
+  return Math.floor(Math.random() * 10000) + 1;
+}
+
+function mongooseQuery(callback) {
+  MWorld.findOne({ id: getRandomNumber()}).exec(function (err, world) {
+    callback(err, world);
   });
-} else {
-  http.createServer(function (req, res) {
+}
 
-    // JSON response object
-    var hello = {message: "Hello, world"};
+function mongodbDriverQuery(callback) {
+  process.nextTick(function() {
+  collection.find({ id: getRandomNumber()}).toArray(function(err, world) {
+    callback(err, world[0]);
+  });
+  })
+}
 
-    var path = url.parse(req.url).pathname;
-    if (path === '/json') {
-      // JSON Response Test
-      res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
-      // Write JSON object to response
-      res.end(JSON.stringify(hello));
-    } else if (path === '/mongoose') {
-      // Database Test
-      var queries = 1,
-        worlds  = [],
-        queryFunctions = [],
-        values = url.parse(req.url, true);
+function sequelizeQuery(callback) {
+  World.find(getRandomNumber()).success(function (world) {
+    callback(null, world);
+  });
+}
 
-      if (values.query.queries) {
-        queries = values.query.queries;
-      }
+http.createServer(function (req, res) {
+  // JSON response object
+  var hello = {message: "Hello, world"};
 
-      res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+  var path = url.parse(req.url).pathname;
 
-      for (var i = 1; i <= queries; i++ ) {
-        queryFunctions.push(function(callback) {
-          MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1 )}).exec(function (err, world) {
-            worlds.push(world);
-            callback(null, 'success');
-          });
-        });
-      }
+  switch (path) {
+  case '/json':
+    // JSON Response Test
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+    // Write JSON object to response
+    res.end(JSON.stringify(hello));
+    break;
 
-      async.parallel(queryFunctions, function(err, results) {
-        res.end(JSON.stringify(worlds));
-      });
-    } else if (path === '/sequelize') {
-      var queries = 1,
-        worlds  = [],
-        queryFunctions = [],
-        values = url.parse(req.url, true);
+  case '/mongodbdriver':
+    // Database Test
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    var queryFunctions = new Array(queries);
 
-      if ( values.query.queries ) {
-        queries = values.query.queries;
-      }
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = mongodbDriverQuery;
+    }
 
-      res.writeHead(200, {'Content-Type': 'application/json'});
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
 
-      for (var i = 1; i <= queries; i++ ) {
-        queryFunctions.push(function(callback) {
-          World.find(Math.floor(Math.random()*10000) + 1).success(function(world) {
-            worlds.push(world);
-            callback(null, 'success');
-          });
-        });
-      }
+    async.parallel(queryFunctions, function(err, results) {
+      res.end(JSON.stringify(results));
+    });
+    break;
 
-      async.parallel(queryFunctions, function(err, results) {
-        res.end(JSON.stringify(worlds));
-      });
-    }  else if (path === '/mysql') {
-      var queries = 1,
-        worlds  = [],
-        queryFunctions = [],
-        values = url.parse(req.url, true);
+  case '/mongoose':
+    // Database Test
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    var queryFunctions = new Array(queries);
 
-      if ( values.query.queries ) {
-        queries = values.query.queries;
-      }
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = mongooseQuery;
+    }
 
-      res.writeHead(200, {'Content-Type': 'application/json'});
-      
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+
+    async.parallel(queryFunctions, function(err, results) {
+      res.end(JSON.stringify(results));
+    });
+    break;
+
+  case '/sequelize':
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    var queryFunctions = new Array(queries);
+
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = sequelizeQuery;
+    }
+
+    res.writeHead(200, {'Content-Type': 'application/json'});
+
+    async.parallel(queryFunctions, function(err, results) {
+      res.end(JSON.stringify(results));
+    });
+    break;
+
+  case '/mysql':
+    res.writeHead(200, {'Content-Type': 'application/json'});
+
+    function mysqlQuery(callback) {
       pool.getConnection(function(err, connection) {
-        for (var i = 1; i <= queries; i++ ) {
-          queryFunctions.push(function(callback) {
-            connection.query("SELECT * FROM World WHERE id = " + (Math.floor(Math.random()*10000) + 1), function(err, rows) {
-              worlds.push(rows[0]);
-              callback(null, 'success');
-            });
-          });
-        }
-
-        async.parallel(queryFunctions, function(err, results) {
-          res.end(JSON.stringify(worlds));
+        if (err) callback(err);
+        connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function(err, rows) {
+          callback(null, rows[0]);
           connection.end();
         });
       });
-    } else {
-      // File not found handler
-      res.writeHead(404, {'Content-Type': 'text/html; charset=UTF-8'});
-      res.end("NOT IMPLEMENTED");
     }
-  }).listen(8080);
-}
+
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    var queryFunctions = new Array(queries);
+
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = mysqlQuery;
+    }
+    async.parallel(queryFunctions, function(err, results) {
+      if (err) {
+        res.writeHead(500);
+        return res.end('MYSQL CONNECTION ERROR.');
+      }
+      res.end(JSON.stringify(results));
+    });
+    break;
+
+  default:
+    // File not found handler
+    res.writeHead(404, {'Content-Type': 'text/html; charset=UTF-8'});
+    res.end("NOT IMPLEMENTED");
+  }
+}).listen(8080);

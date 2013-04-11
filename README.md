@@ -23,6 +23,7 @@ When propmted to create a security group for the instances, here are the ports t
 * 3306 (MySQL)
 * 9000 (Play Framework)
 * 27017 (MongoDB)
+* 3000 (yesod)
 
 #### 2. Setting up the servers
 
@@ -43,10 +44,14 @@ Next, we're going to setup the servers with all the necessary software:
 
 	./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --install-software --list-tests
     source ~/.bash_profile
+    # For your first time through the tests, set the ulimit for open files
+    ulimit -n 4096
     # Most software is installed autormatically by the script, but running the mongo command below from 
     # the install script was causing some errors. For now this needs to be run manually.
-    go get github.com/hoisie/web
-	mongo --host client-private-ip < config/create.js
+    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"
+    cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
+    cd ../..
+	  mongo --host client-private-ip < config/create.js
 
 Assuming the above finished without error, we're ready to start the test suite:
 
@@ -91,10 +96,14 @@ Next, we're going to setup the servers with all the necessary software:
 
 	./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --install-software --list-tests
     source ~/.bash_profile
+    # For your first time through the tests, set the ulimit for open files
+    ulimit -n 4096
     # Most software is installed autormatically by the script, but running the mongo command below from
     # the install script was causing some errors. For now this needs to be run manually.
-    go get github.com/hoisie/web
-	mongo --host client-ip < config/create.js
+    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"
+    cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
+    cd ../..
+    mongo --host client-ip < config/create.js
 
 Assuming this finished without error, we're ready to start the test suite:
 

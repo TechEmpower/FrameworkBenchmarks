@@ -1,4 +1,5 @@
 class HelloWorldController < ApplicationController
+
   def json
     render :json => {:message => "Hello World!"}
   end

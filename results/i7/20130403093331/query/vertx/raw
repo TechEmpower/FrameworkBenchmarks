@@ -1,0 +1,97 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 23:52:32 PDT 2013
+
+  System load:  5.53               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup vertx
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.57ms   26.71ms 226.47ms   75.27%
+    Req/Sec     0.91k   292.85     1.00k    90.55%
+  100000 requests in 10.50s, 21.93MB read
+Requests/sec:   9528.25
+Transfer/sec:      2.09MB
+
+---------------------------------------------------------
+ Queries: 1 for vertx
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.59ms   17.70ms  63.30ms   80.17%
+    Req/Sec     2.20k   748.67     4.00k    55.27%
+  100001 requests in 4.71s, 15.07MB read
+Requests/sec:  21250.47
+Transfer/sec:      3.20MB
+
+---------------------------------------------------------
+ Queries: 5 for vertx
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.97ms   25.72ms 224.46ms   70.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 26.38s, 42.25MB read
+Requests/sec:   3791.22
+Transfer/sec:      1.60MB
+
+---------------------------------------------------------
+ Queries: 10 for vertx
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   126.18ms   16.00ms 251.87ms   96.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 50.36s, 76.10MB read
+Requests/sec:   1985.80
+Transfer/sec:      1.51MB
+
+---------------------------------------------------------
+ Queries: 15 for vertx
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   189.13ms   19.61ms 458.84ms   97.45%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.25m, 110.05MB read
+Requests/sec:   1334.14
+Transfer/sec:      1.47MB
+
+---------------------------------------------------------
+ Queries: 20 for vertx
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   245.84ms   24.13ms 437.47ms   97.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.62m, 143.91MB read
+Requests/sec:   1027.84
+Transfer/sec:      1.48MB

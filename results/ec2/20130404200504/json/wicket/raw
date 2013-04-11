@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Apr  4 02:39:38 UTC 2013
+
+  System load:  0.02               Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup wicket
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/wicket/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   103.53ms  207.18ms   2.78s    90.54%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 40.38s, 30.81MB read
+  Socket errors: connect 0, read 510, write 0, timeout 2572
+Requests/sec:   2476.67
+Transfer/sec:    781.34KB
+
+---------------------------------------------------------
+ Concurrency: 8 for wicket
+ wrk -n 100000 -c 8 -t 4 http://10.253.68.28:8080/wicket/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.65ms    1.46ms  13.23ms   92.84%
+    Req/Sec   713.70    452.49     1.00k    71.37%
+  100001 requests in 18.62s, 30.33MB read
+Requests/sec:   5369.99
+Transfer/sec:      1.63MB
+
+---------------------------------------------------------
+ Concurrency: 16 for wicket
+ wrk -n 100000 -c 16 -t 4 http://10.253.68.28:8080/wicket/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.45ms    1.52ms  22.95ms   99.54%
+    Req/Sec     2.48k   509.97     3.00k    50.68%
+  100000 requests in 8.20s, 30.33MB read
+Requests/sec:  12195.06
+Transfer/sec:      3.70MB
+
+---------------------------------------------------------
+ Concurrency: 32 for wicket
+ wrk -n 100000 -c 32 -t 4 http://10.253.68.28:8080/wicket/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.83ms    2.43ms  34.92ms   98.55%
+    Req/Sec     2.94k   306.12     4.00k    90.34%
+  100000 requests in 7.74s, 30.33MB read
+Requests/sec:  12925.13
+Transfer/sec:      3.92MB
+
+---------------------------------------------------------
+ Concurrency: 64 for wicket
+ wrk -n 100000 -c 64 -t 4 http://10.253.68.28:8080/wicket/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.12ms    1.52ms  10.06ms   73.76%
+    Req/Sec     2.99k    99.26     3.00k    99.01%
+  100000 requests in 7.70s, 30.33MB read
+Requests/sec:  12983.72
+Transfer/sec:      3.94MB
+
+---------------------------------------------------------
+ Concurrency: 128 for wicket
+ wrk -n 100000 -c 128 -t 4 http://10.253.68.28:8080/wicket/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.08ms    3.25ms  19.73ms   79.70%
+    Req/Sec     2.90k   305.97     3.00k    89.60%
+  100002 requests in 7.70s, 30.33MB read
+Requests/sec:  12981.46
+Transfer/sec:      3.94MB
+
+---------------------------------------------------------
+ Concurrency: 256 for wicket
+ wrk -n 100000 -c 256 -t 4 http://10.253.68.28:8080/wicket/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/wicket/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.16ms   23.05ms 197.12ms   94.47%
+    Req/Sec     2.67k   471.95     3.00k    66.82%
+  100000 requests in 8.21s, 30.33MB read
+Requests/sec:  12179.66
+Transfer/sec:      3.69MB

@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 23:49:19 PDT 2013
+
+  System load:  1.26               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup tapestry
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.32ms   36.38ms 314.57ms   91.65%
+    Req/Sec   587.48    492.68     1.00k    58.75%
+  100000 requests in 11.74s, 18.98MB read
+Requests/sec:   8515.02
+Transfer/sec:      1.62MB
+
+---------------------------------------------------------
+ Concurrency: 8 for tapestry
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellodb
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.95ms  770.32us  14.56ms   98.86%
+    Req/Sec   697.07    459.90     1.00k    69.71%
+  100000 requests in 11.55s, 18.96MB read
+Requests/sec:   8656.17
+Transfer/sec:      1.64MB
+
+---------------------------------------------------------
+ Concurrency: 16 for tapestry
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellodb
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   808.92us  189.94us   1.82ms   80.92%
+    Req/Sec     1.97k   166.03     2.00k    97.17%
+  100000 requests in 5.21s, 18.96MB read
+Requests/sec:  19200.26
+Transfer/sec:      3.64MB
+
+---------------------------------------------------------
+ Concurrency: 32 for tapestry
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellodb
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.20ms    0.87ms   6.47ms   89.42%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  100000 requests in 3.56s, 18.96MB read
+Requests/sec:  28119.03
+Transfer/sec:      5.33MB
+
+---------------------------------------------------------
+ Concurrency: 64 for tapestry
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellodb
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.36ms    3.98ms  16.92ms   83.54%
+    Req/Sec     3.88k   326.29     4.00k    87.97%
+  100000 requests in 3.01s, 18.96MB read
+Requests/sec:  33277.22
+Transfer/sec:      6.31MB
+
+---------------------------------------------------------
+ Concurrency: 128 for tapestry
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellodb
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.47ms    9.52ms  42.76ms   81.53%
+    Req/Sec     3.96k   207.05     4.00k    95.54%
+  100003 requests in 2.97s, 18.97MB read
+Requests/sec:  33686.78
+Transfer/sec:      6.39MB
+
+---------------------------------------------------------
+ Concurrency: 256 for tapestry
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/tapestry/hellodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.06ms   24.00ms 266.97ms   94.05%
+    Req/Sec     3.56k   554.81     5.00k    55.36%
+  100001 requests in 3.22s, 19.07MB read
+Requests/sec:  31093.18
+Transfer/sec:      5.93MB

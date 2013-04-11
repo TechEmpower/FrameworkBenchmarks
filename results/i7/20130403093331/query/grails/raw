@@ -1,0 +1,97 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 22:17:28 PDT 2013
+
+  System load:  1.15               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup grails
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/grails/hello/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.47ms   32.04ms 258.51ms   93.06%
+    Req/Sec     0.90k   304.49     1.00k    89.68%
+  100000 requests in 9.37s, 26.19MB read
+Requests/sec:  10670.31
+Transfer/sec:      2.79MB
+
+---------------------------------------------------------
+ Queries: 1 for grails
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/grails/hello/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.32ms   32.62ms 308.54ms   93.50%
+    Req/Sec     1.00k    53.15     2.00k    99.72%
+  100000 requests in 6.62s, 21.06MB read
+Requests/sec:  15105.51
+Transfer/sec:      3.18MB
+
+---------------------------------------------------------
+ Queries: 5 for grails
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/grails/hello/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.55ms   28.08ms 296.90ms   83.41%
+    Req/Sec   248.16    432.27     1.00k    75.18%
+  100000 requests in 12.79s, 41.57MB read
+Requests/sec:   7816.17
+Transfer/sec:      3.25MB
+
+---------------------------------------------------------
+ Queries: 10 for grails
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/grails/hello/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.74ms   21.95ms 241.66ms   76.40%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 20.12s, 67.22MB read
+Requests/sec:   4970.94
+Transfer/sec:      3.34MB
+
+---------------------------------------------------------
+ Queries: 15 for grails
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/grails/hello/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.06ms   37.18ms 322.61ms   72.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 26.99s, 92.86MB read
+Requests/sec:   3705.64
+Transfer/sec:      3.44MB
+
+---------------------------------------------------------
+ Queries: 20 for grails
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/grails/hello/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.09ms   56.02ms 491.30ms   70.93%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 33.87s, 118.51MB read
+Requests/sec:   2952.86
+Transfer/sec:      3.50MB

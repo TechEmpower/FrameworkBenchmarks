@@ -1,0 +1,108 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 16:31:38 UTC 2013
+
+  System load:  0.13               Processes:           70
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup rails-ruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/hello_world/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/hello_world/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   685.67ms   70.44ms   1.21s    79.24%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 4.48m, 53.65MB read
+Requests/sec:    371.91
+Transfer/sec:    204.31KB
+
+---------------------------------------------------------
+ Queries: 1 for rails-ruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/hello_world/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/hello_world/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   581.83ms   64.88ms   1.15s    81.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 3.80m, 49.48MB read
+Requests/sec:    438.78
+Transfer/sec:    222.30KB
+
+---------------------------------------------------------
+ Queries: 5 for rails-ruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/hello_world/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/hello_world/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   976.32ms  119.73ms   1.74s    78.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 6.36m, 66.17MB read
+Requests/sec:    261.97
+Transfer/sec:    177.51KB
+
+---------------------------------------------------------
+ Queries: 10 for rails-ruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/hello_world/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/hello_world/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.52s   167.42ms   2.80s    82.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 9.93m, 87.14MB read
+  Socket errors: connect 0, read 0, write 0, timeout 165
+Requests/sec:    167.83
+Transfer/sec:    149.76KB
+
+---------------------------------------------------------
+ Queries: 15 for rails-ruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/hello_world/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/hello_world/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.07s   219.81ms   3.29s    84.24%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 13.54m, 108.02MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5509
+Requests/sec:    123.11
+Transfer/sec:    136.17KB
+
+---------------------------------------------------------
+ Queries: 20 for rails-ruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/hello_world/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/hello_world/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.59s   263.50ms   4.26s    84.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 16.98m, 128.89MB read
+  Socket errors: connect 0, read 0, write 0, timeout 30148
+Requests/sec:     98.16
+Transfer/sec:    129.56KB

@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Apr  4 00:47:22 UTC 2013
+
+  System load:  0.14               Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup sinatra-jruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sinatra/db?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sinatra/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   834.73ms  267.17ms   2.56s    70.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 5.56m, 32.67MB read
+  Socket errors: connect 0, read 0, write 0, timeout 34
+Requests/sec:    299.73
+Transfer/sec:    100.26KB
+
+---------------------------------------------------------
+ Queries: 1 for sinatra-jruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sinatra/db?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sinatra/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   728.08ms  258.18ms   2.33s    69.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 4.83m, 27.45MB read
+  Socket errors: connect 0, read 0, write 0, timeout 36
+Requests/sec:    345.13
+Transfer/sec:     97.02KB
+
+---------------------------------------------------------
+ Queries: 5 for sinatra-jruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sinatra/db?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sinatra/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14s   328.27ms   4.39s    72.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 7.55m, 48.05MB read
+  Socket errors: connect 0, read 0, write 0, timeout 224
+Requests/sec:    220.83
+Transfer/sec:    108.67KB
+
+---------------------------------------------------------
+ Queries: 10 for sinatra-jruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sinatra/db?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sinatra/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.63s   391.94ms   3.93s    67.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 10.73m, 73.71MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2086
+Requests/sec:    155.35
+Transfer/sec:    117.25KB
+
+---------------------------------------------------------
+ Queries: 15 for sinatra-jruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sinatra/db?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sinatra/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.13s   472.46ms   6.29s    73.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 13.99m, 99.35MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12749
+Requests/sec:    119.13
+Transfer/sec:    121.19KB
+
+---------------------------------------------------------
+ Queries: 20 for sinatra-jruby
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sinatra/db?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sinatra/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.63s   543.29ms   6.33s    70.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 17.23m, 125.09MB read
+  Socket errors: connect 0, read 0, write 0, timeout 32981
+Requests/sec:     96.74
+Transfer/sec:    123.91KB

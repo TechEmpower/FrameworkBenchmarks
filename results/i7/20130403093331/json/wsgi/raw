@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 00:08:48 PDT 2013
+
+  System load:  0.46               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup wsgi
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.86ms    1.53ms  21.57ms   93.53%
+    Req/Sec     1.96k   193.52     2.00k    96.12%
+  100000 requests in 4.36s, 16.50MB read
+Requests/sec:  22959.24
+Transfer/sec:      3.79MB
+
+---------------------------------------------------------
+ Concurrency: 8 for wsgi
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   364.18us  181.52us   1.21ms   89.69%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  100000 requests in 5.52s, 16.50MB read
+Requests/sec:  18127.04
+Transfer/sec:      2.99MB
+
+---------------------------------------------------------
+ Concurrency: 16 for wsgi
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   609.03us  804.93us  10.59ms   95.59%
+    Req/Sec     2.06k   232.87     3.00k    94.27%
+  100000 requests in 4.37s, 16.50MB read
+Requests/sec:  22858.47
+Transfer/sec:      3.77MB
+
+---------------------------------------------------------
+ Concurrency: 32 for wsgi
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.19ms  486.22us   7.31ms   96.52%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  100001 requests in 4.31s, 16.50MB read
+Requests/sec:  23202.05
+Transfer/sec:      3.83MB
+
+---------------------------------------------------------
+ Concurrency: 64 for wsgi
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.63ms  839.46us   9.65ms   96.97%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  100002 requests in 4.29s, 16.50MB read
+Requests/sec:  23316.48
+Transfer/sec:      3.85MB
+
+---------------------------------------------------------
+ Concurrency: 128 for wsgi
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.25ms  180.06us   6.26ms   89.04%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  100002 requests in 4.29s, 16.50MB read
+Requests/sec:  23315.50
+Transfer/sec:      3.85MB
+
+---------------------------------------------------------
+ Concurrency: 256 for wsgi
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.23ms    2.17ms  20.13ms   95.58%
+    Req/Sec     2.12k   330.19     3.00k    87.61%
+  100000 requests in 4.29s, 16.50MB read
+Requests/sec:  23292.75
+Transfer/sec:      3.84MB

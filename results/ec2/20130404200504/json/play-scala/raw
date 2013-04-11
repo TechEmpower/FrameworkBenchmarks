@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Apr  4 05:42:33 UTC 2013
+
+  System load:  0.02               Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup play-scala
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:9000/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    90.30ms   71.44ms 621.64ms   84.57%
+    Req/Sec    44.09    205.47     1.00k    95.59%
+  100013 requests in 23.85s, 10.11MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:   4193.36
+Transfer/sec:    434.08KB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-scala
+ wrk -n 100000 -c 8 -t 4 http://10.253.68.28:9000/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.32ms  752.73us  11.67ms   96.58%
+    Req/Sec     0.96k   198.74     1.00k    95.89%
+  100000 requests in 16.59s, 10.11MB read
+Requests/sec:   6026.46
+Transfer/sec:    623.83KB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-scala
+ wrk -n 100000 -c 16 -t 4 http://10.253.68.28:9000/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.15ms    0.99ms  12.17ms   88.56%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  100001 requests in 13.74s, 10.11MB read
+Requests/sec:   7276.62
+Transfer/sec:    753.24KB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-scala
+ wrk -n 100000 -c 32 -t 4 http://10.253.68.28:9000/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.78ms    1.58ms  17.24ms   81.13%
+    Req/Sec     1.87k   339.11     2.00k    86.79%
+  100000 requests in 11.92s, 10.11MB read
+Requests/sec:   8389.88
+Transfer/sec:    868.48KB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-scala
+ wrk -n 100000 -c 64 -t 4 http://10.253.68.28:9000/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.16ms    3.16ms  22.22ms   81.31%
+    Req/Sec     2.00k    58.82     2.00k    99.65%
+  100000 requests in 10.83s, 10.11MB read
+Requests/sec:   9231.26
+Transfer/sec:      0.93MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-scala
+ wrk -n 100000 -c 128 -t 4 http://10.253.68.28:9000/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.34ms    6.14ms  35.56ms   75.00%
+    Req/Sec     1.74k   730.10     4.00k    62.15%
+  100004 requests in 11.05s, 10.11MB read
+Requests/sec:   9052.60
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-scala
+ wrk -n 100000 -c 256 -t 4 http://10.253.68.28:9000/json
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.37ms   12.47ms  56.65ms   67.56%
+    Req/Sec     1.77k     1.37k    6.00k    71.76%
+  100008 requests in 11.16s, 10.11MB read
+  Socket errors: connect 0, read 0, write 0, timeout 81
+Requests/sec:   8962.87
+Transfer/sec:      0.91MB

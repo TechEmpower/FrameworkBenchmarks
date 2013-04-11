@@ -1,0 +1,108 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 09:36:26 UTC 2013
+
+  System load:  0.3                Processes:           66
+  Usage of /:   23.5% of 19.69GB   Users logged in:     0
+  Memory usage: 4%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup express-mysql
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sequelize?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sequelize?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   375.90ms  136.12ms 603.22ms   69.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.00m, 22.37MB read
+Requests/sec:    834.26
+Transfer/sec:    191.09KB
+
+---------------------------------------------------------
+ Queries: 1 for express-mysql
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sequelize?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sequelize?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   333.46ms   44.15ms 527.37ms   69.28%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.20m, 19.34MB read
+Requests/sec:    759.30
+Transfer/sec:    150.36KB
+
+---------------------------------------------------------
+ Queries: 5 for express-mysql
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sequelize?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sequelize?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   978.27ms  214.18ms   1.48s    93.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 6.69m, 31.56MB read
+Requests/sec:    249.06
+Transfer/sec:     80.48KB
+
+---------------------------------------------------------
+ Queries: 10 for express-mysql
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sequelize?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sequelize?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.49s   126.82ms   2.90s    96.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 16.29m, 46.71MB read
+  Socket errors: connect 0, read 0, write 0, timeout 24891
+Requests/sec:    102.34
+Transfer/sec:     48.95KB
+
+---------------------------------------------------------
+ Queries: 15 for express-mysql
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sequelize?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sequelize?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.76s   227.88ms   5.29s    98.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 24.52m, 61.86MB read
+  Socket errors: connect 0, read 0, write 0, timeout 88101
+Requests/sec:     67.97
+Transfer/sec:     43.05KB
+
+---------------------------------------------------------
+ Queries: 20 for express-mysql
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:8080/sequelize?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:8080/sequelize?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.58s   223.02ms   6.43s    98.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 17.58m, 77.01MB read
+  Socket errors: connect 0, read 0, write 0, timeout 29295
+Requests/sec:     94.82
+Transfer/sec:     74.77KB

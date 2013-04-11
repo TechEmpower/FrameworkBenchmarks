@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Apr  3 14:59:26 UTC 2013
+
+  System load:  0.83               Processes:           70
+  Usage of /:   23.5% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.253.42.29
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+69 packages can be updated.
+33 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Warmup play
+ wrk -r 100000 -c 256 -t 4 http://10.253.68.28:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   209.82ms  106.15ms   1.15s    88.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.29m, 11.33MB read
+  Socket errors: connect 0, read 0, write 0, timeout 22
+Requests/sec:   1293.49
+Transfer/sec:    150.04KB
+
+---------------------------------------------------------
+ Concurrency: 8 for play
+ wrk -n 100000 -c 8 -t 4 http://10.253.68.28:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/db
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.75ms    2.13ms  58.36ms   86.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.21m, 11.33MB read
+Requests/sec:   1379.90
+Transfer/sec:    160.06KB
+
+---------------------------------------------------------
+ Concurrency: 16 for play
+ wrk -n 100000 -c 16 -t 4 http://10.253.68.28:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/db
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.27ms    3.80ms 117.18ms   86.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.08m, 11.33MB read
+Requests/sec:   1542.58
+Transfer/sec:    178.93KB
+
+---------------------------------------------------------
+ Concurrency: 32 for play
+ wrk -n 100000 -c 32 -t 4 http://10.253.68.28:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/db
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.84ms    6.10ms  84.00ms   74.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.05m, 11.33MB read
+Requests/sec:   1581.13
+Transfer/sec:    183.40KB
+
+---------------------------------------------------------
+ Concurrency: 64 for play
+ wrk -n 100000 -c 64 -t 4 http://10.253.68.28:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/db
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.64ms   14.04ms 115.87ms   68.12%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.04m, 11.33MB read
+Requests/sec:   1595.19
+Transfer/sec:    185.03KB
+
+---------------------------------------------------------
+ Concurrency: 128 for play
+ wrk -n 100000 -c 128 -t 4 http://10.253.68.28:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/db
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    79.51ms   21.03ms 298.90ms   76.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100006 requests in 1.06m, 11.33MB read
+Requests/sec:   1577.64
+Transfer/sec:    182.99KB
+
+---------------------------------------------------------
+ Concurrency: 256 for play
+ wrk -n 100000 -c 256 -t 4 http://10.253.68.28:9000/db
+---------------------------------------------------------
+
+Making 100000 requests to http://10.253.68.28:9000/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   158.39ms   32.32ms 344.59ms   86.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.05m, 11.33MB read
+Requests/sec:   1592.61
+Transfer/sec:    184.73KB

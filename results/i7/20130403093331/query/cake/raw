@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 21:14:15 PDT 2013
+
+  System load:  0.2                Processes:           117
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=2
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/world.json?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   256.97ms  202.48ms   2.29s    75.99%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.67m, 26.56MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    998.30
+Transfer/sec:    271.53KB
+
+---------------------------------------------------------
+ Queries: 1 for cake
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=1
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/world.json?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   239.48ms  190.89ms   1.42s    76.71%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.59m, 23.15MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:   1045.44
+Transfer/sec:    247.82KB
+
+---------------------------------------------------------
+ Queries: 5 for cake
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=5
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/world.json?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   286.83ms  218.97ms   2.49s    76.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 1.88m, 36.89MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    886.17
+Transfer/sec:    334.79KB
+
+---------------------------------------------------------
+ Queries: 10 for cake
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=10
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/world.json?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   339.60ms  235.80ms   2.31s    72.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.23m, 53.95MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:    748.91
+Transfer/sec:    413.77KB
+
+---------------------------------------------------------
+ Queries: 15 for cake
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=15
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/world.json?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   392.79ms  270.58ms   2.35s    72.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.57m, 71.02MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+Requests/sec:    648.97
+Transfer/sec:    471.95KB
+
+---------------------------------------------------------
+ Queries: 20 for cake
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=20
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/world.json?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   447.84ms  289.11ms   2.92s    71.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 2.91m, 88.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 20
+Requests/sec:    573.67
+Transfer/sec:    517.40KB

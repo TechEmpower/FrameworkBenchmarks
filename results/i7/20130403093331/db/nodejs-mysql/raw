@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr  2 22:25:44 PDT 2013
+
+  System load:  1.26               Processes:           114
+  Usage of /:   9.8% of 131.63GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Warmup nodejs-mysql
+ wrk -r 100000 -c 256 -t 8 http://172.16.98.122:8080/sequelize
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/sequelize
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.19ms   28.34ms 387.12ms   93.76%
+    Req/Sec   328.41    470.02     1.00k    67.16%
+  100000 requests in 12.14s, 17.53MB read
+Requests/sec:   8237.11
+Transfer/sec:      1.44MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nodejs-mysql
+ wrk -n 100000 -c 8 -t 8 http://172.16.98.122:8080/sequelize
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/sequelize
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.60ms    1.17ms  25.38ms   72.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 49.56s, 17.53MB read
+Requests/sec:   2017.95
+Transfer/sec:    362.16KB
+
+---------------------------------------------------------
+ Concurrency: 16 for nodejs-mysql
+ wrk -n 100000 -c 16 -t 8 http://172.16.98.122:8080/sequelize
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/sequelize
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.91ms    1.66ms  12.93ms   70.08%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100000 requests in 28.57s, 17.53MB read
+Requests/sec:   3500.53
+Transfer/sec:    628.25KB
+
+---------------------------------------------------------
+ Concurrency: 32 for nodejs-mysql
+ wrk -n 100000 -c 32 -t 8 http://172.16.98.122:8080/sequelize
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/sequelize
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.78ms    2.68ms  30.26ms   70.86%
+    Req/Sec    93.40    291.17     1.00k    90.66%
+  100000 requests in 17.28s, 17.53MB read
+Requests/sec:   5787.38
+Transfer/sec:      1.01MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nodejs-mysql
+ wrk -n 100000 -c 64 -t 8 http://172.16.98.122:8080/sequelize
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/sequelize
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.71ms    8.82ms 219.24ms   98.20%
+    Req/Sec   428.14    495.18     1.00k    57.19%
+  100000 requests in 13.06s, 17.53MB read
+Requests/sec:   7659.75
+Transfer/sec:      1.34MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nodejs-mysql
+ wrk -n 100000 -c 128 -t 8 http://172.16.98.122:8080/sequelize
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/sequelize
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.23ms    8.67ms  50.44ms   69.86%
+    Req/Sec   292.12    455.09     1.00k    70.79%
+  100000 requests in 13.45s, 17.53MB read
+Requests/sec:   7432.89
+Transfer/sec:      1.30MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs-mysql
+ wrk -n 100000 -c 256 -t 8 http://172.16.98.122:8080/sequelize
+---------------------------------------------------------
+
+Making 100000 requests to http://172.16.98.122:8080/sequelize
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.03ms   14.56ms  85.70ms   61.55%
+    Req/Sec   655.12    475.72     1.00k    65.51%
+  100000 requests in 11.94s, 17.53MB read
+Requests/sec:   8372.30
+Transfer/sec:      1.47MB
