@@ -12,7 +12,7 @@ def start(args):
     setup_util.replace_text(
         cwd + "/server.py", "127.0.0.1", args.database_host)
 
-    subprocess.check_call("pip install -r %s/requirements.txt")
+    subprocess.check_call("sudo pip install -r requirements.txt", cwd=cwd, shell=True)
 
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8000 --logging=error" % home, shell=True, cwd=cwd)
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8001 --logging=error" % home, shell=True, cwd=cwd)
@@ -22,7 +22,7 @@ def start(args):
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8005 --logging=error" % home, shell=True, cwd=cwd)
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8006 --logging=error" % home, shell=True, cwd=cwd)
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8007 --logging=error" % home, shell=True, cwd=cwd)
-    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php/deploy/nginx.conf", shell=True)
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/tornado/deploy/nginx.conf", shell=True)
 
     return 0
 
@@ -41,10 +41,10 @@ def stop():
     out, err = p.communicate()
     for line in out.splitlines():
         if 'server.py' in line:
-            try:
-                pid = int(line.split(None, 2)[1])
-                os.kill(pid, 9)
-            except OSError:
-                pass
+            #try:
+            pid = int(line.split(None, 2)[1])
+            os.kill(pid, 9)
+            #except OSError:
+            #    pass
 
     return 0
