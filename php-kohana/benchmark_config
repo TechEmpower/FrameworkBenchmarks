@@ -7,7 +7,7 @@
       "db_url": "/bench/db",
       "query_url": "/bench/db/",
       "port": 8080,
-      "sort": 57
+      "sort": 60
     }
   }]
 }
