@@ -5,7 +5,7 @@ import hello.model.{JdbcQuery, World, SingleResultQuery}
 import java.util.concurrent.ThreadLocalRandom
 import scala.annotation.tailrec
 
-class DbController extends ScalatraServlet with JsonSetup with DbSetup with TestDataSourceProvider {
+class DbController extends ScalatraServlet with JsonSetup with DbSetup with JndiDataSourceProvider {
 
   val maxRows = 10000
 
@@ -17,13 +17,12 @@ class DbController extends ScalatraServlet with JsonSetup with DbSetup with Test
     val count: Int = params.getAs[Int]("queries").getOrElse(1)
     useQuery(query) {
       q =>
-        fetch(count, q)
+        buildResultList(count, q)
     }
   }
 
-  private def random = ThreadLocalRandom.current().nextInt(maxRows) + 1
 
-  private def fetch[T](n: Int, q: JdbcQuery[T]): List[T] = {
+  private def buildResultList[T](n: Int, q: JdbcQuery[T]): List[T] = {
     val first = fetchSingle(random, q)
     recursiveFetch(n - 1, q, first, Nil)
   }
@@ -37,4 +36,6 @@ class DbController extends ScalatraServlet with JsonSetup with DbSetup with Test
     } else {
       recursiveFetch(n - 1, q, fetchSingle(random, q), last :: fetched)
     }
+
+  private def random = ThreadLocalRandom.current().nextInt(maxRows) + 1
 }
