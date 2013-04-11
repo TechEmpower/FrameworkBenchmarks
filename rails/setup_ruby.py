@@ -12,6 +12,7 @@ def start(args):
     subprocess.check_call("cp Gemfile-ruby Gemfile", shell=True, cwd="rails")
     subprocess.check_call("cp Gemfile-ruby.lock Gemfile.lock", shell=True, cwd="rails")
     subprocess.check_call("cp config/database-ruby.yml config/database.yml", shell=True, cwd="rails")
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/rails/config/nginx.conf", shell=True)
     subprocess.Popen("rvm ruby-2.0.0-p0 do bundle exec unicorn_rails -E production -c config/unicorn.rb", shell=True, cwd="rails")
     return 0
   except subprocess.CalledProcessError:
