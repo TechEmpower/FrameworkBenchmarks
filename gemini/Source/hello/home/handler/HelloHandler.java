@@ -69,6 +69,7 @@ public class HelloHandler
   public boolean fortunes()
   {
     final List<Fortune> fortunes = store.list(Fortune.class);
+    fortunes.add(new Fortune().setMessage("Additional fortune added at request time."));
     Collections.sort(fortunes);
     return mustache("fortunes", fortunes);
   }
