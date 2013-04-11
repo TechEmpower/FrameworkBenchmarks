@@ -4,6 +4,10 @@ import sys
 import re
 import os
 
+from os.path import expanduser
+
+home = expanduser("~")
+
 def start(args):
 
   try:

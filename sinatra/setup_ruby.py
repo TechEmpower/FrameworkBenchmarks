@@ -9,12 +9,13 @@ from os.path import expanduser
 home = expanduser("~")
 
 def start(args):
+  setup_util.replace_text("sinatra/hello_world.rb", ":host => '.*'", ":host => '" + args.database_host + "'")
   try:
     subprocess.check_call("rvm ruby-2.0.0-p0 do bundle install --gemfile=Gemfile-ruby", shell=True, cwd="sinatra")
     subprocess.check_call("cp Gemfile-ruby Gemfile", shell=True, cwd="sinatra")
     subprocess.check_call("cp Gemfile-ruby.lock Gemfile.lock", shell=True, cwd="sinatra")
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/sinatra/config/nginx.conf", shell=True)
-    subprocess.Popen("rvm ruby-2.0.0-p0 do bundle exec unicorn_sinatra -E production -c config/unicorn.rb", shell=True, cwd="sinatra")
+    subprocess.Popen("rvm ruby-2.0.0-p0 do bundle exec unicorn_rails -E production -c config/unicorn.rb", shell=True, cwd="sinatra")
     return 0
   except subprocess.CalledProcessError:
     return 1
