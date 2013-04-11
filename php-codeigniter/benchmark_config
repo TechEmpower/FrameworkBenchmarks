@@ -1,5 +1,5 @@
 {
-  "framework": "php-codeigniter",
+  "framework": "codeigniter",
   "tests": [{
     "default": {
       "setup_file": "setup",
