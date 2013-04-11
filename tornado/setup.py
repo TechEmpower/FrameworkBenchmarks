@@ -18,6 +18,10 @@ def start(args):
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8001 --logging=error" % home, shell=True, cwd=cwd)
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8002 --logging=error" % home, shell=True, cwd=cwd)
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8003 --logging=error" % home, shell=True, cwd=cwd)
+    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8004 --logging=error" % home, shell=True, cwd=cwd)
+    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8005 --logging=error" % home, shell=True, cwd=cwd)
+    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8006 --logging=error" % home, shell=True, cwd=cwd)
+    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8007 --logging=error" % home, shell=True, cwd=cwd)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php/deploy/nginx.conf", shell=True)
 
     return 0
