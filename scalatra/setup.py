@@ -9,7 +9,7 @@ def start(args):
   try:
     subprocess.check_call("./sbt clean package", shell=True, cwd="scalatra")
     subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
-    subprocess.check_call("cp scalatra/target/scala-2.10/scalatra*.war $RESIN_HOME/webapps/", shell=True)
+    subprocess.check_call("cp scalatra/target/scala-2.10/scalatra*.war $RESIN_HOME/webapps/scalatra.war", shell=True)
     subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
     return 0
   except subprocess.CalledProcessError:
