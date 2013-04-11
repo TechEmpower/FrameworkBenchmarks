@@ -17,7 +17,7 @@ def start(args):
     #subprocess.check_call("sudo a2ensite cake", shell=True)
     #subprocess.check_call("sudo chown -R www-data:www-data cake", shell=True)
     #subprocess.check_call("sudo /etc/init.d/apache2 start", shell=True)
-    subprocess.check_call("composer install", shell=True)        
+    subprocess.check_call("composer.phar install", shell=True, cwd="php-silex")        
     subprocess.check_call("sudo php-fpm --fpm-config config/php-fpm.conf -g " + home + "/FrameworkBenchmarks/php-silex/deploy/php-fpm.pid", shell=True)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php-silex/deploy/nginx.conf", shell=True)
     return 0
