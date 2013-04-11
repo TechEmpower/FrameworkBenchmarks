@@ -22,9 +22,10 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)    
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
+    self.__run_command("sudo sh -c \"echo '*               soft    nofile          4096' >> /etc/security/limits.conf\"")
 
     #######################################
     # Languages
@@ -33,9 +34,11 @@ class Installer:
     #
     # Erlang
     #
-    self.__run_command("curl -klO https://elearning.erlang-solutions.com/couchdb//rbingen_adapter//package_R16B_precise64_1361901944/esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
-    self.__run_command("sudo /usr/bin/dpkg --install esl-erlang_16.b-1~ubuntu~precise_amd64.deb")
-
+    self.__run_command("sudo cp ../config/erlang.list /etc/apt/sources.list.d/erlang.list")
+    self.__run_command("wget -O - http://binaries.erlang-solutions.com/debian/erlang_solutions.asc | sudo apt-key add -")
+    self.__run_command("sudo apt-get update")
+    self.__run_command("sudo apt-get install esl-erlang", True)
+    
     #
     # Python
     #
@@ -84,7 +87,7 @@ class Installer:
     # go
     #
 
-    self.__run_command("curl http://go.googlecode.com/files/go1.0.3.linux-amd64.tar.gz | tar xvz")
+    self.__run_command("curl http://go.googlecode.com/files/go1.1beta1.linux-amd64.tar.gz | tar xvz")
 
     #
     # php
@@ -92,13 +95,16 @@ class Installer:
 
     self.__run_command("wget --trust-server-names http://www.php.net/get/php-5.4.13.tar.gz/from/us1.php.net/mirror")
     self.__run_command("tar xvf php-5.4.13.tar.gz")
-    self.__run_command("./configure --with-pdo-mysql --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
+    self.__run_command("./configure --with-pdo-mysql --with-mysql --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
     self.__run_command("sudo make install", cwd="php-5.4.13")
     self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13")
     self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
     self.__run_command("rm php-5.4.13.tar.gz")
+
+    # Composer
+    self.__run_command("curl -sS https://getcomposer.org/installer | php -- --install-dir=bin")
 
     #
     # Haskell
@@ -128,6 +134,14 @@ class Installer:
     self.__run_command("./configure", cwd="nginx-1.2.7")
     self.__run_command("make", cwd="nginx-1.2.7")
     self.__run_command("sudo make install", cwd="nginx-1.2.7")
+    
+    #
+    # Openresty (nginx with openresty stuff)
+    #
+    self.__run_command("curl http://openresty.org/download/ngx_openresty-1.2.7.5.tar.gz | tar xvz")
+    self.__run_command("./configure --with-luajit", cwd="ngx_openresty-1.2.7.5")
+    self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
+    self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
     
     #
     # Gunicorn
@@ -226,11 +240,6 @@ class Installer:
     self.__run_command("curl http://vertx.io/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
 
     ##############################
-    # WebGO
-    ##############################
-    self.__run_command("go/bin/go get github.com/hoisie/web")
-
-    ##############################
     # Yesod
     ##############################
     self.__run_command("cabal update")
@@ -271,6 +280,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev
+    sudo sh -c "echo '*               soft    nofile          4096' >> /etc/security/limits.conf"
 
     ##############################
     # MySQL
@@ -313,7 +323,7 @@ class Installer:
     # MongoDB
     ##############################
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
-    sudo cp config/10gen.list /etc/apt/sources.list.d/10gen.list
+    sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
     sudo apt-get update 
     yes | sudo apt-get install mongodb-10gen
     

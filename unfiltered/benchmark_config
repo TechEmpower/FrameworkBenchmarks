@@ -1,0 +1,13 @@
+{
+  "framework": "unfiltered",
+  "tests": [{
+    "default": {
+      "setup_file": "setup_unfiltered",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 9000,
+      "sort": 48
+    }
+  }]
+}
