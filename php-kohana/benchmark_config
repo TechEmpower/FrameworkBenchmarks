@@ -1,5 +1,5 @@
 {
-  "framework": "php-kohana",
+  "framework": "kohana",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -7,7 +7,7 @@
       "db_url": "/index.php/bench/db",
       "query_url": "/index.php/bench/db/",
       "port": 8080,
-      "sort": 53
+      "sort": 57
     }
   }]
 }
