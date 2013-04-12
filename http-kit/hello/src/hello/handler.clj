@@ -39,7 +39,7 @@
 
 
 (defn start-server [{:keys [port db-host]}]
-  (db/use-database! (str "jdbc:mysql://" db-host "/hello_world")
+  (db/use-database! (str "jdbc:mysql://" db-host "/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true")
                     "benchmarkdbuser"
                     "benchmarkdbpass")
   ;; Format responses as JSON
