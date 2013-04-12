@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+SRC_DIR=`pwd`
+cd `dirname "$0"`
+cd '../phpunit/phpunit/composer/bin'
+BIN_TARGET=`pwd`/phpunit
+cd $SRC_DIR
+$BIN_TARGET "$@"

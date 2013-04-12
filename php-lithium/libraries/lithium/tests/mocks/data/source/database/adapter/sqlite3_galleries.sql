@@ -1,0 +1,4 @@
+CREATE TABLE [galleries] (
+[id] INTEGER  PRIMARY KEY NOT NULL,
+[name] VARCHAR(50)  NULL
+)
