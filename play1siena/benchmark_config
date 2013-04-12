@@ -3,11 +3,11 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/db?queries=",
+      "json_url": "/play1/json",
+      "db_url": "/play1/db",
+      "query_url": "/play1/db?queries=",
       "port": 8080,
-      "sort": 13
+      "sort": 66
     }
   }]
 }
