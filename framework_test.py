@@ -159,7 +159,7 @@ class FrameworkTest:
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'json'))
         results = self.__parse_test('json')
         self.benchmarker.report_results(framework=self, test="json", requests=results['requests'], latency=results['latency'],
-          results=results['results'], total_time=results['total_time'])
+          results=results['results'], total_time=results['total_time'], errors=results['errors'])
 
         print "Complete"
     except AttributeError:
@@ -173,7 +173,7 @@ class FrameworkTest:
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'db'))
         results = self.__parse_test('db')
         self.benchmarker.report_results(framework=self, test="db", requests=results['requests'], latency=results['latency'],
-          results=results['results'], total_time=results['total_time'])
+          results=results['results'], total_time=results['total_time'], errors=results['errors'])
 
         print "Complete"
     except AttributeError:
@@ -187,7 +187,7 @@ class FrameworkTest:
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'query'))
         results = self.__parse_test('query')
         self.benchmarker.report_results(framework=self, test="query", requests=results['requests'], latency=results['latency'],
-          results=results['results'], total_time=results['total_time'])
+          results=results['results'], total_time=results['total_time'], errors=results['errors'])
         print "Complete"
     except AttributeError:
       pass
@@ -204,19 +204,19 @@ class FrameworkTest:
     if os.path.exists(self.benchmarker.output_file(self.name, 'json')):
       results = self.__parse_test('json')
       self.benchmarker.report_results(framework=self, test="json", requests=results['requests'], latency=results['latency'],
-        results=results['results'], total_time=results['total_time'])
+        results=results['results'], total_time=results['total_time'], errors=results['errors'])
     
     # DB
     if os.path.exists(self.benchmarker.output_file(self.name, 'db')):
       results = self.__parse_test('db')
       self.benchmarker.report_results(framework=self, test="db", requests=results['requests'], latency=results['latency'],
-        results=results['results'], total_time=results['total_time'])
+        results=results['results'], total_time=results['total_time'], errors=results['errors'])
     
     # Query
     if os.path.exists(self.benchmarker.output_file(self.name, 'query')):
       results = self.__parse_test('query')
       self.benchmarker.report_results(framework=self, test="query", requests=results['requests'], latency=results['latency'],
-        results=results['results'], total_time=results['total_time'])
+        results=results['results'], total_time=results['total_time'], errors=results['errors'])
   ############################################################
   # End parse_all
   ############################################################
@@ -239,6 +239,11 @@ class FrameworkTest:
       results['requests']['stdev'] = 0
       results['requests']['max'] = 0
       results['requests']['stdevPercent'] = 0
+      results['errors'] = dict()
+      results['errors']['connect'] = 0
+      results['errors']['read'] = 0
+      results['errors']['write'] = 0
+      results['errors']['timeout'] = 0
       with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
         is_warmup = False
         for line in raw_data:
@@ -285,6 +290,20 @@ class FrameworkTest:
                   results['total_time'] += float(raw_time[:len(raw_time)-1]) * 60.0
                 elif "h" in raw_time:
                   results['total_time'] += float(raw_time[:len(raw_time)-1]) * 3600.0
+            
+            if "Socket errors" in line:
+              if "connect" in line:
+                m = re.search("connect ([0-9]+)", line)
+                results['errors']['connect'] += int(m.group(1))
+              if "read" in line:
+                m = re.search("read ([0-9]+)", line)
+                results['errors']['read'] += int(m.group(1))
+              if "write" in line:
+                m = re.search("write ([0-9]+)", line)
+                results['errors']['write'] += int(m.group(1))
+              if "timeout" in line:
+                m = re.search("timeout ([0-9]+)", line)
+                results['errors']['timeout'] += int(m.group(1))
 
       return results
     except IOError:

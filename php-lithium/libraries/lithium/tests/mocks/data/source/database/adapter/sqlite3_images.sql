@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS [images] (
+[id] INTEGER  NOT NULL PRIMARY KEY,
+[gallery_id] INTEGER  NULL,
+[image] VARCHAR(255)  NULL,
+[title] VARCHAR(50)  NULL
+)
