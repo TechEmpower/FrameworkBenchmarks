@@ -4,10 +4,15 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/bench/json",
+      "port": 8080,
+      "sort": 60
+    },
+    "raw": {
+      "setup_file": "setup",
       "db_url": "/bench/db",
       "query_url": "/bench/db/",
       "port": 8080,
-      "sort": 60
+      "sort": 61
     }
   }]
 }
