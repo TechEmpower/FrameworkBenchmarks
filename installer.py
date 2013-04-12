@@ -228,11 +228,22 @@ class Installer:
     self.__run_command("sudo pip install flask flask-sqlalchemy")
 
     ##############################
-    # Play
+    # Play 2
     ##############################
     self.__run_command("wget http://downloads.typesafe.com/play/2.1.1/play-2.1.1.zip")
     self.__run_command("unzip -o play-2.1.1.zip")
     self.__run_command("rm play-2.1.1.zip")
+    
+    ##############################
+    # Play 1
+    ##############################
+    self.__run_command("wget http://downloads.typesafe.com/releases/play-1.2.5.zip")
+    self.__run_command("unzip -o play-1.2.5.zip")
+    self.__run_command("rm play-1.2.5.zip")
+    self.__run_command("mv play-1.2.5/play play-1.2.5/play1")
+    
+    # siena
+    self.__run_command("play-1.2.5/play install siena", send_yes=True)
 
     ##############################
     # Vert.x
