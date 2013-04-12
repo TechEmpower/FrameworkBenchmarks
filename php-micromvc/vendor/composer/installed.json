@@ -1,0 +1,46 @@
+[
+    {
+        "name": "micro/micro",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Xeoncross/Micro.git",
+            "reference": "a0b700bebf6037cda663a76a5217475b34e518bd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Xeoncross/Micro/zipball/a0b700bebf6037cda663a76a5217475b34e518bd",
+            "reference": "a0b700bebf6037cda663a76a5217475b34e518bd",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2013-04-10 14:41:44",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Micro": "."
+            }
+        },
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "David Pennington",
+                "homepage": "http://xeoncross.com"
+            }
+        ],
+        "description": "The MicroMVC Framework Libraries",
+        "keywords": [
+            "microframework"
+        ],
+        "support": {
+            "source": "https://github.com/Xeoncross/Micro/tree/master",
+            "issues": "https://github.com/Xeoncross/Micro/issues"
+        }
+    }
+]
