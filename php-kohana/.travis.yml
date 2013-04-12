@@ -1,0 +1,24 @@
+language: php
+
+php:
+  - 5.3
+
+before_install:
+  - "git submodule update --init --recursive"
+
+before_script:
+  - "pear channel-discover pear.phing.info"
+  - "pear install phing/phing"
+  - "phpenv rehash"
+  - "composer install"
+
+script: "phing test"
+
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#kohana"
+    template:
+      - "%{repository}/%{branch} (%{commit}) - %{author}: %{message}"
+      - "Build details: %{build_url}"
+  email: false
