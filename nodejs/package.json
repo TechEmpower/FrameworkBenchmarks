@@ -3,9 +3,8 @@
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
-      "mongoose": "3.5.5" 
+      "mongoose": "3.5.5"
     , "sequelize": "1.6.0-beta4"
-    , "async": "0.2.5"
     , "mysql": "2.0.0-alpha7"
     , "mongodb": "1.2.14"
   }

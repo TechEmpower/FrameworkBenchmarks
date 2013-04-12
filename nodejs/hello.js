@@ -16,7 +16,6 @@ if(cluster.isMaster) {
 
 var http = require('http')
   , url = require('url')
-  , async = require('async')
   , mongoose = require('mongoose')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
   , MongoClient = require('mongodb').MongoClient
@@ -65,23 +64,62 @@ function getRandomNumber() {
 }
 
 function mongooseQuery(callback) {
-  MWorld.findOne({ id: getRandomNumber()}).exec(function (err, world) {
-    callback(err, world);
-  });
+  MWorld.findOne({ id: getRandomNumber()}).exec(callback);
 }
 
 function mongodbDriverQuery(callback) {
-  process.nextTick(function() {
-  collection.find({ id: getRandomNumber()}).toArray(function(err, world) {
-    callback(err, world[0]);
-  });
-  })
+  collection.findOne({ id: getRandomNumber()}, callback);
 }
 
 function sequelizeQuery(callback) {
   World.find(getRandomNumber()).success(function (world) {
     callback(null, world);
   });
+}
+
+function mysqlQuery(callback) {
+  pool.getConnection(function(err, connection) {
+    if (err) return callback(err);
+    connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function(err, rows) {
+      callback(null, rows[0]);
+      connection.end();
+    });
+  });
+}
+
+function streamJSON(req, res, fn) {
+  var values = url.parse(req.url, true);
+  var queries = parseInt(values.query.queries, 10) || 1;
+
+  res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+
+  res.write('[');
+
+  for (var i = 0; i < queries; i++) fn(write);
+
+  // On each callback,
+  // write the JSON document immediately,
+  // add a closing "]" if it's the last document,
+  // add a trailing "," otherwise.
+  var errored;
+
+  function write(err, doc) {
+    if (errored) return;
+
+    if (err) {
+      // We've already sent the headers,
+      // so there's nothing we can really do
+      // except finish up the JSON response.
+      errored = true;
+      res.end(']');
+      return
+    }
+
+    res.write(JSON.stringify(doc));
+
+    if (--queries) res.write(',');
+    else res.end(']');
+  }
 }
 
 http.createServer(function (req, res) {
@@ -99,82 +137,19 @@ http.createServer(function (req, res) {
     break;
 
   case '/mongodbdriver':
-    // Database Test
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    var queryFunctions = new Array(queries);
-
-    for (var i = 0; i < queries; i += 1) {
-      queryFunctions[i] = mongodbDriverQuery;
-    }
-
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
-
-    async.parallel(queryFunctions, function(err, results) {
-      res.end(JSON.stringify(results));
-    });
+    streamJSON(req, res, mongodbDriverQuery);
     break;
 
   case '/mongoose':
-    // Database Test
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    var queryFunctions = new Array(queries);
-
-    for (var i = 0; i < queries; i += 1) {
-      queryFunctions[i] = mongooseQuery;
-    }
-
-    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
-
-    async.parallel(queryFunctions, function(err, results) {
-      res.end(JSON.stringify(results));
-    });
+    streamJSON(req, res, mongooseQuery);
     break;
 
   case '/sequelize':
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    var queryFunctions = new Array(queries);
-
-    for (var i = 0; i < queries; i += 1) {
-      queryFunctions[i] = sequelizeQuery;
-    }
-
-    res.writeHead(200, {'Content-Type': 'application/json'});
-
-    async.parallel(queryFunctions, function(err, results) {
-      res.end(JSON.stringify(results));
-    });
+    streamJSON(req, res, sequelizeQuery);
     break;
 
   case '/mysql':
-    res.writeHead(200, {'Content-Type': 'application/json'});
-
-    function mysqlQuery(callback) {
-      pool.getConnection(function(err, connection) {
-        if (err) callback(err);
-        connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function(err, rows) {
-          callback(null, rows[0]);
-          connection.end();
-        });
-      });
-    }
-
-    var values = url.parse(req.url, true);
-    var queries = values.query.queries || 1;
-    var queryFunctions = new Array(queries);
-
-    for (var i = 0; i < queries; i += 1) {
-      queryFunctions[i] = mysqlQuery;
-    }
-    async.parallel(queryFunctions, function(err, results) {
-      if (err) {
-        res.writeHead(500);
-        return res.end('MYSQL CONNECTION ERROR.');
-      }
-      res.end(JSON.stringify(results));
-    });
+    streamJSON(req, res, mysqlQuery);
     break;
 
   default:
