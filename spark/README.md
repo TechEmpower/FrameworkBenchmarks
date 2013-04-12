@@ -9,8 +9,8 @@ with Spark filters.
 
 * [Spark application](/src/main/java/hello/web/SparkApplication.java)
 * [Hibernate](http://www.hibernate.org/) configuration for local datasource and container managed JNDI
- * [JNDI configuration](/world/src/main/resources/hibernate-jndi.cfg.xml)
- * [Local datasource configuration](/world/src/main/resources/hibernate-local.cfg.xml)
+ * [JNDI configuration](/src/main/resources/hibernate-jndi.cfg.xml)
+ * [Local datasource configuration](/src/main/resources/hibernate-local.cfg.xml)
  * [Hibernate utilities](/src/main/java/hello/web/HibernateUtil.java)
  * [Database entity](/src/main/java/hello/domain/World.java)
 
@@ -25,7 +25,7 @@ with Spark filters.
 ## Different test setups
 
 * Local environment with Spark's built in embedded jetty (port=4567, context=/)
- * Start application from [SparkApplication](/world/src/main/java/hello/web/SparkApplication.java)'s main method
+ * Start application from [SparkApplication](/src/main/java/hello/web/SparkApplication.java)'s main method
  * 'standalone' maven profile must be enabled from [pom.xml](/pom.xml)
 * Local environment with Tomcat maven plugin (port=8080, context=/spark)
  * Start application with maven command 'mvn clean tomcat7:run'
@@ -34,7 +34,6 @@ with Spark filters.
  * Create war with maven command 'mvn clean package'
  * No maven profiles must be enabled
  * Built war can be copied from /target/spark.war
-
 * Local datasource or JNDI datasource can be configured with system property 'jndi'
  * -Djndi=true or no property for JNDI datasource
  * -Djndi=false for local datasource
