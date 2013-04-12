@@ -1,0 +1,56 @@
+# Multiple Environment config, set this to development, staging or production
+# SetEnv FUEL_ENV production
+
+<IfModule mod_rewrite.c>
+
+    # Make sure directory listing is disabled
+	Options +FollowSymLinks -Indexes
+	RewriteEngine on
+
+	# NOTICE: If you get a 404 play with combinations of the following commented out lines
+	#AllowOverride All
+	#RewriteBase /wherever/fuel/is
+
+	# Restrict your site to only one domain
+	# !important USE ONLY ONE OPTION
+
+	# Option 1: To rewrite "www.domain.com -> domain.com" uncomment the following lines.
+	#RewriteCond %{HTTPS} !=on
+	#RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+	#RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+	# Option 2: To rewrite "domain.com -> www.domain.com" uncomment the following lines.
+	#RewriteCond %{HTTPS} !=on
+	#RewriteCond %{HTTP_HOST} !^www\..+$ [NC]
+	#RewriteCond %{HTTP_HOST} (.+)$ [NC]
+	#RewriteRule ^(.*)$ http://www.%1/$1 [R=301,L]
+
+	# Remove index.php from URL
+	#RewriteCond %{HTTP:X-Requested-With}	!^XMLHttpRequest$
+	#RewriteCond %{THE_REQUEST}				^[^/]*/index\.php [NC]
+	#RewriteRule ^index\.php(.*)$			$1 [R=301,NS,L]
+
+	# Send request via index.php (again, not if its a real file or folder)
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+
+	# deal with php5-cgi first
+	<IfModule mod_fcgid.c>
+		RewriteRule ^(.*)$ index.php?/$1 [QSA,L]
+	</IfModule>
+
+	<IfModule !mod_fcgid.c>
+
+		# for normal Apache installations
+		<IfModule mod_php5.c>
+			RewriteRule ^(.*)$ index.php/$1 [L]
+		</IfModule>
+
+		# for Apache FGCI installations
+		<IfModule !mod_php5.c>
+			RewriteRule ^(.*)$ index.php?/$1 [QSA,L]
+		</IfModule>
+
+	</IfModule>
+
+</IfModule>
