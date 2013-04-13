@@ -1,6 +1,3 @@
-template: Hello, %s!
-defaultName: Stranger
-
 database:
   # the name of your JDBC driver
   driverClass: com.mysql.jdbc.Driver
