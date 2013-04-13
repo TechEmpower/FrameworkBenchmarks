@@ -19,10 +19,4 @@ public class WorldDAO
   {
     return Optional.fromNullable(get(id));
   }
-
-  /*
-   * public World create(World world) { return persist(world); } public
-   * List<World> findAll() { return
-   * list(namedQuery("com.example.helloworld.core.Person.findAll")); }
-   */
 }
