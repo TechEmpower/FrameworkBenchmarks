@@ -6,7 +6,8 @@ use Dancer ':syntax';
 use Dancer::Plugin::Database;
 set serializer => 'JSON';
 
-my $dbh = database({ driver => 'mysql', database => 'test' });
+#my $dbh = database({ driver => 'mysql', database => 'test' });
+my $dbh = database({ driver => 'mysql', host => 'ip-10-34-150-134.eu-west-1.compute.internal', database => 'test', username => 'root' });
 
 get '/json' => sub {
     { message => 'Hello, World!' }
