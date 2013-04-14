@@ -9,6 +9,7 @@ def start(args):
   
   subprocess.check_call("cabal update", shell=True, cwd="yesod/bench")
   subprocess.check_call("cabal install --only-dependencies", shell=True, cwd="yesod/bench")
+  subprocess.check_call("cabal configure", shell=True, cwd="yesod/bench")
   subprocess.check_call("cabal build", shell=True, cwd="yesod/bench")
 
   db_host = args.database_host
