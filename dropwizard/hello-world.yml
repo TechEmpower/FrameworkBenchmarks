@@ -1,3 +1,6 @@
+http:
+  port: 9980
+
 database:
   # the name of your JDBC driver
   driverClass: com.mysql.jdbc.Driver
@@ -9,7 +12,7 @@ database:
   password: password
 
   # the JDBC URL
-  url: jdbc:mysql://localhost/hello_world
+  url: jdbc:mysql://127.0.0.1:3306/hello_world
 
   # any properties specific to your JDBC driver:
   properties:
