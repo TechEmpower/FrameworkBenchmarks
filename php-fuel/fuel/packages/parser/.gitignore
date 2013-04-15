@@ -1,0 +1,15 @@
+*~
+*.bak
+Thumbs.db
+desktop.ini
+.DS_Store
+.buildpath
+.project
+.settings
+fuel/app/logs/*/*/*
+fuel/app/cache/*/*
+nbproject/
+.idea
+*.tmproj
+*.sublime-project
+*.sublime-workspace

@@ -4,7 +4,7 @@ import sys
 import setup_util
 
 def start(args):
-  setup_util.replace_text("compojure/hello/src/hello/handler.clj", ":host \".*\"", ":host \"" + args.database_host + "\"")
+  setup_util.replace_text("compojure/hello/src/hello/handler.clj", ":subname \"//.*:3306", ":subname \"//" + args.database_host + ":3306")
 
   try:
     subprocess.check_call("lein ring uberwar", shell=True, cwd="compojure/hello")
