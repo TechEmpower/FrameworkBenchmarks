@@ -7,6 +7,7 @@ def start(args):
 
   try:
     subprocess.check_call("lein deps", shell=True, cwd="http-kit/hello")
+    subprocess.check_call("rm -rf target", shell=True, cwd="http-kit/hello")
     # pack all dependencies into a single jar: target/http-kit-standalone.jar
     subprocess.check_call("lein uberjar", shell=True, cwd="http-kit/hello")
     # -server is much faster
