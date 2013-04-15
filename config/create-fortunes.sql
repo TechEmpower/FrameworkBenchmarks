@@ -1,4 +1,11 @@
-DELETE FROM fortune;
+DROP TABLE IF EXISTS Fortune;
+CREATE TABLE  Fortune (
+  id int(10) unsigned NOT NULL auto_increment,
+  message varchar(2048) CHARACTER SET 'utf8' NOT NULL,
+  PRIMARY KEY  (id)
+)
+ENGINE=INNODB;
+
 INSERT INTO fortune (message) VALUES ('fortune: No such file or directory');
 INSERT INTO fortune (message) VALUES ('A computer scientist is someone who fixes things that aren''t broken.');
 INSERT INTO fortune (message) VALUES ('After enough decimal places, nobody gives a damn.');
