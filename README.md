@@ -53,6 +53,7 @@ Next, we're going to setup the servers with all the necessary software:
     cd ../../..
     cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
     cd ..
+    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
 	  mongo --host client-private-ip < config/create.js
 
 Assuming the above finished without error, we're ready to start the test suite:
@@ -106,6 +107,7 @@ Next, we're going to setup the servers with all the necessary software:
     cd ../../..
     cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
     cd ..
+    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
     mongo --host client-ip < config/create.js
 
 Assuming this finished without error, we're ready to start the test suite:
