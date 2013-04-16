@@ -1,0 +1,126 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 12:15:16 UTC 2013
+
+  System load:  0.61               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
+  Memory usage: 9%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer lithium
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.25ms   17.22ms 135.40ms   78.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1236 requests in 5.01s, 378.44KB read
+Requests/sec:    246.60
+Transfer/sec:     75.50KB
+
+---------------------------------------------------------
+ Running Warmup lithium
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.09s   364.10ms   2.75s    74.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13691 requests in 1.00m, 4.09MB read
+  Socket errors: connect 0, read 0, write 0, timeout 16
+Requests/sec:    228.15
+Transfer/sec:     69.86KB
+
+---------------------------------------------------------
+ Queries: 1 for lithium
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   954.73ms  305.51ms   2.39s    72.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  15869 requests in 1.00m, 3.99MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    264.44
+Transfer/sec:     68.12KB
+
+---------------------------------------------------------
+ Queries: 5 for lithium
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.51s   485.11ms   3.08s    77.55%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9799 requests in 1.00m, 4.33MB read
+  Socket errors: connect 0, read 0, write 0, timeout 140
+Requests/sec:    163.28
+Transfer/sec:     73.81KB
+
+---------------------------------------------------------
+ Queries: 10 for lithium
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.17s   674.78ms   4.15s    79.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6638 requests in 1.00m, 4.51MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1146
+Requests/sec:    110.62
+Transfer/sec:     77.01KB
+
+---------------------------------------------------------
+ Queries: 15 for lithium
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.82s   806.88ms   4.66s    86.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5005 requests in 1.00m, 4.59MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2424
+Requests/sec:     83.41
+Transfer/sec:     78.33KB
+
+---------------------------------------------------------
+ Queries: 20 for lithium
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.49s     1.04s    5.85s    86.92%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4000 requests in 1.00m, 4.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3497
+Requests/sec:     66.65
+Transfer/sec:     78.80KB
