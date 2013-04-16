@@ -243,7 +243,7 @@ class Installer:
     self.__run_command("mv play-1.2.5/play play-1.2.5/play1")
     
     # siena
-    self.__run_command("play-1.2.5/play install siena", send_yes=True)
+    self.__run_command("play-1.2.5/play1 install siena", send_yes=True)
 
     ##############################
     # Vert.x
