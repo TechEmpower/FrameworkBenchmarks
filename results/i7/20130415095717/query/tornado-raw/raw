@@ -1,0 +1,115 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 02:03:37 PDT 2013
+
+  System load:  0.72                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tornado-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.35ms  738.97us   6.44ms   88.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16456 requests in 5.00s, 4.79MB read
+Requests/sec:   3290.04
+Transfer/sec:      0.96MB
+
+---------------------------------------------------------
+ Running Warmup tornado-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.11ms  113.54ms 492.72ms   86.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  236594 requests in 1.00m, 68.93MB read
+Requests/sec:   3943.06
+Transfer/sec:      1.15MB
+
+---------------------------------------------------------
+ Queries: 1 for tornado-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.32ms   61.14ms 399.75ms   86.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  335949 requests in 1.00m, 85.14MB read
+Requests/sec:   5598.99
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Queries: 5 for tornado-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   113.56ms  265.87ms 876.82ms   87.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  133797 requests in 1.00m, 54.34MB read
+Requests/sec:   2229.87
+Transfer/sec:      0.91MB
+
+---------------------------------------------------------
+ Queries: 10 for tornado-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   216.23ms  340.35ms 903.66ms   74.53%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  72971 requests in 1.00m, 43.48MB read
+Requests/sec:   1216.11
+Transfer/sec:    741.98KB
+
+---------------------------------------------------------
+ Queries: 15 for tornado-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   283.79ms  457.89ms   1.36s    76.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  52856 requests in 1.00m, 41.52MB read
+Requests/sec:    880.87
+Transfer/sec:    708.55KB
+
+---------------------------------------------------------
+ Queries: 20 for tornado-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   402.55ms  886.64ms   3.22s    86.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  37991 requests in 1.00m, 37.05MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1579
+Requests/sec:    633.17
+Transfer/sec:    632.28KB

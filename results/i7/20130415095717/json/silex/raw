@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 02:11:29 PDT 2013
+
+  System load:  0.36                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer silex
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.48ms    1.32ms   8.60ms   70.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11777 requests in 5.00s, 2.80MB read
+Requests/sec:   2354.75
+Transfer/sec:    572.48KB
+
+---------------------------------------------------------
+ Running Warmup silex
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   103.48ms   91.48ms   1.10s    81.84%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  154155 requests in 1.00m, 36.60MB read
+Requests/sec:   2569.21
+Transfer/sec:    624.62KB
+
+---------------------------------------------------------
+ Concurrency: 8 for silex
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.33ms    1.35ms  16.35ms   71.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  142407 requests in 1.00m, 33.81MB read
+Requests/sec:   2373.38
+Transfer/sec:    577.01KB
+
+---------------------------------------------------------
+ Concurrency: 16 for silex
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.23ms    5.00ms  56.17ms   88.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  153785 requests in 1.00m, 36.51MB read
+Requests/sec:   2562.98
+Transfer/sec:    623.10KB
+
+---------------------------------------------------------
+ Concurrency: 32 for silex
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.55ms   18.62ms 336.67ms   92.04%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  155164 requests in 1.00m, 36.84MB read
+Requests/sec:   2585.94
+Transfer/sec:    628.68KB
+
+---------------------------------------------------------
+ Concurrency: 64 for silex
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.96ms   43.47ms 502.50ms   88.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  154417 requests in 1.00m, 36.66MB read
+Requests/sec:   2573.51
+Transfer/sec:    625.66KB
+
+---------------------------------------------------------
+ Concurrency: 128 for silex
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.76ms   72.00ms 877.15ms   87.55%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  154897 requests in 1.00m, 36.78MB read
+Requests/sec:   2581.49
+Transfer/sec:    627.60KB
+
+---------------------------------------------------------
+ Concurrency: 256 for silex
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.85ms  101.37ms   1.14s    86.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  153783 requests in 1.00m, 36.51MB read
+Requests/sec:   2562.88
+Transfer/sec:    623.08KB

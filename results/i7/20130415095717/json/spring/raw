@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 16:28:04 PDT 2013
+
+  System load:  0.11                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spring
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/spring/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   508.21us  444.95us   4.94ms   91.18%
+    Req/Sec     1.30k   592.95     2.00k    55.88%
+  117307 requests in 5.00s, 19.80MB read
+Requests/sec:  23467.05
+Transfer/sec:      3.96MB
+
+---------------------------------------------------------
+ Running Warmup spring
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.38ms   47.17ms 464.98ms   98.24%
+    Req/Sec     6.53k     1.88k    9.00k    64.49%
+  3605901 requests in 1.00m, 611.28MB read
+  Socket errors: connect 0, read 1597, write 0, timeout 6344
+Requests/sec:  60099.97
+Transfer/sec:     10.19MB
+
+---------------------------------------------------------
+ Concurrency: 8 for spring
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   176.25us   90.34us   3.02ms   89.41%
+    Req/Sec     5.28k   447.94     6.00k    72.23%
+  2839690 requests in 1.00m, 479.34MB read
+Requests/sec:  47328.97
+Transfer/sec:      7.99MB
+
+---------------------------------------------------------
+ Concurrency: 16 for spring
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   253.28us  262.84us   7.56ms   91.62%
+    Req/Sec     9.00k    24.91     9.00k    99.94%
+  4449857 requests in 1.00m, 751.14MB read
+Requests/sec:  74165.27
+Transfer/sec:     12.52MB
+
+---------------------------------------------------------
+ Concurrency: 32 for spring
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   500.20us  542.94us   5.41ms   86.07%
+    Req/Sec    10.90k   325.00    13.00k    88.53%
+  5295683 requests in 1.00m, 0.87GB read
+Requests/sec:  88262.99
+Transfer/sec:     14.90MB
+
+---------------------------------------------------------
+ Concurrency: 64 for spring
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.08ms    1.20ms  10.65ms   84.25%
+    Req/Sec    11.15k   391.05    13.00k    83.29%
+  5612852 requests in 1.00m, 0.93GB read
+Requests/sec:  93550.04
+Transfer/sec:     15.79MB
+
+---------------------------------------------------------
+ Concurrency: 128 for spring
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.84ms    1.95ms  25.60ms   86.88%
+    Req/Sec    10.54k     1.05k   13.00k    88.35%
+  5496701 requests in 1.00m, 0.91GB read
+Requests/sec:  91618.27
+Transfer/sec:     15.47MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spring
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/spring/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.57ms    8.59ms 303.80ms   97.40%
+    Req/Sec    10.29k   688.97    24.00k    71.97%
+  5186075 requests in 1.00m, 0.85GB read
+Requests/sec:  86437.41
+Transfer/sec:     14.59MB

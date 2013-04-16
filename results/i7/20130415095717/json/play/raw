@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 10:08:55 PDT 2013
+
+  System load:  0.13                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 15%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+116 packages can be updated.
+54 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.70ms    2.83ms  19.65ms   95.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  37427 requests in 5.00s, 4.00MB read
+Requests/sec:   7486.10
+Transfer/sec:    818.79KB
+
+---------------------------------------------------------
+ Running Warmup play
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.72ms    2.02ms  19.90ms   84.32%
+    Req/Sec     2.96k   269.04     4.00k    95.48%
+  1560678 requests in 1.00m, 166.70MB read
+Requests/sec:  26010.48
+Transfer/sec:      2.78MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   469.89us  416.52us  12.47ms   99.44%
+    Req/Sec     2.00k    49.87     2.00k    99.75%
+  1081606 requests in 1.00m, 115.53MB read
+Requests/sec:  18027.05
+Transfer/sec:      1.93MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:9000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   591.72us  250.38us   8.46ms   96.67%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  1609559 requests in 1.00m, 171.92MB read
+Requests/sec:  26826.47
+Transfer/sec:      2.87MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:9000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.17ms  354.62us   9.47ms   90.17%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  1638280 requests in 1.00m, 174.99MB read
+Requests/sec:  27305.29
+Transfer/sec:      2.92MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:9000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.35ms  387.37us   9.32ms   81.44%
+    Req/Sec     2.99k   133.25     4.00k    99.00%
+  1619516 requests in 1.00m, 172.98MB read
+Requests/sec:  26992.59
+Transfer/sec:      2.88MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:9000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.83ms    0.96ms  17.63ms   87.27%
+    Req/Sec     2.98k   312.63     5.00k    94.76%
+  1577983 requests in 1.00m, 168.55MB read
+Requests/sec:  26300.18
+Transfer/sec:      2.81MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.87ms    2.05ms  24.47ms   86.06%
+    Req/Sec     2.98k   201.00     4.00k    96.64%
+  1550321 requests in 1.00m, 165.59MB read
+Requests/sec:  25838.41
+Transfer/sec:      2.76MB

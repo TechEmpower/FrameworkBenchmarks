@@ -1,0 +1,142 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 00:46:03 PDT 2013
+
+  System load:  0.13                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phreeze
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/phreeze/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/phreeze/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  0 requests in 6.00s, 0.00B read
+  Socket errors: connect 0, read 0, write 0, timeout 23
+Requests/sec:      0.00
+Transfer/sec:       0.00B
+
+---------------------------------------------------------
+ Running Warmup phreeze
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/phreeze/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/phreeze/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   239.25ms    1.24s   17.52s    99.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4296 requests in 1.00m, 1.76MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6126
+  Non-2xx or 3xx responses: 2
+Requests/sec:     71.59
+Transfer/sec:     30.04KB
+
+---------------------------------------------------------
+ Concurrency: 8 for phreeze
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/phreeze/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/phreeze/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.30ms  524.33ms  16.56s    99.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  269 requests in 1.00m, 112.90KB read
+  Socket errors: connect 0, read 0, write 0, timeout 201
+Requests/sec:      4.48
+Transfer/sec:      1.88KB
+
+---------------------------------------------------------
+ Concurrency: 16 for phreeze
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/phreeze/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/phreeze/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.48ms  622.29ms  16.29s    99.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  494 requests in 1.00m, 207.23KB read
+  Socket errors: connect 0, read 0, write 0, timeout 416
+  Non-2xx or 3xx responses: 1
+Requests/sec:      8.23
+Transfer/sec:      3.45KB
+
+---------------------------------------------------------
+ Concurrency: 32 for phreeze
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/phreeze/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/phreeze/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.92ms  809.63ms  15.90s    99.72%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  826 requests in 1.00m, 346.48KB read
+  Socket errors: connect 0, read 0, write 0, timeout 779
+  Non-2xx or 3xx responses: 2
+Requests/sec:     13.77
+Transfer/sec:      5.77KB
+
+---------------------------------------------------------
+ Concurrency: 64 for phreeze
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/phreeze/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/phreeze/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   176.47ms    1.57s   19.55s    99.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1345 requests in 1.00m, 564.31KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1626
+  Non-2xx or 3xx responses: 2
+Requests/sec:     22.41
+Transfer/sec:      9.40KB
+
+---------------------------------------------------------
+ Concurrency: 128 for phreeze
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/phreeze/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/phreeze/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   113.34ms    1.01s   16.43s    99.59%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1604 requests in 1.00m, 673.00KB read
+  Socket errors: connect 0, read 0, write 0, timeout 3344
+  Non-2xx or 3xx responses: 2
+Requests/sec:     26.73
+Transfer/sec:     11.22KB
+
+---------------------------------------------------------
+ Concurrency: 256 for phreeze
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/phreeze/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/phreeze/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.01s     6.24s   17.14s    82.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2646 requests in 1.00m, 1.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6658
+  Non-2xx or 3xx responses: 5
+Requests/sec:     44.10
+Transfer/sec:     18.50KB
