@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 17:36:45 PDT 2013
+
+  System load:  0.2                 Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer webgo
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   276.55us  230.52us   1.07ms   88.46%
+    Req/Sec     4.00k     0.00     4.00k   100.00%
+  190550 requests in 5.00s, 28.71MB read
+Requests/sec:  38117.73
+Transfer/sec:      5.74MB
+
+---------------------------------------------------------
+ Running Warmup webgo
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.73ms   27.36ms   1.09s    99.88%
+    Req/Sec     9.43k   548.54    11.00k    55.30%
+  4737468 requests in 1.00m, 713.84MB read
+Requests/sec:  78959.41
+Transfer/sec:     11.90MB
+
+---------------------------------------------------------
+ Concurrency: 8 for webgo
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   240.93us  224.83us   7.48ms   93.66%
+    Req/Sec     4.00k     0.00     4.00k   100.00%
+  2323103 requests in 1.00m, 350.05MB read
+Requests/sec:  38718.89
+Transfer/sec:      5.83MB
+
+---------------------------------------------------------
+ Concurrency: 16 for webgo
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   236.86us  277.57us   5.10ms   92.38%
+    Req/Sec     9.00k     0.00     9.00k   100.00%
+  4531574 requests in 1.00m, 682.82MB read
+Requests/sec:  75527.52
+Transfer/sec:     11.38MB
+
+---------------------------------------------------------
+ Concurrency: 32 for webgo
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   398.49us  337.82us   3.16ms   86.32%
+    Req/Sec     9.23k   423.71    10.00k    76.56%
+  4692288 requests in 1.00m, 707.04MB read
+Requests/sec:  78206.80
+Transfer/sec:     11.78MB
+
+---------------------------------------------------------
+ Concurrency: 64 for webgo
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.10ms   19.40ms   1.10s    99.97%
+    Req/Sec     9.23k   419.67    10.00k    77.19%
+  4701582 requests in 1.00m, 708.44MB read
+Requests/sec:  78361.57
+Transfer/sec:     11.81MB
+
+---------------------------------------------------------
+ Concurrency: 128 for webgo
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.96ms   19.55ms   1.11s    99.97%
+    Req/Sec     9.24k   426.43    10.00k    76.12%
+  4741060 requests in 1.00m, 714.39MB read
+Requests/sec:  79019.98
+Transfer/sec:     11.91MB
+
+---------------------------------------------------------
+ Concurrency: 256 for webgo
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.60ms   20.68ms   1.15s    99.78%
+    Req/Sec     9.21k   404.94    10.00k    79.34%
+  4705439 requests in 1.00m, 709.02MB read
+Requests/sec:  78427.54
+Transfer/sec:     11.82MB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 11:32:37 PDT 2013
+
+  System load:  1.33                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+116 packages can be updated.
+54 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yesod
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8000/dbs/2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8000/dbs/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.31ms  195.18us   2.27ms   87.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30675 requests in 5.00s, 5.60MB read
+Requests/sec:   6135.24
+Transfer/sec:      1.12MB
+
+---------------------------------------------------------
+ Running Warmup yesod
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8000/dbs/2
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/dbs/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.70ms   10.08ms  88.06ms   82.50%
+    Req/Sec     1.99k   124.45     3.00k    99.19%
+  1266358 requests in 1.00m, 231.32MB read
+Requests/sec:  21106.44
+Transfer/sec:      3.86MB
+
+---------------------------------------------------------
+ Queries: 1 for yesod
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8000/dbs/1
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/dbs/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.36ms    7.19ms  77.22ms   85.56%
+    Req/Sec     3.26k   442.51     5.00k    74.11%
+  1863153 requests in 1.00m, 283.89MB read
+Requests/sec:  31053.34
+Transfer/sec:      4.73MB
+
+---------------------------------------------------------
+ Queries: 5 for yesod
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8000/dbs/5
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/dbs/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.33ms   20.00ms 146.74ms   77.62%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  629181 requests in 1.00m, 172.12MB read
+Requests/sec:  10488.04
+Transfer/sec:      2.87MB
+
+---------------------------------------------------------
+ Queries: 10 for yesod
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8000/dbs/10
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/dbs/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.88ms   32.76ms 333.62ms   75.03%
+    Req/Sec     2.80     52.80     1.00k    99.72%
+  338103 requests in 1.00m, 143.72MB read
+Requests/sec:   5635.02
+Transfer/sec:      2.40MB
+
+---------------------------------------------------------
+ Queries: 15 for yesod
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8000/dbs/15
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/dbs/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.86ms   46.60ms 325.14ms   73.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  231098 requests in 1.00m, 133.24MB read
+Requests/sec:   3851.50
+Transfer/sec:      2.22MB
+
+---------------------------------------------------------
+ Queries: 20 for yesod
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8000/dbs/20
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/dbs/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.72ms   66.24ms 528.34ms   75.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  174834 requests in 1.00m, 127.29MB read
+Requests/sec:   2913.69
+Transfer/sec:      2.12MB
