@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Tue Apr 16 07:53:04 UTC 2013
+  System information as of Tue Apr 16 21:32:28 UTC 2013
 
-  System load:  0.49               Processes:           70
-  Usage of /:   24.5% of 19.69GB   Users logged in:     1
+  System load:  1.83               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
   Memory usage: 8%                 IP address for eth0: 10.252.147.39
   Swap usage:   0%
 
@@ -29,11 +29,11 @@ Use Juju to deploy your cloud instances and workloads.
 Running 5s test @ http://10.252.147.200:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.33ms    2.13ms  13.94ms   81.06%
+    Latency     5.13ms    2.07ms  13.73ms   86.59%
     Req/Sec     0.00      0.00     0.00    100.00%
-  7865 requests in 5.01s, 737.34KB read
-Requests/sec:   1569.79
-Transfer/sec:    147.17KB
+  7892 requests in 5.00s, 1.20MB read
+Requests/sec:   1577.83
+Transfer/sec:    245.83KB
 
 ---------------------------------------------------------
  Running Warmup elli
@@ -43,11 +43,11 @@ Transfer/sec:    147.17KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=2
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   109.84ms    5.16ms 135.66ms   84.84%
+    Latency   109.20ms    6.85ms 167.01ms   94.13%
     Req/Sec     0.00      0.00     0.00    100.00%
-  139584 requests in 1.00m, 12.78MB read
-Requests/sec:   2326.43
-Transfer/sec:    218.10KB
+  139976 requests in 1.00m, 21.30MB read
+Requests/sec:   2332.87
+Transfer/sec:    363.46KB
 
 ---------------------------------------------------------
  Queries: 1 for elli
@@ -57,11 +57,11 @@ Transfer/sec:    218.10KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=1
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    65.16ms   15.68ms 324.75ms   97.94%
-    Req/Sec   500.62    500.16     1.00k    50.06%
-  234826 requests in 1.00m, 21.50MB read
-Requests/sec:   3913.68
-Transfer/sec:    366.91KB
+    Latency    63.27ms    3.14ms  90.18ms   79.18%
+    Req/Sec     0.97k   161.57     1.00k    97.32%
+  242507 requests in 1.00m, 29.55MB read
+Requests/sec:   4041.67
+Transfer/sec:    504.30KB
 
 ---------------------------------------------------------
  Queries: 5 for elli
@@ -71,11 +71,11 @@ Transfer/sec:    366.91KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=5
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   258.81ms   38.31ms 550.35ms   92.02%
+    Latency   242.33ms   15.76ms 289.88ms   96.06%
     Req/Sec     0.00      0.00     0.00    100.00%
-  59087 requests in 1.00m, 5.41MB read
-Requests/sec:    984.70
-Transfer/sec:     92.32KB
+  63048 requests in 1.00m, 15.38MB read
+Requests/sec:   1050.63
+Transfer/sec:    262.51KB
 
 ---------------------------------------------------------
  Queries: 10 for elli
@@ -85,11 +85,11 @@ Transfer/sec:     92.32KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=10
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   480.01ms   43.19ms 579.96ms   98.31%
+    Latency   466.88ms   41.42ms 556.83ms   96.06%
     Req/Sec     0.00      0.00     0.00    100.00%
-  31582 requests in 1.00m, 2.89MB read
-Requests/sec:    526.31
-Transfer/sec:     49.34KB
+  32536 requests in 1.00m, 12.87MB read
+Requests/sec:    542.14
+Transfer/sec:    219.56KB
 
 ---------------------------------------------------------
  Queries: 15 for elli
@@ -99,11 +99,11 @@ Transfer/sec:     49.34KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=15
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   718.52ms   88.31ms 944.02ms   92.48%
+    Latency   680.95ms   74.01ms 736.38ms   98.87%
     Req/Sec     0.00      0.00     0.00    100.00%
-  20992 requests in 1.00m, 1.92MB read
-Requests/sec:    349.77
-Transfer/sec:     32.79KB
+  22196 requests in 1.00m, 12.14MB read
+Requests/sec:    369.89
+Transfer/sec:    207.18KB
 
 ---------------------------------------------------------
  Queries: 20 for elli
@@ -113,8 +113,8 @@ Transfer/sec:     32.79KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=20
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   927.07ms  117.40ms 979.86ms   98.44%
+    Latency   902.96ms  112.70ms 979.41ms   98.50%
     Req/Sec     0.00      0.00     0.00    100.00%
-  16128 requests in 1.00m, 1.48MB read
-Requests/sec:    268.75
-Transfer/sec:     25.19KB
+  16640 requests in 1.00m, 11.62MB read
+Requests/sec:    277.24
+Transfer/sec:    198.30KB
