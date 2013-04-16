@@ -159,7 +159,7 @@ class FrameworkTest:
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'json'))
         results = self.__parse_test('json')
         self.benchmarker.report_results(framework=self, test="json", requests=results['requests'], latency=results['latency'],
-          results=results['results'], total_time=results['total_time'], errors=results['errors'])
+          results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
 
         print "Complete"
     except AttributeError:
@@ -173,7 +173,7 @@ class FrameworkTest:
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'db'))
         results = self.__parse_test('db')
         self.benchmarker.report_results(framework=self, test="db", requests=results['requests'], latency=results['latency'],
-          results=results['results'], total_time=results['total_time'], errors=results['errors'])
+          results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
 
         print "Complete"
     except AttributeError:
@@ -187,7 +187,7 @@ class FrameworkTest:
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'query'))
         results = self.__parse_test('query')
         self.benchmarker.report_results(framework=self, test="query", requests=results['requests'], latency=results['latency'],
-          results=results['results'], total_time=results['total_time'], errors=results['errors'])
+          results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
         print "Complete"
     except AttributeError:
       pass
@@ -204,19 +204,19 @@ class FrameworkTest:
     if os.path.exists(self.benchmarker.output_file(self.name, 'json')):
       results = self.__parse_test('json')
       self.benchmarker.report_results(framework=self, test="json", requests=results['requests'], latency=results['latency'],
-        results=results['results'], total_time=results['total_time'], errors=results['errors'])
+        results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
     
     # DB
     if os.path.exists(self.benchmarker.output_file(self.name, 'db')):
       results = self.__parse_test('db')
       self.benchmarker.report_results(framework=self, test="db", requests=results['requests'], latency=results['latency'],
-        results=results['results'], total_time=results['total_time'], errors=results['errors'])
+        results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
     
     # Query
     if os.path.exists(self.benchmarker.output_file(self.name, 'query')):
       results = self.__parse_test('query')
       self.benchmarker.report_results(framework=self, test="query", requests=results['requests'], latency=results['latency'],
-        results=results['results'], total_time=results['total_time'], errors=results['errors'])
+        results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
   ############################################################
   # End parse_all
   ############################################################
@@ -229,6 +229,7 @@ class FrameworkTest:
       results = dict()
       results['results'] = []
       results['total_time'] = 0
+      results['totalRequests'] = 0
       results['latency'] = dict()
       results['latency']['avg'] = 0
       results['latency']['stdev'] = 0
@@ -244,6 +245,7 @@ class FrameworkTest:
       results['errors']['read'] = 0
       results['errors']['write'] = 0
       results['errors']['timeout'] = 0
+      results['errors']['5xx'] = 0
       with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
         is_warmup = False
         for line in raw_data:
@@ -290,6 +292,11 @@ class FrameworkTest:
                   results['total_time'] += float(raw_time[:len(raw_time)-1]) * 60.0
                 elif "h" in raw_time:
                   results['total_time'] += float(raw_time[:len(raw_time)-1]) * 3600.0
+           
+            if "requests in" in line:
+              m = re.search("([0-9]+) requests in", line)
+              if m != None: 
+                results['totalRequests'] += int(m.group(1))
             
             if "Socket errors" in line:
               if "connect" in line:
@@ -304,6 +311,12 @@ class FrameworkTest:
               if "timeout" in line:
                 m = re.search("timeout ([0-9]+)", line)
                 results['errors']['timeout'] += int(m.group(1))
+            
+            if "Non-2xx" in line:
+              m = re.search("Non-2xx or 3xx responses: ([0-9]+)", line)
+              if m != None: 
+                results['errors']['5xx'] += int(m.group(1))
+              
 
       return results
     except IOError:
