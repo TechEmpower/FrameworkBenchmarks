@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 01:47:17 PDT 2013
+
+  System load:  0.35                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tornado
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   675.30us  325.40us   2.39ms   91.18%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  57660 requests in 5.00s, 13.96MB read
+Requests/sec:  11527.36
+Transfer/sec:      2.79MB
+
+---------------------------------------------------------
+ Running Warmup tornado
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.16ms   16.48ms 631.99ms   96.37%
+    Req/Sec     1.00k    63.54     2.00k    99.60%
+  807887 requests in 1.00m, 195.66MB read
+Requests/sec:  13464.83
+Transfer/sec:      3.26MB
+
+---------------------------------------------------------
+ Concurrency: 8 for tornado
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   695.33us  372.18us   6.33ms   92.07%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  685600 requests in 1.00m, 166.04MB read
+Requests/sec:  11426.78
+Transfer/sec:      2.77MB
+
+---------------------------------------------------------
+ Concurrency: 16 for tornado
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.34ms    1.23ms   8.07ms   88.25%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  718723 requests in 1.00m, 174.06MB read
+Requests/sec:  11978.87
+Transfer/sec:      2.90MB
+
+---------------------------------------------------------
+ Concurrency: 32 for tornado
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.69ms    6.08ms 310.18ms   95.32%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  731339 requests in 1.00m, 177.12MB read
+Requests/sec:  12189.24
+Transfer/sec:      2.95MB
+
+---------------------------------------------------------
+ Concurrency: 64 for tornado
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.23ms    8.24ms 237.31ms   94.19%
+    Req/Sec     1.00k    17.62     1.00k    99.97%
+  754461 requests in 1.00m, 182.72MB read
+Requests/sec:  12574.47
+Transfer/sec:      3.05MB
+
+---------------------------------------------------------
+ Concurrency: 128 for tornado
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.97ms    5.81ms  95.59ms   84.19%
+    Req/Sec     1.00k    30.62     2.00k    99.91%
+  775659 requests in 1.00m, 187.85MB read
+Requests/sec:  12928.05
+Transfer/sec:      3.13MB
+
+---------------------------------------------------------
+ Concurrency: 256 for tornado
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.96ms   12.74ms 418.00ms   94.91%
+    Req/Sec     1.00k    88.35     2.00k    99.22%
+  808772 requests in 1.00m, 195.87MB read
+Requests/sec:  13479.79
+Transfer/sec:      3.26MB

@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 12:09:51 PDT 2013
+
+  System load:  0.2                 Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer grails
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/grails/hello/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/grails/hello/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.80ms    1.12ms   6.32ms   78.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27991 requests in 5.00s, 5.13MB read
+Requests/sec:   5598.70
+Transfer/sec:      1.03MB
+
+---------------------------------------------------------
+ Running Warmup grails
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/grails/hello/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.44ms   26.27ms 484.45ms   95.21%
+    Req/Sec     2.91k   289.31     4.00k    90.80%
+  1761086 requests in 1.00m, 327.06MB read
+  Socket errors: connect 0, read 118, write 0, timeout 1083
+Requests/sec:  29351.95
+Transfer/sec:      5.45MB
+
+---------------------------------------------------------
+ Concurrency: 8 for grails
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/grails/hello/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/grails/hello/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   340.43us  124.57us   1.22ms   78.13%
+    Req/Sec     2.65k   478.03     3.00k    64.68%
+  1435109 requests in 1.00m, 262.78MB read
+Requests/sec:  23918.75
+Transfer/sec:      4.38MB
+
+---------------------------------------------------------
+ Concurrency: 16 for grails
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/grails/hello/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/grails/hello/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   611.17us  638.67us  21.99ms   93.61%
+    Req/Sec     3.10k   296.63     4.00k    90.25%
+  1885874 requests in 1.00m, 345.31MB read
+Requests/sec:  31431.67
+Transfer/sec:      5.76MB
+
+---------------------------------------------------------
+ Concurrency: 32 for grails
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/grails/hello/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/grails/hello/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.03ms  705.90us  15.92ms   87.84%
+    Req/Sec     3.94k   240.69     4.00k    93.83%
+  1951316 requests in 1.00m, 357.30MB read
+Requests/sec:  32522.59
+Transfer/sec:      5.96MB
+
+---------------------------------------------------------
+ Concurrency: 64 for grails
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/grails/hello/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/grails/hello/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.01ms    1.20ms  25.92ms   83.28%
+    Req/Sec     3.78k   414.95     4.00k    77.91%
+  1955896 requests in 1.00m, 358.14MB read
+Requests/sec:  32598.88
+Transfer/sec:      5.97MB
+
+---------------------------------------------------------
+ Concurrency: 128 for grails
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/grails/hello/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/grails/hello/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.90ms    2.98ms  50.00ms   88.06%
+    Req/Sec     3.71k   458.33     5.00k    70.90%
+  1943324 requests in 1.00m, 355.83MB read
+Requests/sec:  32389.36
+Transfer/sec:      5.93MB
+
+---------------------------------------------------------
+ Concurrency: 256 for grails
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/grails/hello/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.96ms   43.86ms 300.39ms   81.49%
+    Req/Sec     3.46k   503.04     5.00k    53.96%
+  1948901 requests in 1.00m, 357.37MB read
+  Socket errors: connect 0, read 14196, write 0, timeout 3567
+Requests/sec:  32482.22
+Transfer/sec:      5.96MB

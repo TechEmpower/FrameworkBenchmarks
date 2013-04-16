@@ -1,0 +1,115 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 16:42:59 PDT 2013
+
+  System load:  1.43                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spring
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/spring/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/spring/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.90ms  113.57us   1.33ms   66.54%
+    Req/Sec     0.90k   302.56     1.00k    89.85%
+  43022 requests in 5.00s, 8.84MB read
+Requests/sec:   8604.39
+Transfer/sec:      1.77MB
+
+---------------------------------------------------------
+ Running Warmup spring
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/spring/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.66ms    8.70ms 161.34ms   88.57%
+    Req/Sec     2.96k   232.31     3.00k    96.49%
+  1506287 requests in 1.00m, 309.66MB read
+Requests/sec:  25105.26
+Transfer/sec:      5.16MB
+
+---------------------------------------------------------
+ Queries: 1 for spring
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/spring/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.92ms    9.54ms 199.68ms   95.66%
+    Req/Sec     3.98k   194.97     6.00k    96.82%
+  2058926 requests in 1.00m, 362.32MB read
+  Socket errors: connect 0, read 2, write 0, timeout 54
+Requests/sec:  34315.72
+Transfer/sec:      6.04MB
+
+---------------------------------------------------------
+ Queries: 5 for spring
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/spring/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.00ms    9.60ms 152.85ms   80.05%
+    Req/Sec     1.00k    74.71     3.00k    99.53%
+  830915 requests in 1.00m, 246.37MB read
+Requests/sec:  13848.54
+Transfer/sec:      4.11MB
+
+---------------------------------------------------------
+ Queries: 10 for spring
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/spring/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.90ms   11.20ms 152.01ms   81.44%
+    Req/Sec   162.20    368.69     1.00k    83.78%
+  475171 requests in 1.00m, 212.90MB read
+Requests/sec:   7919.42
+Transfer/sec:      3.55MB
+
+---------------------------------------------------------
+ Queries: 15 for spring
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/spring/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.25ms   13.73ms 190.61ms   84.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  333204 requests in 1.00m, 199.79MB read
+Requests/sec:   5553.21
+Transfer/sec:      3.33MB
+
+---------------------------------------------------------
+ Queries: 20 for spring
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/spring/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/spring/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    60.01ms   16.54ms 211.48ms   84.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  257019 requests in 1.00m, 193.06MB read
+Requests/sec:   4283.58
+Transfer/sec:      3.22MB

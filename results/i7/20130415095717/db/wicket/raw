@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 17:53:13 PDT 2013
+
+  System load:  1.2                 Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer wicket
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/wicket/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/wicket/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   690.36us  559.37us   6.98ms   93.94%
+    Req/Sec   768.94    422.31     1.00k    76.89%
+  66178 requests in 5.00s, 20.50MB read
+Requests/sec:  13237.47
+Transfer/sec:      4.10MB
+
+---------------------------------------------------------
+ Running Warmup wicket
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/wicket/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/wicket/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.10ms   10.23ms 205.88ms   95.54%
+    Req/Sec     4.50k   625.42     5.00k    96.19%
+  2459194 requests in 1.00m, 761.95MB read
+Requests/sec:  40987.40
+Transfer/sec:     12.70MB
+
+---------------------------------------------------------
+ Concurrency: 8 for wicket
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/wicket/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/wicket/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   533.78us  586.40us  33.09ms   99.91%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  907097 requests in 1.00m, 280.96MB read
+Requests/sec:  15118.55
+Transfer/sec:      4.68MB
+
+---------------------------------------------------------
+ Concurrency: 16 for wicket
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/wicket/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/wicket/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   488.49us  301.42us  11.91ms   93.31%
+    Req/Sec     4.00k    39.52     4.00k    99.84%
+  1975734 requests in 1.00m, 611.96MB read
+Requests/sec:  32929.59
+Transfer/sec:     10.20MB
+
+---------------------------------------------------------
+ Concurrency: 32 for wicket
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/wicket/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/wicket/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms    0.94ms  32.53ms   89.21%
+    Req/Sec     4.93k   261.18     5.00k    92.64%
+  2495392 requests in 1.00m, 772.92MB read
+Requests/sec:  41589.40
+Transfer/sec:     12.88MB
+
+---------------------------------------------------------
+ Concurrency: 64 for wicket
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/wicket/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/wicket/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.84ms    2.28ms  52.38ms   91.74%
+    Req/Sec     5.00k    43.24     6.00k    99.81%
+  2602140 requests in 1.00m, 805.98MB read
+Requests/sec:  43369.95
+Transfer/sec:     13.43MB
+
+---------------------------------------------------------
+ Concurrency: 128 for wicket
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/wicket/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/wicket/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.36ms    3.26ms  53.76ms   88.15%
+    Req/Sec     4.99k   108.40     6.00k    99.19%
+  2561915 requests in 1.00m, 793.53MB read
+Requests/sec:  42698.88
+Transfer/sec:     13.23MB
+
+---------------------------------------------------------
+ Concurrency: 256 for wicket
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/wicket/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/wicket/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.04ms    8.23ms 135.13ms   93.20%
+    Req/Sec     4.99k   153.56     7.00k    98.19%
+  2479227 requests in 1.00m, 768.01MB read
+Requests/sec:  41321.60
+Transfer/sec:     12.80MB

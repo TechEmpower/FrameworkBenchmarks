@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 16:12:34 PDT 2013
+
+  System load:  0.16                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer sinatra-jruby
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/sinatra/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/sinatra/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.60ms   30.50ms 228.57ms   96.99%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1892 requests in 5.00s, 531.72KB read
+Requests/sec:    378.31
+Transfer/sec:    106.32KB
+
+---------------------------------------------------------
+ Running Warmup sinatra-jruby
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/sinatra/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/sinatra/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   593.61ms  299.58ms   3.47s    90.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24708 requests in 1.00m, 6.78MB read
+  Socket errors: connect 0, read 0, write 0, timeout 21
+Requests/sec:    411.77
+Transfer/sec:    115.72KB
+
+---------------------------------------------------------
+ Concurrency: 8 for sinatra-jruby
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/sinatra/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/sinatra/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.53ms    2.80ms  30.62ms   72.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30681 requests in 1.00m, 8.42MB read
+Requests/sec:    511.32
+Transfer/sec:    143.70KB
+
+---------------------------------------------------------
+ Concurrency: 16 for sinatra-jruby
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/sinatra/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/sinatra/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.01ms    7.90ms 299.59ms   79.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  29962 requests in 1.00m, 8.22MB read
+Requests/sec:    499.34
+Transfer/sec:    140.33KB
+
+---------------------------------------------------------
+ Concurrency: 32 for sinatra-jruby
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/sinatra/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/sinatra/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    65.56ms   12.95ms 108.26ms   69.54%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28933 requests in 1.00m, 7.94MB read
+Requests/sec:    482.18
+Transfer/sec:    135.51KB
+
+---------------------------------------------------------
+ Concurrency: 64 for sinatra-jruby
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/sinatra/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/sinatra/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   133.15ms   30.89ms 449.72ms   74.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28680 requests in 1.00m, 7.87MB read
+Requests/sec:    477.97
+Transfer/sec:    134.33KB
+
+---------------------------------------------------------
+ Concurrency: 128 for sinatra-jruby
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/sinatra/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/sinatra/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   273.61ms   57.66ms 546.54ms   69.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27640 requests in 1.00m, 7.59MB read
+Requests/sec:    460.62
+Transfer/sec:    129.45KB
+
+---------------------------------------------------------
+ Concurrency: 256 for sinatra-jruby
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/sinatra/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/sinatra/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   585.12ms  137.36ms   1.10s    75.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25700 requests in 1.00m, 7.05MB read
+Requests/sec:    428.30
+Transfer/sec:    120.37KB
