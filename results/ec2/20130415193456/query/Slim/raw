@@ -1,0 +1,122 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 15:00:26 UTC 2013
+
+  System load:  0.49               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer Slim
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.24ms   10.86ms 111.39ms   90.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2606 requests in 5.01s, 764.77KB read
+Requests/sec:    520.46
+Transfer/sec:    152.74KB
+
+---------------------------------------------------------
+ Running Warmup Slim
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   511.19ms  166.44ms   1.26s    71.45%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  29827 requests in 1.00m, 8.55MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    497.07
+Transfer/sec:    145.88KB
+
+---------------------------------------------------------
+ Queries: 1 for Slim
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   479.98ms  167.41ms   1.89s    76.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32214 requests in 1.00m, 7.67MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    536.84
+Transfer/sec:    130.93KB
+
+---------------------------------------------------------
+ Queries: 5 for Slim
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   639.85ms  194.48ms   1.25s    68.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23854 requests in 1.00m, 10.31MB read
+Requests/sec:    397.53
+Transfer/sec:    175.95KB
+
+---------------------------------------------------------
+ Queries: 10 for Slim
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   847.94ms  233.30ms   1.66s    73.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17906 requests in 1.00m, 12.09MB read
+Requests/sec:    298.39
+Transfer/sec:    206.25KB
+
+---------------------------------------------------------
+ Queries: 15 for Slim
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.06s   281.71ms   2.04s    77.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14306 requests in 1.00m, 13.12MB read
+Requests/sec:    238.39
+Transfer/sec:    223.88KB
+
+---------------------------------------------------------
+ Queries: 20 for Slim
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.25s   359.02ms   2.17s    74.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12014 requests in 1.00m, 13.93MB read
+Requests/sec:    200.20
+Transfer/sec:    237.66KB
