@@ -21,8 +21,8 @@ type World struct {
 }
 
 const (
-	DB_CONN_STR   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
-	DB_SELECT_SQL = "SELECT * FROM World where id = ?;"
+	DB_CONN_STR   = "benchmarkdbuser:benchmarkdbpass@tcp(172.16.98.98:3306)/hello_world?charset=utf8"
+	DB_SELECT_SQL = "SELECT id, randomNumber FROM World where id = ?;"
 	DB_ROWS       = 10000
 )
 
@@ -53,7 +53,7 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func dbHandler(w http.ResponseWriter, r *http.Request) {
-	qnum := 1
+  	qnum := 1
 	if qnumStr := r.URL.Query().Get("queries"); len(qnumStr) != 0 {
 		qnum, _ = strconv.Atoi(qnumStr)
 	}
