@@ -89,8 +89,11 @@ object FinagleBenchmark extends App {
       val resp = Response()
       database withSession {implicit session: Session =>
         val rand = new Random()
-        val q = Query(Worlds).where(_.id inSet( for (i <- 0 to n) yield rand.nextInt(10000)))
-        resp.setContent(copiedBuffer(serialize(if (n == 1) q.first else q.list), UTF_8))
+        val q = for (i <- 0 until n) yield (for {w <- Worlds if w.randomNumber === rand.nextInt(10000)} yield w)
+
+        
+        //val q = Query(Worlds).where(_.id inSet( for (i <- 0 to n) yield rand.nextInt(10000)))
+        resp.setContent(copiedBuffer(serialize(if (n == 1) q.head else q), UTF_8))
         resp.setContentTypeJson
         Future.value(resp)
       }
