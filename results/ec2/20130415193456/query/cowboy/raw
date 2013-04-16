@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Tue Apr 16 08:08:57 UTC 2013
+  System information as of Tue Apr 16 21:55:17 UTC 2013
 
-  System load:  0.3                Processes:           70
-  Usage of /:   24.5% of 19.69GB   Users logged in:     1
+  System load:  1.89               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
   Memory usage: 8%                 IP address for eth0: 10.252.147.39
   Swap usage:   0%
 
@@ -29,11 +29,11 @@ Use Juju to deploy your cloud instances and workloads.
 Running 5s test @ http://10.252.147.200:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.56ms    2.54ms  15.16ms   85.23%
+    Latency     5.19ms    2.34ms  15.61ms   85.39%
     Req/Sec     0.00      0.00     0.00    100.00%
-  7534 requests in 5.00s, 1.07MB read
-Requests/sec:   1506.22
-Transfer/sec:    219.10KB
+  7471 requests in 5.00s, 1.51MB read
+Requests/sec:   1493.72
+Transfer/sec:    309.96KB
 
 ---------------------------------------------------------
  Running Warmup cowboy
@@ -43,11 +43,11 @@ Transfer/sec:    219.10KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=2
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   114.92ms    9.64ms 308.30ms   95.22%
+    Latency   117.28ms   18.12ms 332.97ms   95.59%
     Req/Sec     0.00      0.00     0.00    100.00%
-  133067 requests in 1.00m, 18.90MB read
-Requests/sec:   2217.75
-Transfer/sec:    322.60KB
+  130595 requests in 1.00m, 26.46MB read
+Requests/sec:   2176.67
+Transfer/sec:    451.68KB
 
 ---------------------------------------------------------
  Queries: 1 for cowboy
@@ -57,11 +57,11 @@ Transfer/sec:    322.60KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=1
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    68.49ms    3.58ms  92.91ms   74.69%
+    Latency    69.88ms    5.41ms 158.73ms   88.25%
     Req/Sec     0.00      0.00     0.00    100.00%
-  224527 requests in 1.00m, 31.89MB read
-Requests/sec:   3742.64
-Transfer/sec:    544.42KB
+  219837 requests in 1.00m, 37.89MB read
+Requests/sec:   3663.87
+Transfer/sec:    646.63KB
 
 ---------------------------------------------------------
  Queries: 5 for cowboy
@@ -71,11 +71,11 @@ Transfer/sec:    544.42KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=5
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   251.07ms   20.19ms 364.17ms   97.57%
+    Latency   250.84ms   17.39ms 392.11ms   96.95%
     Req/Sec     0.00      0.00     0.00    100.00%
-  60737 requests in 1.00m, 8.63MB read
-Requests/sec:   1012.27
-Transfer/sec:    147.25KB
+  60868 requests in 1.00m, 17.93MB read
+Requests/sec:   1014.39
+Transfer/sec:    305.91KB
 
 ---------------------------------------------------------
  Queries: 10 for cowboy
@@ -85,11 +85,11 @@ Transfer/sec:    147.25KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=10
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   479.70ms   44.87ms 685.93ms   96.92%
+    Latency   485.63ms   46.54ms 565.67ms   97.75%
     Req/Sec     0.00      0.00     0.00    100.00%
-  31679 requests in 1.00m, 4.50MB read
-Requests/sec:    527.95
-Transfer/sec:     76.80KB
+  31240 requests in 1.00m, 13.93MB read
+Requests/sec:    520.63
+Transfer/sec:    237.77KB
 
 ---------------------------------------------------------
  Queries: 15 for cowboy
@@ -99,11 +99,11 @@ Transfer/sec:     76.80KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=15
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   700.23ms   75.60ms 751.94ms   98.87%
+    Latency   708.77ms   77.68ms 843.41ms   95.65%
     Req/Sec     0.00      0.00     0.00    100.00%
-  21509 requests in 1.00m, 3.06MB read
-Requests/sec:    358.41
-Transfer/sec:     52.15KB
+  21268 requests in 1.00m, 12.71MB read
+Requests/sec:    354.38
+Transfer/sec:    216.84KB
 
 ---------------------------------------------------------
  Queries: 20 for cowboy
@@ -113,8 +113,8 @@ Transfer/sec:     52.15KB
 Running 1m test @ http://10.252.147.200:8080/db?queries=20
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   923.81ms  112.62ms   1.03s    98.50%
+    Latency   943.79ms  122.73ms   1.17s    94.93%
     Req/Sec     0.00      0.00     0.00    100.00%
-  16278 requests in 1.00m, 2.31MB read
-Requests/sec:    271.25
-Transfer/sec:     39.47KB
+  15872 requests in 1.00m, 11.89MB read
+Requests/sec:    264.50
+Transfer/sec:    202.87KB
