@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 22:35:04 UTC 2013
+
+  System load:  0.36               Processes:           70
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer nodejs-mysql
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/sequelize
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/sequelize
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.61ms    2.11ms  24.50ms   92.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7452 requests in 5.00s, 1.31MB read
+Requests/sec:   1489.29
+Transfer/sec:    267.27KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mysql
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/sequelize
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/sequelize
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   157.68ms   43.68ms 479.93ms   89.52%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  96741 requests in 1.00m, 16.96MB read
+Requests/sec:   1612.34
+Transfer/sec:    289.37KB
+
+---------------------------------------------------------
+ Concurrency: 8 for nodejs-mysql
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/sequelize
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/sequelize
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.52ms    2.21ms  24.91ms   79.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  71829 requests in 1.00m, 12.59MB read
+Requests/sec:   1197.11
+Transfer/sec:    214.85KB
+
+---------------------------------------------------------
+ Concurrency: 16 for nodejs-mysql
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/sequelize
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/sequelize
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.80ms    3.58ms  27.65ms   84.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  77977 requests in 1.00m, 13.67MB read
+Requests/sec:   1299.61
+Transfer/sec:    233.24KB
+
+---------------------------------------------------------
+ Concurrency: 32 for nodejs-mysql
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/sequelize
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/sequelize
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.61ms    3.34ms  42.05ms   60.66%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  104979 requests in 1.00m, 18.40MB read
+Requests/sec:   1749.60
+Transfer/sec:    314.01KB
+
+---------------------------------------------------------
+ Concurrency: 64 for nodejs-mysql
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/sequelize
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/sequelize
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    37.00ms    5.77ms  77.51ms   75.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  103821 requests in 1.00m, 18.20MB read
+Requests/sec:   1730.30
+Transfer/sec:    310.54KB
+
+---------------------------------------------------------
+ Concurrency: 128 for nodejs-mysql
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/sequelize
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/sequelize
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    91.22ms   35.70ms 318.99ms   59.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  99789 requests in 1.00m, 17.49MB read
+Requests/sec:   1663.07
+Transfer/sec:    298.48KB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs-mysql
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/sequelize
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/sequelize
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   201.21ms   73.70ms 474.93ms   73.52%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  101436 requests in 1.00m, 17.78MB read
+Requests/sec:   1690.32
+Transfer/sec:    303.36KB
