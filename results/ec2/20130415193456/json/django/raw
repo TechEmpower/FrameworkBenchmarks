@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 20:44:57 UTC 2013
+
+  System load:  0.81               Processes:           70
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer django
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.52ms    2.77ms  16.19ms   73.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6745 requests in 5.01s, 1.31MB read
+Requests/sec:   1347.38
+Transfer/sec:    267.11KB
+
+---------------------------------------------------------
+ Running Warmup django
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   238.10ms  105.74ms 596.98ms   64.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  79609 requests in 1.00m, 15.41MB read
+Requests/sec:   1326.69
+Transfer/sec:    263.01KB
+
+---------------------------------------------------------
+ Concurrency: 8 for django
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.23ms    2.48ms  19.36ms   74.72%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  81620 requests in 1.00m, 15.80MB read
+Requests/sec:   1360.24
+Transfer/sec:    269.66KB
+
+---------------------------------------------------------
+ Concurrency: 16 for django
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.62ms    4.93ms  85.71ms   66.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  81229 requests in 1.00m, 15.73MB read
+Requests/sec:   1353.77
+Transfer/sec:    268.37KB
+
+---------------------------------------------------------
+ Concurrency: 32 for django
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.70ms   11.31ms  86.09ms   88.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  81288 requests in 1.00m, 15.74MB read
+Requests/sec:   1354.72
+Transfer/sec:    268.57KB
+
+---------------------------------------------------------
+ Concurrency: 64 for django
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    61.89ms   25.61ms 127.17ms   71.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  81146 requests in 1.00m, 15.71MB read
+Requests/sec:   1352.30
+Transfer/sec:    268.08KB
+
+---------------------------------------------------------
+ Concurrency: 128 for django
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   207.98ms  103.40ms 408.17ms   66.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  80319 requests in 1.00m, 15.55MB read
+Requests/sec:   1338.56
+Transfer/sec:    265.36KB
+
+---------------------------------------------------------
+ Concurrency: 256 for django
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   280.39ms  139.17ms 557.16ms   59.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  79159 requests in 1.00m, 15.32MB read
+Requests/sec:   1319.22
+Transfer/sec:    261.53KB

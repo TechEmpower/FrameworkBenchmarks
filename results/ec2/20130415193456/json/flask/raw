@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 04:49:18 UTC 2013
+
+  System load:  0.67               Processes:           70
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer flask
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.30ms  238.31us   4.84ms   62.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12038 requests in 5.00s, 2.17MB read
+Requests/sec:   2406.73
+Transfer/sec:    444.21KB
+
+---------------------------------------------------------
+ Running Warmup flask
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   146.84ms   75.41ms 358.32ms   72.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  138282 requests in 1.00m, 24.92MB read
+Requests/sec:   2304.59
+Transfer/sec:    425.36KB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.91ms    1.59ms  17.47ms   87.06%
+    Req/Sec   250.63    433.51     1.00k    74.94%
+  138686 requests in 1.00m, 25.00MB read
+Requests/sec:   2311.33
+Transfer/sec:    426.60KB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.98ms    2.60ms  14.36ms   75.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  144789 requests in 1.00m, 26.10MB read
+Requests/sec:   2413.12
+Transfer/sec:    445.39KB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.91ms    2.84ms  29.17ms   62.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  143474 requests in 1.00m, 25.86MB read
+Requests/sec:   2391.18
+Transfer/sec:    441.34KB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.17ms   19.27ms 171.39ms   80.39%
+    Req/Sec   249.69    432.97     1.00k    75.03%
+  142847 requests in 1.00m, 25.75MB read
+Requests/sec:   2380.72
+Transfer/sec:    439.41KB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.13ms   25.60ms 133.18ms   74.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  141726 requests in 1.00m, 25.55MB read
+Requests/sec:   2362.01
+Transfer/sec:    435.96KB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   163.90ms   75.95ms 350.42ms   61.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  139312 requests in 1.00m, 25.11MB read
+Requests/sec:   2321.68
+Transfer/sec:    428.51KB
