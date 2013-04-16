@@ -10,37 +10,28 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.sql.*;
 
-import com.fasterxml.jackson.databind.*;
-
 /**
- * Database connectivity (with a Servlet-container managed pool) test
+ * Database connectivity (with a Servlet-container managed pool) test.
  */
 @SuppressWarnings("serial")
 public class DbPoolServlet extends HttpServlet
 {
-  // Constants for setting the content type.
-  private static final String HEADER_CONTENT_TYPE    = "Content-Type";
-  private static final String CONTENT_TYPE_JSON      = "application/json";
-  
+  // Database details.
+  private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
+  private static final int    DB_ROWS  = 10000;
+
+  // Database connection pool.
   @Resource(name="jdbc/hello_world")
   private DataSource mysqlDataSource;
-
-  // Jackson encoder, reused for each response.
-  private final ObjectMapper mapper = new ObjectMapper();
-  
-  // Database details.
-  private static final String DB_QUERY               = "SELECT * FROM World WHERE id = ?";
-  private static final int    DB_ROWS                = 10000;
-  
+    
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException
   {
     // Set content type to JSON
-    res.setHeader(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON);
+    res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
 
-    // Select the MySQL source by default, but allow the option of selecting
-    // Postgres by providing a parameter named "postgres".
+    // Reference the data source.
     final DataSource source = mysqlDataSource;
     
     // Get the count of queries to run.
@@ -97,7 +88,7 @@ public class DbPoolServlet extends HttpServlet
     // Write JSON encoded message to the response.
     try
     {
-      mapper.writeValue(res.getOutputStream(), worlds);
+      Common.MAPPER.writeValue(res.getOutputStream(), worlds);
     }
     catch (IOException ioe) 
     {
