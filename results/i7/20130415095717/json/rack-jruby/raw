@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 14:22:21 PDT 2013
+
+  System load:  0.44                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rack-jruby
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/rack/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/rack/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.71ms    2.69ms  23.87ms   89.96%
+    Req/Sec   185.87    389.73     1.00k    81.41%
+  51060 requests in 5.00s, 8.62MB read
+Requests/sec:  10214.66
+Transfer/sec:      1.72MB
+
+---------------------------------------------------------
+ Running Warmup rack-jruby
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/rack/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/rack/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.39ms   40.33ms   1.36s    95.98%
+    Req/Sec     2.35k   487.35     3.00k    63.91%
+  1487886 requests in 1.00m, 254.20MB read
+Requests/sec:  24798.33
+Transfer/sec:      4.24MB
+
+---------------------------------------------------------
+ Concurrency: 8 for rack-jruby
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/rack/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/rack/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   470.13us    4.06ms 220.23ms   99.84%
+    Req/Sec     1.98k   183.92     2.00k    98.35%
+  1377855 requests in 1.00m, 232.58MB read
+Requests/sec:  22964.68
+Transfer/sec:      3.88MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rack-jruby
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/rack/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/rack/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   824.09us    6.61ms 358.32ms   99.75%
+    Req/Sec     2.99k   108.89     4.00k    99.56%
+  1717526 requests in 1.00m, 289.92MB read
+Requests/sec:  28625.38
+Transfer/sec:      4.83MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rack-jruby
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/rack/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/rack/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.62ms   10.20ms 324.96ms   99.44%
+    Req/Sec     3.01k    89.70     4.00k    99.19%
+  1791185 requests in 1.00m, 302.35MB read
+Requests/sec:  29853.40
+Transfer/sec:      5.04MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rack-jruby
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/rack/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/rack/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.30ms    3.60ms  56.12ms   95.84%
+    Req/Sec     3.00k    58.36     4.00k    99.66%
+  1782809 requests in 1.00m, 300.94MB read
+Requests/sec:  29713.56
+Transfer/sec:      5.02MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rack-jruby
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/rack/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/rack/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.79ms    8.42ms  97.80ms   92.14%
+    Req/Sec     3.02k   130.89     4.00k    98.26%
+  1775564 requests in 1.00m, 299.72MB read
+Requests/sec:  29593.16
+Transfer/sec:      5.00MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rack-jruby
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/rack/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/rack/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.09ms   20.96ms 630.84ms   96.58%
+    Req/Sec     3.01k   127.01     5.00k    99.04%
+  1673108 requests in 1.00m, 283.26MB read
+Requests/sec:  27885.33
+Transfer/sec:      4.72MB

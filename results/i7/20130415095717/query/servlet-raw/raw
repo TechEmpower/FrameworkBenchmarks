@@ -1,0 +1,108 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/servlet/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   810.44us  108.99us   1.07ms   68.56%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  49955 requests in 5.00s, 9.27MB read
+Requests/sec:   9991.55
+Transfer/sec:      1.85MB
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.30ms   10.96ms 386.66ms   94.01%
+    Req/Sec     6.02k   321.24    12.00k    96.82%
+  3148839 requests in 1.00m, 584.33MB read
+Requests/sec:  52480.68
+Transfer/sec:      9.74MB
+
+---------------------------------------------------------
+ Queries: 1 for servlet-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.09ms   19.70ms   1.02s    98.38%
+    Req/Sec     9.45k     0.87k   12.00k    89.44%
+  4979109 requests in 1.00m, 773.19MB read
+  Socket errors: connect 0, read 24616, write 0, timeout 189
+Requests/sec:  82987.21
+Transfer/sec:     12.89MB
+
+---------------------------------------------------------
+ Queries: 5 for servlet-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.21ms   24.22ms 537.70ms   93.41%
+    Req/Sec     2.00k    74.62     2.00k    99.53%
+  1350382 requests in 1.00m, 374.64MB read
+Requests/sec:  22506.48
+Transfer/sec:      6.24MB
+
+---------------------------------------------------------
+ Queries: 10 for servlet-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.57ms   26.45ms 353.93ms   90.76%
+    Req/Sec     1.00k    65.95     2.00k    99.56%
+  712879 requests in 1.00m, 305.81MB read
+Requests/sec:  11881.86
+Transfer/sec:      5.10MB
+
+---------------------------------------------------------
+ Queries: 15 for servlet-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.68ms   33.09ms 437.23ms   89.92%
+    Req/Sec     0.94k   234.92     1.00k    94.14%
+  485628 requests in 1.00m, 281.92MB read
+Requests/sec:   8093.66
+Transfer/sec:      4.70MB
+
+---------------------------------------------------------
+ Queries: 20 for servlet-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.39ms   31.67ms 428.39ms   82.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  367910 requests in 1.00m, 269.33MB read
+Requests/sec:   6131.71
+Transfer/sec:      4.49MB
