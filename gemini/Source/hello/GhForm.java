@@ -59,7 +59,7 @@ public class GhForm
   @Override
   protected void onValidlySubmitted()
   {
-    // Does nothing.    
+    // Does nothing.
   }
 
 }   // End GhForm.
