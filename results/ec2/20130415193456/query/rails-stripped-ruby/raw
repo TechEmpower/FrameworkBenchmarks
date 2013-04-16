@@ -1,0 +1,118 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 06:13:33 UTC 2013
+
+  System load:  0.15               Processes:           70
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer rails-stripped-ruby
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8080/hello_world/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/hello_world/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.67ms   14.99ms 142.31ms   98.55%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2897 requests in 5.04s, 1.24MB read
+Requests/sec:    575.26
+Transfer/sec:    251.96KB
+
+---------------------------------------------------------
+ Running Warmup rails-stripped-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/hello_world/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/hello_world/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   446.83ms   52.56ms 711.72ms   83.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34052 requests in 1.00m, 14.57MB read
+Requests/sec:    567.47
+Transfer/sec:    248.55KB
+
+---------------------------------------------------------
+ Queries: 1 for rails-stripped-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/hello_world/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/hello_world/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   326.46ms   50.71ms 609.69ms   85.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  46823 requests in 1.00m, 18.07MB read
+Requests/sec:    780.39
+Transfer/sec:    308.46KB
+
+---------------------------------------------------------
+ Queries: 5 for rails-stripped-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/hello_world/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/hello_world/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   711.92ms  102.34ms   1.04s    79.59%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21239 requests in 1.00m, 11.77MB read
+Requests/sec:    353.93
+Transfer/sec:    200.78KB
+
+---------------------------------------------------------
+ Queries: 10 for rails-stripped-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/hello_world/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/hello_world/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.16s   160.93ms   1.52s    96.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12908 requests in 1.00m, 9.85MB read
+Requests/sec:    215.10
+Transfer/sec:    168.01KB
+
+---------------------------------------------------------
+ Queries: 15 for rails-stripped-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/hello_world/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/hello_world/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.58s   238.31ms   1.96s    95.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9467 requests in 1.00m, 9.20MB read
+Requests/sec:    157.76
+Transfer/sec:    156.94KB
+
+---------------------------------------------------------
+ Queries: 20 for rails-stripped-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/hello_world/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/hello_world/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.99s   351.04ms   2.35s    95.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7449 requests in 1.00m, 8.79MB read
+  Socket errors: connect 0, read 0, write 0, timeout 212
+Requests/sec:    124.12
+Transfer/sec:    150.02KB

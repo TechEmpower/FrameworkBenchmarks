@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 04:56:45 UTC 2013
+
+  System load:  0.22               Processes:           69
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer flask
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.88ms    3.97ms  20.25ms   64.23%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4141 requests in 5.01s, 0.93MB read
+Requests/sec:    827.16
+Transfer/sec:    189.65KB
+
+---------------------------------------------------------
+ Running Warmup flask
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   426.58ms  188.02ms 854.71ms   61.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  49013 requests in 1.00m, 10.97MB read
+Requests/sec:    816.83
+Transfer/sec:    187.28KB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.34ms    5.04ms  29.89ms   74.55%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  41983 requests in 1.00m, 9.40MB read
+Requests/sec:    699.69
+Transfer/sec:    160.42KB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.85ms   11.44ms  51.34ms   79.71%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  41912 requests in 1.00m, 9.38MB read
+Requests/sec:    698.49
+Transfer/sec:    160.15KB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.42ms   25.84ms  99.21ms   63.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  47295 requests in 1.00m, 10.59MB read
+Requests/sec:    788.19
+Transfer/sec:    180.71KB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   167.20ms   73.76ms 281.52ms   64.46%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  49151 requests in 1.00m, 11.01MB read
+Requests/sec:    819.14
+Transfer/sec:    187.81KB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   189.52ms   65.42ms 335.54ms   66.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  48740 requests in 1.00m, 10.91MB read
+Requests/sec:    812.25
+Transfer/sec:    186.23KB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   370.17ms  169.05ms 814.17ms   66.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  48580 requests in 1.00m, 10.88MB read
+Requests/sec:    809.55
+Transfer/sec:    185.62KB

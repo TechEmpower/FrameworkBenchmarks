@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 07:00:34 UTC 2013
+
+  System load:  1.6                Processes:           70
+  Usage of /:   24.5% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer http-kit
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8080/http-kit/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/http-kit/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.22ms  713.19us  11.91ms   92.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18185 requests in 5.00s, 3.22MB read
+Requests/sec:   3636.67
+Transfer/sec:    659.79KB
+
+---------------------------------------------------------
+ Running Warmup http-kit
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/http-kit/db/2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/http-kit/db/2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.96ms   15.68ms 286.77ms   96.95%
+    Req/Sec    19.93    139.79     1.00k    98.01%
+  217678 requests in 1.00m, 38.57MB read
+Requests/sec:   3627.89
+Transfer/sec:    658.19KB
+
+---------------------------------------------------------
+ Queries: 1 for http-kit
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/http-kit/db/1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.55ms   17.86ms 270.28ms   97.08%
+    Req/Sec     1.00k   129.42     2.00k    98.33%
+  351955 requests in 1.00m, 55.01MB read
+Requests/sec:   5865.81
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Queries: 5 for http-kit
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/http-kit/db/5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/http-kit/db/5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   155.03ms   23.12ms 359.23ms   95.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  97789 requests in 1.00m, 23.54MB read
+Requests/sec:   1629.69
+Transfer/sec:    401.76KB
+
+---------------------------------------------------------
+ Queries: 10 for http-kit
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/http-kit/db/10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/http-kit/db/10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   290.94ms   29.92ms 442.06ms   94.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  52150 requests in 1.00m, 18.00MB read
+Requests/sec:    869.07
+Transfer/sec:    307.14KB
+
+---------------------------------------------------------
+ Queries: 15 for http-kit
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/http-kit/db/15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/http-kit/db/15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   432.76ms   51.85ms 623.43ms   95.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34947 requests in 1.00m, 15.71MB read
+Requests/sec:    582.39
+Transfer/sec:    268.06KB
+
+---------------------------------------------------------
+ Queries: 20 for http-kit
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/http-kit/db/20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/http-kit/db/20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   586.23ms   59.56ms 645.23ms   97.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25869 requests in 1.00m, 14.33MB read
+Requests/sec:    431.08
+Transfer/sec:    244.50KB
