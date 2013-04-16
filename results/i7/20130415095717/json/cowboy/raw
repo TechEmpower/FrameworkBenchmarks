@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 22:09:48 PDT 2013
+
+  System load:  0.35                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cowboy
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   188.05us   39.59us 309.00us   64.91%
+    Req/Sec     5.02k   149.04     6.00k    97.74%
+  207627 requests in 5.00s, 34.64MB read
+Requests/sec:  41535.48
+Transfer/sec:      6.93MB
+
+---------------------------------------------------------
+ Running Warmup cowboy
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.25ms    3.68ms  64.11ms   80.05%
+    Req/Sec    13.97k   248.55    17.00k    97.17%
+  6800116 requests in 1.00m, 1.11GB read
+Requests/sec: 113338.86
+Transfer/sec:     18.91MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cowboy
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   187.27us   46.19us 755.00us   71.38%
+    Req/Sec     5.00k     0.00     5.00k   100.00%
+  2548544 requests in 1.00m, 425.21MB read
+Requests/sec:  42476.66
+Transfer/sec:      7.09MB
+
+---------------------------------------------------------
+ Concurrency: 16 for cowboy
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   192.29us   49.82us   1.08ms   77.53%
+    Req/Sec     9.70k   456.30    10.00k    70.46%
+  4805641 requests in 1.00m, 801.80MB read
+Requests/sec:  80095.03
+Transfer/sec:     13.36MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cowboy
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   282.02us  123.25us   5.60ms   94.41%
+    Req/Sec    13.00k    49.79    13.00k    99.75%
+  6607869 requests in 1.00m, 1.08GB read
+Requests/sec: 110133.85
+Transfer/sec:     18.38MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cowboy
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   567.51us  166.17us   1.67ms   72.78%
+    Req/Sec    13.99k   113.90    14.00k    99.16%
+  6790613 requests in 1.00m, 1.11GB read
+Requests/sec: 113179.39
+Transfer/sec:     18.88MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cowboy
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.83ms    1.45ms  14.08ms   80.52%
+    Req/Sec    13.96k   212.97    14.00k    96.80%
+  6809478 requests in 1.00m, 1.11GB read
+Requests/sec: 113494.14
+Transfer/sec:     18.94MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cowboy
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.28ms    3.47ms  34.48ms   71.53%
+    Req/Sec    13.77k   492.06    18.00k    76.43%
+  6754695 requests in 1.00m, 1.10GB read
+Requests/sec: 112581.33
+Transfer/sec:     18.78MB

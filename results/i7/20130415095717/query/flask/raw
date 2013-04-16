@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 19:19:32 PDT 2013
+
+  System load:  0.61                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.12ms    4.78ms  55.29ms   95.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10970 requests in 5.00s, 3.07MB read
+Requests/sec:   2192.18
+Transfer/sec:    628.46KB
+
+---------------------------------------------------------
+ Running Warmup flask
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   236.99ms    1.35s   17.45s    96.52%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  145714 requests in 1.00m, 40.79MB read
+  Socket errors: connect 0, read 104, write 0, timeout 3723
+Requests/sec:   2428.44
+Transfer/sec:    696.19KB
+
+---------------------------------------------------------
+ Queries: 1 for flask
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   177.27ms  944.30ms  10.46s    95.84%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  198978 requests in 1.00m, 44.55MB read
+  Socket errors: connect 0, read 98, write 0, timeout 2851
+Requests/sec:   3316.17
+Transfer/sec:    760.33KB
+
+---------------------------------------------------------
+ Queries: 5 for flask
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   268.37ms    1.67s   27.64s    96.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  81910 requests in 1.00m, 36.47MB read
+  Socket errors: connect 0, read 133, write 0, timeout 4823
+Requests/sec:   1365.08
+Transfer/sec:    622.42KB
+
+---------------------------------------------------------
+ Queries: 10 for flask
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   287.66ms    1.78s   22.80s    97.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  47539 requests in 1.00m, 34.27MB read
+  Socket errors: connect 0, read 126, write 0, timeout 5656
+Requests/sec:    792.27
+Transfer/sec:    584.77KB
+
+---------------------------------------------------------
+ Queries: 15 for flask
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   402.84ms    2.50s   31.63s    96.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33785 requests in 1.00m, 33.66MB read
+  Socket errors: connect 0, read 213, write 0, timeout 5761
+Requests/sec:    563.04
+Transfer/sec:    574.44KB
+
+---------------------------------------------------------
+ Queries: 20 for flask
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   502.27ms    2.09s   25.06s    94.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26085 requests in 1.00m, 33.20MB read
+  Socket errors: connect 0, read 174, write 0, timeout 5157
+Requests/sec:    434.71
+Transfer/sec:    566.58KB

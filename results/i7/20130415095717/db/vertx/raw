@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 17:21:23 PDT 2013
+
+  System load:  1.4                 Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer vertx
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.86ms    0.96ms   8.28ms   95.86%
+    Req/Sec   823.31    382.13     1.00k    82.33%
+  54016 requests in 5.00s, 8.14MB read
+Requests/sec:  10804.71
+Transfer/sec:      1.63MB
+
+---------------------------------------------------------
+ Running Warmup vertx
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.39ms   17.73ms  73.50ms   77.25%
+    Req/Sec     2.07k   357.23     5.00k    92.49%
+  1357308 requests in 1.00m, 204.52MB read
+Requests/sec:  22622.04
+Transfer/sec:      3.41MB
+
+---------------------------------------------------------
+ Concurrency: 8 for vertx
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   634.30us  142.95us   2.80ms   86.91%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  754235 requests in 1.00m, 113.65MB read
+Requests/sec:  12570.79
+Transfer/sec:      1.89MB
+
+---------------------------------------------------------
+ Concurrency: 16 for vertx
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   721.71us  378.69us   7.90ms   88.41%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  1320708 requests in 1.00m, 199.00MB read
+Requests/sec:  22012.12
+Transfer/sec:      3.32MB
+
+---------------------------------------------------------
+ Concurrency: 32 for vertx
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.39ms    1.78ms  11.29ms   86.41%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  1354133 requests in 1.00m, 204.04MB read
+Requests/sec:  22568.78
+Transfer/sec:      3.40MB
+
+---------------------------------------------------------
+ Concurrency: 64 for vertx
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.78ms    4.41ms  20.92ms   84.50%
+    Req/Sec     2.03k   181.07     4.00k    96.72%
+  1377941 requests in 1.00m, 207.63MB read
+Requests/sec:  22965.71
+Transfer/sec:      3.46MB
+
+---------------------------------------------------------
+ Concurrency: 128 for vertx
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.12ms    8.03ms  62.00ms   81.05%
+    Req/Sec     2.13k   372.71     5.00k    86.29%
+  1404493 requests in 1.00m, 211.63MB read
+Requests/sec:  23408.20
+Transfer/sec:      3.53MB
+
+---------------------------------------------------------
+ Concurrency: 256 for vertx
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.37ms   13.83ms  70.74ms   77.64%
+    Req/Sec     2.61k   515.48     5.00k    60.48%
+  1440938 requests in 1.00m, 217.12MB read
+Requests/sec:  24015.47
+Transfer/sec:      3.62MB

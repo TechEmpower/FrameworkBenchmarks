@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 14:38:51 PDT 2013
+
+  System load:  0.28                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-ruby
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.85ms    2.44ms  29.73ms   98.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13855 requests in 5.00s, 5.64MB read
+Requests/sec:   2770.11
+Transfer/sec:      1.13MB
+
+---------------------------------------------------------
+ Running Warmup rails-ruby
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.76ms   19.11ms 706.85ms   97.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  176082 requests in 1.00m, 71.66MB read
+Requests/sec:   2934.60
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Concurrency: 8 for rails-ruby
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.83ms    2.18ms  43.08ms   97.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  166923 requests in 1.00m, 67.93MB read
+Requests/sec:   2782.02
+Transfer/sec:      1.13MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rails-ruby
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.42ms    3.06ms  51.84ms   97.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  177765 requests in 1.00m, 72.34MB read
+Requests/sec:   2962.72
+Transfer/sec:      1.21MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rails-ruby
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.28ms    4.64ms  77.21ms   97.40%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  175491 requests in 1.00m, 71.42MB read
+Requests/sec:   2924.76
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rails-ruby
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.46ms    5.19ms  85.37ms   90.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  171799 requests in 1.00m, 69.92MB read
+Requests/sec:   2863.18
+Transfer/sec:      1.17MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rails-ruby
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.62ms    8.74ms 109.46ms   86.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  168430 requests in 1.00m, 68.54MB read
+Requests/sec:   2807.12
+Transfer/sec:      1.14MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rails-ruby
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    91.86ms   12.25ms 256.97ms   74.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  166008 requests in 1.00m, 67.56MB read
+Requests/sec:   2766.79
+Transfer/sec:      1.13MB

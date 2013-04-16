@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 15:17:35 PDT 2013
+
+  System load:  0.34                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/servlet/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/servlet/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   124.04us   68.01us 690.00us   91.82%
+    Req/Sec     6.45k     1.52k    8.00k    63.57%
+  326810 requests in 5.00s, 48.93MB read
+Requests/sec:  65377.99
+Transfer/sec:      9.79MB
+
+---------------------------------------------------------
+ Running Warmup servlet
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.55ms   17.46ms 978.31ms   99.75%
+    Req/Sec    24.20k     2.74k   29.00k    87.91%
+  12590885 requests in 1.00m, 1.84GB read
+Requests/sec: 209853.83
+Transfer/sec:     31.42MB
+
+---------------------------------------------------------
+ Concurrency: 8 for servlet
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   126.88us  132.35us   3.06ms   95.43%
+    Req/Sec     7.88k   324.58     9.00k    88.06%
+  3969814 requests in 1.00m, 594.39MB read
+Requests/sec:  66165.13
+Transfer/sec:      9.91MB
+
+---------------------------------------------------------
+ Concurrency: 16 for servlet
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   130.78us  102.45us   2.05ms   93.17%
+    Req/Sec    15.06k   485.11    16.00k    76.14%
+  7429721 requests in 1.00m, 1.09GB read
+Requests/sec: 123830.00
+Transfer/sec:     18.54MB
+
+---------------------------------------------------------
+ Concurrency: 32 for servlet
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   166.42us  160.77us   4.24ms   93.74%
+    Req/Sec    25.20k   616.15    26.00k    58.11%
+  12258309 requests in 1.00m, 1.79GB read
+Requests/sec: 204308.61
+Transfer/sec:     30.59MB
+
+---------------------------------------------------------
+ Concurrency: 64 for servlet
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   300.30us  344.67us  11.35ms   97.69%
+    Req/Sec    25.24k     1.61k   26.00k    91.05%
+  12556847 requests in 1.00m, 1.84GB read
+Requests/sec: 209285.08
+Transfer/sec:     31.34MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servlet
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   564.60us  272.69us   6.55ms   96.42%
+    Req/Sec    26.96k     1.21k   39.00k    94.30%
+  13089300 requests in 1.00m, 1.91GB read
+Requests/sec: 218160.04
+Transfer/sec:     32.66MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/servlet/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms  678.28us  24.55ms   97.75%
+    Req/Sec    26.20k     1.11k   39.00k    81.22%
+  12754230 requests in 1.00m, 1.86GB read
+Requests/sec: 212575.19
+Transfer/sec:     31.83MB
