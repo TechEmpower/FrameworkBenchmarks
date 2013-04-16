@@ -36,7 +36,7 @@ To coordinate the tests via scripting, the servers need to be able to work toget
 Now ssh into the server instance and clone the latest from this repository (the scripts we use to run the tests expect that you'll clone the repository into your home directory):
 
 	ssh -i path-to-pem-file ubuntu@server-instance-ip
-	sudo apt-get install git-core
+	yes | sudo apt-get install git-core
 	git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
 	cd FrameworkBenchmarks
 
@@ -48,9 +48,12 @@ Next, we're going to setup the servers with all the necessary software:
     ulimit -n 4096
     # Most software is installed autormatically by the script, but running the mongo command below from 
     # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"
+    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
     cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
-    cd ../..
+    cd ../../..
+    cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
+    cd ..
+    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
 	  mongo --host client-private-ip < config/create.js
 
 Assuming the above finished without error, we're ready to start the test suite:
@@ -97,12 +100,14 @@ Next, we're going to setup the servers with all the necessary software:
 	./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --install-software --list-tests
     source ~/.bash_profile
     # For your first time through the tests, set the ulimit for open files
-    ulimit -n 4096
     # Most software is installed autormatically by the script, but running the mongo command below from
     # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"
+    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
     cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
-    cd ../..
+    cd ../../..
+    cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
+    cd ..
+    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
     mongo --host client-ip < config/create.js
 
 Assuming this finished without error, we're ready to start the test suite:
