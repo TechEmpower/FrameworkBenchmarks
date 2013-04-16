@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 19:30:31 UTC 2013
+
+  System load:  0.12               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer finagle-future-pool
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/pooling
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/pooling
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.85ms   27.32ms 173.09ms   87.12%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1551 requests in 5.01s, 178.34KB read
+Requests/sec:    309.84
+Transfer/sec:     35.63KB
+
+---------------------------------------------------------
+ Running Warmup finagle-future-pool
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/pooling
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/pooling
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   171.90ms   87.76ms   1.16s    81.90%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  97221 requests in 1.00m, 10.92MB read
+Requests/sec:   1620.24
+Transfer/sec:    186.34KB
+
+---------------------------------------------------------
+ Concurrency: 8 for finagle-future-pool
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/pooling
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/pooling
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.46ms    1.86ms  44.51ms   82.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  105419 requests in 1.00m, 11.84MB read
+Requests/sec:   1756.95
+Transfer/sec:    202.07KB
+
+---------------------------------------------------------
+ Concurrency: 16 for finagle-future-pool
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/pooling
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/pooling
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.61ms    2.91ms  27.30ms   74.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  110012 requests in 1.00m, 12.36MB read
+Requests/sec:   1833.46
+Transfer/sec:    210.87KB
+
+---------------------------------------------------------
+ Concurrency: 32 for finagle-future-pool
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/pooling
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/pooling
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.31ms    4.57ms  41.19ms   72.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  111490 requests in 1.00m, 12.52MB read
+Requests/sec:   1858.18
+Transfer/sec:    213.71KB
+
+---------------------------------------------------------
+ Concurrency: 64 for finagle-future-pool
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/pooling
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/pooling
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.90ms    8.49ms  60.67ms   67.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  110912 requests in 1.00m, 12.46MB read
+Requests/sec:   1848.46
+Transfer/sec:    212.59KB
+
+---------------------------------------------------------
+ Concurrency: 128 for finagle-future-pool
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/pooling
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/pooling
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.41ms   19.56ms 351.63ms   75.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  111313 requests in 1.00m, 12.50MB read
+Requests/sec:   1855.09
+Transfer/sec:    213.35KB
+
+---------------------------------------------------------
+ Concurrency: 256 for finagle-future-pool
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/pooling
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/pooling
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   137.78ms   37.99ms 450.80ms   75.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  111512 requests in 1.00m, 12.52MB read
+Requests/sec:   1858.37
+Transfer/sec:    213.73KB
