@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 23:22:01 PDT 2013
+
+  System load:  0.33                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer lift-stateless
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.24ms    1.46ms  10.30ms   91.29%
+    Req/Sec   132.58    339.76     1.00k    86.74%
+  49054 requests in 5.00s, 14.97MB read
+Requests/sec:   9813.16
+Transfer/sec:      2.99MB
+
+---------------------------------------------------------
+ Running Warmup lift-stateless
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.44ms    4.99ms  80.15ms   92.59%
+    Req/Sec     3.98k   263.93     5.00k    96.76%
+  2353304 requests in 1.00m, 718.17MB read
+Requests/sec:  39222.72
+Transfer/sec:     11.97MB
+
+---------------------------------------------------------
+ Concurrency: 8 for lift-stateless
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   529.48us    0.85ms  15.83ms   95.59%
+    Req/Sec     2.00k    17.57     2.00k    99.97%
+  1148512 requests in 1.00m, 350.50MB read
+Requests/sec:  19142.18
+Transfer/sec:      5.84MB
+
+---------------------------------------------------------
+ Concurrency: 16 for lift-stateless
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   655.91us    1.34ms  24.70ms   95.68%
+    Req/Sec     3.00k    35.26     4.00k    99.88%
+  1648218 requests in 1.00m, 503.00MB read
+Requests/sec:  27470.84
+Transfer/sec:      8.38MB
+
+---------------------------------------------------------
+ Concurrency: 32 for lift-stateless
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.02ms    1.96ms  40.32ms   95.93%
+    Req/Sec     3.99k   117.88     4.00k    98.59%
+  1995065 requests in 1.00m, 608.85MB read
+Requests/sec:  33251.25
+Transfer/sec:     10.15MB
+
+---------------------------------------------------------
+ Concurrency: 64 for lift-stateless
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.87ms    3.07ms  58.93ms   96.11%
+    Req/Sec     4.00k   130.79     5.00k    99.19%
+  2130729 requests in 1.00m, 650.25MB read
+Requests/sec:  35512.64
+Transfer/sec:     10.84MB
+
+---------------------------------------------------------
+ Concurrency: 128 for lift-stateless
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.55ms    5.69ms 229.51ms   97.29%
+    Req/Sec     4.02k   217.82     6.00k    96.39%
+  2280361 requests in 1.00m, 695.91MB read
+Requests/sec:  38006.60
+Transfer/sec:     11.60MB
+
+---------------------------------------------------------
+ Concurrency: 256 for lift-stateless
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.68ms    5.74ms  84.31ms   94.06%
+    Req/Sec     4.29k   494.08     6.00k    69.22%
+  2371369 requests in 1.00m, 723.68MB read
+Requests/sec:  39523.72
+Transfer/sec:     12.06MB
