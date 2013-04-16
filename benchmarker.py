@@ -175,7 +175,7 @@ class Benchmarker:
   ############################################################
   # report_results
   ############################################################
-  def report_results(self, framework, test, results, latency, requests, total_time, errors):
+  def report_results(self, framework, test, results, latency, requests, total_time, errors, total_requests):
     # Try to get the id in the result array if it exists.
     try:
       framework_id = str(self.results['frameworks'].index(framework.name))
@@ -189,6 +189,7 @@ class Benchmarker:
     self.results['weighttpData'][test][framework_id]['requests'] = requests
     self.results['weighttpData'][test][framework_id]['totalTime'] = total_time
     self.results['weighttpData'][test][framework_id]['errors'] = errors
+    self.results['weighttpData'][test][framework_id]['totalRequests'] = total_requests
 
   ############################################################
   # End report_results
