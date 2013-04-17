@@ -2,11 +2,12 @@ import subprocess
 import sys
 import setup_util
 from os.path import expanduser
+import os
 
 home = expanduser("~")
 
 def start(args):
-    setup_util.replace_text("dropwizard/hello-world.yml", "url: jdbc:mysql://localhost/hello_world", "url: jdbc:mysql://" + args.database_host + ":3306/hello_world")
+    setup_util.replace_text("dropwizard/hello-world.yml", "url: jdbc:mysql://.*/hello_world", "url: jdbc:mysql://" + args.database_host + ":3306/hello_world")
 
     try:
         subprocess.check_call("mvn clean package;", shell=True, cwd="dropwizard")
@@ -15,9 +16,10 @@ def start(args):
     except subprocess.CalledProcessError:
         return 1
 def stop():
-    try:
-        subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
-        return 0
-    except subprocess.CalledProcessError:
-        return 1
-
+  p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+  out, err = p.communicate()
+  for line in out.splitlines():
+    if 'hello-world' in line:
+      pid = int(line.split(None, 2)[1])
+      os.kill(pid, 9)
+  return 0

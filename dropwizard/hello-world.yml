@@ -1,18 +1,18 @@
 http:
-  port: 9980
+  port: 9000
 
 database:
   # the name of your JDBC driver
   driverClass: com.mysql.jdbc.Driver
 
   # the username
-  user: root
+  user: benchmarkdbuser
 
   # the password
-  password: password
+  password: benchmarkdbpass
 
   # the JDBC URL
-  url: jdbc:mysql://127.0.0.1:3306/hello_world
+  url: jdbc:mysql://localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true
 
   # any properties specific to your JDBC driver:
   properties:
@@ -28,7 +28,7 @@ database:
   minSize: 8
 
   # the maximum number of connections to keep open
-  maxSize: 32
+  maxSize: 256
 
   # whether or not idle connections should be validated
   checkConnectionWhileIdle: false
