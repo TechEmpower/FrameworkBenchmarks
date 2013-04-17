@@ -7,7 +7,7 @@ use JSON::XS 'encode_json';
 use DBI;
 
 my $dbh = DBI->connect('dbi:mysql:dbname=test', 'root') || die $!;
-my $sth = $dbh->prepare('SELECT id, randomnumber FROM world WHERE id = ?');
+my $sth = $dbh->prepare('SELECT randomnumber FROM world WHERE id = ?');
 my $header = HTTP::Headers->new('Content-Type' => 'application/json');
 
 builder {
