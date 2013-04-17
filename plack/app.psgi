@@ -12,7 +12,7 @@ my $header = ['Content-Type' => 'application/json'];
 builder {
     mount '/json' => sub { [ 200, $header, [ encode_json({ message => 'Hello, World!' })] ] },
     mount '/dbi' => sub { [ 200, $header, [ encode_json([
-        map { id => $_->[0], randomnumber => $_->[1] },
+        map { id => $_->[0] + 0, randomnumber => $_->[1] },
         grep exists $_->[1],
         map [$_, $sth->execute($_) && $sth->fetchrow_array],
         map int rand 10000 + 1,
