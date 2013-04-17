@@ -1,0 +1,13 @@
+{
+  "framework": "spark",
+  "tests": [{
+    "default": {
+      "setup_file": "setup.py",
+      "json_url": "/spark/json",
+      "db_url": "/spark/db",
+      "query_url": "/spark/db?queries=",
+      "port": 8080,
+      "sort": 49
+    }
+  }]
+}
