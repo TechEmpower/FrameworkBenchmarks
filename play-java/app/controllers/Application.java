@@ -26,6 +26,7 @@ import java.util.concurrent.*;
 
 public class Application extends Controller {
 
+    private static final int MAX_QUERIES_PER_REQUEST = 20;
     private static final int TEST_DATABASE_ROWS = 10000;
     //http://stackoverflow.com/questions/3907929/should-i-make-jacksons-objectmapper-as-static-final
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -43,14 +44,14 @@ public class Application extends Controller {
     private static final ExecutionContext dbEc = ExecutionContexts.fromExecutorService(tpe);
 
     // A predicate for checking our ability to service database requests is determined by ensuring that the request
-    // queue doesn't fill up beyond a certain threshold. For convenience we use the max number of connections
-    // to determine this threshold. It is a rough check as we don't know how many queries we're going
-    // to make or what other threads are running in parallel etc. Nevertheless, the check is adequate in order to
-    // throttle the acceptance of requests to the size of the pool.
+    // queue doesn't fill up beyond a certain threshold. For convenience we use the max number of connections * the max
+    // # of db requests per web request to determine this threshold. It is a rough check as we don't know how many
+    // queries we're going to make or what other threads are running in parallel etc. Nevertheless, the check is
+    // adequate in order to throttle the acceptance of requests to the size of the pool.
     public static class IsDbAvailable implements Predicate {
         @Override
         public boolean condition() {
-            return (tpe.getQueue().size() < maxConnections);
+            return (tpe.getQueue().size() < maxConnections * MAX_QUERIES_PER_REQUEST);
         }
     }
 
@@ -77,7 +78,7 @@ public class Application extends Controller {
                                     findWorld(Long.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1)), dbEc));
                             promises.add(p);
                         }
-                        final List<World> worlds = F.Promise.sequence(promises).get(5L * queries, TimeUnit.SECONDS);
+                        final List<World> worlds = F.Promise.sequence(promises).get();
                         return ok(Json.toJson(worlds));
                     }
 
