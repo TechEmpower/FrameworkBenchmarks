@@ -2,14 +2,7 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Tue Apr 16 10:54:33 PDT 2013
-
-  System load:  0.14                Processes:           114
-  Usage of /:   10.0% of 131.63GB   Users logged in:     1
-  Memory usage: 15%                 IP address for eth1: 172.16.98.98
-  Swap usage:   0%
-
-  Graph this data and manage this system at https://landscape.canonical.com/
+ System information disabled due to load higher than 8.0
 
 116 packages can be updated.
 54 updates are security updates.
@@ -23,11 +16,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:9000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   704.44us  641.20us   5.20ms   90.94%
-    Req/Sec   603.77    490.04     1.00k    60.38%
-  75562 requests in 5.00s, 8.07MB read
-Requests/sec:  15113.81
-Transfer/sec:      1.61MB
+    Latency   748.39us    1.49ms  22.82ms   95.79%
+    Req/Sec   750.96    640.95     2.00k    52.87%
+  84480 requests in 5.00s, 9.02MB read
+Requests/sec:  16897.44
+Transfer/sec:      1.80MB
 
 ---------------------------------------------------------
  Running Warmup play-scala
@@ -37,11 +30,11 @@ Transfer/sec:      1.61MB
 Running 1m test @ http://172.16.98.122:9000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.07ms    1.50ms  27.89ms   88.60%
-    Req/Sec     4.92k   488.67     7.00k    90.25%
-  2520863 requests in 1.00m, 269.26MB read
-Requests/sec:  42014.40
-Transfer/sec:      4.49MB
+    Latency     5.94ms    1.41ms  22.28ms   87.83%
+    Req/Sec     4.94k   334.51     6.00k    95.24%
+  2547361 requests in 1.00m, 272.09MB read
+Requests/sec:  42456.57
+Transfer/sec:      4.53MB
 
 ---------------------------------------------------------
  Concurrency: 8 for play-scala
@@ -51,11 +44,11 @@ Transfer/sec:      4.49MB
 Running 1m test @ http://172.16.98.122:9000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   353.77us  365.38us  20.06ms   99.78%
-    Req/Sec     2.00k     0.00     2.00k   100.00%
-  1399386 requests in 1.00m, 149.47MB read
-Requests/sec:  23323.42
-Transfer/sec:      2.49MB
+    Latency   385.48us  330.89us  11.58ms   99.41%
+    Req/Sec     1.99k    70.58     2.00k    99.50%
+  1298594 requests in 1.00m, 138.70MB read
+Requests/sec:  21643.65
+Transfer/sec:      2.31MB
 
 ---------------------------------------------------------
  Concurrency: 16 for play-scala
@@ -65,11 +58,11 @@ Transfer/sec:      2.49MB
 Running 1m test @ http://172.16.98.122:9000/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   404.20us  195.23us  10.06ms   97.49%
-    Req/Sec     3.99k   112.56     4.00k    99.47%
-  2346204 requests in 1.00m, 250.60MB read
-Requests/sec:  39104.24
-Transfer/sec:      4.18MB
+    Latency   441.76us    1.55ms  62.45ms   99.84%
+    Req/Sec     3.99k   104.28     4.00k    99.66%
+  2312318 requests in 1.00m, 246.98MB read
+Requests/sec:  38539.16
+Transfer/sec:      4.12MB
 
 ---------------------------------------------------------
  Concurrency: 32 for play-scala
@@ -79,11 +72,11 @@ Transfer/sec:      4.18MB
 Running 1m test @ http://172.16.98.122:9000/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   738.65us  558.21us  15.94ms   98.91%
+    Latency   725.55us  461.21us  16.33ms   98.06%
     Req/Sec     5.00k     0.00     5.00k   100.00%
-  2615313 requests in 1.00m, 279.35MB read
-Requests/sec:  43589.52
-Transfer/sec:      4.66MB
+  2621394 requests in 1.00m, 280.00MB read
+Requests/sec:  43690.84
+Transfer/sec:      4.67MB
 
 ---------------------------------------------------------
  Concurrency: 64 for play-scala
@@ -93,11 +86,11 @@ Transfer/sec:      4.66MB
 Running 1m test @ http://172.16.98.122:9000/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.45ms  364.94us  15.15ms   89.54%
-    Req/Sec     5.00k    68.06     5.00k    99.72%
-  2615149 requests in 1.00m, 279.33MB read
-Requests/sec:  43586.81
-Transfer/sec:      4.66MB
+    Latency     1.48ms  571.50us  15.97ms   96.13%
+    Req/Sec     4.99k   173.38     6.00k    98.85%
+  2601255 requests in 1.00m, 277.84MB read
+Requests/sec:  43355.25
+Transfer/sec:      4.63MB
 
 ---------------------------------------------------------
  Concurrency: 128 for play-scala
@@ -107,11 +100,11 @@ Transfer/sec:      4.66MB
 Running 1m test @ http://172.16.98.122:9000/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.97ms  829.22us  19.76ms   92.81%
-    Req/Sec     4.98k   332.08     9.00k    95.80%
-  2586758 requests in 1.00m, 276.30MB read
-Requests/sec:  43113.99
-Transfer/sec:      4.61MB
+    Latency     2.93ms    1.31ms  57.31ms   97.06%
+    Req/Sec     4.98k   448.26    10.00k    93.55%
+  2620280 requests in 1.00m, 279.88MB read
+Requests/sec:  43671.97
+Transfer/sec:      4.66MB
 
 ---------------------------------------------------------
  Concurrency: 256 for play-scala
@@ -121,8 +114,8 @@ Transfer/sec:      4.61MB
 Running 1m test @ http://172.16.98.122:9000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.14ms   11.00ms 625.11ms   99.78%
-    Req/Sec     4.96k   336.42     8.00k    94.54%
-  2567919 requests in 1.00m, 274.28MB read
-Requests/sec:  42800.25
-Transfer/sec:      4.57MB
+    Latency     5.87ms    1.52ms  28.21ms   91.06%
+    Req/Sec     4.99k   334.52     8.00k    95.64%
+  2601625 requests in 1.00m, 277.88MB read
+Requests/sec:  43361.18
+Transfer/sec:      4.63MB
