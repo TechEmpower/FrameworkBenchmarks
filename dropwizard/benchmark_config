@@ -6,8 +6,8 @@
             "json_url": "/json",
             "db_url": "/db",
             "query_url": "/db?queries=",
-            "port": 9980,
-            "sort": 31
+            "port": 9000,
+            "sort": 69
         }
     }]
 }
