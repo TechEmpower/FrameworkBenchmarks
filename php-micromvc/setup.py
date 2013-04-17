@@ -6,7 +6,7 @@ from os.path import expanduser
 home = expanduser("~")
 
 def start(args):
-  setup_util.replace_text("php-micromvc/config/Config.php", "localhost", ""+ args.database_host +"")
+  setup_util.replace_text("php-micromvc/Config/Config.php", "localhost", ""+ args.database_host +"")
   setup_util.replace_text("php-micromvc/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
 
   try:
