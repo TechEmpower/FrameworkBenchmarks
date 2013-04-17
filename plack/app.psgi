@@ -1,4 +1,6 @@
-# starman --workers N app.psgi
+# plackup -s Starman --workers N -E deployment app.psgi
+# -or-
+# plackup -s Twiggy::Prefork --max_workers N -E deployment app.psgi
 use v5.16;
 use Plack::Builder;
 use Plack::Request;
