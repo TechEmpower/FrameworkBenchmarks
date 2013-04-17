@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Tue Apr 16 17:19:22 UTC 2013
+  System information as of Wed Apr 17 15:09:18 UTC 2013
 
-  System load:  0.62               Processes:           70
-  Usage of /:   24.6% of 19.69GB   Users logged in:     1
-  Memory usage: 11%                IP address for eth0: 10.252.147.39
+  System load:  0.21               Processes:           70
+  Usage of /:   24.7% of 19.69GB   Users logged in:     1
+  Memory usage: 9%                 IP address for eth0: 10.252.147.39
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Use Juju to deploy your cloud instances and workloads.
 Running 5s test @ http://10.252.147.200:9000/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    27.21ms   20.35ms 101.29ms   84.13%
+    Latency    27.06ms   22.59ms 146.15ms   87.50%
     Req/Sec     0.00      0.00     0.00    100.00%
-  1677 requests in 5.03s, 194.46KB read
-Requests/sec:    333.69
-Transfer/sec:     38.69KB
+  1893 requests in 5.01s, 219.56KB read
+Requests/sec:    377.93
+Transfer/sec:     43.83KB
 
 ---------------------------------------------------------
  Running Warmup play
@@ -43,12 +43,11 @@ Transfer/sec:     38.69KB
 Running 1m test @ http://10.252.147.200:9000/db
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   341.34ms  284.04ms   2.73s    90.19%
+    Latency   284.10ms  150.22ms   1.43s    84.66%
     Req/Sec     0.00      0.00     0.00    100.00%
-  48879 requests in 1.00m, 5.54MB read
-  Socket errors: connect 0, read 0, write 0, timeout 62
-Requests/sec:    814.55
-Transfer/sec:     94.48KB
+  53062 requests in 1.00m, 6.01MB read
+Requests/sec:    884.21
+Transfer/sec:    102.55KB
 
 ---------------------------------------------------------
  Concurrency: 8 for play
@@ -58,11 +57,11 @@ Transfer/sec:     94.48KB
 Running 1m test @ http://10.252.147.200:9000/db
   4 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.07ms    4.28ms  71.30ms   91.32%
+    Latency     7.68ms    3.32ms  36.52ms   82.38%
     Req/Sec     0.00      0.00     0.00    100.00%
-  59356 requests in 1.00m, 6.72MB read
-Requests/sec:    989.23
-Transfer/sec:    114.74KB
+  63217 requests in 1.00m, 7.16MB read
+Requests/sec:   1053.59
+Transfer/sec:    122.20KB
 
 ---------------------------------------------------------
  Concurrency: 16 for play
@@ -72,11 +71,11 @@ Transfer/sec:    114.74KB
 Running 1m test @ http://10.252.147.200:9000/db
   4 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    14.77ms    5.98ms  59.05ms   83.33%
+    Latency    14.25ms    5.38ms  48.38ms   77.76%
     Req/Sec     0.00      0.00     0.00    100.00%
-  64739 requests in 1.00m, 7.33MB read
-Requests/sec:   1078.95
-Transfer/sec:    125.14KB
+  67348 requests in 1.00m, 7.63MB read
+Requests/sec:   1122.47
+Transfer/sec:    130.19KB
 
 ---------------------------------------------------------
  Concurrency: 32 for play
@@ -86,11 +85,11 @@ Transfer/sec:    125.14KB
 Running 1m test @ http://10.252.147.200:9000/db
   4 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    27.27ms    8.37ms  83.67ms   80.74%
+    Latency    27.18ms    6.51ms  74.39ms   76.47%
     Req/Sec     0.00      0.00     0.00    100.00%
-  69741 requests in 1.00m, 7.90MB read
-Requests/sec:   1162.28
-Transfer/sec:    134.81KB
+  70732 requests in 1.00m, 8.01MB read
+Requests/sec:   1178.80
+Transfer/sec:    136.72KB
 
 ---------------------------------------------------------
  Concurrency: 64 for play
@@ -100,11 +99,11 @@ Transfer/sec:    134.81KB
 Running 1m test @ http://10.252.147.200:9000/db
   4 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    52.40ms   14.35ms 113.16ms   77.13%
+    Latency    49.98ms   13.53ms 182.82ms   81.02%
     Req/Sec     0.00      0.00     0.00    100.00%
-  73285 requests in 1.00m, 8.30MB read
-Requests/sec:   1221.32
-Transfer/sec:    141.66KB
+  77319 requests in 1.00m, 8.76MB read
+Requests/sec:   1288.53
+Transfer/sec:    149.46KB
 
 ---------------------------------------------------------
  Concurrency: 128 for play
@@ -114,11 +113,11 @@ Transfer/sec:    141.66KB
 Running 1m test @ http://10.252.147.200:9000/db
   4 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   102.53ms   30.78ms 327.12ms   78.23%
+    Latency    98.19ms   23.18ms 286.19ms   80.70%
     Req/Sec     0.00      0.00     0.00    100.00%
-  73607 requests in 1.00m, 8.34MB read
-Requests/sec:   1226.71
-Transfer/sec:    142.28KB
+  77307 requests in 1.00m, 8.76MB read
+Requests/sec:   1288.29
+Transfer/sec:    149.43KB
 
 ---------------------------------------------------------
  Concurrency: 256 for play
@@ -128,8 +127,8 @@ Transfer/sec:    142.28KB
 Running 1m test @ http://10.252.147.200:9000/db
   4 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   213.81ms   65.62ms 874.05ms   82.68%
+    Latency   190.22ms   47.38ms 875.80ms   80.77%
     Req/Sec     0.00      0.00     0.00    100.00%
-  71365 requests in 1.00m, 8.08MB read
-Requests/sec:   1189.39
-Transfer/sec:    137.95KB
+  78718 requests in 1.00m, 8.92MB read
+Requests/sec:   1311.80
+Transfer/sec:    152.16KB
