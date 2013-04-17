@@ -1,0 +1,29 @@
+{
+	"name": "micromvc/micromvc",
+	"type": "library",
+	"description": "The worlds smallest, full featured, object-oriented PHP 5 Framework",
+	"keywords": ["microframework", "micro", "mvc"],
+	"homepage": "http://micromvc.com",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "David Pennington",
+			"homepage": "http://xeoncross.com"
+		}
+	],
+	"require": {
+		"php": ">=5.3.0",
+		"micro/micro": "dev-master"
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/Xeoncross/Micro.git"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"": "Class"
+		}
+	}
+}

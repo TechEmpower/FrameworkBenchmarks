@@ -1,0 +1,212 @@
+/* Typography - Choose your font and size (base.css default is 16px) */
+body
+{
+	font-size:80%;
+	line-height:1.5em;
+	font-family:Helvetica,Arial,sans-serif;
+	background: #202020;
+}
+/*IE*/
+html>body{font-size:13px}
+pre,code
+{
+	font-family:"DejaVu Sans Mono","Bitstream Vera Sans Mono",Monaco,"Courier New",monospace;
+}
+
+a img, img { border: none; }
+a {color: #2A90BF;text-decoration: none;}
+
+a:hover {
+color: #BE4925;
+text-decoration: underline;
+text-decoration: none;
+}
+
+
+#main {
+margin: 0 0 0 150px;
+background: #ddd;
+}
+
+#content {
+background: #fff;
+padding: 2em;
+margin: 1em 1em 2em 1em;
+margin: 0;
+}
+
+#sidebar { width: 150px; float: left; }
+
+#sidebar h2 {
+color: #777;
+border: none;
+font-size: 20px;
+line-height: 50px;
+text-align: center;
+}
+
+#sidebar ul {
+margin: 2em 0;
+padding: 0;
+list-style: none;
+}
+
+#sidebar ul li {margin: 0;padding: 0;}
+
+#sidebar ul li a {
+display: block;
+line-height: 2.5em;
+padding: 0 1em;
+border-bottom: 1px solid #333;
+color: #fff;
+font-size: 14px;
+font-weight: bold;
+text-shadow:0 1px 2px #000000;
+}
+
+/*
+#sidebar ul li a.selected,
+#sidebar ul li a:hover {
+background: #ddd;
+color: #000;
+text-shadow:0 1px 2px #eee;
+}
+*/
+
+#sidebar ul li a.selected,
+#sidebar ul li a:hover {
+background: #111;
+text-shadow:0 1px 1px #777;
+}
+
+/* Sub levels */
+#sidebar ul li ul { padding: 0; margin: 0; }
+#sidebar ul li li a { color: #ccc; padding: 0 1em 0 3em; }
+
+
+table thead a { color: #333;white-space:nowrap;}
+table tbody tr:hover {background: #f1f1f1;}
+
+
+/*
+ * Header
+ */
+#header {
+background: #eee;
+height: 30px;
+line-height: 30px;
+margin: 0;
+border-bottom: 0px solid #ddd;
+}
+
+/*
+ * Footer
+ */
+
+#footer {
+background: #eee;
+height: 30px;
+line-height: 30px;
+margin: 0;
+border-top: 1px solid #ddd;
+color: #777;
+}
+
+
+/*
+ * Horizontal menu UL
+ */
+ul.horizontal_menu,
+ul.horizontal_menu li {
+margin: 0;
+padding: 0;
+list-style: none;
+}
+ul.horizontal_menu li { float: left; padding: 0 1em; }
+ul.horizontal_menu li.right {float: right;}
+
+
+.box {
+	padding: 1em;
+	margin: 1em 0;
+	background: #eee;
+
+	border: 1px solid #fff;
+	-moz-box-shadow: 0px 1px 4px #bbb;
+	-webkit-box-shadow: 0px 1px 4px #bbb;
+  	box-shadow: 0px 1px 4px #bbb;
+
+  	background: #F7F7F7; /* old browsers */
+	background: -moz-linear-gradient(top, #F7F7F7 0%, #EAEAEA 100%); /* firefox */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F7F7F7), color-stop(100%,#EAEAEA)); /* webkit */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F7F7F7', endColorstr='#EAEAEA',GradientType=0 ); /* ie */
+}
+
+
+/* Create New link */
+.create_new { float: right; }
+
+.create_new a.button {
+	border-top: 1px solid #6ee653;
+	background: #57c246;
+	background: -webkit-gradient(linear, left top, left bottom, from(#57c246), to(#0c9427));
+	background: -moz-linear-gradient(top,  #57c246,#0c9427);
+	padding: 7px 15px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	box-shadow: rgba(0,0,0,1) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	color: white;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;
+}
+.create_new a.button:hover {
+	background: #57c246;
+	background: -webkit-gradient(linear, left top, left bottom, from(#0c9427), to(#57c246));
+	background: -moz-linear-gradient(top, #0c9427, #57c246);
+	color: #ffffff;
+}
+.create_new a.button:active {
+	border-top-color: #1b435e;
+	background: #264d07;
+}
+
+
+/* Pagination links */
+.pagination a { padding: 5px 10px; border: 1px solid #ddd; background: #f8f8f8; border-radius: 4px; }
+.pagination a.current { color: #aaa; }
+
+
+
+/* Messages Boxes use the great Silk icons from http://famfamfam.com/ */
+.message, .warning, .error, .success
+{
+	margin: 1em auto;
+	display: block;
+	padding: .8em 50px;
+	border: 1px solid #fff;
+}
+.message
+{
+	background: #F8FAFC url(../images/message.png) 20px center no-repeat;
+	border-color: #B5D4FE;
+}
+.warning
+{
+	background: #fff6bf url(../images/warning.png) 20px center no-repeat;
+	border-color: #ffd324;
+}
+.error
+{
+	background: #fde6e9 url(../images/error.png) 20px center no-repeat;
+	border-color: #fb939f;
+}
+.success
+{
+	background: #EBFCE1 url(../images/success.png) 20px center no-repeat;
+	border-color: #B9DAA6;
+}
