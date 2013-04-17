@@ -3,6 +3,7 @@
 
 /** import supporting libraries */
 require_once('IRouter.php');
+require_once('verysimple/HTTP/RequestUtil.php');
 
 /**
  * Generic Router is an implementation of IRouter that uses patterns to connect
@@ -132,8 +133,8 @@ class GenericRouter implements IRouter
 			// if a root folder was provided, then we need to strip that out as well
 			if ($this->appRootUrl)
 			{
-				$prefix = $this->appRootUrl.'/';
-				while (substr($this->uri,0,strlen($prefix)) == $prefix)
+				$prefix = str_replace(RequestUtil::GetServerRootUrl(),'/',$this->appRootUrl);
+				if (substr($this->uri,0,strlen($prefix)) == $prefix)
 				{
 					$this->uri = substr($this->uri,strlen($prefix));
 				}
