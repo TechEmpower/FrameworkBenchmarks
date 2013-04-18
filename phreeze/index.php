@@ -24,7 +24,7 @@ $route_map = array(
 		'GET:db' => array('route' => 'Test.DB')
 );
 
-$router = new GenericRouter('./','Test.JSON',$route_map);
+$router = new GenericRouter('/phreeze/','Test.JSON',$route_map);
 
 Dispatcher::Dispatch(
 	$phreezer,
