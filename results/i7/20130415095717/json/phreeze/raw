@@ -2,136 +2,134 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Tue Apr 16 00:38:36 PDT 2013
+  System information as of Thu Apr 18 14:05:37 PDT 2013
 
-  System load:  0.36                Processes:           114
-  Usage of /:   10.0% of 131.63GB   Users logged in:     1
-  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  System load:  0.23                Processes:           114
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 14%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-113 packages can be updated.
-51 updates are security updates.
+116 packages can be updated.
+58 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer phreeze
- wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/phreeze/json
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
-Running 5s test @ http://172.16.98.122:8080/phreeze/json
+Running 5s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    28.65ms   14.13ms 155.53ms   92.54%
+    Latency     1.82ms    1.26ms  15.86ms   88.59%
     Req/Sec     0.00      0.00     0.00    100.00%
-  1441 requests in 5.03s, 591.00KB read
-Requests/sec:    286.67
-Transfer/sec:    117.57KB
+  11665 requests in 6.00s, 4.67MB read
+Requests/sec:   1944.17
+Transfer/sec:    797.32KB
 
 ---------------------------------------------------------
  Running Warmup phreeze
- wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/phreeze/json
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
-Running 1m test @ http://172.16.98.122:8080/phreeze/json
+Running 1m test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   926.12ms  565.30ms   3.35s    79.60%
+    Latency   180.10ms  600.29ms   4.86s    93.92%
     Req/Sec     0.00      0.00     0.00    100.00%
-  17684 requests in 1.00m, 7.08MB read
-  Socket errors: connect 0, read 0, write 0, timeout 456
-Requests/sec:    294.71
-Transfer/sec:    120.88KB
+  104674 requests in 1.00m, 41.92MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2895
+Requests/sec:   1744.41
+Transfer/sec:    715.41KB
 
 ---------------------------------------------------------
  Concurrency: 8 for phreeze
- wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/phreeze/json
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
-Running 1m test @ http://172.16.98.122:8080/phreeze/json
+Running 1m test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    75.33ms  579.37ms  19.38s    99.60%
+    Latency    29.03ms  141.71ms   1.65s    95.67%
     Req/Sec     0.00      0.00     0.00    100.00%
-  833 requests in 1.00m, 341.63KB read
-  Socket errors: connect 0, read 0, write 0, timeout 196
-Requests/sec:     13.88
-Transfer/sec:      5.69KB
+  37119 requests in 1.00m, 14.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 68
+Requests/sec:    618.61
+Transfer/sec:    253.70KB
 
 ---------------------------------------------------------
  Concurrency: 16 for phreeze
- wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/phreeze/json
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
-Running 1m test @ http://172.16.98.122:8080/phreeze/json
+Running 1m test @ http://172.16.98.122:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   141.54ms    1.20s   16.65s    99.47%
+    Latency    14.54ms  262.58ms   8.39s    99.81%
     Req/Sec     0.00      0.00     0.00    100.00%
-  1040 requests in 1.00m, 426.47KB read
-  Socket errors: connect 0, read 0, write 0, timeout 373
-  Non-2xx or 3xx responses: 1
-Requests/sec:     17.33
-Transfer/sec:      7.11KB
+  76792 requests in 1.00m, 30.75MB read
+  Socket errors: connect 0, read 0, write 0, timeout 197
+Requests/sec:   1279.75
+Transfer/sec:    524.84KB
 
 ---------------------------------------------------------
  Concurrency: 32 for phreeze
- wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/phreeze/json
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
-Running 1m test @ http://172.16.98.122:8080/phreeze/json
+Running 1m test @ http://172.16.98.122:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   187.82ms  837.56ms  15.07s    99.19%
+    Latency    22.36ms  261.06ms  14.41s    99.06%
     Req/Sec     0.00      0.00     0.00    100.00%
-  2655 requests in 1.00m, 1.06MB read
-  Socket errors: connect 0, read 0, write 0, timeout 571
-Requests/sec:     44.25
-Transfer/sec:     18.15KB
+  60600 requests in 1.00m, 24.27MB read
+  Socket errors: connect 0, read 0, write 0, timeout 458
+Requests/sec:   1009.94
+Transfer/sec:    414.19KB
 
 ---------------------------------------------------------
  Concurrency: 64 for phreeze
- wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/phreeze/json
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
-Running 1m test @ http://172.16.98.122:8080/phreeze/json
+Running 1m test @ http://172.16.98.122:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   144.89ms    1.27s   25.92s    99.63%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  1868 requests in 1.00m, 766.17KB read
-  Socket errors: connect 0, read 0, write 0, timeout 1665
-Requests/sec:     31.13
-Transfer/sec:     12.77KB
+    Latency    21.36ms  120.08ms   5.62s    98.08%
+    Req/Sec     0.31     17.62     1.00k    99.97%
+  54386 requests in 1.00m, 21.78MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1209
+Requests/sec:    906.37
+Transfer/sec:    371.71KB
 
 ---------------------------------------------------------
  Concurrency: 128 for phreeze
- wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/phreeze/json
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
-Running 1m test @ http://172.16.98.122:8080/phreeze/json
+Running 1m test @ http://172.16.98.122:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   355.24ms    1.78s   16.51s    98.63%
+    Latency    84.11ms  645.80ms   8.44s    98.60%
     Req/Sec     0.00      0.00     0.00    100.00%
-  2904 requests in 1.00m, 1.16MB read
-  Socket errors: connect 0, read 0, write 0, timeout 3116
-Requests/sec:     48.39
-Transfer/sec:     19.85KB
+  78926 requests in 1.00m, 31.61MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2195
+Requests/sec:   1315.33
+Transfer/sec:    539.43KB
 
 ---------------------------------------------------------
  Concurrency: 256 for phreeze
- wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/phreeze/json
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
-Running 1m test @ http://172.16.98.122:8080/phreeze/json
+Running 1m test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   568.21ms    1.95s   16.32s    98.25%
+    Latency   176.07ms  592.30ms   6.41s    94.81%
     Req/Sec     0.00      0.00     0.00    100.00%
-  4651 requests in 1.00m, 1.86MB read
-  Socket errors: connect 0, read 0, write 0, timeout 6155
-  Non-2xx or 3xx responses: 6
-Requests/sec:     77.51
-Transfer/sec:     31.78KB
+  82083 requests in 1.00m, 32.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2569
+Requests/sec:   1367.92
+Transfer/sec:    561.00KB

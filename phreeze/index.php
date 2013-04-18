@@ -10,7 +10,7 @@ require_once 'verysimple/Phreeze/GenericRouter.php';
 require_once 'verysimple/Phreeze/Phreezer.php';
 
 $cs = new ConnectionSetting();
-$cs->ConnectionString = "localhost:3306";
+$cs->ConnectionString = "172.16.98.98:3306";
 $cs->DBName = "hello_world";
 $cs->Username = "benchmarkdbuser";
 $cs->Password = "benchmarkdbpass";
@@ -24,7 +24,7 @@ $route_map = array(
 		'GET:db' => array('route' => 'Test.DB')
 );
 
-$router = new GenericRouter('/phreeze/','Test.JSON',$route_map);
+$router = new GenericRouter('/','Test.JSON',$route_map);
 
 Dispatcher::Dispatch(
 	$phreezer,
