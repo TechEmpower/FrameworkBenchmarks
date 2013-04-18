@@ -1,3 +1,0 @@
-/json           JsonR   GET
-/db             DBR     GET
-/db2/#Int       DB2R    GET
