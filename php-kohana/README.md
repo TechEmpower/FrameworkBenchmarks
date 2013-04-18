@@ -17,7 +17,7 @@ Uses the db abstraction class from Kohana
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Codeigniter Version 2.1.3](http://kohanaframework.org/)
+* [Kohana Version 3.3.0](http://kohanaframework.org/)
 * [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
 * [nginx 1.2.7](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
