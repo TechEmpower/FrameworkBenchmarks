@@ -4,10 +4,7 @@
 /** import supporting libraries */
 require_once("Observable.php");
 require_once("Criteria.php");
-require_once("KeyMap.php");
-require_once("FieldMap.php");
 require_once("DataAdapter.php");
-require_once("NotFoundException.php");
 require_once("CacheRam.php");
 require_once("CacheNoCache.php");
 require_once("verysimple/IO/Includer.php");
@@ -21,7 +18,7 @@ require_once("verysimple/IO/Includer.php");
  * @author     VerySimple Inc.
  * @copyright  1997-2008 VerySimple, Inc.
  * @license    http://www.gnu.org/licenses/lgpl.html  LGPL
- * @version    3.3.3
+ * @version    3.3.4
  */
 class Phreezer extends Observable
 {
@@ -33,7 +30,7 @@ class Phreezer extends Observable
 	 */
 	public $RenderEngine;
 
-	public static $Version = '3.3.3 HEAD';
+	public static $Version = '3.3.4 HEAD';
 
 	/**
 	 * @var int expiration time for query & value cache (in seconds) default = 5
@@ -103,7 +100,7 @@ class Phreezer extends Observable
 		$this->_level1Cache = new CacheRam();
 		$this->_level2Cache = new CacheNoCache();
 
-		parent::AttachObserver($observer);
+		if ($observer) parent::AttachObserver($observer);
 		$this->Observe("Phreeze Instantiated", OBSERVE_DEBUG);
 
 		$this->DataAdapter = new DataAdapter($csetting, $observer);
@@ -316,6 +313,7 @@ class Phreezer extends Observable
 
 		if (!$obj = $ds->Next())
 		{
+			require_once("NotFoundException.php");
 			throw new NotFoundException("$objectclass with specified criteria not found");
 		}
 
@@ -371,6 +369,7 @@ class Phreezer extends Observable
 			$fms = $this->GetFieldMaps($objectclass);
 
 			// the query builder will handle creating the SQL for us
+			require_once("QueryBuilder.php");
 			$builder = new QueryBuilder($this);
 			$builder->RecurseFieldMaps($objectclass, $fms);
 
@@ -379,6 +378,7 @@ class Phreezer extends Observable
 			$count_sql = $builder->GetCountSQL($criteria);
 		}
 
+		require_once("DataSet.php");
 		$ds = new DataSet($this, $objectclass, $sql, $cache_timeout);
 		$ds->CountSQL = $count_sql;
 
@@ -390,7 +390,7 @@ class Phreezer extends Observable
     * Get one instance of an object based on it's primary key value
     *
     * @access public
-    * @param string $objectclass the type of object that your DataSet will contain
+    * @param string $objectclass to query
     * @param variant $id the value of the primary key
     * @param int cache timeout (in seconds).  Default is Phreezer->ObjectCacheTimeout.  Set to 0 for no cache
     * @return Phreezable
@@ -422,11 +422,12 @@ class Phreezer extends Observable
 
 		$ds = $this->Query($objectclass, $criteria);
 
-		// tell the dataset that we will be able to cache this query
+		// this is cacheable
 		$ds->UnableToCache = false;
 
 		if (!$obj = $ds->Next())
 		{
+			require_once("NotFoundException.php");
 			throw new NotFoundException("$objectclass with primary key of $id not found");
 		}
 

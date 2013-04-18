@@ -4,16 +4,11 @@
 /** import supporting libraries */
 require_once("verysimple/HTTP/RequestUtil.php");
 require_once("verysimple/HTTP/Context.php");
-require_once("verysimple/HTTP/BrowserDevice.php");
-require_once("verysimple/Authentication/Authenticator.php");
-require_once("verysimple/Authentication/Auth401.php");
-require_once("verysimple/Authentication/IAuthenticatable.php");
-require_once("verysimple/String/VerySimpleStringUtil.php");
-require_once("DataPage.php");
 require_once("Phreezer.php");
 require_once("Criteria.php");
 require_once("IRouter.php");
 require_once("GenericRouter.php");
+require_once("verysimple/Authentication/IAuthenticatable.php");
 
 /**
  * Controller is a base controller object used for an MVC pattern
@@ -151,6 +146,8 @@ abstract class Controller
 	 */
 	protected function Require401Authentication(IAuthenticatable $authenticatable, $realm = "Login Required", $qs_username_field = "", $qs_password_field = "")
 	{
+		require_once("verysimple/Authentication/Auth401.php");
+		
 		$user = $this->Get401Authentication($authenticatable,$qs_username_field, $qs_password_field);
 
 		// we only want to output 401 headers if the user is not already authenticated
@@ -290,6 +287,7 @@ abstract class Controller
 	 */
 	public function GetDevice()
 	{
+		require_once("verysimple/HTTP/BrowserDevice.php");
 		return BrowserDevice::GetInstance();
 	}
 
@@ -345,8 +343,10 @@ abstract class Controller
 	 * @param Array $supressProps (In the format Array("PropName1","PropName2")
 	 * @param bool noMap set to true to render this DataPage regardless of whether there is a FieldMap
 	 */
-	protected function RenderXML(DataPage $page,$additionalProps = null, $supressProps = null, $noMap = false)
+	protected function RenderXML($page,$additionalProps = null, $supressProps = null, $noMap = false)
 	{
+		require_once("verysimple/String/VerySimpleStringUtil.php");
+		
 		if (!is_array($supressProps)) $supressProps = array();
 
 		// never include these props
@@ -620,6 +620,8 @@ abstract class Controller
 	 */
 	public function ClearCurrentUser()
 	{
+		require_once("verysimple/Authentication/Authenticator.php");
+		
 		$this->_cu = null;
 		Authenticator::ClearAuthentication($this->GUID);
 	}
@@ -647,6 +649,8 @@ abstract class Controller
 	{
 		if (!$this->_cu)
 		{
+			require_once("verysimple/Authentication/Authenticator.php");
+			
 			$this->Phreezer->Observe("Loading CurrentUser from Session");
 			$this->_cu = Authenticator::GetCurrentUser($this->GUID);
 

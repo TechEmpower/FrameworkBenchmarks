@@ -11,9 +11,9 @@ require_once('verysimple/HTTP/RequestUtil.php');
  *
  * @package    verysimple::Phreeze
  * @author     VerySimple Inc.
- * @copyright  1997-2012 VerySimple, Inc.
+ * @copyright  1997-2013 VerySimple, Inc.
  * @license    http://www.gnu.org/licenses/lgpl.html  LGPL
- * @version    1.0
+ * @version    1.1
  */
 class GenericRouter implements IRouter
 {
@@ -25,6 +25,8 @@ class GenericRouter implements IRouter
 
 	// cached route from last run:
 	private $cachedRoute;
+	
+	public static $ROUTE_NOT_FOUND = "Default.Error404";
 
 	/**
 	 * Instantiate the GenericRouter
@@ -118,7 +120,7 @@ class GenericRouter implements IRouter
 		}
 
 		// if we haven't returned by now, we've found no match:
-		return array("Default","Error404");
+		return explode('.', self::$ROUTE_NOT_FOUND,2);
 	}
 
 	/**
