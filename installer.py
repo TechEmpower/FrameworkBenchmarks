@@ -22,7 +22,7 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)    
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("sudo sh -c \"echo '*               soft    nofile          8192' >> /etc/security/limits.conf\"")
@@ -95,7 +95,7 @@ class Installer:
 
     self.__run_command("wget --trust-server-names http://www.php.net/get/php-5.4.13.tar.gz/from/us1.php.net/mirror")
     self.__run_command("tar xvf php-5.4.13.tar.gz")
-    self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
+    self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
     self.__run_command("sudo make install", cwd="php-5.4.13")
     self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13")
@@ -105,6 +105,10 @@ class Installer:
 
     # Composer
     self.__run_command("curl -sS https://getcomposer.org/installer | php -- --install-dir=bin")
+
+    # Phalcon
+    self.__run_command("git clone git://github.com/phalcon/cphalcon.git")
+    self.__run_command("sudo ./install", cwd="cphalcon/build")
 
     #
     # Haskell
@@ -342,7 +346,6 @@ class Installer:
     sudo mv mongodb.conf /etc/mongodb.conf
     sudo restart mongodb
     """
-
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)
     
@@ -381,3 +384,4 @@ class Installer:
   ############################################################
   # End __init__
   ############################################################
+

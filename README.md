@@ -243,7 +243,7 @@ The benchmark_config file is used by our run script to identify the available te
   * query_url (optional): The relative URL path to the variable query test. The URL must be set up so that an integer can be applied to the end of the url to specify the number of queries to run, i.e. /db?queries= or /db/
   * port: The port the server is listneing on
   * sort: The sort order. This is important for our own blog post which relies on consistent ordering of the frameworks. You can get the next available sort order by running:
-    ./run-test.py --next-sort
+    ./run-tests.py --next-sort
 
 ## Setup Files
 
