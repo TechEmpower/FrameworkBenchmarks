@@ -106,6 +106,10 @@ class Installer:
     # Composer
     self.__run_command("curl -sS https://getcomposer.org/installer | php -- --install-dir=bin")
 
+    # Phalcon
+    self.__run_command("git clone git://github.com/phalcon/cphalcon.git")
+    self.__run_command("sudo ./install", cwd="cphalcon/build")
+
     #
     # Haskell
     #
@@ -342,7 +346,6 @@ class Installer:
     sudo mv mongodb.conf /etc/mongodb.conf
     sudo restart mongodb
     """
-
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)
     
