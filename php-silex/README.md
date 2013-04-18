@@ -17,7 +17,7 @@ Uses the Doctrine DBAL functionality.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Symfony Version 2.2.1](http://silex.sensiolabs.org/)
+* [Silex Version 1.0](http://silex.sensiolabs.org/)
 * [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
 * [nginx 1.2.7](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
