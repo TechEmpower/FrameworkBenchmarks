@@ -12,3 +12,5 @@ mods/
 /.settings
 /.buildpath
 /.project
+*.iml
+.idea/

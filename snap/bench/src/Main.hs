@@ -2,6 +2,7 @@
 
 module Main where
 
+import Control.Applicative
 import Control.Monad
 import Control.Monad.IO.Class
 import Data.Aeson
@@ -41,8 +42,7 @@ main = do
 dbSetup :: [String] -> IO ()
 dbSetup sets = do
     pool <- createPool (connect $ getConnInfo sets) close 1 10 50
-    gen  <- newStdGen
-    httpServe config $ site pool gen
+    httpServe config $ site pool
 
 config :: Config Snap a
 config = setAccessLog ConfigNoLog
@@ -60,10 +60,10 @@ getConnInfo [host, user, pwd, db, port] = defaultConnectInfo
     }
 getConnInfo _ = defaultConnectInfo
 
-site :: Pool Connection -> StdGen -> Snap ()
-site pool gen = route
+site :: Pool Connection -> Snap ()
+site pool = route
     [ ("json", jsonHandler)
-    , ("db",   dbHandler pool gen)
+    , ("db",   dbHandler pool)
     ]
 
 jsonHandler :: Snap ()
@@ -71,18 +71,17 @@ jsonHandler = do
     modifyResponse (setContentType "application/json")
     writeLBS $ encode [ "message" .= ("Hello, World!" :: Text) ]
 
-dbHandler :: Pool Connection -> StdGen -> Snap ()
-dbHandler pool gen = do
+dbHandler :: Pool Connection -> Snap ()
+dbHandler pool = do
     modifyResponse (setContentType "application/json")
     qs <- getQueryParam "queries"
-    runAll pool gen $ maybe 1 fst (qs >>= B.readInt)
+    runAll pool $ maybe 1 fst (qs >>= B.readInt)
 
-runAll :: Pool Connection -> StdGen -> Int -> Snap ()
-runAll pool gen i = do
+runAll :: Pool Connection -> Int -> Snap ()
+runAll pool i = do
+    !rs <- take i . randomRs (1, 10000) <$> liftIO newStdGen
     qry <- liftIO $ withResource pool (forM rs . runOne)
     writeLBS $ encode qry
-  where
-    rs = take i $ randomRs (1, 10000) gen
 
 runOne :: Connection -> Int -> IO RandQuery
 runOne conn = fmap head . query conn "SELECT * FROM World where id=?" . Only
