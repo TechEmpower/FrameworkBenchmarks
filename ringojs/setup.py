@@ -8,12 +8,6 @@ def start(args):
   setup_util.replace_text("ringojs/ringo-main.js", "dbHost = '.*';", "dbHost = '" + args.database_host + "';")
 
   try:
-    subprocess.check_call("sudo ringo-admin install oberhamsi/sql-ringojs-client", shell=True, cwd="ringojs")
-  except:
-    # already installed
-    pass
-
-  try:
     subprocess.check_call("ringo --production ringo-main.js", shell=True, cwd="ringojs")
     return 0
   except subprocess.CalledProcessError:
