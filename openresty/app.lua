@@ -8,13 +8,6 @@ local encode = cjson.encode
 local random = math.random
 local insert = table.insert
 
-local mysqlconn = {
-    host = "DBHOSTNAME",
-    port = 3306,
-    database = "hello_world",
-    user = "benchmarkdbuser",
-    password = "benchmarkdbpass"
-}
 
 function _M.handler(ngx)
     ngx.header.content_type = 'application/json'
@@ -23,6 +16,15 @@ function _M.handler(ngx)
         local resp = {message = "Hello, World!"}
         ngx.print( encode(resp) )
     elseif ngx.var.uri == '/db' then
+
+        local mysqlconn = {
+            host = "DBHOSTNAME",
+            port = 3306,
+            database = "hello_world",
+            user = "benchmarkdbuser",
+            password = "benchmarkdbpass"
+        }
+
         local db, err = mysql:new()
         local ok, err = db:connect(mysqlconn)
         local num_queries = tonumber(ngx.var.arg_queries) or 1
