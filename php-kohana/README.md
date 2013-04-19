@@ -5,13 +5,13 @@ This is the Kohana PHP portion of a [benchmarking test suite](../) comparing a v
 ### JSON Encoding Test
 Uses the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-encode.php).
 
-* [JSON test controller](application/classes/controllers/Bench.php)
+* [JSON test controller](application/classes/Controller/Bench.php)
 
 
 ### Data-Store/Database Mapping Test
 Uses the db abstraction class from Kohana
 
-* [DB test controller](application/classes/controllers/Bench.php)
+* [DB test controller](application/classes/Controller/Bench.php)
 
 
 ## Infrastructure Software Versions
