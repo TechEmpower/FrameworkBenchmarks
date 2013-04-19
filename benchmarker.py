@@ -182,7 +182,10 @@ class Benchmarker:
     except ValueError:
       framework_id = str(framework.sort)
       
-    
+    if test not in self.results['rawData'].keys():
+      self.results['rawData'][test] = dict()
+      self.results['weighttpData'][test] = dict()
+
     self.results['rawData'][test][framework_id] = results
     self.results['weighttpData'][test][framework_id] = dict()
     self.results['weighttpData'][test][framework_id]['latency'] = latency
@@ -425,9 +428,10 @@ class Benchmarker:
     with open(os.path.join(self.full_results_directory(), "fortune.csv"), 'wb') as csvfile:
       writer = csv.writer(csvfile)
       writer.writerow(["Framework"] + self.query_intervals)
-      for key, value in self.results['rawData']['fortune'].iteritems():
-        framework = self.results['frameworks'][int(key)]
-        writer.writerow([framework] + value)
+      if 'fortune' in self.results['rawData'].keys():
+        for key, value in self.results['rawData']['fortune'].iteritems():
+          framework = self.results['frameworks'][int(key)]
+          writer.writerow([framework] + value)
 
   ############################################################
   # End __parse_results
