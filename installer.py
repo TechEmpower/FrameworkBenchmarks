@@ -121,7 +121,7 @@ class Installer:
     #
     self.__run_command("wget http://www.ringojs.org/downloads/ringojs_0.9-1_all.deb")
     self.__run_command("dpkg -i ringojs_0.9-1_all.deb")
-    self.__run_command("rm ringojs_0.9_1.all.db")
+    self.__run_command("rm ringojs_0.9-1_all.deb")
 
     #######################################
     # Webservers
