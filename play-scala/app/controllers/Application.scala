@@ -2,17 +2,23 @@ package controllers
 
 import play.api.Play.current
 import play.api.mvc._
-import play.api.libs.json.Json
-import java.util.concurrent._
+import play.api.libs.json._
+import scala.concurrent.forkjoin.ThreadLocalRandom
 import scala.concurrent._
-import models._
+import java.util.concurrent.{ThreadPoolExecutor, LinkedBlockingQueue, TimeUnit}
+import models.World
 import utils._
-import scala.concurrent.Future
-
+import play.modules.reactivemongo.ReactiveMongoPlugin
+import play.modules.reactivemongo.json.collection.JSONCollection
 import play.api.libs.concurrent.Execution.Implicits._
 import play.core.NamedThreadFactory
 
 object Application extends Controller {
+
+  val database = ReactiveMongoPlugin.db
+  def collection: JSONCollection = database.collection[JSONCollection]("world")
+
+  val worldWithoutMongoId = (__ \ "_id").json.prune
 
   private val MaxQueriesPerRequest = 20
   private val TestDatabaseRows = 10000
@@ -54,6 +60,27 @@ object Application extends Controller {
         worlds map {
           w => Ok(Json.toJson(w))
         }
+      }
+    }
+  }
+
+  def mongodb(queries: Int) = Action {
+    import scala.concurrent.ExecutionContext.Implicits.global
+
+    Async {
+      val random = ThreadLocalRandom.current()
+      val futureList = Future.sequence((for {
+        _ <- 1 to queries
+      } yield { collection
+        .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)))
+        .cursor[JsObject]
+        .toList map {
+          l => l.head.transform(worldWithoutMongoId).get
+        }
+      }))
+
+      futureList.map { worlds =>
+        Ok(Json.toJson(worlds))
       }
     }
   }

@@ -10,10 +10,12 @@ object ApplicationBuild extends Build {
   val appDependencies = Seq(
     jdbc,
     anorm,
-    "mysql" % "mysql-connector-java" % "5.1.22"
+    "mysql" % "mysql-connector-java" % "5.1.22",
+    "org.reactivemongo" %% "play2-reactivemongo" % "0.9-SNAPSHOT"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
+    resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
   )
 
 }

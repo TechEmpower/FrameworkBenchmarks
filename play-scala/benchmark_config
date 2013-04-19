@@ -8,6 +8,13 @@
       "query_url": "/db?queries=",
       "port": 9000,
       "sort": 32
+    },
+    "mongodb": {
+      "setup_file": "setup",
+      "db_url": "/mongodb",
+      "query_url": "/mongodb?queries=",
+      "port": 9000,
+      "sort": 73
     }
   }]
 }
