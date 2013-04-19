@@ -1,0 +1,56 @@
+var sql = require('sql-ringojs-client');
+
+// DO NOT TOUCH THE FOLLOWING LINE.
+// THIS VARIABLE IS REGEX REPLACED BY setup.py
+var dbHost = 'localhost';
+
+exports.app = function(req) {
+   var path = req.pathInfo;
+   if (path === '/json') {
+      var helloObject = {message: "Hello, world"};
+      // JSON Response Test
+      return {
+         status: 200,
+         headers: {"Content-Type": "application/json; charset=UTF-8"},
+         body: [JSON.stringify(helloObject)]
+      }
+   } else if (path === '/db') {
+      var queryCount = req.env.servletRequest.getParameter('queries');
+      var connection = datasource.getConnection();
+      if (queryCount === null) {
+         var randId = ((Math.random() * 10000) | 0) + 1
+         var world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
+         // let's just hope it gets to this
+         connection.close();
+         return {
+            status: 200,
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
+            body: [JSON.stringify(world)]
+         }
+      } else {
+         queryCount = parseInt(queryCount, 10);
+         var body = [];
+         var randId, world;
+         for (var i = 0; i < queryCount; i++) {
+            randId = ((Math.random() * 10000) | 0) + 1;
+            world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
+            body.push(world);
+         }
+         connection.close();
+         return {
+            status: 200,
+            headers: {"Content-Type": "application/json; charset=UTF-8"},
+            body: [JSON.stringify(body)]
+         }
+      }
+   }
+};
+
+
+var datasource = module.singleton('pooling-datasource', function() {
+  return sql.connect("jdbc:mysql://" + dbHost + "/hello_world", 'benchmarkdbuser', 'benchmarkdbpass');
+});
+
+if (require.main == module) {
+    require("ringo/httpserver").main(module.id);
+}
