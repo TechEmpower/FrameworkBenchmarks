@@ -14,7 +14,7 @@ def start(args):
     pass
 
   try:
-    subprocess.Popen("ringo --production ringo-main.js", shell=True, cwd="ringojs")
+    subprocess.check_call("ringo --production ringo-main.js", shell=True, cwd="ringojs")
     return 0
   except subprocess.CalledProcessError:
     return 1
