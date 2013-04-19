@@ -1,0 +1,12 @@
+{
+  "framework": "play-scala-reactivemongo",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 9000,
+      "sort": 73
+    }
+  }]
+}
