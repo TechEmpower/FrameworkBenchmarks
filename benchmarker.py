@@ -421,6 +421,14 @@ class Benchmarker:
         framework = self.results['frameworks'][int(key)]
         writer.writerow([framework] + value)
 
+    # Fortune CSV
+    with open(os.path.join(self.full_results_directory(), "fortune.csv"), 'wb') as csvfile:
+      writer = csv.writer(csvfile)
+      writer.writerow(["Framework"] + self.query_intervals)
+      for key, value in self.results['rawData']['fortune'].iteritems():
+        framework = self.results['frameworks'][int(key)]
+        writer.writerow([framework] + value)
+
   ############################################################
   # End __parse_results
   ############################################################
@@ -504,10 +512,12 @@ class Benchmarker:
       self.results['rawData']['json'] = dict()
       self.results['rawData']['db'] = dict()
       self.results['rawData']['query'] = dict()
+      self.results['rawData']['fortune'] = dict()
       self.results['weighttpData'] = dict()
       self.results['weighttpData']['json'] = dict()
       self.results['weighttpData']['db'] = dict()
       self.results['weighttpData']['query'] = dict()
+      self.results['weighttpData']['fortune'] = dict()
     else:
       for x in self.__gather_tests():
         if x.name not in self.results['frameworks']:
