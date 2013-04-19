@@ -14,7 +14,7 @@ object Application extends Controller {
   private val TestDatabaseRows = 10000
   private val database = ReactiveMongoPlugin.db
   private def collection: JSONCollection = database.collection[JSONCollection]("world")
-  private val worldWithoutMongoId = (__ \ "_id").json.prune
+  private val projection = Json.obj("_id" -> 0)
 
   def db(queries: Int) = Action {
     import scala.concurrent.ExecutionContext.Implicits.global
@@ -24,11 +24,9 @@ object Application extends Controller {
       val futureWorlds = Future.sequence((for {
         _ <- 1 to queries
       } yield { collection
-        .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)))
+        .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
         .cursor[JsValue]
-        .toList map {
-          l => l.head.transform(worldWithoutMongoId).get
-        }
+        .toList
       }))
 
       futureWorlds.map { worlds =>
