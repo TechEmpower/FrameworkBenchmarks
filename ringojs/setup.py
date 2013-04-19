@@ -9,6 +9,11 @@ def start(args):
 
   try:
     subprocess.check_call("ringo-admin install oberhamsi/sql-ringojs-client", shell=True, cwd="ringojs")
+  except:
+    # already installed
+    pass
+
+  try:
     subprocess.Popen("ringo --production ringo-main.js", shell=True, cwd="ringojs")
     return 0
   except subprocess.CalledProcessError:
