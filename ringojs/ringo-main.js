@@ -16,31 +16,40 @@ exports.app = function(req) {
       }
    } else if (path === '/db') {
       var queryCount = req.env.servletRequest.getParameter('queries');
-      var connection = datasource.getConnection();
-      if (queryCount === null) {
-         var randId = ((Math.random() * 10000) | 0) + 1
-         var world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
-         // let's just hope it gets to this
-         connection.close();
-         return {
-            status: 200,
-            headers: {"Content-Type": "application/json; charset=UTF-8"},
-            body: [JSON.stringify(world)]
+      try {
+         var connection = datasource.getConnection();
+         if (queryCount === null) {
+            var randId = ((Math.random() * 10000) | 0) + 1
+            var world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
+            // let's just hope it gets to this
+            connection.close();
+            return {
+               status: 200,
+               headers: {"Content-Type": "application/json; charset=UTF-8"},
+               body: [JSON.stringify(world)]
+            }
+         } else {
+            queryCount = parseInt(queryCount, 10);
+            var body = [];
+            var randId, world;
+            for (var i = 0; i < queryCount; i++) {
+               randId = ((Math.random() * 10000) | 0) + 1;
+               world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
+               body.push(world);
+            }
+            connection.close();
+            return {
+               status: 200,
+               headers: {"Content-Type": "application/json; charset=UTF-8"},
+               body: [JSON.stringify(body)]
+            }
          }
-      } else {
-         queryCount = parseInt(queryCount, 10);
-         var body = [];
-         var randId, world;
-         for (var i = 0; i < queryCount; i++) {
-            randId = ((Math.random() * 10000) | 0) + 1;
-            world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
-            body.push(world);
-         }
+      } catch (e) {
          connection.close();
-         return {
-            status: 200,
-            headers: {"Content-Type": "application/json; charset=UTF-8"},
-            body: [JSON.stringify(body)]
+         connection = null;
+      } finally {
+         if (connection !== null) {
+            connection.close();
          }
       }
    }
