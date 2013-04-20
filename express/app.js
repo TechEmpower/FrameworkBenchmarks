@@ -22,6 +22,11 @@ var cluster = require('cluster')
     randomNumber: Sequelize.INTEGER
   }, {
     freezeTableName: true
+  })
+  , Fortune      = sequelize.define('Fortune', {
+    message: Sequelize.STRING
+  }, {
+    freezeTableName: true
   });
 
 var Schema = mongoose.Schema
@@ -111,10 +116,9 @@ if (cluster.isMaster) {
 
   app.get('/fortune', function(req, res) {
     Fortune.findAll().success(function (fortunes) {
-      var newFortune = new Fortune();
-      newFortune.message = "Additional fortune added at request time.";
-      fortune.push(newFortune);
-      fortune.sort(sortFortunes);
+      var newFortune = Fortune.build({message: "Additional fortune added at request time."});
+      fortunes.push(newFortune);
+      fortunes.sort(sortFortunes);
 
       res.render('fortune', {fortunes: fortunes});
     });
