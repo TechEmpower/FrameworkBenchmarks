@@ -5,10 +5,10 @@ import setup_util
 import os
 
 def start(args):
-  setup_util.replace_text("ringojs/view.js", "dbHost = '.*';", "dbHost = '" + args.database_host + "';")
+  setup_util.replace_text("ringojs-stick/views.js", "dbHost = '.*';", "dbHost = '" + args.database_host + "';")
 
   try:
-    subprocess.check_call("ringo --production ringo-main.js", shell=True, cwd="ringojs")
+    subprocess.check_call("ringo --production ringo-main.js", shell=True, cwd="ringojs-stick")
     return 0
   except subprocess.CalledProcessError:
     return 1
