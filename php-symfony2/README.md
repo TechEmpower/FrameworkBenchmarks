@@ -1,4 +1,4 @@
-# Cake PHP Benchmarking Test
+# Symfony 2 Benchmarking Test
 
 This is the Symfony 2 PHP portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
@@ -11,8 +11,8 @@ Uses the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-
 ### Data-Store/Database Mapping Test
 Uses the Symfony 2/Doctrine 2 Entity functionality.
 
-* [DB test controller](src/Skamander/BenchmarkBundle/BenchController.php)
-* [DB test model](src/Skamander/BenchmarkBundle/World.php)
+* [DB test controller](src/Skamander/BenchmarkBundle/Controller/BenchController.php)
+* [DB test model](src/Skamander/BenchmarkBundle/Entity/World.php)
 
 
 ## Infrastructure Software Versions
