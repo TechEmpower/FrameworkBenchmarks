@@ -11,4 +11,10 @@
     <load-on-startup/>
   </servlet>
   <servlet-mapping url-regexp='^/db$' servlet-name='db'/>
+  <servlet>
+    <servlet-name>fortunes</servlet-name>
+    <servlet-class>hello.FortunesServlet</servlet-class>
+    <load-on-startup/>
+  </servlet>
+  <servlet-mapping url-regexp='^/fortunes$' servlet-name='fortunes'/>
 </web-app>

@@ -141,6 +141,16 @@ class FrameworkTest:
       self.query_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.query_url_passed = False
+
+    # Fortune
+    try:
+      print "VERIFYING Fortune (" + self.fortune_url + ") ..."
+      url = self.benchmarker.generate_url(self.fortune_url, self.port)
+      subprocess.check_call(["curl", "-f", url])
+      print ""
+      self.fortune_url_passed = True
+    except (AttributeError, subprocess.CalledProcessError) as e:
+      self.fortune_url_passed = False
   ############################################################
   # End verify_urls
   ############################################################
@@ -191,6 +201,19 @@ class FrameworkTest:
         print "Complete"
     except AttributeError:
       pass
+
+    # fortune
+    try:
+      if self.fortune_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "fortune"):
+        sys.stdout.write("BENCHMARKING Fortune ... ") 
+        remote_script = self.__generate_concurrency_script(self.fortune_url, self.port)
+        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'fortune'))
+        results = self.__parse_test('fortune')
+        self.benchmarker.report_results(framework=self, test="fortune", requests=results['requests'], latency=results['latency'],
+          results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
+        print "Complete"
+    except AttributeError:
+      pass
   ############################################################
   # End benchmark
   ############################################################
@@ -216,6 +239,12 @@ class FrameworkTest:
     if os.path.exists(self.benchmarker.output_file(self.name, 'query')):
       results = self.__parse_test('query')
       self.benchmarker.report_results(framework=self, test="query", requests=results['requests'], latency=results['latency'],
+        results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
+
+    # Query
+    if os.path.exists(self.benchmarker.output_file(self.name, 'fortune')):
+      results = self.__parse_test('fortune')
+      self.benchmarker.report_results(framework=self, test="fortune", requests=results['requests'], latency=results['latency'],
         results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
   ############################################################
   # End parse_all
