@@ -22,7 +22,7 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.1.2</version>
         </dependency>
- 
+
         <!-- @Inject -->
         <dependency>
             <groupId>javax.inject</groupId>
@@ -37,7 +37,14 @@
             <version>2.5</version>
             <scope>provided</scope>
         </dependency>
- 
+
+        <!-- Apache Commons Lang -->
+        <dependency>
+          	<groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
