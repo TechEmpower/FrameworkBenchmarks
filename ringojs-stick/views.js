@@ -23,7 +23,7 @@ app.get('/json', function() {
 });
 
 app.get('/db', function(request) {
-   var queryCount = req.params.queries;
+   var queryCount = request.params.queries;
    try {
       var connection = datasource.getConnection();
       if (queryCount === null) {
