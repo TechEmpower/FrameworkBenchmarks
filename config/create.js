@@ -10,7 +10,7 @@ db.world.ensureIndex({id: 1})
 db.fortune.drop()
 
 db.fortune.save( {id: 1, message: 'fortune: No such file or directory'} );
-db.fortune.save( {id: 2, message: 'A computer scientist is someone who fixes things that aren''t broken.'} );
+db.fortune.save( {id: 2, message: "A computer scientist is someone who fixes things that aren't broken."} );
 db.fortune.save( {id: 3, message: 'After enough decimal places, nobody gives a damn.'} );
 db.fortune.save( {id: 4, message: 'A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1'} );
 db.fortune.save( {id: 5, message: 'A computer program does what you tell it to do, not what you want it to do.'} );
