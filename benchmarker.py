@@ -304,7 +304,7 @@ class Benchmarker:
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
         continue
-
+      
       print textwrap.dedent("""
       =====================================================
         Beginning {name}
