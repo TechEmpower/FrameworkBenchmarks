@@ -28,8 +28,6 @@ exports.app = function(req) {
          if (queryCount === null) {
             var randId = ((Math.random() * 10000) | 0) + 1
             var world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
-            // let's just hope it gets to this
-            connection.close();
             return {
                status: 200,
                headers: {"Content-Type": "application/json; charset=UTF-8"},
@@ -44,7 +42,6 @@ exports.app = function(req) {
                world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
                body.push(world);
             }
-            connection.close();
             return {
                status: 200,
                headers: {"Content-Type": "application/json; charset=UTF-8"},
