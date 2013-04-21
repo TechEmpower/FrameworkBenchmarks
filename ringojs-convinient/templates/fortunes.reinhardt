@@ -11,7 +11,7 @@
 </tr>
 {% for fortune in fortunes %}
 <tr>
-<td>{{fortune.id}}</td>
+<td>{{fortune._id}}</td>
 <td>{{fortune.message}}</td>
 </tr>
 {% endfor %}
