@@ -10,8 +10,16 @@ http://localhost:8080/json
 
 ### Single Row Random Query
 
-http://localhost:8080/db
+With ORM:
+    http://localhost:8080/dbs
 
-### Variable Row Query Test
+Without ORM (raw):
+    http://localhost:8080/dbsraw
 
-http://localhost:8080/db?queries=2
+### Variable Row Query Test 
+
+With ORM:
+    http://localhost:8080/db?queries=2
+
+Without ORM (raw):
+    http://localhost:8080/dbraw?queries=2
