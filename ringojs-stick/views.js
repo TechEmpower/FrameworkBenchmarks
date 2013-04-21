@@ -2,6 +2,7 @@ var sql = require('sql-ringojs-client');
 var {Application} = require("stick");
 var fs = require('fs');
 var {Template} = require('reinhardt/template');
+var response = require('ringo/jsgi/response');
 
 // DO NOT TOUCH THE FOLLOWING LINE.
 // THIS VARIABLE IS REGEX REPLACED BY setup.py
@@ -39,28 +40,17 @@ app.get('/db', function(request) {
       if (queryCount === null) {
          var randId = ((Math.random() * 10000) | 0) + 1
          var world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
-         // let's just hope it gets to this
-         connection.close();
-         return {
-            status: 200,
-            headers: {"Content-Type": "application/json; charset=UTF-8"},
-            body: [JSON.stringify(world)]
-         }
+         return response.json(world);
       } else {
          queryCount = parseInt(queryCount, 10);
-         var body = [];
+         var worlds = [];
          var randId, world;
          for (var i = 0; i < queryCount; i++) {
             randId = ((Math.random() * 10000) | 0) + 1;
             world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
-            body.push(world);
+            worlds.push(world);
          }
-         connection.close();
-         return {
-            status: 200,
-            headers: {"Content-Type": "application/json; charset=UTF-8"},
-            body: [JSON.stringify(body)]
-         }
+         return response.json(worlds);
       }
    } catch (e) {
       connection.close();
@@ -81,11 +71,7 @@ app.get('/fortune', function() {
          message: 'Additional fortune added at request time.'
       });
       fortunes.sort(sortFortunes);
-      return {
-         status: 200,
-         headers: {"Content-Type": "text/html; charset=UTF-8"},
-         body: [fortuneTemplate.render({fortunes: fortunes})]
-      }
+      return response.html(fortuneTemplate.render({fortunes: fortunes}));
    } catch (e) {
       connection.close();
       connection = null;
