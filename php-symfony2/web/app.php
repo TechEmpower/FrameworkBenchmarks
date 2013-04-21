@@ -9,7 +9,7 @@ $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 // Change 'sf2' to a unique prefix in order to prevent cache key conflicts
 // with other applications also using APC.
 
-$loader = new ApcClassLoader('sf2', $loader);
+$loader = new ApcClassLoader('symfony2Benchmark', $loader);
 $loader->register(true);
 
 
