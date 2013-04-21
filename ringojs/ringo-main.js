@@ -79,7 +79,6 @@ exports.app = function(req) {
          }
       }
    }
-   console.log(path)
 };
 
 
