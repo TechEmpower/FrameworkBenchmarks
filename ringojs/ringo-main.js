@@ -1,8 +1,15 @@
 var sql = require('sql-ringojs-client');
+var mustache = require('ringo/mustache');
 
 // DO NOT TOUCH THE FOLLOWING LINE.
 // THIS VARIABLE IS REGEX REPLACED BY setup.py
 var dbHost = 'localhost';
+
+var sortFortunes = function(a, b) {
+ return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
+};
+
+var fortuneTemplate = require('fs').read(module.resolve('./templates/fortune.mustache'));
 
 exports.app = function(req) {
    var path = req.pathInfo;
@@ -52,7 +59,30 @@ exports.app = function(req) {
             connection.close();
          }
       }
+   } else if (path === '/fortune') {
+      try {
+         var connection = datasource.getConnection();
+         var fortunes = sql.query(connection, 'select * from Fortune');
+         fortunes.push({
+            id: 0,
+            message: 'Additional fortune added at request time.'
+         });
+         fortunes.sort(sortFortunes);
+         return {
+            status: 200,
+            headers: {"Content-Type": "text/html; charset=UTF-8"},
+            body: [mustache.to_html(fortuneTemplate, {fortunes: fortunes})]
+         }
+      } catch (e) {
+         connection.close();
+         connection = null;
+      } finally {
+         if (connection !== null) {
+            connection.close();
+         }
+      }
    }
+   console.log(path)
 };
 
 
