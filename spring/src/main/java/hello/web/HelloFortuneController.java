@@ -23,19 +23,22 @@ import org.springframework.web.servlet.ModelAndView;
 public class HelloFortuneController
 {
 
-  private static final int    DB_ROWS                = 10000;
-
-  @RequestMapping(value = "/fortune")
+  @RequestMapping(value = "/fortunes")
   public ModelAndView fortunes()
   {
     
     final Session session = HibernateUtil.getSessionFactory().openSession();
-    List<Fortune> fortunes = (List<Fortune>)session.createCriteria(Fortune.class).list()
-    session.close();
-    
-    fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-    Collections.sort(fortunes);
+    try
+    {
+      List fortunes = new ArrayList(session.createCriteria(Fortune.class).list());
+      fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+      Collections.sort(fortunes);
 
-    return new ModelAndView("fortunes", "command", fortunes);
+      return new ModelAndView("fortunes", "fortunes", fortunes);
+    }
+    finally
+    {
+      session.close();
+    }
   }
 }
