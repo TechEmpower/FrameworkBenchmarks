@@ -1,0 +1,86 @@
+/* Typography - Choose your font and size (base.css default is 16px) */
+body
+{
+	font-size:80%;
+	line-height:1.5em;
+	font-family:Helvetica,"Helvetica Neue",Arial,sans-serif;
+} /*IE*/
+html>body{font-size:13px}
+pre,code
+{
+	font-family:"DejaVu Sans Mono","Bitstream Vera Sans Mono",Monaco,"Courier New",monospace;
+}
+
+header, #main, footer { float: left; width: 100%; }
+#main { margin: 2em 0; }
+a { text-decoration: none; color: #4B6E89;font-weight: bold; }
+a:hover { color: #000; }
+
+header { border-bottom: 1px solid #ddd; }
+header h1 { color: #ddd; margin: 0;line-height: 100px; }
+
+nav ul{ list-style: none;margin: 0;padding: 0;}
+nav ul li { float: right;margin: 0 2em 0 0;line-height: 100px; }
+
+#sidebar h3 { margin-bottom: 5px; }
+#sidebar ul { margin: 0; }
+#sidebar ul li {list-style: none;border-bottom: 1px solid #eee;line-height: 2.4em;}
+#sidebar ul li:hover { background: #f8f8f8; }
+
+footer { border-top: 1px solid #ddd; padding: 1em 0;color: #999;font-size: 12px; }
+footer .stats { text-align:right; }
+
+/* Form element label */
+form.formstyle label
+{
+	margin: 0px;
+	display: inline;
+	line-height: 2em;
+	float: left;
+	width: 100%;
+}
+form.formstyle label b { float: left; }
+form.formstyle label span
+{
+	color: #999;
+	display: block;
+	font-size: 12px;
+	float: right;
+	text-align: right;
+}
+form.formstyle .form_error
+{
+	color: #E83D1B;
+	font-weight: bold;
+	margin: -1.5em 0 1.5em 0;
+}
+
+/* Messages Boxes use the great Silk icons from http://famfamfam.com/ */
+.message, .warning, .error, .success
+{
+    margin: 1em auto;
+    display: block;
+    clear: both;
+    padding: .8em 50px;
+	border: 1px solid #fff;
+}
+.message
+{
+    background: #F8FAFC url(../Images/message.png) 20px center no-repeat;
+    border-color: #B5D4FE;
+}
+.warning
+{
+    background: #fff6bf url(../Images/warning.png) 20px center no-repeat;
+    border-color: #ffd324;
+}
+.error
+{
+    background: #fde6e9 url(../Images/error.png) 20px center no-repeat;
+    border-color: #fb939f;
+}
+.success
+{
+    background: #EBFCE1 url(../Images/success.png) 20px center no-repeat;
+    border-color: #B9DAA6;
+}

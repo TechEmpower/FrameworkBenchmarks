@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tapestry
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/tapestry/hellodb?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/tapestry/hellodb?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21ms  150.62us   1.91ms   73.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32812 requests in 5.00s, 7.21MB read
+Requests/sec:   6562.90
+Transfer/sec:      1.44MB
+
+---------------------------------------------------------
+ Running Warmup tapestry
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellodb?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/tapestry/hellodb?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.66ms   13.91ms 262.46ms   86.89%
+    Req/Sec     2.02k   156.63     4.00k    97.60%
+  1420014 requests in 1.00m, 312.25MB read
+Requests/sec:  23667.92
+Transfer/sec:      5.20MB
+
+---------------------------------------------------------
+ Queries: 1 for tapestry
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellodb?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/tapestry/hellodb?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.81ms   21.41ms 482.07ms   90.88%
+    Req/Sec     3.02k   161.22     5.00k    97.91%
+  1832336 requests in 1.00m, 347.96MB read
+Requests/sec:  30540.67
+Transfer/sec:      5.80MB
+
+---------------------------------------------------------
+ Queries: 5 for tapestry
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellodb?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/tapestry/hellodb?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.88ms   14.31ms 129.06ms   79.91%
+    Req/Sec     1.01k    89.56     2.00k    99.19%
+  868979 requests in 1.00m, 270.10MB read
+Requests/sec:  14483.02
+Transfer/sec:      4.50MB
+
+---------------------------------------------------------
+ Queries: 10 for tapestry
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellodb?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/tapestry/hellodb?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.23ms   18.80ms 380.57ms   81.66%
+    Req/Sec     1.00k    68.37     1.00k    99.53%
+  519180 requests in 1.00m, 240.18MB read
+Requests/sec:   8652.92
+Transfer/sec:      4.00MB
+
+---------------------------------------------------------
+ Queries: 15 for tapestry
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellodb?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/tapestry/hellodb?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.98ms   18.19ms 246.41ms   82.56%
+    Req/Sec     5.26     72.38     1.00k    99.47%
+  370598 requests in 1.00m, 227.52MB read
+Requests/sec:   6176.21
+Transfer/sec:      3.79MB
+
+---------------------------------------------------------
+ Queries: 20 for tapestry
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/tapestry/hellodb?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/tapestry/hellodb?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    55.46ms   20.37ms 141.23ms   83.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  289697 requests in 1.00m, 221.75MB read
+Requests/sec:   4828.19
+Transfer/sec:      3.70MB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 05:24:07 PDT 2013
+
+  System load:  0.39                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer slim
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.90ms  801.96us   7.10ms   83.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21357 requests in 5.00s, 4.56MB read
+Requests/sec:   4271.07
+Transfer/sec:      0.91MB
+
+---------------------------------------------------------
+ Running Warmup slim
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    54.05ms   41.09ms 688.76ms   90.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  283874 requests in 1.00m, 60.63MB read
+Requests/sec:   4731.18
+Transfer/sec:      1.01MB
+
+---------------------------------------------------------
+ Concurrency: 8 for slim
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.90ms  696.07us   8.59ms   74.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  256487 requests in 1.00m, 54.78MB read
+Requests/sec:   4274.78
+Transfer/sec:      0.91MB
+
+---------------------------------------------------------
+ Concurrency: 16 for slim
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.43ms    2.83ms  91.87ms   91.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  281027 requests in 1.00m, 60.02MB read
+Requests/sec:   4683.72
+Transfer/sec:      1.00MB
+
+---------------------------------------------------------
+ Concurrency: 32 for slim
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.94ms    9.41ms 121.22ms   93.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  285536 requests in 1.00m, 60.98MB read
+Requests/sec:   4758.80
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 64 for slim
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.09ms   27.82ms 608.98ms   91.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  283977 requests in 1.00m, 60.65MB read
+Requests/sec:   4732.84
+Transfer/sec:      1.01MB
+
+---------------------------------------------------------
+ Concurrency: 128 for slim
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.02ms   37.11ms 479.72ms   90.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  285180 requests in 1.00m, 60.91MB read
+Requests/sec:   4752.84
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 256 for slim
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    53.25ms   50.11ms   1.03s    90.93%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  284415 requests in 1.00m, 60.74MB read
+Requests/sec:   4740.33
+Transfer/sec:      1.01MB

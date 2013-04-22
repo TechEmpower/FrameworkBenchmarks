@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 20:00:57 UTC 2013
+
+  System load:  1.69               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer play1siena
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8080/play1/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/play1/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.06ms   13.47ms 220.79ms   99.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9153 requests in 5.00s, 4.12MB read
+Requests/sec:   1830.10
+Transfer/sec:    842.75KB
+
+---------------------------------------------------------
+ Running Warmup play1siena
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/play1/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   107.80ms   19.31ms 318.09ms   93.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  142071 requests in 1.00m, 63.89MB read
+Requests/sec:   2367.79
+Transfer/sec:      1.06MB
+
+---------------------------------------------------------
+ Queries: 1 for play1siena
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/play1/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.08ms    8.66ms 147.71ms   90.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  153292 requests in 1.00m, 64.29MB read
+Requests/sec:   2554.78
+Transfer/sec:      1.07MB
+
+---------------------------------------------------------
+ Queries: 5 for play1siena
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/play1/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   166.67ms   10.51ms 233.60ms   92.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  91799 requests in 1.00m, 49.71MB read
+Requests/sec:   1530.02
+Transfer/sec:    848.47KB
+
+---------------------------------------------------------
+ Queries: 10 for play1siena
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/play1/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   263.56ms   29.59ms 507.47ms   96.45%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  58127 requests in 1.00m, 40.28MB read
+Requests/sec:    968.62
+Transfer/sec:    687.41KB
+
+---------------------------------------------------------
+ Queries: 15 for play1siena
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/play1/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   359.48ms   35.58ms 520.54ms   94.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  42443 requests in 1.00m, 35.84MB read
+Requests/sec:    707.36
+Transfer/sec:    611.72KB
+
+---------------------------------------------------------
+ Queries: 20 for play1siena
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/play1/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   448.70ms   36.27ms 527.14ms   97.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33950 requests in 1.00m, 33.82MB read
+Requests/sec:    565.79
+Transfer/sec:    577.08KB

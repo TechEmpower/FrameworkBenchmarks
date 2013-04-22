@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 19:46:02 UTC 2013
+
+  System load:  0.06               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer play1siena
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/play1/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/play1/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.83ms    4.41ms  55.92ms   90.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7622 requests in 5.00s, 3.15MB read
+Requests/sec:   1523.34
+Transfer/sec:    644.15KB
+
+---------------------------------------------------------
+ Running Warmup play1siena
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/play1/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    63.78ms  120.78ms 885.10ms   90.00%
+    Req/Sec   284.47    451.30     1.00k    71.55%
+  262211 requests in 1.00m, 108.55MB read
+  Socket errors: connect 0, read 492, write 0, timeout 5535
+Requests/sec:   4370.30
+Transfer/sec:      1.81MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play1siena
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/play1/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.89ms  592.61us  18.77ms   98.44%
+    Req/Sec     2.00k    24.95     2.00k    99.94%
+  539139 requests in 1.00m, 222.63MB read
+Requests/sec:   8985.63
+Transfer/sec:      3.71MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play1siena
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/play1/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.80ms    1.11ms  21.30ms   97.73%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  554280 requests in 1.00m, 228.88MB read
+Requests/sec:   9237.99
+Transfer/sec:      3.81MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play1siena
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/play1/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.41ms    1.29ms  35.82ms   94.48%
+    Req/Sec     1.99k    74.56     2.00k    99.44%
+  571963 requests in 1.00m, 236.19MB read
+Requests/sec:   9532.69
+Transfer/sec:      3.94MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play1siena
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/play1/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.73ms    2.15ms  36.44ms   93.40%
+    Req/Sec     2.00k    43.22     3.00k    99.81%
+  586841 requests in 1.00m, 242.33MB read
+Requests/sec:   9780.90
+Transfer/sec:      4.04MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play1siena
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/play1/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.38ms    4.76ms 147.72ms   95.18%
+    Req/Sec     2.00k    55.54     2.00k    99.69%
+  583011 requests in 1.00m, 240.75MB read
+Requests/sec:   9717.14
+Transfer/sec:      4.01MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play1siena
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/play1/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/play1/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.39ms  139.68ms   1.58s    98.14%
+    Req/Sec     1.78k     0.88k    3.00k    70.29%
+  534424 requests in 1.00m, 221.26MB read
+  Socket errors: connect 0, read 407, write 0, timeout 4974
+Requests/sec:   8905.75
+Transfer/sec:      3.69MB

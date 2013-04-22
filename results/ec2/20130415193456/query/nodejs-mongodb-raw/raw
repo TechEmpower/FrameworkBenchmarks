@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 09:45:15 UTC 2013
+
+  System load:  0.76               Processes:           70
+  Usage of /:   24.5% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb-raw
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8080/mongodbdriver?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/mongodbdriver?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.04ms    2.06ms  27.86ms   97.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  15149 requests in 5.01s, 4.28MB read
+Requests/sec:   3025.75
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb-raw
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/mongodbdriver?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/mongodbdriver?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   123.78ms   47.66ms 261.07ms   81.89%
+    Req/Sec   248.43    432.24     1.00k    75.16%
+  200619 requests in 1.00m, 56.74MB read
+Requests/sec:   3343.58
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mongodb-raw
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/mongodbdriver?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/mongodbdriver?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    76.55ms   26.14ms 167.88ms   82.02%
+    Req/Sec   498.44    500.15     1.00k    50.16%
+  276554 requests in 1.00m, 61.13MB read
+Requests/sec:   4608.83
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mongodb-raw
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/mongodbdriver?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/mongodbdriver?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   138.24ms   28.17ms 266.54ms   77.22%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  114550 requests in 1.00m, 53.73MB read
+Requests/sec:   1909.09
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mongodb-raw
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/mongodbdriver?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/mongodbdriver?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   308.20ms  100.61ms 579.62ms   78.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  66755 requests in 1.00m, 51.93MB read
+Requests/sec:   1112.39
+Transfer/sec:      0.87MB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mongodb-raw
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/mongodbdriver?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/mongodbdriver?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   328.55ms   62.57ms 644.55ms   77.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  47257 requests in 1.00m, 51.36MB read
+Requests/sec:    787.47
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mongodb-raw
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/mongodbdriver?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/mongodbdriver?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   424.05ms   72.94ms 728.26ms   81.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36245 requests in 1.00m, 50.59MB read
+Requests/sec:    603.96
+Transfer/sec:    863.14KB

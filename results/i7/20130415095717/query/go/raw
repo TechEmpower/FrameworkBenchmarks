@@ -1,0 +1,115 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 10:46:36 PDT 2013
+
+  System load:  0.43                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 14%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+116 packages can be updated.
+54 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer go
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.08ms    1.04ms  13.35ms   86.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6661 requests in 5.00s, 1.13MB read
+Requests/sec:   1331.01
+Transfer/sec:    232.06KB
+
+---------------------------------------------------------
+ Running Warmup go
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   194.41ms   53.04ms 488.70ms   76.08%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  78911 requests in 1.00m, 13.44MB read
+Requests/sec:   1315.13
+Transfer/sec:    229.31KB
+
+---------------------------------------------------------
+ Queries: 1 for go
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.59ms   40.48ms 394.67ms   84.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  156391 requests in 1.00m, 21.89MB read
+Requests/sec:   2606.43
+Transfer/sec:    373.58KB
+
+---------------------------------------------------------
+ Queries: 5 for go
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   489.30ms   70.87ms 783.10ms   71.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31048 requests in 1.00m, 8.14MB read
+Requests/sec:    517.43
+Transfer/sec:    138.88KB
+
+---------------------------------------------------------
+ Queries: 10 for go
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.01s   141.29ms   1.34s    96.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14826 requests in 1.00m, 6.13MB read
+Requests/sec:    247.08
+Transfer/sec:    104.65KB
+
+---------------------------------------------------------
+ Queries: 15 for go
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.50s   248.88ms   1.84s    96.66%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9824 requests in 1.00m, 5.55MB read
+Requests/sec:    163.71
+Transfer/sec:     94.74KB
+
+---------------------------------------------------------
+ Queries: 20 for go
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.98s   373.51ms   2.36s    96.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7407 requests in 1.00m, 5.31MB read
+  Socket errors: connect 0, read 0, write 0, timeout 251
+Requests/sec:    123.44
+Transfer/sec:     90.58KB

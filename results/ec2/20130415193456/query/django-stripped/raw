@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 05:50:41 UTC 2013
+
+  System load:  0.43               Processes:           70
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer django-stripped
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.17ms    9.26ms  48.23ms   64.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1827 requests in 5.03s, 570.16KB read
+Requests/sec:    363.56
+Transfer/sec:    113.46KB
+
+---------------------------------------------------------
+ Running Warmup django-stripped
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   962.14ms  519.01ms   1.85s    56.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26681 requests in 1.00m, 8.13MB read
+Requests/sec:    444.61
+Transfer/sec:    138.75KB
+
+---------------------------------------------------------
+ Queries: 1 for django-stripped
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   660.74ms  409.54ms   1.41s    47.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36319 requests in 1.00m, 8.58MB read
+Requests/sec:    605.26
+Transfer/sec:    146.46KB
+
+---------------------------------------------------------
+ Queries: 5 for django-stripped
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.94s     1.22s    3.91s    53.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14843 requests in 1.00m, 7.59MB read
+  Socket errors: connect 0, read 26, write 0, timeout 1370
+Requests/sec:    247.32
+Transfer/sec:    129.43KB
+
+---------------------------------------------------------
+ Queries: 10 for django-stripped
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.92s     2.15s    6.44s    55.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8478 requests in 1.00m, 7.23MB read
+  Socket errors: connect 0, read 23, write 0, timeout 2276
+Requests/sec:    141.28
+Transfer/sec:    123.46KB
+
+---------------------------------------------------------
+ Queries: 15 for django-stripped
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.80s     2.19s    7.60s    56.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5892 requests in 1.00m, 7.04MB read
+  Socket errors: connect 0, read 72, write 0, timeout 3609
+Requests/sec:     98.18
+Transfer/sec:    120.20KB
+
+---------------------------------------------------------
+ Queries: 20 for django-stripped
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.58s     3.84s   12.06s    61.08%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4517 requests in 1.00m, 6.95MB read
+  Socket errors: connect 0, read 35, write 0, timeout 4434
+Requests/sec:     75.27
+Transfer/sec:    118.54KB

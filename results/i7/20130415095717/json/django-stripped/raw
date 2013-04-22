@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 19:50:21 PDT 2013
+
+  System load:  0.45                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer django-stripped
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   576.63us   98.09us   1.58ms   95.80%
+    Req/Sec     0.97k   161.57     1.00k    97.33%
+  67809 requests in 5.00s, 13.13MB read
+Requests/sec:  13563.41
+Transfer/sec:      2.63MB
+
+---------------------------------------------------------
+ Running Warmup django-stripped
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.43ms   45.94ms 336.62ms   79.89%
+    Req/Sec     1.12k   337.76     2.00k    87.08%
+  807612 requests in 1.00m, 156.35MB read
+Requests/sec:  13460.09
+Transfer/sec:      2.61MB
+
+---------------------------------------------------------
+ Concurrency: 8 for django-stripped
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   571.40us   48.23us   1.00ms   80.67%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  829540 requests in 1.00m, 160.60MB read
+Requests/sec:  13825.76
+Transfer/sec:      2.68MB
+
+---------------------------------------------------------
+ Concurrency: 16 for django-stripped
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.40ms    1.62ms  18.19ms   91.34%
+    Req/Sec     1.37k   494.43     2.00k    62.04%
+  831076 requests in 1.00m, 160.89MB read
+Requests/sec:  13851.28
+Transfer/sec:      2.68MB
+
+---------------------------------------------------------
+ Concurrency: 32 for django-stripped
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.78ms    4.28ms  70.72ms   94.65%
+    Req/Sec     1.37k   482.44     2.00k    63.16%
+  831171 requests in 1.00m, 160.91MB read
+Requests/sec:  13852.97
+Transfer/sec:      2.68MB
+
+---------------------------------------------------------
+ Concurrency: 64 for django-stripped
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.36ms   13.75ms 398.67ms   84.88%
+    Req/Sec     1.13k   350.56     2.00k    86.10%
+  817039 requests in 1.00m, 158.18MB read
+Requests/sec:  13617.42
+Transfer/sec:      2.64MB
+
+---------------------------------------------------------
+ Concurrency: 128 for django-stripped
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.52ms   19.55ms 409.82ms   95.93%
+    Req/Sec     1.24k   434.55     2.00k    75.23%
+  811957 requests in 1.00m, 157.19MB read
+Requests/sec:  13532.56
+Transfer/sec:      2.62MB
+
+---------------------------------------------------------
+ Concurrency: 256 for django-stripped
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.73ms   68.70ms 460.27ms   75.28%
+    Req/Sec     1.13k   332.83     2.00k    87.36%
+  808617 requests in 1.00m, 156.54MB read
+Requests/sec:  13476.85
+Transfer/sec:      2.61MB
