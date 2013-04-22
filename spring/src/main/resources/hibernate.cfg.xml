@@ -14,5 +14,6 @@
         <property name="hibernate.current_session_context_class">thread</property>
 
         <mapping class="hello.domain.World" />
+        <mapping class="hello.domain.Fortune" />
     </session-factory>
 </hibernate-configuration>
