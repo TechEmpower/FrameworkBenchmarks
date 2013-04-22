@@ -128,6 +128,16 @@ class Installer:
     self.__run_command("sudo ringo-admin install oberhamsi/reinhardt")
     self.__run_command("sudo ringo-admin install grob/ringo-sqlstore")
 
+    #
+    # Perl
+    #
+    self.__run_command("sudo cpan install Plack", send_yes=True)
+    self.__run_command("sudo cpan install Starman")
+    self.__run_command("sudo cpan install DBD::mysql")
+    self.__run_command("sudo cpan install Dancer")
+    self.__run_command("sudo cpan install Dancer::Plugin::Database")
+    self.__run_command("sudo cpan install JSON", send_yes=True)
+
     #######################################
     # Webservers
     #######################################
