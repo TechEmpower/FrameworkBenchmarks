@@ -137,6 +137,7 @@ class Installer:
     self.__run_command("sudo cpan install Dancer")
     self.__run_command("sudo cpan install Dancer::Plugin::Database")
     self.__run_command("sudo cpan install JSON", send_yes=True)
+    self.__run_command("sudo cpan install Kelp", send_yes=True)
 
     #######################################
     # Webservers

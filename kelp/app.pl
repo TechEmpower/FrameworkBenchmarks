@@ -3,10 +3,10 @@ use Kelp::Less;
 use DBI;
 
 attr dbh => sub {
-    my $database = 'test';
-    my $host     = 'ip-10-34-150-134.eu-west-1.compute.internal';
+    my $database = 'hello_world';
+    my $host     = 'localhost';
     my $dsn      = 'dbi:mysql:database=$database;host=$host;port=3306';
-    DBI->connect( $dsn, 'root', '', {} );
+    DBI->connect( $dsn, 'benchmarkdbuser', 'benchmarkdbpass', {} );
 };
 
 get '/json' => sub {
