@@ -6,6 +6,7 @@
       "json_url": "/spring/json",
       "db_url": "/spring/db",
       "query_url": "/spring/db?queries=",
+      "fortune_url": "/spring/fortunes",
       "port": 8080,
       "sort": 22
     }
