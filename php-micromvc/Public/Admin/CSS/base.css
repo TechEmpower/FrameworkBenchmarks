@@ -1,0 +1,90 @@
+/*
+A CSS framework by David Pennington
+Copyright 2011, MIT License
+http://xeoncross.com
+*/
+
+/* Master Reset */
+*{vertical-align:baseline}
+html,body,div,form,fieldset,input,textarea,th,td,h1,h2,h3,h4,h5,h6{margin:0;padding:0}
+article,aside,figure,figcaption,hgroup,footer,header,nav,section,video,object{display:block}
+th,td{text-align:left;vertical-align:top;padding:.5em;border:1px solid}
+table{border-collapse:collapse;border-spacing:0;width:100%}
+abbr,acronym{cursor:help;border-bottom:1px dotted}
+fieldset,img{border:0}
+pre{width:100%;white-space:pre;overflow:auto}
+.reset,.reset *{font-weight:inherit;font-family:inherit;font-style:inherit;font-size:1em;border:0;outline:0;padding:0;margin:0}
+
+/* Form Reset (IE7+) */
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=tel],html>body textarea 
+{
+	width:100%;
+	padding:.5em;
+	margin:0 0 1.5em 0;
+	-webkit-box-sizing:border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing:border-box;    /* Firefox, other Gecko */
+	box-sizing:border-box;         /* Opera/IE 8+ */
+}
+
+/* 12 Column Grid System */
+
+/* 1024px, 1152px, & 1280 screens */
+.grid_1{width:50px}
+.grid_2{width:130px}
+.grid_3{width:210px}
+.grid_4{width:290px}
+.grid_5{width:370px}
+.grid_6{width:450px}
+.grid_7{width:530px}
+.grid_8{width:610px}
+.grid_9{width:690px}
+.grid_10{width:770px}
+.grid_11{width:850px}
+.grid_12{width:930px}
+.grid_1,.grid_2,.grid_3,.grid_4,.grid_5,.grid_6,.grid_7,.grid_8,.grid_9,.grid_10,.grid_11,.grid_12
+{margin-left:30px;float:left;display:inline;/*overflow:hidden;*/}
+.container{width:930px;margin:0 auto;/*overflow:hidden;*/}
+.container .first, .container .grid_12{margin-left:0;clear:left}
+
+/* +1400px screens */
+@media only screen and (min-width:1400px){
+.grid_1{width:70px}
+.grid_2{width:170px}
+.grid_3{width:270px}
+.grid_4{width:370px}
+.grid_5{width:470px}
+.grid_6{width:570px}
+.grid_7{width:670px}
+.grid_8{width:770px}
+.grid_9{width:870px}
+.grid_10{width:970px}
+.grid_11{width:1070px}
+.grid_12{width:1170px}
+.container{width:1170px}
+}
+
+/* Mobile Devices */
+@media only screen and (max-width:700px){
+.grid_1,.grid_2,.grid_3,.grid_4,.grid_5,.grid_6,.grid_7,.grid_8,.grid_9,.grid_10,.grid_11,.grid_12
+{width:100%;margin-left:0px}
+.container{width:auto;margin:0 2em}
+}
+
+/* Vertical Rhythm - Auto-ajusting Font/Line-Height Ratio */
+body{font-size:100%;line-height:1.5em;font-family:Georgia,serif;}/*IE*/
+html>body{font-size:1em}
+p{margin:0 0 1.5em 0;padding:0}
+h1,h2,h3,h4{font-weight:normal;line-height:1.5em}
+h1{font-size:4em}
+h2{font-size:3em}
+h3{font-size:1.5em;line-height:2em}
+h4{font-size:1em;font-weight:bold}
+table{margin:1em 0}
+th,td{border:1px solid;padding:.5em}
+blockquote{margin:1.5em;font-style:italic}
+ul,ol,dl{margin:1.5em;padding:0}
+ul ul,ol ol{margin:0 2em}
+pre{margin:1.5em 0;line-height:1.5em}
+input,select{font-family:inherit;font-size:1em;/*line-height:1.5em;height:1.5em;*/}
+textarea{margin:0 0 1.5em 0;height:9em;font-family:inherit;font-size:1em;}
+

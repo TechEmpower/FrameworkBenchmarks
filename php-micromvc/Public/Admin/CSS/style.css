@@ -1,0 +1,37 @@
+table thead tr
+{
+	border-bottom: 1px solid #fff;
+	-moz-box-shadow: 0px 1px 2px #ddd;
+  	-webkit-box-shadow: 0px 1px 2px #ddd;
+ 	box-shadow: 0px 1px 2px #ddd;
+}
+
+table th
+{
+	background: #F7F7F7; /* old browsers */
+	background: -moz-linear-gradient(top, #F7F7F7 0%, #EAEAEA 100%); /* firefox */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F7F7F7), color-stop(100%,#EAEAEA)); /* webkit */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F7F7F7', endColorstr='#EAEAEA',GradientType=0 ); /* ie */
+}
+
+table tr {  border: 1px solid #eee;}
+table td, table th { border: 0; }
+tr:nth-of-type(odd) { background-color:#f8f8f8; }
+
+table tr.header { border-bottom: 1px solid #ddd; }
+table tr.header td { background: #eee; }
+
+/* Column Sorting Table Headers */
+table th a.sort_by {padding-right: 20px;}
+table th a.down {background: url(../images/bullet_arrow_down.png) right no-repeat;}
+table th a.up {background: url(../images/bullet_arrow_up.png) right no-repeat;}
+
+/* Special Links */
+a.delete, a.edit {margin: 0 .5em;}
+
+/* Form Reset (IE7+) */
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=tel],html>body textarea
+{
+	border: 1px solid;
+	border-color: #888 #bbb #e2e2e2;
+}

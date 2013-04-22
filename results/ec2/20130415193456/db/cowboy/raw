@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 21:47:49 UTC 2013
+
+  System load:  0.36               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer cowboy
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.03ms    1.61ms  10.47ms   88.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13795 requests in 5.00s, 2.38MB read
+Requests/sec:   2756.70
+Transfer/sec:    486.52KB
+
+---------------------------------------------------------
+ Running Warmup cowboy
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.07ms    8.66ms 177.61ms   91.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  222697 requests in 1.00m, 38.38MB read
+Requests/sec:   3711.56
+Transfer/sec:    655.05KB
+
+---------------------------------------------------------
+ Concurrency: 8 for cowboy
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.09ms    4.44ms 165.10ms   95.74%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  165572 requests in 1.00m, 28.54MB read
+Requests/sec:   2759.35
+Transfer/sec:    486.98KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cowboy
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.42ms    1.36ms  25.00ms   91.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  219533 requests in 1.00m, 37.84MB read
+Requests/sec:   3658.83
+Transfer/sec:    645.72KB
+
+---------------------------------------------------------
+ Concurrency: 32 for cowboy
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.59ms    2.47ms  55.30ms   85.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  229455 requests in 1.00m, 39.55MB read
+Requests/sec:   3824.32
+Transfer/sec:    674.94KB
+
+---------------------------------------------------------
+ Concurrency: 64 for cowboy
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.70ms    7.68ms 223.55ms   99.07%
+    Req/Sec    47.03    211.77     1.00k    95.30%
+  234338 requests in 1.00m, 40.39MB read
+Requests/sec:   3905.50
+Transfer/sec:    689.26KB
+
+---------------------------------------------------------
+ Concurrency: 128 for cowboy
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.47ms    2.55ms  45.32ms   75.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  236427 requests in 1.00m, 40.75MB read
+Requests/sec:   3940.29
+Transfer/sec:    695.40KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cowboy
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.99ms    4.29ms  84.96ms   79.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  228849 requests in 1.00m, 39.44MB read
+Requests/sec:   3814.22
+Transfer/sec:    673.18KB

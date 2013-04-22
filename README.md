@@ -2,7 +2,7 @@
 
 Guesses and anecdotes can dominate discussions about the performance of web application frameworks.  Here we attempt to provide some objective performance measures across a wide field of frameworks, covering several platforms: Go, Python, Java, Ruby, PHP, Clojure, Groovy, and JavaScript.  The tests exercise the frameworks' JSON seralization and object-relational model (ORM).  Future versions will exercise server-side template libraries and other computation.
 
-See results data we've collected from Amazon EC2 instances and our physical hardware at our blog. http://www.techempower.com/blog/2013/03/28/framework-benchmarks/
+Read more and see the results of our tests on Amazon EC2 and physical hardware at http://www.techempower.com/benchmarks/
 
 ## Running the test suite
 
@@ -243,7 +243,7 @@ The benchmark_config file is used by our run script to identify the available te
   * query_url (optional): The relative URL path to the variable query test. The URL must be set up so that an integer can be applied to the end of the url to specify the number of queries to run, i.e. /db?queries= or /db/
   * port: The port the server is listneing on
   * sort: The sort order. This is important for our own blog post which relies on consistent ordering of the frameworks. You can get the next available sort order by running:
-    ./run-test.py --next-sort
+    ./run-tests.py --next-sort
 
 ## Setup Files
 

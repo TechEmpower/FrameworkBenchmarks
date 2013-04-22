@@ -1,0 +1,123 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 19:22:25 UTC 2013
+
+  System load:  0.78               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer finagle
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.18ms    1.39ms  25.46ms   92.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4869 requests in 5.01s, 711.04KB read
+Requests/sec:    972.82
+Transfer/sec:    142.07KB
+
+---------------------------------------------------------
+ Running Warmup finagle
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   255.62ms   60.09ms 558.77ms   92.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  59886 requests in 1.00m, 8.54MB read
+Requests/sec:    998.02
+Transfer/sec:    145.75KB
+
+---------------------------------------------------------
+ Queries: 1 for finagle
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   137.28ms   40.56ms 567.87ms   93.30%
+    Req/Sec     1.25     35.39     1.00k    99.87%
+  112831 requests in 1.00m, 12.67MB read
+Requests/sec:   1880.44
+Transfer/sec:    216.27KB
+
+---------------------------------------------------------
+ Queries: 5 for finagle
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   598.99ms  140.67ms   1.45s    92.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25327 requests in 1.00m, 5.94MB read
+Requests/sec:    422.09
+Transfer/sec:    101.34KB
+
+---------------------------------------------------------
+ Queries: 10 for finagle
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.17s   299.28ms   2.38s    91.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12850 requests in 1.00m, 4.96MB read
+  Socket errors: connect 0, read 0, write 0, timeout 33
+Requests/sec:    214.14
+Transfer/sec:     84.63KB
+
+---------------------------------------------------------
+ Queries: 15 for finagle
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.74s   473.04ms   3.72s    90.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8564 requests in 1.00m, 4.60MB read
+  Socket errors: connect 0, read 0, write 0, timeout 119
+Requests/sec:    142.71
+Transfer/sec:     78.54KB
+
+---------------------------------------------------------
+ Queries: 20 for finagle
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.31s   728.35ms   5.48s    88.67%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6411 requests in 1.00m, 4.42MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1244
+Requests/sec:    106.83
+Transfer/sec:     75.37KB

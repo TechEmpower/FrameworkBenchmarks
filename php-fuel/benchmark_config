@@ -1,5 +1,5 @@
 {
-  "framework": "Fuel",
+  "framework": "fuel",
   "tests": [{
     "default": {
       "setup_file": "setup",

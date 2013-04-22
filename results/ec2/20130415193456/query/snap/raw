@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 18:59:11 UTC 2013
+
+  System load:  0.35               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer snap
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.84ms    2.26ms  12.19ms   68.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8074 requests in 5.00s, 1.66MB read
+Requests/sec:   1613.21
+Transfer/sec:    340.29KB
+
+---------------------------------------------------------
+ Running Warmup snap
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8000/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8000/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   177.06ms   44.45ms 394.22ms   69.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  86825 requests in 1.00m, 17.89MB read
+Requests/sec:   1447.04
+Transfer/sec:    305.24KB
+
+---------------------------------------------------------
+ Queries: 1 for snap
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8000/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8000/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.09ms   17.20ms 374.82ms   83.02%
+    Req/Sec     1.24     35.19     1.00k    99.88%
+  153246 requests in 1.00m, 26.89MB read
+Requests/sec:   2554.19
+Transfer/sec:    458.96KB
+
+---------------------------------------------------------
+ Queries: 5 for snap
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8000/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8000/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   435.58ms  150.57ms   1.01s    71.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34741 requests in 1.00m, 10.34MB read
+Requests/sec:    578.96
+Transfer/sec:    176.40KB
+
+---------------------------------------------------------
+ Queries: 10 for snap
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8000/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8000/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   629.93ms  193.17ms   1.55s    78.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23795 requests in 1.00m, 10.67MB read
+Requests/sec:    396.50
+Transfer/sec:    181.99KB
+
+---------------------------------------------------------
+ Queries: 15 for snap
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8000/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8000/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.03s   363.75ms   2.43s    73.37%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14243 requests in 1.00m, 8.56MB read
+  Socket errors: connect 0, read 0, write 0, timeout 22
+Requests/sec:    237.34
+Transfer/sec:    146.02KB
+
+---------------------------------------------------------
+ Queries: 20 for snap
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8000/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8000/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.18s   244.67ms   1.83s    80.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12687 requests in 1.00m, 9.55MB read
+Requests/sec:    211.43
+Transfer/sec:    162.91KB
