@@ -1,4 +1,4 @@
-# Cake PHP Benchmarking Test
+# Symfony PHP Benchmarking Test
 
 This is the Symfony 2 PHP portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
