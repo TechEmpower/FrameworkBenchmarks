@@ -14,13 +14,9 @@ var connectionPool = module.singleton("connectionPool", function() {
     });
 });
 var store = exports.store = new Store(connectionPool);
-var entityCache = module.singleton("entityCache", function() {
-    return new Cache(10000);
-});
 var queryCache = module.singleton("queryCache", function() {
     return new Cache(10000);
 });
-store.setEntityCache(entityCache);
 store.setQueryCache(queryCache);
 
 // define entities in DB
