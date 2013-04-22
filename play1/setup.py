@@ -11,7 +11,7 @@ def start(args):
   return 0
 def stop():
   try:
-     subprocess.check_call("play1 stop", shell=True, cwd="play1")
+    subprocess.check_call("play1 stop", shell=True, cwd="play1")
 #    subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
 #    subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
     return 0
