@@ -126,6 +126,7 @@ class Installer:
     self.__run_command("sudo ringo-admin install oberhamsi/sql-ringojs-client")
     self.__run_command("sudo ringo-admin install ringo/stick")
     self.__run_command("sudo ringo-admin install oberhamsi/reinhardt")
+    self.__run_command("sudo ringo-admin install grob/ringo-sqlstore")
 
     #######################################
     # Webservers
