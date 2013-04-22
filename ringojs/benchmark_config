@@ -1,0 +1,19 @@
+{
+  "framework": "ringojs",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8080,
+      "sort": 72
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortune",
+      "port": 8080,
+      "sort": 73
+    }
+  }]
+}
