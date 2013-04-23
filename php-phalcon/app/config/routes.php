@@ -13,4 +13,9 @@ $router->add('/db', array(
     'action' => 'db',
 ));
 
+$router->add('/fortunes', array(
+    'controller' => 'bench',
+    'action' => 'fortunes',
+));
+
 return $router;

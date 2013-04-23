@@ -19,20 +19,38 @@ try {
         return include($config->application->routes);
     });
 
+    //Register Volt as a service
+    $di->set('voltService', function($view, $di) {
+        $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
+        $volt->setOptions(array(
+            "compiledPath" => "../app/compiled-templates/",
+            "compiledExtension" => ".compiled"
+        ));
+
+        return $volt;
+    });
+
     // Setting up the view component (seems to be required even when not used)
     $di->set('view', function() use ($config) {
         $view = new \Phalcon\Mvc\View();
         $view->setViewsDir($config->application->viewsDir);
+        $view->registerEngines(array(
+            ".volt" => 'voltService'
+        ));
+
         return $view;
     });
 
     // Setting up the database connection
     $di->set('db', function() use ($config) {
         return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-            "host"     => $config->database->host,
-            "username" => $config->database->username,
-            "password" => $config->database->password,
-            "dbname"   => $config->database->name
+            'host'     => $config->database->host,
+            'username' => $config->database->username,
+            'password' => $config->database->password,
+            'dbname'   => $config->database->name,
+            'options'  => array(
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+            )
         ));
     });
 

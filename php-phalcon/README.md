@@ -13,6 +13,11 @@ Uses the built-in ORM of Phalcon PHP
 
 * [DB test controller](app/controllers/BenchController.php)
 
+### Template Test
+Uses Phalcons template engine 'Volt'
+
+* [Template test controller](app/controllers/BenchController.php)
+
 
 ## Infrastructure Software Versions
 The tests were run with:
@@ -34,3 +39,7 @@ http://localhost/db
 ### Variable Query Test
     
 http://localhost/db?queries=2
+
+### Templating Test
+
+http://localhost/fortunes
