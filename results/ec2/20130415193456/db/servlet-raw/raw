@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 01:08:48 UTC 2013
+
+  System load:  0.2                Processes:           70
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer servlet-raw
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/servlet/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/servlet/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.73ms    6.14ms  96.58ms   98.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12780 requests in 5.00s, 1.98MB read
+Requests/sec:   2555.64
+Transfer/sec:    406.26KB
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/servlet/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.85ms  180.26ms   6.23s    97.02%
+    Req/Sec   149.78    356.97     1.00k    85.02%
+  231683 requests in 1.00m, 36.26MB read
+  Socket errors: connect 0, read 0, write 0, timeout 109
+Requests/sec:   3861.33
+Transfer/sec:    618.84KB
+
+---------------------------------------------------------
+ Concurrency: 8 for servlet-raw
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/servlet/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/db
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.27ms    5.03ms 201.37ms   99.75%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  405445 requests in 1.00m, 62.94MB read
+Requests/sec:   6757.42
+Transfer/sec:      1.05MB
+
+---------------------------------------------------------
+ Concurrency: 16 for servlet-raw
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/servlet/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/db
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.09ms    3.44ms  64.18ms   95.86%
+    Req/Sec     1.18k   384.78     2.00k    81.94%
+  476320 requests in 1.00m, 73.94MB read
+Requests/sec:   7938.63
+Transfer/sec:      1.23MB
+
+---------------------------------------------------------
+ Concurrency: 32 for servlet-raw
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/servlet/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/db
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.05ms   11.00ms 171.48ms   94.72%
+    Req/Sec     1.99k    74.56     2.00k    99.44%
+  488823 requests in 1.00m, 75.89MB read
+Requests/sec:   8146.90
+Transfer/sec:      1.26MB
+
+---------------------------------------------------------
+ Concurrency: 64 for servlet-raw
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/servlet/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/db
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.74ms   18.94ms 225.13ms   91.53%
+    Req/Sec     1.97k   174.83     2.00k    96.85%
+  500257 requests in 1.00m, 77.66MB read
+Requests/sec:   8337.83
+Transfer/sec:      1.29MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servlet-raw
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/servlet/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/db
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.82ms   19.64ms 346.90ms   89.18%
+    Req/Sec     1.96k   206.67     2.00k    95.53%
+  502724 requests in 1.00m, 78.04MB read
+Requests/sec:   8378.70
+Transfer/sec:      1.30MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet-raw
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/servlet/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    37.98ms   49.33ms 728.29ms   92.08%
+    Req/Sec     1.02k   123.94     2.00k    98.44%
+  445860 requests in 1.00m, 69.89MB read
+Requests/sec:   7431.33
+Transfer/sec:      1.16MB

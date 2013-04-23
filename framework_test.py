@@ -141,8 +141,41 @@ class FrameworkTest:
       self.query_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.query_url_passed = False
+
+    # Fortune
+    try:
+      print "VERIFYING Fortune (" + self.fortune_url + ") ..."
+      url = self.benchmarker.generate_url(self.fortune_url, self.port)
+      subprocess.check_call(["curl", "-f", url])
+      print ""
+      self.fortune_url_passed = True
+    except (AttributeError, subprocess.CalledProcessError) as e:
+      self.fortune_url_passed = False
   ############################################################
   # End verify_urls
+  ############################################################
+
+  ############################################################
+  # contains_type(type)
+  # true if this test contains an implementation of the given 
+  # test type (json, db, etc.)
+  ############################################################
+  def contains_type(self, type):
+    try:
+      if type == 'json' and self.json_url != None:
+        return True
+      if type == 'db' and self.db_url != None:
+        return True
+      if type == 'query' and self.query_url != None:
+        return True
+      if type == 'fortune' and self.fortune_url != None:
+        return True
+    except AttributeError:
+      pass
+      
+    return False
+  ############################################################
+  # End stop
   ############################################################
 
   ############################################################
@@ -159,7 +192,7 @@ class FrameworkTest:
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'json'))
         results = self.__parse_test('json')
         self.benchmarker.report_results(framework=self, test="json", requests=results['requests'], latency=results['latency'],
-          results=results['results'], total_time=results['total_time'])
+          results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
 
         print "Complete"
     except AttributeError:
@@ -173,7 +206,7 @@ class FrameworkTest:
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'db'))
         results = self.__parse_test('db')
         self.benchmarker.report_results(framework=self, test="db", requests=results['requests'], latency=results['latency'],
-          results=results['results'], total_time=results['total_time'])
+          results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
 
         print "Complete"
     except AttributeError:
@@ -187,7 +220,20 @@ class FrameworkTest:
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'query'))
         results = self.__parse_test('query')
         self.benchmarker.report_results(framework=self, test="query", requests=results['requests'], latency=results['latency'],
-          results=results['results'], total_time=results['total_time'])
+          results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
+        print "Complete"
+    except AttributeError:
+      pass
+
+    # fortune
+    try:
+      if self.fortune_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "fortune"):
+        sys.stdout.write("BENCHMARKING Fortune ... ") 
+        remote_script = self.__generate_concurrency_script(self.fortune_url, self.port)
+        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'fortune'))
+        results = self.__parse_test('fortune')
+        self.benchmarker.report_results(framework=self, test="fortune", requests=results['requests'], latency=results['latency'],
+          results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
         print "Complete"
     except AttributeError:
       pass
@@ -204,19 +250,25 @@ class FrameworkTest:
     if os.path.exists(self.benchmarker.output_file(self.name, 'json')):
       results = self.__parse_test('json')
       self.benchmarker.report_results(framework=self, test="json", requests=results['requests'], latency=results['latency'],
-        results=results['results'], total_time=results['total_time'])
+        results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
     
     # DB
     if os.path.exists(self.benchmarker.output_file(self.name, 'db')):
       results = self.__parse_test('db')
       self.benchmarker.report_results(framework=self, test="db", requests=results['requests'], latency=results['latency'],
-        results=results['results'], total_time=results['total_time'])
+        results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
     
     # Query
     if os.path.exists(self.benchmarker.output_file(self.name, 'query')):
       results = self.__parse_test('query')
       self.benchmarker.report_results(framework=self, test="query", requests=results['requests'], latency=results['latency'],
-        results=results['results'], total_time=results['total_time'])
+        results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
+
+    # Query
+    if os.path.exists(self.benchmarker.output_file(self.name, 'fortune')):
+      results = self.__parse_test('fortune')
+      self.benchmarker.report_results(framework=self, test="fortune", requests=results['requests'], latency=results['latency'],
+        results=results['results'], total_time=results['total_time'], errors=results['errors'], total_requests=results['totalRequests'])
   ############################################################
   # End parse_all
   ############################################################
@@ -229,6 +281,7 @@ class FrameworkTest:
       results = dict()
       results['results'] = []
       results['total_time'] = 0
+      results['totalRequests'] = 0
       results['latency'] = dict()
       results['latency']['avg'] = 0
       results['latency']['stdev'] = 0
@@ -239,6 +292,12 @@ class FrameworkTest:
       results['requests']['stdev'] = 0
       results['requests']['max'] = 0
       results['requests']['stdevPercent'] = 0
+      results['errors'] = dict()
+      results['errors']['connect'] = 0
+      results['errors']['read'] = 0
+      results['errors']['write'] = 0
+      results['errors']['timeout'] = 0
+      results['errors']['5xx'] = 0
       with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
         is_warmup = False
         for line in raw_data:
@@ -285,6 +344,31 @@ class FrameworkTest:
                   results['total_time'] += float(raw_time[:len(raw_time)-1]) * 60.0
                 elif "h" in raw_time:
                   results['total_time'] += float(raw_time[:len(raw_time)-1]) * 3600.0
+           
+            if "requests in" in line:
+              m = re.search("([0-9]+) requests in", line)
+              if m != None: 
+                results['totalRequests'] += int(m.group(1))
+            
+            if "Socket errors" in line:
+              if "connect" in line:
+                m = re.search("connect ([0-9]+)", line)
+                results['errors']['connect'] += int(m.group(1))
+              if "read" in line:
+                m = re.search("read ([0-9]+)", line)
+                results['errors']['read'] += int(m.group(1))
+              if "write" in line:
+                m = re.search("write ([0-9]+)", line)
+                results['errors']['write'] += int(m.group(1))
+              if "timeout" in line:
+                m = re.search("timeout ([0-9]+)", line)
+                results['errors']['timeout'] += int(m.group(1))
+            
+            if "Non-2xx" in line:
+              m = re.search("Non-2xx or 3xx responses: ([0-9]+)", line)
+              if m != None: 
+                results['errors']['5xx'] += int(m.group(1))
+              
 
       return results
     except IOError:

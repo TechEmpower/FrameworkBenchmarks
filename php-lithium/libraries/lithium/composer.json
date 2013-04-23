@@ -1,0 +1,22 @@
+{
+	"name": "UnionOfRAD/lithium",
+	"type": "lithium-library",
+	"description": "The core library of the Lithium PHP framework",
+	"keywords": ["lithium", "framework"],
+	"homepage": "http://lithify.me",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Union of RAD",
+			"homepage": "http://union-of-rad.org"
+		},
+		{
+			"name": "The Lithium Community",
+			"homepage": "http://github.com/UnionOfRAD/lithium/graphs/contributors"
+		}
+	],
+	"require": {
+		"php": ">=5.3.6",
+		"composer/installers": "dev-master"
+	}
+}

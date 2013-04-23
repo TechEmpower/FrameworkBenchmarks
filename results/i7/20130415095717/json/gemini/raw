@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 09:58:42 PDT 2013
+
+  System load:  0.05                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer gemini
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   137.16us   70.43us 653.00us   92.11%
+    Req/Sec     6.11k     1.31k    7.00k    86.84%
+  302941 requests in 5.00s, 49.98MB read
+Requests/sec:  60600.89
+Transfer/sec:     10.00MB
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14ms  284.81us   6.92ms   95.26%
+    Req/Sec    26.33k     2.46k   36.00k    93.51%
+  13115048 requests in 1.00m, 2.11GB read
+Requests/sec: 218586.02
+Transfer/sec:     36.06MB
+
+---------------------------------------------------------
+ Concurrency: 8 for gemini
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   120.75us   46.48us   2.06ms   91.46%
+    Req/Sec     8.00k    65.91     8.00k    99.56%
+  3910422 requests in 1.00m, 645.16MB read
+Requests/sec:  65174.09
+Transfer/sec:     10.75MB
+
+---------------------------------------------------------
+ Concurrency: 16 for gemini
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   122.91us  150.18us   8.19ms   98.31%
+    Req/Sec    15.00k    25.03    15.00k    99.94%
+  7602371 requests in 1.00m, 1.22GB read
+Requests/sec: 126708.84
+Transfer/sec:     20.91MB
+
+---------------------------------------------------------
+ Concurrency: 32 for gemini
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   156.75us  111.70us   1.37ms   93.56%
+    Req/Sec    25.00k    84.69    26.00k    99.28%
+  12429370 requests in 1.00m, 2.00GB read
+Requests/sec: 207161.30
+Transfer/sec:     34.18MB
+
+---------------------------------------------------------
+ Concurrency: 64 for gemini
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   288.83us  156.66us   2.37ms   95.39%
+    Req/Sec    26.99k   373.12    32.00k    96.64%
+  13222505 requests in 1.00m, 2.13GB read
+Requests/sec: 220380.43
+Transfer/sec:     36.36MB
+
+---------------------------------------------------------
+ Concurrency: 128 for gemini
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   571.87us  196.16us   5.17ms   96.49%
+    Req/Sec    26.99k   402.97    29.00k    93.39%
+  13207410 requests in 1.00m, 2.13GB read
+Requests/sec: 220126.41
+Transfer/sec:     36.32MB
+
+---------------------------------------------------------
+ Concurrency: 256 for gemini
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms  392.93us  14.39ms   96.39%
+    Req/Sec    26.96k   715.41    36.00k    90.29%
+  13169229 requests in 1.00m, 2.12GB read
+Requests/sec: 219490.88
+Transfer/sec:     36.21MB

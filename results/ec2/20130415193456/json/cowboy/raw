@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 21:40:22 UTC 2013
+
+  System load:  0.62               Processes:           70
+  Usage of /:   24.6% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer cowboy
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   558.05us  139.75us   1.76ms   82.26%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  70697 requests in 5.00s, 11.80MB read
+Requests/sec:  14142.34
+Transfer/sec:      2.36MB
+
+---------------------------------------------------------
+ Running Warmup cowboy
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.86ms    8.57ms 103.33ms   67.76%
+    Req/Sec     3.37k   525.47     6.00k    62.25%
+  943382 requests in 1.00m, 157.40MB read
+Requests/sec:  15722.96
+Transfer/sec:      2.62MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cowboy
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   562.47us  260.52us   6.38ms   97.70%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  832302 requests in 1.00m, 138.87MB read
+Requests/sec:  13871.80
+Transfer/sec:      2.31MB
+
+---------------------------------------------------------
+ Concurrency: 16 for cowboy
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.05ms  301.44us   1.95ms   60.91%
+    Req/Sec     3.00k    49.89     4.00k    99.75%
+  910837 requests in 1.00m, 151.97MB read
+Requests/sec:  15180.74
+Transfer/sec:      2.53MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cowboy
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.17ms  728.20us   8.94ms   60.32%
+    Req/Sec     3.02k   133.12     4.00k    98.20%
+  936125 requests in 1.00m, 156.19MB read
+Requests/sec:  15602.21
+Transfer/sec:      2.60MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cowboy
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.37ms    1.44ms  17.85ms   71.26%
+    Req/Sec     3.04k   204.50     5.00k    96.04%
+  941163 requests in 1.00m, 157.03MB read
+Requests/sec:  15686.12
+Transfer/sec:      2.62MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cowboy
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.34ms    5.12ms 138.28ms   89.65%
+    Req/Sec     3.00k    86.38     4.00k    99.25%
+  923552 requests in 1.00m, 154.09MB read
+Requests/sec:  15392.99
+Transfer/sec:      2.57MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cowboy
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.69ms    6.35ms  68.14ms   75.14%
+    Req/Sec     3.08k   341.84     6.00k    90.30%
+  934738 requests in 1.00m, 155.96MB read
+Requests/sec:  15578.90
+Transfer/sec:      2.60MB

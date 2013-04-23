@@ -1,6 +1,7 @@
 Hello::Application.routes.draw do
   get "hello_world/json"
   get "hello_world/db"
+  get "fortune" => "hello_world#fortune"
 
 
   # The priority is based upon order of creation:

@@ -1,5 +1,5 @@
 {
-  "framework": "php-symfony2",
+  "framework": "symfony2",
   "tests": [{
     "default": {
       "setup_file": "setup",

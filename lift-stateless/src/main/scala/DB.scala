@@ -20,7 +20,7 @@ object DB {
     ds.setMaxIdle(10);
     ds.setInitialSize(10);
     ds.setValidationQuery("SELECT 1")
-    ds.setUrl("jdbc:mysql://%s/%s?useUnicode=true&characterEncoding=UTF-8"
+    ds.setUrl("jdbc:mysql://%s/%s?useUnicode=true&characterEncoding=UTF-8&jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
       format (config[String]("db.host"), config[String]("db.name")))
     ds
   }

@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cake
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json.json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.52ms    1.95ms  16.17ms   72.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7091 requests in 5.00s, 1.49MB read
+Requests/sec:   1417.29
+Transfer/sec:    305.82KB
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   162.62ms  100.87ms 659.33ms   68.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  92447 requests in 1.00m, 19.48MB read
+Requests/sec:   1540.73
+Transfer/sec:    332.46KB
+
+---------------------------------------------------------
+ Concurrency: 8 for cake
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json.json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.56ms    3.63ms 115.58ms   95.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  87238 requests in 1.00m, 18.38MB read
+Requests/sec:   1453.89
+Transfer/sec:    313.71KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cake
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json.json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.65ms    7.66ms 119.83ms   90.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  93201 requests in 1.00m, 19.64MB read
+Requests/sec:   1553.29
+Transfer/sec:    335.16KB
+
+---------------------------------------------------------
+ Concurrency: 32 for cake
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json.json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.39ms   19.39ms 204.80ms   89.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  93659 requests in 1.00m, 19.74MB read
+Requests/sec:   1560.93
+Transfer/sec:    336.80KB
+
+---------------------------------------------------------
+ Concurrency: 64 for cake
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json.json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.87ms   45.96ms 351.62ms   87.24%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  93537 requests in 1.00m, 19.71MB read
+Requests/sec:   1558.84
+Transfer/sec:    336.36KB
+
+---------------------------------------------------------
+ Concurrency: 128 for cake
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json.json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    82.18ms   67.84ms 454.12ms   73.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  92812 requests in 1.00m, 19.56MB read
+Requests/sec:   1546.83
+Transfer/sec:    333.77KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cake
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   164.40ms  103.64ms 694.47ms   68.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  92358 requests in 1.00m, 19.46MB read
+Requests/sec:   1539.26
+Transfer/sec:    332.14KB

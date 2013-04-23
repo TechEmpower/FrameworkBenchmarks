@@ -1,0 +1,133 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 00:59:42 UTC 2013
+
+  System load:  0.1                Processes:           70
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer servlet
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/servlet/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/servlet/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.16ms  788.70us   8.50ms   89.93%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  35903 requests in 5.00s, 5.38MB read
+Requests/sec:   7181.56
+Transfer/sec:      1.08MB
+
+---------------------------------------------------------
+ Running Warmup servlet
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.32ms    9.97ms  59.25ms   74.52%
+    Req/Sec     2.69k     1.81k    6.00k    69.55%
+  770378 requests in 1.00m, 115.93MB read
+  Socket errors: connect 0, read 395, write 0, timeout 6338
+Requests/sec:  12837.30
+Transfer/sec:      1.93MB
+
+---------------------------------------------------------
+ Concurrency: 8 for servlet
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   368.10us  241.61us   9.33ms   98.45%
+    Req/Sec     4.99k    85.98     5.00k    99.26%
+  1228769 requests in 1.00m, 183.98MB read
+Requests/sec:  20479.64
+Transfer/sec:      3.07MB
+
+---------------------------------------------------------
+ Concurrency: 16 for servlet
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   700.82us    3.00ms 111.93ms   99.69%
+    Req/Sec     6.00k    61.29     7.00k    99.62%
+  1616863 requests in 1.00m, 242.09MB read
+Requests/sec:  26948.01
+Transfer/sec:      4.03MB
+
+---------------------------------------------------------
+ Concurrency: 32 for servlet
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21ms  747.64us  16.73ms   88.38%
+    Req/Sec     6.14k   355.97     8.00k    85.99%
+  1675857 requests in 1.00m, 250.92MB read
+Requests/sec:  27931.40
+Transfer/sec:      4.18MB
+
+---------------------------------------------------------
+ Concurrency: 64 for servlet
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.53ms    3.39ms 118.11ms   98.26%
+    Req/Sec     6.66k   493.71    10.00k    66.40%
+  1687930 requests in 1.00m, 252.73MB read
+Requests/sec:  28132.57
+Transfer/sec:      4.21MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servlet
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.90ms    3.52ms  62.36ms   91.70%
+    Req/Sec     6.50k   513.69     9.00k    99.44%
+  1672324 requests in 1.00m, 250.39MB read
+Requests/sec:  27872.15
+Transfer/sec:      4.17MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/servlet/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/servlet/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.59ms   30.33ms 357.06ms   96.20%
+    Req/Sec     5.45k     2.70k   10.00k    64.41%
+  1571268 requests in 1.00m, 235.97MB read
+  Socket errors: connect 0, read 615, write 0, timeout 5917
+Requests/sec:  26183.64
+Transfer/sec:      3.93MB

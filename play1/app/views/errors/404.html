@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Not found</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=${_response_encoding}"/>    
+    </head>
+    <body>
+        #{if play.mode.name() == 'DEV'}
+            #{404 result /}
+        #{/if}
+        #{else}
+            <h1>Not found</h1>
+            <p>
+                ${result.message}
+            </p>
+        #{/else}
+    </body>
+</html>

@@ -7,7 +7,7 @@ This is the webgo portion of a [benchmarking test suite](../) comparing a variet
 
 ## Versions
 
-* [Go 1.0.3](http://golang.org/)
+* [Go 1.1beta2](http://golang.org/)
 * [WebGo](https://github.com/hoisie/web)
 
 ## Test URLs

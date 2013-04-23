@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 07:36:29 UTC 2013
+
+  System load:  0.02               Processes:           70
+  Usage of /:   24.5% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer grizzly-jersey
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.27ms    3.76ms  30.31ms   89.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9726 requests in 5.01s, 1.25MB read
+Requests/sec:   1942.71
+Transfer/sec:    256.24KB
+
+---------------------------------------------------------
+ Running Warmup grizzly-jersey
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.47ms   11.59ms 193.32ms   90.50%
+    Req/Sec     2.61k   763.86     3.00k    88.07%
+  877036 requests in 1.00m, 112.98MB read
+Requests/sec:  14617.22
+Transfer/sec:      1.88MB
+
+---------------------------------------------------------
+ Concurrency: 8 for grizzly-jersey
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   595.32us  607.65us   7.76ms   95.22%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  759031 requests in 1.00m, 97.78MB read
+Requests/sec:  12650.63
+Transfer/sec:      1.63MB
+
+---------------------------------------------------------
+ Concurrency: 16 for grizzly-jersey
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.24ms    2.36ms  75.19ms   96.58%
+    Req/Sec     3.00k    35.30     4.00k    99.88%
+  829881 requests in 1.00m, 106.90MB read
+Requests/sec:  13831.46
+Transfer/sec:      1.78MB
+
+---------------------------------------------------------
+ Concurrency: 32 for grizzly-jersey
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.25ms    1.72ms  22.16ms   95.36%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  875047 requests in 1.00m, 112.72MB read
+Requests/sec:  14584.16
+Transfer/sec:      1.88MB
+
+---------------------------------------------------------
+ Concurrency: 64 for grizzly-jersey
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.36ms    5.34ms 200.86ms   96.47%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  897340 requests in 1.00m, 115.59MB read
+Requests/sec:  14955.95
+Transfer/sec:      1.93MB
+
+---------------------------------------------------------
+ Concurrency: 128 for grizzly-jersey
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.40ms    2.84ms  43.75ms   80.16%
+    Req/Sec     3.01k   136.99     5.00k    98.68%
+  919274 requests in 1.00m, 118.42MB read
+Requests/sec:  15321.27
+Transfer/sec:      1.97MB
+
+---------------------------------------------------------
+ Concurrency: 256 for grizzly-jersey
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.35ms    3.34ms  41.77ms   83.57%
+    Req/Sec     3.03k   212.57     5.00k    96.27%
+  937733 requests in 1.00m, 120.79MB read
+Requests/sec:  15631.53
+Transfer/sec:      2.01MB
