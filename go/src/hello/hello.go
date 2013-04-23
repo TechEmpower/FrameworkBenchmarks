@@ -69,8 +69,7 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
-	// the Fortune table contains 12 rows, and we'll add another Fortune ourselves
-	fortunes := make([]Fortune, 13)
+	var fortunes []Fortune
   
 	stmt := <-fortuneStmts // wait for a connection
   
@@ -80,18 +79,19 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Error preparing statement: %s", err)
 	}
   
-	i := 0
 	// Fetch rows
 	for rows.Next() {
 		// get RawBytes from data
-		err = rows.Scan(&fortunes[i].Id, &fortunes[i].Message)
+		fortune := Fortune{}
+		err = rows.Scan(&fortune.Id, &fortune.Message)
 		if err != nil {
 			panic(err.Error())
 		}
-		i++
+		fortunes = append(fortunes, fortune)
+		
 	}
 	fortuneStmts <- stmt // return a connection
-  	fortunes[i].Message = "Additional fortune added at request time."
+  	fortunes = append(fortunes, Fortune{0, "Additional fortune added at request time."})
 	
 	sort.Sort(ByMessage{fortunes})
 	if err := tmpl.Execute(w, map[string]interface{} {"fortunes": fortunes}); err != nil {
