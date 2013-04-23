@@ -18,7 +18,7 @@
       "setup_file": "setup",
       "db_url": "/sequelize",
       "query_url": "/sequelize?queries=",
-      "fortune_url": "/fortune"
+      "fortune_url": "/fortune",
       "port": 8080,
       "sort": 6
     }
