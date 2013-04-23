@@ -5,7 +5,7 @@ import play.api.mvc._
 import play.api.libs.json.Json
 import java.util.concurrent._
 import scala.concurrent._
-import models._
+import models.{World, Fortune}
 import utils._
 import scala.concurrent.Future
 
@@ -58,4 +58,14 @@ object Application extends Controller {
     }
   }
 
+  def fortunes() = PredicatedAction(isDbAvailable, ServiceUnavailable) {
+    Action {
+      Async {
+        Future(Fortune.getAll())(dbEc).map { fs =>
+          val fortunes =  fs :+ Fortune(anorm.NotAssigned, "Additional fortune added at request time.")
+          Ok(views.html.fortune(fortunes))
+        }
+      }
+    }
+  }
 }
