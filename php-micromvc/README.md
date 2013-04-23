@@ -5,13 +5,13 @@ This is the Micromvc portion of a [benchmarking test suite](../) comparing a var
 ### JSON Encoding Test
 Uses the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-encode.php).
 
-* [JSON test controller](index.php)
+* [JSON test controller](Class/Controller/Benchmark/Json.php)
 
 
 ### Data-Store/Database Mapping Test
 Uses the built-in ORM of micromvc
 
-* [DB test controller](index.php)
+* [DB test controller](Class/Controller/Benchmark/Db.php)
 
 
 ## Infrastructure Software Versions

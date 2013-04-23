@@ -9,11 +9,12 @@
 <th>id</th>
 <th>message</th>
 </tr>
-<c:forEach var="o" items="${fortunes}">
+{% for fortune in fortunes %}
 <tr>
-<td>${o.id}</td>
-<td>${o.message}</td>
+<td>{{fortune._id}}</td>
+<td>{{fortune.message}}</td>
 </tr>
-</c:if>
-</table></body>
+{% endfor %}
+</table>
+</body>
 </html>
