@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"runtime"
 	"strconv"
+        "html/template"
+	"sort"
 )
 
 type MessageStruct struct {
@@ -22,13 +24,13 @@ type World struct {
 
 type Fortune struct {
 	Id           uint16 `json:"id"`
-	Message      uint16 `json:"message"`
+	Message      string `json:"message"`
 }
 
 const (
-	DB_CONN_STR           = "benchmarkdbuser:benchmarkdbpass@tcp(172.16.98.98:3306)/hello_world?charset=utf8"
+	DB_CONN_STR           = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
 	DB_SELECT_SQL         = "SELECT id, randomNumber FROM World where id = ?;"
-  DB_FORTUNE_SELECT_SQL = "SELECT id, message FROM Fortune;"
+	DB_FORTUNE_SELECT_SQL = "SELECT id, message FROM Fortune;"
 	DB_ROWS               = 10000
 )
 
@@ -46,12 +48,9 @@ func main() {
 	if query, err = db.Prepare(DB_SELECT_SQL); err != nil {
 		log.Fatalf("Error preparing statement: %s", err)
 	}
-	if fortuneQuery, err = db.Query(DB_FORTUNE_SELECT_SQL); err != nil {
-		log.Fatalf("Error preparing statement: %s", err)
-	}
 	http.HandleFunc("/json", jsonHandler)
 	http.HandleFunc("/db", dbHandler)
-  http.HandleFunc("/fortune", fortuneHandler)
+	http.HandleFunc("/fortune", fortuneHandler)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -78,27 +77,36 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
-  fortunes := make([]Fortune, 13)
+	// the Fortune table contains 12 rows, and we'll add another Fortune ourselves
+	fortunes := make([]Fortune, 13)
   
-  // Execute the query
+	// Execute the query
 	rows, err := db.Query(DB_FORTUNE_SELECT_SQL)
 	if err != nil {
 		log.Fatalf("Error preparing statement: %s", err)
 	}
   
-  var i := 0
+	i := 0
 	// Fetch rows
 	for rows.Next() {
 		// get RawBytes from data
-		err = rows.Scan(&fortunes[i].id, &fortunes[i].message)
+		err = rows.Scan(&fortunes[i].Id, &fortunes[i].Message)
 		if err != nil {
 			panic(err.Error())
 		}
 		i++
 	}
-  
-  var tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
-  if err := tmpl.Execute(w, map[string]interface{} {"fortunes": fortunes}); err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-  }
+        fortunes[i].Message = "Additional fortune added at request time."
+	
+  	sort.Sort(ByMessage{fortunes})
+	var tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
+	if err := tmpl.Execute(w, map[string]interface{} {"fortunes": fortunes}); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
+
+type Fortunes []Fortune
+func (s Fortunes) Len() int      { return len(s) }
+func (s Fortunes) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+type ByMessage struct{ Fortunes }
+func (s ByMessage) Less(i, j int) bool { return s.Fortunes[i].Message < s.Fortunes[j].Message }
