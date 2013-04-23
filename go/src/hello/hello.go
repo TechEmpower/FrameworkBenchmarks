@@ -37,7 +37,7 @@ const (
 
 var (
 	stmts = make(chan *sql.Stmt, MAX_CON)
-	fortuneDB *sql.DB
+	fortuneStmts = make(chan *sql.Stmt, MAX_CON)
 )
 
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
@@ -71,8 +71,10 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	// the Fortune table contains 12 rows, and we'll add another Fortune ourselves
 	fortunes := make([]Fortune, 13)
   
+  stmt := <-fortuneStmts // wait for a connection
+  
 	// Execute the query
-	rows, err := fortuneDB.Query(DB_FORTUNE_SELECT_SQL)
+	rows, err := stmt.Query()
 	if err != nil {
 		log.Fatalf("Error preparing statement: %s", err)
 	}
@@ -103,10 +105,6 @@ type ByMessage struct{ Fortunes }
 func (s ByMessage) Less(i, j int) bool { return s.Fortunes[i].Message < s.Fortunes[j].Message }
 
 func main() {
-	var err error
-	if fortuneDB, err = sql.Open("mysql", DB_CONN_STR); err != nil {
-	    log.Fatalf("Error opening database: %s", err)
-	} 
 	http.HandleFunc("/db", dbHandler)
 	http.HandleFunc("/json", jsonHandler)
 	http.HandleFunc("/fortune", fortuneHandler)
@@ -124,6 +122,12 @@ func init() {
 				log.Fatal(err)
 			}
 			stmts <- stmt
+      
+			fortuneStmt, err := db.Prepare(DB_FORTUNE_SELECT_SQL)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fortuneStmts <- fortuneStmt
 		} else {
 			log.Fatalf("Error opening database: %s", err)
 		}
