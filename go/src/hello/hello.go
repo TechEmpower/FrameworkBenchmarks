@@ -38,6 +38,7 @@ const (
 var (
 	stmts = make(chan *sql.Stmt, MAX_CON)
 	fortuneStmts = make(chan *sql.Stmt, MAX_CON)
+	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 )
 
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +72,7 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	// the Fortune table contains 12 rows, and we'll add another Fortune ourselves
 	fortunes := make([]Fortune, 13)
   
-  stmt := <-fortuneStmts // wait for a connection
+	stmt := <-fortuneStmts // wait for a connection
   
 	// Execute the query
 	rows, err := stmt.Query()
@@ -89,10 +90,10 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		i++
 	}
-  fortunes[i].Message = "Additional fortune added at request time."
+	fortuneStmts <- stmt // return a connection
+  	fortunes[i].Message = "Additional fortune added at request time."
 	
-  sort.Sort(ByMessage{fortunes})
-	var tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
+	sort.Sort(ByMessage{fortunes})
 	if err := tmpl.Execute(w, map[string]interface{} {"fortunes": fortunes}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
