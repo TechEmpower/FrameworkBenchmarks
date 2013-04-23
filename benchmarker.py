@@ -305,6 +305,10 @@ class Benchmarker:
       if self.exclude != None and test.name in self.exclude:
         continue
       
+      # If the test does not contain an implementation of the current test-type, skip it
+      if not test.containsType(self.type):
+        continue
+      
       print textwrap.dedent("""
       =====================================================
         Beginning {name}
