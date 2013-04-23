@@ -7,6 +7,8 @@
                  [korma "0.3.0-RC5"]
                  [log4j "1.2.15" :exclusions [javax.mail/mail javax.jms/jms com.sun.jdmk/jmxtools com.sun.jmx/jmxri]]
                  [mysql/mysql-connector-java "5.1.6"]
+                 [org.clojure/java.jdbc "0.3.0-alpha1"]
+                 [c3p0/c3p0 "0.9.1.2"]
                  ]
   :plugins [[lein-ring "0.8.2"]]
   :ring {:handler hello.handler/app}
