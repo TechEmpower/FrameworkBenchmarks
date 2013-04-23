@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /php-silex-orm/ "/home/ubuntu/FrameworkBenchmarks/php-silex-orm/web/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/php-silex-orm/web/>
+          Options Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>
