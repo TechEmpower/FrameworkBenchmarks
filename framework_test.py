@@ -161,14 +161,17 @@ class FrameworkTest:
   # test type (json, db, etc.)
   ############################################################
   def contains_type(self, type):
-    if type == 'json' and self.json_url not None:
-      return True
-    if type == 'db' and self.db_url not None:
-      return True
-    if type == 'query' and self.query_url not None:
-      return True
-    if type == 'fortune' and self.fortune_url not None:
-      return True
+    try:
+      if type == 'json' and self.json_url != None:
+        return True
+      if type == 'db' and self.db_url != None:
+        return True
+      if type == 'query' and self.query_url != None:
+        return True
+      if type == 'fortune' and self.fortune_url != None:
+        return True
+    except AttributeError:
+      pass
       
     return False
   ############################################################
