@@ -82,12 +82,22 @@
      queries ; Number of queries to run
      (repeatedly get-world-raw)))))
 
+(defn get-query-count [queries]
+  "Parse provided string value of query count, clamping values to between 1 and 500."
+  (let [q (try (Integer/parseInt queries)
+               (catch Exception e 1))] ; default to 1 on parse failure
+    (if (> q 500)
+      500 ; clamp to 500 max
+      (if (< q 1)
+        1 ; clamp to 1 min
+        q)))) ; otherwise use provided value
+
 ; Define route handlers
 (defroutes app-routes
   (GET "/" [] "Hello, World!")
   (GET "/json" [] (response {:message "Hello, World!"}))
-  (GET "/db/:queries" [queries] (response (run-queries (Integer/parseInt queries))))
-  (GET "/dbraw/:queries" [queries] (response (run-queries-raw (Integer/parseInt queries))))
+  (GET "/db/:queries" [queries] (response (run-queries (get-query-count queries))))
+  (GET "/dbraw/:queries" [queries] (response (run-queries-raw (get-query-count queries))))
   (route/not-found "Not Found"))
 
 ; Format responses as JSON
