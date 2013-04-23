@@ -13,6 +13,7 @@
       "setup_file": "setup",
       "db_url": "/dbraw.php",
       "query_url": "/dbraw.php?queries=",
+      "fortune_url": "/fortune.php"
       "port": 8080,
       "sort": 12
     }
