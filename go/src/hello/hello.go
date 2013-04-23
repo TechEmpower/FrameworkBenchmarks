@@ -21,7 +21,7 @@ type World struct {
 }
 
 const (
-	DB_CONN_STR   = "root@tcp(127.0.0.1:3306)/hello_world?charset=utf8"
+	DB_CONN_STR   = "benchmarkdbuser:benchmarkdbpass@tcp(172.16.98.98:3306)/hello_world?charset=utf8"
 	DB_SELECT_SQL = "SELECT id, randomNumber FROM World where id = ?"
 	DB_ROWS       = 10000
 	MAX_CON       = 100
