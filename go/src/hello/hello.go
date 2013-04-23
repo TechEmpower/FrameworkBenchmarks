@@ -22,28 +22,14 @@ type World struct {
 
 const (
 	DB_CONN_STR   = "benchmarkdbuser:benchmarkdbpass@tcp(172.16.98.98:3306)/hello_world?charset=utf8"
-	DB_SELECT_SQL = "SELECT id, randomNumber FROM World where id = ?;"
+	DB_SELECT_SQL = "SELECT id, randomNumber FROM World where id = ?"
 	DB_ROWS       = 10000
+	MAX_CON       = 80
 )
 
 var (
-	db    *sql.DB
-	query *sql.Stmt
+	stmts = make(chan *sql.Stmt, MAX_CON)
 )
-
-func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-	var err error
-	if db, err = sql.Open("mysql", DB_CONN_STR); err != nil {
-		log.Fatalf("Error opening database: %s", err)
-	}
-	if query, err = db.Prepare(DB_SELECT_SQL); err != nil {
-		log.Fatalf("Error preparing statement: %s", err)
-	}
-	http.HandleFunc("/json", jsonHandler)
-	http.HandleFunc("/db", dbHandler)
-	http.ListenAndServe(":8080", nil)
-}
 
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/javascript")
@@ -53,16 +39,44 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func dbHandler(w http.ResponseWriter, r *http.Request) {
-  	qnum := 1
+	n := 1
 	if qnumStr := r.URL.Query().Get("queries"); len(qnumStr) != 0 {
-		qnum, _ = strconv.Atoi(qnumStr)
+		n, _ = strconv.Atoi(qnumStr)
 	}
-	ww := make([]World, qnum)
-	for i := 0; i < qnum; i++ {
-		query.QueryRow(rand.Intn(DB_ROWS)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
+	stmt := <-stmts // wait for a connection
+	ww := make([]World, n)
+	for i := 0; i < n; i++ {
+		stmt.QueryRow(rand.Intn(DB_ROWS)+1).Scan(
+			&ww[i].Id,
+			&ww[i].RandomNumber,
+		)
 	}
-	w.Header().Set("Content-Type", "application/javascript")
+	stmts <- stmt // return a connection
 	j, _ := json.Marshal(ww)
+	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Length", strconv.Itoa(len(j)))
 	w.Write(j)
+}
+
+func main() {
+	http.HandleFunc("/db", dbHandler)
+	http.HandleFunc("/json", jsonHandler)
+	http.ListenAndServe(":8080", nil)
+}
+
+func init() {
+	// use cores
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	// setup connection pool
+	for i := 0; i < MAX_CON; i++ {
+		if db, err := sql.Open("mysql", DB_CONN_STR); err == nil {
+			stmt, err := db.Prepare(DB_SELECT_SQL)
+			if err != nil {
+				log.Fatal(err)
+			}
+			stmts <- stmt
+		} else {
+			log.Fatalf("Error opening database: %s", err)
+		}
+	}
 }
