@@ -3,9 +3,9 @@ use Mojolicious::Lite;
 use Mojolicious::Plugin::Database;
 
 plugin 'database', {
-    dsn      => 'dbi:mysql:dbname=test',
-    username => 'root',
-    password => ''
+    dsn      => 'dbi:mysql:dbname=hello_world;host=localhost',
+    username => 'benchmarkdbuser',
+    password => 'benchmarkdbpass'
 };
 
 get '/json' => sub {
