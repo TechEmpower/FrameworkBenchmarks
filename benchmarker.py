@@ -306,7 +306,7 @@ class Benchmarker:
         continue
       
       # If the test does not contain an implementation of the current test-type, skip it
-      if not test.contains_type(self.type):
+      if self.type != 'all' and not test.contains_type(self.type):
         continue
       
       print textwrap.dedent("""
