@@ -24,7 +24,7 @@ const (
 	DB_CONN_STR   = "benchmarkdbuser:benchmarkdbpass@tcp(172.16.98.98:3306)/hello_world?charset=utf8"
 	DB_SELECT_SQL = "SELECT id, randomNumber FROM World where id = ?"
 	DB_ROWS       = 10000
-	MAX_CON       = 100
+	MAX_CON       = 80
 )
 
 var (
@@ -68,19 +68,15 @@ func init() {
 	// use cores
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	// setup connection pool
-	if db, err := sql.Open("mysql", DB_CONN_STR); err == nil {
-		for i := 0; i < MAX_CON; i++ {
-			tx, err := db.Begin()
-			if err != nil {
-				log.Fatal(err)
-			}
-			stmt, err := tx.Prepare(DB_SELECT_SQL)
+	for i := 0; i < MAX_CON; i++ {
+		if db, err := sql.Open("mysql", DB_CONN_STR); err == nil {
+			stmt, err := db.Prepare(DB_SELECT_SQL)
 			if err != nil {
 				log.Fatal(err)
 			}
 			stmts <- stmt
+		} else {
+			log.Fatalf("Error opening database: %s", err)
 		}
-	} else {
-		log.Fatalf("Error opening database: %s", err)
 	}
 }
