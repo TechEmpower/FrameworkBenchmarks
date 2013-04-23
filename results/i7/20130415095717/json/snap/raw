@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 11:40:51 PDT 2013
+
+  System load:  1.18                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+116 packages can be updated.
+54 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer snap
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   448.81us  189.86us   1.08ms   72.14%
+    Req/Sec     2.21k   665.10     3.00k    57.25%
+  107560 requests in 5.00s, 18.46MB read
+Requests/sec:  21515.34
+Transfer/sec:      3.69MB
+
+---------------------------------------------------------
+ Running Warmup snap
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.34ms    2.00ms  24.24ms   88.25%
+    Req/Sec     1.99k    99.55     3.00k    99.19%
+  994100 requests in 1.00m, 170.65MB read
+Requests/sec:  16568.41
+Transfer/sec:      2.84MB
+
+---------------------------------------------------------
+ Concurrency: 8 for snap
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   369.86us  141.90us   1.07ms   69.76%
+    Req/Sec     2.50k   500.07     3.00k    50.31%
+  1441337 requests in 1.00m, 247.42MB read
+Requests/sec:  24022.65
+Transfer/sec:      4.12MB
+
+---------------------------------------------------------
+ Concurrency: 16 for snap
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   596.76us  164.92us   1.55ms   73.43%
+    Req/Sec     3.00k    63.52     3.00k    99.60%
+  1661310 requests in 1.00m, 285.18MB read
+Requests/sec:  27689.13
+Transfer/sec:      4.75MB
+
+---------------------------------------------------------
+ Concurrency: 32 for snap
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.56ms  426.73us   3.46ms   68.01%
+    Req/Sec     2.00k    49.91     2.00k    99.75%
+  1269281 requests in 1.00m, 217.89MB read
+Requests/sec:  21155.25
+Transfer/sec:      3.63MB
+
+---------------------------------------------------------
+ Concurrency: 64 for snap
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.95ms  695.39us  13.23ms   80.96%
+    Req/Sec     2.00k    17.64     2.00k    99.97%
+  1310679 requests in 1.00m, 224.99MB read
+Requests/sec:  21845.01
+Transfer/sec:      3.75MB
+
+---------------------------------------------------------
+ Concurrency: 128 for snap
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.55ms    1.43ms  21.51ms   79.40%
+    Req/Sec     2.00k   114.33     3.00k    98.69%
+  1189367 requests in 1.00m, 204.17MB read
+Requests/sec:  19823.19
+Transfer/sec:      3.40MB
+
+---------------------------------------------------------
+ Concurrency: 256 for snap
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.30ms    2.06ms  20.99ms   86.47%
+    Req/Sec     1.98k   127.65     2.00k    98.34%
+  996218 requests in 1.00m, 171.01MB read
+Requests/sec:  16603.92
+Transfer/sec:      2.85MB

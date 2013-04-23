@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 23:29:28 PDT 2013
+
+  System load:  1.18                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer lift-stateless
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.30ms    5.81ms  40.32ms   88.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6898 requests in 5.00s, 2.14MB read
+  Non-2xx or 3xx responses: 2
+Requests/sec:   1379.12
+Transfer/sec:    437.44KB
+
+---------------------------------------------------------
+ Running Warmup lift-stateless
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    76.90ms   11.90ms 249.71ms   90.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  196624 requests in 1.00m, 60.90MB read
+  Non-2xx or 3xx responses: 22
+Requests/sec:   3276.93
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 8 for lift-stateless
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.06ms    1.06ms  16.67ms   87.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  156874 requests in 1.00m, 48.59MB read
+  Non-2xx or 3xx responses: 15
+Requests/sec:   2614.49
+Transfer/sec:    829.25KB
+
+---------------------------------------------------------
+ Concurrency: 16 for lift-stateless
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.12ms    3.57ms 133.40ms   92.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  191961 requests in 1.00m, 59.46MB read
+  Non-2xx or 3xx responses: 20
+Requests/sec:   3199.27
+Transfer/sec:      0.99MB
+
+---------------------------------------------------------
+ Concurrency: 32 for lift-stateless
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.02ms    7.00ms 150.85ms   91.72%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  201073 requests in 1.00m, 62.28MB read
+  Non-2xx or 3xx responses: 16
+Requests/sec:   3351.14
+Transfer/sec:      1.04MB
+
+---------------------------------------------------------
+ Concurrency: 64 for lift-stateless
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.30ms    6.55ms 189.37ms   87.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  199724 requests in 1.00m, 61.86MB read
+  Non-2xx or 3xx responses: 20
+Requests/sec:   3328.60
+Transfer/sec:      1.03MB
+
+---------------------------------------------------------
+ Concurrency: 128 for lift-stateless
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.39ms    8.66ms 187.53ms   89.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  199304 requests in 1.00m, 61.73MB read
+  Non-2xx or 3xx responses: 23
+Requests/sec:   3321.66
+Transfer/sec:      1.03MB
+
+---------------------------------------------------------
+ Concurrency: 256 for lift-stateless
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    75.77ms   12.55ms 250.87ms   92.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  199141 requests in 1.00m, 61.68MB read
+  Non-2xx or 3xx responses: 14
+Requests/sec:   3318.87
+Transfer/sec:      1.03MB

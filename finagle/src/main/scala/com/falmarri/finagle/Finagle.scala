@@ -50,12 +50,12 @@ object FinagleBenchmark extends App {
     ds.setDriverClassName("com.mysql.jdbc.Driver")
     ds.setUsername("benchmarkdbuser")
     ds.setPassword("benchmarkdbpass")
-    ds.setMaxActive(20);
+    ds.setMaxActive(256);
     ds.setMaxIdle(10);
     ds.setInitialSize(20);
     //ds.setValidationQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS")
     //new java.io.File("target").mkdirs // ensure that folder for database exists
-    ds.setUrl("jdbc:mysql://" + System.getProperty("db.host", "localhost") + ":3306/hello_world")
+    ds.setUrl("jdbc:mysql://" + System.getProperty("db.host", "localhost") + ":3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true")
     ds
   }
   
@@ -89,8 +89,10 @@ object FinagleBenchmark extends App {
       val resp = Response()
       database withSession {implicit session: Session =>
         val rand = new Random()
-        val q = Query(Worlds).where(_.id inSet( for (i <- 0 to n) yield rand.nextInt(10000)))
-        resp.setContent(copiedBuffer(serialize(if (n == 1) q.first else q.list), UTF_8))
+        val q = (0 until n).map { _ =>
+          Query(Worlds).where(_.id > rand.nextInt(10000)).first
+        }
+        resp.setContent(copiedBuffer(serialize(q), UTF_8))
         resp.setContentTypeJson
         Future.value(resp)
       }
@@ -104,8 +106,10 @@ object FinagleBenchmark extends App {
 	      val resp = Response()
 	      database withSession {implicit session: Session =>
 	        val rand = new Random()
-	        val q = Query(Worlds).where(_.id inSet( for (i <- 0 to n) yield rand.nextInt(10000)))
-	        resp.setContent(copiedBuffer(serialize(if (n == 1) q.first else q.list), UTF_8))
+                val q = (0 until n).map { _ =>
+                  Query(Worlds).where(_.id > rand.nextInt(10000)).first
+                }
+                resp.setContent(copiedBuffer(serialize(q), UTF_8))
 	        resp.setContentTypeJson
 	        resp
 	      	}

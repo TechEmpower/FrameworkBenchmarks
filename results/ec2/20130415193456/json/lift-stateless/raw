@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 08:59:28 UTC 2013
+
+  System load:  0.12               Processes:           70
+  Usage of /:   24.5% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer lift-stateless
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.93ms   12.18ms  99.75ms   90.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2650 requests in 5.01s, 828.12KB read
+Requests/sec:    528.83
+Transfer/sec:    165.26KB
+
+---------------------------------------------------------
+ Running Warmup lift-stateless
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    80.79ms   51.06ms 682.28ms   78.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  215175 requests in 1.00m, 65.67MB read
+Requests/sec:   3586.23
+Transfer/sec:      1.09MB
+
+---------------------------------------------------------
+ Concurrency: 8 for lift-stateless
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.18ms    1.22ms  19.14ms   92.70%
+    Req/Sec     0.62     24.98     1.00k    99.94%
+  217573 requests in 1.00m, 66.40MB read
+Requests/sec:   3626.23
+Transfer/sec:      1.11MB
+
+---------------------------------------------------------
+ Concurrency: 16 for lift-stateless
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.80ms    2.34ms  53.79ms   90.94%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  252541 requests in 1.00m, 77.07MB read
+Requests/sec:   4208.99
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Concurrency: 32 for lift-stateless
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.48ms    3.82ms  56.26ms   88.90%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  302893 requests in 1.00m, 92.44MB read
+Requests/sec:   5048.25
+Transfer/sec:      1.54MB
+
+---------------------------------------------------------
+ Concurrency: 64 for lift-stateless
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.96ms   10.40ms 148.59ms   93.77%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  333266 requests in 1.00m, 101.70MB read
+Requests/sec:   5554.53
+Transfer/sec:      1.70MB
+
+---------------------------------------------------------
+ Concurrency: 128 for lift-stateless
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.22ms   16.96ms 280.71ms   92.45%
+    Req/Sec     0.99k   140.93     2.00k    98.00%
+  340646 requests in 1.00m, 103.96MB read
+Requests/sec:   5677.43
+Transfer/sec:      1.73MB
+
+---------------------------------------------------------
+ Concurrency: 256 for lift-stateless
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.73ms   22.64ms 271.04ms   86.03%
+    Req/Sec     1.00k   150.90     3.00k    98.10%
+  342475 requests in 1.00m, 104.52MB read
+  Socket errors: connect 0, read 0, write 0, timeout 24
+Requests/sec:   5707.68
+Transfer/sec:      1.74MB

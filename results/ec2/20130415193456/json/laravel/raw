@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer laravel
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.97ms   23.24ms 192.65ms   88.72%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1729 requests in 5.01s, 1.54MB read
+Requests/sec:    345.01
+Transfer/sec:    314.37KB
+
+---------------------------------------------------------
+ Running Warmup laravel
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   655.79ms  160.49ms   1.68s    74.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23082 requests in 1.00m, 20.54MB read
+Requests/sec:    384.64
+Transfer/sec:    350.57KB
+
+---------------------------------------------------------
+ Concurrency: 8 for laravel
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.13ms   51.78ms 743.93ms   93.65%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24410 requests in 1.00m, 21.72MB read
+Requests/sec:    406.81
+Transfer/sec:    370.75KB
+
+---------------------------------------------------------
+ Concurrency: 16 for laravel
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    52.28ms  102.26ms   1.04s    90.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24484 requests in 1.00m, 21.79MB read
+Requests/sec:    408.03
+Transfer/sec:    371.86KB
+
+---------------------------------------------------------
+ Concurrency: 32 for laravel
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   105.65ms  163.67ms   1.01s    88.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24141 requests in 1.00m, 21.49MB read
+Requests/sec:    402.32
+Transfer/sec:    366.70KB
+
+---------------------------------------------------------
+ Concurrency: 64 for laravel
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   176.75ms  183.75ms   1.29s    85.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23677 requests in 1.00m, 21.07MB read
+Requests/sec:    394.59
+Transfer/sec:    359.63KB
+
+---------------------------------------------------------
+ Concurrency: 128 for laravel
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   334.39ms  182.36ms   1.35s    71.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23176 requests in 1.00m, 20.63MB read
+Requests/sec:    386.24
+Transfer/sec:    352.02KB
+
+---------------------------------------------------------
+ Concurrency: 256 for laravel
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/json
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   660.52ms  191.00ms   1.86s    76.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23124 requests in 1.00m, 20.58MB read
+Requests/sec:    385.34
+Transfer/sec:    351.24KB

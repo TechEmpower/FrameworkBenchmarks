@@ -175,19 +175,24 @@ class Benchmarker:
   ############################################################
   # report_results
   ############################################################
-  def report_results(self, framework, test, results, latency, requests, total_time):
+  def report_results(self, framework, test, results, latency, requests, total_time, errors, total_requests):
     # Try to get the id in the result array if it exists.
     try:
       framework_id = str(self.results['frameworks'].index(framework.name))
     except ValueError:
       framework_id = str(framework.sort)
       
-    
+    if test not in self.results['rawData'].keys():
+      self.results['rawData'][test] = dict()
+      self.results['weighttpData'][test] = dict()
+
     self.results['rawData'][test][framework_id] = results
     self.results['weighttpData'][test][framework_id] = dict()
     self.results['weighttpData'][test][framework_id]['latency'] = latency
     self.results['weighttpData'][test][framework_id]['requests'] = requests
     self.results['weighttpData'][test][framework_id]['totalTime'] = total_time
+    self.results['weighttpData'][test][framework_id]['errors'] = errors
+    self.results['weighttpData'][test][framework_id]['totalRequests'] = total_requests
 
   ############################################################
   # End report_results
@@ -251,7 +256,7 @@ class Benchmarker:
   def __setup_server(self):
     try:
       subprocess.check_call("sudo sysctl -w net.core.somaxconn=1024".rsplit(" "))
-      subprocess.check_call("sudo -s ulimit -n 4096".rsplit(" "))
+      subprocess.check_call("sudo -s ulimit -n 8192".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_recycle=1".rsplit(" "))
       subprocess.check_call("sudo sysctl -w kernel.shmmax=134217728".rsplit(" "))
@@ -272,7 +277,7 @@ class Benchmarker:
     p = subprocess.Popen(self.ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
       sudo sysctl -w net.core.somaxconn=1024
-      sudo -s ulimit -n 4096
+      sudo -s ulimit -n 8192
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
       sudo sysctl -w kernel.shmmax=134217728
@@ -299,7 +304,11 @@ class Benchmarker:
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
         continue
-
+      
+      # If the test does not contain an implementation of the current test-type, skip it
+      if self.type != 'all' and not test.contains_type(self.type):
+        continue
+      
       print textwrap.dedent("""
       =====================================================
         Beginning {name}
@@ -419,6 +428,15 @@ class Benchmarker:
         framework = self.results['frameworks'][int(key)]
         writer.writerow([framework] + value)
 
+    # Fortune CSV
+    with open(os.path.join(self.full_results_directory(), "fortune.csv"), 'wb') as csvfile:
+      writer = csv.writer(csvfile)
+      writer.writerow(["Framework"] + self.query_intervals)
+      if 'fortune' in self.results['rawData'].keys():
+        for key, value in self.results['rawData']['fortune'].iteritems():
+          framework = self.results['frameworks'][int(key)]
+          writer.writerow([framework] + value)
+
   ############################################################
   # End __parse_results
   ############################################################
@@ -502,10 +520,12 @@ class Benchmarker:
       self.results['rawData']['json'] = dict()
       self.results['rawData']['db'] = dict()
       self.results['rawData']['query'] = dict()
+      self.results['rawData']['fortune'] = dict()
       self.results['weighttpData'] = dict()
       self.results['weighttpData']['json'] = dict()
       self.results['weighttpData']['db'] = dict()
       self.results['weighttpData']['query'] = dict()
+      self.results['weighttpData']['fortune'] = dict()
     else:
       for x in self.__gather_tests():
         if x.name not in self.results['frameworks']:

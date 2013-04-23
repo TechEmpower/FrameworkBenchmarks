@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 12:03:54 PDT 2013
+
+  System load:  0.17                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+116 packages can be updated.
+54 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer finagle
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   209.12us  275.42us   3.50ms   94.30%
+    Req/Sec     3.94k     1.44k    5.00k    79.47%
+  236885 requests in 5.00s, 25.30MB read
+Requests/sec:  47380.82
+Transfer/sec:      5.06MB
+
+---------------------------------------------------------
+ Running Warmup finagle
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.61ms    2.60ms  31.92ms   93.28%
+    Req/Sec    28.17k     3.14k   42.00k    92.31%
+  13929316 requests in 1.00m, 1.45GB read
+Requests/sec: 232158.56
+Transfer/sec:     24.80MB
+
+---------------------------------------------------------
+ Concurrency: 8 for finagle
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   153.44us  116.02us   1.98ms   99.25%
+    Req/Sec     6.00k     0.00     6.00k   100.00%
+  3161663 requests in 1.00m, 337.70MB read
+Requests/sec:  52695.19
+Transfer/sec:      5.63MB
+
+---------------------------------------------------------
+ Concurrency: 16 for finagle
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   146.39us  115.43us   4.32ms   97.13%
+    Req/Sec    13.00k    49.91    13.00k    99.84%
+  6528781 requests in 1.00m, 697.35MB read
+Requests/sec: 108815.29
+Transfer/sec:     11.62MB
+
+---------------------------------------------------------
+ Concurrency: 32 for finagle
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   184.38us  196.97us   3.78ms   95.79%
+    Req/Sec    22.97k   219.67    23.00k    98.04%
+  11313458 requests in 1.00m, 1.18GB read
+Requests/sec: 188561.97
+Transfer/sec:     20.14MB
+
+---------------------------------------------------------
+ Concurrency: 64 for finagle
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   405.87us    1.49ms  36.36ms   99.07%
+    Req/Sec    27.83k     1.99k   33.00k    91.19%
+  13607927 requests in 1.00m, 1.42GB read
+Requests/sec: 226801.64
+Transfer/sec:     24.23MB
+
+---------------------------------------------------------
+ Concurrency: 128 for finagle
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   791.16us    1.35ms  25.46ms   94.83%
+    Req/Sec    28.35k     2.14k   41.00k    91.77%
+  13906665 requests in 1.00m, 1.45GB read
+Requests/sec: 231782.58
+Transfer/sec:     24.76MB
+
+---------------------------------------------------------
+ Concurrency: 256 for finagle
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.59ms    2.43ms  33.99ms   92.31%
+    Req/Sec    28.69k     2.26k   40.00k    92.81%
+  14004233 requests in 1.00m, 1.46GB read
+Requests/sec: 233415.66
+Transfer/sec:     24.93MB

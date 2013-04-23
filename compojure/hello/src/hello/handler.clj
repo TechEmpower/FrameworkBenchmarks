@@ -8,12 +8,10 @@
             [compojure.route :as route]))
 
 ; Database connection
-(defdb db (mysql {:db "hello_world"
+(defdb db (mysql {:subname "//localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
                   :user "benchmarkdbuser"
                   :password "benchmarkdbpass"
                   ;;OPTIONAL KEYS
-                  :host "localhost"
-                  :port "3306"
                   :delimiters "" ;; remove delimiters
                   :maximum-pool-size 256
                   }))

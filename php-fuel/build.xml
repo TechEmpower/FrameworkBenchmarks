@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+
+<project name="FuelPHP" default="help">
+	<property name="basedir" value="${project.basedir}" />
+	<property name="builddir" value="${basedir}/build" />
+	<property name="branch" value="1.1/develop" />
+	<property name="tag" value="v1.1" />
+
+	<property name="submodules" value="fuel/core,fuel/packages/auth,fuel/packages/email,fuel/packages/oil,fuel/packages/orm,fuel/packages/parser" />
+
+	<target name="help">
+		<echo message="phing clean   Clean all previous builds"/>
+		<echo message="phing dist    Build a release .zip"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${builddir}"/>
+	</target>
+
+	<target name="warn">
+		<echo message="WARNING! This will remove any modifications that are not committed." />
+		<input propertyName="continue" defaultValue="n" validArgs="Y,n" promptChar=":">Do you want to continue? </input>
+		<if>
+ 			<equals arg1="${continue}" arg2="n" />
+ 			<then>
+				<fail message="Abandoning build." />
+			</then>
+		</if>
+	</target>
+
+    <target name="prepare">
+        <echo msg="Making directory ./build" />
+        <mkdir dir="./build" />
+    </target>
+
+	<target name="prepare-repo">
+		<if>
+			<not>
+				<isset property="release-tag"/>
+			</not>
+			<then>
+				<propertyprompt propertyName="release-tag" defaultValue="${tag}" promptText="Tag name:" />
+			</then>
+		</if>
+
+		<exec command="git fetch" dir="." passthru="true" />
+		<exec command="git reset --hard HEAD" dir="." passthru="true" />
+		<exec command="git checkout ${release-tag}" dir="." passthru="true" />
+		<exec command="git submodule update --init" dir="." passthru="true" />
+	</target>
+
+	<!-- Build a release .zip -->
+	<target name="dist" depends="warn,prepare,prepare-repo">
+		<zip destfile="${builddir}/fuelphp-${release-tag}.zip" prefix="fuelphp-${release-tag}/">
+			<fileset dir="${basedir}">
+				<include name="**/**"/>
+
+				<exclude name="*.zip" />
+				<exclude name="build/**" />
+
+				<exclude name="build.xml" />
+				<exclude name="phpunit.xml" />
+				<exclude name="CONTRIBUTING.md" />
+				<exclude name="TESTING.md" />
+
+				<exclude name="fuel/app/cache/*/**" />
+				<exclude name="fuel/app/logs/*/**" />
+				<exclude name="fuel/app/tmp/*/**" />
+
+				<exclude name=".DS_Store" />
+				<exclude name="**/.git/**" />
+				<exclude name="**/.git*" />
+			</fileset>
+		</zip>
+
+	</target>
+
+</project>

@@ -1,0 +1,118 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 01:39:42 UTC 2013
+
+  System load:  0.44               Processes:           70
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer sinatra-ruby
+ wrk -d 5 -c 8 -t 8 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.96ms   11.51ms 125.13ms   97.72%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3404 requests in 5.01s, 1.24MB read
+Requests/sec:    679.90
+Transfer/sec:    252.64KB
+
+---------------------------------------------------------
+ Running Warmup sinatra-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=2
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=2
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   375.19ms   37.91ms 539.20ms   85.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  40591 requests in 1.00m, 14.73MB read
+Requests/sec:    676.46
+Transfer/sec:    251.38KB
+
+---------------------------------------------------------
+ Queries: 1 for sinatra-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=1
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=1
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   264.33ms   24.44ms 421.06ms   81.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  57780 requests in 1.00m, 17.95MB read
+Requests/sec:    962.94
+Transfer/sec:    306.32KB
+
+---------------------------------------------------------
+ Queries: 5 for sinatra-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=5
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=5
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   620.28ms   64.10ms 795.20ms   97.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24491 requests in 1.00m, 12.66MB read
+Requests/sec:    408.13
+Transfer/sec:    215.98KB
+
+---------------------------------------------------------
+ Queries: 10 for sinatra-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=10
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=10
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.02s   125.67ms   1.22s    96.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14721 requests in 1.00m, 11.38MB read
+Requests/sec:    245.30
+Transfer/sec:    194.23KB
+
+---------------------------------------------------------
+ Queries: 15 for sinatra-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=15
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=15
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.46s   208.61ms   1.73s    96.51%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10263 requests in 1.00m, 10.57MB read
+Requests/sec:    171.03
+Transfer/sec:    180.34KB
+
+---------------------------------------------------------
+ Queries: 20 for sinatra-ruby
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db?queries=20
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db?queries=20
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.85s   305.08ms   2.10s    96.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8044 requests in 1.00m, 10.35MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    134.04
+Transfer/sec:    176.66KB

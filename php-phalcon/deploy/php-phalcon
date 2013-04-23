@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /php-phalcon/ "/home/ubuntu/FrameworkBenchmarks/php-phalcon/public/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/php-phalcon/public/>
+          Options Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>

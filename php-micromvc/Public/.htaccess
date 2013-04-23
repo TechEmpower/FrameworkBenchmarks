@@ -1,0 +1,51 @@
+##############################
+# MicroMVC Apache2 settings
+##############################
+
+# 1and1.com users might need to un-comment this line
+#AddType x-mapp-php5 .php
+
+# Disable directory browsing
+Options All -Indexes
+
+# Prevent folder listing
+#IndexIgnore *
+
+# Set the default file for indexes
+DirectoryIndex index.php index.html
+
+<IfModule mod_rewrite.c>
+
+	# mod_rewrite rules
+	RewriteEngine on
+
+	# The RewriteBase of the system (change if you are using this sytem in a sub-folder).
+	RewriteBase /
+
+	# If the file/dir does not exist, route everything to index.php
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} !^/(robots\.txt|favicon\.ico)
+	RewriteRule ^(.*)$ index.php/$1 [QSA,L]
+
+	#############################
+	# Prevent Image hotlinking (must be blank refer or this site)
+	#RewriteCond %{HTTP_REFERER} !^$
+	#RewriteCond %{HTTP_REFERER} !^http://(micromvc|othersite) [NC]
+	#RewriteRule .*\.(gif|jpg|png)$ [NC,F]
+
+	#############################
+	# Deny any people (or bots) from the following sites: (to stop spam comments)
+	#RewriteCond %{HTTP_REFERER} nienschanz\.ru [NC,OR]
+	#RewriteCond %{HTTP_REFERER} porn\.com
+	#RewriteRule .* - [F]
+
+	# You can also uncomment this if you know the IP:
+	#Deny from 192.168.1.1
+
+</IfModule>
+
+# Cache static content for one week
+#<FilesMatch "\.(flv|gif|jpg|jpeg|png|ico|swf)$">
+#	#Header set Cache-Control "max-age=604800"
+#</FilesMatch>

@@ -2,7 +2,7 @@
 
 Guesses and anecdotes can dominate discussions about the performance of web application frameworks.  Here we attempt to provide some objective performance measures across a wide field of frameworks, covering several platforms: Go, Python, Java, Ruby, PHP, Clojure, Groovy, and JavaScript.  The tests exercise the frameworks' JSON seralization and object-relational model (ORM).  Future versions will exercise server-side template libraries and other computation.
 
-See results data we've collected from Amazon EC2 instances and our physical hardware at our blog. http://www.techempower.com/blog/2013/03/28/framework-benchmarks/
+Read more and see the results of our tests on Amazon EC2 and physical hardware at http://www.techempower.com/benchmarks/
 
 ## Running the test suite
 
@@ -24,6 +24,8 @@ When propmted to create a security group for the instances, here are the ports t
 * 9000 (Play Framework)
 * 27017 (MongoDB)
 * 3000 (yesod)
+* 8000 (snap)
+
 
 #### 2. Setting up the servers
 
@@ -36,7 +38,7 @@ To coordinate the tests via scripting, the servers need to be able to work toget
 Now ssh into the server instance and clone the latest from this repository (the scripts we use to run the tests expect that you'll clone the repository into your home directory):
 
 	ssh -i path-to-pem-file ubuntu@server-instance-ip
-	sudo apt-get install git-core
+	yes | sudo apt-get install git-core
 	git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
 	cd FrameworkBenchmarks
 
@@ -45,12 +47,15 @@ Next, we're going to setup the servers with all the necessary software:
 	./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --install-software --list-tests
     source ~/.bash_profile
     # For your first time through the tests, set the ulimit for open files
-    ulimit -n 4096
+    ulimit -n 8192
     # Most software is installed autormatically by the script, but running the mongo command below from 
     # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"
+    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
     cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
-    cd ../..
+    cd ../../..
+    cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
+    cd ..
+    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
 	  mongo --host client-private-ip < config/create.js
 
 Assuming the above finished without error, we're ready to start the test suite:
@@ -97,12 +102,14 @@ Next, we're going to setup the servers with all the necessary software:
 	./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --install-software --list-tests
     source ~/.bash_profile
     # For your first time through the tests, set the ulimit for open files
-    ulimit -n 4096
     # Most software is installed autormatically by the script, but running the mongo command below from
     # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"
+    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
     cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
-    cd ../..
+    cd ../../..
+    cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
+    cd ..
+    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
     mongo --host client-ip < config/create.js
 
 Assuming this finished without error, we're ready to start the test suite:
@@ -236,7 +243,7 @@ The benchmark_config file is used by our run script to identify the available te
   * query_url (optional): The relative URL path to the variable query test. The URL must be set up so that an integer can be applied to the end of the url to specify the number of queries to run, i.e. /db?queries= or /db/
   * port: The port the server is listneing on
   * sort: The sort order. This is important for our own blog post which relies on consistent ordering of the frameworks. You can get the next available sort order by running:
-    ./run-test.py --next-sort
+    ./run-tests.py --next-sort
 
 ## Setup Files
 

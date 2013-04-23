@@ -12,7 +12,7 @@ The tests were run with:
 * [Ruby 2.0.0-p0](http://www.ruby-lang.org/)
 * [JRuby 1.7.3](http://jruby.org/)
 * [Rack 1.5.1](http://rack.github.com/)
-* [Passenger 3.9.5-rc3](https://www.phusionpassenger.com/)
+* [Unicorn 4.6.2](http://unicorn.bogomips.org/)
 * [Resin 4.0.34](http://www.caucho.com/)
 
 ## References
