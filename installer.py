@@ -87,7 +87,14 @@ class Installer:
     # go
     #
 
-    self.__run_command("curl http://go.googlecode.com/files/go1.1beta1.linux-amd64.tar.gz | tar xvz")
+    self.__run_command("curl http://go.googlecode.com/files/go1.1beta2.linux-amd64.tar.gz | tar xvz")
+
+    #
+    # Perl
+    #
+
+    self.__run_command("curl -L http://cpanmin.us | perl - --sudo App::cpanminus")
+    self.__run_command("cpanm -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON")
 
     #
     # php
@@ -127,20 +134,6 @@ class Installer:
     self.__run_command("sudo ringo-admin install ringo/stick")
     self.__run_command("sudo ringo-admin install oberhamsi/reinhardt")
     self.__run_command("sudo ringo-admin install grob/ringo-sqlstore")
-
-    #
-    # Perl
-    #
-    self.__run_command("sudo cpan install Plack", send_yes=True)
-    self.__run_command("sudo cpan install Starman")
-    self.__run_command("sudo cpan install DBD::mysql")
-    self.__run_command("sudo cpan install DBI")
-    self.__run_command("sudo cpan install Dancer")
-    self.__run_command("sudo cpan install Dancer::Plugin::Database")
-    self.__run_command("sudo cpan install JSON", send_yes=True)
-    self.__run_command("sudo cpan install Kelp", send_yes=True)
-    self.__run_command("sudo cpan install Mojolicious", send_yes=True)
-    self.__run_command("sudo cpan install Mojolicious:Plugin:Database", send_yes=True)
 
     #######################################
     # Webservers
