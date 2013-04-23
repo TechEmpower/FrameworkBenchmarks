@@ -3,11 +3,13 @@ use strict;
 use warnings;
 
 use Dancer ':syntax';
-use Dancer::Plugin::Database;
+use DBI;
+
 set serializer => 'JSON';
 
-#my $dbh = database({ driver => 'mysql', database => 'test' });
-my $dbh = database({ driver => 'mysql', host => 'localhost', database => 'hello_world', username => 'benchmarkdbuser', password => 'benchmarkdbpass' });
+my $dsn = "dbi:mysql:database=hello_world;host=localhost;port=3306";
+my $dbh = DBI->connect( $dsn, 'benchmarkdbuser', 'benchmarkdbpass', {} );
+my $sth = $dbh->prepare("SELECT * FROM World where id = ?");
 
 get '/json' => sub {
     { message => 'Hello, World!' }
@@ -16,13 +18,15 @@ get '/json' => sub {
 get '/db' => sub {
     my $queries = params->{queries} || 1;
     my @response;
-    for( 1 .. $queries ) {
+    for ( 1 .. $queries ) {
         my $id = int rand 10000 + 1;
-        if ( my $row = $dbh->quick_select( 'world', { id => $id } ) ) {
-            push @response, { id => $id, randomNumber => $row->{randomNumber} };
+        $sth->execute($id);
+        if ( my $row = $sth->fetchrow_hashref ) {
+            push @response,
+              { id => $id, randomNumber => $row->{randomNumber} };
         }
     }
-    { \@response }
+    return \@response;
 };
 
 Dancer->dance;
