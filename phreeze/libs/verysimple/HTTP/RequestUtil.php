@@ -2,8 +2,6 @@
 /** @package	verysimple::HTTP */
 
 /** import supporting libraries */
-require_once("FileUpload.php");
-require_once("verysimple/String/VerySimpleStringUtil.php");
 
 /**
  * Static utility class for processing form post/request data
@@ -366,6 +364,7 @@ class RequestUtil
 		$tmp_path = $upload['tmp_name'];
 		$info = pathinfo($upload['name']);
 
+		require_once("FileUpload.php");
 		$fupload = new FileUpload();
 		$fupload->Name = $info['basename'];
 		$fupload->Size = $upload['size'];
@@ -455,6 +454,8 @@ class RequestUtil
 
 		if (self::$ENCODE_NON_ASCII)
 		{
+			require_once("verysimple/String/VerySimpleStringUtil.php");
+			
 			if (is_array($val))
 			{
 				foreach ($val as $k=>$v)
@@ -478,6 +479,8 @@ class RequestUtil
 	 */
 	public static function HasNonAsciiChars($fieldname)
 	{
+		require_once("verysimple/String/VerySimpleStringUtil.php");
+		
 		$val = isset($_REQUEST[$fieldname]) ? $_REQUEST[$fieldname] : '';
 		return VerySimpleStringUtil::EncodeToHTML($val) != $val;
 	}

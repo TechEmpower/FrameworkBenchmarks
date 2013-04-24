@@ -59,5 +59,19 @@ public class HelloHandler
     
     return json(worlds);
   }
+  
+  /**
+   * Fetch the full list of Fortunes from the database, sort them by the
+   * fortune message text, and then render the results to simple HTML using a 
+   * server-side template.
+   */
+  @PathSegment
+  public boolean fortunes()
+  {
+    final List<Fortune> fortunes = store.list(Fortune.class);
+    fortunes.add(new Fortune().setMessage("Additional fortune added at request time."));
+    Collections.sort(fortunes);
+    return mustache("fortunes", fortunes);
+  }
 
 }

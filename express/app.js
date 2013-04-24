@@ -6,6 +6,7 @@
 var cluster = require('cluster')
   , numCPUs = require('os').cpus().length
   , express = require('express')
+  , mustacheExpress = require('mustache-express')
   , mongoose = require('mongoose')
   , async = require('async')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
@@ -19,6 +20,11 @@ var cluster = require('cluster')
   })
   , World      = sequelize.define('World', {
     randomNumber: Sequelize.INTEGER
+  }, {
+    freezeTableName: true
+  })
+  , Fortune      = sequelize.define('Fortune', {
+    message: Sequelize.STRING
   }, {
     freezeTableName: true
   });
@@ -50,6 +56,10 @@ if (cluster.isMaster) {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(app.router);
+    app.engine('mustache', mustacheExpress());
+
+    app.set('view engine', 'mustache');
+    app.set('views', __dirname + '/views');
   });
 
   app.configure('development', function() {
@@ -103,6 +113,20 @@ if (cluster.isMaster) {
       res.send(worlds);
     });
   });
+
+  app.get('/fortune', function(req, res) {
+    Fortune.findAll().success(function (fortunes) {
+      var newFortune = Fortune.build({message: "Additional fortune added at request time."});
+      fortunes.push(newFortune);
+      fortunes.sort(sortFortunes);
+
+      res.render('fortune', {fortunes: fortunes});
+    });
+  });
+
+  function sortFortunes(a, b) {
+    return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
+  }
 
   app.listen(8080);
 }
