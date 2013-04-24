@@ -4,6 +4,7 @@ class BenchController extends \Phalcon\Mvc\Controller
 {
     public function initialize()
     {
+        // views must be renderd explicitly. safes processing time when not needed.
         $this->view->disable();
     }
 
@@ -24,10 +25,44 @@ class BenchController extends \Phalcon\Mvc\Controller
         return $this->sendContentAsJson($worlds);
     }
 
+    public function fortunesAction() {
+        // since the resultset is immutable get an array instead
+        // so we can add the new fortune
+        $fortunes = Fortunes::find()->toArray();
+        $fortunes[] = array(
+            'id' => 0,
+            'message' => 'Additional fortune added at request time.'
+        );
+
+        usort($fortunes, function($left, $right) {
+            if ($left['message'] === $right['message']) {
+                return 0;
+            } else if ($left['message'] > $right['message']) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        return $this->sendContentAsText(
+            $this->view->getRender('bench', 'fortunes', array(
+                'fortunes' => $fortunes
+            ))
+        );
+    }
+
     private function getQueryOrDefault($query, $default) {
         return $this->request->getQuery($query) !== null
             ? $this->request->getQuery($query)
             : $default;
+    }
+
+    private function sendContentAsText($content) {
+        $response = new Phalcon\Http\Response();
+        $response->setStatusCode(200, "OK");
+        $response->setHeader("Content-Type", "text/html; charset=utf-8");
+        $response->setContent($content);
+        return $response;
     }
 
     private function sendContentAsJson($content) {
