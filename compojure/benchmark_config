@@ -6,6 +6,7 @@
       "json_url": "/compojure/json",
       "db_url": "/compojure/db/1",
       "query_url": "/compojure/db/",
+      "fortune_url": "/compojure/fortune-hiccup"
       "port": 8080,
       "sort": 2
     }
