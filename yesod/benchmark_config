@@ -7,13 +7,6 @@
       "port": 8000,
       "sort": 37
     }
-    "mongodb": {
-      "setup_file": "setup",
-      "db_url": "/mongo/db",
-      "query_url": "/mongo/dbs/",
-      "port": 8000,
-      "sort": 38
-    },
     "mongodb-raw": {
       "setup_file": "setup",
       "db_url": "/mongo/raw/db"

@@ -35,6 +35,8 @@ data App = App
     , mongoDBPool :: Pool Mongo.Connection
     }
 
+-- | Not actually using the non-raw mongoDB.
+-- persistent-mongoDB expects a field of '_id', not 'id'
 mkYesod "App" [parseRoutes|
 /json               JsonR     GET
 
