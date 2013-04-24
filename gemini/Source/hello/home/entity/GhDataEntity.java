@@ -1,4 +1,4 @@
-package hello;
+package hello.home.entity;
 
 import com.techempower.util.*;
 

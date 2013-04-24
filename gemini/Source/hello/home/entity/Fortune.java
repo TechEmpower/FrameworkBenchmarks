@@ -1,12 +1,12 @@
 package hello.home.entity;
 
+import com.techempower.data.annotation.*;
 import com.techempower.js.*;
-
-import hello.*;
 
 /**
  * A fortune entity.
  */
+@Entity
 public class   Fortune
     extends    GhDataEntity
     implements Comparable<Fortune>
