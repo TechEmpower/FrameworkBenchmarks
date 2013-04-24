@@ -4,11 +4,7 @@
 /** import supporting libraries */
 require_once("IObservable.php");
 require_once("ConnectionSetting.php");
-require_once("DataPage.php");
-require_once("DataSet.php");
-require_once("QueryBuilder.php");
 require_once("verysimple/DB/DataDriver/IDataDriver.php");
-require_once("verysimple/IO/Includer.php");
 
 /**
  * DataAdapter abstracts and provides access to the data store
@@ -17,7 +13,7 @@ require_once("verysimple/IO/Includer.php");
  * @author     VerySimple Inc. <noreply@verysimple.com>
  * @copyright  1997-2005 VerySimple Inc.
  * @license    http://www.gnu.org/licenses/lgpl.html  LGPL
- * @version    2.0
+ * @version    2.1
  */
 class DataAdapter implements IObservable
 {
@@ -34,6 +30,9 @@ class DataAdapter implements IObservable
 	
 	/** @var used internally to keep track of communication error re-tries */
 	private $_num_retries = 0;
+	
+	/** @var static singleton instance of the data adapter */
+	static $ADAPTER_INSTANCE = null;
 	
 	/** @var instance of the driver class, used for escaping */
 	static $DRIVER_INSTANCE = null;
@@ -52,47 +51,15 @@ class DataAdapter implements IObservable
     function __construct($csetting, $listener = null, IDataDriver $driver = null)
     {
     	$this->_driver = $driver;
-    	
-    	
-    	if ($this->_driver == null) 
-    	{
-    		// the driver was not explicitly provided so we will try to create one from 
-    		// the connection setting based on the database types that we do know about
-    		switch($csetting->Type)
-    		{
-    			case "mysql":
-					include_once("verysimple/DB/DataDriver/MySQL.php");
-    				$this->_driver  = new DataDriverMySQL();
-    				break;
-    			case "mysqli":
-					include_once("verysimple/DB/DataDriver/MySQLi.php");
-    				$this->_driver  = new DataDriverMySQLi();
-    				break;
-    			case "sqlite":
-					include_once("verysimple/DB/DataDriver/SQLite.php");
-    				$this->_driver  = new DataDriverSQLite();
-    				break;
-    			default:
-    				try
-    				{
-    					Includer::IncludeFile("verysimple/DB/DataDriver/".$csetting->Type.".php");
-						$classname = "DataDriver" . $csetting->Type;
-    					$this->_driver  = new $classname();
-    				}
-    				catch (IncludeException $ex)
-		    		{
-		    			throw new Exception('Unknown DataDriver "' . $csetting->Type . '" specified in connection settings');
-		    		}
-    				break;
-    		}
+    	if ($this->_driver) DataAdapter::$DRIVER_INSTANCE = $this->_driver;
 
-    	}
-    	
-    	DataAdapter::$DRIVER_INSTANCE = $this->_driver;
-    	
-		$this->AttachObserver($listener);
 		$this->ConnectionSetting =& $csetting;
+
+		if ($listener) $this->AttachObserver($listener);
 		$this->Observe("DataAdapter Instantiated", OBSERVE_DEBUG);
+		
+		// set the singleton reference
+		DataAdapter::$ADAPTER_INSTANCE = $this;
 	}
 	
 	
@@ -105,6 +72,52 @@ class DataAdapter implements IObservable
 	{
 		$this->Observe("DataAdapter Destructor Firing...",OBSERVE_DEBUG);
 		$this->Close();
+	}
+	
+	/**
+	 * Load the data driver
+	 * @throws Exception
+	 */
+	public function LoadDriver()
+	{
+
+		if ($this->_driver == null)
+		{
+			require_once("verysimple/IO/Includer.php");
+			
+			// the driver was not explicitly provided so we will try to create one from
+			// the connection setting based on the database types that we do know about
+			switch($this->ConnectionSetting->Type)
+			{
+				case "mysql":
+					include_once("verysimple/DB/DataDriver/MySQL.php");
+					$this->_driver  = new DataDriverMySQL();
+					break;
+				case "mysqli":
+					include_once("verysimple/DB/DataDriver/MySQLi.php");
+					$this->_driver  = new DataDriverMySQLi();
+					break;
+				case "sqlite":
+					include_once("verysimple/DB/DataDriver/SQLite.php");
+					$this->_driver  = new DataDriverSQLite();
+					break;
+				default:
+					try
+					{
+						Includer::IncludeFile("verysimple/DB/DataDriver/".$this->ConnectionSetting->Type.".php");
+						$classname = "DataDriver" . $this->ConnectionSetting->Type;
+						$this->_driver  = new $classname();
+					}
+					catch (IncludeException $ex)
+					{
+						throw new Exception('Unknown DataDriver "' . $this->ConnectionSetting->Type . '" specified in connection settings');
+					}
+					break;
+			}
+		
+			DataAdapter::$DRIVER_INSTANCE = $this->_driver;
+		
+		}
 	}
 	
     /**
@@ -133,6 +146,8 @@ class DataAdapter implements IObservable
 		}
 		else
 		{
+			if (!$this->_driver) $this->LoadDriver();
+			
 			try
 			{
 				$this->_dbconn = $this->_driver->Open(
@@ -382,6 +397,8 @@ class DataAdapter implements IObservable
 	 */	
     public static function Escape($val)
     {
+    	if (DataAdapter::$ADAPTER_INSTANCE) DataAdapter::$ADAPTER_INSTANCE->LoadDriver();
+
 		// this is an unfortunate leftover from poor design of making this function static
 		// we cannon use the driver's escape method without a static reference
 		if (!DataAdapter::$DRIVER_INSTANCE) throw new Exception("DataAdapter must be instantiated before Escape can be called");
@@ -402,6 +419,8 @@ class DataAdapter implements IObservable
 	 */
 	public static function GetQuotedSql($val)
 	{
+		if (DataAdapter::$ADAPTER_INSTANCE) DataAdapter::$ADAPTER_INSTANCE->LoadDriver();
+		
 		// this is an unfortunate leftover from poor design of making this function static
 		// we cannon use the driver's escape method without a static reference
 		if (!DataAdapter::$DRIVER_INSTANCE) throw new Exception("DataAdapter must be instantiated before Escape can be called");
