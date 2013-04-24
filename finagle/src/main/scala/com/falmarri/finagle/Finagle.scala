@@ -12,7 +12,7 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import scala.language.experimental.macros
-import scala.reflect.macros.Context
+//import scala.reflect.macros.Context
 import java.io.StringWriter
 import org.jboss.netty.util.CharsetUtil.UTF_8
 import scala.slick.driver.MySQLDriver.simple._
