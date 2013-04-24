@@ -6,7 +6,6 @@
 var cluster = require('cluster')
   , numCPUs = require('os').cpus().length
   , express = require('express')
-  , mustacheExpress = require('mustache-express')
   , mongoose = require('mongoose')
   , async = require('async')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
@@ -56,9 +55,8 @@ if (cluster.isMaster) {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(app.router);
-    app.engine('mustache', mustacheExpress());
 
-    app.set('view engine', 'mustache');
+    app.set('view engine', 'jade');
     app.set('views', __dirname + '/views');
   });
 
@@ -120,7 +118,7 @@ if (cluster.isMaster) {
       fortunes.push(newFortune);
       fortunes.sort(sortFortunes);
 
-      res.render('fortune', {fortunes: fortunes});
+      res.render('fortunes', {fortunes: fortunes});
     });
   });
 
