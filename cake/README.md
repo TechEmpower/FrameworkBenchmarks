@@ -20,7 +20,7 @@ The tests were run with:
 
 * [Cake Version 2.3.0](http://cakephp.org/)
 * [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
-* [nginx 1.2.7](http://nginx.org/)
+* [nginx 1.4.0](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 Cake Debug mode is set to 0 in [core.php](app/Config/core.php), as
