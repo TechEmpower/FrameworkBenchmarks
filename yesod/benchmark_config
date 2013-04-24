@@ -16,5 +16,12 @@
       "port": 8000,
       "sort": 38
     },
+    "mongodb-raw": {
+      "setup_file": "setup",
+      "db_url": "/mongo/raw/db"
+      "query_url": "/mongo/raw/dbs/",
+      "port": 8080,
+      "sort": 47
+    },
   }]
 }
