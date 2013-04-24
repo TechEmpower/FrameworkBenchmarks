@@ -4,11 +4,14 @@
         ring.middleware.json
         ring.util.response
         korma.db
-        korma.core)
+        korma.core
+        hiccup.core
+        hiccup.util)
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             [clojure.java.jdbc :as jdbc]
-            [clojure.java.jdbc.sql :as sql]))
+            [clojure.java.jdbc.sql :as sql]
+            [net.cgrand.enlive-html :as html]))
 
 ; Database connection
 (defdb db (mysql {:subname "//localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
@@ -92,12 +95,54 @@
         1 ; clamp to 1 min
         q)))) ; otherwise use provided value
 
+
+; Set up entity World and the database representation
+(defentity fortune
+  (pk :id)
+  (table :fortune)
+  (entity-fields :id :message)
+  (database db))
+
+(defn get-all-fortunes []
+  "Query all Fortune records from the database."
+    (select fortune
+            (fields :id :message)))
+
+(defn get-fortunes []
+  "Fetch the full list of Fortunes from the database, sort them by the fortune
+message text, and then return the results."
+  (let [fortunes (conj (get-all-fortunes) {:id 0 :message "Additional fortune added at request time."} )]
+    (sort-by #(:message %) fortunes)))
+
+(defn fortunes-hiccup [fortunes]
+  "Render the given fortunes to simple HTML using Hiccup."
+  (html
+   [:head
+    [:title "Fortunes"]]
+   [:body
+    [:table
+     [:tr
+      [:th "id"]
+      [:th "message"]]
+     (for [x fortunes]
+       [:tr
+        [:td (:id x)]
+        [:td (escape-html (:message x))]])
+     ]]))
+
+(defn fortunes-enlive [fortunes]
+  "Render the given fortunes to simple HTML using Enlive."
+  "todo")
+
 ; Define route handlers
 (defroutes app-routes
   (GET "/" [] "Hello, World!")
   (GET "/json" [] (response {:message "Hello, World!"}))
   (GET "/db/:queries" [queries] (response (run-queries (get-query-count queries))))
   (GET "/dbraw/:queries" [queries] (response (run-queries-raw (get-query-count queries))))
+  (GET "/fortune" [] (response (get-fortunes)))
+  (GET "/fortune-hiccup" [] (fortunes-hiccup (get-fortunes)))
+  (GET "/fortune-enlive" [] (fortunes-enlive (get-fortunes)))
   (route/not-found "Not Found"))
 
 ; Format responses as JSON
