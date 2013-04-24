@@ -153,10 +153,10 @@ class Installer:
     #
     # Nginx
     #
-    self.__run_command("curl http://nginx.org/download/nginx-1.2.7.tar.gz | tar xvz")
-    self.__run_command("./configure", cwd="nginx-1.2.7")
-    self.__run_command("make", cwd="nginx-1.2.7")
-    self.__run_command("sudo make install", cwd="nginx-1.2.7")
+    self.__run_command("curl http://nginx.org/download/nginx-1.4.0.tar.gz | tar xvz")
+    self.__run_command("./configure", cwd="nginx-1.4.0")
+    self.__run_command("make", cwd="nginx-1.4.0")
+    self.__run_command("sudo make install", cwd="nginx-1.4.0")
 
     #
     # Openresty (nginx with openresty stuff)
