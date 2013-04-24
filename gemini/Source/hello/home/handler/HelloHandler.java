@@ -1,6 +1,5 @@
 package hello.home.handler;
 
-import hello.*;
 import hello.home.entity.*;
 
 import java.util.*;
@@ -16,7 +15,7 @@ import com.techempower.gemini.path.annotation.*;
  * simple database queries.
  */
 public class HelloHandler
-    extends  BasicPathHandler<GhContext>
+    extends  BasicPathHandler<Context>
 {
 
   private static final int DB_ROWS = 10000;
