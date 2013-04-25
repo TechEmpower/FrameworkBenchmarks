@@ -9,6 +9,13 @@
       "fortune_url": "/compojure/fortune-hiccup"
       "port": 8080,
       "sort": 2
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/compojure/dbraw/1",
+      "query_url": "/compojure/dbraw/",
+      "port": 8080,
+      "sort": 3
     }
   }]
 }
