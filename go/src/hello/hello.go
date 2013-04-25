@@ -29,11 +29,11 @@ type Fortune struct {
 }
 
 const (
-	ConnectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
+	ConnectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
 	WorldSelect        = "SELECT id, randomNumber FROM World where id = ?"
 	FortuneSelect      = "SELECT id, message FROM Fortune;"
 	WorldRowCount      = 10000
-	MaxConnectionCount = 80
+	MaxConnectionCount = 100
 )
 
 var (
