@@ -29,38 +29,38 @@ type Fortune struct {
 }
 
 const (
-	DB_CONN_STR           = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
-	DB_SELECT_SQL         = "SELECT id, randomNumber FROM World where id = ?"
-	DB_FORTUNE_SELECT_SQL = "SELECT id, message FROM Fortune;"
-	DB_ROWS               = 10000
-	MAX_CONN              = 80
+	ConnectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
+	WorldSelect        = "SELECT id, randomNumber FROM World where id = ?"
+	FortuneSelect      = "SELECT id, message FROM Fortune;"
+	WorldRowCount      = 10000
+	MaxConnectionCount = 80
 )
 
 var (
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
-	dbStatement       *sql.Stmt
+	worldStatement    *sql.Stmt
 	fourtuneStatement *sql.Stmt
 )
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	db, err := sql.Open("mysql", DB_CONN_STR)
+	db, err := sql.Open("mysql", ConnectionString)
 	if err != nil {
-		log.Fatalf("Error opening database: %s", err)
+		log.Fatalf("Error opening database: %v", err)
 	}
-	db.SetMaxIdleConns(MAX_CONN)
-	dbStatement, err = db.Prepare(DB_SELECT_SQL)
+	db.SetMaxIdleConns(MaxConnectionCount)
+	worldStatement, err = db.Prepare(WorldSelect)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fourtuneStatement, err = db.Prepare(DB_FORTUNE_SELECT_SQL)
+	fourtuneStatement, err = db.Prepare(FortuneSelect)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	http.HandleFunc("/db", dbHandler)
+	http.HandleFunc("/db", worldHandler)
 	http.HandleFunc("/json", jsonHandler)
 	http.HandleFunc("/fortune", fortuneHandler)
 	http.ListenAndServe(":8080", nil)
@@ -73,24 +73,27 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-func dbHandler(w http.ResponseWriter, r *http.Request) {
+func worldHandler(w http.ResponseWriter, r *http.Request) {
 	n := 1
 	if nStr := r.URL.Query().Get("queries"); len(nStr) != 0 {
 		n, _ = strconv.Atoi(nStr)
 	}
 	ww := make([]World, n)
 	if n == 1 {
-		dbStatement.QueryRow(rand.Intn(DB_ROWS)+1).Scan(&ww[0].Id, &ww[0].RandomNumber)
+		worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[0].Id, &ww[0].RandomNumber)
 	} else {
-		wait := sync.WaitGroup{}
-		wait.Add(n)
+		var wg sync.WaitGroup
+		wg.Add(n)
 		for i := 0; i < n; i++ {
 			go func(i int) {
-				dbStatement.QueryRow(rand.Intn(DB_ROWS)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
-				wait.Done()
+				err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
+				if err != nil {
+					log.Fatalf("Error scanning world row: %v", err)
+				}
+				wg.Done()
 			}(i)
 		}
-		wait.Wait()
+		wg.Wait()
 	}
 	j, _ := json.Marshal(ww)
 	w.Header().Set("Content-Type", "application/json")
@@ -100,16 +103,19 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	fortunes := make([]*Fortune, 0, 16)
-	rows, err := fourtuneStatement.Query() //Execute the query
+
+	//Execute the query
+	rows, err := fourtuneStatement.Query()
 	if err != nil {
-		log.Fatalf("Error preparing statement: %s", err)
+		log.Fatalf("Error preparing statement: %v", err)
 	}
+
 	i := 0
 	var fortune *Fortune
 	for rows.Next() { //Fetch rows
 		fortune = new(Fortune)
 		if err = rows.Scan(&fortune.Id, &fortune.Message); err != nil {
-			panic(err)
+			log.Fatalf("Error scanning fortune row: %v", err)
 		}
 		fortunes = append(fortunes, fortune)
 		i++
