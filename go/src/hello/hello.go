@@ -11,6 +11,7 @@ import (
 	"runtime"
 	"sort"
 	"strconv"
+	"sync"
 )
 
 type MessageStruct struct {
@@ -36,33 +37,29 @@ const (
 )
 
 var (
-	stmts        = make(chan *sql.Stmt, MAX_CONN)
-	fortuneStmts = make(chan *sql.Stmt, MAX_CONN)
-	tmpl         = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
-)
+	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
-func init() {
-	//setup DB connection pool to work around Go issue #4805: https://code.google.com/p/go/issues/detail?id=4805&q=sql.db&colspec=ID%20Status%20Stars%20Priority%20Owner%20Reporter%20Summary
-	for i := 0; i < MAX_CONN; i++ {
-		db, err := sql.Open("mysql", DB_CONN_STR)
-		if err != nil {
-			log.Fatalf("Error opening database: %s", err)
-		}
-		stmt, err := db.Prepare(DB_SELECT_SQL)
-		if err != nil {
-			log.Fatal(err)
-		}
-		stmts <- stmt
-		fortuneStmt, err := db.Prepare(DB_FORTUNE_SELECT_SQL)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fortuneStmts <- fortuneStmt
-	}
-}
+	dbStatement       *sql.Stmt
+	fourtuneStatement *sql.Stmt
+)
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
+
+	db, err := sql.Open("mysql", DB_CONN_STR)
+	if err != nil {
+		log.Fatalf("Error opening database: %s", err)
+	}
+	db.SetMaxIdleConns(MAX_CONN)
+	dbStatement, err = db.Prepare(DB_SELECT_SQL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fourtuneStatement, err = db.Prepare(DB_FORTUNE_SELECT_SQL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	http.HandleFunc("/db", dbHandler)
 	http.HandleFunc("/json", jsonHandler)
 	http.HandleFunc("/fortune", fortuneHandler)
@@ -82,11 +79,19 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 		n, _ = strconv.Atoi(nStr)
 	}
 	ww := make([]World, n)
-	stmt := <-stmts //wait for a connection
-	for i := 0; i < n; i++ {
-		stmt.QueryRow(rand.Intn(DB_ROWS)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
+	if n == 1 {
+		dbStatement.QueryRow(rand.Intn(DB_ROWS)+1).Scan(&ww[0].Id, &ww[0].RandomNumber)
+	} else {
+		wait := sync.WaitGroup{}
+		wait.Add(n)
+		for i := 0; i < n; i++ {
+			go func(i int) {
+				dbStatement.QueryRow(rand.Intn(DB_ROWS)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
+				wait.Done()
+			}(i)
+		}
+		wait.Wait()
 	}
-	stmts <- stmt //get a connection
 	j, _ := json.Marshal(ww)
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Length", strconv.Itoa(len(j)))
@@ -95,8 +100,7 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	fortunes := make([]*Fortune, 0, 16)
-	stmt := <-fortuneStmts    //wait for a connection
-	rows, err := stmt.Query() //Execute the query
+	rows, err := fourtuneStatement.Query() //Execute the query
 	if err != nil {
 		log.Fatalf("Error preparing statement: %s", err)
 	}
@@ -110,7 +114,6 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 		fortunes = append(fortunes, fortune)
 		i++
 	}
-	fortuneStmts <- stmt //return a connection
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 
 	sort.Sort(ByMessage{fortunes})
