@@ -107,14 +107,14 @@ intQuery :: forall (m :: * -> *) (m1 :: * -> *) val backend.
            -> Int64 -> m Value
 intQuery db i = do
     Just x <- db $ get (Key $ PersistInt64 i)
-    return $ jsonResult i (worldRandomNumber x)
+    return $ jsonResult (worldRandomNumber x)
   where
-    jsonResult :: Int64 -> Int -> Value
-    jsonResult i n = object ["id" .= i, "randomNumber" .= n]
+    jsonResult :: Int -> Value
+    jsonResult n = object ["id" .= i, "randomNumber" .= n]
 
 rawMongoIntQuery :: Mongo.Val v => v -> Handler Value
 rawMongoIntQuery i = do
-    Just x <- runMongoDB $ Mongo.findOne (Mongo.select ["id" =: i] "World")
+    Just x <- runMongoDB $ Mongo.findOne (Mongo.select ["id" =: i] "world")
     return $ documentToJson x
 
 multiRandomHandler :: ToJSON a
@@ -136,6 +136,7 @@ documentToJson = object . map toAssoc
 instance ToJSON Mongo.Value where
   toJSON (Mongo.Int32 i)  = toJSON i
   toJSON (Mongo.Int64 i)  = toJSON i
+  toJSON (Mongo.Float f)  = toJSON f
   toJSON (Mongo.Doc d)   = documentToJson d
   toJSON s = error $ "no convert for: " ++ show s
 
