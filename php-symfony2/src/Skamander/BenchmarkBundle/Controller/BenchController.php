@@ -4,8 +4,10 @@ namespace Skamander\BenchmarkBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Skamander\BenchmarkBundle\Entity\Fortune;
 
 class BenchController extends Controller
 {
@@ -36,5 +38,34 @@ class BenchController extends Controller
         }
 
         return new JsonResponse($worlds);
+    }
+
+    /**
+     * @Route("/fortunes", name="_fortunes")
+     * @Template
+     */
+    public function fortunesAction()
+    {
+        $repo = $this->getDoctrine()
+            ->getRepository('SkamanderBenchmarkBundle:Fortune');
+        $fortunes = $repo->findAll();
+
+        $runtimeFortune = new Fortune();
+        $runtimeFortune->setId(0)
+            ->setMessage('Additional fortune added at request time.');
+
+        $fortunes[] = $runtimeFortune;
+
+        usort($fortunes, function($left, $right) {
+            if ($left->message === $right->message) {
+                return 0;
+            } else if ($left->message > $right->message) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        return ['fortunes' => $fortunes];
     }
 }
