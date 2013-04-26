@@ -6,10 +6,10 @@
       "json_url": "/json",
       "port": 8000,
       "sort": 37
-    }
+    },
     "mongodb-raw": {
       "setup_file": "setup",
-      "db_url": "/mongo/raw/db"
+      "db_url": "/mongo/raw/db",
       "query_url": "/mongo/raw/dbs/",
       "port": 8000,
       "sort": 47
@@ -20,6 +20,6 @@
       "query_url": "/dbs/",
       "port": 8000,
       "sort": 10
-    },
+    }
   }]
 }
