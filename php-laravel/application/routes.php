@@ -37,7 +37,6 @@ Route::get('/json', function()
     return Response::json(array('message' => 'Hello World!'));
 });
 
-
 Route::get('/db', function()
 {
     $queries = Input::get('queries', 1);
@@ -50,6 +49,7 @@ Route::get('/db', function()
     return Response::json($worlds);
 });
 
+Route::get('/fortunes', 'bench@fortunes');
 
 /*
 |--------------------------------------------------------------------------
