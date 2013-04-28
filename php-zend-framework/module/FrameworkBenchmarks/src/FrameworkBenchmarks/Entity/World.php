@@ -2,13 +2,15 @@
 
 namespace FrameworkBenchmarks\Entity;
 
+use Zend\Stdlib\ArrayObject;
+
 /**
  * Entity that represents a single entry in the `World` collection of the benchmarks in FrameworkBenchmarks
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  * @link   http://www.techempower.com/benchmarks
  */
-class World
+class World extends ArrayObject
 {
     /**
      * @var int

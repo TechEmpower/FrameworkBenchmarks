@@ -3,6 +3,7 @@
 namespace FrameworkBenchmarks\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\JsonModel;
 use Zend\Db\TableGateway\TableGateway;
 
@@ -32,7 +33,13 @@ class DbController extends AbstractActionController
      */
     public function dbAction()
     {
-        return new JsonModel($this->tableGateway->select(array('id' => mt_rand(1, 10000))));
+        $result = $this->tableGateway->select(array('id' => mt_rand(1, 10000)));
+
+        foreach ($result as $return) {
+            return new JsonModel($return);
+        }
+
+        return $this->notFoundAction();
     }
 
     /**
@@ -46,7 +53,9 @@ class DbController extends AbstractActionController
         $worlds  = array();
 
         for ($i = 0; $i < $queries; $i += 1) {
-            $worlds[] =  $this->tableGateway->select(array('id' => mt_rand(1, 10000)));
+            foreach ($this->tableGateway->select(array('id' => mt_rand(1, 10000))) as $found) {
+                $worlds[] = $found;
+            }
         }
 
         return new JsonModel($worlds);
