@@ -7,7 +7,7 @@ from os.path import expanduser
 home = expanduser("~")
 
 def start(args):
-  setup_util.replace_text("php-zend-framework/app/config/parameters.yml", "database_host: .*", "database_host: " + args.database_host)
+  setup_util.replace_text("php-zend-framework/config/benchmarks.local.php", "mysql:dbname=hello_world;host=localhost", "mysql:dbname=hello_world;host=" + args.database_host)
   setup_util.replace_text("php-zend-framework/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
 
   try:
