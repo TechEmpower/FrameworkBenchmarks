@@ -253,7 +253,7 @@ class Installer:
     ##############################
     # Bottle
     ##############################
-    self.__run_command("sudo pip install bottle")
+    self.__run_command("sudo pip install bottle bottle-sqlalchemy")
 
     ##############################
     # Play 2
