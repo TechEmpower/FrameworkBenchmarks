@@ -1,0 +1,11 @@
+{
+  "framework": "undertow",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/",
+      "port": 8080,
+      "sort": 30
+    }
+  }]
+}
