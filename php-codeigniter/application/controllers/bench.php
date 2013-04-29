@@ -28,4 +28,29 @@ class Bench extends CI_Controller {
             ->set_content_type('application/json')
             ->set_output(json_encode($worlds));
     }
+
+    public function fortunes() {
+        $fortunes = $this->db
+            ->query('SELECT * FROM Fortune')
+            ->result_array();
+
+        $fortunes[] = array(
+            'id' => 0,
+            'message' => 'Additional fortune added at request time.'
+        );
+
+        usort($fortunes, function($left, $right) {
+            if ($left['message'] === $right['message']) {
+                return 0;
+            } else if ($left['message'] > $right['message']) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        $this->load->view('fortunes', [
+            'fortunes' => $fortunes
+        ]);
+    }
 }
