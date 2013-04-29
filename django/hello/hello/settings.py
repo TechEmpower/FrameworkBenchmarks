@@ -9,16 +9,41 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+
+#  WTF?  Use Postgres.  It's SQL.  It has better support under Django
+#  Postgres is better for Django under virutally every circumstance 
+#  Using a traditional RBDM
+
+# also pip install https://github.com/iiilx/django-psycopg2-pool/tarball/master/
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'hello_world',                      # Or path to database file if using sqlite3.
-        'USER': 'benchmarkdbuser',                      # Not used with sqlite3.
-        'PASSWORD': 'benchmarkdbpass',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE' : 'django_psycopg2_pool.gevent',  # support here https://github.com/iiilx/django-psycopg2-pool
+        #'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+        'NAME' : 'world or whatever',
+        'USER': 'myuser',                              
+        'PASSWORD': 'I\'ll configure this for $100/hr',                 
+        'HOST': '/run/postgresql',  #SOCKETS if running the DB locally                   
+        'PORT': '',                      
+        'POOL_SIZE' : 100,  # match to postgres max connections / workers
     }
 }
+
+
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#        'NAME': 'hello_world',                      # Or path to database file if using sqlite3.
+#        'USER': 'benchmarkdbuser',                      # Not used with sqlite3.
+#        'PASSWORD': 'benchmarkdbpass',                  # Not used with sqlite3.
+#        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+#        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+#    }
+#}
+
+# if this app was actually using sessions, see the 
+# https://docs.djangoproject.com/en/dev/topics/http/sessions/#using-cached-sessions
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -89,12 +114,19 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 )
 
+# are we using any of these?  Django can go very lean 
+# if you aren't using this functionality, which this example isn't
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    #  we don't even need the common middleware
+    # https://docs.djangoproject.com/en/dev/ref/middleware/#django.middleware.common.CommonMiddleware
+    # way to go guys, seriously.  Don't pretend to be benchmarking Django 
+    # if using all of it's functionality-providing middleware but
+    # it's not needed for this stripped-down example
+#    'django.middleware.common.CommonMiddleware',
+#    'django.contrib.sessions.middleware.SessionMiddleware',
+#    'django.middleware.csrf.CsrfViewMiddleware',
+#    'django.contrib.auth.middleware.AuthenticationMiddleware',
+#    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'hello.urls'
@@ -110,12 +142,13 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # using any of these?  nope.  disable.
+#    'django.contrib.auth',
+#    'django.contrib.contenttypes',
+#    'django.contrib.sessions',
+#    'django.contrib.sites',
+#    'django.contrib.messages',
+#    'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
