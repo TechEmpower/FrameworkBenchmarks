@@ -29,7 +29,7 @@ type Fortune struct {
 }
 
 const (
-	ConnectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
+	ConnectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
 	WorldSelect        = "SELECT id, randomNumber FROM World where id = ?"
 	FortuneSelect      = "SELECT id, message FROM Fortune;"
 	WorldRowCount      = 10000
@@ -40,7 +40,7 @@ var (
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
 	worldStatement    *sql.Stmt
-	fourtuneStatement *sql.Stmt
+	fortuneStatement *sql.Stmt
 )
 
 func main() {
@@ -55,7 +55,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fourtuneStatement, err = db.Prepare(FortuneSelect)
+	fortuneStatement, err = db.Prepare(FortuneSelect)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -105,7 +105,7 @@ func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	fortunes := make([]*Fortune, 0, 16)
 
 	//Execute the query
-	rows, err := fourtuneStatement.Query()
+	rows, err := fortuneStatement.Query()
 	if err != nil {
 		log.Fatalf("Error preparing statement: %v", err)
 	}
