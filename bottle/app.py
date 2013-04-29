@@ -6,7 +6,7 @@ from random import randint
 import json
 
 app = Bottle()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@192.168.0.12:3306/hello_world'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world'
 Base = declarative_base()
 db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 plugin = sqlalchemy.Plugin(db_engine, keyword='db', )
@@ -57,7 +57,7 @@ def get_random_world_raw():
     result = connection.execute("SELECT * FROM world WHERE id = " + str(wid)).fetchone()
     worlds.append({'id': result[0], 'randomNumber': result[1]})
   connection.close()
-  return jsondumps(worlds)
+  return json.dumps(worlds)
 
 @app.route("/dbsraw")
 def get_random_world_single_raw():
