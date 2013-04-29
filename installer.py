@@ -52,6 +52,10 @@ class Installer:
     self.__run_command("sudo python setup.py install", cwd="pip-1.1")
     self.__run_command("sudo pip install MySQL-python==1.2.4")
     self.__run_command("sudo pip install simplejson==3.0.7")
+    self.__run_command("curl http://initd.org/psycopg/tarballs/PSYCOPG-2-5/psycopg2-2.5.tar.gz | tar xvz")
+    self.__run_command("sudo python setup.py install", cwd="psycopg2-2.5")
+    self.__run_command("git clone https://github.com/iiilx/django-psycopg2-pool.git")
+    self.__run_command("sudo python setup.py install", cwd="django-psycopg2-pool")
 
     #
     # nodejs
@@ -313,7 +317,7 @@ class Installer:
     # Prerequisites
     ##############################
     yes | sudo apt-get update
-    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev
+    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
     sudo sh -c "echo '*               soft    nofile          8192' >> /etc/security/limits.conf"
 
     ##############################
@@ -331,6 +335,17 @@ class Installer:
 
     # Insert data
     mysql -uroot -psecret < create.sql
+    
+    ##############################
+    # Postgres
+    ##############################
+    sudo useradd benchmarkdbuser -p benchmarkdbpass
+    sudo -u postgres psql template1 < create-postgres-database.sql
+    sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
+    
+    sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
+    sudo mv pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
+    sudo -u postgres -H /etc/init.d/postgresql restart
 
     ##############################
     # Weighttp
