@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from random import randint
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@192.168.0.12:3306/hello_world'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world'
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
@@ -38,9 +38,8 @@ def get_random_world():
 
 @app.route("/dbs")
 def get_random_world_single():
-  worlds = []
   wid = randint(1, 10000)
-  worlds.append(World.query.get(wid).serialize)
+  worlds = [World.query.get(wid).serialize]
   return jsonify(worlds=worlds)
   
 @app.route("/dbraw")
@@ -58,10 +57,9 @@ def get_random_world_raw():
 @app.route("/dbsraw")
 def get_random_world_single_raw():
   connection = dbraw_engine.connect()
-  worlds = []
   wid = randint(1, 10000)
   result = connection.execute("SELECT * FROM world WHERE id = " + str(wid)).fetchone()
-  worlds.append({'id': result[0], 'randomNumber': result[1]})
+  worlds = [{'id': result[0], 'randomNumber': result[1]})]
   connection.close()
   return jsonify(worlds=worlds)
 
