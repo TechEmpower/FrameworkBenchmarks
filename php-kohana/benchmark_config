@@ -11,6 +11,7 @@
       "setup_file": "setup",
       "db_url": "/bench/db",
       "query_url": "/bench/db/",
+      "fortune_url": "/bench/fortunes",
       "port": 8080,
       "sort": 61
     }
