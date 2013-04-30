@@ -7,14 +7,14 @@
       "db_url": "/dbs",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 31
+      "sort": 88
     },
     "mysql-raw": {
       "setup_file": "setup",
       "db_url": "/dbsraw",
       "query_url": "/dbraw?queries=",
       "port": 8080,
-      "sort": 82
+      "sort": 89
     }
   }]
 }
