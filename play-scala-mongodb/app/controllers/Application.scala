@@ -42,8 +42,7 @@ object Application extends Controller {
         _ <- 1 to queries
       } yield { collection
         .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
-        .cursor[JsValue]
-        .toList.map(list => list.head)
+        .one[JsValue]
       }))
 
       futureWorlds.map { worlds =>
