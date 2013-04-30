@@ -12,10 +12,10 @@ import System.Environment (getArgs)
 
 main :: IO ()
 main = do
-    socket <- bindPort 8001 "*"
+    socket <- bindPort 8000 "*"
     [cores, _] <- getArgs
     let run = Warp.runSettingsSocket Warp.defaultSettings
-                { Warp.settingsPort = 8001
+                { Warp.settingsPort = 8000
                 , Warp.settingsHost = "*"
                 , Warp.settingsOnException = const $ return ()
                 } socket app
