@@ -75,18 +75,20 @@ class BenchController extends Controller
 
     public function fortunesRawAction()
     {
-        $conn = $this->get('database_connection');
-        $fortunes = $conn->fetchAll('SELECT * FROM Fortune');
+        $repo = $this->getDoctrine()
+            ->getRepository('SkamanderBenchmarkBundle:Fortune');
+        $fortunes = $repo->findAll();
 
-        $fortunes[] = [
-            'id' => 0,
-            'message' => 'Additional fortune added at request time.'
-        ];
+        $runtimeFortune = new Fortune();
+        $runtimeFortune->setId(0)
+            ->setMessage('Additional fortune added at request time.');
+
+        $fortunes[] = $runtimeFortune;
 
         usort($fortunes, function($left, $right) {
-            if ($left['message'] === $right['message']) {
+            if ($left->message === $right->message) {
                 return 0;
-            } else if ($left['message'] > $right['message']) {
+            } else if ($left->message > $right->message) {
                 return 1;
             } else {
                 return -1;
