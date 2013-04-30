@@ -7,3 +7,7 @@ class World(models.Model):
   class Meta:
     db_table = 'world'
 
+class Fortune(models.Model):
+  message = models.StringField()
+  class Meta:
+    db_table = 'fortune'

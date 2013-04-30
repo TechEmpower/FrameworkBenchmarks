@@ -16,4 +16,5 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^json$', 'world.views.json'),
     url(r'^db$', 'world.views.db'),
+    url(r'^fortunes$', 'world.views.fortunes'),
 )

@@ -4,6 +4,7 @@ from django.template import Context, loader
 from django.http import HttpResponse
 from django.core import serializers
 from world.models import World
+from world.models import Fortune
 import ujson
 import random
 
@@ -23,3 +24,11 @@ def db(request):
 
   return HttpResponse(serializers.serialize("json", worlds), mimetype="application/json")
 
+def fortunes(request):
+  fortunes = Fortune.objects.all()
+  fortunes.append(Fortune(id=0, message="Additional message added at runtime."))
+
+  fortunes = sorted(fortunes, key=attrgetter('message'))
+
+  context = {'fortunes': fortunes}
+  return render(request, 'fortunes/index.html', context)
