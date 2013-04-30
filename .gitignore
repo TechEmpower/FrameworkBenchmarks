@@ -14,3 +14,4 @@ mods/
 /.project
 *.iml
 .idea/
+.hsenv/
