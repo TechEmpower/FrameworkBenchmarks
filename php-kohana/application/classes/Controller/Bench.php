@@ -29,4 +29,32 @@ Class Controller_Bench extends Controller
             ->headers(array('Content-Type' => 'application/json'))
             ->body(json_encode($worlds));
     }
+
+    public function action_fortunes()
+    {
+        $fortunes = DB::select()->from('Fortune')
+            ->execute()
+            ->as_array();
+
+        $fortunes[] = array(
+            'id' => 0,
+            'message' => 'Additional fortune added at request time.'
+        );
+
+        usort($fortunes, function($left, $right) {
+            if ($left['message'] === $right['message']) {
+                return 0;
+            } else if ($left['message'] > $right['message']) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        $this->response->body(
+            View::factory('bench/fortunes')
+                ->bind('fortunes', $fortunes)
+                ->render()
+        );
+    }
 }
