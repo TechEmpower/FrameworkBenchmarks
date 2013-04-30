@@ -175,6 +175,7 @@ class Installer:
     #
 
     self.__run_command("sudo easy_install -U 'gunicorn==0.17.2'")
+    self.__run_command("sudo pip install --upgrade meinheld")
     self.__run_command("sudo easy_install -U 'eventlet==0.12.1'")
     self.__run_command("sudo pip install --upgrade 'gevent==0.13.8'")
 
