@@ -1,4 +1,3 @@
-
 import subprocess
 import sys
 import setup_util
@@ -12,6 +11,7 @@ def start(args):
 
   try:
     subprocess.check_call("composer.phar install", shell=True, cwd="php-symfony2")
+    subprocess.check_call("php app/console cache:clear --env=prod --no-debug", shell=True, cwd="php-symfony2")
     subprocess.check_call("sudo chown -R www-data:www-data php-symfony2", shell=True)
     subprocess.check_call("sudo php-fpm --fpm-config config/php-fpm.conf -g " + home + "/FrameworkBenchmarks/php-symfony2/deploy/php-fpm.pid", shell=True)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php-symfony2/deploy/nginx.conf", shell=True)
