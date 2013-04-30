@@ -8,6 +8,6 @@ class World(models.Model):
     db_table = 'world'
 
 class Fortune(models.Model):
-  message = models.StringField()
+  message = models.CharField()
   class Meta:
     db_table = 'fortune'
