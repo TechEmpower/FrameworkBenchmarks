@@ -255,6 +255,11 @@ class Installer:
     self.__run_command("sudo pip install flask flask-sqlalchemy")
 
     ##############################
+    # Bottle
+    ##############################
+    self.__run_command("sudo pip install bottle bottle-sqlalchemy")
+
+    ##############################
     # Play 2
     ##############################
     self.__run_command("wget http://downloads.typesafe.com/play/2.1.1/play-2.1.1.zip")
