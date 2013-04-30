@@ -280,7 +280,7 @@ class Benchmarker:
       sudo -s ulimit -n 8192
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
-      sudo sysctl -w kernel.shmmax=134217728
+      sudo sysctl -w kernel.shmmax=2147483648
       sudo sysctl -w kernel.shmall=2097152
     """)
   ############################################################
