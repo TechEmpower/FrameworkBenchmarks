@@ -5,5 +5,6 @@ return array(
 	
 	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
     'json' => 'bench/json',
-    'db' => 'bench/db'
+    'db' => 'bench/db',
+    'fortunes' => 'bench/fortunes'
 );
