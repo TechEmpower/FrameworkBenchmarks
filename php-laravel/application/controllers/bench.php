@@ -1,6 +1,6 @@
 <?php
 
-class Bench_Controller extends Controller {
+class Bench_Controller extends Base_Controller {
 
     public $layout = 'layouts.main';
 
