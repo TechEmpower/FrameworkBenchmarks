@@ -4,7 +4,7 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
-      "port": 8001,
+      "port": 8000,
       "sort": 86
     }
   }]
