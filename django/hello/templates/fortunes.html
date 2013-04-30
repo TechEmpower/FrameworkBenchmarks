@@ -1,4 +1,4 @@
-{% extend base.html %}
+{% extends "base.html" %}
 
 {% block content %}
 <table>
@@ -8,8 +8,8 @@
 </tr>
 {% for fortune in fortunes %}
 <tr>
-<td>{% fortune.id %}</td>
-<td>{% fortune.message %}</td>
+<td>{{ fortune.id }}</td>
+<td>{{ fortune.message }}</td>
 </tr>
 {% endfor %}
 </table>
