@@ -4,22 +4,18 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/dbs/",
       "port": 8000,
       "sort": 37
     },
     "mongodb-raw": {
       "setup_file": "setup",
+      "json_url": "/json",
       "db_url": "/mongo/raw/db",
       "query_url": "/mongo/raw/dbs/",
       "port": 8000,
       "sort": 47
-    },
-    "mysql": {
-      "setup_file": "setup",
-      "db_url": "/db",
-      "query_url": "/dbs/",
-      "port": 8000,
-      "sort": 10
     }
   }]
 }
