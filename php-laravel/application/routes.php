@@ -31,6 +31,7 @@
 |		});
 |
 */
+Route::controller(Controller::detect());
 
 Route::get('/json', function()
 {
