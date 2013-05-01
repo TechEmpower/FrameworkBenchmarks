@@ -527,9 +527,11 @@ class Benchmarker:
       self.results['weighttpData']['query'] = dict()
       self.results['weighttpData']['fortune'] = dict()
     else:
-      for x in self.__gather_tests():
-        if x.name not in self.results['frameworks']:
-          self.results['frameworks'] = self.results['frameworks'] + [x.name]
+      #for x in self.__gather_tests():
+      #  if x.name not in self.results['frameworks']:
+      #    self.results['frameworks'] = self.results['frameworks'] + [x.name]
+      # Always overwrite framework list
+      self.results['frameworks'] = [t.name for t in self.__gather_tests()]
 
     # Setup the ssh command string
     self.ssh_string = "ssh -T -o StrictHostKeyChecking=no " + self.client_user + "@" + self.client_host
