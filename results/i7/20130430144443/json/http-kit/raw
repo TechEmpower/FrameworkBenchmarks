@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 22:03:29 PDT 2013
+
+  System load:  0.22                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer http-kit
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   291.63us  190.97us   1.45ms   85.66%
+    Req/Sec     2.59k     0.97k    4.00k    71.70%
+  161856 requests in 5.00s, 25.93MB read
+Requests/sec:  32379.74
+Transfer/sec:      5.19MB
+
+---------------------------------------------------------
+ Running Warmup http-kit
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.87ms    0.89ms   9.07ms   79.96%
+    Req/Sec    16.01k     1.47k   18.00k    92.41%
+  4074622 requests in 30.00s, 652.82MB read
+Requests/sec: 135826.61
+Transfer/sec:     21.76MB
+
+---------------------------------------------------------
+ Concurrency: 8 for http-kit
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   228.17us  261.58us   9.68ms   98.10%
+    Req/Sec     4.03k   174.95     5.00k    96.84%
+  1096922 requests in 30.00s, 175.75MB read
+Requests/sec:  36566.00
+Transfer/sec:      5.86MB
+
+---------------------------------------------------------
+ Concurrency: 16 for http-kit
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   344.90us  226.59us   2.06ms   81.46%
+    Req/Sec     6.66k   485.17     7.00k    66.23%
+  1728611 requests in 30.00s, 276.95MB read
+Requests/sec:  57621.42
+Transfer/sec:      9.23MB
+
+---------------------------------------------------------
+ Concurrency: 32 for http-kit
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   492.34us  349.75us   2.10ms   83.04%
+    Req/Sec     9.91k   430.14    11.00k    80.69%
+  2550230 requests in 30.00s, 408.59MB read
+Requests/sec:  85010.43
+Transfer/sec:     13.62MB
+
+---------------------------------------------------------
+ Concurrency: 64 for http-kit
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   673.88us  465.30us   3.48ms   86.63%
+    Req/Sec    13.22k   637.24    16.00k    73.45%
+  3295334 requests in 30.00s, 527.97MB read
+Requests/sec: 109848.83
+Transfer/sec:     17.60MB
+
+---------------------------------------------------------
+ Concurrency: 128 for http-kit
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.11ms  695.02us   7.61ms   87.73%
+    Req/Sec    14.66k     1.29k   22.00k    89.35%
+  3669179 requests in 30.00s, 587.87MB read
+Requests/sec: 122313.02
+Transfer/sec:     19.60MB
+
+---------------------------------------------------------
+ Concurrency: 256 for http-kit
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.90ms    0.90ms   9.38ms   79.62%
+    Req/Sec    16.05k     1.54k   23.00k    90.27%
+  4048950 requests in 30.00s, 648.71MB read
+Requests/sec: 134974.34
+Transfer/sec:     21.63MB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 01:46:45 PDT 2013
+
+  System load:  2.15                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer kohana-raw
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.88ms    1.81ms  28.11ms   91.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8241 requests in 5.00s, 16.86MB read
+Requests/sec:   1647.20
+Transfer/sec:      3.37MB
+
+---------------------------------------------------------
+ Running Warmup kohana-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   122.38ms   86.89ms 684.58ms   74.52%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  62444 requests in 30.00s, 127.74MB read
+Requests/sec:   2081.31
+Transfer/sec:      4.26MB
+
+---------------------------------------------------------
+ Concurrency: 8 for kohana-raw
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.80ms    1.37ms  33.39ms   83.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  49796 requests in 30.00s, 101.86MB read
+Requests/sec:   1659.81
+Transfer/sec:      3.40MB
+
+---------------------------------------------------------
+ Concurrency: 16 for kohana-raw
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.16ms    3.29ms  28.88ms   72.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  59123 requests in 30.00s, 120.94MB read
+Requests/sec:   1970.62
+Transfer/sec:      4.03MB
+
+---------------------------------------------------------
+ Concurrency: 32 for kohana-raw
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.31ms    9.39ms  85.59ms   83.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  62503 requests in 30.00s, 127.86MB read
+Requests/sec:   2083.42
+Transfer/sec:      4.26MB
+
+---------------------------------------------------------
+ Concurrency: 64 for kohana-raw
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.90ms   31.97ms 405.86ms   90.51%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  62776 requests in 30.00s, 128.41MB read
+Requests/sec:   2092.47
+Transfer/sec:      4.28MB
+
+---------------------------------------------------------
+ Concurrency: 128 for kohana-raw
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.86ms   72.81ms 887.50ms   89.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  62665 requests in 30.00s, 128.19MB read
+Requests/sec:   2088.72
+Transfer/sec:      4.27MB
+
+---------------------------------------------------------
+ Concurrency: 256 for kohana-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   125.46ms   78.02ms 624.93ms   74.45%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  62480 requests in 30.00s, 127.81MB read
+Requests/sec:   2082.53
+Transfer/sec:      4.26MB

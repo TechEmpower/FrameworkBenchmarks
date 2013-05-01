@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 04:41:05 PDT 2013
+
+  System load:  0.28                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dancer-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.91ms  835.88us   5.73ms   71.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20660 requests in 5.00s, 3.70MB read
+Requests/sec:   4131.26
+Transfer/sec:    758.27KB
+
+---------------------------------------------------------
+ Running Warmup dancer-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    53.24ms    2.82ms 114.23ms   76.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  143947 requests in 30.00s, 25.80MB read
+Requests/sec:   4798.04
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Queries: 1 for dancer-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.22ms    3.14ms 141.75ms   89.28%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  155685 requests in 30.00s, 27.91MB read
+Requests/sec:   5189.71
+Transfer/sec:      0.93MB
+
+---------------------------------------------------------
+ Queries: 5 for dancer-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.91ms    9.77ms 143.83ms   89.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  103611 requests in 30.01s, 18.57MB read
+Requests/sec:   3453.10
+Transfer/sec:    633.80KB
+
+---------------------------------------------------------
+ Queries: 10 for dancer-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   147.81ms   13.65ms 213.81ms   91.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  51717 requests in 30.00s, 9.27MB read
+Requests/sec:   1723.82
+Transfer/sec:    316.40KB
+
+---------------------------------------------------------
+ Queries: 15 for dancer-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   222.63ms   17.86ms 271.81ms   94.53%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34318 requests in 30.00s, 6.15MB read
+Requests/sec:   1143.87
+Transfer/sec:    209.97KB
+
+---------------------------------------------------------
+ Queries: 20 for dancer-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   293.80ms   31.42ms 356.39ms   94.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25835 requests in 30.01s, 4.63MB read
+Requests/sec:    860.99
+Transfer/sec:    158.04KB

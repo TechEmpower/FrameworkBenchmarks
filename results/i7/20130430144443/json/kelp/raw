@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 04:45:54 PDT 2013
+
+  System load:  0.05                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer kelp
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   738.45us  545.48us   7.01ms   93.21%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  55614 requests in 5.00s, 11.82MB read
+Requests/sec:  11124.57
+Transfer/sec:      2.37MB
+
+---------------------------------------------------------
+ Running Warmup kelp
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.11ms   10.37ms 240.54ms   94.82%
+    Req/Sec     1.00k    24.98     1.00k    99.94%
+  392195 requests in 30.00s, 83.39MB read
+Requests/sec:  13073.26
+Transfer/sec:      2.78MB
+
+---------------------------------------------------------
+ Concurrency: 8 for kelp
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   717.03us  482.84us   8.93ms   93.71%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  333385 requests in 30.00s, 70.88MB read
+Requests/sec:  11113.30
+Transfer/sec:      2.36MB
+
+---------------------------------------------------------
+ Concurrency: 16 for kelp
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.26ms    1.06ms  16.07ms   96.26%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  380758 requests in 30.00s, 80.96MB read
+Requests/sec:  12691.90
+Transfer/sec:      2.70MB
+
+---------------------------------------------------------
+ Concurrency: 32 for kelp
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.59ms    1.35ms  14.50ms   89.03%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  384821 requests in 30.00s, 81.82MB read
+Requests/sec:  12827.10
+Transfer/sec:      2.73MB
+
+---------------------------------------------------------
+ Concurrency: 64 for kelp
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.94ms    1.72ms  21.93ms   89.23%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  391666 requests in 30.00s, 83.28MB read
+Requests/sec:  13055.43
+Transfer/sec:      2.78MB
+
+---------------------------------------------------------
+ Concurrency: 128 for kelp
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.61ms    2.26ms  25.28ms   85.38%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  396417 requests in 30.00s, 84.29MB read
+Requests/sec:  13213.68
+Transfer/sec:      2.81MB
+
+---------------------------------------------------------
+ Concurrency: 256 for kelp
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.05ms    9.36ms 265.43ms   94.93%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  394612 requests in 30.00s, 83.90MB read
+Requests/sec:  13154.62
+Transfer/sec:      2.80MB

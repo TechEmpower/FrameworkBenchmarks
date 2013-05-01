@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer gemini
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   609.35us  122.01us   1.29ms   74.33%
+    Req/Sec     0.97k   172.70     1.00k    96.93%
+  65738 requests in 5.00s, 89.53MB read
+Requests/sec:  13150.08
+Transfer/sec:     17.91MB
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.64ms    4.60ms  69.30ms   83.02%
+    Req/Sec     5.93k   451.65     8.00k    94.98%
+  1570441 requests in 30.00s, 2.09GB read
+Requests/sec:  52353.53
+Transfer/sec:     71.30MB
+
+---------------------------------------------------------
+ Concurrency: 8 for gemini
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   627.86us    0.86ms  34.58ms   99.88%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  398996 requests in 30.00s, 543.37MB read
+Requests/sec:  13299.82
+Transfer/sec:     18.11MB
+
+---------------------------------------------------------
+ Concurrency: 16 for gemini
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   576.43us  179.34us   3.81ms   85.71%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  822228 requests in 30.00s, 1.09GB read
+Requests/sec:  27407.80
+Transfer/sec:     37.33MB
+
+---------------------------------------------------------
+ Concurrency: 32 for gemini
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   686.33us    1.02ms  39.74ms   98.57%
+    Req/Sec     5.99k   102.43     6.00k    98.94%
+  1487811 requests in 30.00s, 1.98GB read
+Requests/sec:  49595.32
+Transfer/sec:     67.54MB
+
+---------------------------------------------------------
+ Concurrency: 64 for gemini
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.44ms    1.62ms  49.34ms   89.59%
+    Req/Sec     6.94k   281.07     8.00k    94.08%
+  1714995 requests in 30.00s, 2.28GB read
+Requests/sec:  57169.15
+Transfer/sec:     77.86MB
+
+---------------------------------------------------------
+ Concurrency: 128 for gemini
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.97ms    2.69ms  46.48ms   85.19%
+    Req/Sec     6.39k   567.31    15.00k    61.20%
+  1671593 requests in 30.00s, 2.22GB read
+Requests/sec:  55723.49
+Transfer/sec:     75.89MB
+
+---------------------------------------------------------
+ Concurrency: 256 for gemini
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.83ms    5.87ms 167.01ms   89.71%
+    Req/Sec     6.02k   264.97     9.00k    97.19%
+  1574999 requests in 30.00s, 2.09GB read
+Requests/sec:  52502.38
+Transfer/sec:     71.50MB

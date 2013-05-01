@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 07:43:54 PDT 2013
+
+  System load:  0.02                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 15%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer symfony2
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.19ms    2.60ms  19.39ms   75.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4842 requests in 5.01s, 1.15MB read
+Requests/sec:    967.26
+Transfer/sec:    235.16KB
+
+---------------------------------------------------------
+ Running Warmup symfony2
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   252.19ms  135.85ms 928.21ms   74.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31048 requests in 30.00s, 7.37MB read
+Requests/sec:   1034.87
+Transfer/sec:    251.60KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.92ms    2.32ms  24.57ms   73.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30132 requests in 30.00s, 7.15MB read
+Requests/sec:   1004.32
+Transfer/sec:    244.17KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.54ms    8.57ms 104.54ms   87.84%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32318 requests in 30.00s, 7.67MB read
+Requests/sec:   1077.15
+Transfer/sec:    261.87KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.96ms   33.37ms 664.08ms   90.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32260 requests in 30.00s, 7.66MB read
+Requests/sec:   1075.29
+Transfer/sec:    261.42KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.53ms   69.45ms   1.09s    90.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32078 requests in 30.00s, 7.62MB read
+Requests/sec:   1069.19
+Transfer/sec:    259.94KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   117.11ms  126.82ms   1.27s    88.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32005 requests in 30.00s, 7.60MB read
+Requests/sec:   1066.69
+Transfer/sec:    259.34KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   241.03ms  126.76ms 917.26ms   71.46%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31705 requests in 30.00s, 7.53MB read
+Requests/sec:   1056.84
+Transfer/sec:    256.94KB

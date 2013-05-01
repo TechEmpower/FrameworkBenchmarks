@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 07:47:51 PDT 2013
+
+  System load:  0.13                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 15%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer symfony2
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.81ms    3.09ms  25.10ms   74.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3157 requests in 5.01s, 788.45KB read
+Requests/sec:    630.34
+Transfer/sec:    157.43KB
+
+---------------------------------------------------------
+ Running Warmup symfony2
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   355.42ms  203.20ms   2.56s    77.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20959 requests in 30.00s, 5.11MB read
+  Socket errors: connect 0, read 0, write 0, timeout 8
+Requests/sec:    698.65
+Transfer/sec:    174.52KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.34ms    3.17ms  27.71ms   73.51%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  19130 requests in 30.00s, 4.67MB read
+Requests/sec:    637.62
+Transfer/sec:    159.24KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.50ms    7.50ms  60.76ms   70.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21196 requests in 30.00s, 5.17MB read
+Requests/sec:    706.47
+Transfer/sec:    176.44KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.58ms   30.11ms 590.07ms   86.28%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21221 requests in 30.00s, 5.18MB read
+Requests/sec:    707.32
+Transfer/sec:    176.64KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    88.69ms   67.98ms 758.99ms   83.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21189 requests in 30.00s, 5.17MB read
+Requests/sec:    706.26
+Transfer/sec:    176.38KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   183.40ms  155.62ms   1.14s    80.45%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21083 requests in 30.00s, 5.14MB read
+Requests/sec:    702.72
+Transfer/sec:    175.51KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   361.20ms  178.48ms   1.34s    74.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20941 requests in 30.00s, 5.11MB read
+Requests/sec:    697.96
+Transfer/sec:    174.34KB

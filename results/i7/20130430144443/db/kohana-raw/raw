@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 01:39:22 PDT 2013
+
+  System load:  0.09                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer kohana-raw
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/bench/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/bench/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.75ms    1.34ms  12.53ms   80.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8508 requests in 5.00s, 1.90MB read
+Requests/sec:   1700.79
+Transfer/sec:    389.88KB
+
+---------------------------------------------------------
+ Running Warmup kohana-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/bench/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   117.78ms   93.96ms   1.59s    83.40%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  64362 requests in 30.00s, 14.41MB read
+Requests/sec:   2145.35
+Transfer/sec:    491.80KB
+
+---------------------------------------------------------
+ Concurrency: 8 for kohana-raw
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/bench/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.62ms    1.17ms  10.97ms   73.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  52010 requests in 30.00s, 11.64MB read
+Requests/sec:   1733.56
+Transfer/sec:    397.39KB
+
+---------------------------------------------------------
+ Concurrency: 16 for kohana-raw
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/bench/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.04ms    3.51ms  30.62ms   75.72%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  61238 requests in 30.00s, 13.71MB read
+Requests/sec:   2041.15
+Transfer/sec:    467.89KB
+
+---------------------------------------------------------
+ Concurrency: 32 for kohana-raw
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/bench/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.83ms    9.93ms 119.47ms   87.03%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  64448 requests in 30.00s, 14.43MB read
+Requests/sec:   2148.06
+Transfer/sec:    492.40KB
+
+---------------------------------------------------------
+ Concurrency: 64 for kohana-raw
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/bench/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.20ms   31.46ms 396.89ms   88.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  64719 requests in 30.00s, 14.49MB read
+Requests/sec:   2157.30
+Transfer/sec:    494.52KB
+
+---------------------------------------------------------
+ Concurrency: 128 for kohana-raw
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/bench/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.63ms   58.40ms 511.31ms   88.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  64659 requests in 30.00s, 14.47MB read
+Requests/sec:   2155.22
+Transfer/sec:    494.04KB
+
+---------------------------------------------------------
+ Concurrency: 256 for kohana-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/bench/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/bench/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   118.43ms   83.55ms 618.62ms   74.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  64204 requests in 30.00s, 14.37MB read
+Requests/sec:   2139.99
+Transfer/sec:    490.57KB
