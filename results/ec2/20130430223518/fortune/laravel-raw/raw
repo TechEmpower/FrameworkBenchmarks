@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 09:13:42 UTC 2013
+
+  System load:  0.83               Processes:           77
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer laravel-raw
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    37.74ms   18.27ms 140.22ms   75.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1094 requests in 5.02s, 2.74MB read
+Requests/sec:    217.91
+Transfer/sec:    558.65KB
+
+---------------------------------------------------------
+ Running Warmup laravel-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.20s   358.07ms   2.88s    81.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5979 requests in 30.01s, 14.97MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    199.24
+Transfer/sec:    510.80KB
+
+---------------------------------------------------------
+ Concurrency: 8 for laravel-raw
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    37.26ms   16.81ms 146.33ms   69.74%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6503 requests in 30.00s, 16.28MB read
+Requests/sec:    216.75
+Transfer/sec:    555.68KB
+
+---------------------------------------------------------
+ Concurrency: 16 for laravel-raw
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    76.42ms   44.36ms 378.34ms   72.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6510 requests in 30.00s, 16.30MB read
+Requests/sec:    216.98
+Transfer/sec:    556.30KB
+
+---------------------------------------------------------
+ Concurrency: 32 for laravel-raw
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   154.97ms  101.32ms   1.05s    74.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6412 requests in 30.00s, 16.05MB read
+Requests/sec:    213.72
+Transfer/sec:    547.95KB
+
+---------------------------------------------------------
+ Concurrency: 64 for laravel-raw
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   300.85ms  209.70ms   1.68s    75.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6271 requests in 30.00s, 15.70MB read
+Requests/sec:    209.01
+Transfer/sec:    535.85KB
+
+---------------------------------------------------------
+ Concurrency: 128 for laravel-raw
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   616.72ms  299.89ms   1.76s    69.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6060 requests in 30.00s, 15.17MB read
+Requests/sec:    201.97
+Transfer/sec:    517.82KB
+
+---------------------------------------------------------
+ Concurrency: 256 for laravel-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21s   346.28ms   3.15s    82.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5989 requests in 30.01s, 14.99MB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+Requests/sec:    199.58
+Transfer/sec:    511.67KB

@@ -1,0 +1,126 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer bottle
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.45ms  802.04us   4.73ms   56.93%
+    Req/Sec   247.19    432.19     1.00k    75.28%
+  36828 requests in 5.00s, 6.71MB read
+Requests/sec:   7365.57
+Transfer/sec:      1.34MB
+
+---------------------------------------------------------
+ Running Warmup bottle
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   151.42ms   64.47ms 476.02ms   77.79%
+    Req/Sec   371.39    483.33     1.00k    62.86%
+  217863 requests in 30.01s, 39.68MB read
+Requests/sec:   7260.32
+Transfer/sec:      1.32MB
+
+---------------------------------------------------------
+ Concurrency: 8 for bottle
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.17ms  518.18us   2.94ms   62.65%
+    Req/Sec   394.75    488.95     1.00k    60.52%
+  240379 requests in 30.00s, 43.79MB read
+Requests/sec:   8011.92
+Transfer/sec:      1.46MB
+
+---------------------------------------------------------
+ Concurrency: 16 for bottle
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.17ms    2.56ms  13.41ms   80.07%
+    Req/Sec   370.39    483.06     1.00k    62.96%
+  233119 requests in 30.00s, 42.46MB read
+Requests/sec:   7770.61
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Concurrency: 32 for bottle
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.80ms    3.58ms  15.79ms   82.28%
+    Req/Sec   554.79    497.14     1.00k    55.48%
+  246028 requests in 30.00s, 44.81MB read
+Requests/sec:   8201.12
+Transfer/sec:      1.49MB
+
+---------------------------------------------------------
+ Concurrency: 64 for bottle
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.12ms    8.39ms  42.69ms   79.10%
+    Req/Sec   334.58    644.73     2.00k    76.18%
+  238223 requests in 30.00s, 43.39MB read
+Requests/sec:   7940.53
+Transfer/sec:      1.45MB
+
+---------------------------------------------------------
+ Concurrency: 128 for bottle
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.35ms   11.99ms  74.19ms   61.84%
+    Req/Sec   377.19    484.84     1.00k    62.28%
+  243287 requests in 30.00s, 44.32MB read
+Requests/sec:   8109.57
+Transfer/sec:      1.48MB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.29ms   18.26ms 136.70ms   77.22%
+    Req/Sec   506.24    500.12     1.00k    50.62%
+  241586 requests in 30.00s, 44.01MB read
+Requests/sec:   8051.79
+Transfer/sec:      1.47MB

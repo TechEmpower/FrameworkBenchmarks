@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 08:24:32 UTC 2013
+
+  System load:  0.0                Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer lithium
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.28ms   17.32ms 105.48ms   69.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1101 requests in 5.02s, 268.53KB read
+Requests/sec:    219.54
+Transfer/sec:     53.54KB
+
+---------------------------------------------------------
+ Running Warmup lithium
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   990.12ms  328.56ms   3.80s    79.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7307 requests in 30.01s, 1.74MB read
+  Socket errors: connect 0, read 0, write 0, timeout 11
+Requests/sec:    243.47
+Transfer/sec:     59.39KB
+
+---------------------------------------------------------
+ Concurrency: 8 for lithium
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.89ms   13.98ms 147.36ms   78.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7977 requests in 30.00s, 1.90MB read
+Requests/sec:    265.87
+Transfer/sec:     64.84KB
+
+---------------------------------------------------------
+ Concurrency: 16 for lithium
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    61.18ms   43.81ms 550.63ms   84.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7994 requests in 30.00s, 1.90MB read
+Requests/sec:    266.45
+Transfer/sec:     64.98KB
+
+---------------------------------------------------------
+ Concurrency: 32 for lithium
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   135.99ms  135.95ms   1.06s    89.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7783 requests in 30.00s, 1.85MB read
+Requests/sec:    259.40
+Transfer/sec:     63.26KB
+
+---------------------------------------------------------
+ Concurrency: 64 for lithium
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   261.81ms  272.30ms   1.87s    87.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7870 requests in 30.00s, 1.87MB read
+Requests/sec:    262.30
+Transfer/sec:     63.97KB
+
+---------------------------------------------------------
+ Concurrency: 128 for lithium
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   518.74ms  299.44ms   1.64s    71.06%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7607 requests in 30.00s, 1.81MB read
+Requests/sec:    253.52
+Transfer/sec:     61.84KB
+
+---------------------------------------------------------
+ Concurrency: 256 for lithium
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.02s   327.03ms   3.56s    83.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7067 requests in 30.01s, 1.68MB read
+  Socket errors: connect 0, read 0, write 0, timeout 22
+Requests/sec:    235.50
+Transfer/sec:     57.44KB

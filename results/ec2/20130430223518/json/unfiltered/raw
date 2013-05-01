@@ -1,0 +1,133 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 07:27:25 UTC 2013
+
+  System load:  0.26               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer unfiltered
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:9000/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.02ms    3.97ms  24.39ms   90.53%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11177 requests in 5.00s, 1.44MB read
+Requests/sec:   2234.80
+Transfer/sec:    294.63KB
+
+---------------------------------------------------------
+ Running Warmup unfiltered
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.26ms    5.96ms  47.96ms   76.88%
+    Req/Sec     2.91k   372.10     3.00k    93.50%
+  948078 requests in 30.00s, 122.06MB read
+Requests/sec:  31603.70
+Transfer/sec:      4.07MB
+
+---------------------------------------------------------
+ Concurrency: 8 for unfiltered
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   642.29us  381.19us  10.08ms   96.52%
+    Req/Sec     0.99k    89.50     1.00k    99.19%
+  385413 requests in 30.00s, 49.62MB read
+Requests/sec:  12847.45
+Transfer/sec:      1.65MB
+
+---------------------------------------------------------
+ Concurrency: 16 for unfiltered
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.93ms  558.26us   7.45ms   90.80%
+    Req/Sec     1.99k    82.71     2.00k    99.31%
+  533041 requests in 30.00s, 68.63MB read
+Requests/sec:  17768.51
+Transfer/sec:      2.29MB
+
+---------------------------------------------------------
+ Concurrency: 32 for unfiltered
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.68ms    1.46ms  24.51ms   87.45%
+    Req/Sec     2.01k    86.47     3.00k    99.25%
+  675268 requests in 30.00s, 86.94MB read
+Requests/sec:  22510.43
+Transfer/sec:      2.90MB
+
+---------------------------------------------------------
+ Concurrency: 64 for unfiltered
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.98ms    2.77ms  28.11ms   88.19%
+    Req/Sec     2.99k    96.40     3.00k    99.06%
+  779428 requests in 30.00s, 100.35MB read
+Requests/sec:  25981.97
+Transfer/sec:      3.35MB
+
+---------------------------------------------------------
+ Concurrency: 128 for unfiltered
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.75ms    4.15ms  46.20ms   88.35%
+    Req/Sec     2.99k   140.45     3.00k    98.75%
+  883418 requests in 30.00s, 113.74MB read
+Requests/sec:  29448.35
+Transfer/sec:      3.79MB
+
+---------------------------------------------------------
+ Concurrency: 256 for unfiltered
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.86ms    5.64ms  56.16ms   78.89%
+    Req/Sec     3.79k   478.30     7.00k    80.01%
+  974750 requests in 30.00s, 125.50MB read
+Requests/sec:  32492.99
+Transfer/sec:      4.18MB

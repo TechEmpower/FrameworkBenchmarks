@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 09:57:56 UTC 2013
+
+  System load:  0.62               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer fuel
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.73ms   19.00ms 121.86ms   67.90%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  863 requests in 5.03s, 1.58MB read
+Requests/sec:    171.67
+Transfer/sec:    321.88KB
+
+---------------------------------------------------------
+ Running Warmup fuel
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.45s   561.91ms   3.13s    75.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4850 requests in 30.01s, 8.88MB read
+  Socket errors: connect 0, read 0, write 0, timeout 131
+Requests/sec:    161.63
+Transfer/sec:    303.06KB
+
+---------------------------------------------------------
+ Concurrency: 8 for fuel
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.21ms   18.86ms 118.56ms   67.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5018 requests in 30.00s, 9.19MB read
+Requests/sec:    167.25
+Transfer/sec:    313.59KB
+
+---------------------------------------------------------
+ Concurrency: 16 for fuel
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    96.76ms   47.33ms 307.87ms   68.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4939 requests in 30.00s, 9.04MB read
+Requests/sec:    164.62
+Transfer/sec:    308.66KB
+
+---------------------------------------------------------
+ Concurrency: 32 for fuel
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   203.13ms  108.84ms 697.43ms   70.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4771 requests in 30.01s, 8.74MB read
+Requests/sec:    159.00
+Transfer/sec:    298.12KB
+
+---------------------------------------------------------
+ Concurrency: 64 for fuel
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   385.60ms  170.96ms   1.09s    73.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4947 requests in 30.00s, 9.06MB read
+Requests/sec:    164.88
+Transfer/sec:    309.15KB
+
+---------------------------------------------------------
+ Concurrency: 128 for fuel
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   761.08ms  381.14ms   2.86s    72.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4894 requests in 30.01s, 8.96MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    163.10
+Transfer/sec:    305.82KB
+
+---------------------------------------------------------
+ Concurrency: 256 for fuel
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.55s   500.66ms   4.18s    84.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4593 requests in 30.01s, 8.41MB read
+  Socket errors: connect 0, read 0, write 0, timeout 42
+Requests/sec:    153.06
+Transfer/sec:    286.98KB

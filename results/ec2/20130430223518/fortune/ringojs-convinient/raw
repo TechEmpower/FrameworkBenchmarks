@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 11:41:30 UTC 2013
+
+  System load:  0.29               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer ringojs-convinient
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    63.42ms   15.62ms 118.42ms   71.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  644 requests in 5.03s, 0.89MB read
+Requests/sec:    128.07
+Transfer/sec:    181.98KB
+
+---------------------------------------------------------
+ Running Warmup ringojs-convinient
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.68s   496.73ms   3.36s    86.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4126 requests in 30.01s, 5.73MB read
+  Socket errors: connect 0, read 0, write 0, timeout 80
+Requests/sec:    137.49
+Transfer/sec:    195.36KB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs-convinient
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    55.21ms   11.64ms 117.91ms   67.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4321 requests in 30.00s, 6.00MB read
+Requests/sec:    144.02
+Transfer/sec:    204.64KB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs-convinient
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   114.81ms   30.00ms 238.98ms   74.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4201 requests in 30.00s, 5.83MB read
+Requests/sec:    140.01
+Transfer/sec:    198.95KB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs-convinient
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   225.54ms   53.44ms 488.06ms   80.54%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4236 requests in 30.00s, 5.88MB read
+Requests/sec:    141.19
+Transfer/sec:    200.61KB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs-convinient
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   451.49ms  109.05ms   1.06s    82.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4234 requests in 30.01s, 5.88MB read
+Requests/sec:    141.11
+Transfer/sec:    200.50KB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs-convinient
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   888.96ms  225.81ms   2.05s    86.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4148 requests in 30.01s, 5.76MB read
+Requests/sec:    138.24
+Transfer/sec:    196.43KB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs-convinient
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.72s   508.58ms   3.13s    87.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4060 requests in 30.01s, 5.63MB read
+  Socket errors: connect 0, read 0, write 0, timeout 86
+Requests/sec:    135.30
+Transfer/sec:    192.24KB

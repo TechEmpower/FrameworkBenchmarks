@@ -1,0 +1,109 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer servlet-raw
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/servlet/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.92ms    1.28ms  16.32ms   95.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21223 requests in 5.00s, 3.94MB read
+Requests/sec:   4244.25
+Transfer/sec:    806.36KB
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    54.15ms   38.39ms 616.77ms   76.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  145829 requests in 30.00s, 27.07MB read
+Requests/sec:   4860.88
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Queries: 1 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/servlet/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.84ms   37.12ms 424.11ms   90.22%
+    Req/Sec     0.97k   173.73     1.00k    96.89%
+  247068 requests in 29.99s, 38.35MB read
+Requests/sec:   8237.50
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Queries: 5 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/servlet/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   112.56ms   62.82ms 648.40ms   79.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  70190 requests in 30.01s, 19.47MB read
+Requests/sec:   2338.86
+Transfer/sec:    664.40KB
+
+---------------------------------------------------------
+ Queries: 10 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/servlet/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   197.29ms   82.76ms 614.32ms   77.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  38051 requests in 30.00s, 16.32MB read
+Requests/sec:   1268.40
+Transfer/sec:    557.09KB
+
+---------------------------------------------------------
+ Queries: 15 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/servlet/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   287.39ms  121.83ms 841.42ms   76.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26090 requests in 30.00s, 15.14MB read
+Requests/sec:    869.62
+Transfer/sec:    516.84KB
+
+---------------------------------------------------------
+ Queries: 20 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/servlet/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   381.98ms  117.05ms 971.17ms   77.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  19433 requests in 30.02s, 14.22MB read
+Requests/sec:    647.33
+Transfer/sec:    485.19KB
