@@ -1,0 +1,125 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 10:50:23 UTC 2013
+
+  System load:  0.31               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer spark
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/spark/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/spark/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.91ms   12.66ms 102.96ms   92.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1983 requests in 5.02s, 376.76KB read
+Requests/sec:    395.39
+Transfer/sec:     75.12KB
+
+---------------------------------------------------------
+ Running Warmup spark
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/spark/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/spark/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   701.09ms  747.75ms   5.07s    86.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11417 requests in 30.00s, 2.12MB read
+  Socket errors: connect 0, read 0, write 0, timeout 268
+Requests/sec:    380.51
+Transfer/sec:     72.29KB
+
+---------------------------------------------------------
+ Queries: 1 for spark
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/spark/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/spark/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   713.56ms  730.70ms   4.83s    85.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11212 requests in 30.01s, 1.74MB read
+  Socket errors: connect 0, read 0, write 0, timeout 230
+Requests/sec:    373.56
+Transfer/sec:     59.38KB
+
+---------------------------------------------------------
+ Queries: 5 for spark
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/spark/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/spark/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   693.12ms  775.04ms   6.06s    87.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10738 requests in 30.01s, 2.98MB read
+  Socket errors: connect 0, read 0, write 0, timeout 298
+Requests/sec:    357.85
+Transfer/sec:    101.65KB
+
+---------------------------------------------------------
+ Queries: 10 for spark
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/spark/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/spark/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   724.72ms  811.59ms   7.30s    86.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10325 requests in 30.01s, 4.43MB read
+  Socket errors: connect 0, read 0, write 0, timeout 340
+Requests/sec:    344.08
+Transfer/sec:    151.13KB
+
+---------------------------------------------------------
+ Queries: 15 for spark
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/spark/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/spark/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   806.12ms  855.21ms   6.48s    86.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9187 requests in 30.01s, 5.33MB read
+  Socket errors: connect 0, read 0, write 0, timeout 415
+Requests/sec:    306.11
+Transfer/sec:    181.94KB
+
+---------------------------------------------------------
+ Queries: 20 for spark
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/spark/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/spark/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   799.18ms  917.60ms   8.42s    87.45%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8423 requests in 30.01s, 6.17MB read
+  Socket errors: connect 0, read 0, write 0, timeout 552
+Requests/sec:    280.67
+Transfer/sec:    210.38KB

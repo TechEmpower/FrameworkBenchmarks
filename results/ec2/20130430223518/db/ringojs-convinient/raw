@@ -1,0 +1,133 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 11:34:07 UTC 2013
+
+  System load:  0.1                Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer ringojs-convinient
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.52ms    6.62ms  38.46ms   66.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4240 requests in 5.00s, 781.58KB read
+Requests/sec:    847.49
+Transfer/sec:    156.22KB
+
+---------------------------------------------------------
+ Running Warmup ringojs-convinient
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   153.81ms  147.47ms 669.31ms   81.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  39054 requests in 30.01s, 7.03MB read
+Requests/sec:   1301.55
+Transfer/sec:    239.94KB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs-convinient
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.91ms    3.62ms  32.70ms   66.67%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  41649 requests in 30.00s, 7.50MB read
+Requests/sec:   1388.23
+Transfer/sec:    255.91KB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs-convinient
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.41ms    9.31ms  40.88ms   70.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  41818 requests in 30.00s, 7.53MB read
+Requests/sec:   1393.71
+Transfer/sec:    256.93KB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs-convinient
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.95ms   19.50ms  79.61ms   80.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  41963 requests in 30.00s, 7.55MB read
+Requests/sec:   1398.68
+Transfer/sec:    257.85KB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs-convinient
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.49ms   36.19ms 132.94ms   82.20%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  42476 requests in 30.00s, 7.65MB read
+Requests/sec:   1415.73
+Transfer/sec:    260.99KB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs-convinient
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    70.95ms   74.67ms 326.53ms   82.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  37841 requests in 30.01s, 6.81MB read
+Requests/sec:   1261.12
+Transfer/sec:    232.49KB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs-convinient
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   164.98ms  164.03ms 647.78ms   81.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  35081 requests in 30.01s, 6.32MB read
+Requests/sec:   1168.85
+Transfer/sec:    215.48KB

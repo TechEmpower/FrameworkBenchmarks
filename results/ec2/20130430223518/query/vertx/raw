@@ -1,0 +1,111 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer vertx
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.78ms    1.80ms  11.45ms   84.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18417 requests in 5.00s, 4.04MB read
+Requests/sec:   3683.22
+Transfer/sec:    827.28KB
+
+---------------------------------------------------------
+ Running Warmup vertx
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.05ms   54.09ms 248.10ms   58.44%
+    Req/Sec    20.47    150.16     2.00k    98.08%
+  129327 requests in 30.00s, 28.37MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:   4311.01
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Queries: 1 for vertx
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.67ms   63.45ms 298.26ms   86.23%
+    Req/Sec   148.91    399.04     3.00k    86.54%
+  215095 requests in 30.00s, 32.41MB read
+  Socket errors: connect 0, read 0, write 0, timeout 14
+Requests/sec:   7169.94
+Transfer/sec:      1.08MB
+
+---------------------------------------------------------
+ Queries: 5 for vertx
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   124.94ms   54.38ms 341.98ms   62.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  60150 requests in 30.00s, 25.41MB read
+Requests/sec:   2005.19
+Transfer/sec:    867.48KB
+
+---------------------------------------------------------
+ Queries: 10 for vertx
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   227.05ms   51.03ms 488.57ms   91.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32482 requests in 30.01s, 24.72MB read
+Requests/sec:   1082.41
+Transfer/sec:    843.52KB
+
+---------------------------------------------------------
+ Queries: 15 for vertx
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   351.71ms   82.53ms 693.94ms   87.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21112 requests in 30.01s, 23.23MB read
+Requests/sec:    703.55
+Transfer/sec:    792.87KB
+
+---------------------------------------------------------
+ Queries: 20 for vertx
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   445.96ms   90.64ms 682.36ms   91.46%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16567 requests in 30.01s, 23.84MB read
+Requests/sec:    552.14
+Transfer/sec:    813.65KB

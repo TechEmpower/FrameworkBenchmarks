@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 23:06:48 UTC 2013
+
+  System load:  0.06               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/compojure/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/compojure/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.57ms   25.51ms 416.61ms   99.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12359 requests in 5.01s, 2.03MB read
+Requests/sec:   2468.71
+Transfer/sec:    414.67KB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/compojure/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.73ms  100.39ms 669.50ms   93.54%
+    Req/Sec   261.03    439.33     1.00k    73.90%
+  247209 requests in 30.00s, 41.51MB read
+  Socket errors: connect 0, read 826, write 0, timeout 1949
+Requests/sec:   8240.48
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/compojure/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   739.31us  426.76us  10.84ms   97.82%
+    Req/Sec     1.00k    49.91     2.00k    99.75%
+  335208 requests in 30.00s, 54.98MB read
+Requests/sec:  11173.75
+Transfer/sec:      1.83MB
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/compojure/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.40ms  683.85us  19.64ms   92.52%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  351729 requests in 30.00s, 57.69MB read
+Requests/sec:  11724.48
+Transfer/sec:      1.92MB
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/compojure/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.71ms    1.03ms  17.27ms   91.91%
+    Req/Sec     1.00k    43.36     1.00k    99.81%
+  366753 requests in 30.00s, 60.16MB read
+Requests/sec:  12225.57
+Transfer/sec:      2.01MB
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/compojure/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.28ms    1.46ms  19.87ms   87.70%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  375356 requests in 30.00s, 61.57MB read
+Requests/sec:  12512.34
+Transfer/sec:      2.05MB
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/compojure/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.82ms    6.92ms 166.48ms   95.55%
+    Req/Sec     1.00k    25.02     1.00k    99.94%
+  373728 requests in 30.00s, 61.30MB read
+Requests/sec:  12458.02
+Transfer/sec:      2.04MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/compojure/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.69ms  137.40ms 792.61ms   96.22%
+    Req/Sec     0.93k   255.32     1.00k    92.99%
+  319858 requests in 30.00s, 53.15MB read
+  Socket errors: connect 0, read 601, write 0, timeout 1417
+Requests/sec:  10662.01
+Transfer/sec:      1.77MB

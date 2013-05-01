@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 02:23:24 UTC 2013
+
+  System load:  0.0                Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer sinatra-jruby
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/sinatra/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/sinatra/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.90ms   39.84ms 364.66ms   86.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  414 requests in 5.27s, 82.48KB read
+Requests/sec:     78.54
+Transfer/sec:     15.65KB
+
+---------------------------------------------------------
+ Running Warmup sinatra-jruby
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/sinatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sinatra/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   966.40ms  656.34ms   3.60s    68.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7111 requests in 30.01s, 1.39MB read
+  Socket errors: connect 0, read 0, write 0, timeout 84
+Requests/sec:    236.93
+Transfer/sec:     47.56KB
+
+---------------------------------------------------------
+ Concurrency: 8 for sinatra-jruby
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/sinatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sinatra/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.96ms    7.84ms  60.29ms   67.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13044 requests in 30.00s, 2.54MB read
+Requests/sec:    434.79
+Transfer/sec:     86.62KB
+
+---------------------------------------------------------
+ Concurrency: 16 for sinatra-jruby
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/sinatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sinatra/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.33ms   12.98ms  97.11ms   64.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18349 requests in 30.00s, 3.57MB read
+Requests/sec:    611.59
+Transfer/sec:    121.84KB
+
+---------------------------------------------------------
+ Concurrency: 32 for sinatra-jruby
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/sinatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sinatra/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.48ms   26.78ms 168.47ms   64.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18265 requests in 30.00s, 3.55MB read
+Requests/sec:    608.79
+Transfer/sec:    121.28KB
+
+---------------------------------------------------------
+ Concurrency: 64 for sinatra-jruby
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/sinatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sinatra/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.75ms   56.20ms 305.15ms   64.22%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18238 requests in 30.01s, 3.55MB read
+Requests/sec:    607.83
+Transfer/sec:    121.09KB
+
+---------------------------------------------------------
+ Concurrency: 128 for sinatra-jruby
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/sinatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sinatra/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   176.25ms  131.83ms 688.03ms   64.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18139 requests in 30.01s, 3.53MB read
+Requests/sec:    604.44
+Transfer/sec:    120.42KB
+
+---------------------------------------------------------
+ Concurrency: 256 for sinatra-jruby
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/sinatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sinatra/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   351.56ms  307.22ms   1.81s    62.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17817 requests in 30.01s, 3.47MB read
+Requests/sec:    593.75
+Transfer/sec:    118.29KB

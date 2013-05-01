@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 09:26:28 UTC 2013
+
+  System load:  1.24               Processes:           77
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer codeigniter-raw
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/index.php/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.30ms   12.16ms 100.77ms   87.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2280 requests in 5.01s, 4.66MB read
+Requests/sec:    455.24
+Transfer/sec:      0.93MB
+
+---------------------------------------------------------
+ Running Warmup codeigniter-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   575.12ms  212.93ms   2.22s    74.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13110 requests in 30.02s, 26.79MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    436.69
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Concurrency: 8 for codeigniter-raw
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.33ms   14.37ms 157.26ms   92.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13800 requests in 30.00s, 28.20MB read
+Requests/sec:    459.93
+Transfer/sec:      0.94MB
+
+---------------------------------------------------------
+ Concurrency: 16 for codeigniter-raw
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    37.45ms   59.33ms 629.22ms   91.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13884 requests in 30.00s, 28.37MB read
+Requests/sec:    462.79
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Concurrency: 32 for codeigniter-raw
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    77.85ms  141.70ms   1.37s    91.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13934 requests in 30.00s, 28.48MB read
+Requests/sec:    464.42
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Concurrency: 64 for codeigniter-raw
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   159.44ms  223.49ms   2.61s    86.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13341 requests in 30.00s, 27.27MB read
+Requests/sec:    444.65
+Transfer/sec:      0.91MB
+
+---------------------------------------------------------
+ Concurrency: 128 for codeigniter-raw
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   303.13ms  194.64ms   1.26s    69.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13088 requests in 30.00s, 26.75MB read
+Requests/sec:    436.20
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Concurrency: 256 for codeigniter-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   579.97ms  219.95ms   2.58s    76.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12830 requests in 30.01s, 26.22MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    427.56
+Transfer/sec:      0.87MB
