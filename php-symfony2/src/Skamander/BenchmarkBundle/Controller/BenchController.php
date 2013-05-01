@@ -59,13 +59,7 @@ class BenchController extends Controller
         $fortunes[] = $runtimeFortune;
 
         usort($fortunes, function($left, $right) {
-            if ($left->message === $right->message) {
-                return 0;
-            } else if ($left->message > $right->message) {
-                return 1;
-            } else {
-                return -1;
-            }
+            return strcmp($left->message, $right->message);
         });
 
         return $this->render("SkamanderBenchmarkBundle:Bench:fortunes.html.twig", [
@@ -86,13 +80,7 @@ class BenchController extends Controller
         $fortunes[] = $runtimeFortune;
 
         usort($fortunes, function($left, $right) {
-            if ($left->message === $right->message) {
-                return 0;
-            } else if ($left->message > $right->message) {
-                return 1;
-            } else {
-                return -1;
-            }
+            return strcmp($left->message, $right->message);
         });
 
         return $this->render("SkamanderBenchmarkBundle:Bench:fortunes.html.php", [
