@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 01:19:48 PDT 2013
+
+  System load:  0.2                 Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer scalatra-raw
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/scalatra/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/scalatra/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21ms    1.27ms  12.84ms   90.37%
+    Req/Sec   162.96    370.02     1.00k    83.70%
+  45762 requests in 5.00s, 9.72MB read
+Requests/sec:   9153.80
+Transfer/sec:      1.94MB
+
+---------------------------------------------------------
+ Running Warmup scalatra-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/scalatra/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/scalatra/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.01ms   37.68ms   1.11s    95.51%
+    Req/Sec     3.45k   779.98     4.00k    86.20%
+  1151546 requests in 30.00s, 245.20MB read
+Requests/sec:  38381.97
+Transfer/sec:      8.17MB
+
+---------------------------------------------------------
+ Concurrency: 8 for scalatra-raw
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/scalatra/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/scalatra/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   506.63us  329.32us  12.95ms   99.44%
+    Req/Sec     1.64k   480.40     2.00k    63.91%
+  471890 requests in 30.00s, 100.26MB read
+Requests/sec:  15730.22
+Transfer/sec:      3.34MB
+
+---------------------------------------------------------
+ Concurrency: 16 for scalatra-raw
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/scalatra/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/scalatra/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   510.94us    1.20ms  46.11ms   99.81%
+    Req/Sec     4.00k    56.09     4.00k    99.68%
+  1011727 requests in 30.00s, 214.95MB read
+Requests/sec:  33725.60
+Transfer/sec:      7.17MB
+
+---------------------------------------------------------
+ Concurrency: 32 for scalatra-raw
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/scalatra/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/scalatra/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.90ms    1.46ms  48.49ms   95.08%
+    Req/Sec     5.00k    55.83     6.00k    99.69%
+  1345437 requests in 30.00s, 285.85MB read
+Requests/sec:  44848.94
+Transfer/sec:      9.53MB
+
+---------------------------------------------------------
+ Concurrency: 64 for scalatra-raw
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/scalatra/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/scalatra/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.55ms    1.66ms  46.28ms   92.02%
+    Req/Sec     5.47k   541.32     9.00k    99.31%
+  1410649 requests in 30.00s, 299.71MB read
+Requests/sec:  47023.44
+Transfer/sec:      9.99MB
+
+---------------------------------------------------------
+ Concurrency: 128 for scalatra-raw
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/scalatra/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/scalatra/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.46ms   18.86ms 748.80ms   99.44%
+    Req/Sec     5.43k   516.61     7.00k    56.22%
+  1406755 requests in 30.00s, 298.88MB read
+Requests/sec:  46894.43
+Transfer/sec:      9.96MB
+
+---------------------------------------------------------
+ Concurrency: 256 for scalatra-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/scalatra/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/scalatra/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.78ms   22.27ms 797.92ms   97.12%
+    Req/Sec     5.01k   188.43     7.00k    96.81%
+  1328360 requests in 30.00s, 282.30MB read
+Requests/sec:  44281.50
+Transfer/sec:      9.41MB

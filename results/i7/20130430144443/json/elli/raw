@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 22:35:15 PDT 2013
+
+  System load:  0.38                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer elli
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   235.50us   91.45us 539.00us   64.79%
+    Req/Sec     5.15k   702.58     6.00k    48.69%
+  187910 requests in 5.00s, 21.86MB read
+Requests/sec:  37588.81
+Transfer/sec:      4.37MB
+
+---------------------------------------------------------
+ Running Warmup elli
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.65ms  429.10us   8.45ms   85.19%
+    Req/Sec    19.49k   774.53    25.00k    93.84%
+  4790895 requests in 30.00s, 557.41MB read
+Requests/sec: 159703.46
+Transfer/sec:     18.58MB
+
+---------------------------------------------------------
+ Concurrency: 8 for elli
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   283.07us   95.79us   1.13ms   56.01%
+    Req/Sec     3.68k     1.26k    6.00k    43.93%
+  929381 requests in 30.00s, 108.13MB read
+Requests/sec:  30980.60
+Transfer/sec:      3.60MB
+
+---------------------------------------------------------
+ Concurrency: 16 for elli
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   165.43us   36.95us 293.00us   69.99%
+    Req/Sec    11.00k    49.75    12.00k    99.75%
+  2773346 requests in 30.00s, 322.67MB read
+Requests/sec:  92448.45
+Transfer/sec:     10.76MB
+
+---------------------------------------------------------
+ Concurrency: 32 for elli
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   206.59us   46.80us 406.00us   69.24%
+    Req/Sec    17.94k   241.71    18.00k    93.77%
+  4410475 requests in 30.00s, 513.15MB read
+Requests/sec: 147024.02
+Transfer/sec:     17.11MB
+
+---------------------------------------------------------
+ Concurrency: 64 for elli
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   415.49us  115.78us   1.05ms   66.36%
+    Req/Sec    18.99k    96.19    19.00k    99.26%
+  4665509 requests in 30.00s, 542.82MB read
+Requests/sec: 155520.72
+Transfer/sec:     18.09MB
+
+---------------------------------------------------------
+ Concurrency: 128 for elli
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   810.58us  166.02us   1.53ms   69.95%
+    Req/Sec    18.98k   199.05    20.00k    98.57%
+  4726134 requests in 30.00s, 549.88MB read
+Requests/sec: 157542.77
+Transfer/sec:     18.33MB
+
+---------------------------------------------------------
+ Concurrency: 256 for elli
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.68ms  499.72us   6.32ms   86.32%
+    Req/Sec    19.39k   643.22    23.00k    95.17%
+  4746281 requests in 30.00s, 552.22MB read
+Requests/sec: 158215.10
+Transfer/sec:     18.41MB

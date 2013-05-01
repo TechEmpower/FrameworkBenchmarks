@@ -1,0 +1,125 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 09:54:30 UTC 2013
+
+  System load:  0.14               Processes:           77
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer fuel
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    37.90ms   17.97ms 135.20ms   73.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1062 requests in 5.02s, 280.57KB read
+Requests/sec:    211.70
+Transfer/sec:     55.93KB
+
+---------------------------------------------------------
+ Running Warmup fuel
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.20s   417.64ms   3.98s    79.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5952 requests in 30.01s, 1.54MB read
+  Socket errors: connect 0, read 0, write 0, timeout 33
+Requests/sec:    198.31
+Transfer/sec:     52.40KB
+
+---------------------------------------------------------
+ Queries: 1 for fuel
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.13s   406.77ms   2.20s    71.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6448 requests in 30.00s, 1.44MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    214.90
+Transfer/sec:     49.27KB
+
+---------------------------------------------------------
+ Queries: 5 for fuel
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.43s   497.89ms   2.49s    76.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4953 requests in 30.01s, 1.78MB read
+  Socket errors: connect 0, read 0, write 0, timeout 42
+Requests/sec:    165.04
+Transfer/sec:     60.90KB
+
+---------------------------------------------------------
+ Queries: 10 for fuel
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.76s   597.66ms   2.97s    82.20%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3943 requests in 30.01s, 2.10MB read
+  Socket errors: connect 0, read 0, write 0, timeout 156
+Requests/sec:    131.40
+Transfer/sec:     71.58KB
+
+---------------------------------------------------------
+ Queries: 15 for fuel
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.12s   744.37ms   3.43s    83.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3194 requests in 30.01s, 2.24MB read
+  Socket errors: connect 0, read 0, write 0, timeout 572
+Requests/sec:    106.45
+Transfer/sec:     76.58KB
+
+---------------------------------------------------------
+ Queries: 20 for fuel
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.42s   882.83ms   3.67s    84.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2726 requests in 30.01s, 2.38MB read
+  Socket errors: connect 0, read 0, write 0, timeout 939
+Requests/sec:     90.83
+Transfer/sec:     81.20KB

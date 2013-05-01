@@ -1,0 +1,117 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 17:28:42 PDT 2013
+
+  System load:  2.54                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/dbraw.php?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/dbraw.php?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14ms  174.36us   1.84ms   70.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  29664 requests in 5.00s, 7.45MB read
+Requests/sec:   5933.11
+Transfer/sec:      1.49MB
+
+---------------------------------------------------------
+ Running Warmup php-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw.php?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw.php?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.15ms   27.19ms 445.23ms   95.11%
+    Req/Sec     1.92k   294.30     2.00k    92.13%
+  691336 requests in 30.00s, 173.74MB read
+Requests/sec:  23045.18
+Transfer/sec:      5.79MB
+
+---------------------------------------------------------
+ Queries: 1 for php-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw.php?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw.php?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.60ms   23.37ms 633.55ms   95.50%
+    Req/Sec     2.99k   108.57     3.00k    99.19%
+  793290 requests in 30.00s, 172.29MB read
+Requests/sec:  26443.71
+Transfer/sec:      5.74MB
+
+---------------------------------------------------------
+ Queries: 5 for php-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw.php?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw.php?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.63ms   45.48ms   1.00s    95.61%
+    Req/Sec     1.92k   295.99     2.00k    92.03%
+  527386 requests in 30.00s, 186.52MB read
+Requests/sec:  17581.20
+Transfer/sec:      6.22MB
+
+---------------------------------------------------------
+ Queries: 10 for php-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw.php?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw.php?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.97ms   90.73ms   1.64s    93.45%
+    Req/Sec     0.99k   118.99     1.00k    98.56%
+  313677 requests in 30.00s, 164.76MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:  10456.07
+Transfer/sec:      5.49MB
+
+---------------------------------------------------------
+ Queries: 15 for php-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw.php?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw.php?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.90ms  117.24ms   3.42s    95.56%
+    Req/Sec   107.27    309.56     1.00k    89.27%
+  233786 requests in 30.00s, 162.68MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:   7792.59
+Transfer/sec:      5.42MB
+
+---------------------------------------------------------
+ Queries: 20 for php-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw.php?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw.php?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.15ms   95.38ms   1.13s    92.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  181286 requests in 30.00s, 157.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:   6042.51
+Transfer/sec:      5.24MB

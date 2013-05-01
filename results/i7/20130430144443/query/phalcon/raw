@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 03:48:10 PDT 2013
+
+  System load:  4.27                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phalcon
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.80ms  516.81us   5.68ms   72.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10308 requests in 5.00s, 2.66MB read
+Requests/sec:   2061.03
+Transfer/sec:    544.50KB
+
+---------------------------------------------------------
+ Running Warmup phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    60.08ms   61.50ms 581.45ms   89.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  136828 requests in 30.00s, 35.30MB read
+Requests/sec:   4560.49
+Transfer/sec:      1.18MB
+
+---------------------------------------------------------
+ Queries: 1 for phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.28ms   79.18ms   2.34s    93.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  163633 requests in 30.00s, 36.63MB read
+Requests/sec:   5454.28
+Transfer/sec:      1.22MB
+
+---------------------------------------------------------
+ Queries: 5 for phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.00ms   74.56ms 600.60ms   83.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  96724 requests in 30.00s, 34.86MB read
+Requests/sec:   3224.23
+Transfer/sec:      1.16MB
+
+---------------------------------------------------------
+ Queries: 10 for phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   123.13ms  114.11ms   1.29s    84.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  66259 requests in 30.00s, 35.25MB read
+Requests/sec:   2208.58
+Transfer/sec:      1.17MB
+
+---------------------------------------------------------
+ Queries: 15 for phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   155.79ms  103.48ms 785.66ms   75.12%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  49612 requests in 30.00s, 34.85MB read
+Requests/sec:   1653.52
+Transfer/sec:      1.16MB
+
+---------------------------------------------------------
+ Queries: 20 for phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   189.98ms  130.10ms   1.30s    75.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  39959 requests in 30.00s, 34.89MB read
+Requests/sec:   1331.90
+Transfer/sec:      1.16MB

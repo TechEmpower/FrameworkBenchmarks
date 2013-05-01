@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:15:10 PDT 2013
+
+  System load:  0.36                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-scala-mongodb
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.18ms    1.84ms  12.59ms   88.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24471 requests in 5.00s, 2.87MB read
+Requests/sec:   4894.70
+Transfer/sec:    586.88KB
+
+---------------------------------------------------------
+ Running Warmup play-scala-mongodb
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.59ms    3.10ms  49.60ms   91.07%
+    Req/Sec     1.94k   261.64     3.00k    93.95%
+  546927 requests in 30.00s, 64.04MB read
+Requests/sec:  18231.64
+Transfer/sec:      2.13MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-scala-mongodb
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   829.38us  333.20us   7.89ms   98.69%
+    Req/Sec     1.00k    65.90     1.00k    99.56%
+  287056 requests in 30.00s, 33.61MB read
+Requests/sec:   9568.66
+Transfer/sec:      1.12MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-scala-mongodb
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.93ms  373.04us   9.02ms   97.70%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  509542 requests in 30.00s, 59.66MB read
+Requests/sec:  16985.44
+Transfer/sec:      1.99MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-scala-mongodb
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.71ms  838.43us  25.56ms   97.23%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  558604 requests in 30.00s, 65.41MB read
+Requests/sec:  18620.89
+Transfer/sec:      2.18MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-scala-mongodb
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.41ms    1.02ms  33.37ms   95.11%
+    Req/Sec     1.97k   195.53     2.00k    97.77%
+  557109 requests in 30.00s, 65.23MB read
+Requests/sec:  18571.10
+Transfer/sec:      2.17MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-scala-mongodb
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.21ms   15.50ms 628.64ms   99.94%
+    Req/Sec     1.98k   165.15     3.00k    97.41%
+  552612 requests in 30.00s, 64.71MB read
+Requests/sec:  18419.79
+Transfer/sec:      2.16MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-scala-mongodb
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.09ms    3.21ms  73.61ms   91.15%
+    Req/Sec     1.93k   349.85     3.00k    90.22%
+  561961 requests in 30.00s, 65.80MB read
+Requests/sec:  18732.20
+Transfer/sec:      2.19MB

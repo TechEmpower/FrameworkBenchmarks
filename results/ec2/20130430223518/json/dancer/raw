@@ -1,0 +1,133 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 11:46:52 UTC 2013
+
+  System load:  0.15               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer dancer
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.11ms    2.80ms  17.26ms   67.66%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5489 requests in 5.00s, 1.12MB read
+Requests/sec:   1096.98
+Transfer/sec:    229.21KB
+
+---------------------------------------------------------
+ Running Warmup dancer
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   238.75ms   23.64ms 329.28ms   93.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31881 requests in 30.01s, 6.51MB read
+Requests/sec:   1062.40
+Transfer/sec:    221.98KB
+
+---------------------------------------------------------
+ Concurrency: 8 for dancer
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.57ms    4.05ms  82.20ms   83.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31897 requests in 30.00s, 6.51MB read
+Requests/sec:   1063.19
+Transfer/sec:    222.14KB
+
+---------------------------------------------------------
+ Concurrency: 16 for dancer
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.43ms    4.08ms  69.50ms   80.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31512 requests in 30.00s, 6.43MB read
+Requests/sec:   1050.38
+Transfer/sec:    219.46KB
+
+---------------------------------------------------------
+ Concurrency: 32 for dancer
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.53ms    4.29ms  90.88ms   79.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32457 requests in 30.00s, 6.62MB read
+Requests/sec:   1081.82
+Transfer/sec:    226.03KB
+
+---------------------------------------------------------
+ Concurrency: 64 for dancer
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    60.27ms    5.44ms 111.75ms   85.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31839 requests in 30.00s, 6.50MB read
+Requests/sec:   1061.19
+Transfer/sec:    221.73KB
+
+---------------------------------------------------------
+ Concurrency: 128 for dancer
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   120.88ms    9.48ms 162.22ms   88.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31673 requests in 30.00s, 6.46MB read
+Requests/sec:   1055.65
+Transfer/sec:    220.57KB
+
+---------------------------------------------------------
+ Concurrency: 256 for dancer
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   238.55ms   21.80ms 312.79ms   93.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31942 requests in 30.01s, 6.52MB read
+Requests/sec:   1064.45
+Transfer/sec:    222.41KB

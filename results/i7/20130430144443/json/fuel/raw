@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 02:32:12 PDT 2013
+
+  System load:  0.25                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer fuel
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.32ms    1.41ms  13.42ms   74.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9286 requests in 5.00s, 1.98MB read
+Requests/sec:   1855.87
+Transfer/sec:    405.88KB
+
+---------------------------------------------------------
+ Running Warmup fuel
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   128.39ms  101.47ms 952.90ms   82.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  61423 requests in 30.00s, 13.12MB read
+Requests/sec:   2047.21
+Transfer/sec:    447.74KB
+
+---------------------------------------------------------
+ Concurrency: 8 for fuel
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.24ms    1.27ms  12.88ms   73.90%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  56575 requests in 30.00s, 12.08MB read
+Requests/sec:   1885.74
+Transfer/sec:    412.41KB
+
+---------------------------------------------------------
+ Concurrency: 16 for fuel
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.09ms    4.95ms  49.09ms   87.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  61026 requests in 30.00s, 13.03MB read
+Requests/sec:   2034.24
+Transfer/sec:    444.89KB
+
+---------------------------------------------------------
+ Concurrency: 32 for fuel
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.15ms   20.26ms 257.11ms   90.99%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  61673 requests in 30.00s, 13.17MB read
+Requests/sec:   2055.68
+Transfer/sec:    449.58KB
+
+---------------------------------------------------------
+ Concurrency: 64 for fuel
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.63ms   48.08ms 609.55ms   88.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  61718 requests in 30.00s, 13.18MB read
+Requests/sec:   2057.17
+Transfer/sec:    449.91KB
+
+---------------------------------------------------------
+ Concurrency: 128 for fuel
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.43ms   87.80ms 937.10ms   87.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  61284 requests in 30.00s, 13.09MB read
+Requests/sec:   2042.70
+Transfer/sec:    446.75KB
+
+---------------------------------------------------------
+ Concurrency: 256 for fuel
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   132.80ms  135.87ms   1.58s    89.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  61264 requests in 30.00s, 13.08MB read
+Requests/sec:   2042.03
+Transfer/sec:    446.61KB

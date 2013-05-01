@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 20:58:13 PDT 2013
+
+  System load:  0.74                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/dbs
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/dbs
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.22ms  736.23us   5.56ms   80.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18734 requests in 5.00s, 4.18MB read
+Requests/sec:   3746.30
+Transfer/sec:    855.28KB
+
+---------------------------------------------------------
+ Running Warmup flask
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbs
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbs
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.06ms   24.44ms 175.65ms   68.59%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  115332 requests in 30.00s, 25.71MB read
+Requests/sec:   3844.11
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/dbs
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbs
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.17ms  729.32us  12.76ms   80.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  112493 requests in 30.00s, 25.08MB read
+Requests/sec:   3749.68
+Transfer/sec:    856.06KB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/dbs
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbs
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.16ms    2.92ms  20.00ms   72.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  116189 requests in 30.00s, 25.90MB read
+Requests/sec:   3872.79
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/dbs
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbs
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.47ms    3.91ms  29.35ms   74.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  115267 requests in 30.00s, 25.70MB read
+Requests/sec:   3842.02
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/dbs
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbs
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.17ms    6.47ms  48.79ms   76.53%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  115236 requests in 30.00s, 25.69MB read
+Requests/sec:   3841.06
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/dbs
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbs
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.98ms   18.05ms 269.32ms   75.87%
+    Req/Sec     1.25     35.30     1.00k    99.88%
+  115179 requests in 30.00s, 25.68MB read
+Requests/sec:   3839.12
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbs
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbs
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.59ms   29.09ms 323.09ms   71.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  115226 requests in 30.00s, 25.69MB read
+Requests/sec:   3840.57
+Transfer/sec:      0.86MB

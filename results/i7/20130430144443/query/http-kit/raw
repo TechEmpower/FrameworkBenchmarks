@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 22:11:24 PDT 2013
+
+  System load:  1.38                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer http-kit
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/http-kit/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/http-kit/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   840.08us  103.36us   1.18ms   65.65%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  47426 requests in 5.00s, 8.40MB read
+Requests/sec:   9486.03
+Transfer/sec:      1.68MB
+
+---------------------------------------------------------
+ Running Warmup http-kit
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/http-kit/db/2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.99ms    1.57ms  21.94ms   92.16%
+    Req/Sec     3.10k   531.22     5.00k    80.98%
+  922908 requests in 30.00s, 163.51MB read
+Requests/sec:  30764.96
+Transfer/sec:      5.45MB
+
+---------------------------------------------------------
+ Queries: 1 for http-kit
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.42ms    2.50ms  72.58ms   97.31%
+    Req/Sec     6.70k   799.39    11.00k    92.61%
+  1705260 requests in 30.00s, 266.53MB read
+Requests/sec:  56845.05
+Transfer/sec:      8.88MB
+
+---------------------------------------------------------
+ Queries: 5 for http-kit
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/http-kit/db/5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.58ms    5.29ms  72.53ms   95.21%
+    Req/Sec     0.99k   126.28     2.00k    98.38%
+  348956 requests in 30.00s, 84.01MB read
+Requests/sec:  11631.76
+Transfer/sec:      2.80MB
+
+---------------------------------------------------------
+ Queries: 10 for http-kit
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/http-kit/db/10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.09ms   43.67ms   1.61s    97.62%
+    Req/Sec     1.88     43.30     1.00k    99.81%
+  168259 requests in 30.00s, 58.07MB read
+Requests/sec:   5608.29
+Transfer/sec:      1.94MB
+
+---------------------------------------------------------
+ Queries: 15 for http-kit
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/http-kit/db/15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.37ms   13.51ms 238.89ms   95.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  112697 requests in 30.00s, 50.66MB read
+Requests/sec:   3756.63
+Transfer/sec:      1.69MB
+
+---------------------------------------------------------
+ Queries: 20 for http-kit
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/http-kit/db/20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/http-kit/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.71ms   19.40ms 294.65ms   94.37%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  84254 requests in 30.00s, 46.67MB read
+Requests/sec:   2808.31
+Transfer/sec:      1.56MB

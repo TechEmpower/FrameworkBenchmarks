@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 03:41:43 UTC 2013
+
+  System load:  0.89               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer go
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.11ms    2.08ms  33.89ms   98.88%
+    Req/Sec    18.59    135.31     1.00k    98.14%
+  38527 requests in 5.00s, 5.17MB read
+Requests/sec:   7705.44
+Transfer/sec:      1.03MB
+
+---------------------------------------------------------
+ Running Warmup go
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.93ms   82.15ms   1.04s    95.14%
+    Req/Sec     0.88k   321.59     1.00k    88.29%
+  256756 requests in 30.00s, 34.47MB read
+Requests/sec:   8558.33
+Transfer/sec:      1.15MB
+
+---------------------------------------------------------
+ Concurrency: 8 for go
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.96ms  496.66us  13.10ms   97.08%
+    Req/Sec   827.95    377.54     1.00k    82.80%
+  241731 requests in 30.00s, 32.45MB read
+Requests/sec:   8057.89
+Transfer/sec:      1.08MB
+
+---------------------------------------------------------
+ Concurrency: 16 for go
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.85ms    1.63ms  32.06ms   92.86%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  266112 requests in 30.00s, 35.73MB read
+Requests/sec:   8870.59
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Concurrency: 32 for go
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.91ms    4.67ms  72.24ms   90.61%
+    Req/Sec     1.00k    49.83     1.00k    99.75%
+  278388 requests in 30.00s, 37.37MB read
+Requests/sec:   9279.97
+Transfer/sec:      1.25MB
+
+---------------------------------------------------------
+ Concurrency: 64 for go
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.26ms    6.96ms  84.87ms   87.20%
+    Req/Sec     1.00k    24.93     1.00k    99.94%
+  285174 requests in 30.00s, 38.29MB read
+Requests/sec:   9505.55
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Concurrency: 128 for go
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.61ms   21.61ms 210.57ms   90.60%
+    Req/Sec     1.00k    65.90     1.00k    99.56%
+  276393 requests in 30.00s, 37.11MB read
+Requests/sec:   9213.11
+Transfer/sec:      1.24MB
+
+---------------------------------------------------------
+ Concurrency: 256 for go
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.06ms  100.76ms   1.64s    95.05%
+    Req/Sec     0.98k   139.32     1.00k    98.02%
+  262140 requests in 29.99s, 35.19MB read
+Requests/sec:   8740.33
+Transfer/sec:      1.17MB

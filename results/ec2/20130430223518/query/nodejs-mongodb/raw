@@ -1,0 +1,117 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 00:15:26 UTC 2013
+
+  System load:  0.86               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/mongoose?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/mongoose?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.03ms    2.27ms  17.94ms   91.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8819 requests in 5.00s, 2.49MB read
+Requests/sec:   1763.18
+Transfer/sec:    510.61KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mongoose?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   161.49ms   71.84ms 359.05ms   57.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  58036 requests in 30.00s, 16.41MB read
+Requests/sec:   1934.49
+Transfer/sec:    560.21KB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mongodb
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mongoose?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    92.20ms   75.38ms   1.77s    98.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  87278 requests in 30.00s, 19.29MB read
+Requests/sec:   2909.33
+Transfer/sec:    658.50KB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mongodb
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mongoose?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   320.09ms  110.89ms 448.95ms   69.51%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28027 requests in 30.01s, 13.15MB read
+Requests/sec:    933.90
+Transfer/sec:    448.60KB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mongodb
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mongoose?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   510.00ms   98.09ms 664.38ms   82.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14847 requests in 30.01s, 11.55MB read
+Requests/sec:    494.73
+Transfer/sec:    394.10KB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mongodb
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mongoose?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.06s   410.79ms   1.34s    81.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10101 requests in 30.03s, 10.98MB read
+Requests/sec:    336.41
+Transfer/sec:    374.39KB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mongodb
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mongoose?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.82s   809.42ms   3.43s    81.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7467 requests in 30.02s, 10.42MB read
+  Socket errors: connect 0, read 0, write 0, timeout 380
+Requests/sec:    248.71
+Transfer/sec:    355.46KB

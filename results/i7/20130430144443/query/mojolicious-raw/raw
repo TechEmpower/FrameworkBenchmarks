@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:09:21 PDT 2013
+
+  System load:  0.27                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer mojolicious-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.57ms    0.99ms   5.54ms   73.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  15791 requests in 5.00s, 2.83MB read
+Requests/sec:   3157.94
+Transfer/sec:    579.63KB
+
+---------------------------------------------------------
+ Running Warmup mojolicious-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.83ms    7.15ms 141.84ms   92.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  106759 requests in 30.00s, 19.14MB read
+Requests/sec:   3558.49
+Transfer/sec:    653.15KB
+
+---------------------------------------------------------
+ Queries: 1 for mojolicious-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.92ms    4.46ms 127.31ms   82.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  111394 requests in 30.00s, 19.97MB read
+Requests/sec:   3712.94
+Transfer/sec:    681.51KB
+
+---------------------------------------------------------
+ Queries: 5 for mojolicious-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   141.90ms   53.10ms 344.72ms   68.05%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  52153 requests in 30.00s, 9.35MB read
+Requests/sec:   1738.26
+Transfer/sec:    319.05KB
+
+---------------------------------------------------------
+ Queries: 10 for mojolicious-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   248.36ms   63.90ms 544.32ms   69.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30476 requests in 30.00s, 5.46MB read
+Requests/sec:   1015.89
+Transfer/sec:    186.47KB
+
+---------------------------------------------------------
+ Queries: 15 for mojolicious-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   450.98ms   96.94ms 739.97ms   77.65%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17318 requests in 30.01s, 3.10MB read
+Requests/sec:    577.15
+Transfer/sec:    105.96KB
+
+---------------------------------------------------------
+ Queries: 20 for mojolicious-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   615.97ms  124.37ms 881.81ms   79.20%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12635 requests in 30.00s, 2.27MB read
+Requests/sec:    421.12
+Transfer/sec:     77.32KB

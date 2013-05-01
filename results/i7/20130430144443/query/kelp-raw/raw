@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 04:55:13 PDT 2013
+
+  System load:  0.49                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer kelp-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.83ms    7.33ms 119.64ms   99.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27918 requests in 5.00s, 5.24MB read
+Requests/sec:   5583.76
+Transfer/sec:      1.05MB
+
+---------------------------------------------------------
+ Running Warmup kelp-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.56ms   20.49ms 225.52ms   97.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  172324 requests in 30.00s, 32.37MB read
+Requests/sec:   5743.44
+Transfer/sec:      1.08MB
+
+---------------------------------------------------------
+ Queries: 1 for kelp-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.72ms    5.64ms 162.62ms   99.50%
+    Req/Sec     0.99k    89.77     1.00k    99.19%
+  251136 requests in 30.00s, 47.17MB read
+Requests/sec:   8370.96
+Transfer/sec:      1.57MB
+
+---------------------------------------------------------
+ Queries: 5 for kelp-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.12ms   46.01ms 354.45ms   78.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  66787 requests in 30.00s, 12.55MB read
+Requests/sec:   2226.15
+Transfer/sec:    428.19KB
+
+---------------------------------------------------------
+ Queries: 10 for kelp-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   218.06ms   55.46ms 417.27ms   74.71%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34245 requests in 30.00s, 6.43MB read
+Requests/sec:   1141.42
+Transfer/sec:    219.55KB
+
+---------------------------------------------------------
+ Queries: 15 for kelp-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   402.88ms   84.51ms 638.93ms   73.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18690 requests in 30.00s, 3.51MB read
+Requests/sec:    622.92
+Transfer/sec:    119.84KB
+
+---------------------------------------------------------
+ Queries: 20 for kelp-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   611.03ms  103.36ms 895.38ms   80.12%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12541 requests in 30.00s, 2.36MB read
+Requests/sec:    417.97
+Transfer/sec:     80.41KB

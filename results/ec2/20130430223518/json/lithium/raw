@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 08:20:35 UTC 2013
+
+  System load:  0.13               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer lithium
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.61ms   37.17ms 316.54ms   90.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1523 requests in 5.01s, 355.42KB read
+Requests/sec:    303.77
+Transfer/sec:     70.89KB
+
+---------------------------------------------------------
+ Running Warmup lithium
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   714.73ms  250.24ms   2.38s    73.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10288 requests in 30.01s, 2.34MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    342.86
+Transfer/sec:     80.02KB
+
+---------------------------------------------------------
+ Concurrency: 8 for lithium
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.05ms   75.54ms 661.18ms   93.23%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11341 requests in 30.00s, 2.58MB read
+Requests/sec:    378.01
+Transfer/sec:     88.21KB
+
+---------------------------------------------------------
+ Concurrency: 16 for lithium
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.11ms  125.84ms   1.12s    91.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11650 requests in 30.00s, 2.65MB read
+Requests/sec:    388.28
+Transfer/sec:     90.61KB
+
+---------------------------------------------------------
+ Concurrency: 32 for lithium
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   113.98ms  169.03ms   1.21s    89.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11394 requests in 30.00s, 2.60MB read
+Requests/sec:    379.79
+Transfer/sec:     88.63KB
+
+---------------------------------------------------------
+ Concurrency: 64 for lithium
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   212.99ms  315.50ms   2.86s    91.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11248 requests in 30.00s, 2.56MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+Requests/sec:    374.91
+Transfer/sec:     87.49KB
+
+---------------------------------------------------------
+ Concurrency: 128 for lithium
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   346.40ms  163.88ms 842.14ms   71.99%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11000 requests in 30.00s, 2.51MB read
+Requests/sec:    366.65
+Transfer/sec:     85.57KB
+
+---------------------------------------------------------
+ Concurrency: 256 for lithium
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   705.94ms  285.44ms   2.66s    78.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10348 requests in 30.01s, 2.36MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    344.85
+Transfer/sec:     80.49KB
