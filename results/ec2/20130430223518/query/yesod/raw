@@ -1,0 +1,119 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:35:25 UTC 2013
+
+  System load:  1.16               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer yesod
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8000/dbs/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8000/dbs/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.24ms    1.87ms  14.86ms   74.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9596 requests in 5.00s, 1.75MB read
+Requests/sec:   1918.32
+Transfer/sec:    358.83KB
+
+---------------------------------------------------------
+ Running Warmup yesod
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/dbs/2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/dbs/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   160.71ms  124.68ms   1.49s    81.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  61185 requests in 30.01s, 11.18MB read
+Requests/sec:   2038.96
+Transfer/sec:    381.40KB
+
+---------------------------------------------------------
+ Queries: 1 for yesod
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/dbs/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/dbs/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.55ms   49.75ms 420.34ms   72.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  103341 requests in 30.01s, 15.75MB read
+Requests/sec:   3443.95
+Transfer/sec:    537.37KB
+
+---------------------------------------------------------
+ Queries: 5 for yesod
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/dbs/5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/dbs/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   328.21ms  188.39ms   1.66s    77.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26430 requests in 30.01s, 7.23MB read
+Requests/sec:    880.67
+Transfer/sec:    246.72KB
+
+---------------------------------------------------------
+ Queries: 10 for yesod
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/dbs/10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/dbs/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   661.04ms  406.44ms   2.44s    73.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13676 requests in 30.02s, 5.81MB read
+  Socket errors: connect 0, read 0, write 0, timeout 8
+Requests/sec:    455.60
+Transfer/sec:    198.32KB
+
+---------------------------------------------------------
+ Queries: 15 for yesod
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/dbs/15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/dbs/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   972.09ms  529.91ms   2.82s    66.23%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9018 requests in 30.01s, 5.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 17
+Requests/sec:    300.50
+Transfer/sec:    177.43KB
+
+---------------------------------------------------------
+ Queries: 20 for yesod
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/dbs/20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/dbs/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.40s   786.49ms   4.13s    67.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6806 requests in 30.01s, 4.96MB read
+  Socket errors: connect 0, read 0, write 0, timeout 180
+Requests/sec:    226.79
+Transfer/sec:    169.10KB

@@ -131,8 +131,8 @@ class Installer:
     # RingoJs
     #
     self.__run_command("wget http://www.ringojs.org/downloads/ringojs_0.9-1_all.deb")
-    self.__run_command("sudo apt-get install jsvc")
-    self.__run_command("sudo dpkg -i ringojs_0.9-1_all.deb")
+    self.__run_command("sudo apt-get install jsvc", True)
+    self.__run_command("sudo dpkg -i ringojs_0.9-1_all.deb", True)
     self.__run_command("rm ringojs_0.9-1_all.deb")
     self.__run_command("sudo ringo-admin install oberhamsi/sql-ringojs-client")
     self.__run_command("sudo ringo-admin install ringo/stick")

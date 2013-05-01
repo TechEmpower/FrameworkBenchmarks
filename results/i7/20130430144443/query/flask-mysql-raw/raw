@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:27:54 PDT 2013
+
+  System load:  0.71                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask-mysql-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/dbraw?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/dbraw?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.50ms  280.98us   3.45ms   72.08%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26799 requests in 5.00s, 7.48MB read
+Requests/sec:   5359.88
+Transfer/sec:      1.50MB
+
+---------------------------------------------------------
+ Running Warmup flask-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.16ms   13.61ms 108.47ms   76.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  200494 requests in 30.00s, 55.94MB read
+Requests/sec:   6682.86
+Transfer/sec:      1.86MB
+
+---------------------------------------------------------
+ Queries: 1 for flask-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.33ms   12.22ms 100.73ms   75.81%
+    Req/Sec   629.38    483.12     1.00k    62.94%
+  243939 requests in 30.00s, 54.39MB read
+Requests/sec:   8131.15
+Transfer/sec:      1.81MB
+
+---------------------------------------------------------
+ Queries: 5 for flask-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.79ms   17.92ms 266.64ms   90.68%
+    Req/Sec     1.88     43.29     1.00k    99.81%
+  135168 requests in 30.00s, 60.06MB read
+Requests/sec:   4505.45
+Transfer/sec:      2.00MB
+
+---------------------------------------------------------
+ Queries: 10 for flask-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    91.96ms   25.57ms 314.10ms   82.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  87798 requests in 30.00s, 63.20MB read
+Requests/sec:   2926.45
+Transfer/sec:      2.11MB
+
+---------------------------------------------------------
+ Queries: 15 for flask-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   120.22ms   28.65ms 257.59ms   93.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  64683 requests in 30.00s, 64.38MB read
+Requests/sec:   2155.94
+Transfer/sec:      2.15MB
+
+---------------------------------------------------------
+ Queries: 20 for flask-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   154.79ms   41.66ms 415.04ms   91.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  51208 requests in 30.00s, 65.13MB read
+Requests/sec:   1706.94
+Transfer/sec:      2.17MB

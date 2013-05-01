@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:42:11 PDT 2013
+
+  System load:  0.41                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer wai
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   161.91us   57.37us 551.00us   84.59%
+    Req/Sec     5.93k   251.65     6.00k    93.23%
+  248755 requests in 5.00s, 32.98MB read
+Requests/sec:  49754.96
+Transfer/sec:      6.60MB
+
+---------------------------------------------------------
+ Running Warmup wai
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.47ms    2.79ms  25.53ms   87.72%
+    Req/Sec    14.53k     1.63k   20.00k    83.73%
+  3643690 requests in 30.00s, 483.01MB read
+Requests/sec: 121460.19
+Transfer/sec:     16.10MB
+
+---------------------------------------------------------
+ Concurrency: 8 for wai
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   161.23us   44.57us 492.00us   84.62%
+    Req/Sec     5.98k   123.83     6.00k    98.44%
+  1482367 requests in 30.00s, 196.50MB read
+Requests/sec:  49413.02
+Transfer/sec:      6.55MB
+
+---------------------------------------------------------
+ Concurrency: 16 for wai
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   144.21us   42.52us 503.00us   75.94%
+    Req/Sec    12.75k   435.29    13.00k    74.63%
+  3162308 requests in 30.00s, 419.20MB read
+Requests/sec: 105414.38
+Transfer/sec:     13.97MB
+
+---------------------------------------------------------
+ Concurrency: 32 for wai
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   308.82us  719.03us  16.75ms   97.45%
+    Req/Sec    15.12k     1.11k   18.00k    71.27%
+  3815877 requests in 30.00s, 505.84MB read
+Requests/sec: 127201.77
+Transfer/sec:     16.86MB
+
+---------------------------------------------------------
+ Concurrency: 64 for wai
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   721.68us    1.38ms  18.11ms   94.03%
+    Req/Sec    14.11k     2.12k   19.00k    76.79%
+  3526103 requests in 30.00s, 467.42MB read
+Requests/sec: 117538.71
+Transfer/sec:     15.58MB
+
+---------------------------------------------------------
+ Concurrency: 128 for wai
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.52ms    2.41ms  26.21ms   89.86%
+    Req/Sec    13.84k     2.44k   24.00k    81.08%
+  3484400 requests in 30.00s, 461.89MB read
+Requests/sec: 116153.16
+Transfer/sec:     15.40MB
+
+---------------------------------------------------------
+ Concurrency: 256 for wai
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.57ms    2.91ms  26.48ms   87.31%
+    Req/Sec    14.97k     1.01k   19.00k    76.62%
+  3730147 requests in 30.00s, 494.47MB read
+Requests/sec: 124351.58
+Transfer/sec:     16.48MB

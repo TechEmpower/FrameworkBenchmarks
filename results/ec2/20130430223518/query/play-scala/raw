@@ -1,0 +1,117 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 04:35:46 UTC 2013
+
+  System load:  0.6                Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer play-scala
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:9000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:9000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.01ms    2.04ms  18.14ms   80.46%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7950 requests in 5.00s, 1.14MB read
+Requests/sec:   1589.94
+Transfer/sec:    233.76KB
+
+---------------------------------------------------------
+ Running Warmup play-scala
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:9000/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   130.84ms   44.10ms 385.99ms   75.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  57467 requests in 30.01s, 8.25MB read
+Requests/sec:   1915.20
+Transfer/sec:    281.58KB
+
+---------------------------------------------------------
+ Queries: 1 for play-scala
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:9000/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.32ms   28.76ms 243.19ms   76.21%
+    Req/Sec     0.63     25.02     1.00k    99.94%
+  87655 requests in 30.00s, 9.93MB read
+Requests/sec:   2921.91
+Transfer/sec:    338.91KB
+
+---------------------------------------------------------
+ Queries: 5 for play-scala
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:9000/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   256.12ms   81.38ms 803.18ms   80.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  29097 requests in 30.00s, 6.85MB read
+Requests/sec:    969.86
+Transfer/sec:    233.81KB
+
+---------------------------------------------------------
+ Queries: 10 for play-scala
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:9000/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   445.84ms  125.83ms 979.11ms   82.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16343 requests in 30.01s, 6.32MB read
+Requests/sec:    544.60
+Transfer/sec:    215.79KB
+
+---------------------------------------------------------
+ Queries: 15 for play-scala
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:9000/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   597.73ms  198.95ms   1.36s    80.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11956 requests in 30.01s, 6.44MB read
+Requests/sec:    398.37
+Transfer/sec:    219.65KB
+
+---------------------------------------------------------
+ Queries: 20 for play-scala
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:9000/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:9000/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   765.15ms  216.86ms   1.39s    86.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9189 requests in 30.01s, 6.34MB read
+  Socket errors: connect 0, read 0, write 0, timeout 28
+Requests/sec:    306.17
+Transfer/sec:    216.31KB

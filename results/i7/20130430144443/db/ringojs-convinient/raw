@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 04:19:01 PDT 2013
+
+  System load:  0.98                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs-convinient
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.70ms    0.90ms   6.65ms   91.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25435 requests in 5.00s, 4.58MB read
+Requests/sec:   5087.09
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Running Warmup ringojs-convinient
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.08ms   28.61ms 112.22ms   63.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  177737 requests in 30.00s, 32.00MB read
+Requests/sec:   5924.42
+Transfer/sec:      1.07MB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs-convinient
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.41ms  432.14us   7.66ms   85.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  170163 requests in 30.00s, 30.64MB read
+Requests/sec:   5672.13
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs-convinient
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.02ms    1.57ms  14.99ms   70.03%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  171002 requests in 30.00s, 30.79MB read
+Requests/sec:   5699.98
+Transfer/sec:      1.03MB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs-convinient
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.64ms    3.76ms  30.15ms   57.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  170025 requests in 30.00s, 30.61MB read
+Requests/sec:   5667.41
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs-convinient
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.76ms    7.67ms  34.41ms   59.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  170596 requests in 30.00s, 30.71MB read
+Requests/sec:   5686.36
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs-convinient
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.53ms   16.57ms 225.07ms   69.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  169651 requests in 30.00s, 30.54MB read
+Requests/sec:   5655.16
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs-convinient
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.41ms   28.82ms 244.69ms   65.88%
+    Req/Sec     4.34     65.77     1.00k    99.57%
+  176644 requests in 30.00s, 31.80MB read
+Requests/sec:   5888.19
+Transfer/sec:      1.06MB

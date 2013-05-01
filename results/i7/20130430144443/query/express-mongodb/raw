@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 16:18:18 PDT 2013
+
+  System load:  1.02                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer express-mongodb
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongoose?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongoose?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.27ms  509.79us   5.44ms   92.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31993 requests in 5.00s, 9.20MB read
+Requests/sec:   6396.70
+Transfer/sec:      1.84MB
+
+---------------------------------------------------------
+ Running Warmup express-mongodb
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongoose?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.71ms   20.24ms 123.16ms   66.10%
+    Req/Sec     0.99k   105.44     1.00k    98.88%
+  296272 requests in 30.00s, 85.20MB read
+Requests/sec:   9875.31
+Transfer/sec:      2.84MB
+
+---------------------------------------------------------
+ Queries: 1 for express-mongodb
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongoose?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.58ms   14.40ms  92.38ms   69.75%
+    Req/Sec     1.26k   439.66     2.00k    73.84%
+  447436 requests in 30.00s, 100.61MB read
+Requests/sec:  14914.85
+Transfer/sec:      3.35MB
+
+---------------------------------------------------------
+ Queries: 5 for express-mongodb
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongoose?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    65.10ms   35.29ms 162.02ms   66.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  154474 requests in 30.00s, 73.06MB read
+Requests/sec:   5148.87
+Transfer/sec:      2.44MB
+
+---------------------------------------------------------
+ Queries: 10 for express-mongodb
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongoose?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   114.73ms   56.80ms 436.18ms   63.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  85463 requests in 30.00s, 66.82MB read
+Requests/sec:   2848.68
+Transfer/sec:      2.23MB
+
+---------------------------------------------------------
+ Queries: 15 for express-mongodb
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongoose?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   187.39ms  120.91ms 448.28ms   67.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  58203 requests in 30.00s, 63.48MB read
+Requests/sec:   1939.96
+Transfer/sec:      2.12MB
+
+---------------------------------------------------------
+ Queries: 20 for express-mongodb
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongoose?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   239.79ms  140.86ms 621.34ms   56.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  44004 requests in 30.00s, 62.47MB read
+Requests/sec:   1466.70
+Transfer/sec:      2.08MB

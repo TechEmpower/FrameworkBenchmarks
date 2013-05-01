@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 20:48:54 PDT 2013
+
+  System load:  0.22                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer netty
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   162.23us  103.10us   0.86ms   91.35%
+    Req/Sec     4.88k     1.60k    6.00k    82.71%
+  263791 requests in 5.00s, 45.28MB read
+Requests/sec:  52769.36
+Transfer/sec:      9.06MB
+
+---------------------------------------------------------
+ Running Warmup netty
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.17ms  624.50us  16.33ms   95.49%
+    Req/Sec    26.64k     1.47k   27.00k    95.11%
+  6563341 requests in 30.00s, 1.10GB read
+Requests/sec: 218781.02
+Transfer/sec:     37.56MB
+
+---------------------------------------------------------
+ Concurrency: 8 for netty
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   147.73us   94.89us   1.04ms   98.32%
+    Req/Sec     7.00k     0.00     7.00k   100.00%
+  1692276 requests in 30.00s, 290.50MB read
+Requests/sec:  56410.13
+Transfer/sec:      9.68MB
+
+---------------------------------------------------------
+ Concurrency: 16 for netty
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   143.75us   77.98us   1.22ms   96.70%
+    Req/Sec    13.00k    35.30    13.00k    99.88%
+  3281806 requests in 30.00s, 563.36MB read
+Requests/sec: 109397.34
+Transfer/sec:     18.78MB
+
+---------------------------------------------------------
+ Concurrency: 32 for netty
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   157.50us  130.17us   3.94ms   95.33%
+    Req/Sec    24.92k   417.16    25.00k    94.34%
+  6098614 requests in 30.00s, 1.02GB read
+Requests/sec: 203297.28
+Transfer/sec:     34.90MB
+
+---------------------------------------------------------
+ Concurrency: 64 for netty
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   296.98us  266.12us   9.48ms   96.77%
+    Req/Sec    25.98k   262.12    27.00k    98.01%
+  6426580 requests in 30.00s, 1.08GB read
+Requests/sec: 214234.17
+Transfer/sec:     36.78MB
+
+---------------------------------------------------------
+ Concurrency: 128 for netty
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   598.65us  335.05us   6.53ms   95.45%
+    Req/Sec    26.71k   610.82    27.00k    74.69%
+  6520953 requests in 30.00s, 1.09GB read
+Requests/sec: 217383.67
+Transfer/sec:     37.32MB
+
+---------------------------------------------------------
+ Concurrency: 256 for netty
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.19ms  656.10us  15.36ms   96.30%
+    Req/Sec    26.91k   548.05    27.00k    94.98%
+  6575823 requests in 30.00s, 1.10GB read
+Requests/sec: 219202.71
+Transfer/sec:     37.63MB

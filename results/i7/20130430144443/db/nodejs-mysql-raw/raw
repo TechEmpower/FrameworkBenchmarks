@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 20:34:42 PDT 2013
+
+  System load:  0.68                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mysql-raw
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/mysql
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.92ms  325.34us   3.74ms   85.82%
+    Req/Sec   634.33    482.52     1.00k    63.43%
+  43683 requests in 5.00s, 7.66MB read
+Requests/sec:   8735.86
+Transfer/sec:      1.53MB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/mysql
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.71ms   13.78ms  75.20ms   79.38%
+    Req/Sec     1.00k    65.92     1.00k    99.56%
+  382452 requests in 30.00s, 67.03MB read
+Requests/sec:  12748.24
+Transfer/sec:      2.23MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nodejs-mysql-raw
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/mysql
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.90ms  252.34us   3.07ms   80.22%
+    Req/Sec   748.45    434.04     1.00k    74.85%
+  268785 requests in 30.00s, 47.11MB read
+Requests/sec:   8959.71
+Transfer/sec:      1.57MB
+
+---------------------------------------------------------
+ Concurrency: 16 for nodejs-mysql-raw
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/mysql
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mysql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.09ms    1.22ms   8.53ms   65.58%
+    Req/Sec     1.00k   705.99     2.00k    50.19%
+  311461 requests in 30.00s, 54.59MB read
+Requests/sec:  10382.05
+Transfer/sec:      1.82MB
+
+---------------------------------------------------------
+ Concurrency: 32 for nodejs-mysql-raw
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/mysql
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mysql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.15ms    1.87ms  36.71ms   87.58%
+    Req/Sec     1.02k   154.16     2.00k    97.57%
+  370770 requests in 30.00s, 64.98MB read
+Requests/sec:  12359.22
+Transfer/sec:      2.17MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nodejs-mysql-raw
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/mysql
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mysql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.05ms    3.22ms  48.35ms   76.77%
+    Req/Sec     1.13k   331.70     2.00k    87.42%
+  364232 requests in 30.00s, 63.84MB read
+Requests/sec:  12141.33
+Transfer/sec:      2.13MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nodejs-mysql-raw
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/mysql
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mysql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.67ms    9.31ms  46.74ms   81.78%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  381539 requests in 30.00s, 66.87MB read
+Requests/sec:  12718.28
+Transfer/sec:      2.23MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/mysql
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.83ms   12.08ms  84.89ms   60.57%
+    Req/Sec     1.06k   245.12     3.00k    93.82%
+  382505 requests in 30.00s, 67.04MB read
+Requests/sec:  12750.39
+Transfer/sec:      2.23MB

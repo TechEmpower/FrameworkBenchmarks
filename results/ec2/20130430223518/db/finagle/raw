@@ -1,0 +1,133 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 06:45:42 UTC 2013
+
+  System load:  0.8                Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer finagle
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.92ms   17.40ms 103.68ms   82.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1908 requests in 5.00s, 219.45KB read
+Requests/sec:    381.24
+Transfer/sec:     43.85KB
+
+---------------------------------------------------------
+ Running Warmup finagle
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   184.94ms   93.21ms 835.85ms   80.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  45425 requests in 30.00s, 5.10MB read
+Requests/sec:   1513.92
+Transfer/sec:    174.13KB
+
+---------------------------------------------------------
+ Concurrency: 8 for finagle
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.49ms    8.91ms 359.35ms   99.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  55192 requests in 30.00s, 6.20MB read
+Requests/sec:   1839.63
+Transfer/sec:    211.59KB
+
+---------------------------------------------------------
+ Concurrency: 16 for finagle
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.49ms    3.47ms  24.08ms   71.51%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  56149 requests in 30.00s, 6.31MB read
+Requests/sec:   1871.51
+Transfer/sec:    215.25KB
+
+---------------------------------------------------------
+ Concurrency: 32 for finagle
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.11ms   12.77ms 225.31ms   90.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  50171 requests in 30.00s, 5.64MB read
+Requests/sec:   1672.26
+Transfer/sec:    192.33KB
+
+---------------------------------------------------------
+ Concurrency: 64 for finagle
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.33ms   17.88ms 132.79ms   75.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  41885 requests in 30.00s, 4.70MB read
+Requests/sec:   1396.10
+Transfer/sec:    160.57KB
+
+---------------------------------------------------------
+ Concurrency: 128 for finagle
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.59ms   25.33ms 309.27ms   88.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  53147 requests in 30.00s, 5.97MB read
+Requests/sec:   1771.27
+Transfer/sec:    203.73KB
+
+---------------------------------------------------------
+ Concurrency: 256 for finagle
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   135.72ms   34.72ms 467.64ms   91.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  55771 requests in 30.00s, 6.26MB read
+Requests/sec:   1858.98
+Transfer/sec:    213.81KB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:32:56 PDT 2013
+
+  System load:  0.44                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer compojure-raw
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/compojure/dbraw/1
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/compojure/dbraw/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.89ms  516.60us   5.03ms   88.37%
+    Req/Sec   368.22    483.26     1.00k    63.18%
+  47683 requests in 5.00s, 8.08MB read
+Requests/sec:   9537.34
+Transfer/sec:      1.62MB
+
+---------------------------------------------------------
+ Running Warmup compojure-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/compojure/dbraw/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/dbraw/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.36ms   15.81ms 104.01ms   87.77%
+    Req/Sec     2.26k   466.59     3.00k    71.66%
+  728005 requests in 30.00s, 123.65MB read
+Requests/sec:  24267.51
+Transfer/sec:      4.12MB
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure-raw
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/compojure/dbraw/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/dbraw/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   681.87us    0.97ms  39.48ms   99.94%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  359508 requests in 30.00s, 60.95MB read
+Requests/sec:  11983.77
+Transfer/sec:      2.03MB
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure-raw
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/compojure/dbraw/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/dbraw/1
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   652.68us  230.31us   4.46ms   81.66%
+    Req/Sec     3.00k    65.96     3.00k    99.56%
+  735973 requests in 30.00s, 124.78MB read
+Requests/sec:  24532.90
+Transfer/sec:      4.16MB
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure-raw
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/compojure/dbraw/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/dbraw/1
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.03ms  632.62us   5.89ms   87.87%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  923773 requests in 30.00s, 156.62MB read
+Requests/sec:  30793.14
+Transfer/sec:      5.22MB
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure-raw
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/compojure/dbraw/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/dbraw/1
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.98ms    2.11ms  27.20ms   87.66%
+    Req/Sec     3.58k   493.43     4.00k    58.17%
+  941452 requests in 30.00s, 159.62MB read
+Requests/sec:  31383.31
+Transfer/sec:      5.32MB
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure-raw
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/compojure/dbraw/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/dbraw/1
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.74ms    6.16ms  72.56ms   87.35%
+    Req/Sec     3.00k    24.96     3.00k    99.94%
+  807011 requests in 30.00s, 136.82MB read
+Requests/sec:  26901.95
+Transfer/sec:      4.56MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/compojure/dbraw/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/dbraw/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.79ms   14.47ms 132.24ms   86.12%
+    Req/Sec     2.98k   209.82     4.00k    95.54%
+  746256 requests in 30.00s, 126.55MB read
+Requests/sec:  24875.50
+Transfer/sec:      4.22MB

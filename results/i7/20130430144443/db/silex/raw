@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 08:11:21 PDT 2013
+
+  System load:  0.12                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 15%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer silex
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.28ms    2.90ms  22.66ms   71.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3960 requests in 5.01s, 0.97MB read
+Requests/sec:    790.59
+Transfer/sec:    197.46KB
+
+---------------------------------------------------------
+ Running Warmup silex
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   273.77ms  216.43ms   2.05s    78.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28122 requests in 30.00s, 6.86MB read
+Requests/sec:    937.29
+Transfer/sec:    234.09KB
+
+---------------------------------------------------------
+ Concurrency: 8 for silex
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.74ms    2.66ms  26.72ms   72.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24446 requests in 30.00s, 5.96MB read
+Requests/sec:    814.82
+Transfer/sec:    203.49KB
+
+---------------------------------------------------------
+ Concurrency: 16 for silex
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.14ms    5.88ms  72.23ms   71.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27806 requests in 30.00s, 6.78MB read
+Requests/sec:    926.81
+Transfer/sec:    231.47KB
+
+---------------------------------------------------------
+ Concurrency: 32 for silex
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.66ms   24.48ms 311.50ms   85.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27930 requests in 30.00s, 6.81MB read
+Requests/sec:    930.95
+Transfer/sec:    232.49KB
+
+---------------------------------------------------------
+ Concurrency: 64 for silex
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.10ms   53.96ms 468.97ms   84.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27906 requests in 30.00s, 6.81MB read
+Requests/sec:    930.14
+Transfer/sec:    232.29KB
+
+---------------------------------------------------------
+ Concurrency: 128 for silex
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   143.07ms  153.57ms   1.45s    89.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27815 requests in 30.00s, 6.78MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    927.12
+Transfer/sec:    231.55KB
+
+---------------------------------------------------------
+ Concurrency: 256 for silex
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   285.96ms  161.82ms   1.37s    76.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27660 requests in 30.00s, 6.75MB read
+Requests/sec:    922.00
+Transfer/sec:    230.26KB

@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 15:31:45 UTC 2013
+
+  System load:  0.0                Processes:           75
+  Usage of /:   25.5% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer symfony2
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    81.94ms   41.56ms 180.40ms   65.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  559 requests in 5.02s, 135.93KB read
+Requests/sec:    111.45
+Transfer/sec:     27.10KB
+
+---------------------------------------------------------
+ Running Warmup symfony2
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.36s   523.06ms   5.18s    86.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5206 requests in 30.01s, 1.24MB read
+  Socket errors: connect 0, read 0, write 0, timeout 73
+Requests/sec:    173.48
+Transfer/sec:     42.18KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.98ms   24.33ms 169.67ms   72.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5718 requests in 30.00s, 1.36MB read
+Requests/sec:    190.59
+Transfer/sec:     46.34KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    88.66ms   47.53ms 420.56ms   79.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5613 requests in 30.00s, 1.33MB read
+Requests/sec:    187.09
+Transfer/sec:     45.48KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   180.08ms  110.83ms 983.87ms   74.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5528 requests in 30.00s, 1.31MB read
+Requests/sec:    184.25
+Transfer/sec:     44.80KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   347.20ms  184.08ms   1.55s    77.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5552 requests in 30.00s, 1.32MB read
+Requests/sec:    185.05
+Transfer/sec:     45.00KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   671.61ms  318.49ms   1.98s    70.28%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5483 requests in 30.00s, 1.30MB read
+Requests/sec:    182.74
+Transfer/sec:     44.44KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.28s   458.02ms   4.58s    81.05%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5568 requests in 30.01s, 1.32MB read
+  Socket errors: connect 0, read 0, write 0, timeout 39
+Requests/sec:    185.55
+Transfer/sec:     45.12KB
