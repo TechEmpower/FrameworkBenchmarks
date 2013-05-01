@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 02:43:33 PDT 2013
+
+  System load:  0.34                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer fuel
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.71ms    2.00ms  16.62ms   74.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4477 requests in 5.01s, 8.20MB read
+Requests/sec:    894.37
+Transfer/sec:      1.64MB
+
+---------------------------------------------------------
+ Running Warmup fuel
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   250.35ms  164.23ms   1.16s    76.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30856 requests in 30.00s, 56.50MB read
+Requests/sec:   1028.46
+Transfer/sec:      1.88MB
+
+---------------------------------------------------------
+ Concurrency: 8 for fuel
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.90ms    2.21ms  23.95ms   74.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26966 requests in 30.00s, 49.37MB read
+Requests/sec:    898.83
+Transfer/sec:      1.65MB
+
+---------------------------------------------------------
+ Concurrency: 16 for fuel
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.02ms    5.83ms  59.38ms   72.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30176 requests in 30.00s, 55.25MB read
+Requests/sec:   1005.82
+Transfer/sec:      1.84MB
+
+---------------------------------------------------------
+ Concurrency: 32 for fuel
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.15ms   17.47ms 183.90ms   80.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31002 requests in 30.00s, 56.76MB read
+Requests/sec:   1033.35
+Transfer/sec:      1.89MB
+
+---------------------------------------------------------
+ Concurrency: 64 for fuel
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    63.97ms   76.87ms   1.08s    93.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31072 requests in 30.00s, 56.89MB read
+Requests/sec:   1035.64
+Transfer/sec:      1.90MB
+
+---------------------------------------------------------
+ Concurrency: 128 for fuel
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   126.08ms  131.68ms   1.63s    88.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30970 requests in 30.00s, 56.71MB read
+Requests/sec:   1032.23
+Transfer/sec:      1.89MB
+
+---------------------------------------------------------
+ Concurrency: 256 for fuel
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   245.85ms  138.31ms   1.02s    75.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30862 requests in 30.00s, 56.51MB read
+Requests/sec:   1028.64
+Transfer/sec:      1.88MB

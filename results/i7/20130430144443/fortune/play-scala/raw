@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 21:18:49 PDT 2013
+
+  System load:  1.03                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-scala
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.17ms  293.82us   2.99ms   83.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33069 requests in 5.00s, 74.49MB read
+Requests/sec:   6613.88
+Transfer/sec:     14.90MB
+
+---------------------------------------------------------
+ Running Warmup play-scala
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.15ms    8.19ms  96.72ms   74.61%
+    Req/Sec     1.00k   214.33     2.00k    95.41%
+  404273 requests in 30.00s, 0.89GB read
+Requests/sec:  13474.60
+Transfer/sec:     30.35MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-scala
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms  340.40us   9.67ms   90.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  208055 requests in 30.00s, 468.66MB read
+Requests/sec:   6935.25
+Transfer/sec:     15.62MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-scala
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.43ms  642.49us  13.70ms   96.19%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  336172 requests in 30.00s, 757.25MB read
+Requests/sec:  11205.93
+Transfer/sec:     25.24MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-scala
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.52ms  849.19us  15.02ms   80.50%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  379098 requests in 30.00s, 853.95MB read
+Requests/sec:  12636.67
+Transfer/sec:     28.47MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-scala
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.82ms    2.00ms  41.29ms   83.96%
+    Req/Sec     1.00k    66.00     2.00k    99.56%
+  394237 requests in 30.00s, 0.87GB read
+Requests/sec:  13141.48
+Transfer/sec:     29.60MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-scala
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.34ms    4.36ms  57.85ms   81.07%
+    Req/Sec     1.01k   143.06     2.00k    97.95%
+  400314 requests in 30.00s, 0.88GB read
+Requests/sec:  13343.68
+Transfer/sec:     30.06MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-scala
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.34ms    9.39ms 220.02ms   79.09%
+    Req/Sec     1.02k   236.39     2.00k    94.36%
+  406769 requests in 30.00s, 0.89GB read
+Requests/sec:  13559.50
+Transfer/sec:     30.54MB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 00:00:18 PDT 2013
+
+  System load:  1.31                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer finagle-future-pool
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/pooling?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/pooling?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.06ms  296.82us   3.50ms   74.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  19424 requests in 5.00s, 2.77MB read
+Requests/sec:   3884.35
+Transfer/sec:    567.30KB
+
+---------------------------------------------------------
+ Running Warmup finagle-future-pool
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/pooling?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/pooling?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.86ms   10.89ms 273.20ms   86.82%
+    Req/Sec    14.30    118.78     1.00k    98.57%
+  208813 requests in 30.00s, 29.78MB read
+Requests/sec:   6960.47
+Transfer/sec:      0.99MB
+
+---------------------------------------------------------
+ Queries: 1 for finagle-future-pool
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/pooling?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/pooling?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.35ms   10.22ms 257.11ms   94.22%
+    Req/Sec     1.00k   161.61     2.00k    97.39%
+  388839 requests in 30.00s, 43.68MB read
+Requests/sec:  12961.07
+Transfer/sec:      1.46MB
+
+---------------------------------------------------------
+ Queries: 5 for finagle-future-pool
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/pooling?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/pooling?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.19ms   28.25ms 424.06ms   89.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  86673 requests in 30.00s, 20.33MB read
+Requests/sec:   2888.84
+Transfer/sec:    693.73KB
+
+---------------------------------------------------------
+ Queries: 10 for finagle-future-pool
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/pooling?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/pooling?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   167.01ms   39.08ms 390.51ms   86.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  44402 requests in 30.00s, 17.14MB read
+Requests/sec:   1479.94
+Transfer/sec:    585.06KB
+
+---------------------------------------------------------
+ Queries: 15 for finagle-future-pool
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/pooling?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/pooling?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   252.87ms   73.87ms   1.81s    88.66%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  29591 requests in 30.00s, 15.91MB read
+Requests/sec:    986.26
+Transfer/sec:    542.96KB
+
+---------------------------------------------------------
+ Queries: 20 for finagle-future-pool
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/pooling?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/pooling?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   331.75ms   78.60ms 679.25ms   84.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  22268 requests in 30.01s, 15.35MB read
+Requests/sec:    742.13
+Transfer/sec:    523.71KB

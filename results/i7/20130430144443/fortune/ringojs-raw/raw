@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 04:09:42 PDT 2013
+
+  System load:  6.83                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs-raw
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.92ms    3.86ms  29.79ms   92.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  19025 requests in 5.00s, 26.15MB read
+Requests/sec:   3804.31
+Transfer/sec:      5.23MB
+
+---------------------------------------------------------
+ Running Warmup ringojs-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.95ms   66.84ms   1.61s    89.87%
+    Req/Sec     0.63     25.01     1.00k    99.94%
+  165431 requests in 30.00s, 227.34MB read
+Requests/sec:   5514.21
+Transfer/sec:      7.58MB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs-raw
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.86ms  817.58us  16.83ms   91.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  129981 requests in 30.00s, 178.63MB read
+Requests/sec:   4332.70
+Transfer/sec:      5.95MB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs-raw
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.10ms    1.81ms  18.02ms   89.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  157666 requests in 30.00s, 216.67MB read
+Requests/sec:   5255.50
+Transfer/sec:      7.22MB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs-raw
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.85ms    5.54ms  49.85ms   89.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  163909 requests in 30.00s, 225.25MB read
+Requests/sec:   5463.63
+Transfer/sec:      7.51MB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs-raw
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.88ms   17.65ms 339.86ms   90.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  164942 requests in 30.00s, 226.67MB read
+Requests/sec:   5498.08
+Transfer/sec:      7.56MB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs-raw
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.63ms   28.36ms 364.28ms   88.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  165805 requests in 30.00s, 227.86MB read
+Requests/sec:   5526.62
+Transfer/sec:      7.59MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.80ms   49.78ms 343.32ms   86.25%
+    Req/Sec     6.19     78.47     1.00k    99.38%
+  166163 requests in 30.00s, 228.35MB read
+Requests/sec:   5538.37
+Transfer/sec:      7.61MB

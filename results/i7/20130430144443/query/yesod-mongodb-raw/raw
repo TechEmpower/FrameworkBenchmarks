@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:51:52 PDT 2013
+
+  System load:  0.04                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yesod-mongodb-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8000/mongo/raw/dbs/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.97ms  403.66us  43.55ms   83.71%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1000 requests in 5.00s, 194.89KB read
+Requests/sec:    199.81
+Transfer/sec:     38.94KB
+
+---------------------------------------------------------
+ Running Warmup yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/dbs/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.32ms    5.81ms  96.92ms   90.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  178936 requests in 30.00s, 34.05MB read
+Requests/sec:   5964.62
+Transfer/sec:      1.14MB
+
+---------------------------------------------------------
+ Queries: 1 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/dbs/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.57ms    5.08ms  90.10ms   94.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  185682 requests in 30.00s, 29.00MB read
+Requests/sec:   6189.05
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Queries: 5 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/dbs/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    52.47ms   12.35ms 144.68ms   85.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  144162 requests in 30.00s, 42.19MB read
+Requests/sec:   4805.04
+Transfer/sec:      1.41MB
+
+---------------------------------------------------------
+ Queries: 10 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/dbs/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.20ms   36.26ms 420.67ms   85.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  94267 requests in 30.00s, 43.67MB read
+Requests/sec:   3141.77
+Transfer/sec:      1.46MB
+
+---------------------------------------------------------
+ Queries: 15 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/dbs/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   159.15ms  128.31ms   1.02s    86.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  60424 requests in 30.00s, 38.30MB read
+Requests/sec:   2013.99
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Queries: 20 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/dbs/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   192.44ms  147.73ms   1.21s    87.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  45835 requests in 30.00s, 36.88MB read
+Requests/sec:   1527.69
+Transfer/sec:      1.23MB

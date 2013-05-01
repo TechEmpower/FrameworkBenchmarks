@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/servlet/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   787.07us  124.04us   1.35ms   68.42%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  50922 requests in 5.00s, 9.45MB read
+Requests/sec:  10185.46
+Transfer/sec:      1.89MB
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.17ms   21.38ms 729.04ms   96.37%
+    Req/Sec     5.95k   352.56     6.00k    97.43%
+  1586280 requests in 30.00s, 294.41MB read
+Requests/sec:  52878.15
+Transfer/sec:      9.81MB
+
+---------------------------------------------------------
+ Queries: 1 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.43ms    7.03ms 138.11ms   91.89%
+    Req/Sec     9.96k   525.89    14.00k    89.31%
+  2462256 requests in 30.00s, 382.29MB read
+Requests/sec:  82080.49
+Transfer/sec:     12.74MB
+
+---------------------------------------------------------
+ Queries: 5 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.95ms   25.30ms 422.11ms   93.46%
+    Req/Sec     2.11k   336.64     4.00k    87.87%
+  694014 requests in 30.00s, 192.54MB read
+Requests/sec:  23134.07
+Transfer/sec:      6.42MB
+
+---------------------------------------------------------
+ Queries: 10 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.41ms   38.20ms 474.42ms   94.22%
+    Req/Sec     1.00k    78.73     2.00k    99.38%
+  366975 requests in 30.00s, 157.42MB read
+Requests/sec:  12232.19
+Transfer/sec:      5.25MB
+
+---------------------------------------------------------
+ Queries: 15 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.21ms   30.50ms 301.05ms   87.36%
+    Req/Sec     0.92k   267.99     1.00k    92.22%
+  250132 requests in 30.00s, 145.21MB read
+Requests/sec:   8337.53
+Transfer/sec:      4.84MB
+
+---------------------------------------------------------
+ Queries: 20 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.90ms   37.08ms 438.78ms   88.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  189500 requests in 30.00s, 138.73MB read
+Requests/sec:   6316.57
+Transfer/sec:      4.62MB

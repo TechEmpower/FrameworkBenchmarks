@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 00:55:38 PDT 2013
+
+  System load:  0.45                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer codeigniter
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.34ms  771.67us   7.57ms   79.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17211 requests in 5.00s, 3.68MB read
+Requests/sec:   3441.95
+Transfer/sec:    752.76KB
+
+---------------------------------------------------------
+ Running Warmup codeigniter
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    65.57ms   55.21ms 870.84ms   89.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  122800 requests in 30.00s, 26.23MB read
+Requests/sec:   4093.23
+Transfer/sec:      0.87MB
+
+---------------------------------------------------------
+ Concurrency: 8 for codeigniter
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.30ms    1.15ms  38.34ms   91.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  104286 requests in 30.00s, 22.27MB read
+Requests/sec:   3476.15
+Transfer/sec:    760.24KB
+
+---------------------------------------------------------
+ Concurrency: 16 for codeigniter
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.05ms    2.12ms  28.28ms   82.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  118617 requests in 30.00s, 25.33MB read
+Requests/sec:   3953.95
+Transfer/sec:    864.73KB
+
+---------------------------------------------------------
+ Concurrency: 32 for codeigniter
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.42ms    6.51ms 105.18ms   92.20%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  126345 requests in 30.00s, 26.98MB read
+Requests/sec:   4211.33
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Concurrency: 64 for codeigniter
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.92ms   19.52ms 285.21ms   91.54%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  126763 requests in 30.00s, 27.07MB read
+Requests/sec:   4225.20
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Concurrency: 128 for codeigniter
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.36ms   29.83ms 403.95ms   86.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  125728 requests in 30.00s, 26.85MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:   4191.03
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Concurrency: 256 for codeigniter
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.49ms   42.90ms 539.45ms   83.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  125426 requests in 30.00s, 26.79MB read
+  Socket errors: connect 0, read 0, write 0, timeout 31
+Requests/sec:   4180.54
+Transfer/sec:      0.89MB

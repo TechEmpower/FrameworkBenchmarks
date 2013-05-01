@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 18:19:26 PDT 2013
+
+  System load:  0.15                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-jruby
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/rails/hello_world/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/rails/hello_world/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.41ms   24.54ms 260.70ms   94.74%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4344 requests in 5.00s, 1.53MB read
+Requests/sec:    868.66
+Transfer/sec:    313.02KB
+
+---------------------------------------------------------
+ Running Warmup rails-jruby
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/rails/hello_world/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   131.64ms  280.58ms   3.74s    98.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  59436 requests in 30.00s, 20.92MB read
+  Socket errors: connect 0, read 0, write 0, timeout 77
+Requests/sec:   1981.10
+Transfer/sec:    713.90KB
+
+---------------------------------------------------------
+ Concurrency: 8 for rails-jruby
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/rails/hello_world/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/rails/hello_world/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.91ms  807.39us  12.54ms   86.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  128054 requests in 30.00s, 45.06MB read
+Requests/sec:   4268.51
+Transfer/sec:      1.50MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rails-jruby
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/rails/hello_world/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/rails/hello_world/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.86ms    2.05ms  18.60ms   69.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  121477 requests in 30.00s, 42.75MB read
+Requests/sec:   4049.19
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rails-jruby
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/rails/hello_world/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/rails/hello_world/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.89ms    4.67ms  40.93ms   69.84%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  118242 requests in 30.00s, 41.61MB read
+Requests/sec:   3941.28
+Transfer/sec:      1.39MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rails-jruby
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/rails/hello_world/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/rails/hello_world/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.38ms    9.76ms  55.16ms   64.37%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  111064 requests in 30.00s, 39.08MB read
+Requests/sec:   3702.01
+Transfer/sec:      1.30MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rails-jruby
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/rails/hello_world/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/rails/hello_world/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.26ms   19.88ms  98.17ms   65.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  98116 requests in 30.00s, 34.53MB read
+Requests/sec:   3270.58
+Transfer/sec:      1.15MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rails-jruby
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/rails/hello_world/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.23ms   42.03ms 202.54ms   60.55%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  77252 requests in 30.00s, 27.19MB read
+Requests/sec:   2575.03
+Transfer/sec:      0.91MB

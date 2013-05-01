@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 19:46:51 PDT 2013
+
+  System load:  3.76                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer vertx
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   211.07us  487.10us   7.27ms   97.76%
+    Req/Sec     4.74k     1.55k    6.00k    78.73%
+  259996 requests in 5.00s, 27.77MB read
+Requests/sec:  52008.24
+Transfer/sec:      5.56MB
+
+---------------------------------------------------------
+ Running Warmup vertx
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.05ms  800.88us   8.18ms   86.74%
+    Req/Sec    15.20k     2.19k   21.00k    87.24%
+  3789973 requests in 30.00s, 404.81MB read
+Requests/sec: 126336.65
+Transfer/sec:     13.49MB
+
+---------------------------------------------------------
+ Concurrency: 8 for vertx
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   140.77us   82.27us   1.46ms   98.51%
+    Req/Sec     7.00k    70.23     7.00k    99.50%
+  1702343 requests in 30.00s, 181.83MB read
+Requests/sec:  56747.08
+Transfer/sec:      6.06MB
+
+---------------------------------------------------------
+ Concurrency: 16 for vertx
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   152.02us   89.78us   1.16ms   93.87%
+    Req/Sec    13.00k    55.59    13.00k    99.69%
+  3247863 requests in 30.00s, 346.91MB read
+Requests/sec: 108267.51
+Transfer/sec:     11.56MB
+
+---------------------------------------------------------
+ Concurrency: 32 for vertx
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   262.48us  160.53us   3.07ms   94.02%
+    Req/Sec    14.99k   114.04    15.00k    99.25%
+  3742146 requests in 30.00s, 399.70MB read
+Requests/sec: 124745.73
+Transfer/sec:     13.32MB
+
+---------------------------------------------------------
+ Concurrency: 64 for vertx
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   538.40us  386.44us  11.08ms   92.73%
+    Req/Sec    14.92k     1.48k   19.00k    91.98%
+  3750001 requests in 30.00s, 400.54MB read
+Requests/sec: 125002.18
+Transfer/sec:     13.35MB
+
+---------------------------------------------------------
+ Concurrency: 128 for vertx
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.06ms  467.83us   7.98ms   89.19%
+    Req/Sec    15.04k     1.30k   19.00k    93.84%
+  3775673 requests in 30.00s, 403.29MB read
+Requests/sec: 125863.27
+Transfer/sec:     13.44MB
+
+---------------------------------------------------------
+ Concurrency: 256 for vertx
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.06ms  811.26us   6.23ms   87.80%
+    Req/Sec    15.22k     1.55k   23.00k    89.41%
+  3796248 requests in 30.00s, 405.48MB read
+Requests/sec: 126551.70
+Transfer/sec:     13.52MB

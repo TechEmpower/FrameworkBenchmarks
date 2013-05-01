@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 03:40:15 PDT 2013
+
+  System load:  0.27                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phalcon
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   655.40us  159.72us   1.41ms   73.66%
+    Req/Sec     0.97k   172.38     1.00k    96.95%
+  60626 requests in 5.00s, 12.95MB read
+Requests/sec:  12126.67
+Transfer/sec:      2.59MB
+
+---------------------------------------------------------
+ Running Warmup phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.65ms    6.06ms 110.59ms   94.51%
+    Req/Sec     1.00k    43.22     1.00k    99.81%
+  434370 requests in 30.00s, 92.77MB read
+Requests/sec:  14479.35
+Transfer/sec:      3.09MB
+
+---------------------------------------------------------
+ Concurrency: 8 for phalcon
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   666.16us  390.89us  10.30ms   96.72%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  368298 requests in 30.00s, 78.66MB read
+Requests/sec:  12276.71
+Transfer/sec:      2.62MB
+
+---------------------------------------------------------
+ Concurrency: 16 for phalcon
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14ms  440.12us   5.72ms   74.51%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  417378 requests in 30.00s, 89.14MB read
+Requests/sec:  13912.87
+Transfer/sec:      2.97MB
+
+---------------------------------------------------------
+ Concurrency: 32 for phalcon
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.33ms    7.04ms 281.33ms   99.94%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  435576 requests in 30.00s, 93.03MB read
+Requests/sec:  14519.38
+Transfer/sec:      3.10MB
+
+---------------------------------------------------------
+ Concurrency: 64 for phalcon
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.66ms   10.79ms 285.96ms   97.38%
+    Req/Sec     1.00k    35.31     1.00k    99.88%
+  433121 requests in 30.00s, 92.50MB read
+Requests/sec:  14437.58
+Transfer/sec:      3.08MB
+
+---------------------------------------------------------
+ Concurrency: 128 for phalcon
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.30ms    8.52ms 125.47ms   95.52%
+    Req/Sec     1.00k    60.99     1.00k    99.63%
+  427921 requests in 30.00s, 91.39MB read
+Requests/sec:  14264.54
+Transfer/sec:      3.05MB
+
+---------------------------------------------------------
+ Concurrency: 256 for phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.92ms   19.89ms 534.46ms   96.38%
+    Req/Sec     1.04k   220.87     2.00k    94.95%
+  432475 requests in 30.00s, 92.37MB read
+Requests/sec:  14416.63
+Transfer/sec:      3.08MB

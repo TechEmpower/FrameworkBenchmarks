@@ -1,0 +1,133 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 03:31:24 PDT 2013
+
+  System load:  1.22                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spark
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/spark/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/spark/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.12ms   69.74ms   1.09s    98.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2617 requests in 5.01s, 416.01KB read
+Requests/sec:    522.14
+Transfer/sec:     83.00KB
+
+---------------------------------------------------------
+ Running Warmup spark
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/spark/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/spark/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   323.85ms  314.06ms   2.46s    84.45%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  22602 requests in 30.00s, 3.51MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:    753.37
+Transfer/sec:    119.76KB
+
+---------------------------------------------------------
+ Concurrency: 8 for spark
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/spark/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/spark/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.37ms    7.68ms 134.81ms   99.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25189 requests in 30.00s, 3.91MB read
+  Socket errors: connect 0, read 0, write 0, timeout 24
+Requests/sec:    839.60
+Transfer/sec:    133.46KB
+
+---------------------------------------------------------
+ Concurrency: 16 for spark
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/spark/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/spark/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.36ms  103.21ms   1.89s    96.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25234 requests in 30.00s, 3.92MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    841.09
+Transfer/sec:    133.71KB
+
+---------------------------------------------------------
+ Concurrency: 32 for spark
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/spark/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/spark/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    70.81ms  529.58ms   7.81s    99.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25225 requests in 30.00s, 3.92MB read
+  Socket errors: connect 0, read 0, write 0, timeout 62
+Requests/sec:    840.78
+Transfer/sec:    133.66KB
+
+---------------------------------------------------------
+ Concurrency: 64 for spark
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/spark/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/spark/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    76.56ms   43.08ms 323.51ms   88.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24756 requests in 30.00s, 3.84MB read
+Requests/sec:    825.13
+Transfer/sec:    131.17KB
+
+---------------------------------------------------------
+ Concurrency: 128 for spark
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/spark/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/spark/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   156.74ms  140.45ms   1.19s    82.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24391 requests in 30.00s, 3.79MB read
+Requests/sec:    812.93
+Transfer/sec:    129.23KB
+
+---------------------------------------------------------
+ Concurrency: 256 for spark
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/spark/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/spark/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   313.69ms  297.22ms   2.20s    83.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24147 requests in 30.00s, 3.75MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    804.80
+Transfer/sec:    127.94KB

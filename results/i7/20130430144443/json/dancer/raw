@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 04:31:45 PDT 2013
+
+  System load:  0.15                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dancer
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.30ms  781.95us   7.88ms   92.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30070 requests in 5.00s, 6.14MB read
+Requests/sec:   6012.52
+Transfer/sec:      1.23MB
+
+---------------------------------------------------------
+ Running Warmup dancer
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.33ms    1.66ms  53.90ms   72.46%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  199980 requests in 30.00s, 40.80MB read
+Requests/sec:   6665.74
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 8 for dancer
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.38ms    1.02ms  18.01ms   91.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  178713 requests in 30.00s, 36.46MB read
+Requests/sec:   5957.07
+Transfer/sec:      1.22MB
+
+---------------------------------------------------------
+ Concurrency: 16 for dancer
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.39ms  840.17us  14.64ms   95.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  200430 requests in 30.00s, 40.90MB read
+Requests/sec:   6681.00
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 32 for dancer
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.77ms  810.66us  20.62ms   93.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  199337 requests in 30.00s, 40.67MB read
+Requests/sec:   6644.52
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 64 for dancer
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.59ms    0.95ms  21.10ms   87.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  199353 requests in 30.00s, 40.68MB read
+Requests/sec:   6644.97
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 128 for dancer
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.23ms    3.15ms 135.86ms   97.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  199508 requests in 30.00s, 40.71MB read
+Requests/sec:   6650.13
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 256 for dancer
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.33ms    2.35ms  56.38ms   88.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  199303 requests in 30.00s, 40.67MB read
+Requests/sec:   6643.39
+Transfer/sec:      1.36MB

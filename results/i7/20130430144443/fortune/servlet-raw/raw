@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet-raw
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/servlet//fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   785.86us  268.45us   4.56ms   96.62%
+    Req/Sec     0.92k   264.19     1.00k    92.48%
+  49772 requests in 5.00s, 68.16MB read
+Requests/sec:   9955.67
+Transfer/sec:     13.63MB
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.29ms    8.75ms 120.97ms   92.90%
+    Req/Sec     2.96k   269.71     3.00k    97.55%
+  865808 requests in 30.00s, 1.16GB read
+Requests/sec:  28860.97
+Transfer/sec:     39.52MB
+
+---------------------------------------------------------
+ Concurrency: 8 for servlet-raw
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   787.41us  195.27us   6.06ms   87.16%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  300110 requests in 30.00s, 410.99MB read
+Requests/sec:  10003.88
+Transfer/sec:     13.70MB
+
+---------------------------------------------------------
+ Concurrency: 16 for servlet-raw
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.85ms  376.92us   7.13ms   90.84%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  560347 requests in 30.00s, 767.38MB read
+Requests/sec:  18678.85
+Transfer/sec:     25.58MB
+
+---------------------------------------------------------
+ Concurrency: 32 for servlet-raw
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.39ms    0.93ms   9.93ms   84.63%
+    Req/Sec     3.00k    49.94     3.00k    99.75%
+  787490 requests in 30.00s, 1.05GB read
+Requests/sec:  26250.70
+Transfer/sec:     35.95MB
+
+---------------------------------------------------------
+ Concurrency: 64 for servlet-raw
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.37ms    1.47ms  20.38ms   85.16%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  872263 requests in 30.00s, 1.17GB read
+Requests/sec:  29076.52
+Transfer/sec:     39.82MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servlet-raw
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.70ms    3.51ms  46.08ms   89.44%
+    Req/Sec     3.00k    55.81     4.00k    99.69%
+  871194 requests in 30.00s, 1.17GB read
+Requests/sec:  29040.97
+Transfer/sec:     39.77MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.33ms    8.64ms 139.41ms   93.52%
+    Req/Sec     3.01k   127.12     4.00k    98.57%
+  856415 requests in 30.00s, 1.15GB read
+Requests/sec:  28548.10
+Transfer/sec:     39.10MB

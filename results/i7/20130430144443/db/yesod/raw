@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 22:20:48 PDT 2013
+
+  System load:  1.29                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yesod
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   782.73us  152.94us   1.50ms   85.17%
+    Req/Sec     1.00k    61.66     1.00k    99.62%
+  51145 requests in 5.00s, 7.70MB read
+Requests/sec:  10228.80
+Transfer/sec:      1.54MB
+
+---------------------------------------------------------
+ Running Warmup yesod
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.76ms    7.69ms  63.61ms   84.89%
+    Req/Sec     3.27k   512.78     4.00k    69.34%
+  956072 requests in 30.00s, 143.86MB read
+Requests/sec:  31869.46
+Transfer/sec:      4.80MB
+
+---------------------------------------------------------
+ Concurrency: 8 for yesod
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   769.12us  186.48us   2.27ms   95.77%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  307642 requests in 30.00s, 46.29MB read
+Requests/sec:  10254.84
+Transfer/sec:      1.54MB
+
+---------------------------------------------------------
+ Concurrency: 16 for yesod
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   689.74us  275.12us   6.14ms   91.79%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  697183 requests in 30.00s, 104.91MB read
+Requests/sec:  23240.08
+Transfer/sec:      3.50MB
+
+---------------------------------------------------------
+ Concurrency: 32 for yesod
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.02ms    0.92ms  13.76ms   92.69%
+    Req/Sec     3.93k   256.22     4.00k    92.94%
+  973261 requests in 30.00s, 146.45MB read
+Requests/sec:  32443.31
+Transfer/sec:      4.88MB
+
+---------------------------------------------------------
+ Concurrency: 64 for yesod
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.26ms    2.60ms  32.06ms   91.78%
+    Req/Sec     3.56k   496.86     4.00k    55.73%
+  991880 requests in 30.00s, 149.25MB read
+Requests/sec:  33063.98
+Transfer/sec:      4.98MB
+
+---------------------------------------------------------
+ Concurrency: 128 for yesod
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.59ms    5.79ms 115.16ms   90.74%
+    Req/Sec     3.67k   782.18     7.00k    83.11%
+  1022680 requests in 30.00s, 153.88MB read
+Requests/sec:  34091.70
+Transfer/sec:      5.13MB
+
+---------------------------------------------------------
+ Concurrency: 256 for yesod
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.25ms    8.06ms  60.21ms   85.43%
+    Req/Sec     3.41k   491.80     4.00k    59.10%
+  953675 requests in 30.00s, 143.50MB read
+Requests/sec:  31789.73
+Transfer/sec:      4.78MB

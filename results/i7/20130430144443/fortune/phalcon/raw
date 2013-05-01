@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 03:51:35 PDT 2013
+
+  System load:  3.73                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phalcon
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.55ms  439.71us   5.28ms   71.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11338 requests in 5.00s, 26.21MB read
+Requests/sec:   2266.39
+Transfer/sec:      5.24MB
+
+---------------------------------------------------------
+ Running Warmup phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    54.57ms   56.32ms 581.17ms   89.22%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  146047 requests in 30.00s, 337.61MB read
+Requests/sec:   4868.25
+Transfer/sec:     11.25MB
+
+---------------------------------------------------------
+ Concurrency: 8 for phalcon
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.07ms    6.78ms  99.91ms   99.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  65771 requests in 30.00s, 152.04MB read
+Requests/sec:   2192.21
+Transfer/sec:      5.07MB
+
+---------------------------------------------------------
+ Concurrency: 16 for phalcon
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.96ms    0.95ms  12.55ms   76.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  120525 requests in 30.00s, 278.61MB read
+Requests/sec:   4017.47
+Transfer/sec:      9.29MB
+
+---------------------------------------------------------
+ Concurrency: 32 for phalcon
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.72ms    6.72ms 116.01ms   94.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  138783 requests in 30.00s, 320.82MB read
+Requests/sec:   4626.01
+Transfer/sec:     10.69MB
+
+---------------------------------------------------------
+ Concurrency: 64 for phalcon
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.82ms   34.20ms 756.94ms   97.06%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  143712 requests in 30.00s, 332.21MB read
+Requests/sec:   4790.34
+Transfer/sec:     11.07MB
+
+---------------------------------------------------------
+ Concurrency: 128 for phalcon
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.46ms   80.94ms   1.46s    97.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  145582 requests in 30.00s, 336.54MB read
+Requests/sec:   4852.56
+Transfer/sec:     11.22MB
+
+---------------------------------------------------------
+ Concurrency: 256 for phalcon
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.11ms   85.23ms   1.35s    92.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  144355 requests in 30.00s, 333.70MB read
+Requests/sec:   4811.59
+Transfer/sec:     11.12MB
