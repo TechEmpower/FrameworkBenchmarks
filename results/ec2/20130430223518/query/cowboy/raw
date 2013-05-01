@@ -1,0 +1,109 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer cowboy
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.93ms    1.35ms  12.45ms   89.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10373 requests in 5.00s, 2.10MB read
+Requests/sec:   2073.96
+Transfer/sec:    430.39KB
+
+---------------------------------------------------------
+ Running Warmup cowboy
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   104.46ms    6.35ms 128.72ms   91.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  73136 requests in 30.00s, 14.82MB read
+Requests/sec:   2437.81
+Transfer/sec:    505.93KB
+
+---------------------------------------------------------
+ Queries: 1 for cowboy
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    63.45ms    3.99ms  99.25ms   89.71%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  120725 requests in 30.00s, 20.81MB read
+Requests/sec:   4023.99
+Transfer/sec:    710.22KB
+
+---------------------------------------------------------
+ Queries: 5 for cowboy
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   232.52ms   26.88ms 326.23ms   89.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32768 requests in 30.00s, 9.65MB read
+Requests/sec:   1092.10
+Transfer/sec:    329.36KB
+
+---------------------------------------------------------
+ Queries: 10 for cowboy
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   423.20ms   52.47ms 523.66ms   95.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17773 requests in 30.01s, 7.93MB read
+Requests/sec:    592.30
+Transfer/sec:    270.54KB
+
+---------------------------------------------------------
+ Queries: 15 for cowboy
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   613.49ms   95.82ms 831.62ms   94.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12063 requests in 30.01s, 7.21MB read
+Requests/sec:    401.99
+Transfer/sec:    245.99KB
+
+---------------------------------------------------------
+ Queries: 20 for cowboy
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   823.07ms  150.46ms   1.11s    90.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8960 requests in 30.01s, 6.71MB read
+Requests/sec:    298.56
+Transfer/sec:    229.02KB

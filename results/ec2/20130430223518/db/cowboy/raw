@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 06:03:09 UTC 2013
+
+  System load:  0.36               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer cowboy
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.22ms  758.96us   8.99ms   94.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17102 requests in 5.01s, 2.95MB read
+Requests/sec:   3416.38
+Transfer/sec:    602.97KB
+
+---------------------------------------------------------
+ Running Warmup cowboy
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.57ms    3.57ms  86.96ms   82.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  122515 requests in 30.00s, 21.12MB read
+Requests/sec:   4084.05
+Transfer/sec:    720.84KB
+
+---------------------------------------------------------
+ Concurrency: 8 for cowboy
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.19ms    0.86ms  12.06ms   95.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  108508 requests in 30.00s, 18.70MB read
+Requests/sec:   3616.91
+Transfer/sec:    638.35KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cowboy
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.94ms  731.95us  13.74ms   77.74%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  121441 requests in 30.00s, 20.93MB read
+Requests/sec:   4047.98
+Transfer/sec:    714.44KB
+
+---------------------------------------------------------
+ Concurrency: 32 for cowboy
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.76ms    1.66ms  21.50ms   70.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  125761 requests in 30.00s, 21.68MB read
+Requests/sec:   4191.71
+Transfer/sec:    739.79KB
+
+---------------------------------------------------------
+ Concurrency: 64 for cowboy
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.50ms    2.87ms  25.96ms   69.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  125921 requests in 30.00s, 21.70MB read
+Requests/sec:   4197.19
+Transfer/sec:    740.77KB
+
+---------------------------------------------------------
+ Concurrency: 128 for cowboy
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.08ms    4.53ms  96.94ms   86.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  124333 requests in 30.00s, 21.43MB read
+Requests/sec:   4144.50
+Transfer/sec:    731.47KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cowboy
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.78ms    3.21ms  87.59ms   78.40%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  122179 requests in 30.00s, 21.06MB read
+Requests/sec:   4072.53
+Transfer/sec:    718.80KB

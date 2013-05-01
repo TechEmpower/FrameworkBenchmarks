@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 08:15:07 UTC 2013
+
+  System load:  0.03               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer scalatra
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/scalatra/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/scalatra/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.46ms   12.07ms  98.89ms   97.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4797 requests in 5.01s, 0.92MB read
+Requests/sec:    958.06
+Transfer/sec:    188.06KB
+
+---------------------------------------------------------
+ Running Warmup scalatra
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/scalatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/scalatra/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.84ms  150.32ms   1.38s    94.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  62961 requests in 30.01s, 12.90MB read
+  Socket errors: connect 0, read 505, write 0, timeout 2145
+Requests/sec:   2097.81
+Transfer/sec:    440.05KB
+
+---------------------------------------------------------
+ Concurrency: 8 for scalatra
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/scalatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/scalatra/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.90ms  499.35us   8.14ms   93.17%
+    Req/Sec     0.99k   121.22     1.00k    98.51%
+  272021 requests in 30.00s, 52.14MB read
+Requests/sec:   9067.60
+Transfer/sec:      1.74MB
+
+---------------------------------------------------------
+ Concurrency: 16 for scalatra
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/scalatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/scalatra/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.66ms  705.08us  13.68ms   85.45%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  296335 requests in 30.00s, 56.80MB read
+Requests/sec:   9878.18
+Transfer/sec:      1.89MB
+
+---------------------------------------------------------
+ Concurrency: 32 for scalatra
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/scalatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/scalatra/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.27ms    1.64ms  36.61ms   90.07%
+    Req/Sec     1.00k    43.40     1.00k    99.81%
+  309788 requests in 30.00s, 59.38MB read
+Requests/sec:  10326.33
+Transfer/sec:      1.98MB
+
+---------------------------------------------------------
+ Concurrency: 64 for scalatra
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/scalatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/scalatra/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.25ms    2.63ms  52.65ms   92.54%
+    Req/Sec     1.00k    55.90     1.00k    99.69%
+  322122 requests in 30.00s, 61.75MB read
+Requests/sec:  10737.96
+Transfer/sec:      2.06MB
+
+---------------------------------------------------------
+ Concurrency: 128 for scalatra
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/scalatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/scalatra/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.21ms    5.99ms  94.85ms   88.66%
+    Req/Sec     1.00k    66.10     1.00k    99.56%
+  305780 requests in 30.00s, 58.61MB read
+Requests/sec:  10193.18
+Transfer/sec:      1.95MB
+
+---------------------------------------------------------
+ Concurrency: 256 for scalatra
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/scalatra/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/scalatra/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.97ms   17.04ms 462.21ms   92.35%
+    Req/Sec     1.00k    25.05     1.00k    99.94%
+  295115 requests in 30.00s, 56.57MB read
+Requests/sec:   9838.27
+Transfer/sec:      1.89MB

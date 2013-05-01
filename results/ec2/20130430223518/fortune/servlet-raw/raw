@@ -1,0 +1,123 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer servlet-raw
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/servlet//fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.90ms    5.38ms  52.55ms   96.24%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14047 requests in 5.00s, 19.24MB read
+Requests/sec:   2809.13
+Transfer/sec:      3.85MB
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet//fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    60.25ms   28.18ms 410.92ms   88.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  130698 requests in 30.00s, 179.04MB read
+Requests/sec:   4356.13
+Transfer/sec:      5.97MB
+
+---------------------------------------------------------
+ Concurrency: 8 for servlet-raw
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet//fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.98ms    1.25ms  22.48ms   96.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  126065 requests in 30.00s, 172.64MB read
+Requests/sec:   4202.19
+Transfer/sec:      5.75MB
+
+---------------------------------------------------------
+ Concurrency: 16 for servlet-raw
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet//fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.63ms    1.36ms  19.58ms   80.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  136623 requests in 30.00s, 187.10MB read
+Requests/sec:   4553.93
+Transfer/sec:      6.24MB
+
+---------------------------------------------------------
+ Concurrency: 32 for servlet-raw
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet//fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.24ms    2.39ms  49.27ms   90.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  135831 requests in 30.00s, 186.02MB read
+Requests/sec:   4527.65
+Transfer/sec:      6.20MB
+
+---------------------------------------------------------
+ Concurrency: 64 for servlet-raw
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet//fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.26ms    6.58ms 189.15ms   95.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  138411 requests in 30.00s, 189.55MB read
+Requests/sec:   4613.59
+Transfer/sec:      6.32MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servlet-raw
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet//fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.39ms   16.06ms 532.61ms   94.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  134490 requests in 30.00s, 184.18MB read
+Requests/sec:   4482.76
+Transfer/sec:      6.14MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/servlet//fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/servlet//fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.04ms   31.01ms 523.78ms   91.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  134024 requests in 30.00s, 183.58MB read
+Requests/sec:   4467.07
+Transfer/sec:      6.12MB

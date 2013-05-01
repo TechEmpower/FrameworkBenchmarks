@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 23:30:42 UTC 2013
+
+  System load:  0.01               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer express-mongodb
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/mongoose
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.88ms    1.49ms  11.44ms   61.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11207 requests in 5.00s, 2.52MB read
+Requests/sec:   2241.06
+Transfer/sec:    515.99KB
+
+---------------------------------------------------------
+ Running Warmup express-mongodb
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    95.91ms   21.87ms 174.29ms   72.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  80919 requests in 30.00s, 18.19MB read
+Requests/sec:   2697.68
+Transfer/sec:    621.13KB
+
+---------------------------------------------------------
+ Concurrency: 8 for express-mongodb
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.05ms    1.92ms  25.36ms   67.28%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  72335 requests in 30.00s, 16.26MB read
+Requests/sec:   2411.01
+Transfer/sec:    555.12KB
+
+---------------------------------------------------------
+ Concurrency: 16 for express-mongodb
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.46ms    2.25ms  26.87ms   75.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  77230 requests in 30.00s, 17.36MB read
+Requests/sec:   2574.28
+Transfer/sec:    592.71KB
+
+---------------------------------------------------------
+ Concurrency: 32 for express-mongodb
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.77ms    6.18ms  40.65ms   69.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  79560 requests in 30.00s, 17.89MB read
+Requests/sec:   2651.82
+Transfer/sec:    610.57KB
+
+---------------------------------------------------------
+ Concurrency: 64 for express-mongodb
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.16ms   13.28ms  83.85ms   65.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  81553 requests in 30.00s, 18.34MB read
+Requests/sec:   2718.06
+Transfer/sec:    625.82KB
+
+---------------------------------------------------------
+ Concurrency: 128 for express-mongodb
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.93ms   27.18ms 189.06ms   70.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  81945 requests in 30.01s, 18.43MB read
+Requests/sec:   2731.01
+Transfer/sec:    628.80KB
+
+---------------------------------------------------------
+ Concurrency: 256 for express-mongodb
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.47ms   48.04ms 277.80ms   61.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  83103 requests in 30.00s, 18.69MB read
+Requests/sec:   2769.66
+Transfer/sec:    637.70KB
