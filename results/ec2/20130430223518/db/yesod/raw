@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:31:28 UTC 2013
+
+  System load:  0.42               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer yesod
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8000/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.27ms    1.81ms  10.83ms   86.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13717 requests in 5.00s, 2.06MB read
+Requests/sec:   2742.62
+Transfer/sec:    422.56KB
+
+---------------------------------------------------------
+ Running Warmup yesod
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    98.00ms   63.37ms 847.13ms   71.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  113102 requests in 30.00s, 17.02MB read
+Requests/sec:   3770.06
+Transfer/sec:    580.89KB
+
+---------------------------------------------------------
+ Concurrency: 8 for yesod
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.77ms    1.39ms  10.92ms   86.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  95125 requests in 30.00s, 14.31MB read
+Requests/sec:   3170.82
+Transfer/sec:    488.55KB
+
+---------------------------------------------------------
+ Concurrency: 16 for yesod
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.88ms    3.22ms  43.96ms   86.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  110343 requests in 30.00s, 16.60MB read
+Requests/sec:   3678.10
+Transfer/sec:    566.71KB
+
+---------------------------------------------------------
+ Concurrency: 32 for yesod
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.74ms    8.02ms  69.50ms   79.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  113274 requests in 30.00s, 17.04MB read
+Requests/sec:   3775.81
+Transfer/sec:    581.77KB
+
+---------------------------------------------------------
+ Concurrency: 64 for yesod
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.02ms   13.20ms  88.16ms   68.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  113559 requests in 30.00s, 17.09MB read
+Requests/sec:   3785.12
+Transfer/sec:    583.21KB
+
+---------------------------------------------------------
+ Concurrency: 128 for yesod
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.95ms   24.97ms 173.41ms   67.12%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  112784 requests in 30.00s, 16.97MB read
+Requests/sec:   3758.96
+Transfer/sec:    579.17KB
+
+---------------------------------------------------------
+ Concurrency: 256 for yesod
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    80.20ms   45.63ms 867.41ms   73.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  113937 requests in 30.00s, 17.14MB read
+Requests/sec:   3798.19
+Transfer/sec:    585.22KB

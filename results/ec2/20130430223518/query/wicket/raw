@@ -1,0 +1,109 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer wicket
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/wicket/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/wicket/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.30ms    1.65ms  16.78ms   84.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13623 requests in 5.00s, 4.63MB read
+Requests/sec:   2724.53
+Transfer/sec:      0.93MB
+
+---------------------------------------------------------
+ Running Warmup wicket
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/wicket/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/wicket/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    75.10ms   22.01ms 479.50ms   84.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  106302 requests in 30.01s, 36.19MB read
+Requests/sec:   3542.06
+Transfer/sec:      1.21MB
+
+---------------------------------------------------------
+ Queries: 1 for wicket
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/wicket/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/wicket/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    52.48ms   14.98ms 199.13ms   87.99%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  150423 requests in 30.00s, 46.63MB read
+Requests/sec:   5013.68
+Transfer/sec:      1.55MB
+
+---------------------------------------------------------
+ Queries: 5 for wicket
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/wicket/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/wicket/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   134.65ms   40.35ms 445.26ms   86.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  57509 requests in 30.01s, 24.87MB read
+Requests/sec:   1916.63
+Transfer/sec:    848.82KB
+
+---------------------------------------------------------
+ Queries: 10 for wicket
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/wicket/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/wicket/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   237.83ms   56.19ms 411.72ms   80.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32435 requests in 30.01s, 18.95MB read
+Requests/sec:   1080.86
+Transfer/sec:    646.73KB
+
+---------------------------------------------------------
+ Queries: 15 for wicket
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/wicket/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/wicket/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   339.22ms   77.91ms 560.89ms   81.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  22623 requests in 30.01s, 16.67MB read
+Requests/sec:    753.93
+Transfer/sec:    568.75KB
+
+---------------------------------------------------------
+ Queries: 20 for wicket
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/wicket/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/wicket/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   438.06ms  111.07ms 985.83ms   83.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17404 requests in 30.01s, 15.48MB read
+Requests/sec:    579.85
+Transfer/sec:    527.97KB

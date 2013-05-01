@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 23:14:44 UTC 2013
+
+  System load:  0.82               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/compojure/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/compojure/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.26ms    1.76ms  14.90ms   86.52%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9664 requests in 5.00s, 1.93MB read
+Requests/sec:   1932.48
+Transfer/sec:    395.45KB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/compojure/db/2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   111.20ms  138.54ms   1.48s    92.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  66920 requests in 30.00s, 13.37MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:   2230.60
+Transfer/sec:    456.47KB
+
+---------------------------------------------------------
+ Queries: 1 for compojure
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    70.65ms   45.03ms 587.31ms   79.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  108118 requests in 30.00s, 18.33MB read
+Requests/sec:   3603.66
+Transfer/sec:    625.62KB
+
+---------------------------------------------------------
+ Queries: 5 for compojure
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/compojure/db/5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   200.13ms  242.83ms   2.51s    90.08%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30926 requests in 30.01s, 9.02MB read
+  Socket errors: connect 0, read 0, write 0, timeout 25
+Requests/sec:   1030.66
+Transfer/sec:    307.98KB
+
+---------------------------------------------------------
+ Queries: 10 for compojure
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/compojure/db/10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   372.17ms  343.15ms   2.81s    77.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16556 requests in 30.01s, 7.34MB read
+  Socket errors: connect 0, read 0, write 0, timeout 37
+Requests/sec:    551.70
+Transfer/sec:    250.38KB
+
+---------------------------------------------------------
+ Queries: 15 for compojure
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/compojure/db/15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   606.29ms  389.03ms   2.45s    73.05%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11343 requests in 30.01s, 6.75MB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+Requests/sec:    377.96
+Transfer/sec:    230.18KB
+
+---------------------------------------------------------
+ Queries: 20 for compojure
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/compojure/db/20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/compojure/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   816.78ms  475.75ms   4.27s    76.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8552 requests in 30.02s, 6.38MB read
+  Socket errors: connect 0, read 0, write 0, timeout 57
+Requests/sec:    284.92
+Transfer/sec:    217.73KB
