@@ -23,8 +23,8 @@
     },
     "mysql": {
       "setup_file": "setup",
-      "db_url": "/sequelize",
-      "query_url": "/sequelize?queries=",
+      "db_url": "/mysql-orm",
+      "query_url": "/mysql-orm?queries=",
       "port": 8080,
       "sort": 10
     },
