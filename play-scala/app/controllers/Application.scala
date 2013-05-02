@@ -5,7 +5,7 @@ import play.api.mvc._
 import play.api.libs.json.Json
 import java.util.concurrent._
 import scala.concurrent._
-import models._
+import models.{World, Fortune}
 import utils._
 import scala.concurrent.Future
 
@@ -14,6 +14,7 @@ import play.core.NamedThreadFactory
 
 object Application extends Controller {
 
+  private val MaxQueriesPerRequest = 20
   private val TestDatabaseRows = 10000
 
   private val partitionCount = current.configuration.getInt("db.default.partitionCount").getOrElse(2)
@@ -29,11 +30,11 @@ object Application extends Controller {
   private val dbEc = ExecutionContext.fromExecutorService(tpe)
 
   // A predicate for checking our ability to service database requests is determined by ensuring that the request
-  // queue doesn't fill up beyond a certain threshold. For convenience we use the max number of connections
-  // to determine this threshold. It is a rough check as we don't know how many queries we're going
-  // to make or what other threads are running in parallel etc. Nevertheless, the check is adequate in order to
-  // throttle the acceptance of requests to the size of the pool.
-  def isDbAvailable: Boolean = (tpe.getQueue.size() < maxConnections)
+  // queue doesn't fill up beyond a certain threshold. For convenience we use the max number of connections * the max
+  // # of db requests per web request to determine this threshold. It is a rough check as we don't know how many
+  // queries we're going to make or what other threads are running in parallel etc. Nevertheless, the check is
+  // adequate in order to throttle the acceptance of requests to the size of the pool.
+  def isDbAvailable: Boolean = (tpe.getQueue.size() < maxConnections * MaxQueriesPerRequest)
 
 
   def json() = Action {
@@ -57,4 +58,14 @@ object Application extends Controller {
     }
   }
 
+  def fortunes() = PredicatedAction(isDbAvailable, ServiceUnavailable) {
+    Action {
+      Async {
+        Future(Fortune.getAll())(dbEc).map { fs =>
+          val fortunes =  fs :+ Fortune(anorm.NotAssigned, "Additional fortune added at request time.")
+          Ok(views.html.fortune(fortunes))
+        }
+      }
+    }
+  }
 }

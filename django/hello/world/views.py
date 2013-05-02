@@ -3,15 +3,17 @@
 from django.template import Context, loader
 from django.http import HttpResponse
 from django.core import serializers
-from world.models import World
-import simplejson
+from world.models import World, Fortune
+from django.shortcuts import render
+import ujson
 import random
+from operator import attrgetter
 
 def json(request):
   response = {
     "message": "Hello, World!"
   }
-  return HttpResponse(simplejson.dumps(response), mimetype="application/json")
+  return HttpResponse(ujson.dumps(response), mimetype="application/json")
 
 def db(request):
   queries = int(request.GET.get('queries', 1))
@@ -23,3 +25,11 @@ def db(request):
 
   return HttpResponse(serializers.serialize("json", worlds), mimetype="application/json")
 
+def fortunes(request):
+  fortunes = list(Fortune.objects.all())
+  fortunes.append(Fortune(id=0, message="Additional message added at runtime."))
+
+  fortunes = sorted(fortunes, key=attrgetter('message'))
+
+  context = {'fortunes': fortunes}
+  return render(request, 'fortunes.html', context)

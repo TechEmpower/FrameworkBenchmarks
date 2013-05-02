@@ -5,10 +5,11 @@ import setup_util
 import os
 
 def start(args):
-  setup_util.replace_text("yesod/bench/config/mysql.yml", "host: .*", "host: " + args.database_host)
+  #setup_util.replace_text("yesod/bench/config/mysql.yml", "host: .*", "host: " + args.database_host)
   
   subprocess.check_call("cabal update", shell=True, cwd="yesod/bench")
   subprocess.check_call("cabal install --only-dependencies", shell=True, cwd="yesod/bench")
+  subprocess.check_call("cabal configure", shell=True, cwd="yesod/bench")
   subprocess.check_call("cabal build", shell=True, cwd="yesod/bench")
 
   db_host = args.database_host

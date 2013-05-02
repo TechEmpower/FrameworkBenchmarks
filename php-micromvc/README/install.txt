@@ -1,0 +1,13 @@
+--- Installing MicroMVC ---
+
+Rename /Config/Sample.*.php files and edit with your configuration values.
+
+The root web folder is /Public where all the Javascript, Images, and CSS should go.
+
+Sample server configurations are provided for Nginx and Apache2.
+
+A CLI console is provided for using the migrations
+
+$ php CLI create
+
+The code is very well commented, please read it.

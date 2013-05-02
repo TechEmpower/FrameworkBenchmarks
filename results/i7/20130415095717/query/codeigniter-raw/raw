@@ -1,0 +1,116 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 04:12:49 PDT 2013
+
+  System load:  0.16                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer codeigniter-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/index.php/bench/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/index.php/bench/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.88ms  572.32us   5.16ms   77.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13720 requests in 5.00s, 3.91MB read
+Requests/sec:   2743.47
+Transfer/sec:    799.77KB
+
+---------------------------------------------------------
+ Running Warmup codeigniter-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/2
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/index.php/bench/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    75.30ms  104.68ms   5.04s    95.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  205312 requests in 1.00m, 58.45MB read
+  Socket errors: connect 0, read 0, write 0, timeout 43
+Requests/sec:   3421.78
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Queries: 1 for codeigniter-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/1
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/index.php/bench/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.12ms   93.90ms   3.29s    95.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  218704 requests in 1.00m, 51.88MB read
+  Socket errors: connect 0, read 0, write 0, timeout 105
+Requests/sec:   3644.97
+Transfer/sec:      0.86MB
+
+---------------------------------------------------------
+ Queries: 5 for codeigniter-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/5
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/index.php/bench/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    90.41ms   82.31ms   1.08s    84.74%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  179212 requests in 1.00m, 76.54MB read
+Requests/sec:   2986.91
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Queries: 10 for codeigniter-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/10
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/index.php/bench/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   105.62ms   85.43ms 935.36ms   76.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  150365 requests in 1.00m, 100.06MB read
+Requests/sec:   2505.92
+Transfer/sec:      1.67MB
+
+---------------------------------------------------------
+ Queries: 15 for codeigniter-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/15
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/index.php/bench/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   117.83ms   89.94ms 795.92ms   75.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  129744 requests in 1.00m, 117.14MB read
+Requests/sec:   2162.29
+Transfer/sec:      1.95MB
+
+---------------------------------------------------------
+ Queries: 20 for codeigniter-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/20
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/index.php/bench/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   134.58ms  100.98ms   1.09s    75.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  114358 requests in 1.00m, 130.39MB read
+Requests/sec:   1905.86
+Transfer/sec:      2.17MB

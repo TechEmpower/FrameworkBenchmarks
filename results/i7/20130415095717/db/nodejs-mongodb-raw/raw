@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 00:00:17 PDT 2013
+
+  System load:  0.5                 Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb-raw
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongodbdriver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   667.75us  168.03us   2.19ms   89.34%
+    Req/Sec     0.97k   158.64     1.00k    97.43%
+  60974 requests in 5.00s, 13.48MB read
+Requests/sec:  12196.21
+Transfer/sec:      2.70MB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/mongodbdriver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.74ms    3.48ms  35.61ms   65.00%
+    Req/Sec     3.01k   278.48     6.00k    94.57%
+  1705451 requests in 1.00m, 376.98MB read
+Requests/sec:  28425.18
+Transfer/sec:      6.28MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nodejs-mongodb-raw
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/mongodbdriver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   647.82us  178.05us   6.55ms   92.20%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  750052 requests in 1.00m, 165.79MB read
+Requests/sec:  12501.00
+Transfer/sec:      2.76MB
+
+---------------------------------------------------------
+ Concurrency: 16 for nodejs-mongodb-raw
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/mongodbdriver
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   783.50us  360.93us   6.88ms   88.78%
+    Req/Sec     2.13k   334.76     3.00k    87.17%
+  1299470 requests in 1.00m, 287.24MB read
+Requests/sec:  21658.22
+Transfer/sec:      4.79MB
+
+---------------------------------------------------------
+ Concurrency: 32 for nodejs-mongodb-raw
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/mongodbdriver
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.45ms  824.92us  12.48ms   92.55%
+    Req/Sec     2.43k   494.44     3.00k    57.48%
+  1506105 requests in 1.00m, 332.92MB read
+Requests/sec:  25102.35
+Transfer/sec:      5.55MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nodejs-mongodb-raw
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/mongodbdriver
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.64ms    1.33ms  29.70ms   86.46%
+    Req/Sec     2.93k   594.97     6.00k    67.28%
+  1656760 requests in 1.00m, 366.22MB read
+Requests/sec:  27613.08
+Transfer/sec:      6.10MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nodejs-mongodb-raw
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/mongodbdriver
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.82ms    2.10ms  46.96ms   89.98%
+    Req/Sec     2.99k   112.82     4.00k    98.91%
+  1699360 requests in 1.00m, 375.63MB read
+Requests/sec:  28323.50
+Transfer/sec:      6.26MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs-mongodb-raw
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/mongodbdriver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.68ms    3.63ms  58.24ms   77.25%
+    Req/Sec     3.00k   123.32     4.00k    98.48%
+  1735447 requests in 1.00m, 383.61MB read
+Requests/sec:  28924.94
+Transfer/sec:      6.39MB

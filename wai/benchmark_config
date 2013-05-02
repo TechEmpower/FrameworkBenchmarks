@@ -1,0 +1,11 @@
+{
+  "framework": "wai",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8000,
+      "sort": 86
+    }
+  }]
+}

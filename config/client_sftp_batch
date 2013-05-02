@@ -3,3 +3,7 @@ put config/mongodb.conf
 put config/create.sql
 put config/create.js
 put config/10gen.list
+put config/create-postgres-database.sql
+put config/create-postgres.sql
+put config/postgresql.conf
+put config/pg_hba.conf

@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 22:57:50 UTC 2013
+
+  System load:  0.2                Processes:           69
+  Usage of /:   24.2% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer php
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/dborm.php
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/dborm.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.31ms    9.60ms  85.80ms   81.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2654 requests in 5.01s, 649.85KB read
+Requests/sec:    530.27
+Transfer/sec:    129.84KB
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/dborm.php
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/dborm.php
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   447.45ms  189.93ms   1.76s    73.59%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33967 requests in 1.00m, 8.12MB read
+Requests/sec:    566.08
+Transfer/sec:    138.62KB
+
+---------------------------------------------------------
+ Concurrency: 8 for php
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/dborm.php
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/dborm.php
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.27ms    8.82ms 138.61ms   90.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36737 requests in 1.00m, 8.78MB read
+Requests/sec:    612.24
+Transfer/sec:    149.91KB
+
+---------------------------------------------------------
+ Concurrency: 16 for php
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/dborm.php
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/dborm.php
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.47ms   56.17ms 668.62ms   93.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  37449 requests in 1.00m, 8.95MB read
+Requests/sec:    624.12
+Transfer/sec:    152.82KB
+
+---------------------------------------------------------
+ Concurrency: 32 for php
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/dborm.php
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/dborm.php
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.19ms  151.31ms   1.66s    92.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  37469 requests in 1.00m, 8.96MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    624.46
+Transfer/sec:    152.90KB
+
+---------------------------------------------------------
+ Concurrency: 64 for php
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/dborm.php
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/dborm.php
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   116.09ms  146.96ms   1.46s    89.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36832 requests in 1.00m, 8.81MB read
+Requests/sec:    613.85
+Transfer/sec:    150.31KB
+
+---------------------------------------------------------
+ Concurrency: 128 for php
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/dborm.php
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/dborm.php
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   223.42ms  125.19ms 900.96ms   71.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  35676 requests in 1.00m, 8.53MB read
+Requests/sec:    594.56
+Transfer/sec:    145.58KB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/dborm.php
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/dborm.php
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   457.68ms  144.70ms   2.13s    76.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34000 requests in 1.00m, 8.13MB read
+Requests/sec:    566.62
+Transfer/sec:    138.75KB

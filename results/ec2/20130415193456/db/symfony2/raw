@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 16 10:52:10 UTC 2013
+
+  System load:  0.0                Processes:           70
+  Usage of /:   24.5% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.252.147.39
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+67 packages can be updated.
+30 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer symfony2
+ wrk -d 60 -c 8 -t 8 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.147.200:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.56ms   33.37ms 222.84ms   69.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  415 requests in 5.03s, 103.66KB read
+Requests/sec:     82.45
+Transfer/sec:     20.59KB
+
+---------------------------------------------------------
+ Running Warmup symfony2
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.15s   588.91ms   3.57s    79.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6771 requests in 1.00m, 1.65MB read
+  Socket errors: connect 0, read 0, write 0, timeout 989
+Requests/sec:    112.83
+Transfer/sec:     28.18KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2
+ wrk -d 60 -c 8 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.63ms   21.15ms 262.84ms   73.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7031 requests in 1.00m, 1.71MB read
+Requests/sec:    117.18
+Transfer/sec:     29.26KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2
+ wrk -d 60 -c 16 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   142.25ms   58.85ms 409.04ms   69.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7018 requests in 1.00m, 1.71MB read
+Requests/sec:    116.96
+Transfer/sec:     29.21KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2
+ wrk -d 60 -c 32 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   278.47ms  116.54ms 757.00ms   69.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6995 requests in 1.00m, 1.71MB read
+Requests/sec:    116.58
+Transfer/sec:     29.11KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2
+ wrk -d 60 -c 64 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   552.54ms  199.64ms   1.27s    71.52%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6945 requests in 1.00m, 1.69MB read
+Requests/sec:    115.74
+Transfer/sec:     28.91KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2
+ wrk -d 60 -c 128 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.09s   409.09ms   2.62s    74.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6869 requests in 1.00m, 1.68MB read
+  Socket errors: connect 0, read 0, write 0, timeout 23
+Requests/sec:    114.47
+Transfer/sec:     28.59KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2
+ wrk -d 60 -c 256 -t 4 http://10.252.147.200:8080/db
+---------------------------------------------------------
+
+Running 1m test @ http://10.252.147.200:8080/db
+  4 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.18s   588.99ms   5.88s    84.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6612 requests in 1.00m, 1.61MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1099
+Requests/sec:    110.18
+Transfer/sec:     27.52KB

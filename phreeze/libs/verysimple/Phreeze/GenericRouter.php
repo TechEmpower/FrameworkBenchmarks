@@ -3,6 +3,7 @@
 
 /** import supporting libraries */
 require_once('IRouter.php');
+require_once('verysimple/HTTP/RequestUtil.php');
 
 /**
  * Generic Router is an implementation of IRouter that uses patterns to connect
@@ -10,9 +11,9 @@ require_once('IRouter.php');
  *
  * @package    verysimple::Phreeze
  * @author     VerySimple Inc.
- * @copyright  1997-2012 VerySimple, Inc.
+ * @copyright  1997-2013 VerySimple, Inc.
  * @license    http://www.gnu.org/licenses/lgpl.html  LGPL
- * @version    1.0
+ * @version    1.1
  */
 class GenericRouter implements IRouter
 {
@@ -24,6 +25,8 @@ class GenericRouter implements IRouter
 
 	// cached route from last run:
 	private $cachedRoute;
+	
+	public static $ROUTE_NOT_FOUND = "Default.Error404";
 
 	/**
 	 * Instantiate the GenericRouter
@@ -117,7 +120,7 @@ class GenericRouter implements IRouter
 		}
 
 		// if we haven't returned by now, we've found no match:
-		return array("Default","Error404");
+		return explode('.', self::$ROUTE_NOT_FOUND,2);
 	}
 
 	/**
@@ -132,8 +135,8 @@ class GenericRouter implements IRouter
 			// if a root folder was provided, then we need to strip that out as well
 			if ($this->appRootUrl)
 			{
-				$prefix = $this->appRootUrl.'/';
-				while (substr($this->uri,0,strlen($prefix)) == $prefix)
+				$prefix = str_replace(RequestUtil::GetServerRootUrl(),'/',$this->appRootUrl);
+				if (substr($this->uri,0,strlen($prefix)) == $prefix)
 				{
 					$this->uri = substr($this->uri,strlen($prefix));
 				}

@@ -6,6 +6,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
       "port": 9000,
       "sort": 32
     }
