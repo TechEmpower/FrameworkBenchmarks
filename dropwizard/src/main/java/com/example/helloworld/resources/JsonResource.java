@@ -13,16 +13,18 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class JsonResource
 {
-  private final Map<String, String> MESSAGE = new HashMap<String, String>();
+  // Response message class (copied from 'servlet' test)
+  public final static class HelloMessage {
+    public final String message;
 
-  public JsonResource()
-  {
-    MESSAGE.put("message", "Hello, world!");
+    public HelloMessage(String m) { message = m; }
   }
 
+  public JsonResource() { }
+
   @GET
-  public Map<String, String> sayHello()
+  public HelloMessage sayHello()
   {
-    return MESSAGE;
+    return new HelloMessage("Hello, World!");
   }
 }
