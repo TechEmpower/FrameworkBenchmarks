@@ -1,3 +1,7 @@
-_bench:
-    resource: "@SkamanderBenchmarkBundle/Controller/BenchController.php"
-    type:     annotation
+_json:
+    pattern: /json
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:json }
+
+_db:
+    pattern: /db
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:db }
