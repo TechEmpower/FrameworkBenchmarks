@@ -6,7 +6,7 @@ import os
 
 def start(args):
   setup_util.replace_text("nodejs/hello.js", "mongodb:\/\/.*\/hello_world", "mongodb://" + args.database_host + "/hello_world")
-  setup_util.replace_text("nodejs/hello.js", "host: '.*',", "host: '" + args.database_host + "',")
+  setup_util.replace_text("nodejs/hello.js", "localhost", args.database_host)
 
   try:
     subprocess.check_call("npm install", shell=True, cwd="nodejs")
