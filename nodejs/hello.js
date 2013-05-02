@@ -71,11 +71,9 @@ function mongooseQuery(callback) {
 }
 
 function mongodbDriverQuery(callback) {
-  process.nextTick(function() {
-  collection.find({ id: getRandomNumber()}).toArray(function(err, world) {
-    callback(err, world[0]);
+  collection.findOne({ id: getRandomNumber()}, function(err, world) {
+    callback(err, world);
   });
-  })
 }
 
 function sequelizeQuery(callback) {
