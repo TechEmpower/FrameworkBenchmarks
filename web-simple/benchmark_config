@@ -1,0 +1,18 @@
+{
+  "framework": "Web-Simple",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8080,
+      "sort": 78
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 8080,
+      "sort": 79
+    }
+  }]
+}
