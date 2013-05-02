@@ -11,12 +11,23 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_psycopg2_pool.gevent', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+    	# psycopg2_pool uses gevent, which doesn't cooperate when running in the meinheld worker.  There's no
+    	# other green threads to switch to because meinheld uses its own event library, so effectively there is no
+    	# pooling under meinheld.  You can verify this by running top.  With gevent, many postgres threads will show up
+    	# when the test is running.  With meinheld there will be only as many postgres threads as there are
+    	# meinheld workers.  Until psycopg2_pool has meinheld support, this will be the case.
+    	# The vanilla psycopg2 driver contains a C hook that lets meinheld switch to other requests to wait for
+    	# DB accesses to complete.  No pooling, but you can create extra gunicorn threads to help with that.
+    	# Conclusion, use the basic psycopg2 driver for now.
+        #'ENGINE': 'django_psycopg2_pool.gevent', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'Engine' : 'postgresql_psycopg2',
         'NAME': 'hello_world',                      # Or path to database file if using sqlite3.
         'USER': 'benchmarkdbuser',                      # Not used with sqlite3.
         'PASSWORD': 'benchmarkdbpass',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        # also this pool size might be very low for Postgres on dedicated harware
+        # this is the size that I use on small VPS's that don't have a lot of memory.
 	'POOL_SIZE' : 32,
     }
 }
