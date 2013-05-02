@@ -10,7 +10,7 @@ var cluster = require('cluster')
   , async = require('async')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
   , Mapper = require('mapper')
-  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world' };
+  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
 
 var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId;
@@ -101,7 +101,7 @@ if (cluster.isMaster) {
 
   app.get('/fortune', function(req, res) {
     Fortune.all(function (err, fortunes) {
-      var newFortune = Fortune.build({message: "Additional fortune added at request time."});
+      var newFortune = {id: 0, message: "Additional fortune added at request time."};
       fortunes.push(newFortune);
       fortunes.sort(sortFortunes);
 

@@ -19,17 +19,17 @@ var http = require('http')
   , async = require('async')
   , libmysql = require('mysql-libmysqlclient').createConnectionSync()
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://localhost/hello_world')
+  , conn = mongoose.connect('mongodb://172.16.98.98/hello_world')
   , MongoClient = require('mongodb').MongoClient
   , Mapper = require('mapper')
-  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world' };
+  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
 
 var collection = null;
 Mapper.connect(connMap, {verbose: false, strict: false});
 var World = Mapper.map("World", "id", "randomNumber")
 
 libmysql.connectSync('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
-MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
+MongoClient.connect('mongodb://172.16.98.98/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
 
