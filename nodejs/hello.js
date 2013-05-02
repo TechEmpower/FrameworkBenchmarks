@@ -17,33 +17,18 @@ if(cluster.isMaster) {
 var http = require('http')
   , url = require('url')
   , async = require('async')
+  , libmysql = require('mysql-libmysqlclient').createConnectionSync()
   , mongoose = require('mongoose')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
   , MongoClient = require('mongodb').MongoClient
-  , mysql = require('mysql')
-  , pool  = mysql.createPool({
-      host: 'localhost',
-      user     : 'benchmarkdbuser',
-      password : 'benchmarkdbpass',
-      database : 'hello_world',
-      connectionLimit : 256
-    })
-  , Sequelize = require("sequelize")
-  , sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-    host: 'localhost',
-    logging: false,
-    define: { timestamps: false },
-    maxConcurrentQueries: 100,
-    pool: { maxConnections: 800, maxIdleTime: 30 }
-  })
-  , World      = sequelize.define('World', {
-    randomNumber: Sequelize.INTEGER
-  }, {
-    freezeTableName: true
-  });
+  , Mapper = require('mapper')
+  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world' };
 
 var collection = null;
+Mapper.connect(connMap, {verbose: false, strict: false});
+var World = Mapper.map("World", "id", "randomNumber")
 
+libmysql.connectSync('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
 MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
@@ -57,8 +42,6 @@ var WorldSchema = new Schema({
   , randomNumber                 : Number
 }, { collection : 'world' });
 var MWorld = conn.model('World', WorldSchema);
-
-
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 10000) + 1;
@@ -79,7 +62,7 @@ function mongodbDriverQuery(callback) {
 }
 
 function sequelizeQuery(callback) {
-  World.find(getRandomNumber()).success(function (world) {
+  World.findById(getRandomNumber(), function (err, world) {
     callback(null, world);
   });
 }
@@ -132,7 +115,7 @@ http.createServer(function (req, res) {
     });
     break;
 
-  case '/sequelize':
+  case '/mysql-orm':
     var values = url.parse(req.url, true);
     var queries = values.query.queries || 1;
     var queryFunctions = new Array(queries);
@@ -151,22 +134,29 @@ http.createServer(function (req, res) {
   case '/mysql':
     res.writeHead(200, {'Content-Type': 'application/json'});
 
-    function mysqlQuery(callback) {
-      pool.getConnection(function(err, connection) {
-        if (err) callback(err);
-        connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function(err, rows) {
-          callback(null, rows[0]);
-          connection.end();
+    function libmysqlQuery(callback) {
+      libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
+        if (err) {
+	  throw err;
+	}
+	
+	res.fetchAll(function(err, rows) {
+	  if (err) {
+	    throw err;
+	  }
+
+	  res.freeSync();
+	  callback(null, rows[0]);
         });
       });
-    }
+    } 
 
     var values = url.parse(req.url, true);
     var queries = values.query.queries || 1;
     var queryFunctions = new Array(queries);
 
     for (var i = 0; i < queries; i += 1) {
-      queryFunctions[i] = mysqlQuery;
+      queryFunctions[i] = libmysqlQuery;
     }
     async.parallel(queryFunctions, function(err, results) {
       if (err) {
