@@ -30,6 +30,5 @@ executable         bench
                  , mwc-random                    >= 0.12
                  , pool-conduit                  >= 0.1
                  , network
-                 , lifted-async                  >= 0.1
                  , mongoDB
                  , aeson

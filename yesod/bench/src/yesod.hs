@@ -20,7 +20,6 @@ import Data.Conduit.Network (bindPort)
 import System.Posix.Process (forkProcess)
 import Control.Monad (replicateM_)
 import Network (PortID (PortNumber))
-import Control.Concurrent.Async.Lifted (mapConcurrently)
 import Data.Int (Int64)
 import Data.Aeson (ToJSON(..))
 
@@ -124,7 +123,7 @@ multiRandomHandler :: ToJSON a
 multiRandomHandler operation cnt = do
     App {..} <- getYesod
     nums <- liftIO $ replicateM cnt (randomNumber appGen)
-    jsonToRepJson . array =<< mapConcurrently operation nums
+    jsonToRepJson . array =<< mapM operation nums
 
 documentToJson :: [Field] -> Value
 documentToJson = object . map toAssoc
