@@ -2,7 +2,14 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
- System information disabled due to load higher than 8.0
+  System information as of Thu May  2 06:45:23 PDT 2013
+
+  System load:  0.19                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 15%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
 
 121 packages can be updated.
 65 updates are security updates.
@@ -16,11 +23,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/servlet//fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   785.86us  268.45us   4.56ms   96.62%
-    Req/Sec     0.92k   264.19     1.00k    92.48%
-  49772 requests in 5.00s, 68.16MB read
-Requests/sec:   9955.67
-Transfer/sec:     13.63MB
+    Latency     0.88ms    1.46ms  17.48ms   98.13%
+    Req/Sec   697.76    460.09     1.00k    69.78%
+  53214 requests in 5.00s, 73.48MB read
+Requests/sec:  10644.10
+Transfer/sec:     14.70MB
 
 ---------------------------------------------------------
  Running Warmup servlet-raw
@@ -30,11 +37,11 @@ Transfer/sec:     13.63MB
 Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     9.29ms    8.75ms 120.97ms   92.90%
-    Req/Sec     2.96k   269.71     3.00k    97.55%
-  865808 requests in 30.00s, 1.16GB read
-Requests/sec:  28860.97
-Transfer/sec:     39.52MB
+    Latency    12.67ms   40.37ms 523.63ms   94.75%
+    Req/Sec     3.11k   510.53     4.00k    76.86%
+  1100800 requests in 30.00s, 1.49GB read
+Requests/sec:  36693.52
+Transfer/sec:     50.83MB
 
 ---------------------------------------------------------
  Concurrency: 8 for servlet-raw
@@ -44,11 +51,11 @@ Transfer/sec:     39.52MB
 Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   787.41us  195.27us   6.06ms   87.16%
+    Latency   677.24us  100.51us   1.07ms   68.39%
     Req/Sec     1.00k     0.00     1.00k   100.00%
-  300110 requests in 30.00s, 410.99MB read
-Requests/sec:  10003.88
-Transfer/sec:     13.70MB
+  352299 requests in 30.00s, 486.50MB read
+Requests/sec:  11743.59
+Transfer/sec:     16.22MB
 
 ---------------------------------------------------------
  Concurrency: 16 for servlet-raw
@@ -58,11 +65,11 @@ Transfer/sec:     13.70MB
 Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.85ms  376.92us   7.13ms   90.84%
+    Latency   717.08us  292.59us   9.97ms   92.20%
     Req/Sec     2.00k     0.00     2.00k   100.00%
-  560347 requests in 30.00s, 767.38MB read
-Requests/sec:  18678.85
-Transfer/sec:     25.58MB
+  662584 requests in 30.00s, 0.89GB read
+Requests/sec:  22086.75
+Transfer/sec:     30.50MB
 
 ---------------------------------------------------------
  Concurrency: 32 for servlet-raw
@@ -72,11 +79,11 @@ Transfer/sec:     25.58MB
 Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.39ms    0.93ms   9.93ms   84.63%
-    Req/Sec     3.00k    49.94     3.00k    99.75%
-  787490 requests in 30.00s, 1.05GB read
-Requests/sec:  26250.70
-Transfer/sec:     35.95MB
+    Latency   828.12us  442.87us   8.74ms   86.72%
+    Req/Sec     4.72k   450.84     5.00k    71.65%
+  1174056 requests in 30.00s, 1.58GB read
+Requests/sec:  39136.72
+Transfer/sec:     54.04MB
 
 ---------------------------------------------------------
  Concurrency: 64 for servlet-raw
@@ -86,11 +93,11 @@ Transfer/sec:     35.95MB
 Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.37ms    1.47ms  20.38ms   85.16%
-    Req/Sec     3.00k     0.00     3.00k   100.00%
-  872263 requests in 30.00s, 1.17GB read
-Requests/sec:  29076.52
-Transfer/sec:     39.82MB
+    Latency     1.14ms    1.19ms  22.75ms   93.70%
+    Req/Sec     7.00k    24.98     8.00k    99.94%
+  1781736 requests in 30.00s, 2.40GB read
+Requests/sec:  59395.20
+Transfer/sec:     82.02MB
 
 ---------------------------------------------------------
  Concurrency: 128 for servlet-raw
@@ -100,11 +107,11 @@ Transfer/sec:     39.82MB
 Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.70ms    3.51ms  46.08ms   89.44%
-    Req/Sec     3.00k    55.81     4.00k    99.69%
-  871194 requests in 30.00s, 1.17GB read
-Requests/sec:  29040.97
-Transfer/sec:     39.77MB
+    Latency     2.17ms    1.78ms  29.39ms   92.74%
+    Req/Sec     7.00k    60.93     8.00k    99.63%
+  1803107 requests in 30.00s, 2.43GB read
+Requests/sec:  60104.99
+Transfer/sec:     83.00MB
 
 ---------------------------------------------------------
  Concurrency: 256 for servlet-raw
@@ -114,8 +121,8 @@ Transfer/sec:     39.77MB
 Running 30s test @ http://172.16.98.122:8080/servlet//fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     9.33ms    8.64ms 139.41ms   93.52%
-    Req/Sec     3.01k   127.12     4.00k    98.57%
-  856415 requests in 30.00s, 1.15GB read
-Requests/sec:  28548.10
-Transfer/sec:     39.10MB
+    Latency     5.08ms    7.54ms 207.90ms   96.28%
+    Req/Sec     7.02k   354.82    10.00k    92.07%
+  1804156 requests in 30.00s, 2.43GB read
+Requests/sec:  60141.36
+Transfer/sec:     83.05MB
