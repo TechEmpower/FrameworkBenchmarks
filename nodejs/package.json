@@ -4,10 +4,10 @@
   , "private": true
   , "dependencies": {
       "mongoose": "3.5.5" 
-    , "sequelize": "1.6.0-beta4"
     , "async": "0.2.5"
-    , "mysql": "2.0.0-alpha7"
     , "mongodb": "1.2.14"
+    , "mysql-libmysqlclient": "1.5.2"
+    , "mapper": "0.2.4-pre"
   }
   , "main": "hello.js"
 }
