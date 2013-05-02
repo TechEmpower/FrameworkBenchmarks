@@ -21,7 +21,6 @@ sub dispatch_request {
         if ( my @row = $sth->fetchrow_array ) {
           push @response, { id => $id, randomNumber => $row[1] };
         }
-        $sth->finish();
     }
     [ 200, [ 'Content-type' => 'application/json; charset=utf-8', ],
       [ encode_json(\@response)] ];
