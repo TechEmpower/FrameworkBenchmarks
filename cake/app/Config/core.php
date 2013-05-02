@@ -248,7 +248,7 @@ Configure::write('App.baseUrl', env('SCRIPT_NAME'));
  *       Please check the comments in boostrap.php for more info on the cache engines available
  *       and their setttings.
  */
-$engine = 'File';
+$engine = 'Apc';
 
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
