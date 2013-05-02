@@ -1,0 +1,20 @@
+language: php
+
+env:
+  - OPCODE_CACHE=apc
+ #- OPCODE_CACHE=xcache
+
+php:
+  - 5.3
+  - 5.4
+
+before_script:
+ - php tests/ci_depends.php $OPCODE_CACHE
+# - cd ../ && git clone git://github.com/UnionOfRAD/li3_quality.git && cd lithium
+
+script:
+ - console/li3 test --filters=Profiler tests/cases
+# - console/li3 test --filters=Profiler tests/cases && cd ../li3_quality && for FILE in $(cd ../lithium/ && git diff-index --name-only --diff-filter=AM HEAD~1); do ../lithium/console/li3 quality syntax ../lithium/${FILE} --silent; done
+
+notifications:
+    irc: "irc.freenode.org#li3-core"

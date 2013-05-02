@@ -1,0 +1,14 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+
+# Home page
+GET     /json                           Application.json
+GET     /db                             Application.dbSync
+GET     /db2                            Application.dbAsyncAllQueries
+GET     /db3                            Application.dbAsyncEachQuery
+GET     /setup                          Application.setup
+GET     /                               Application.index
+GET     /hello                          Application.hello
+

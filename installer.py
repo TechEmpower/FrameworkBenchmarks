@@ -2,7 +2,7 @@ import subprocess
 import os
 
 class Installer:
-  
+
   ############################################################
   # install_software
   ############################################################
@@ -22,10 +22,10 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)    
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake mercurial", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
-    self.__run_command("sudo sh -c \"echo '*               soft    nofile          4096' >> /etc/security/limits.conf\"")
+    self.__run_command("sudo sh -c \"echo '*               soft    nofile          8192' >> /etc/security/limits.conf\"")
 
     #######################################
     # Languages
@@ -38,7 +38,7 @@ class Installer:
     self.__run_command("wget -O - http://binaries.erlang-solutions.com/debian/erlang_solutions.asc | sudo apt-key add -")
     self.__run_command("sudo apt-get update")
     self.__run_command("sudo apt-get install esl-erlang", True)
-    
+
     #
     # Python
     #
@@ -52,6 +52,10 @@ class Installer:
     self.__run_command("sudo python setup.py install", cwd="pip-1.1")
     self.__run_command("sudo pip install MySQL-python==1.2.4")
     self.__run_command("sudo pip install simplejson==3.0.7")
+    self.__run_command("curl http://initd.org/psycopg/tarballs/PSYCOPG-2-5/psycopg2-2.5.tar.gz | tar xvz")
+    self.__run_command("sudo python setup.py install", cwd="psycopg2-2.5")
+    self.__run_command("git clone https://github.com/iiilx/django-psycopg2-pool.git")
+    self.__run_command("sudo python setup.py install", cwd="django-psycopg2-pool")
 
     #
     # nodejs
@@ -62,10 +66,10 @@ class Installer:
     #
     # Java
     #
-    
+
     self.__run_command("sudo apt-get install openjdk-7-jdk", True)
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
-    
+
     #
     # Ruby/JRuby
     #
@@ -76,7 +80,7 @@ class Installer:
     subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler"])
     subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.3"])
     subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do gem install bundler"])
-    
+
     # We need a newer version of jruby-rack
     self.__run_command("git clone git://github.com/jruby/jruby-rack.git")
     subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do bundle install"])
@@ -86,8 +90,15 @@ class Installer:
     #
     # go
     #
+    self.__run_command("hg clone -u 2489327864d7 https://code.google.com/p/go")
+    self.__run_command("./all.bash", cwd="go/src")
 
-    self.__run_command("curl http://go.googlecode.com/files/go1.1beta1.linux-amd64.tar.gz | tar xvz")
+    #
+    # Perl
+    #
+
+    self.__run_command("curl -L http://cpanmin.us | perl - --sudo App::cpanminus")
+    self.__run_command("cpanm -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON")
 
     #
     # php
@@ -95,7 +106,7 @@ class Installer:
 
     self.__run_command("wget --trust-server-names http://www.php.net/get/php-5.4.13.tar.gz/from/us1.php.net/mirror")
     self.__run_command("tar xvf php-5.4.13.tar.gz")
-    self.__run_command("./configure --with-pdo-mysql --with-mysql --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
+    self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
     self.__run_command("sudo make install", cwd="php-5.4.13")
     self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13")
@@ -106,11 +117,27 @@ class Installer:
     # Composer
     self.__run_command("curl -sS https://getcomposer.org/installer | php -- --install-dir=bin")
 
+    # Phalcon
+    self.__run_command("git clone git://github.com/phalcon/cphalcon.git")
+    self.__run_command("sudo ./install", cwd="cphalcon/build")
+
     #
     # Haskell
     #
 
     self.__run_command("sudo apt-get install ghc cabal-install", True)
+
+    #
+    # RingoJs
+    #
+    self.__run_command("wget http://www.ringojs.org/downloads/ringojs_0.9-1_all.deb")
+    self.__run_command("sudo apt-get install jsvc")
+    self.__run_command("sudo dpkg -i ringojs_0.9-1_all.deb")
+    self.__run_command("rm ringojs_0.9-1_all.deb")
+    self.__run_command("sudo ringo-admin install oberhamsi/sql-ringojs-client")
+    self.__run_command("sudo ringo-admin install ringo/stick")
+    self.__run_command("sudo ringo-admin install oberhamsi/reinhardt")
+    self.__run_command("sudo ringo-admin install grob/ringo-sqlstore")
 
     #######################################
     # Webservers
@@ -126,15 +153,15 @@ class Installer:
     self.__run_command("sudo mv /etc/apache2/ports.conf /etc/apache2/ports.conf.orig")
     self.__run_command("sudo sh -c \"cat ../config/ports.conf > /etc/apache2/ports.conf\"")
     self.__run_command("sudo /etc/init.d/apache2 stop")
-    
+
     #
     # Nginx
     #
-    self.__run_command("curl http://nginx.org/download/nginx-1.2.7.tar.gz | tar xvz")
-    self.__run_command("./configure", cwd="nginx-1.2.7")
-    self.__run_command("make", cwd="nginx-1.2.7")
-    self.__run_command("sudo make install", cwd="nginx-1.2.7")
-    
+    self.__run_command("curl http://nginx.org/download/nginx-1.4.0.tar.gz | tar xvz")
+    self.__run_command("./configure", cwd="nginx-1.4.0")
+    self.__run_command("make", cwd="nginx-1.4.0")
+    self.__run_command("sudo make install", cwd="nginx-1.4.0")
+
     #
     # Openresty (nginx with openresty stuff)
     #
@@ -142,12 +169,13 @@ class Installer:
     self.__run_command("./configure --with-luajit", cwd="ngx_openresty-1.2.7.5")
     self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
     self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
-    
+
     #
     # Gunicorn
     #
 
     self.__run_command("sudo easy_install -U 'gunicorn==0.17.2'")
+    self.__run_command("sudo pip install --upgrade meinheld")
     self.__run_command("sudo easy_install -U 'eventlet==0.12.1'")
     self.__run_command("sudo pip install --upgrade 'gevent==0.13.8'")
 
@@ -220,7 +248,7 @@ class Installer:
     self.__run_command("wget http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
     self.__run_command("unzip -o grails-2.1.1.zip")
     self.__run_command("rm grails-2.1.1.zip")
-    
+
 
     ##############################
     # Flask
@@ -228,11 +256,27 @@ class Installer:
     self.__run_command("sudo pip install flask flask-sqlalchemy")
 
     ##############################
-    # Play
+    # Bottle
+    ##############################
+    self.__run_command("sudo pip install bottle bottle-sqlalchemy")
+
+    ##############################
+    # Play 2
     ##############################
     self.__run_command("wget http://downloads.typesafe.com/play/2.1.1/play-2.1.1.zip")
     self.__run_command("unzip -o play-2.1.1.zip")
     self.__run_command("rm play-2.1.1.zip")
+
+    ##############################
+    # Play 1
+    ##############################
+    self.__run_command("wget http://downloads.typesafe.com/releases/play-1.2.5.zip")
+    self.__run_command("unzip -o play-1.2.5.zip")
+    self.__run_command("rm play-1.2.5.zip")
+    self.__run_command("mv play-1.2.5/play play-1.2.5/play1")
+
+    # siena
+    self.__run_command("play-1.2.5/play1 install siena", send_yes=True)
 
     ##############################
     # Vert.x
@@ -279,8 +323,8 @@ class Installer:
     # Prerequisites
     ##############################
     yes | sudo apt-get update
-    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev
-    sudo sh -c "echo '*               soft    nofile          4096' >> /etc/security/limits.conf"
+    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
+    sudo sh -c "echo '*               soft    nofile          8192' >> /etc/security/limits.conf"
 
     ##############################
     # MySQL
@@ -297,6 +341,17 @@ class Installer:
 
     # Insert data
     mysql -uroot -psecret < create.sql
+    
+    ##############################
+    # Postgres
+    ##############################
+    sudo useradd benchmarkdbuser -p benchmarkdbpass
+    sudo -u postgres psql template1 < create-postgres-database.sql
+    sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
+    
+    sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
+    sudo mv pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
+    sudo -u postgres -H /etc/init.d/postgresql restart
 
     ##############################
     # Weighttp
@@ -308,7 +363,7 @@ class Installer:
     ./waf build
     sudo ./waf install
     cd ~
-    
+
     ##############################
     # wrk
     ##############################
@@ -324,17 +379,16 @@ class Installer:
     ##############################
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
     sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
-    sudo apt-get update 
+    sudo apt-get update
     yes | sudo apt-get install mongodb-10gen
-    
+
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf
     sudo restart mongodb
     """
-
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)
-    
+
   ############################################################
   # End __parse_results
   ############################################################
@@ -370,3 +424,4 @@ class Installer:
   ############################################################
   # End __init__
   ############################################################
+

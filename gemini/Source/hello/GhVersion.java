@@ -5,7 +5,7 @@ import com.techempower.gemini.*;
 import com.techempower.helper.*;
 
 /**
- * Provies a name, client, and version number for the current build of 
+ * Provides a name, client, and version number for the current build of 
  * the GeminiHello application.
  *
  * @see com.techempower.Version

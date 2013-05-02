@@ -10,6 +10,7 @@ home = expanduser("~")
 def start(args):
   setup_util.replace_text("php/dborm.php", "@.*\/hello_world", "@" + args.database_host + "/hello_world")
   setup_util.replace_text("php/dbraw.php", "host=.*;", "host=" + args.database_host + ";")
+  setup_util.replace_text("php/fortune.php", "host=.*;dbname", "host=" + args.database_host + ";dbname")
   setup_util.replace_text("php/deploy/php", "\".*\/FrameworkBenchmarks", "\"" + home + "/FrameworkBenchmarks")
   setup_util.replace_text("php/deploy/php", "Directory .*\/FrameworkBenchmarks", "Directory " + home + "/FrameworkBenchmarks")
   setup_util.replace_text("php/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")

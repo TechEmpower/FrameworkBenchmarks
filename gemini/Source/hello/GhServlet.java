@@ -1,6 +1,7 @@
 package hello;
 
 import javax.servlet.annotation.*;
+
 import com.techempower.gemini.*;
 
 /**
@@ -27,37 +28,12 @@ public class GhServlet
   //
 
   /**
-   * Handles the init call.  Starts the Infrastructure.  This method -must-
-   * call super.init().
-   */
-  @Override
-  public void init()
-  {
-  	// Do not remove the super.init() call below.
-    super.init();
-
-    // Additional initialization is optional.
-  }
-
-  /**
    * Gets a GeminiApplication object for this application.
    */
   @Override
   public GhApplication getApplication()
   {
     return GhApplication.getInstance();
-  }
-
-  /**
-   * Handles the destroy call.  This method -must- call super.destroy().
-   */
-  @Override
-  public void destroy()
-  {
-  	// Do not remove the super.destroy() call below.
-    super.destroy();
-
-    // Additional clean-up is optional.
   }
 
 }   // End GhServlet.

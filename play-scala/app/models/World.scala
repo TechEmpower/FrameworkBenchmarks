@@ -37,7 +37,7 @@ object World {
    */
     def findById(id: Long): World = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM world WHERE id = {id}").on(
+            SQL("SELECT * FROM World WHERE id = {id}").on(
                 "id" -> id
             ).as(World.simpleRowParser.single)
         }

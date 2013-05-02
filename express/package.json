@@ -8,5 +8,6 @@
     , "async": "0.2.5"
     , "sequelize": "1.6.0-beta4"
     , "mysql": "2.0.0-alpha7"
+    , "jade": "0.29.0"
   }
 }

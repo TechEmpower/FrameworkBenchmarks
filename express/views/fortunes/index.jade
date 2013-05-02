@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+  table
+    tr
+      th id
+      th message
+    for fortune in fortunes
+      tr
+        td= fortune.id
+        td= fortune.message

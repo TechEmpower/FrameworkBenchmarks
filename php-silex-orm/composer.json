@@ -1,0 +1,9 @@
+{
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "require": {
+        "silex/silex": "1.0.*@dev",
+        "dflydev/doctrine-orm-service-provider": "1.0.*@dev"
+    }
+}

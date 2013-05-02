@@ -14,4 +14,10 @@ class HelloWorldController < ApplicationController
     end
     render :json => results
   end
+  
+  def fortune
+    @fortunes = Fortune.all
+    @fortunes << Fortune.new(:message => "Additional fortune added at request time.")
+    @fortunes = @fortunes.sort { |x, y| x.message <=> y.message }
+  end
 end

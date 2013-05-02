@@ -1,6 +1,5 @@
 package hello.home.handler;
 
-import hello.*;
 import hello.home.entity.*;
 
 import java.util.*;
@@ -16,7 +15,7 @@ import com.techempower.gemini.path.annotation.*;
  * simple database queries.
  */
 public class HelloHandler
-    extends  BasicPathHandler<GhContext>
+    extends  BasicPathHandler<Context>
 {
 
   private static final int DB_ROWS = 10000;
@@ -58,6 +57,20 @@ public class HelloHandler
     }
     
     return json(worlds);
+  }
+  
+  /**
+   * Fetch the full list of Fortunes from the database, sort them by the
+   * fortune message text, and then render the results to simple HTML using a 
+   * server-side template.
+   */
+  @PathSegment
+  public boolean fortunes()
+  {
+    final List<Fortune> fortunes = store.list(Fortune.class);
+    fortunes.add(new Fortune().setMessage("Additional fortune added at request time."));
+    Collections.sort(fortunes);
+    return mustache("fortunes", fortunes);
   }
 
 }

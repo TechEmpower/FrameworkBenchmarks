@@ -21,6 +21,11 @@ var cluster = require('cluster')
     randomNumber: Sequelize.INTEGER
   }, {
     freezeTableName: true
+  })
+  , Fortune      = sequelize.define('Fortune', {
+    message: Sequelize.STRING
+  }, {
+    freezeTableName: true
   });
 
 var Schema = mongoose.Schema
@@ -50,6 +55,9 @@ if (cluster.isMaster) {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(app.router);
+
+    app.set('view engine', 'jade');
+    app.set('views', __dirname + '/views');
   });
 
   app.configure('development', function() {
@@ -103,6 +111,20 @@ if (cluster.isMaster) {
       res.send(worlds);
     });
   });
+
+  app.get('/fortune', function(req, res) {
+    Fortune.findAll().success(function (fortunes) {
+      var newFortune = Fortune.build({message: "Additional fortune added at request time."});
+      fortunes.push(newFortune);
+      fortunes.sort(sortFortunes);
+
+      res.render('fortunes', {fortunes: fortunes});
+    });
+  });
+
+  function sortFortunes(a, b) {
+    return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
+  }
 
   app.listen(8080);
 }

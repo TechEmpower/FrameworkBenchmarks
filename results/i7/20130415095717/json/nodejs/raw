@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Apr 15 12:32:42 PDT 2013
+
+  System load:  0.66                Processes:           114
+  Usage of /:   10.0% of 131.63GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+113 packages can be updated.
+51 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   192.12us   84.93us   1.31ms   93.36%
+    Req/Sec     4.38k     0.91k    5.00k    72.32%
+  215306 requests in 5.00s, 39.42MB read
+Requests/sec:  43069.57
+Transfer/sec:      7.89MB
+
+---------------------------------------------------------
+ Running Warmup nodejs
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.61ms  828.71us   9.29ms   64.59%
+    Req/Sec     8.60k   548.31    10.00k    61.45%
+  4358818 requests in 1.00m, 798.12MB read
+Requests/sec:  72648.55
+Transfer/sec:     13.30MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nodejs
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   188.60us  101.72us   4.18ms   94.72%
+    Req/Sec     4.87k   657.71     6.00k    61.19%
+  2634704 requests in 1.00m, 482.43MB read
+Requests/sec:  43912.54
+Transfer/sec:      8.04MB
+
+---------------------------------------------------------
+ Concurrency: 16 for nodejs
+ wrk -d 60 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   320.57us  161.18us   3.65ms   79.23%
+    Req/Sec     6.73k     0.99k    8.00k    61.81%
+  3456236 requests in 1.00m, 632.86MB read
+Requests/sec:  57605.25
+Transfer/sec:     10.55MB
+
+---------------------------------------------------------
+ Concurrency: 32 for nodejs
+ wrk -d 60 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   513.69us  249.70us   3.70ms   78.75%
+    Req/Sec     8.33k     0.90k   11.00k    75.02%
+  4213925 requests in 1.00m, 771.59MB read
+Requests/sec:  70232.60
+Transfer/sec:     12.86MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nodejs
+ wrk -d 60 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.08ms  518.36us   7.88ms   77.28%
+    Req/Sec     8.38k     0.91k   10.00k    77.41%
+  4221704 requests in 1.00m, 773.02MB read
+Requests/sec:  70362.96
+Transfer/sec:     12.88MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nodejs
+ wrk -d 60 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.93ms  687.56us   5.40ms   73.49%
+    Req/Sec     8.44k   720.48    13.00k    88.54%
+  4324616 requests in 1.00m, 791.86MB read
+Requests/sec:  72077.93
+Transfer/sec:     13.20MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs
+ wrk -d 60 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 1m test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.56ms  727.06us   7.59ms   94.52%
+    Req/Sec     8.78k   682.74    12.00k    81.18%
+  4346088 requests in 1.00m, 795.79MB read
+Requests/sec:  72436.92
+Transfer/sec:     13.26MB
