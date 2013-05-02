@@ -176,23 +176,17 @@ class Benchmarker:
   # report_results
   ############################################################
   def report_results(self, framework, test, results, latency, requests, total_time, errors, total_requests):
-    # Try to get the id in the result array if it exists.
-    try:
-      framework_id = str(self.results['frameworks'].index(framework.name))
-    except ValueError:
-      framework_id = str(framework.sort)
-      
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
       self.results['weighttpData'][test] = dict()
 
-    self.results['rawData'][test][framework_id] = results
-    self.results['weighttpData'][test][framework_id] = dict()
-    self.results['weighttpData'][test][framework_id]['latency'] = latency
-    self.results['weighttpData'][test][framework_id]['requests'] = requests
-    self.results['weighttpData'][test][framework_id]['totalTime'] = total_time
-    self.results['weighttpData'][test][framework_id]['errors'] = errors
-    self.results['weighttpData'][test][framework_id]['totalRequests'] = total_requests
+    self.results['rawData'][test][framework.sort] = results
+    self.results['weighttpData'][test][framework.sort] = dict()
+    self.results['weighttpData'][test][framework.sort]['latency'] = latency
+    self.results['weighttpData'][test][framework.sort]['requests'] = requests
+    self.results['weighttpData'][test][framework.sort]['totalTime'] = total_time
+    self.results['weighttpData'][test][framework.sort]['errors'] = errors
+    self.results['weighttpData'][test][framework.sort]['totalRequests'] = total_requests
 
   ############################################################
   # End report_results
@@ -280,7 +274,7 @@ class Benchmarker:
       sudo -s ulimit -n 8192
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
-      sudo sysctl -w kernel.shmmax=134217728
+      sudo sysctl -w kernel.shmmax=2147483648
       sudo sysctl -w kernel.shmall=2097152
     """)
   ############################################################
@@ -405,37 +399,37 @@ class Benchmarker:
       f.write(json.dumps(self.results))
     
     # JSON CSV
-    with open(os.path.join(self.full_results_directory(), "json.csv"), 'wb') as csvfile:
-      writer = csv.writer(csvfile)
-      writer.writerow(["Framework"] + self.concurrency_levels)
-      for key, value in self.results['rawData']['json'].iteritems():
-        framework = self.results['frameworks'][int(key)]
-        writer.writerow([framework] + value)
+    # with open(os.path.join(self.full_results_directory(), "json.csv"), 'wb') as csvfile:
+    #  writer = csv.writer(csvfile)
+    #  writer.writerow(["Framework"] + self.concurrency_levels)
+    #  for key, value in self.results['rawData']['json'].iteritems():
+    #    framework = self.results['frameworks'][int(key)]
+    #    writer.writerow([framework] + value)
 
     # DB CSV
-    with open(os.path.join(self.full_results_directory(), "db.csv"), 'wb') as csvfile:
-      writer = csv.writer(csvfile)
-      writer.writerow(["Framework"] + self.concurrency_levels)
-      for key, value in self.results['rawData']['db'].iteritems():
-        framework = self.results['frameworks'][int(key)]
-        writer.writerow([framework] + value)
+    #with open(os.path.join(self.full_results_directory(), "db.csv"), 'wb') as csvfile:
+    #  writer = csv.writer(csvfile)
+    #  writer.writerow(["Framework"] + self.concurrency_levels)
+    #  for key, value in self.results['rawData']['db'].iteritems():
+    #    framework = self.results['frameworks'][int(key)]
+    #    writer.writerow([framework] + value)
 
     # Query CSV
-    with open(os.path.join(self.full_results_directory(), "query.csv"), 'wb') as csvfile:
-      writer = csv.writer(csvfile)
-      writer.writerow(["Framework"] + self.query_intervals)
-      for key, value in self.results['rawData']['query'].iteritems():
-        framework = self.results['frameworks'][int(key)]
-        writer.writerow([framework] + value)
+    #with open(os.path.join(self.full_results_directory(), "query.csv"), 'wb') as csvfile:
+    #  writer = csv.writer(csvfile)
+    #  writer.writerow(["Framework"] + self.query_intervals)
+    #  for key, value in self.results['rawData']['query'].iteritems():
+    #    framework = self.results['frameworks'][int(key)]
+    #    writer.writerow([framework] + value)
 
     # Fortune CSV
-    with open(os.path.join(self.full_results_directory(), "fortune.csv"), 'wb') as csvfile:
-      writer = csv.writer(csvfile)
-      writer.writerow(["Framework"] + self.query_intervals)
-      if 'fortune' in self.results['rawData'].keys():
-        for key, value in self.results['rawData']['fortune'].iteritems():
-          framework = self.results['frameworks'][int(key)]
-          writer.writerow([framework] + value)
+    #with open(os.path.join(self.full_results_directory(), "fortune.csv"), 'wb') as csvfile:
+    #  writer = csv.writer(csvfile)
+    #  writer.writerow(["Framework"] + self.query_intervals)
+    #  if 'fortune' in self.results['rawData'].keys():
+    #    for key, value in self.results['rawData']['fortune'].iteritems():
+    #      framework = self.results['frameworks'][int(key)]
+    #      writer.writerow([framework] + value)
 
   ############################################################
   # End __parse_results
@@ -527,9 +521,11 @@ class Benchmarker:
       self.results['weighttpData']['query'] = dict()
       self.results['weighttpData']['fortune'] = dict()
     else:
-      for x in self.__gather_tests():
-        if x.name not in self.results['frameworks']:
-          self.results['frameworks'] = self.results['frameworks'] + [x.name]
+      #for x in self.__gather_tests():
+      #  if x.name not in self.results['frameworks']:
+      #    self.results['frameworks'] = self.results['frameworks'] + [x.name]
+      # Always overwrite framework list
+      self.results['frameworks'] = [t.name for t in self.__gather_tests()]
 
     # Setup the ssh command string
     self.ssh_string = "ssh -T -o StrictHostKeyChecking=no " + self.client_user + "@" + self.client_host
