@@ -19,11 +19,11 @@ sub dispatch_request {
         my $id = int rand 10000 + 1;
         $sth->execute($id);
         if ( my $row = $sth->fetchrow_hashref ) {
-            push @response,
-              { id => $id, randomNumber => $row->{randomNumber} };
+            push @response, { id => $id, randomNumber => $row->{randomNumber} };
         }
     }
-    [ 200, \@response ];
+    [ 200, [ 'Content-type' => 'application/json; charset=utf-8', ],
+      [ encode_json(\@response)] ];
   }
 }
 
