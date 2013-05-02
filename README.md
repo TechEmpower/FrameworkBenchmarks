@@ -23,6 +23,7 @@ When propmted to create a security group for the instances, here are the ports t
 * 22 (SSH)
 * 8080 (Most of the tests run on 8080)
 * 3306 (MySQL)
+* 5432 (PostgreSQL)
 * 9000 (Play Framework)
 * 27017 (MongoDB)
 * 3000 (yesod)
