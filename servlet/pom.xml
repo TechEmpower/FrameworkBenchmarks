@@ -23,6 +23,11 @@
             <version>2.1.2</version>
         </dependency>
 
+	<dependency>
+	  <groupId>jstl</groupId>
+	  <artifactId>jstl</artifactId>
+	  <version>1.2</version>
+	</dependency>
         <!-- @Inject -->
         <dependency>
             <groupId>javax.inject</groupId>
