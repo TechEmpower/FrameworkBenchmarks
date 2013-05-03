@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.Common;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 using Npgsql;
@@ -13,12 +13,11 @@ namespace Benchmarks.Mono.AspNet.Controllers
 {
     public class AdoNetPostgreSqlController : Controller
     {
-        static Random random = new Random();
-        static string connectionString = ConfigurationManager.ConnectionStrings["PostgreSQL"].ConnectionString;
+        private static string connectionString = ConfigurationManager.ConnectionStrings["PostgreSQL"].ConnectionString;
 
         public ActionResult Index(int? queries)
         {
-            List<World> worlds = new List<World>();
+            List<World> worlds = new List<World>(queries ?? 1);
 
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
@@ -26,14 +25,16 @@ namespace Benchmarks.Mono.AspNet.Controllers
 
                 using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM World WHERE id = @ID", connection))
                 {
-                    for (int i = 0; i < (queries ?? 1); i++)
+                    Random random = new Random();
+
+                    for (int i = 0; i < worlds.Capacity; i++)
                     {
                         int randomID = random.Next(0, 10000) + 1;
 
                         command.Parameters.Clear();
                         command.Parameters.AddWithValue("@ID", randomID);
 
-                        using (DbDataReader reader = command.ExecuteReader())
+                        using (DbDataReader reader = command.ExecuteReader(CommandBehavior.SingleRow))
                         {
                             if (reader.Read())
                             {
@@ -52,40 +53,36 @@ namespace Benchmarks.Mono.AspNet.Controllers
                                    : Json(worlds[0], JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> Async(int? queries)
+        public ActionResult Fortunes()
         {
-            List<World> worlds = new List<World>();
+            List<Fortune> fortunes = new List<Fortune>();
 
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
 
-                using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM World WHERE id = @ID", connection))
+                using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM Fortune", connection))
                 {
-                    for (int i = 0; i < (queries ?? 1); i++)
+                    using (DbDataReader reader = command.ExecuteReader(CommandBehavior.SequentialAccess))
                     {
-                        int randomID = random.Next(0, 10000) + 1;
-
-                        command.Parameters.Clear();
-                        command.Parameters.AddWithValue("@ID", randomID);
-
-                        using (DbDataReader reader = await command.ExecuteReaderAsync())
+                        while (reader.Read())
                         {
-                            if (await reader.ReadAsync())
+                            Fortune fortune = new Fortune
                             {
-                                World world = new World();
-                                world.id = reader.GetInt32(0);
-                                world.randomNumber = reader.GetInt32(1);
+                                ID = reader.GetInt32(0),
+                                Message = reader.GetString(1)
+                            };
 
-                                worlds.Add(world);
-                            }
+                            fortunes.Add(fortune);
                         }
                     }
                 }
             }
 
-            return queries != null ? Json(worlds, JsonRequestBehavior.AllowGet)
-                                   : Json(worlds[0], JsonRequestBehavior.AllowGet);
+            fortunes.Add(new Fortune { ID = 0, Message = "Additional fortune added at request time." });
+            fortunes.Sort();
+
+            return View(fortunes);
         }
     }
 }
