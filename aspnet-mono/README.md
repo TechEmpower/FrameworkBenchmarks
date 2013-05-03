@@ -6,17 +6,34 @@
 
 `http://localhost:8080/json`
 
-### ADO.NET with MySQL
+### ADO.NET
 
-`http://localhost:8080/mysql-raw?queries=10`
+#### MySQL
 
-### Entity Framework with MySQL
+`http://localhost:8080/adonet/mysql`
+`http://localhost:8080/adonet/mysql?queries=10`
+
+#### PostgreSQL
+
+`http://localhost:8080/adonet/postgresql`
+`http://localhost:8080/adonet/postgresql?queries=10`
+
+### MongoDB
+
+`http://localhost:8080/mongodb`
+`http://localhost:8080/mongodb?queries=10`
+
+### Entity Framework
 
 _Currently not working._
 
-`http://localhost:8080/mysql-ef?queries=10`
+`http://localhost:8080/ef/mysql`
+`http://localhost:8080/ef/mysql?queries=10`
 
-## Install Mono
+`http://localhost:8080/ef/postgresql`
+`http://localhost:8080/ef/postgresql?queries=10`
+
+## Mono Installation
 
     sudo apt-get install build-essential autoconf libtool automake git
 
