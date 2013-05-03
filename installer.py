@@ -56,6 +56,7 @@ class Installer:
     self.__run_command("sudo python setup.py install", cwd="psycopg2-2.5")
     self.__run_command("git clone https://github.com/iiilx/django-psycopg2-pool.git")
     self.__run_command("sudo python setup.py install", cwd="django-psycopg2-pool")
+    self.__run_command("sudo pip install --upgrade numpy==1.7.1")
 
     #
     # nodejs

@@ -36,7 +36,7 @@ def db(request):
   #r = nprnd.randint
   # but wait!  there's more!  if we're calling a function over and over with the same parameters, 
   # we can use even more function magic.
-  rp = partial(nprnd.randint, 10000)
+  rp = partial(nprnd.randint, 1, 10000)
   # now we're ready to write our awesome query iterator thingy
   # first of all, we know the id's correspond to the random number we're picking, so we can create
   # dictionaries on the fly instead of serializing later
