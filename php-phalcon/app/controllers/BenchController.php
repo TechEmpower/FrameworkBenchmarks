@@ -55,7 +55,6 @@ class BenchController extends \Phalcon\Mvc\Controller
             }
         });
 
-        $this->response->setStatusCode(200, "OK");
         $this->response->setHeader("Content-Type", "text/html; charset=utf-8");
 
         $this->view->fortunes = $fortunes;
@@ -63,7 +62,6 @@ class BenchController extends \Phalcon\Mvc\Controller
 
     private function sendContentAsJson($content) {
         $response = new Phalcon\Http\Response(json_encode($content));
-        $response->setStatusCode(200, "OK");
         $response->setHeader("Content-Type", "application/json");
         return $response;
     }
