@@ -1,5 +1,5 @@
 {
-  "framework": "phalcon",
+  "framework": "phalcon-micro",
   "tests": [{
     "default": {
       "setup_file": "setup",
