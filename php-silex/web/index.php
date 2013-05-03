@@ -9,13 +9,13 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Silex\Application();
 
+$dbh = new PDO('mysql:host=192.168.100.102;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
+    PDO::ATTR_PERSISTENT => true
+));
+
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'db.options' => array(
-        'driver' => 'pdo_mysql',
-        'host' => '192.168.100.102',
-        'dbname' => 'hello_world',
-        'user' => 'benchmarkdbuser',
-        'password' => 'benchmarkdbpass',
+    'pdo' => $dbh
     ),
 ));
 
