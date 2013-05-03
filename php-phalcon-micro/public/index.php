@@ -8,14 +8,10 @@ try {
     $app['db'] = function() {
 
         return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-            'host'       => 'localhost',
+            'dsn'       => 'host=localhost;dbname=hello_world;charset=utf8',
             'username'   => 'benchmarkdbuser',
             'password'   => 'benchmarkdbpass',
-            'dbname'     => 'hello_world',
-            'persistent' => true,
-            'options'    => array(
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
-            )
+            'persistent' => true
         ));
     };
 
@@ -59,16 +55,15 @@ try {
         $worlds = array();
 
         for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = $db->fetchOne('SELECT * FROM world WHERE id = ?', Phalcon\Db::FETCH_ASSOC, array(mt_rand(1, 10000)));
+            $worlds[] = $db->fetchOne('SELECT * FROM world WHERE id = ' . mt_rand(1, 10000), Phalcon\Db::FETCH_ASSOC);
         }
 
         echo json_encode($worlds);
     });
 
+    // /fortunes
     $app->map('/fortunes', function() use ($app) {
 
-        // since the resultset is immutable get an array instead
-        // so we can add the new fortune
         $fortunes = $app['db']->query('SELECT * FROM fortune')->fetchAll();
 
         $fortunes[] = array(
