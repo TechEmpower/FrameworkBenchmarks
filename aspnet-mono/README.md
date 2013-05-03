@@ -4,7 +4,7 @@
 
 ### JSON
 
-`http://localhost:8080/json`
+* `http://localhost:8080/json`
 
 ---
 
@@ -12,15 +12,15 @@
 
 **MySQL**
 
-`http://localhost:8080/adonet/mysql`
-`http://localhost:8080/adonet/mysql?queries=10`
-`http://localhost:8080/adonet/mysql/fortunes`
+* `http://localhost:8080/adonet/mysql`
+* `http://localhost:8080/adonet/mysql?queries=10`
+* `http://localhost:8080/adonet/mysql/fortunes`
 
 **PostgreSQL**
 
-`http://localhost:8080/adonet/postgresql`
-`http://localhost:8080/adonet/postgresql?queries=10`
-`http://localhost:8080/adonet/postgresql/fortunes`
+* `http://localhost:8080/adonet/postgresql`
+* `http://localhost:8080/adonet/postgresql?queries=10`
+* `http://localhost:8080/adonet/postgresql/fortunes`
 
 ---
 
@@ -28,16 +28,16 @@
 
 **MySQL**
 
-`http://localhost:8080/entityframework/mysql`
-`http://localhost:8080/entityframework/mysql?queries=10`
-`http://localhost:8080/entityframework/mysql/fortunes`
+* `http://localhost:8080/entityframework/mysql`
+* `http://localhost:8080/entityframework/mysql?queries=10`
+* `http://localhost:8080/entityframework/mysql/fortunes`
 
 ---
 
 ### MongoDB
 
-`http://localhost:8080/mongodb`
-`http://localhost:8080/mongodb?queries=10`
+* `http://localhost:8080/mongodb`
+* `http://localhost:8080/mongodb?queries=10`
 
 ## Mono Installation
 
@@ -59,4 +59,5 @@
     ./autogen.sh --prefix=/usr/local
     make
     sudo make install
+
 
