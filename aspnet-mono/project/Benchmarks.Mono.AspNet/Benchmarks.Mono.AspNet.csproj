@@ -39,45 +39,56 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.0-alpha3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\packages\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <Private>True</Private>
+      <HintPath>..\packages\MySql.Data.6.6.5\lib\net40\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="policy.2.0.Npgsql">
+      <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\policy.2.0.Npgsql.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="../packages/Microsoft.AspNet.Mvc.4.0.20710.0/lib/net40/System.Web.Mvc.dll" />
-    <Reference Include="../packages/MySql.Data.6.6.5/lib/net40/MySql.Data.dll" />
-    <Reference Include="../packages/EntityFramework.6.0.0-alpha3/lib/net45/EntityFramework.dll" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AdoNetMySqlController.cs" />
+    <Compile Include="Controllers\AdoNetPostgreSqlController.cs" />
+    <Compile Include="Controllers\EntityFrameworkPostgreSqlController.cs" />
+    <Compile Include="Controllers\EntityFrameworkMySqlController.cs" />
     <Compile Include="Controllers\JsonController.cs" />
-    <Compile Include="Controllers\MySqlController.cs" />
+    <Compile Include="Controllers\MongoDBController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\HelloWorld.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HelloWorld.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\HelloWorld.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HelloWorld.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\HelloWorld.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HelloWorld.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\World.cs">
-      <DependentUpon>HelloWorld.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\MySqlWorldContext.cs" />
+    <Compile Include="Models\World.cs" />
+    <Compile Include="Models\PostgreSqlWorldContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -87,27 +98,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <EntityDeploy Include="Models\HelloWorld.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>HelloWorld.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Models\HelloWorld.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>HelloWorld.edmx</DependentUpon>
-      <LastGenOutput>HelloWorld.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\HelloWorld.edmx.diagram">
-      <DependentUpon>HelloWorld.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\HelloWorld.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>HelloWorld.edmx</DependentUpon>
-      <LastGenOutput>HelloWorld.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -124,7 +115,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>52936</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:55347/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
