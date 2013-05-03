@@ -22,7 +22,7 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)    
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake mercurial", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("sudo sh -c \"echo '*               soft    nofile          8192' >> /etc/security/limits.conf\"")
@@ -90,8 +90,8 @@ class Installer:
     #
     # go
     #
-    self.__run_command("hg clone -u 2489327864d7 https://code.google.com/p/go")
-    self.__run_command("./all.bash", cwd="go/src")
+    
+    self.__run_command("curl http://go.googlecode.com/files/go1.1rc1.linux-amd64.tar.gz | tar xvz")
 
     #
     # Perl
