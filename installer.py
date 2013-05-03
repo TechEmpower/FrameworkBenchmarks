@@ -144,21 +144,17 @@ class Installer:
     # Mono
     #
     self.__run_command("git clone git://github.com/mono/mono")
-    self.__run_command("cd mono")
-    self.__run_command("git checkout mono-3.10")
-    self.__run_command("./autogen.sh --prefix=/usr/local")
-    self.__run_command("make get-monolite-latest")
-    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe")
-    self.__run_command("sudo make install")
-
-    self.__run_command("cd ..")
+    self.__run_command("git checkout mono-3.10", cwd="mono")
+    self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
+    self.__run_command("make get-monolite-latest", cwd="mono")
+    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
+    self.__run_command("sudo make install", cwd="mono")
 
     self.__run_command("git clone git://github.com/mono/xsp")
-    self.__run_command("cd xsp")
-    self.__run_command("git checkout 3.0")
-    self.__run_command("./autogen.sh --prefix=/usr/local")
-    self.__run_command("make")
-    self.__run_command("sudo make install")
+    self.__run_command("git checkout 3.0", cwd="xsp")
+    self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
+    self.__run_command("make", cwd="xsp")
+    self.__run_command("sudo make install", cwd="xsp")
 
     #######################################
     # Webservers
