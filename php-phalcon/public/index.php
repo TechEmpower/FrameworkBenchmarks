@@ -1,8 +1,11 @@
 <?php
 
+define('APP_PATH', realpath('..'));
+
 try {
+
     // Load the config
-    $config = include(__DIR__."/../app/config/config.php");
+    $config = include APP_PATH . "/app/config/config.php";
 
     // Register an autoloader
     $loader = new \Phalcon\Loader();
@@ -15,27 +18,39 @@ try {
     $di = new Phalcon\DI\FactoryDefault();
 
     // Setting up the router
-    $di->set('router', function() use ($config) {
-        return include($config->application->routes);
-    });
+    $di->set('router', require APP_PATH . '/app/config/routes.php');
 
-    //Register Volt as a service
-    $di->set('voltService', function($view, $di) {
-        $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
-        $volt->setOptions(array(
-            "compiledPath" => "../app/compiled-templates/",
-            "compiledExtension" => ".compiled"
-        ));
-
-        return $volt;
+    //MetaData
+    $di->set('modelsMetadata', function(){
+        if (function_exists('apc_store')) {
+            return new Phalcon\Mvc\Model\MetaData\Apc();
+        } else {
+            return new Phalcon\Mvc\Model\MetaData\Files(array(
+                'metaDataDir' => APP_PATH . "/app/compiled-templates/"
+            ));
+        }
     });
 
     // Setting up the view component (seems to be required even when not used)
     $di->set('view', function() use ($config) {
+
         $view = new \Phalcon\Mvc\View();
+
         $view->setViewsDir($config->application->viewsDir);
+
         $view->registerEngines(array(
-            ".volt" => 'voltService'
+            ".volt" => function($view, $di) {
+
+                $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
+
+                $volt->setOptions(array(
+                    "compiledPath" => APP_PATH . "/app/compiled-templates/",
+                    "compiledExtension" => ".compiled",
+                    "compiledSeparator" => '_',
+                ));
+
+                return $volt;
+            }
         ));
 
         return $view;
@@ -43,11 +58,14 @@ try {
 
     // Setting up the database connection
     $di->set('db', function() use ($config) {
+
+        $database = $config->database;
+
         return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
-            'host'     => $config->database->host,
-            'username' => $config->database->username,
-            'password' => $config->database->password,
-            'dbname'   => $config->database->name,
+            'host' => $database->host,
+            'username' => $database->username,
+            'password' => $database->password,
+            'dbname' => $database->name,
             'options'  => array(
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
             )

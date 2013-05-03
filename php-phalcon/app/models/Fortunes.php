@@ -1,6 +1,5 @@
 <?php
 
-
 class Fortunes extends \Phalcon\Mvc\Model
 {
     public $id;
