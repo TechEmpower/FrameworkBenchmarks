@@ -11,6 +11,7 @@
       "setup_file": "setup",
       "db_url": "/adonet/mysql",
       "query_url": "/adonet/mysql?queries=",
+      "fortune_url": "/adonet/mysql/fortunes",
       "port": 8080,
       "sort": 91
     },
@@ -18,6 +19,7 @@
       "setup_file": "setup",
       "db_url": "/adonet/postgresql",
       "query_url": "/adonet/postgresql?queries=",
+      "fortune_url": "/adonet/postgresql/fortunes",
       "port": 8080,
       "sort": 92
     },
@@ -27,6 +29,14 @@
       "query_url": "/mongodb?queries=",
       "port": 8080,
       "sort": 93
+    },
+    "mysql-entityframework": {
+      "setup_file": "setup",
+      "db_url": "/entityframework/mysql",
+      "query_url": "/entityframework/mysql?queries=",
+      "fortune_url": "/entityframework/mysql/fortunes",
+      "port": 8080,
+      "sort": 94
     }
   }]
 }

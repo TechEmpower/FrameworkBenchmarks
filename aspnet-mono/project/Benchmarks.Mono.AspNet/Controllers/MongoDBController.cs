@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Web.Mvc;
@@ -12,8 +12,7 @@ namespace Benchmarks.Mono.AspNet.Controllers
 {
     public class MongoDBController : Controller
     {
-        static Random random = new Random();
-        static string connectionString = ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString;
+        private static string connectionString = ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString;
 
         public ActionResult Index(int? queries)
         {
@@ -21,10 +20,12 @@ namespace Benchmarks.Mono.AspNet.Controllers
             MongoServer server = client.GetServer();
             MongoDatabase database = server.GetDatabase("hello_world");
             MongoCollection<World> collection = database.GetCollection<World>("world");
+            
+            List<World> worlds = new List<World>(queries ?? 1);
+            
+            Random random = new Random();
 
-            List<World> worlds = new List<World>();
-
-            for (int i = 0; i < (queries ?? 1); i++)
+            for (int i = 0; i < worlds.Capacity; i++)
             {
                 int randomID = random.Next(0, 10000) + 1;
                 worlds.Add(collection.FindOne(Query<World>.EQ(e => e.id, randomID)));

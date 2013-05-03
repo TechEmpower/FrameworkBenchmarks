@@ -1,4 +1,4 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace Benchmarks.Mono.AspNet
@@ -7,6 +7,14 @@ namespace Benchmarks.Mono.AspNet
     {
         protected void Application_Start()
         {
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new RazorViewEngine { ViewLocationFormats = new[] { "~/Views/{0}.cshtml" } });
+
+            Routes();
+        }
+
+        private void Routes()
+        {
             RouteTable.Routes.MapRoute(
                 name: "JSON",
                 url: "json",
@@ -14,15 +22,15 @@ namespace Benchmarks.Mono.AspNet
             );
 
             RouteTable.Routes.MapRoute(
-                name: "ADO.NET/MySQL",
+                name: "ADO.NET/MySQL/DB",
                 url: "adonet/mysql",
                 defaults: new { controller = "AdoNetMySql", action = "Index" }
             );
 
             RouteTable.Routes.MapRoute(
-                name: "ADO.NET/MySQL/Async",
-                url: "adonet/mysql/async",
-                defaults: new { controller = "AdoNetMySql", action = "Async" }
+                name: "ADO.NET/MySQL/Fortunes",
+                url: "adonet/mysql/fortunes",
+                defaults: new { controller = "AdoNetMySql", action = "Fortunes" }
             );
 
             RouteTable.Routes.MapRoute(
@@ -32,21 +40,21 @@ namespace Benchmarks.Mono.AspNet
             );
 
             RouteTable.Routes.MapRoute(
-                name: "ADO.NET/PostgreSQL/Async",
-                url: "adonet/postgresql/async",
-                defaults: new { controller = "AdoNetPostgreSql", action = "Async" }
+                name: "ADO.NET/PostgreSQL/Fortunes",
+                url: "adonet/postgresql/fortunes",
+                defaults: new { controller = "AdoNetPostgreSql", action = "Fortunes" }
             );
 
             RouteTable.Routes.MapRoute(
                 name: "EntityFramework/MySQL",
-                url: "ef/mysql",
+                url: "entityframework/mysql",
                 defaults: new { controller = "EntityFrameworkMySql", action = "Index" }
             );
 
             RouteTable.Routes.MapRoute(
-                name: "EntityFramework/PostgreSQL",
-                url: "ef/postgresql",
-                defaults: new { controller = "EntityFrameworkPostgreSql", action = "Index" }
+                name: "EntityFramework/MySQL/Fortunes",
+                url: "entityframework/mysql/fortunes",
+                defaults: new { controller = "EntityFrameworkMySql", action = "Fortunes" }
             );
 
             RouteTable.Routes.MapRoute(
