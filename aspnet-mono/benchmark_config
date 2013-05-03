@@ -1,0 +1,32 @@
+{
+  "framework": "aspnet-mono",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8080,
+      "sort": 90
+    },
+    "mysql-raw": {
+      "setup_file": "setup",
+      "db_url": "/adonet/mysql",
+      "query_url": "/adonet/mysql?queries=",
+      "port": 8080,
+      "sort": 91
+    },
+    "postgresql-raw": {
+      "setup_file": "setup",
+      "db_url": "/adonet/postgresql",
+      "query_url": "/adonet/postgresql?queries=",
+      "port": 8080,
+      "sort": 92
+    },
+    "mongodb-raw": {
+      "setup_file": "setup",
+      "db_url": "/mongodb",
+      "query_url": "/mongodb?queries=",
+      "port": 8080,
+      "sort": 93
+    }
+  }]
+}
