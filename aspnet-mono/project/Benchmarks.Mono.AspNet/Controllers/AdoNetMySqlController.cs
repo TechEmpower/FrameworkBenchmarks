@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.Common;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 using MySql.Data.MySqlClient;
@@ -13,79 +13,76 @@ namespace Benchmarks.Mono.AspNet.Controllers
 {
     public class AdoNetMySqlController : Controller
     {
-        static Random random = new Random();
-        static string connectionString = ConfigurationManager.ConnectionStrings["MySQL"].ConnectionString;
-
+        private static string connectionString = ConfigurationManager.ConnectionStrings["MySQL"].ConnectionString;
+        
         public ActionResult Index(int? queries)
         {
-            List<World> worlds = new List<World>();
-
+            List<World> worlds = new List<World>(queries ?? 1);
+            
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-
+                
                 using (MySqlCommand command = new MySqlCommand("SELECT * FROM World WHERE id = @ID", connection))
                 {
-                    for (int i = 0; i < (queries ?? 1); i++)
+                    Random random = new Random();
+                    
+                    for (int i = 0; i < worlds.Capacity; i++)
                     {
                         int randomID = random.Next(0, 10000) + 1;
-
+                        
                         command.Parameters.Clear();
                         command.Parameters.AddWithValue("@ID", randomID);
-
-                        using (DbDataReader reader = command.ExecuteReader())
+                        
+                        using (DbDataReader reader = command.ExecuteReader(CommandBehavior.SingleRow))
                         {
                             if (reader.Read())
                             {
                                 World world = new World();
                                 world.id = reader.GetInt32(0);
                                 world.randomNumber = reader.GetInt32(1);
-
+                                
                                 worlds.Add(world);
                             }
                         }
                     }
                 }
             }
-
+            
             return queries != null ? Json(worlds, JsonRequestBehavior.AllowGet)
                                    : Json(worlds[0], JsonRequestBehavior.AllowGet);
         }
-
-        public async Task<ActionResult> Async(int? queries)
+        
+        public ActionResult Fortunes()
         {
-            List<World> worlds = new List<World>();
-
+            List<Fortune> fortunes = new List<Fortune>();
+            
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                await connection.OpenAsync();
-
-                using (MySqlCommand command = new MySqlCommand("SELECT * FROM World WHERE id = @ID", connection))
+                connection.Open();
+                
+                using (MySqlCommand command = new MySqlCommand("SELECT * FROM Fortune", connection))
                 {
-                    for (int i = 0; i < (queries ?? 1); i++)
+                    using (DbDataReader reader = command.ExecuteReader(CommandBehavior.SequentialAccess))
                     {
-                        int randomID = random.Next(0, 10000) + 1;
-
-                        command.Parameters.Clear();
-                        command.Parameters.AddWithValue("@ID", randomID);
-
-                        using (DbDataReader reader = await command.ExecuteReaderAsync())
+                        while (reader.Read())
                         {
-                            if (await reader.ReadAsync())
+                            Fortune fortune = new Fortune
                             {
-                                World world = new World();
-                                world.id = reader.GetInt32(0);
-                                world.randomNumber = reader.GetInt32(1);
-
-                                worlds.Add(world);
-                            }
+                                ID = reader.GetInt32(0),
+                                Message = reader.GetString(1)
+                            };
+                            
+                            fortunes.Add(fortune);
                         }
                     }
                 }
             }
-
-            return queries != null ? Json(worlds, JsonRequestBehavior.AllowGet)
-                                   : Json(worlds[0], JsonRequestBehavior.AllowGet);
+            
+            fortunes.Add(new Fortune { ID = 0, Message = "Additional fortune added at request time." });
+            fortunes.Sort();
+            
+            return View(fortunes);
         }
     }
 }
