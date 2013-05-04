@@ -1,7 +1,10 @@
 using System;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Configuration;
+using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
 using System.Data.Entity.ModelConfiguration.Configuration.Types;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Reflection;
 
 namespace Benchmarks.Mono.AspNet.Models
 {
@@ -20,17 +23,27 @@ namespace Benchmarks.Mono.AspNet.Models
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             
             if (Database.Connection is Npgsql.NpgsqlConnection)
-            {
-                modelBuilder.HasDefaultSchema("public");
-                modelBuilder.Conventions.Add<LowerCaseConfigurationConvention>();
-            }
+                modelBuilder.Conventions.Add<PostgreSqlConfigurationConvention>();
         }
         
-        private class LowerCaseConfigurationConvention : IConfigurationConvention<Type, EntityTypeConfiguration>
+        private class PostgreSqlConfigurationConvention
+            : IConfigurationConvention<Type, EntityTypeConfiguration>, 
+              IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>,
+              IConfigurationConvention<Type, ModelConfiguration>
         {
             public void Apply(Type memberInfo, Func<EntityTypeConfiguration> configuration)
             {
                 configuration().ToTable(memberInfo.Name.ToLowerInvariant(), null);
+            }
+            
+            public void Apply(PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration)
+            {
+                configuration().ColumnName = memberInfo.Name.ToLowerInvariant();
+            }
+            
+            public void Apply(Type memberInfo, Func<ModelConfiguration> configuration)
+            {
+                configuration().DefaultSchema = "public";
             }
         }
     }
