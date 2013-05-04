@@ -5,6 +5,7 @@ namespace Skamander\BenchmarkBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Skamander\BenchmarkBundle\Entity\Fortune;
 
 class BenchController extends Controller
@@ -67,7 +68,7 @@ class BenchController extends Controller
         ]);
     }
 
-    public function fortunesRawAction()
+    public function fortunesPhpAction()
     {
         $repo = $this->getDoctrine()
             ->getRepository('SkamanderBenchmarkBundle:Fortune');
@@ -86,5 +87,35 @@ class BenchController extends Controller
         return $this->render("SkamanderBenchmarkBundle:Bench:fortunes.html.php", [
             'fortunes' => $fortunes
         ]);
+    }
+
+    public function fortunesRawAction()
+    {
+        $repo = $this->getDoctrine()
+            ->getRepository('SkamanderBenchmarkBundle:Fortune');
+        $fortunes = $repo->findAll();
+
+        $runtimeFortune = new Fortune();
+        $runtimeFortune->setId(0)
+            ->setMessage('Additional fortune added at request time.');
+
+        $fortunes[] = $runtimeFortune;
+
+        usort($fortunes, function($left, $right) {
+            return strcmp($left->message, $right->message);
+        });
+
+        // This is not the symfony way to work with templates! It's implemented to show users
+        // who don't want to use template engines (like twig), or template sugar (like the slots etc.
+        // from symfony 2), because in their opinion already built-in php constructs like foreach +
+        // if else + include etc. are enough, that the performance impact should be neglectable, and
+        // that the advantages outweigh the disadvantages (performance).
+        $title = 'Fortunes';
+
+        ob_start();
+        include __DIR__ . '/../Resources/views/Bench/raw/content.php';
+        $response = ob_get_clean();
+
+        return new Response($response);
     }
 }
