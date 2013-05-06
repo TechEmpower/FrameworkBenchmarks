@@ -135,16 +135,59 @@ http.createServer(function (req, res) {
     function libmysqlQuery(callback) {
       libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
         if (err) {
-	  throw err;
-	}
+	        throw err;
+	      }
 	
-	res.fetchAll(function(err, rows) {
-	  if (err) {
-	    throw err;
-	  }
+	      res.fetchAll(function(err, rows) {
+      	  if (err) {
+      	    throw err;
+      	  }
 
-	  res.freeSync();
-	  callback(null, rows[0]);
+      	  res.freeSync();
+      	  callback(null, rows[0]);
+        });
+      });
+    } 
+
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    var queryFunctions = new Array(queries);
+
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = libmysqlQuery;
+    }
+    async.parallel(queryFunctions, function(err, results) {
+      if (err) {
+        res.writeHead(500);
+        return res.end('MYSQL CONNECTION ERROR.');
+      }
+      res.end(JSON.stringify(results));
+    });
+    break;
+
+  case '/update':
+    res.writeHead(200, {'Content-Type': 'application/json'});
+
+    function libmysqlQuery(callback) {
+      libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
+        if (err) {
+          throw err;
+        }
+  
+        res.fetchAll(function(err, rows) {
+          if (err) {
+            throw err;
+          }
+
+          res.freeSync();
+
+          rows[0].randomNumber = getRandomNumber();
+          libmysql.query("UPDATE World SET randomNumber = " + rows[0].randomNumber + " WHERE id = " + rows[0]['id'], function (err, res) {
+            if (err) {
+              throw err;
+            }
+          });
+          callback(null, rows[0]);
         });
       });
     } 

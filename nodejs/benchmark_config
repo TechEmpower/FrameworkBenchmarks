@@ -32,6 +32,7 @@
       "setup_file": "setup",
       "db_url": "/mysql",
       "query_url": "/mysql?queries=",
+      "update_url": "/update?queries=",
       "port": 8080,
       "sort": 28
     }
