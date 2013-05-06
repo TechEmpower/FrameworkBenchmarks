@@ -144,7 +144,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	ww := make([]World, n)
 	if n == 1 {
 		worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[0].Id, &ww[0].RandomNumber)
-		ww[0].RandomNumber = rand.Intn(WorldRowCount) + 1
+		ww[0].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
 		updateStatement.Exec(ww[0].RandomNumber, ww[0].Id)
 	} else {
 		var wg sync.WaitGroup
@@ -152,7 +152,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		for i := 0; i < n; i++ {
 			go func(i int) {
 				err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
-				ww[i].RandomNumber = rand.Intn(WorldRowCount) + 1
+				ww[i].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
 				updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
 				if err != nil {
 					log.Fatalf("Error scanning world row: %v", err)
