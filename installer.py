@@ -155,7 +155,6 @@ class Installer:
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
     self.__run_command("make", cwd="xsp")
     self.__run_command("sudo make install", cwd="xsp")
-
     #######################################
     # Webservers
     #######################################
