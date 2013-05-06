@@ -14,7 +14,7 @@ import javax.sql.*;
  * Database connectivity (with a Servlet-container managed pool) test.
  */
 @SuppressWarnings("serial")
-public class DbPoolServlet extends HttpServlet
+public class UpdateServlet extends HttpServlet
 {
   // Database details.
   private static final String DB_QUERY      = "SELECT * FROM World WHERE id = ?";
@@ -80,10 +80,10 @@ public class DbPoolServlet extends HttpServlet
               // Update row
               try (PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY))
               {
-                statement.setint(1, random.nextInt(DB_ROWS) + 1);
-                statement.setInt(2, id);
+                statement2.setInt(1, random.nextInt(DB_ROWS) + 1);
+                statement2.setInt(2, id);
 
-                statement.execute();
+                statement2.execute();
               }
             }
           }
