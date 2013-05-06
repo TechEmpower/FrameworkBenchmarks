@@ -1,3 +1,23 @@
-_bench:
-    resource: "@SkamanderBenchmarkBundle/Controller/BenchController.php"
-    type:     annotation
+_json:
+    pattern:  /json
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:json }
+
+_db:
+    pattern:  /db
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:db }
+
+_dbRaw:
+    pattern:  /db-raw
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:dbRaw }
+
+_fortunes:
+    pattern:  /fortunes
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:fortunes }
+
+_fortunesPhp:
+    pattern:  /fortunes-php
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:fortunesPhp }
+
+_fortunesRaw:
+    pattern:  /fortunes-raw
+    defaults: { _controller: SkamanderBenchmarkBundle:Bench:fortunesRaw }
