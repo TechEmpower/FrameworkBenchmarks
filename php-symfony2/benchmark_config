@@ -14,7 +14,7 @@
       "setup_file": "setup",
       "fortune_url": "/fortunes-php",
       "port": 8080,
-      "sort": 83
+      "sort": 96
     },
     "raw": {
       "setup_file": "setup",
@@ -22,7 +22,7 @@
       "query_url": "/db-raw?queries=",
       "fortune_url": "/fortunes-raw",
       "port": 8080,
-      "sort": 91
+      "sort": 97
     }
   }]
 }
