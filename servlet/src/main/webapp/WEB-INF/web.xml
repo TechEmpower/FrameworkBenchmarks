@@ -17,4 +17,10 @@
     <load-on-startup/>
   </servlet>
   <servlet-mapping url-regexp='^/fortunes$' servlet-name='fortunes'/>
+  <servlet>
+    <servlet-name>update</servlet-name>
+    <servlet-class>hello.UpdateServlet</servlet-class>
+    <load-on-startup/>
+  </servlet>
+  <servlet-mapping url-regexp='^/update$' servlet-name='update'/>
 </web-app>

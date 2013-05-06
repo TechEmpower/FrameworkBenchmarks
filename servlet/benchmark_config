@@ -12,6 +12,7 @@
       "db_url": "/servlet/db",
       "query_url": "/servlet/db?queries=",
       "fortune_url": "/servlet//fortunes",
+      "query_url": "/servlet/update?queries=",
       "port": 8080,
       "sort": 19
     }
