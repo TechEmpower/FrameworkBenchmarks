@@ -249,6 +249,8 @@ class Benchmarker:
   ############################################################
   def __setup_server(self):
     try:
+      if os.name == 'nt':
+        return True
       subprocess.check_call("sudo sysctl -w net.core.somaxconn=1024".rsplit(" "))
       subprocess.check_call("sudo -s ulimit -n 8192".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
