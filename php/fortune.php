@@ -10,22 +10,13 @@ $pdo = new PDO('mysql:host=localhost;dbname=hello_world;charset=utf8', 'benchmar
 ));
 
 // Define query
-$statement = $pdo->prepare('SELECT * FROM Fortune');
-$statement->execute();
+$statement = $pdo->query( 'SELECT id, message FROM Fortune' );
   
 // Store result in array.
-$arr = $statement->fetchAll();
-$arr[] = array('id' => 0, 'message' => 'Additional fortune added at request time.');
+$arr = $statement->fetchAll(PDO::FETCH_KEY_PAIR); 
+$arr[0] = 'Additional fortune added at request time.';
 
-function cmp($a, $b) {
-  if ($a['message'] == $b['message']) {
-    return 0;
-  }
-  
-  return ($a['message'] < $b['message']) ? -1 : 1;
-}
-
-uasort($arr, 'cmp');
+asort($arr);
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,11 +30,11 @@ uasort($arr, 'cmp');
 <th>message</th>
 </tr>
 <?php
-foreach ($arr as &$value) {
+foreach ( $arr as $id => &$fortune ) {
 ?>
 <tr>
-<td><?php echo htmlspecialchars($value['id'], ENT_QUOTES, 'UTF-8'); ?></td>  
-<td><?php echo htmlspecialchars($value['message'], ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?></td>  
+<td><?php echo htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8'); ?></td>
 </tr>
 <?php } ?>
 </table>
