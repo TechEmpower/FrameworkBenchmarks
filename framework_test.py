@@ -154,7 +154,7 @@ class FrameworkTest:
 
     # Update
     try:
-      print "VERIFYING Update (" + self.update_url + ") ..."
+      print "VERIFYING Update (" + self.update_url + "2) ..."
       url = self.benchmarker.generate_url(self.update_url, self.port)
       subprocess.check_call(["curl", "-f", url])
       print ""
