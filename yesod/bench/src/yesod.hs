@@ -8,7 +8,6 @@ import System.Environment (getArgs)
 import qualified Network.Wai.Handler.Warp as Warp
 import Data.Text (Text)
 import Data.Conduit.Pool (Pool)
-import Database.Persist.Store (PersistValue (PersistInt64))
 import qualified Database.Persist.MySQL as My
 import qualified Database.Persist.MongoDB as Mongo
 import qualified Database.MongoDB as Mongo
@@ -20,11 +19,9 @@ import Data.Conduit.Network (bindPort)
 import System.Posix.Process (forkProcess)
 import Control.Monad (replicateM_)
 import Network (PortID (PortNumber))
-import Control.Concurrent.Async.Lifted (mapConcurrently)
 import Data.Int (Int64)
-import Data.Aeson (ToJSON(..))
 
-mkPersist sqlSettings [persist|
+mkPersist sqlSettings [persistLowerCase|
 World sql=World
     randomNumber Int sql=randomNumber
 |]
@@ -55,39 +52,39 @@ instance Yesod App where
     shouldLog _ _ _ = False
     yesodMiddleware = id
 
-getJsonR :: Handler RepJson
-getJsonR = jsonToRepJson $ object ["message" .= ("Hello, World!" :: Text)]
+getJsonR :: Handler Value
+getJsonR = return $ object ["message" .= ("Hello, World!" :: Text)]
 
 
-getDbR :: Handler RepJson
+getDbR :: Handler Value
 getDbR = getDb (intQuery runMySQL )
 
-getMongoDbR :: Handler RepJson
+getMongoDbR :: Handler Value
 getMongoDbR = getDb (intQuery runMongoDB )
 
-getMongoRawDbR :: Handler RepJson
+getMongoRawDbR :: Handler Value
 getMongoRawDbR = getDb rawMongoIntQuery
 
-getDbsR :: Int -> Handler RepJson
+getDbsR :: Int -> Handler Value
 getDbsR cnt = do
     App {..} <- getYesod
     multiRandomHandler (intQuery runMySQL) cnt
 
-getMongoDbsR :: Int -> Handler RepJson
+getMongoDbsR :: Int -> Handler Value
 getMongoDbsR cnt = multiRandomHandler (intQuery runMongoDB) cnt
 
-getMongoRawDbsR :: Int -> Handler RepJson
+getMongoRawDbsR :: Int -> Handler Value
 getMongoRawDbsR cnt = multiRandomHandler rawMongoIntQuery cnt
 
 
 randomNumber :: R.Gen (PrimState IO) -> IO Int64
 randomNumber appGen = R.uniformR (1, 10000) appGen
 
-getDb :: ToJSON a => (Int64 -> Handler a) -> Handler RepJson
+getDb :: (Int64 -> Handler Value) -> Handler Value
 getDb query = do
     app <- getYesod
     i <- liftIO (randomNumber (appGen app))
-    jsonToRepJson =<< query i
+    query i
 
 
 runMongoDB :: Mongo.Action Handler b -> Handler b
@@ -95,7 +92,7 @@ runMongoDB f = do
   App {..} <- getYesod
   Mongo.runMongoDBPoolDef f mongoDBPool
 
-runMySQL :: My.SqlPersist Handler b -> Handler b
+runMySQL :: My.SqlPersistT Handler b -> Handler b
 runMySQL f = do
   App {..} <- getYesod
   My.runSqlPool f mySqlPool
@@ -120,11 +117,11 @@ rawMongoIntQuery i = do
 multiRandomHandler :: ToJSON a
                    => (Int64 -> Handler a)
                    -> Int
-                   -> Handler RepJson
+                   -> Handler Value
 multiRandomHandler operation cnt = do
     App {..} <- getYesod
     nums <- liftIO $ replicateM cnt (randomNumber appGen)
-    jsonToRepJson . array =<< mapConcurrently operation nums
+    return . array =<< mapM operation nums
 
 documentToJson :: [Field] -> Value
 documentToJson = object . map toAssoc
