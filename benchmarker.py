@@ -515,11 +515,13 @@ class Benchmarker:
       self.results['rawData']['db'] = dict()
       self.results['rawData']['query'] = dict()
       self.results['rawData']['fortune'] = dict()
+      self.results['rawData']['update'] = dict()
       self.results['weighttpData'] = dict()
       self.results['weighttpData']['json'] = dict()
       self.results['weighttpData']['db'] = dict()
       self.results['weighttpData']['query'] = dict()
       self.results['weighttpData']['fortune'] = dict()
+      self.results['weighttpData']['update'] = dict()
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:
