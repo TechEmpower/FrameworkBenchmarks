@@ -14,6 +14,11 @@ Uses the Symfony 2/Doctrine 2 Entity functionality.
 * [DB test controller](src/Skamander/BenchmarkBundle/Controller/BenchController.php)
 * [DB test model](src/Skamander/BenchmarkBundle/Entity/World.php)
 
+### Template Test
+Uses Symfony's template engine 'Twig'
+
+* [Template test controller](src/Skamander/BenchmarkBundle/Controller/BenchController.php)
+
 
 ## Infrastructure Software Versions
 The tests were run with:
@@ -35,3 +40,7 @@ http://localhost/db
 ### Variable Query Test
     
 http://localhost/db?queries=2
+
+### Templating Test
+
+http://localhost/fortunes
