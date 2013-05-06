@@ -1,20 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 using Benchmarks.Mono.AspNet.Models;
 
 namespace Benchmarks.Mono.AspNet.Controllers
 {
-    public class EntityFrameworkMySqlController : Controller
+    public class EntityFrameworkController : Controller
     {
-        public ActionResult Index(int? queries)
+        public ActionResult Index(string providerName, int? queries)
         {
             List<World> worlds = new List<World>(queries ?? 1);
 
-            using (EntityFramework db = new EntityFramework())
+            using (EntityFramework db = new EntityFramework(providerName))
             {
                 Random random = new Random();
                 
@@ -29,11 +27,11 @@ namespace Benchmarks.Mono.AspNet.Controllers
                                    : Json(worlds[0], JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Fortunes()
+        public ActionResult Fortunes(string providerName)
         {
             List<Fortune> fortunes = new List<Fortune>();
 
-            using (EntityFramework db = new EntityFramework())
+            using (EntityFramework db = new EntityFramework(providerName))
             {
                 fortunes.AddRange(db.Fortunes);
             }
@@ -41,7 +39,7 @@ namespace Benchmarks.Mono.AspNet.Controllers
             fortunes.Add(new Fortune { ID = 0, Message = "Additional fortune added at request time." });
             fortunes.Sort();
 
-            return View(fortunes);
+            return View("Fortunes", fortunes);
         }
     }
 }

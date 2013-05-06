@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Web.Mvc;
 
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
@@ -13,6 +14,15 @@ namespace Benchmarks.Mono.AspNet.Controllers
     public class MongoDBController : Controller
     {
         private static string connectionString = ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString;
+        
+        static MongoDBController()
+        {
+            BsonClassMap.RegisterClassMap<World>(m =>
+            {
+                m.MapProperty(w => w.id);
+                m.MapProperty(w => w.randomNumber);
+            });
+        }
 
         public ActionResult Index(int? queries)
         {
@@ -28,7 +38,7 @@ namespace Benchmarks.Mono.AspNet.Controllers
             for (int i = 0; i < worlds.Capacity; i++)
             {
                 int randomID = random.Next(0, 10000) + 1;
-                worlds.Add(collection.FindOne(Query<World>.EQ(e => e.id, randomID)));
+                worlds.Add(collection.FindOne(Query<World>.EQ(w => w.id, randomID)));
             }
 
             return queries != null ? Json(worlds, JsonRequestBehavior.AllowGet)

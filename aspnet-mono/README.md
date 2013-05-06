@@ -12,15 +12,15 @@
 
 **MySQL**
 
-* `http://localhost:8080/adonet/mysql`
-* `http://localhost:8080/adonet/mysql?queries=10`
-* `http://localhost:8080/adonet/mysql/fortunes`
+* `http://localhost:8080/ado/mysql`
+* `http://localhost:8080/ado/mysql?queries=10`
+* `http://localhost:8080/ado/mysql/fortunes`
 
 **PostgreSQL**
 
-* `http://localhost:8080/adonet/postgresql`
-* `http://localhost:8080/adonet/postgresql?queries=10`
-* `http://localhost:8080/adonet/postgresql/fortunes`
+* `http://localhost:8080/ado/postgresql`
+* `http://localhost:8080/ado/postgresql?queries=10`
+* `http://localhost:8080/ado/postgresql/fortunes`
 
 ---
 
@@ -31,6 +31,12 @@
 * `http://localhost:8080/entityframework/mysql`
 * `http://localhost:8080/entityframework/mysql?queries=10`
 * `http://localhost:8080/entityframework/mysql/fortunes`
+
+**PostgreSQL**
+
+* `http://localhost:8080/entityframework/postgresql`
+* `http://localhost:8080/entityframework/postgresql?queries=10`
+* `http://localhost:8080/entityframework/postgresql/fortunes`
 
 ---
 
@@ -46,7 +52,7 @@
     git clone git://github.com/mono/mono
     cd mono
     git checkout mono-3.10
-    ./autogen.sh --prefix=/usr/local --with-profile2=no --with-profile4=no
+    ./autogen.sh --prefix=/usr/local
     make get-monolite-latest
     make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe
     sudo make install

@@ -22,45 +22,15 @@ namespace Benchmarks.Mono.AspNet
             );
 
             RouteTable.Routes.MapRoute(
-                name: "ADO.NET/MySQL/DB",
-                url: "adonet/mysql",
-                defaults: new { controller = "AdoNetMySql", action = "Index" }
+                name: "WithProviders",
+                url: "{controller}/{providerName}/{action}",
+                defaults: new { action = "Index" }
             );
-
+            
             RouteTable.Routes.MapRoute(
-                name: "ADO.NET/MySQL/Fortunes",
-                url: "adonet/mysql/fortunes",
-                defaults: new { controller = "AdoNetMySql", action = "Fortunes" }
-            );
-
-            RouteTable.Routes.MapRoute(
-                name: "ADO.NET/PostgreSQL",
-                url: "adonet/postgresql",
-                defaults: new { controller = "AdoNetPostgreSql", action = "Index" }
-            );
-
-            RouteTable.Routes.MapRoute(
-                name: "ADO.NET/PostgreSQL/Fortunes",
-                url: "adonet/postgresql/fortunes",
-                defaults: new { controller = "AdoNetPostgreSql", action = "Fortunes" }
-            );
-
-            RouteTable.Routes.MapRoute(
-                name: "EntityFramework/MySQL",
-                url: "entityframework/mysql",
-                defaults: new { controller = "EntityFrameworkMySql", action = "Index" }
-            );
-
-            RouteTable.Routes.MapRoute(
-                name: "EntityFramework/MySQL/Fortunes",
-                url: "entityframework/mysql/fortunes",
-                defaults: new { controller = "EntityFrameworkMySql", action = "Fortunes" }
-            );
-
-            RouteTable.Routes.MapRoute(
-                name: "MongoDB",
-                url: "mongodb",
-                defaults: new { controller = "MongoDB", action = "Index" }
+                name: "Default",
+                url: "{controller}/{action}",
+                defaults: new { action = "Index" }
             );
         }
     }
