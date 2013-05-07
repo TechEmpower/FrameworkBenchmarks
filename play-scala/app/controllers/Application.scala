@@ -62,7 +62,7 @@ object Application extends Controller {
     Action {
       Async {
         Future(Fortune.getAll())(dbEc).map { fs =>
-          val fortunes =  fs :+ Fortune(anorm.NotAssigned, "Additional fortune added at request time.")
+          val fortunes =  Fortune(anorm.NotAssigned, "Additional fortune added at request time.") +: fs
           Ok(views.html.fortune(fortunes))
         }
       }
