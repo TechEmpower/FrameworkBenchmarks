@@ -80,7 +80,8 @@ public class UpdateServlet extends HttpServlet
               // Update row
               try (PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY))
               {
-                statement2.setInt(1, random.nextInt(DB_ROWS) + 1);
+		worlds[i].setRandomNumber(random.nextInt(DB_ROWS) + 1);
+                statement2.setInt(1, worlds[i].getRandomNumber());
                 statement2.setInt(2, id);
 
                 statement2.execute();
