@@ -19,7 +19,7 @@ def start(args):
 def stop():
   try:
     subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
-    subprocess.call("sudo kill -QUIT $( cat php-phalcon/deploy/php-fpm.pid )", shell=True)
+    subprocess.call("sudo kill -QUIT $( cat php-phalcon-micro/deploy/php-fpm.pid )", shell=True)
     subprocess.check_call("sudo chown -R $USER:$USER php-phalcon-micro", shell=True)
     return 0
   except subprocess.CalledProcessError:
