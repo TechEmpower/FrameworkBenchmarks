@@ -47,7 +47,7 @@ $nodeinstaller_local = $workdir + "\" + $nodeinstaller_file
 (New-Object System.Net.WebClient).DownloadFile($nodeinstaller_url, $nodeinstaller_local)
 
 Start-Process $nodeinstaller_local '/passive' -Wait
-$env:Path += ";C:\Program Files\nodejs"; [Environment]::SetEnvironmentVariable( "Path", $env:Path, [System.EnvironmentVariableTarget]::Machine )
+$env:Path += ";C:\Program Files\nodejs"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # Python
@@ -59,7 +59,7 @@ $pythoninstaller_local = $workdir + "\" + $pythoninstaller_file
 (New-Object System.Net.WebClient).DownloadFile($pythoninstaller_url, $pythoninstaller_local)
 
 Start-Process $pythoninstaller_local '/passive' -Wait
-$env:Path += ";C:\Python27"; [Environment]::SetEnvironmentVariable( "Path", $env:Path, [System.EnvironmentVariableTarget]::Machine )
+$env:Path += ";C:\Python27"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # Firewall
@@ -67,4 +67,4 @@ $env:Path += ";C:\Python27"; [Environment]::SetEnvironmentVariable( "Path", $env
 Write-Host "Configuring firewall...`n"
 New-NetFirewallRule -DisplayName "HTTP 8080" -Action Allow -Direction Inbound -LocalPort 8080 -Protocol TCP | Out-Null
 
-cd "C:\FrameworkBenchmarks"
+cd $basedir
