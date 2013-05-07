@@ -7,7 +7,7 @@ public class World
 {
 
   private final int id;
-  private final int randomNumber;
+  private int randomNumber;
   
   public World(int id, int randomNumber)
   {
@@ -24,5 +24,9 @@ public class World
   {
     return this.randomNumber;
   }      
-  
+ 
+  public void setRandomNumber(int randomNumber)
+  {
+    this.randomNumber = randomNumber;
+  } 
 }
