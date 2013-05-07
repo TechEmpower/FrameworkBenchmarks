@@ -68,4 +68,26 @@ object Application extends Controller {
       }
     }
   }
+
+  def update(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
+    Action {
+      Async {
+        val random = ThreadLocalRandom.current()
+
+        val worlds = Future.sequence((for {
+          _ <- 1 to queries
+        } yield Future {
+            val world = World.findById(random.nextInt(TestDatabaseRows) + 1)
+            val updatedWorld = world.copy(randomNumber = random.nextInt(TestDatabaseRows) + 1)
+            World.updateRandom(updatedWorld)
+            updatedWorld
+          }(dbEc)
+        ).toList)
+
+        worlds.map {
+          w => Ok(Json.toJson(w))
+        }
+      }
+    }
+  }
 }

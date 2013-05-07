@@ -6,6 +6,7 @@
 GET     /json                           controllers.Application.json
 GET     /db                             controllers.Application.db(queries: Int ?= 1)
 GET     /fortunes                       controllers.Application.fortunes
+GET     /update                         controllers.Application.update(queries: Int ?= 1)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.Assets.at(path="/public", file)
