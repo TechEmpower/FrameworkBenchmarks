@@ -6,6 +6,7 @@
       "json_url": "/json",
       "db_url": "/dbs",
       "query_url": "/db?queries=",
+      "update_url": "/update?queries=",
       "port": 8080,
       "sort": 88
     },

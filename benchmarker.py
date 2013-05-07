@@ -175,18 +175,11 @@ class Benchmarker:
   ############################################################
   # report_results
   ############################################################
-  def report_results(self, framework, test, results, latency, requests, total_time, errors, total_requests):
+  def report_results(self, framework, test, results):
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
-      self.results['weighttpData'][test] = dict()
 
     self.results['rawData'][test][framework.sort] = results
-    self.results['weighttpData'][test][framework.sort] = dict()
-    self.results['weighttpData'][test][framework.sort]['latency'] = latency
-    self.results['weighttpData'][test][framework.sort]['requests'] = requests
-    self.results['weighttpData'][test][framework.sort]['totalTime'] = total_time
-    self.results['weighttpData'][test][framework.sort]['errors'] = errors
-    self.results['weighttpData'][test][framework.sort]['totalRequests'] = total_requests
 
   ############################################################
   # End report_results
@@ -516,12 +509,6 @@ class Benchmarker:
       self.results['rawData']['query'] = dict()
       self.results['rawData']['fortune'] = dict()
       self.results['rawData']['update'] = dict()
-      self.results['weighttpData'] = dict()
-      self.results['weighttpData']['json'] = dict()
-      self.results['weighttpData']['db'] = dict()
-      self.results['weighttpData']['query'] = dict()
-      self.results['weighttpData']['fortune'] = dict()
-      self.results['weighttpData']['update'] = dict()
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:
