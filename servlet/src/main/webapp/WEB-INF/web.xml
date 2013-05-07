@@ -23,4 +23,16 @@
     <load-on-startup/>
   </servlet>
   <servlet-mapping url-regexp='^/update$' servlet-name='update'/>
+  <servlet>
+    <servlet-name>postgres</servlet-name>
+    <servlet-class>hello.PostgresServlet</servlet-class>
+    <load-on-startup/>
+  </servlet>
+  <servlet-mapping url-regexp='^/postgres$' servlet-name='postgres'/>
+  <servlet>
+    <servlet-name>postgres-update</servlet-name>
+    <servlet-class>hello.PostgresUpdateServlet</servlet-class>
+    <load-on-startup/>
+  </servlet>
+  <servlet-mapping url-regexp='^/postgres-update$' servlet-name='postgres-update'/>
 </web-app>

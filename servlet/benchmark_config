@@ -15,6 +15,14 @@
       "update_url": "/servlet/update?queries=",
       "port": 8080,
       "sort": 19
+    },
+    "postgres-raw": {
+      "setup_file": "setup",
+      "db_url": "/servlet/postgres",
+      "query_url": "/servlet/postgres?queries=",
+      "update_url": "/servlet/postgres-update?queries=",
+      "port": 8080,
+      "sort": 99
     }
   }]
 }
