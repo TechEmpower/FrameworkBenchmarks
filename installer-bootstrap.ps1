@@ -9,7 +9,7 @@ if (!$Work) {
 $basedir = "C:\FrameworkBenchmarks"
 $workdir = $basedir + "\installs"
 
-$repo = "https://github.com/TechEmpower/FrameworkBenchmarks"
+$repo = "https://github.com/pdonald/FrameworkBenchmarks"
 $installer = $basedir + "\installer.ps1"
 
 $git = "C:\Git\bin\git.exe"
@@ -33,6 +33,7 @@ Remove-Item -Recurse -Force $basedir
 
 Write-Host "Downloading FrameworkBenchmarks from git...`n"
 &$git "clone" $repo $basedir | Out-Host
+&$git "checkout windows" | Out-Host
 
 Write-Host "`nLaunching installer...`n"
 Set-ExecutionPolicy -ExecutionPolicy Bypass
