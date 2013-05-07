@@ -6,12 +6,11 @@ import random
 from tornado import escape
 import tornado.options
 from tornado.options import options
+import tornado.httpserver
 
 
 tornado.options.define('port', default=8888, type=int, help=(
     "Server port"))
-
-db = motor.MotorClient("127.0.0.1").open_sync().hello_world
 
 class JsonSerializeTestHandler(tornado.web.RequestHandler):
     def get(self):
@@ -49,5 +48,8 @@ application = tornado.web.Application([
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
-    application.listen(options.port)
+    server = tornado.httpserver.HTTPServer(application)
+    server.bind(options.port)
+    server.start(0)
+    db = motor.MotorClient("localhost").open_sync().hello_world
     tornado.ioloop.IOLoop.instance().start()
