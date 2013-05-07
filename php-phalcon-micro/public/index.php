@@ -42,7 +42,7 @@ try {
 
     $app->map('/json', function() {
         header("Content-Type: application/json");
-        echo json_encode('Hello World!');
+        echo json_encode(array('message' => 'Hello World!'));
     });
 
     //
