@@ -5,11 +5,11 @@
 
 var cluster = require('cluster')
   , numCPUs = require('os').cpus().length
+  , windows = require('os').platform() == 'win32'
   , express = require('express')
   , mongoose = require('mongoose')
   , async = require('async')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
-  , Mapper = require('mapper')
   , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
 
 var Schema = mongoose.Schema
@@ -21,9 +21,12 @@ var WorldSchema = new Schema({
 }, { collection : 'world' });
 var MWorld = conn.model('World', WorldSchema);
 
-Mapper.connect(connMap, {verbose: false, strict: false});
-var World = Mapper.map("World", "id", "randomNumber");
-var Fortune = Mapper.map("Fortune", "id", "message");
+if (!windows) {
+  var Mapper = require('mapper');
+  Mapper.connect(connMap, {verbose: false, strict: false});
+  var World = Mapper.map("World", "id", "randomNumber");
+  var Fortune = Mapper.map("Fortune", "id", "message");
+}
 
 if (cluster.isMaster) {
   // Fork workers.
@@ -81,6 +84,8 @@ if (cluster.isMaster) {
   });
 
   app.get('/mysql-orm', function(req, res) {
+    if (!windows) return res.send(501, 'Not supported on windows');
+    
     var queries = req.query.queries || 1
       , worlds  = []
       , queryFunctions = [];
@@ -100,6 +105,8 @@ if (cluster.isMaster) {
   });
 
   app.get('/fortune', function(req, res) {
+    if (!windows) return res.send(501, 'Not supported on windows');
+    
     Fortune.all(function (err, fortunes) {
       var newFortune = {id: 0, message: "Additional fortune added at request time."};
       fortunes.push(newFortune);

@@ -1,0 +1,389 @@
+﻿<!--
+***********************************************************************************************
+Microsoft.WebApplication.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your web deploy projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process for web application projects.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="Microsoft.WebApplication.Build.Tasks.GetSilverlightItemsFromProperty"  AssemblyFile="Microsoft.WebApplication.Build.Tasks.dll" />
+  <UsingTask TaskName="Microsoft.WebApplication.Build.Tasks.CopyFilesToFolders"  AssemblyFile="Microsoft.WebApplication.Build.Tasks.dll" />
+
+  <PropertyGroup>
+    <IsDesktopBuild Condition="'$(IsDesktopBuild)'=='' And '$(TeamFoundationServerUrl)' != ''">False</IsDesktopBuild>
+    <WebProjectOutputDirInsideProjectDefault>True</WebProjectOutputDirInsideProjectDefault>
+    <WebProjectOutputDirInsideProjectDefault  Condition="('$(OutDir)' != '$(OutputPath)') Or ('$(IsDesktopBuild)' == 'False')" >False</WebProjectOutputDirInsideProjectDefault>
+    <WebProjectOutputDirInsideProject Condition="'$(WebProjectOutputDirInsideProject)' == ''">$(WebProjectOutputDirInsideProjectDefault)</WebProjectOutputDirInsideProject>
+    <DisableLinkInCopyWebApplicaton Condition="'$(DisableLinkInCopyWebApplicaton)'==''">False</DisableLinkInCopyWebApplicaton>
+    <Disable_CopyWebApplication Condition="'$(Disable_CopyWebApplication)' == ''">False</Disable_CopyWebApplication>
+    <UseWPP_CopyWebApplication Condition="'$(UseWPP_CopyWebApplication)' == ''">False</UseWPP_CopyWebApplication>
+    <CleanWebProjectOutputDir>True</CleanWebProjectOutputDir>
+    <CleanWebProjectOutputDir Condition="$(WebProjectOutputDirInsideProject)" >False</CleanWebProjectOutputDir>
+  </PropertyGroup>
+
+  <!--Only setup $(WebProjectOutputDir) iff user haven't set it up-->
+  <PropertyGroup Condition="'$(WebProjectOutputDir)'==''">
+    <WebProjectOutputDir>$(MSBuildProjectDirectory)</WebProjectOutputDir>
+    <WebProjectOutputDir Condition="!$(WebProjectOutputDirInsideProject)">$(OutDir)_PublishedWebsites\$(MSBuildProjectName)</WebProjectOutputDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PrepareForRunDependsOn>
+      $(PrepareForRunDependsOn);
+      CopySilverlightApplications;
+      _CopyBinDeployableAssemblies;
+    </PrepareForRunDependsOn>
+    <PrepareForRunDependsOn Condition="!$(Disable_CopyWebApplication)">
+      $(PrepareForRunDependsOn);
+      _CopyWebApplication;
+      _BuiltWebOutputGroupOutput
+    </PrepareForRunDependsOn>
+  </PropertyGroup>
+
+  <!--***************************************************************-->
+  <!--Global setting for Clean target -->
+  <!--***************************************************************-->
+  <PropertyGroup>
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      CleanWebProjectOutputDir;
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <!--********************************************************************-->
+  <!-- CleanWebProjectOutputDir  -->
+  <!-- ********************************************************************-->
+  <PropertyGroup>
+    <CleanWebProjectOutputDirDependsOn Condition="'$(CleanWebProjectOutputDirDependsOn)' == ''">
+    </CleanWebProjectOutputDirDependsOn>
+  </PropertyGroup>
+  <Target Name="CleanWebProjectOutputDir"
+          Condition="$(CleanWebProjectOutputDir)"
+          DependsOnTargets="$(CleanWebProjectOutputDirDependsOn)">
+    <!--Assertion check-->
+    <!--In the case of Clean Packaging/Publish, we simply delete the WebProjectOutputDir-->
+    <RemoveDir Condition="Exists($(WebProjectOutputDir))" Directories="$(WebProjectOutputDir)" ContinueOnError="true" />
+  </Target>
+
+  <!--
+	============================================================
+	_CopyWebApplication
+
+	This target will copy the build outputs along with the 
+	content files into a _PublishedWebsites folder.
+	
+	This Task is only necessary when $(OutDir) has been redirected
+	to a folder other than ~\bin such as is the case with Team Build.
+  
+  The original _CopyWebApplication is now a Legacy, you can still use it by setting $(UseWPP_CopyWebApplication) to true.
+  By default, it now change to use _WPPCopyWebApplication target in Microsoft.Web.Publish.targets.   It allow to leverage the web.config trsnaformation.
+	============================================================
+	-->
+
+  <PropertyGroup>
+    <!--This will be overwrite by ..\web\Microsoft.Web.Publishing.targets when $(UseWPP_CopyWebApplication) set to true-->
+   <OnBefore_CopyWebApplicationDefault>
+     _CopyWebApplicationLegacy;
+   </OnBefore_CopyWebApplicationDefault>
+    <OnBefore_CopyWebApplicationDefault Condition="$(UseWPP_CopyWebApplication) AND Exists('$(MSBuildThisFileDirectory)\..\Web\Microsoft.Web.Publishing.targets')">
+     _WPPCopyWebApplication;
+   </OnBefore_CopyWebApplicationDefault>
+   <OnBefore_CopyWebApplication Condition="'$(OnBefore_CopyWebApplication)'==''">
+    $(OnBefore_CopyWebApplicationDefault);
+  </OnBefore_CopyWebApplication>
+    
+  <OnAfter_CopyWebApplication Condition="'$(OnAfter_CopyWebApplication)'==''">
+  </OnAfter_CopyWebApplication>
+
+  <_CopyWebApplicationDependsOn Condition="'$(_CopyWebApplicationDependsOn)'==''">
+    $(OnBefore_CopyWebApplication);
+  </_CopyWebApplicationDependsOn>
+
+  </PropertyGroup>
+  <Target Name="_CopyWebApplication" 
+          Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'" 
+          DependsOnTargets="$(_CopyWebApplicationDependsOn)">
+
+    <CallTarget Condition="'$(OnAfter_CopyWebApplication)' != ''" Targets="$(OnAfter_CopyWebApplication)" RunEachTargetSeparately="true" />
+    
+  </Target>
+  
+  <!--
+	============================================================
+	_CopyWebApplicationLegacy
+
+	This target will copy the build outputs along with the 
+	content files into a _PublishedWebsites folder.
+	
+	This Task is only necessary when $(OutDir) has been redirected
+	to a folder other than ~\bin such as is the case with Team Build.
+	============================================================
+	-->
+  <Target Name="_CopyWebApplicationLegacy" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'" >
+    <!-- Log tasks -->
+    <Message Text="Copying Web Application Project Files for $(MSBuildProjectName)" />
+
+    <!-- Create the _PublishedWebsites\app\bin folder -->
+    <MakeDir Directories="$(WebProjectOutputDir)\bin" />
+
+    <!-- Copy build outputs to _PublishedWebsites\app\bin folder -->
+    <Copy SourceFiles="@(IntermediateAssembly)" DestinationFolder="$(WebProjectOutputDir)\bin" 
+          SkipUnchangedFiles="true"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+    <Copy SourceFiles="@(AddModules)" 
+          DestinationFolder="$(WebProjectOutputDir)\bin" 
+          SkipUnchangedFiles="true"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+    <Copy SourceFiles="$(IntermediateOutputPath)$(_SGenDllName)" 
+          DestinationFolder="$(WebProjectOutputDir)\%(Content.SubFolder)%(Content.RecursiveDir)" 
+          SkipUnchangedFiles="true" 
+          Condition="'$(_SGenDllCreated)'=='true'"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+    <Copy SourceFiles="$(IntermediateOutputPath)$(TargetName).pdb" 
+          DestinationFolder="$(WebProjectOutputDir)\bin" 
+          SkipUnchangedFiles="true" 
+          Condition="'$(_DebugSymbolsProduced)'=='true'" 
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+    <Copy SourceFiles="@(DocFileItem)" 
+          DestinationFolder="$(WebProjectOutputDir)\bin" 
+          SkipUnchangedFiles="true" 
+          Condition="'$(_DocumentationFileProduced)'=='true'"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+    <Copy SourceFiles="@(IntermediateSatelliteAssembliesWithTargetPath)" 
+          DestinationFiles="@(IntermediateSatelliteAssembliesWithTargetPath->'$(WebProjectOutputDir)\bin\%(Culture)\$(TargetName).resources.dll')" 
+          SkipUnchangedFiles="true" 
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+    <Copy SourceFiles="@(ReferenceComWrappersToCopyLocal); @(ResolvedIsolatedComModules); @(_DeploymentLooseManifestFile); @(NativeReferenceFile)" 
+          DestinationFolder="$(WebProjectOutputDir)\bin" 
+          SkipUnchangedFiles="true" 
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+    <!-- copy any referenced assemblies to _PublishedWebsites\app\bin folder -->
+    <Copy SourceFiles="@(ReferenceCopyLocalPaths)"
+          DestinationFiles="@(ReferenceCopyLocalPaths->'$(WebProjectOutputDir)\bin\%(DestinationSubDirectory)%(Filename)%(Extension)')" 
+          SkipUnchangedFiles="true" 
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+    <!-- Copy content files recursively to _PublishedWebsites\app\ folder -->
+    <Copy SourceFiles="@(Content)" Condition="'%(Content.Link)' == ''"
+          DestinationFolder="$(WebProjectOutputDir)\%(Content.RelativeDir)" 
+          SkipUnchangedFiles="true" 
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
+    <Copy SourceFiles="@(Content)" Condition="!$(DisableLinkInCopyWebApplicaton) And '%(Content.Link)' != ''"
+          DestinationFiles="$(WebProjectOutputDir)\%(Content.Link)"
+          SkipUnchangedFiles="true"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+    <!-- Copy items that have been marked to be copied to the bin folder -->
+    <Copy SourceFiles="@(_SourceItemsToCopyToOutputDirectory)" 
+          DestinationFolder="$(WebProjectOutputDir)\bin" 
+          SkipUnchangedFiles="true" 
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+    <Copy SourceFiles="@(_SourceItemsToCopyToOutputDirectoryAlways)" 
+          DestinationFolder="$(WebProjectOutputDir)\bin" 
+          SkipUnchangedFiles="false" 
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+    <!-- Copy Silverlight Zip and Xzp file to _PublishedWebsites\app\ folder-->
+    <Copy SourceFiles="@(_WebApplicationSilverlightXapFiles)"
+          DestinationFolder="$(WebProjectOutputDir)\%(_WebApplicationSilverlightXapFiles.RelativeDir)" 
+          SkipUnchangedFiles="true"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+    <!-- Copy items that need to be bin deployed to the bin folder -->
+    <Copy SourceFiles="@(_binDeployableAssemblies)" 
+          DestinationFolder="$(WebProjectOutputDir)\bin\%(_binDeployableAssemblies.DestinationRelPath)" 
+          SkipUnchangedFiles="true" 
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+  </Target>
+
+  <!--
+	============================================================
+	_BuiltWebOutputGroupOutput
+
+	This target creates and populates BuiltWebOutputGroupOutput
+	with contents of bin along with the @(Content) files
+	============================================================
+	-->
+  <Target Name ="_BuiltWebOutputGroupOutput"
+          Condition="!$(Disable_CopyWebApplication)"
+          Outputs="@(BuiltWebOutputGroupOutput)">
+    <CreateItem Include="$(WebProjectOutputDir)\bin\**\*.*;@(Content->'%(FullPath)')" Condition="'$(OutDir)' == '$(OutputPath)'">
+      <Output ItemName="BuiltWebOutputGroupOutput" TaskParameter="Include"/>
+    </CreateItem>
+
+    <CreateItem Include="$(WebProjectOutputDir)\**\*.*" Condition="'$(OutDir)' != '$(OutputPath)'">
+      <Output ItemName="BuiltWebOutputGroupOutput" TaskParameter="Include"/>
+    </CreateItem>
+  </Target>
+
+  <!--
+    ============================================================
+    _GetSilverlightApplications
+
+    Converts the list of Silverlight Applications that are defined
+    in the property $(SilverlightApplicationList) to ITaskItems that
+    can be used by teh CopySilverlightApplication task
+    The format of $(SilverlightApplicationList) is: 
+      {projGuid}|relPath|tgtFolder;{projGuid2}|relPathToProject2|tgtFolder2;...
+    ============================================================
+    -->
+  <Target
+    Name="_GetSilverlightApplications"
+    Condition="'$(SilverlightApplicationList)' != ''">
+
+    <GetSilverlightItemsFromProperty
+        SilverlightReferences="$(SilverlightApplicationList)"
+        ProjectPath="$(MSBuildProjectFullPath)">
+
+      <Output TaskParameter="SilverlightApplications" ItemName="_AllSilverlightApplications"/>
+    </GetSilverlightItemsFromProperty>
+
+    <!-- Break the silverlight application list into two lists: those that exist on disk and those that don't. -->
+    <ItemGroup>
+      <_SilverlightApplications Include="@(_AllSilverlightApplications)" Condition="Exists('%(Identity)')"/>
+      <_SilverlightApplicationsNotExist Include="@(_AllSilverlightApplications)" Condition="!Exists('%(Identity)')"/>
+    </ItemGroup>
+
+  </Target>
+
+  <!--
+	============================================================
+	CopySilverlightApplications
+
+	This target copies the output xap files from referenced
+	Silverlight application projects to the target folder.
+	============================================================
+	-->
+  <Target
+      Name="CopySilverlightApplications"
+      DependsOnTargets="_GetSilverlightApplications"
+      Outputs="@(_WebApplicationSilverlightXapFiles)"
+      Condition="'$(BuildingInsideVisualStudio)' != 'true'">
+
+    <!--
+        When building this project from the IDE or when building a .SLN from the command-line,
+        just gather the referenced build outputs (Xap files).  The code that builds the .SLN will already have
+        built the project, so there's no need to do it again here. Since Silverlight only supports AnyCPU that is
+        what we use for the platform
+
+        The ContinueOnError setting is here so that, during project load, as
+        much information as possible will be passed to the compilers.
+        -->
+        <MSBuild
+            Projects="@(_SilverlightApplications)"
+            Targets="GetXapOutputFile"
+            BuildInParallel= "false"
+            Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration);Platform=AnyCPU;BuildingSolutionFile=false"
+            Condition="'@(_SilverlightApplications)' != ''"
+            ContinueOnError="!$(BuildingProject)">
+
+      <Output TaskParameter="TargetOutputs" ItemName="_SilverlightXapFiles"/>
+
+    </MSBuild>
+
+    <!--
+        Build referenced projects when building from the command line.
+
+        The $(ProjectReferenceBuildTargets) will normally be blank so that the project's default
+        target is used during a P2P reference. However if a custom build process requires that
+        the referenced project has a different target to build it can be specified.
+        -->
+    <MSBuild
+        Projects="@(_SilverlightApplications)"
+        Targets="$(ProjectReferenceBuildTargets)"
+        Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration);Platform=AnyCPU;BuildingSolutionFile=false"
+        BuildInParallel="false"
+        Condition="'$(BuildingInsideVisualStudio)' != 'true' and '@(_SilverlightApplications)' != ''">
+    </MSBuild>
+
+    <!--Copy the outputs to the target folder-->
+    <CopyFilesToFolders SourceFiles="@(_SilverlightXapFiles)" 
+                        SilverlightApplications="@(_SilverlightApplications)" 
+                        ConfigName="$(Configuration)"  
+                        Condition="'@(_SilverlightXapFiles)' != ''">
+      <Output TaskParameter="DestinationFiles" ItemName="_WebApplicationSilverlightXapFiles" />      
+    </CopyFilesToFolders>
+
+    <!-- Issue a warning for each non-existent project. -->
+    <Warning
+        Text="The referenced Silverlight project '%(_SilverlightApplicationsNotExist.Identity)' does not exist."
+        Condition="'@(_SilverlightApplicationsNotExist)'!=''"/>
+  </Target>
+
+  <!--
+	============================================================
+	_CopyBinDeployableAssemblies
+
+	This target copies the contents of ProjectDir\_bin_deployableAssemblies to the bin
+	folder, preserving the relative paths
+	============================================================
+	-->
+  <Target
+      Name="_CopyBinDeployableAssemblies"
+      Condition="Exists('$(MSBuildProjectDirectory)\_bin_deployableAssemblies')">
+
+    <PropertyGroup>
+      <BinDeployableFolder Condition="'$(BinDeployableFolder)' == ''">_bin_deployableAssemblies\</BinDeployableFolder>
+      <BinDeployableFolderFullPath>$([System.IO.Path]::GetFullPath($(BinDeployableFolder)))</BinDeployableFolderFullPath>
+    </PropertyGroup>
+
+    <!--Pick up the deployable items from the $(None) collection that are under the _bin_deployableAssemblies folder -->
+    <CreateItem Include="@(None->'%(Identity)')" Condition="'%(None.FullPath)' != '' And  $([System.String]::new('%(None.FullPath)').StartsWith($(BinDeployableFolderFullPath), StringComparison.OrdinalIgnoreCase ))" >
+      <Output ItemName="__binDeployableAssemblies" TaskParameter="Include"/>
+    </CreateItem>
+
+    <!--Add metadata which holds the destination relative folder to copy them to-->
+    <ItemGroup>
+      <_binDeployableAssemblies Include ="@(__binDeployableAssemblies)" Condition="'@(__binDeployableAssemblies)' != ''">
+        <DestinationRelPath>$([System.String]::Concat($([System.IO.Path]::GetDirectoryName($([System.String]::new('%(__binDeployableAssemblies.FullPath)')))),'\').SubString($(BinDeployableFolderFullPath.Length)))</DestinationRelPath>
+      </_binDeployableAssemblies>
+    </ItemGroup>
+
+    <!-- Do the copy-->
+    <Copy SourceFiles="@(_binDeployableAssemblies)" DestinationFolder="$(OutDir)%(_binDeployableAssemblies.DestinationRelPath)"
+          SkipUnchangedFiles="true"
+          Retries="$(CopyRetryCount)"
+          RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+    <!--Add the items just copied to the collection of items to delete when doing a clean-->
+    <ItemGroup>
+      <FileWrites Include ="@(_binDeployableAssemblies->'$(OutDir)%(DestinationRelPath)%(Filename)%(Extension)')" />
+    </ItemGroup>
+ </Target>
+
+  <!--Import publishing target-->
+  <Import Project="..\Web\Microsoft.Web.Publishing.targets" Condition="Exists('..\Web\Microsoft.Web.Publishing.targets')" />
+
+
+  <!--Ensure the Siliverlight zap file is created and copied to the bin folder for the Microsoft.Web.Publishing.targets-->
+  <PropertyGroup>
+    <OnBeforePipelineCollectFilesPhase>
+      $(OnBeforePipelineCollectFilesPhase);
+      CopySilverlightApplications;
+    </OnBeforePipelineCollectFilesPhase>
+  </PropertyGroup>
+
+
+</Project>
