@@ -15,7 +15,6 @@ This is the Tornado portion of a [benchmarking test suite](../) comparing a vari
 The tests were run with:
 * [Python 2.7.3](http://www.python.org/)
 * [Tornado 3](https://www.tornadoweb.com/)
-* [nginx 1.4.0](http://nginx.org/)
 * [Mongodb 2.0.4](https://www.mongodb.org/)
 
 
