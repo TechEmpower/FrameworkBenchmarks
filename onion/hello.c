@@ -56,6 +56,7 @@
 #include <semaphore.h>
 #include <pthread.h>
 #include <signal.h>
+#include <malloc.h>
 
 /// Gets the dict and converts it to JSON and writes it into the response. 
 onion_connection_status return_json(onion_dict *json, onion_request *req, onion_response *res){
@@ -89,8 +90,6 @@ onion_connection_status return_db(MYSQL *db, onion_request *req, onion_response 
 	char *error;
 	const char *nqueries_str=onion_request_get_query(req,"queries");
 	int queries=(nqueries_str) ? atoi(nqueries_str) : 1;
-	
-	
 
 	json_object *json=json_object_new_object();
 	json_object *array=json_object_new_array();
@@ -116,6 +115,71 @@ onion_connection_status return_db(MYSQL *db, onion_request *req, onion_response 
 	
 	json_object_put(json);
 	return OCS_PROCESSED;
+}
+
+onion_connection_status fortunes_html_template(onion_dict *context, onion_request *req, onion_response *res);
+
+typedef struct fortune{
+	char id[10];
+	char message[2048];
+}fortune_t;
+
+typedef struct fortune_list{
+	int count;
+	int size;
+	fortune_t *list;
+}fortune_list_t;
+
+int cmp_fortune(fortune_t *a, fortune_t *b){
+	return strcmp(a->message, b->message);
+}
+
+onion_connection_status return_fortune(MYSQL *db, onion_request *req, onion_response *res){
+	mysql_query(db, "SELECT id, message FROM Fortune;");
+	MYSQL_RES *sqlres = mysql_store_result(db);
+	if (!sqlres)
+		return OCS_INTERNAL_ERROR;
+	MYSQL_ROW row;
+	fortune_list_t fortune_list;
+	
+	fortune_list.count=0;
+	fortune_list.size=16;
+	fortune_list.list=calloc(16,sizeof(fortune_t));
+	
+	while( (row=mysql_fetch_row(sqlres)) ){
+		if (fortune_list.count>=fortune_list.size){
+			fortune_list.size+=fortune_list.size;
+			fortune_list.list=realloc(fortune_list.list, fortune_list.size * sizeof(fortune_list.size));
+		}
+		strncpy(fortune_list.list[fortune_list.count].id,row[0],sizeof(fortune_list.list[fortune_list.count].id));
+		strncpy(fortune_list.list[fortune_list.count].message,row[1],sizeof(fortune_list.list[fortune_list.count].message));
+		fortune_list.count++;
+	}
+	
+	qsort(fortune_list.list, fortune_list.count, sizeof(fortune_t), (__compar_fn_t)cmp_fortune);
+	
+	onion_dict *context=onion_dict_new();
+	
+	onion_dict_add(context, "title", "Fortunes", 0);
+	
+	onion_dict *fortunes=onion_dict_new();
+	int i;
+	for (i=0;i<fortune_list.count;i++){
+		char nr[16];
+		snprintf(nr,sizeof(nr),"%010d",nr);
+		
+		onion_dict *fortune=onion_dict_new();
+		onion_dict_add(fortune, "id", fortune_list.list[i].id, 0);
+		onion_dict_add(fortune, "message", fortune_list.list[i].message, 0);
+		
+		onion_dict_add(fortunes, nr, fortune, OD_DUP_KEY|OD_FREE_VALUE|OD_DICT);
+	}
+	
+	onion_dict_add(context,"fortunes",fortunes, OD_DICT|OD_FREE_VALUE);
+	
+	onion_connection_status ret=fortunes_html_template(context, req, res);
+	free(fortune_list.list);
+	return ret;
 }
 
 #define NCONN 10
@@ -173,6 +237,12 @@ onion_connection_status muxer(struct test_data *data, onion_request *req, onion_
 		free_connection(data, db);
 		return ret;
 	}
+	if (strcmp(path, "fortune")==0){
+		MYSQL *db=get_connection(data);
+		int ret=return_fortune(db, req, res);
+		free_connection(data, db);
+		return ret;
+	}
 	
 	return OCS_INTERNAL_ERROR;
 }
@@ -198,6 +268,7 @@ int main(void){
 	int i;
 	for (i=0;i<NCONN;i++){
 		data.db[i]=mysql_init(NULL);
+		mysql_options(data.db[i], MYSQL_SET_CHARSET_NAME, "utf8");
 		data.free_db[i]=1;
 		if (data.db[i]==NULL){
 			ONION_ERROR("Cant create db connection: %s", mysql_error(data.db[i]));
