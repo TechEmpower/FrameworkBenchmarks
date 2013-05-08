@@ -242,6 +242,8 @@ class Benchmarker:
   ############################################################
   def __setup_server(self):
     try:
+      if os.name == 'nt':
+        return True
       subprocess.check_call("sudo sysctl -w net.core.somaxconn=1024".rsplit(" "))
       subprocess.check_call("sudo -s ulimit -n 8192".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
@@ -283,6 +285,10 @@ class Benchmarker:
   ############################################################
   def __run_tests(self, tests):
     for test in tests:
+      if test.os == 'nt' and os.name != 'nt':
+        # this is a windows only test, but we're not on windows. abort.
+        continue
+        
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
