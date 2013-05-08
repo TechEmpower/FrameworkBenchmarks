@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks.AspNet", "Benchmarks.AspNet.csproj", "{62C3DEA2-2696-4200-BD83-011679316847}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C24E4BD-94BD-4AFD-B912-00A5FF825E6B}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.config = NuGet.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62C3DEA2-2696-4200-BD83-011679316847}.Debug|x64.ActiveCfg = Debug|x64
+		{62C3DEA2-2696-4200-BD83-011679316847}.Debug|x64.Build.0 = Debug|x64
+		{62C3DEA2-2696-4200-BD83-011679316847}.Debug|x86.ActiveCfg = Debug|x86
+		{62C3DEA2-2696-4200-BD83-011679316847}.Debug|x86.Build.0 = Debug|x86
+		{62C3DEA2-2696-4200-BD83-011679316847}.Release|x64.ActiveCfg = Release|x64
+		{62C3DEA2-2696-4200-BD83-011679316847}.Release|x64.Build.0 = Release|x64
+		{62C3DEA2-2696-4200-BD83-011679316847}.Release|x86.ActiveCfg = Release|x86
+		{62C3DEA2-2696-4200-BD83-011679316847}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

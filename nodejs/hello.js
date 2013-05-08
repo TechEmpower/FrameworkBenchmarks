@@ -1,5 +1,6 @@
 var cluster = require('cluster')
-  , numCPUs = require('os').cpus().length;
+  , numCPUs = require('os').cpus().length
+  , windows = require('os').platform() == 'win32';
 
 if(cluster.isMaster) {
   // Fork workers.
@@ -17,18 +18,22 @@ if(cluster.isMaster) {
 var http = require('http')
   , url = require('url')
   , async = require('async')
-  , libmysql = require('mysql-libmysqlclient').createConnectionSync()
   , mongoose = require('mongoose')
   , conn = mongoose.connect('mongodb://172.16.98.98/hello_world')
   , MongoClient = require('mongodb').MongoClient
-  , Mapper = require('mapper')
   , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
 
-var collection = null;
-Mapper.connect(connMap, {verbose: false, strict: false});
-var World = Mapper.map("World", "id", "randomNumber")
+if (!windows) {
+  var Mapper = require('mapper')  
+    , libmysql = require('mysql-libmysqlclient').createConnectionSync();
+    
+    Mapper.connect(connMap, {verbose: false, strict: false});
+    var World = Mapper.map("World", "id", "randomNumber")
+    libmysql.connectSync('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+}
 
-libmysql.connectSync('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+var collection = null;
+
 MongoClient.connect('mongodb://172.16.98.98/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
@@ -70,6 +75,11 @@ http.createServer(function (req, res) {
   var hello = {message: "Hello, world"};
 
   var path = url.parse(req.url).pathname;
+  
+  // mysql on windows is not supported
+  if (windows && (path.substr(0, 3) == '/my' || path == '/update')) {
+    path = '/doesntexist';
+  }
 
   switch (path) {
   case '/json':
@@ -210,7 +220,7 @@ http.createServer(function (req, res) {
 
   default:
     // File not found handler
-    res.writeHead(404, {'Content-Type': 'text/html; charset=UTF-8'});
+    res.writeHead(501, {'Content-Type': 'text/plain; charset=UTF-8'});
     res.end("NOT IMPLEMENTED");
   }
 }).listen(8080);
