@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 07:59:59 UTC 2013
+
+  System load:  0.25               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer tornado-raw
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.83ms    7.25ms  39.47ms   85.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4721 requests in 5.00s, 1.19MB read
+Requests/sec:    943.52
+Transfer/sec:    243.01KB
+
+---------------------------------------------------------
+ Running Warmup tornado-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   255.12ms  329.31ms   1.78s    87.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27337 requests in 30.00s, 6.88MB read
+Requests/sec:    911.15
+Transfer/sec:    234.68KB
+
+---------------------------------------------------------
+ Concurrency: 8 for tornado-raw
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.39ms    7.57ms  73.47ms   86.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28066 requests in 30.00s, 7.06MB read
+Requests/sec:    935.51
+Transfer/sec:    240.94KB
+
+---------------------------------------------------------
+ Concurrency: 16 for tornado-raw
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.51ms   17.37ms 105.46ms   85.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27809 requests in 30.00s, 6.99MB read
+Requests/sec:    926.92
+Transfer/sec:    238.72KB
+
+---------------------------------------------------------
+ Concurrency: 32 for tornado-raw
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.84ms   35.86ms 222.12ms   86.05%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28644 requests in 30.00s, 7.20MB read
+Requests/sec:    954.73
+Transfer/sec:    245.88KB
+
+---------------------------------------------------------
+ Concurrency: 64 for tornado-raw
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    65.69ms   75.07ms 460.29ms   85.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28037 requests in 30.00s, 7.05MB read
+Requests/sec:    934.45
+Transfer/sec:    240.66KB
+
+---------------------------------------------------------
+ Concurrency: 128 for tornado-raw
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   121.81ms  147.51ms 941.45ms   86.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28706 requests in 30.01s, 7.22MB read
+Requests/sec:    956.68
+Transfer/sec:    246.39KB
+
+---------------------------------------------------------
+ Concurrency: 256 for tornado-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   248.34ms  397.77ms   2.05s    88.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28538 requests in 30.01s, 7.18MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:    951.04
+Transfer/sec:    244.94KB

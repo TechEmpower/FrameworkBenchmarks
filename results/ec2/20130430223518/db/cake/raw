@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 22:57:25 UTC 2013
+
+  System load:  0.14               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer cake
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/world.json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/world.json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.26ms   19.30ms 118.74ms   67.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  986 requests in 5.01s, 233.71KB read
+Requests/sec:    196.76
+Transfer/sec:     46.64KB
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/world.json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/world.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.18s   408.98ms   2.90s    79.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6003 requests in 30.01s, 1.39MB read
+  Socket errors: connect 0, read 0, write 0, timeout 20
+Requests/sec:    200.04
+Transfer/sec:     47.43KB
+
+---------------------------------------------------------
+ Concurrency: 8 for cake
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/world.json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/world.json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.04ms   15.70ms 107.97ms   72.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6687 requests in 30.00s, 1.55MB read
+Requests/sec:    222.87
+Transfer/sec:     52.83KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cake
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/world.json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/world.json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.01ms   32.98ms 283.46ms   72.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6564 requests in 30.00s, 1.52MB read
+Requests/sec:    218.79
+Transfer/sec:     51.86KB
+
+---------------------------------------------------------
+ Concurrency: 32 for cake
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/world.json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/world.json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   147.99ms   74.72ms 534.36ms   72.93%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6458 requests in 30.00s, 1.50MB read
+Requests/sec:    215.24
+Transfer/sec:     51.02KB
+
+---------------------------------------------------------
+ Concurrency: 64 for cake
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/world.json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/world.json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   297.06ms  154.20ms   1.31s    75.53%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6337 requests in 30.00s, 1.47MB read
+Requests/sec:    211.20
+Transfer/sec:     50.07KB
+
+---------------------------------------------------------
+ Concurrency: 128 for cake
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/world.json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/world.json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   590.76ms  251.46ms   1.78s    72.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6284 requests in 30.00s, 1.45MB read
+Requests/sec:    209.43
+Transfer/sec:     49.65KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cake
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/world.json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/world.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.22s   501.90ms   5.62s    82.93%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5872 requests in 30.01s, 1.36MB read
+  Socket errors: connect 0, read 0, write 0, timeout 64
+Requests/sec:    195.67
+Transfer/sec:     46.39KB

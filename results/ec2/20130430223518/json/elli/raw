@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:46:01 UTC 2013
+
+  System load:  0.04               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer elli
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.97ms  350.41us   1.46ms   51.31%
+    Req/Sec   677.90    468.16     1.00k    67.79%
+  46364 requests in 5.00s, 5.39MB read
+Requests/sec:   9273.56
+Transfer/sec:      1.08MB
+
+---------------------------------------------------------
+ Running Warmup elli
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.72ms    2.17ms  23.70ms   70.47%
+    Req/Sec     1.99k   194.83     4.00k    98.06%
+  569428 requests in 30.00s, 66.25MB read
+Requests/sec:  18981.09
+Transfer/sec:      2.21MB
+
+---------------------------------------------------------
+ Concurrency: 8 for elli
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.95ms  341.95us   1.92ms   55.57%
+    Req/Sec   714.02    587.02     2.00k    57.38%
+  279183 requests in 30.00s, 32.48MB read
+Requests/sec:   9306.20
+Transfer/sec:      1.08MB
+
+---------------------------------------------------------
+ Concurrency: 16 for elli
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.96ms    2.29ms  91.39ms   99.44%
+    Req/Sec     1.94k   253.93     3.00k    93.22%
+  549295 requests in 30.16s, 63.91MB read
+Requests/sec:  18213.77
+Transfer/sec:      2.12MB
+
+---------------------------------------------------------
+ Concurrency: 32 for elli
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.83ms  715.95us  14.98ms   72.24%
+    Req/Sec     1.99k    82.30     2.00k    99.32%
+  554377 requests in 30.00s, 64.50MB read
+Requests/sec:  18479.25
+Transfer/sec:      2.15MB
+
+---------------------------------------------------------
+ Concurrency: 64 for elli
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.54ms    0.88ms  11.00ms   74.75%
+    Req/Sec     2.00k    49.89     2.00k    99.75%
+  556082 requests in 30.00s, 64.70MB read
+Requests/sec:  18535.92
+Transfer/sec:      2.16MB
+
+---------------------------------------------------------
+ Concurrency: 128 for elli
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.11ms    3.89ms  85.45ms   97.69%
+    Req/Sec     1.98k   334.32     4.00k    91.03%
+  552334 requests in 30.00s, 64.26MB read
+Requests/sec:  18412.15
+Transfer/sec:      2.14MB
+
+---------------------------------------------------------
+ Concurrency: 256 for elli
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.00ms    5.34ms 148.90ms   97.88%
+    Req/Sec     1.99k   179.95     5.00k    98.19%
+  554739 requests in 29.99s, 64.54MB read
+Requests/sec:  18496.41
+Transfer/sec:      2.15MB

@@ -4,7 +4,7 @@ import sys
 import setup_util
 
 def start(args):
-  setup_util.replace_text("servlet/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+  setup_util.replace_text("servlet/src/main/webapp/WEB-INF/resin-web.xml", "localhost", args.database_host)
 
   try:
     subprocess.check_call("mvn clean compile war:war", shell=True, cwd="servlet")

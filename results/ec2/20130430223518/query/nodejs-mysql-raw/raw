@@ -1,0 +1,118 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 03:58:25 UTC 2013
+
+  System load:  0.65               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer nodejs-mysql-raw
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/mysql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/mysql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.35ms    3.20ms  21.16ms   80.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6163 requests in 5.00s, 1.27MB read
+Requests/sec:   1232.11
+Transfer/sec:    259.36KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mysql?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mysql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   190.60ms   67.28ms 638.85ms   74.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  41671 requests in 30.00s, 8.57MB read
+Requests/sec:   1388.89
+Transfer/sec:    292.37KB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mysql?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mysql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   143.74ms   51.57ms 208.97ms   72.71%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  69137 requests in 30.01s, 12.12MB read
+Requests/sec:   2304.13
+Transfer/sec:    413.51KB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mysql?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mysql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   446.59ms  158.79ms 735.75ms   68.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  19765 requests in 30.01s, 5.86MB read
+Requests/sec:    658.60
+Transfer/sec:    199.94KB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mysql?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mysql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   869.94ms  328.18ms   1.13s    75.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10540 requests in 30.01s, 4.73MB read
+Requests/sec:    351.22
+Transfer/sec:    161.46KB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mysql?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mysql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.51s   673.82ms   2.10s    76.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7229 requests in 30.01s, 4.34MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    240.86
+Transfer/sec:    148.10KB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/mysql?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/mysql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.06s   741.72ms   2.63s    86.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5515 requests in 30.01s, 4.15MB read
+  Socket errors: connect 0, read 0, write 0, timeout 532
+Requests/sec:    183.78
+Transfer/sec:    141.50KB

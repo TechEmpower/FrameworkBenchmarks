@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer micromvc
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   729.81us  255.35us   2.17ms   86.36%
+    Req/Sec     0.97k   171.75     1.00k    96.97%
+  53798 requests in 5.00s, 11.44MB read
+Requests/sec:  10759.64
+Transfer/sec:      2.29MB
+
+---------------------------------------------------------
+ Running Warmup micromvc
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.16ms   10.91ms 226.08ms   95.95%
+    Req/Sec     1.00k    24.96     1.00k    99.94%
+  383573 requests in 30.00s, 81.56MB read
+Requests/sec:  12785.59
+Transfer/sec:      2.72MB
+
+---------------------------------------------------------
+ Concurrency: 8 for micromvc
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   725.77us  242.83us   2.74ms   87.14%
+    Req/Sec     1.00k    25.05     1.00k    99.94%
+  325174 requests in 30.00s, 69.14MB read
+Requests/sec:  10839.47
+Transfer/sec:      2.30MB
+
+---------------------------------------------------------
+ Concurrency: 16 for micromvc
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.27ms  498.70us   4.08ms   73.32%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  369173 requests in 30.00s, 78.49MB read
+Requests/sec:  12306.19
+Transfer/sec:      2.62MB
+
+---------------------------------------------------------
+ Concurrency: 32 for micromvc
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.54ms    1.82ms  41.97ms   93.35%
+    Req/Sec     1.00k    24.94     1.00k    99.94%
+  384307 requests in 30.00s, 81.71MB read
+Requests/sec:  12810.44
+Transfer/sec:      2.72MB
+
+---------------------------------------------------------
+ Concurrency: 64 for micromvc
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.98ms    6.72ms 117.54ms   94.59%
+    Req/Sec     1.00k    43.40     1.00k    99.81%
+  382769 requests in 30.00s, 81.39MB read
+Requests/sec:  12759.26
+Transfer/sec:      2.71MB
+
+---------------------------------------------------------
+ Concurrency: 128 for micromvc
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.38ms   10.34ms 188.40ms   93.94%
+    Req/Sec     1.00k    66.37     1.00k    99.56%
+  380916 requests in 30.00s, 80.99MB read
+Requests/sec:  12697.14
+Transfer/sec:      2.70MB
+
+---------------------------------------------------------
+ Concurrency: 256 for micromvc
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.92ms   11.41ms 235.32ms   92.42%
+    Req/Sec     1.01k   145.17     2.00k    97.89%
+  381115 requests in 30.00s, 81.03MB read
+Requests/sec:  12703.72
+Transfer/sec:      2.70MB

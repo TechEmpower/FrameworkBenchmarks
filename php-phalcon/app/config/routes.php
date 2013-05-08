@@ -1,6 +1,6 @@
 <?php
 
-$router = new Phalcon\Mvc\Router();
+$router = new Phalcon\Mvc\Router(false);
 
 $router->add('/json', array(
     'controller' => 'bench',

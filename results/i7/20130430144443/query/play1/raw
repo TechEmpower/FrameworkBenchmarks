@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 02:25:50 PDT 2013
+
+  System load:  3.22                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play1
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.39ms  315.99us   4.12ms   90.23%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  29257 requests in 5.00s, 11.76MB read
+Requests/sec:   5850.50
+Transfer/sec:      2.35MB
+
+---------------------------------------------------------
+ Running Warmup play1
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.08ms    6.44ms  71.83ms   94.64%
+    Req/Sec   212.73    409.36     1.00k    78.73%
+  231511 requests in 30.00s, 93.08MB read
+Requests/sec:   7716.99
+Transfer/sec:      3.10MB
+
+---------------------------------------------------------
+ Queries: 1 for play1
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.04ms    4.82ms  74.37ms   94.65%
+    Req/Sec     0.99k   113.57     1.00k    98.69%
+  300261 requests in 30.00s, 111.61MB read
+Requests/sec:  10009.08
+Transfer/sec:      3.72MB
+
+---------------------------------------------------------
+ Queries: 5 for play1
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.41ms   19.64ms 713.26ms   95.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  126056 requests in 30.00s, 62.26MB read
+Requests/sec:   4201.62
+Transfer/sec:      2.08MB
+
+---------------------------------------------------------
+ Queries: 10 for play1
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   108.90ms   20.85ms 305.06ms   95.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  67998 requests in 30.00s, 43.89MB read
+Requests/sec:   2266.38
+Transfer/sec:      1.46MB
+
+---------------------------------------------------------
+ Queries: 15 for play1
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   159.02ms   32.17ms 728.53ms   95.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  47145 requests in 30.00s, 37.57MB read
+Requests/sec:   1571.39
+Transfer/sec:      1.25MB
+
+---------------------------------------------------------
+ Queries: 20 for play1
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   203.89ms   36.68ms 420.20ms   95.67%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36464 requests in 30.00s, 34.59MB read
+Requests/sec:   1215.37
+Transfer/sec:      1.15MB

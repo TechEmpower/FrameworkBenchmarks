@@ -1,0 +1,767 @@
+﻿<!--
+***********************************************************************************************
+Microsoft.Web.Publishing.AspNetCompileMerge.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your web deploy projects from the command-line or the IDE.
+
+This file defines the steps in the standard package/publish process for Tranform the list of file 
+through the aspnet_compile and aspnet_merge.  It will dramaticaly change the content in the list.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Import task from our dll-->
+  <UsingTask TaskName="GetPublishingLocalizedString" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="CopyPipelineFiles" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll" />
+  <UsingTask TaskName="AspNetMerge" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="GetProjectProperties" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="FilterByItems" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="GenerateAssemblyInfo" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="CheckItemsCount" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+
+  <!--ImportBefore Extension-->
+  <PropertyGroup>
+    <ImportByWildcardBeforeMicrosoftWebPublishingTransformTargets Condition="'$(ImportByWildcardBeforeMicrosoftWebPublishingTransformTargets)'==''">true</ImportByWildcardBeforeMicrosoftWebPublishingTransformTargets>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportBefore\*" Condition="'$(ImportByWildcardBeforeMicrosoftWebPublishingTransformTargets)' == 'true' and exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportBefore')"/>
+
+  <PropertyGroup>
+    <Microsoft_Web_Publishing_AspNetCompileMerge_targets_Imported>True</Microsoft_Web_Publishing_AspNetCompileMerge_targets_Imported>
+  </PropertyGroup>
+
+  <!--********************************************************************-->
+  <!--Enforce all item have these metadata value for all pipeline metadata-->
+  <!--Default for Exclude is False-->
+  <!--********************************************************************-->
+  <ItemDefinitionGroup>
+    <_AspnetCompileMergePrecompiledOutput>
+      <DestinationRelativePath></DestinationRelativePath>
+      <Exclude>False</Exclude>
+      <FromTarget>AspNetCompilerMergePhase</FromTarget>
+      <Category>Run</Category>
+      <ProjectFileType>Default</ProjectFileType>
+    </_AspnetCompileMergePrecompiledOutput>
+  </ItemDefinitionGroup>
+  
+  
+  <PropertyGroup>
+    <AspnetCompileMergeIntermediateOutputPath Condition="'$(AspnetCompileMergeIntermediateOutputPath)' == ''">$(IntermediateOutputPath)AspnetCompileMerge\</AspnetCompileMergeIntermediateOutputPath>
+    <AspnetCompileMergeIntermediateAssemblyInfo Condition="'$(AspnetCompileMergeIntermediateAssemblyInfo)' == ''">$(IntermediateOutputPath)AssemblyInfo\</AspnetCompileMergeIntermediateAssemblyInfo>
+    <CopyBeforeAspnetCompileMergeTargetPath  Condition="'$(CopyBeforeAspnetCompileMergeTargetPath)' == ''">$(AspnetCompileMergeIntermediateOutputPath)Source</CopyBeforeAspnetCompileMergeTargetPath>
+    <AspnetCompileMerge_TempBuildDir Condition="'$(AspnetCompileMerge_TempBuildDir)' == ''" >$(AspnetCompileMergeIntermediateOutputPath)TempBuildDir</AspnetCompileMerge_TempBuildDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(UseMerge)' != 'true'">
+    <_AspNetCompilerFixedNames  Condition="'$(_AspNetCompilerFixedNames)' == ''">$(UseFixedNames)</_AspNetCompilerFixedNames>
+  </PropertyGroup>
+
+  <PropertyGroup  Condition="'$(UseMetabasePath)' == 'true'">
+    <_AspNetCompilerMetabasePath Condition ="'$(_AspNetCompilerMetabasePath)' == ''">$(SourceWebMetabasePath)</_AspNetCompilerMetabasePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(UseMetabasePath)' != 'true'">
+    <_AspNetCompilerSourceWebPath Condition="'$(_AspNetCompilerSourceWebPath)' != ''">$(WebPublishPipelineProjectDirectory)</_AspNetCompilerSourceWebPath>
+    <_AspNetCompilerVirtualPath Condition="'$(_AspNetCompilerVirtualPath)' != ''">$(SourceWebVirtualPath)</_AspNetCompilerVirtualPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_WPPCurrentBuildInfo>$(_WPPCurrentBuildInfo);PrecompileBeforePublish=$(PrecompileBeforePublish);WDPMergeOption=$(WDPMergeOption);_AspNetCompilerFixedNames=$(_AspNetCompilerFixedNames);_AspNetCompilerMetabasePath=$(_AspNetCompilerMetabasePath);Microsoft_Web_Publishing_AspNetCompileMerge_targets_Imported=$(Microsoft_Web_Publishing_AspNetCompileMerge_targets_Imported)</_WPPCurrentBuildInfo>
+  </PropertyGroup>
+  
+  <!--***************************************************************-->
+  <!--Hookinto clean target for Clean target -->
+  <!--***************************************************************-->
+  <PropertyGroup>
+    <_WPPCleanTargets>
+      $(_WPPCleanTargets);
+      CleanAspNetCompileMergeTempDirectories;
+      </_WPPCleanTargets>
+  </PropertyGroup>
+
+  
+  <!--
+    ============================================================
+                              Clean
+
+    Clean target.
+    ============================================================
+    -->
+  <PropertyGroup>
+    <CleanAspNetCompileMergeTempDirectoriesDependsOn Condition="'$(CleanAspNetCompileMergeTempDirectoriesDependsOn)'==''">
+    </CleanAspNetCompileMergeTempDirectoriesDependsOn>
+  
+  </PropertyGroup>
+  <Target Name="CleanAspNetCompileMergeTempDirectories"  DependsOnTargets="$(CleanAspNetCompileMergeTempDirectoriesDependsOn)">
+    <!-- 
+        Create a Clean boolean property
+        -->
+    <CreateProperty Value="true">
+      <Output TaskParameter="Value" PropertyName="Clean" />
+    </CreateProperty>
+    <RemoveDir Condition="Exists('$(CopyBeforeAspnetCompileMergeTargetPath)')" Directories="$(CopyBeforeAspnetCompileMergeTargetPath)"/>
+    <RemoveDir Condition="Exists('$(AspnetCompileMerge_TempBuildDir)')" Directories="$(AspnetCompileMerge_TempBuildDir)" />
+    <RemoveDir Condition="Exists('$(AspnetCompileMergeIntermediateAssemblyInfo)')" Directories="$(AspnetCompileMergeIntermediateAssemblyInfo)" />
+    <Delete Condition="'$(AssemblyInfoDll)' != '' And Exists($(AssemblyInfoDll))"
+      DeletedFiles="$(AssemblyInfoDll)" ContinueOnError="true" />
+  </Target>
+
+
+  <!--
+    ============================================================
+                                        GetAspNetMergePath
+
+    Get the paths for AspNet_Merge.exe Path.
+    Use Framework SDK's Path.  If not exist, fall back to WDP installpath.
+    ============================================================
+    -->
+  <PropertyGroup>
+    <GetAspNetMergePathDependsOn>
+      GetFrameworkPaths;
+    </GetAspNetMergePathDependsOn>
+  </PropertyGroup>
+  <Target
+      Name="GetAspNetMergePath"
+      DependsOnTargets="$(GetAspNetMergePathDependsOn)"
+      Condition ="'$(GetAspNetMergePath)' != 'false'">
+    <PropertyGroup>
+      <AspnetMergeName>aspnet_merge.exe</AspnetMergeName>
+      <AspnetMergePath Condition="Exists('$(TargetFrameworkSDKToolsDirectory)$(AspnetMergeName)')">$(TargetFrameworkSDKToolsDirectory)</AspnetMergePath>
+    </PropertyGroup>
+    <Error Condition="'$(AspnetMergePath)' == '' Or !Exists($(AspnetMergePath))"
+           Text="Can't find the valid AspnetMergePath" />
+  </Target>
+
+
+
+  <!--********************************************************************-->
+  <!-- Target GenerateAssemblyInfo -->
+  <!--********************************************************************-->
+  <!--
+    ============================================================
+                              GenerateAssemblyInfo
+
+    Generates an Assembly with the AssemblyAttributes contained in @(AssebmlyAttributes)
+    The output is in property AssemblyInfoDll
+
+    The assembly attributes can be defined as follows:
+    
+           <ItemGroup>
+             <AssebmlyAttributes Include="AssemblyVersion">
+               <value>3.0.0.0</value>
+             </AssebmlyAttributes>
+             <AssebmlyAttributes Include="AssemblyFileVersion">
+               <value>3.0.0.0</value>
+             </AssebmlyAttributes>
+             <AssemblyAttributes Include="AssemblyTitle">
+               <value>MyCompany MyWeb</value>
+             </AssemblyAttributes>
+             <AssemblyAttributes Include="AssemblyDescription">
+               <value>Corporate Site</value>
+             </AssemblyAttributes>
+             <AssemblyAttributes Include="AssemblyCompany">
+               <value>MyCompany</value>
+             </AssemblyAttributes>
+             <AssemblyAttributes Include="AssemblyCopyright">
+               <value>Copyright © MyCompany 2005</value>
+             </AssemblyAttributes>
+           </ItemGroup>
+    
+    ============================================================
+    -->
+  <PropertyGroup>
+    <GenerateAssemblyInfoFromAssemblyAttributesDependsOn>
+      $(OnBeforeGenerateAssemblyInfoFromAssemblyAttributes);
+      $(GenerateAssemblyInfoFromAssemblyAttributesDependsOn);
+      GetFrameworkPaths;
+      GetAspNetMergePath;
+    </GenerateAssemblyInfoFromAssemblyAttributesDependsOn>
+  </PropertyGroup>
+  <Target Name="GenerateAssemblyInfoFromAssemblyAttributes" 
+          DependsOnTargets="$(GenerateAssemblyInfoFromAssemblyAttributesDependsOn)"
+          Condition=" '@(AssemblyAttributes)' != '' ">
+    
+    <PropertyGroup >
+      <_GenerateAssemblyInfoDll>False</_GenerateAssemblyInfoDll>
+      <_GenerateAssemblyInfoDll Condition="'$(AssemblyInfoDll)' == ''  Or !Exists($(AssemblyInfoDll))">True</_GenerateAssemblyInfoDll>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="$(_GenerateAssemblyInfoDll)">
+      <_AssemblyInfoSource Condition="'$(_AssemblyInfoSource)' == ''" >$(IntermediateOutputPath)AssemblyInfo\AssemblyInfo.cs</_AssemblyInfoSource>
+      <_AssemblyInfoSourceDirectory>$([System.IO.Path]::GetDirectoryName($(_AssemblyInfoSource)))</_AssemblyInfoSourceDirectory>
+      <AssemblyInfoDll>$([System.IO.Path]::GetDirectoryName($(_AssemblyInfoSource)))\AssemblyInfo.dll</AssemblyInfoDll>
+      <_AssemblyInfoDllDirectory>$([System.IO.Path]::GetDirectoryName($(AssemblyInfoDll)))</_AssemblyInfoDllDirectory>
+    </PropertyGroup>
+    
+    <GenerateAssemblyInfo Condition="$(_GenerateAssemblyInfoDll) And !Exists($(_AssemblyInfoSource))"
+       AssemblyAttributes="@(AssemblyAttributes)"
+       OutputDir="$([System.IO.Path]::GetDirectoryName($(_AssemblyInfoSource)))"
+       />
+
+    <MakeDir Condition="!Exists($(_AssemblyInfoDllDirectory))"
+              Directories="$(_AssemblyInfoDllDirectory)" ContinueOnError="true" />
+    
+    <Csc Condition="$(_GenerateAssemblyInfoDll)"
+      TargetType="library"
+      Sources="$(_AssemblyInfoSource)"
+      OutputAssembly="$(AssemblyInfoDll)"
+      />
+    <ItemGroup Condition="$(_GenerateAssemblyInfoDll) And Exists($(AssemblyInfoDll))">
+      <FileWrites Include="$(_AssemblyInfoSource)" />
+      <FileWrites Include="$(AssemblyInfoDll)" />
+    </ItemGroup>
+  </Target>
+
+
+  <PropertyGroup>
+    <GenerateAssemblyInfoFromExistingAssembleInfoDependsOn>
+      $(OnBeforeGenerateAssemblyInfoFromExistingAssembleInfo);
+      $(GenerateAssemblyInfoFromExistingAssembleInfoDependsOn);
+      GetFrameworkPaths;
+      GetAspNetMergePath;
+      GenerateAssemblyInfoFromAssemblyAttributes;
+    </GenerateAssemblyInfoFromExistingAssembleInfoDependsOn>
+  </PropertyGroup>
+  <Target Name="GenerateAssemblyInfoFromExistingAssembleInfo" 
+          DependsOnTargets="$(GenerateAssemblyInfoFromExistingAssembleInfoDependsOn)"
+          Condition=" '@(AssemblyAttributes)' == '' ">
+
+    <FilterByItems Condition="'$(_AssemblyInfoSource)'==''"
+      PipelineItems="@(Compile)"
+                       SourceMetadataName="Filename"
+                       FilterMetadataName="Filename"
+                       Filter="AssemblyInfo">
+      <Output TaskParameter="InFilter" ItemName="_AspNetCompile_AssemblyInfo"/>
+    </FilterByItems>
+
+    <ItemGroup Condition="'$(_AssemblyInfoSource)'!=''">
+      <_AspNetCompile_AssemblyInfo Include="$(_AssemblyInfoSource)" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(AssemblyInfoDll)' == ''">
+      <_AssemblyInfoDllDirectory>$(IntermediateOutputPath)AssemblyInfo</_AssemblyInfoDllDirectory>
+      <AssemblyInfoDll>$(_AssemblyInfoDllDirectory)\AssemblyInfo.dll</AssemblyInfoDll>
+    </PropertyGroup>
+    
+    <MakeDir Condition="!Exists($(_AssemblyInfoDllDirectory))"
+              Directories="$(_AssemblyInfoDllDirectory)" ContinueOnError="true" />
+
+    
+    <PropertyGroup >
+      <_GenerateAssemblyInfoDll>False</_GenerateAssemblyInfoDll>
+      <_GenerateAssemblyInfoDll Condition="'$(AssemblyInfoDll)' == ''  Or !Exists($(AssemblyInfoDll))">True</_GenerateAssemblyInfoDll>
+    </PropertyGroup>
+
+    
+    <CheckItemsCount Items="@(_AspNetCompile_AssemblyInfo)" >
+      <Output TaskParameter="Count" PropertyName="_AspNetCompile_AssemblyInfo_Count" />
+    </CheckItemsCount>
+
+    <!--Found more than one AssemblyInfo.cs or AssemblyInfo.vb
+    To avoid this error either specify
+    /p:_AssemblyInfoSource=..\..\AssemblyInfo.cs
+    or
+    /p:AssemblyInfoDll=$(TargetPath)
+    or
+    supply @(AssemblyAttributes) as following
+    <ItemGroup>
+      <AssebmlyAttributes Include="AssemblyVersion">
+        <value>3.0.0.0</value>
+      </AssebmlyAttributes>
+      <AssebmlyAttributes Include="AssemblyFileVersion">
+        <value>3.0.0.0</value>
+      </AssebmlyAttributes>
+      <AssemblyAttributes Include="AssemblyTitle">
+        <value>MyCompany MyWeb</value>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyDescription">
+        <value>Corporate Site</value>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyCompany">
+        <value>MyCompany</value>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyCopyright">
+        <value>Copyright © MyCompany 2005</value>
+      </AssemblyAttributes>
+    </ItemGroup>-->
+    <GetPublishingLocalizedString
+           Condition="$(_GenerateAssemblyInfoDll) AND '$(_AspNetCompile_AssemblyInfo_Count)' != '1'"
+           ID="PublishLocalizedString_ErrorInvalidMSBuildItemCollectionCount"
+           ArgumentCount="3"
+           Arguments="_AspNetCompile_AssemblyInfo_Count;$(_AspNetCompile_AssemblyInfo_Count);1"
+           LogType="Error" />
+
+    <Error  Text ="Target GenerateAssemblyInfoFromExistingAssembleInfo Failed"
+             Condition="$(_GenerateAssemblyInfoDll) And '$(_AspNetCompile_AssemblyInfo_Count)' != '1'" />
+
+
+
+    <FilterByItems
+      PipelineItems="@(_AspNetCompile_AssemblyInfo)"
+                       SourceMetadataName="Extension"
+                       FilterMetadataName="Extension"
+                       Filter="AssemblyInfo.cs">
+      <Output TaskParameter="InFilter" ItemName="_AspNetCompile_AssemblyInfo_CS"/>
+    </FilterByItems>
+
+    <Csc Condition="$(_GenerateAssemblyInfoDll) And '@(_AspNetCompile_AssemblyInfo_CS)' != ''"
+      TargetType="library"
+      Sources="@(_AspNetCompile_AssemblyInfo_CS)"
+      OutputAssembly="$(AssemblyInfoDll)"
+      />
+    
+    <FilterByItems
+      PipelineItems="@(_AspNetCompile_AssemblyInfo)"
+                       SourceMetadataName="Extension"
+                       FilterMetadataName="Extension"
+                       Filter="AssemblyInfo.vb">
+      <Output TaskParameter="InFilter" ItemName="_AspNetCompile_AssemblyInfo_VB"/>
+    </FilterByItems>
+
+    <Vbc Condition="$(_GenerateAssemblyInfoDll) And '@(_AspNetCompile_AssemblyInfo_VB)' != ''"
+      TargetType="library"
+      Sources="@(_AspNetCompile_AssemblyInfo_VB)"
+      OutputAssembly="$(AssemblyInfoDll)"
+      />
+    
+    <ItemGroup Condition="$(_GenerateAssemblyInfoDll) And Exists($(AssemblyInfoDll))">
+      <FileWrites Include="$(AssemblyInfoDll)" />
+    </ItemGroup>
+    
+  </Target>
+  
+  
+
+  <PropertyGroup>
+    <GenerateAssemblyInfoDependsOn>
+      $(OnBeforeGenerateAssemblyInfo);
+      $(GenerateAssemblyInfoDependsOn);
+      GetFrameworkPaths;
+      GetAspNetMergePath;
+      GenerateAssemblyInfoFromAssemblyAttributes;
+      GenerateAssemblyInfoFromExistingAssembleInfo;
+    </GenerateAssemblyInfoDependsOn>
+  </PropertyGroup>
+  <Target Name="GenerateAssemblyInfo" 
+          DependsOnTargets="$(GenerateAssemblyInfoDependsOn)"
+          Condition=" '$(GenerateAssemblyInfo)' != 'false' ">
+  
+  </Target>
+
+
+  <!--********************************************************************-->
+  <!-- Target GetAspNetPreCompileSourceVirtualPath -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <GetAspNetPreCompileSourceVirtualPathDependsOn >
+      $(OnBeforeGetAspNetPreCompileSourceVirtualPath);
+      $(GetAspNetPreCompileSourceVirtualPathDependsOn);
+    </GetAspNetPreCompileSourceVirtualPathDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GetAspNetPreCompileSourceVirtualPath"
+          Condition ="'$(GetAspNetPreCompileSourceVirtualPath)' != 'false' And '$(_AspNetCompilerVirtualPath)' == '' And '$(UseMetabasePath)' != 'true'"
+          DependsOnTargets="$(GetAspNetPreCompileSourceVirtualPathDependsOn)">
+    <ItemGroup>
+      <__AspNetPreCompileSourceVirtualPathName Include ="DevelopmentServerVPath" />
+      <__AspNetPreCompileSourceVirtualPathValue />
+    </ItemGroup>
+    <GetProjectProperties ProjectFileFullPath="$(WebPublishPipelineWAPProjectSettings)"
+                          ProjectExtensionsProperties="@(__AspNetPreCompileSourceVirtualPathName)">
+      <Output TaskParameter="ResultProperties"  ItemName="__AspNetPreCompileSourceVirtualPathValue" />
+      <Output TaskParameter="UseIis"  PropertyName="__AspNetPreCompileSourceUseIis" />
+      <Output TaskParameter="IisUrl"  PropertyName="__AspNetPreCompileSourceIisUrl" />
+    </GetProjectProperties>
+
+    <PropertyGroup>
+      <_AspNetCompilerVirtualPath>%(__AspNetPreCompileSourceVirtualPathValue.Value)</_AspNetCompilerVirtualPath>
+      <_AspNetCompilerVirtualPath Condition="'$(_AspNetCompilerVirtualPath)' == '' ">\</_AspNetCompilerVirtualPath>
+    </PropertyGroup>
+  </Target>
+
+
+  <!--********************************************************************-->
+  <!-- Target ConfigureForAspNetPreCompileMerge -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <ConfigureForAspNetPreCompileMergeDependsOn>
+      $(OnBeforeConfigureForAspNetPreCompileMerge);
+      $(ConfigureForAspNetPreCompileMergeDependsOn);
+      GetFrameworkPaths;
+      GetAspNetMergePath;
+      GetAspNetPreCompileSourceVirtualPath;
+      ResolveKeySource;
+    </ConfigureForAspNetPreCompileMergeDependsOn>
+  </PropertyGroup>
+
+  <Target Name="ConfigureForAspNetPreCompileMerge" DependsOnTargets="$(ConfigureForAspNetPreCompileMergeDependsOn)">
+
+    <PropertyGroup Condition="'$(_WDPFrameworkLowerThan4)' ==''">
+      <_WDPFrameworkLowerThan4>False</_WDPFrameworkLowerThan4>
+      <_WDPFrameworkLowerThan4 Condition="'$(TargetFrameworkVersion)' == 'v2.0' or '$(TargetFrameworkVersion)' == 'v3.0' or '$(TargetFrameworkVersion)' == 'v3.5'">True</_WDPFrameworkLowerThan4>
+    </PropertyGroup>
+
+    
+    <PropertyGroup Condition="'$(AspnetCompilerPath)'==''">
+      <AspnetCompilerPath >$(Framework40Dir)</AspnetCompilerPath>
+      <AspnetCompilerPath Condition=" '$(_WDPFrameworkLowerThan4)' == 'True' ">$(Framework20Dir)</AspnetCompilerPath>
+    </PropertyGroup>
+
+    <Error Condition="'$(AspnetCompilerPath)' == '' Or !Exists($(AspnetCompilerPath))"
+           Text="Can't find the valid AspnetCompilerPath" />
+
+    <PropertyGroup>
+      <_AspNetCompileMergeKeyFile Condition="'$(_AspNetCompileMergeKeyFile)' == ''">$(KeyOriginatorFile)</_AspNetCompileMergeKeyFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(UseMerge)' != true">
+      <_AspNetCompileMergeKeyContainer Condition="'$(_AspNetCompileMergeKeyContainer)' == ''">$(KeyContainerName)</_AspNetCompileMergeKeyContainer>
+    </PropertyGroup>
+    
+  </Target>
+
+
+  <!--********************************************************************-->
+  <!-- Target AspNetPreCompile -->
+  <!--We can't use the in-place aspnet_compiler because it will output to the aspnet temp folder which is only suiteable to run on the current machine.-->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <AspNetPreCompileDependsOn >
+      $(OnBeforeAspNetPreCompile);
+      $(AspNetPreCompileDependsOn);
+      CopyAllFilesToSingleFolderForAspNetCompileMerge;
+      GetReferenceAssemblyPaths;
+      ResolveReferences;
+      ResolveKeySource;
+      ConfigureForAspNetPreCompileMerge;
+    </AspNetPreCompileDependsOn>
+  </PropertyGroup>
+
+  <Target Name="AspNetPreCompile" DependsOnTargets="$(AspNetPreCompileDependsOn)"  Condition="'$(AspNetPreCompile)' != 'false'">
+
+    <PropertyGroup  Condition="'$(UseMetabasePath)' == 'true'" >
+      <_PreAspnetCompileMergeSingleTargetFolderFullPath></_PreAspnetCompileMergeSingleTargetFolderFullPath>
+      <_AspNetCompilerVirtualPath></_AspNetCompilerVirtualPath>
+    </PropertyGroup>
+    <PropertyGroup  Condition="'$(UseMetabasePath)' != 'true'" >
+      <_PreAspnetCompileMergeSingleTargetFolderFullPath>$([System.IO.Path]::GetFullPath($(_PreAspnetCompileMergeSingleTargetFolder)))</_PreAspnetCompileMergeSingleTargetFolderFullPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <_PostAspnetCompileMergeSingleTargetFolderFullPath>$([System.IO.Path]::GetFullPath($(_PostAspnetCompileMergeSingleTargetFolder)))</_PostAspnetCompileMergeSingleTargetFolderFullPath>
+    </PropertyGroup>
+
+    <AspNetCompiler
+      PhysicalPath="$(_PreAspnetCompileMergeSingleTargetFolderFullPath)"
+      TargetPath="$(_PostAspnetCompileMergeSingleTargetFolderFullPath)"
+      VirtualPath="$(_AspNetCompilerVirtualPath)"
+      Force="$(_AspNetCompilerForce)"
+      Debug="$(DebugSymbols)"
+      Updateable="$(EnableUpdateable)"
+      KeyFile="$(_AspNetCompileMergeKeyFile)"
+      KeyContainer="$(_AspNetCompileMergeKeyContainer)"
+      DelaySign="$(DelaySign)"
+      AllowPartiallyTrustedCallers="$(AllowPartiallyTrustedCallers)"
+      FixedNames="$(_AspNetCompilerFixedNames)"
+      Clean="$(Clean)"
+      MetabasePath="$(_AspNetCompilerMetabasePath)"
+      ToolPath="$(AspnetCompilerPath)"
+        />
+
+    <!--
+        Removing APP_DATA is done here so that the output groups reflect the fact that App_data is
+        not present
+        -->
+    <RemoveDir Condition="'$(DeleteAppDataFolder)' == 'true' And Exists('$(_PostAspnetCompileMergeSingleTargetFolderFullPath)\App_Data')"
+               Directories="$(_PostAspnetCompileMergeSingleTargetFolderFullPath)\App_Data" />
+               
+
+    <CollectFilesinFolder Condition="'$(UseMerge)' != 'true'"
+      RootPath="$(_PostAspnetCompileMergeSingleTargetFolderFullPath)" >
+      <Output TaskParameter="Result" ItemName="_AspnetCompileMergePrecompiledOutputNoMetadata" />
+    </CollectFilesinFolder>
+
+    <ItemGroup Condition="'$(UseMerge)' != 'true'">
+      <FileWrites Include="$(_PostAspnetCompileMergeSingleTargetFolderFullPath)\**"/>
+    </ItemGroup>
+
+  </Target>
+
+
+  
+  <!--********************************************************************-->
+  <!-- Target AspNetMerge -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <AspNetMergeDependsOn >
+      $(OnBeforeAspNetMerge);
+      CopyAllFilesToSingleFolderForAspNetCompileMerge;
+      $(AspNetMergeDependsOn);
+      ConfigureForAspNetPreCompileMerge;
+      AspNetPreCompile;
+      GenerateAssemblyInfo;
+    </AspNetMergeDependsOn>
+  </PropertyGroup>
+
+  <Target Name="AspNetMerge" DependsOnTargets="$(AspNetMergeDependsOn)"  Condition="'$(AspNetMerge)' != 'false' And '$(UseMerge)' == 'true'">
+    <AspNetMerge
+     ExePath="$(AspnetMergePath)"
+     ApplicationPath="$(_PostAspnetCompileMergeSingleTargetFolderFullPath)"
+     KeyFile="$(_AspNetCompileMergeKeyFile)"
+     DelaySign="$(DelaySign)"
+     Prefix="$(AssemblyPrefixName)"
+     SingleAssemblyName="$(SingleAssemblyName)"
+     Debug="$(DebugSymbols)"
+     Nologo="$(NoLogo)"
+     ContentAssemblyName="$(ContentAssemblyName)"
+     ErrorStack="$(ErrorStack)"
+     RemoveCompiledFiles="$(DeleteAppCodeCompiledFiles)"
+     CopyAttributes="$(CopyAssemblyAttributes)"
+     AssemblyInfo="$(AssemblyInfoDll)"
+     MergeXmlDocs="$(MergeXmlDocs)"
+     ErrorLogFile="$(MergeErrorLogFile)"
+          />
+
+
+    <CollectFilesinFolder Condition="'$(UseMerge)' == 'true'"
+      RootPath="$(_PostAspnetCompileMergeSingleTargetFolderFullPath)" >
+      <Output TaskParameter="Result" ItemName="_AspnetCompileMergePrecompiledOutputNoMetadata" />
+    </CollectFilesinFolder>
+
+    <ItemGroup Condition="'$(UseMerge)' == 'true'">
+      <FileWrites Include="$(_PostAspnetCompileMergeSingleTargetFolderFullPath)\**"/>
+    </ItemGroup>
+
+
+  </Target>
+
+
+  <!--********************************************************************-->
+  <!--Target ConfigureFoldersForAspNetCompileMerge -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <ConfigureFoldersForAspNetCompileMergeDependsOn>
+      $(OnBeforeConfigureFoldersForAspNetCompileMerge);
+      $(ConfigureFoldersForAspNetCompileMergeDependsOn);
+    </ConfigureFoldersForAspNetCompileMergeDependsOn>
+  </PropertyGroup>
+
+  <Target Name="ConfigureFoldersForAspNetCompileMerge"
+          Outputs="@(FilesForPackagingFromProject)"
+          DependsOnTargets="$(ConfigureFoldersForAspNetCompileMergeDependsOn)">
+    <!--This is a phase separation point-->
+
+
+    <!--
+    <CopyBeforeAspnetCompileMergeTargetPath  Condition="'$(CopyBeforeAspnetCompileMergeTargetPath)' == ''">$(AspnetCompileMergeIntermediateOutputPath)\Source</CopyBeforeAspnetCompileMergeTargetPath>
+    <AspnetCompileMerge_TempBuildDir Condition="'$(AspnetCompileMerge_TempBuildDir)' == ''" >$(AspnetCompileMergeIntermediateOutputPath)\TempBuildDir</AspnetCompileMerge_TempBuildDir>
+    -->
+    <PropertyGroup>
+      <_PreAspnetCompileMergeSingleTargetFolder>$(CopyBeforeAspnetCompileMergeTargetPath)</_PreAspnetCompileMergeSingleTargetFolder>
+      <_PostAspnetCompileMergeSingleTargetFolder>$(AspnetCompileMerge_TempBuildDir)</_PostAspnetCompileMergeSingleTargetFolder>
+    </PropertyGroup>
+
+    <CallTarget Targets="$(OnAfterConfigureFoldersForAspNetCompileMerge)" RunEachTargetSeparately="False" />
+  </Target>
+
+
+
+  <!--********************************************************************    -->
+  <!-- CopyAllFilesToSingleFolderForAspNetCompileMerge  Task                             -->
+  <!-- This will materialize all the in-memory files list which is not marked -->
+  <!-- as excluded from packaging into the AspNetCompileMerge temp folder.               -->
+  <!--ToDo: remove the condition on ContentPath AspNetCompileMerge (we are doing it now because IIS team is not support it yet-->
+  <!-- ********************************************************************   -->
+  <PropertyGroup>
+    <CopyAllFilesToSingleFolderForAspNetCompileMergeDependsOn>
+      $(OnBeforeCopyAllFilesToSingleFolderForAspNetCompileMerge);
+      ConfigureFoldersForAspNetCompileMerge;
+      $(CopyAllFilesToSingleFolderForAspNetCompileMergeDependsOn);
+    </CopyAllFilesToSingleFolderForAspNetCompileMergeDependsOn>
+  </PropertyGroup>
+  <Target Name="CopyAllFilesToSingleFolderForAspNetCompileMerge"
+          DependsOnTargets="$(CopyAllFilesToSingleFolderForAspNetCompileMergeDependsOn)"
+          Condition="'$(UseMetabasePath)' != 'true'">
+
+    <!-- In the case of the incremental Packaging/Publish, we need to find out the extra file and delete them-->
+    <ItemGroup>
+      <_AllExtraFilesUnder_PreAspnetCompileMergeSingleTargetFolder Include="$(_PreAspnetCompileMergeSingleTargetFolder)\**" />
+      <_AllExtraFilesUnder_PreAspnetCompileMergeSingleTargetFolder
+        Remove="@(FilesForPackagingFromProject->'$(_PreAspnetCompileMergeSingleTargetFolder)\%(DestinationRelativePath)')" />
+    </ItemGroup>
+    <!--Remove all extra files in the temp folder that's not in the @(FilesForPackagingFromProject-->
+    <Delete Files="@(_AllExtraFilesUnder_PreAspnetCompileMergeSingleTargetFolder)" />
+
+    <!-- Make sure the folder exist -->
+    <MakeDir Directories="$(_PreAspnetCompileMergeSingleTargetFolder)" Condition="!Exists('$(_PreAspnetCompileMergeSingleTargetFolder)')"/>
+
+    <!--Get Localized string before displaying message-->
+    <GetPublishingLocalizedString
+       Importance="High"
+       ID="PublishLocalizedString_WebPublishPipelineMaterializeAllFilesToTempDir"
+       ArgumentCount="1"
+       Arguments="$(_PreAspnetCompileMergeSingleTargetFolder)"
+       LogType="Message" />
+
+    <!--Force Copy Of all file to the $(_PreAspnetCompileMergeSingleTargetFolder) if needed-->
+    <CopyPipelineFiles PipelineItems="@(FilesForPackagingFromProject)"
+                           SourceDirectory="$(WebPublishPipelineProjectDirectory)"
+                           TargetDirectory="$(_PreAspnetCompileMergeSingleTargetFolder)"
+                           SkipMetadataExcludeTrueItems="True"
+                           UpdateItemSpec="True"
+                           DeleteItemsMarkAsExcludeTrue ="True">
+      <Output TaskParameter="ResultPipelineItems" ItemName="_Files_PreAspnetCompileMergeSingleTargetFolder"/>
+    </CopyPipelineFiles>
+
+    <!--Workaround the MSBuild 2.0 limitation-->
+    <ItemGroup>
+      <FilesForPackagingFromProject Remove="@(FilesForPackagingFromProject)" />
+      <FilesForPackagingFromProject Include="@(_Files_PreAspnetCompileMergeSingleTargetFolder)" />
+    </ItemGroup>
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert)"
+                      Encoding="utf-8"
+                      File="$(IntermediateOutputPath)\FilesForPackagingFromProjectInPreAspNetComopileMergeCopied.txt"
+                      Lines="@(FilesForPackagingFromProject->'
+                      Files:%(Identity) 
+                      FromTarget:%(FromTarget)
+                      DestinationRelativePath:%(DestinationRelativePath)')"
+                      Overwrite="True" />
+
+
+    <!--Remove all Empty folder that's left. Since it is not critical, we only log warning if we failed to delete empty folder.-->
+    <RemoveEmptyDirectories Directories="$(_PreAspnetCompileMergeSingleTargetFolder)"  LogErrorAsWarning="True" />
+    <MakeDir Directories="$(_PreAspnetCompileMergeSingleTargetFolder)" Condition="!Exists('$(_PreAspnetCompileMergeSingleTargetFolder)')"/>
+
+    <CallTarget Targets="$(OnAfterCopyAllFilesToSingleFolderForAspNetCompileMerge)" RunEachTargetSeparately="False" />
+  </Target>
+
+
+
+  <!--********************************************************************-->
+  <!--Target PostAspNetCompileMergeCollectFiles -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <PostAspNetCompileMergeCollectFilesDependsOn>
+      $(OnBeforePostAspNetCompileMergeCollectFiles);
+      $(PostAspNetCompileMergeCollectFilesDependsOn);
+      AspNetMerge;
+    </PostAspNetCompileMergeCollectFilesDependsOn>
+  </PropertyGroup>
+
+  <Target Name="PostAspNetCompileMergeCollectFiles"
+          Outputs="@(FilesForPackagingFromProject)"
+          DependsOnTargets="$(PostAspNetCompileMergeCollectFilesDependsOn)">
+
+    <!--need to consolate the @(FilesForPackagingFromProject) and @(_AspnetCompileMergePrecompiledOutput)-->
+
+    <ItemGroup>
+      <_AspnetCompileMergePrecompiledOutput Include="@(_AspnetCompileMergePrecompiledOutputNoMetadata->'$(_PostAspnetCompileMergeSingleTargetFolder)\%(Identity)')">
+        <DestinationRelativePath>%(_AspnetCompileMergePrecompiledOutputNoMetadata.Identity)</DestinationRelativePath>
+      </_AspnetCompileMergePrecompiledOutput>
+    </ItemGroup>
+
+
+    <!--This exclude if the filter item's DestinationRelativePath is specified.  
+        This is useful for case like Reference Dll and pdb where the source is not under the current project.-->
+    <FilterByItems PipelineItems="@(FilesForPackagingFromProject)"
+                       SourceMetadataName="DestinationRelativePath"
+                       FilterRootFolder="$(_PostAspnetCompileMergeSingleTargetFolderFullPath)"
+                       FilterBaseOnRelativePath="True"
+                       FilterMetadataName="DestinationRelativePath"
+                       Filter="@(_AspnetCompileMergePrecompiledOutput)">
+      <Output TaskParameter="InFilter" ItemName="_FilesForPackagingFromProject_in_AspnetCompileMergePrecompiledOutput"/>
+    </FilterByItems>
+
+    <!--Keep the Item meta from the original @(FilesForPackagingFromProject)-->
+    <ItemGroup>
+      <_AspnetCompileMergePrecompiledOutput Remove="@(_FilesForPackagingFromProject_in_AspnetCompileMergePrecompiledOutput->'%(FilterItemSpec)')" />
+      <_AspnetCompileMergePrecompiledOutput Include="@(_FilesForPackagingFromProject_in_AspnetCompileMergePrecompiledOutput->'%(FilterItemSpec)')" />
+    </ItemGroup>
+
+    <!--Workaround the MSBuild 2.0 limitation-->
+    <ItemGroup>
+      <FilesForPackagingFromProject Remove="@(FilesForPackagingFromProject)" />
+      <FilesForPackagingFromProject Include="@(_AspnetCompileMergePrecompiledOutput)" />
+    </ItemGroup>
+
+
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert)"
+                      Encoding="utf-8"
+                      File="$(IntermediateOutputPath)\FilesForPackagingFromPostAspNetCompileMergeCollectFiles.txt"
+                      Lines="@(FilesForPackagingFromProject->'
+                      Files:%(Identity) 
+                      FromTarget:%(FromTarget)
+                      DestinationRelativePath:%(DestinationRelativePath)')"
+                      Overwrite="True" />
+
+    <CallTarget Targets="$(OnAfterPostAspNetCompileMergeCollectFiles)" RunEachTargetSeparately="False" />
+  </Target>
+
+
+
+  <!--********************************************************************-->
+  <!--Target CleanPostAspNetCompileMergeFolder -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <CleanPostAspNetCompileMergeFolderDependsOn>
+      $(OnBeforeCleanPostAspNetCompileMergeFolder);
+      $(CleanPostAspNetCompileMergeFolderDependsOn);
+      ConfigureFoldersForAspNetCompileMerge;
+    </CleanPostAspNetCompileMergeFolderDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CleanPostAspNetCompileMergeFolder"
+          Outputs="@(FilesForPackagingFromProject)"
+          DependsOnTargets="$(CleanPostAspNetCompileMergeFolderDependsOn)">
+
+    <RemoveDir Condition="'$(_PostAspnetCompileMergeSingleTargetFolder)' != '' And Exists($(_PostAspnetCompileMergeSingleTargetFolder))"
+               Directories="$(_PostAspnetCompileMergeSingleTargetFolder)" />
+
+    <CallTarget Targets="$(OnAfterCleanPostAspNetCompileMergeFolder)" RunEachTargetSeparately="False" />
+  </Target>
+
+  <!--********************************************************************-->
+  <!--Target PipelineAspNetCompileMergePhase -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <PipelineAspNetCompileMergePhaseDependsOn>
+      $(OnBeforePipelineAspNetCompileMergePhase);
+      $(PipelineAspNetCompileMergePhaseDependsOn);
+      CleanPostAspNetCompileMergeFolder;
+      CopyAllFilesToSingleFolderForAspNetCompileMerge;
+      AspNetPreCompile;
+      AspNetMerge;
+      PostAspNetCompileMergeCollectFiles;
+    </PipelineAspNetCompileMergePhaseDependsOn>
+    <PipelineAspNetCompileMergePhaseAfterTargets Condition="'$(PipelineAspNetCompileMergePhaseAfterTargets)' == '' ">
+      PipelineTransformPhase;
+    </PipelineAspNetCompileMergePhaseAfterTargets>
+  </PropertyGroup>
+
+  <Target Name="PipelineAspNetCompileMergePhase"
+          Outputs="@(FilesForPackagingFromProject)"
+          DependsOnTargets="$(PipelineAspNetCompileMergePhaseDependsOn)"
+          AfterTargets="$(PipelineAspNetCompileMergePhaseAfterTargets)">
+    <!--This is a phase separation point-->
+
+    <!--Get Localized string before displaying message-->
+    <GetPublishingLocalizedString
+       ID="PublishLocalizedString_WebPublishPipelinePhase"
+      ArgumentCount="1"
+      Arguments="AspnetCompileMerge"
+       LogType="Message" />
+    <!--<Message Text="Pipeline AspNetCompileMerge Phase" />-->
+
+    <CallTarget Targets="$(OnAfterPipelineAspNetCompileMergePhase)" RunEachTargetSeparately="False" />
+  </Target>
+
+  
+  <!--ImportAfter Extension-->
+  <PropertyGroup>
+    <ImportByWildcardAfterMicrosoftWebPublishingTransformTargets Condition="'$(ImportByWildcardAfterMicrosoftWebPublishingTransformTargets)'==''">true</ImportByWildcardAfterMicrosoftWebPublishingTransformTargets>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportAfter\*" Condition="'$(ImportByWildcardAfterMicrosoftWebPublishingTransformTargets)' == 'true' and exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportAfter')"/>
+</Project>

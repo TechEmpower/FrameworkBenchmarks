@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 15:50:15 UTC 2013
+
+  System load:  0.0                Processes:           75
+  Usage of /:   25.5% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer rails-jruby
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/rails/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/rails/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   247.94ms  182.51ms 802.27ms   75.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  153 requests in 5.04s, 243.40KB read
+Requests/sec:     30.33
+Transfer/sec:     48.25KB
+
+---------------------------------------------------------
+ Running Warmup rails-jruby
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/rails/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/rails/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.27s     2.77s   11.38s    89.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2439 requests in 30.01s, 3.79MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1423
+Requests/sec:     81.27
+Transfer/sec:    129.30KB
+
+---------------------------------------------------------
+ Concurrency: 8 for rails-jruby
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/rails/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/rails/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.36ms   74.51ms   1.74s    99.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7312 requests in 30.00s, 11.36MB read
+Requests/sec:    243.72
+Transfer/sec:    387.71KB
+
+---------------------------------------------------------
+ Concurrency: 16 for rails-jruby
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/rails/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/rails/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.92ms   18.38ms 177.93ms   72.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9125 requests in 30.00s, 14.18MB read
+Requests/sec:    304.15
+Transfer/sec:    483.84KB
+
+---------------------------------------------------------
+ Concurrency: 32 for rails-jruby
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/rails/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/rails/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    82.23ms   33.13ms 238.99ms   71.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10829 requests in 30.00s, 16.82MB read
+Requests/sec:    360.93
+Transfer/sec:    574.17KB
+
+---------------------------------------------------------
+ Concurrency: 64 for rails-jruby
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/rails/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/rails/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   138.53ms   75.34ms 492.79ms   70.53%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12447 requests in 30.00s, 19.34MB read
+Requests/sec:    414.85
+Transfer/sec:    659.95KB
+
+---------------------------------------------------------
+ Concurrency: 128 for rails-jruby
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/rails/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/rails/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   253.12ms  168.23ms 921.83ms   64.24%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13282 requests in 30.00s, 20.63MB read
+Requests/sec:    442.67
+Transfer/sec:    704.21KB
+
+---------------------------------------------------------
+ Concurrency: 256 for rails-jruby
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/rails/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/rails/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   509.28ms  360.49ms   1.97s    60.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13031 requests in 30.01s, 20.24MB read
+Requests/sec:    434.24
+Transfer/sec:    690.80KB

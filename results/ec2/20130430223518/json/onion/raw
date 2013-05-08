@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 06:25:18 UTC 2013
+
+  System load:  0.14               Processes:           80
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer onion
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   297.45us   42.90us 535.00us   76.58%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  126527 requests in 5.00s, 16.41MB read
+Requests/sec:  25308.74
+Transfer/sec:      3.28MB
+
+---------------------------------------------------------
+ Running Warmup onion
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.17ms    4.66ms  32.82ms   87.48%
+    Req/Sec     6.21k   771.47    14.00k    62.24%
+  1619633 requests in 30.00s, 210.07MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:  53987.14
+Transfer/sec:      7.00MB
+
+---------------------------------------------------------
+ Concurrency: 8 for onion
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   493.99us    5.13ms 204.31ms   99.50%
+    Req/Sec     2.04k   199.95     3.00k    95.83%
+  692734 requests in 30.00s, 89.85MB read
+Requests/sec:  23091.91
+Transfer/sec:      3.00MB
+
+---------------------------------------------------------
+ Concurrency: 16 for onion
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   421.08us  554.69us  13.30ms   99.31%
+    Req/Sec     4.11k   312.90     5.00k    89.01%
+  1164519 requests in 30.00s, 151.04MB read
+Requests/sec:  38818.37
+Transfer/sec:      5.03MB
+
+---------------------------------------------------------
+ Concurrency: 32 for onion
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   829.36us    0.90ms  16.52ms   97.62%
+    Req/Sec     5.06k   316.38     8.00k    92.69%
+  1383462 requests in 30.00s, 179.43MB read
+Requests/sec:  46118.39
+Transfer/sec:      5.98MB
+
+---------------------------------------------------------
+ Concurrency: 64 for onion
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.69ms    2.08ms  22.01ms   94.66%
+    Req/Sec     6.03k   488.99    10.00k    83.29%
+  1571371 requests in 29.99s, 203.81MB read
+Requests/sec:  52401.05
+Transfer/sec:      6.80MB
+
+---------------------------------------------------------
+ Concurrency: 128 for onion
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.12ms    6.66ms  41.36ms   88.54%
+    Req/Sec     5.50k   844.33    13.00k    84.59%
+  1249708 requests in 29.99s, 162.09MB read
+Requests/sec:  41668.93
+Transfer/sec:      5.40MB
+
+---------------------------------------------------------
+ Concurrency: 256 for onion
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.91ms    8.53ms 117.10ms   87.99%
+    Req/Sec     4.01k   849.96     5.00k    27.99%
+  1362281 requests in 30.00s, 176.69MB read
+Requests/sec:  45408.08
+Transfer/sec:      5.89MB

@@ -1,0 +1,109 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer gemini
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.74ms  523.76us   6.21ms   88.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23380 requests in 5.00s, 4.69MB read
+Requests/sec:   4675.22
+Transfer/sec:      0.94MB
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.00ms   43.68ms 574.65ms   74.92%
+    Req/Sec    39.73    201.64     2.00k    96.15%
+  144363 requests in 30.00s, 28.99MB read
+Requests/sec:   4812.04
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Queries: 1 for gemini
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.92ms   36.08ms 587.53ms   90.93%
+    Req/Sec   787.23    412.44     2.00k    78.47%
+  248119 requests in 30.00s, 42.30MB read
+Requests/sec:   8271.17
+Transfer/sec:      1.41MB
+
+---------------------------------------------------------
+ Queries: 5 for gemini
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   111.13ms   70.95ms 772.74ms   75.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  71987 requests in 30.00s, 21.07MB read
+Requests/sec:   2399.21
+Transfer/sec:    718.99KB
+
+---------------------------------------------------------
+ Queries: 10 for gemini
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   196.90ms   99.10ms 778.70ms   76.84%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  39299 requests in 30.01s, 17.46MB read
+Requests/sec:   1309.60
+Transfer/sec:    595.66KB
+
+---------------------------------------------------------
+ Queries: 15 for gemini
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   282.91ms  100.40ms 779.62ms   79.93%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26721 requests in 30.02s, 15.92MB read
+Requests/sec:    890.25
+Transfer/sec:    543.03KB
+
+---------------------------------------------------------
+ Queries: 20 for gemini
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   375.37ms  135.59ms   1.13s    79.67%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20085 requests in 30.02s, 15.01MB read
+Requests/sec:    669.15
+Transfer/sec:    511.98KB

@@ -1,0 +1,124 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 08:57:30 UTC 2013
+
+  System load:  0.37               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer kohana-raw
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/bench/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/bench/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.95ms   13.74ms  80.54ms   72.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1453 requests in 5.01s, 383.89KB read
+Requests/sec:    289.92
+Transfer/sec:     76.60KB
+
+---------------------------------------------------------
+ Running Warmup kohana-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/bench/db/2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/bench/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   883.69ms  326.94ms   2.99s    77.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8205 requests in 30.01s, 2.12MB read
+  Socket errors: connect 0, read 0, write 0, timeout 14
+Requests/sec:    273.37
+Transfer/sec:     72.23KB
+
+---------------------------------------------------------
+ Queries: 1 for kohana-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/bench/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/bench/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   849.21ms  282.65ms   3.21s    78.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8652 requests in 30.01s, 1.94MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    288.28
+Transfer/sec:     66.10KB
+
+---------------------------------------------------------
+ Queries: 5 for kohana-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/bench/db/5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/bench/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   976.18ms  343.26ms   1.97s    74.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7502 requests in 30.01s, 2.70MB read
+Requests/sec:    250.02
+Transfer/sec:     92.26KB
+
+---------------------------------------------------------
+ Queries: 10 for kohana-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/bench/db/10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/bench/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.16s   374.44ms   2.09s    78.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6254 requests in 30.01s, 3.33MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    208.43
+Transfer/sec:    113.53KB
+
+---------------------------------------------------------
+ Queries: 15 for kohana-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/bench/db/15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/bench/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.30s   427.60ms   2.70s    77.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5541 requests in 30.01s, 3.89MB read
+  Socket errors: connect 0, read 0, write 0, timeout 17
+Requests/sec:    184.64
+Transfer/sec:    132.82KB
+
+---------------------------------------------------------
+ Queries: 20 for kohana-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/bench/db/20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/bench/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.40s   458.65ms   2.59s    79.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5015 requests in 30.01s, 4.38MB read
+  Socket errors: connect 0, read 0, write 0, timeout 40
+Requests/sec:    167.12
+Transfer/sec:    149.41KB

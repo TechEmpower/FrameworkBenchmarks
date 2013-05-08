@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 06:12:33 UTC 2013
+
+  System load:  0.33               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer snap
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8000/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.32ms  551.73us   6.62ms   85.39%
+    Req/Sec   123.60    329.74     1.00k    87.64%
+  33688 requests in 5.00s, 5.78MB read
+Requests/sec:   6733.74
+Transfer/sec:      1.16MB
+
+---------------------------------------------------------
+ Running Warmup snap
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.98ms    4.77ms  65.48ms   83.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  166813 requests in 30.00s, 28.64MB read
+Requests/sec:   5560.20
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Concurrency: 8 for snap
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.54ms    1.23ms   8.61ms   86.98%
+    Req/Sec   248.44    432.24     1.00k    75.16%
+  177995 requests in 30.00s, 30.55MB read
+Requests/sec:   5933.27
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 16 for snap
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.88ms    1.74ms  11.39ms   67.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  185183 requests in 30.00s, 31.79MB read
+Requests/sec:   6172.80
+Transfer/sec:      1.06MB
+
+---------------------------------------------------------
+ Concurrency: 32 for snap
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.21ms    1.60ms  13.76ms   85.85%
+    Req/Sec     0.62     24.91     1.00k    99.94%
+  223900 requests in 30.00s, 38.43MB read
+Requests/sec:   7462.96
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Concurrency: 64 for snap
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.10ms    1.59ms  19.60ms   81.31%
+    Req/Sec    23.44    151.35     1.00k    97.66%
+  236906 requests in 30.00s, 40.67MB read
+Requests/sec:   7897.11
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 128 for snap
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.34ms    2.00ms  25.51ms   79.59%
+    Req/Sec     3.72     60.91     1.00k    99.63%
+  220897 requests in 30.00s, 37.92MB read
+Requests/sec:   7363.41
+Transfer/sec:      1.26MB
+
+---------------------------------------------------------
+ Concurrency: 256 for snap
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.31ms    7.03ms 226.96ms   98.06%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  210218 requests in 30.00s, 36.09MB read
+Requests/sec:   7006.93
+Transfer/sec:      1.20MB

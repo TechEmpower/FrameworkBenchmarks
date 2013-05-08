@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 01:56:04 PDT 2013
+
+  System load:  0.5                 Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer laravel-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.25ms    1.39ms  11.98ms   75.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6470 requests in 5.01s, 6.00MB read
+Requests/sec:   1292.57
+Transfer/sec:      1.20MB
+
+---------------------------------------------------------
+ Running Warmup laravel-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   169.10ms   85.61ms 771.16ms   72.84%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  44555 requests in 30.00s, 41.30MB read
+Requests/sec:   1485.08
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Queries: 1 for laravel-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   160.99ms   91.82ms 684.13ms   72.20%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  47092 requests in 30.00s, 42.22MB read
+Requests/sec:   1569.62
+Transfer/sec:      1.41MB
+
+---------------------------------------------------------
+ Queries: 5 for laravel-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   199.54ms   96.81ms 601.23ms   69.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  39130 requests in 30.00s, 39.82MB read
+Requests/sec:   1304.22
+Transfer/sec:      1.33MB
+
+---------------------------------------------------------
+ Queries: 10 for laravel-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   231.41ms  109.14ms 666.66ms   71.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32848 requests in 30.00s, 38.44MB read
+Requests/sec:   1094.83
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Queries: 15 for laravel-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   271.89ms  133.25ms   1.03s    71.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28200 requests in 30.00s, 37.27MB read
+Requests/sec:    939.93
+Transfer/sec:      1.24MB
+
+---------------------------------------------------------
+ Queries: 20 for laravel-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   303.39ms  148.73ms 892.22ms   70.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24842 requests in 30.00s, 36.60MB read
+Requests/sec:    827.98
+Transfer/sec:      1.22MB

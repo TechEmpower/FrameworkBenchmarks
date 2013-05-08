@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 11:06:39 UTC 2013
+
+  System load:  1.2                Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer phalcon
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.11ms    4.92ms  41.33ms   80.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3157 requests in 5.01s, 7.30MB read
+Requests/sec:    630.44
+Transfer/sec:      1.46MB
+
+---------------------------------------------------------
+ Running Warmup phalcon
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   406.74ms  146.01ms   1.20s    73.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18675 requests in 30.01s, 43.17MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    622.19
+Transfer/sec:      1.44MB
+
+---------------------------------------------------------
+ Concurrency: 8 for phalcon
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.71ms    4.52ms  39.68ms   78.92%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18902 requests in 30.00s, 43.69MB read
+Requests/sec:    630.02
+Transfer/sec:      1.46MB
+
+---------------------------------------------------------
+ Concurrency: 16 for phalcon
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.99ms   25.47ms 319.88ms   91.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20571 requests in 30.01s, 47.55MB read
+Requests/sec:    685.57
+Transfer/sec:      1.58MB
+
+---------------------------------------------------------
+ Concurrency: 32 for phalcon
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.51ms  100.30ms   1.03s    92.11%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20522 requests in 30.00s, 47.44MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    683.99
+Transfer/sec:      1.58MB
+
+---------------------------------------------------------
+ Concurrency: 64 for phalcon
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   145.21ms  382.78ms   4.25s    93.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20310 requests in 30.00s, 46.95MB read
+  Socket errors: connect 0, read 0, write 0, timeout 11
+Requests/sec:    676.93
+Transfer/sec:      1.56MB
+
+---------------------------------------------------------
+ Concurrency: 128 for phalcon
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   235.06ms  238.21ms   1.51s    86.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  19535 requests in 30.00s, 45.16MB read
+Requests/sec:    651.08
+Transfer/sec:      1.51MB
+
+---------------------------------------------------------
+ Concurrency: 256 for phalcon
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   412.38ms  206.84ms   2.18s    75.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  19548 requests in 30.01s, 45.19MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:    651.49
+Transfer/sec:      1.51MB

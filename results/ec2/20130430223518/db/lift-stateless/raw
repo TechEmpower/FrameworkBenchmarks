@@ -1,0 +1,138 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 06:59:43 UTC 2013
+
+  System load:  0.11               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer lift-stateless
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    82.92ms   41.22ms 213.60ms   77.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  532 requests in 5.02s, 167.71KB read
+Requests/sec:    105.90
+Transfer/sec:     33.38KB
+
+---------------------------------------------------------
+ Running Warmup lift-stateless
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.01s   280.73ms   1.63s    90.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7027 requests in 30.01s, 2.16MB read
+  Socket errors: connect 0, read 0, write 0, timeout 34
+  Non-2xx or 3xx responses: 1
+Requests/sec:    234.15
+Transfer/sec:     73.81KB
+
+---------------------------------------------------------
+ Concurrency: 8 for lift-stateless
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.53ms   17.41ms 142.48ms   87.40%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14920 requests in 30.00s, 4.59MB read
+Requests/sec:    497.28
+Transfer/sec:    156.75KB
+
+---------------------------------------------------------
+ Concurrency: 16 for lift-stateless
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.30ms   44.54ms 388.46ms   88.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  15878 requests in 30.00s, 4.89MB read
+Requests/sec:    529.20
+Transfer/sec:    166.81KB
+
+---------------------------------------------------------
+ Concurrency: 32 for lift-stateless
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    74.77ms   78.63ms 560.73ms   88.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  15965 requests in 30.00s, 4.91MB read
+  Non-2xx or 3xx responses: 3
+Requests/sec:    532.12
+Transfer/sec:    167.74KB
+
+---------------------------------------------------------
+ Concurrency: 64 for lift-stateless
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   130.79ms   80.62ms 614.68ms   85.66%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16262 requests in 30.00s, 5.01MB read
+  Non-2xx or 3xx responses: 1
+Requests/sec:    542.02
+Transfer/sec:    170.85KB
+
+---------------------------------------------------------
+ Concurrency: 128 for lift-stateless
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   223.57ms   72.77ms 705.07ms   83.03%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16768 requests in 30.01s, 5.16MB read
+Requests/sec:    558.84
+Transfer/sec:    176.15KB
+
+---------------------------------------------------------
+ Concurrency: 256 for lift-stateless
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   443.98ms  119.68ms   1.14s    88.46%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16540 requests in 30.00s, 5.09MB read
+  Non-2xx or 3xx responses: 1
+Requests/sec:    551.24
+Transfer/sec:    173.76KB
