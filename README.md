@@ -121,6 +121,48 @@ Assuming this finished without error, we're ready to start the test suite:
 
 This will run the full set of tests. Results of all the tests will output to ~/FrameworkBenchmarks/results/unique-machine-name/*timestamp*.
 
+### Windows Instructions
+Generously provided by @pdonald
+
+Note: The following tests are the only known tests to run on Windows
+* aspnet
+* aspnet-mysql-raw
+* aspnet-postgresql-raw
+* aspnet-mongodb-raw
+* aspnet-mysql-entityframework
+* aspnet-postgres-entityframework
+* nodejs
+* nodejs-mongodb
+* nodejs-mongodb-raw
+* express
+* express-mongodb
+* kohana
+* kohana-raw
+* codeigniter
+* codeigniter-raw
+
+Server installation scripts for Windows Server 2012 R2 on Amazon EC2.
+
+Instructions:
+
+* Create an instance from the Microsoft Windows Server 2012 Base image on Amazon EC2
+* Connect to it via Remote Desktop
+* Copy installer-bootstrap.ps1 from this repo to the server (for files CTRL-C + CTRL-V works alright)
+* Copy your client private key too while you're at it
+* Right click on the installer script and select Run with PowerShell
+* It will ask something, just hit enter
+* It will install git and then launch installer.ps1 from the repo which will install everything else
+* Installation shouldn't take more than 5 to 10 minutes
+* Then you have a working console: try python, git, ssh, curl, node etc. everything works + PowerShell goodies
+
+The client/database machine is still assumed to be a Linux box, you can install just the client software via
+  python run-tests.py -s server-ip -c client-ip -i "C:\Users\Administrator\Desktop\client.key" --install-software --install client --list-tests
+
+Now you can run tests:
+
+  python run-tests.py -s server-ip -c client-ip -i "C:\Users\Administrator\Desktop\client.key" --max-threads 2 --duration 30 --sleep 5 --name win --test aspnet --type all
+
+
 ## Result Files
 
 After a test run, the directory ~/FrameworkBenchmarks/results/machine-name/timestamp will contains all the result files. In this folder are four files: three CSV files, one for each of the test types (json, db, query), and a single results.json file that contains all the results as well as some additional information. The results.json file is what we use to drive our blog post, and may or may not be useful to you. There are three subdirectories: one for each of the test types (json, db, query), each of these directories contain the raw weighttp results for each framework.
