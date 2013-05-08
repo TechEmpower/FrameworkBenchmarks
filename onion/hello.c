@@ -268,6 +268,7 @@ int main(void){
 	int i;
 	for (i=0;i<NCONN;i++){
 		data.db[i]=mysql_init(NULL);
+		mysql_options(data.db[i], MYSQL_SET_CHARSET_NAME, "utf8");
 		data.free_db[i]=1;
 		if (data.db[i]==NULL){
 			ONION_ERROR("Cant create db connection: %s", mysql_error(data.db[i]));
