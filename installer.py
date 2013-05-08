@@ -102,7 +102,7 @@ class Installer:
     #
 
     self.__run_command("curl -L http://cpanmin.us | perl - --sudo App::cpanminus")
-    self.__run_command("cpanm -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON")
+    self.__run_command("cpanm -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::pg")
 
     #
     # php
