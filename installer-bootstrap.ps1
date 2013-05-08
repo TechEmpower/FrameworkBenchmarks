@@ -9,7 +9,7 @@ if (!$noexit) {
 $basedir = "C:\FrameworkBenchmarks"
 $workdir = $basedir + "\installs"
 
-$repo = "https://github.com/pdonald/FrameworkBenchmarks"
+$repo = "https://github.com/TechEmpower/FrameworkBenchmarks"
 $installer = $basedir + "\installer.ps1"
 
 $git = "C:\Git\bin\git.exe"
@@ -31,7 +31,7 @@ Write-Host "Removing git installation files...`n"
 Remove-Item -Recurse -Force $basedir
 
 Write-Host "Downloading FrameworkBenchmarks from git...`n"
-&$git "clone" "--branch" "windows" $repo $basedir | Out-Host
+&$git "clone" $repo $basedir | Out-Host
 
 Write-Host "`nLaunching installer...`n"
 Set-ExecutionPolicy -ExecutionPolicy Bypass -ErrorAction 'SilentlyContinue'
