@@ -10,7 +10,7 @@ def start(args):
     subprocess.check_call("mvn clean package", shell=True, cwd="restexpress")
     subprocess.check_call("mvn assembly:single", shell=True, cwd="restexpress")
     subprocess.check_call("unzip world-1.0-SNAPSHOT-zip-with-dependencies.zip", shell=True, cwd="restexpress/target")
-    subprocess.Popen("java -jar netty-example-0.1-jar-with-dependencies.jar".rsplit(" "), cwd="restexpress/target/world-1.0-SNAPSHOT")
+    subprocess.Popen("java -jar world-1.0-SNAPSHOT.jar".rsplit(" "), cwd="restexpress/target/world-1.0-SNAPSHOT")
     return 0
   except subprocess.CalledProcessError:
     return 1
