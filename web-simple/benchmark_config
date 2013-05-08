@@ -1,5 +1,5 @@
 {
-  "framework": "Web-Simple",
+  "framework": "web-simple",
   "tests": [{
     "default": {
       "setup_file": "setup",
