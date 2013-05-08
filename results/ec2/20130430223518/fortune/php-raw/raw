@@ -1,0 +1,126 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer php-raw
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/fortune.php
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/fortune.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.64ms    2.10ms  14.77ms   91.60%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10814 requests in 5.00s, 15.58MB read
+Requests/sec:   2162.19
+Transfer/sec:      3.12MB
+
+---------------------------------------------------------
+ Running Warmup php-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   136.40ms  237.93ms   4.97s    96.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  65029 requests in 30.00s, 93.70MB read
+  Socket errors: connect 0, read 0, write 0, timeout 18
+Requests/sec:   2167.63
+Transfer/sec:      3.12MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php-raw
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.80ms    2.88ms  39.22ms   91.66%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  65526 requests in 30.00s, 94.42MB read
+Requests/sec:   2184.14
+Transfer/sec:      3.15MB
+
+---------------------------------------------------------
+ Concurrency: 16 for php-raw
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune.php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.15ms   11.30ms 140.59ms   91.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  67867 requests in 30.00s, 97.79MB read
+Requests/sec:   2262.17
+Transfer/sec:      3.26MB
+
+---------------------------------------------------------
+ Concurrency: 32 for php-raw
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune.php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.35ms   42.48ms 543.08ms   92.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  67343 requests in 30.00s, 97.04MB read
+Requests/sec:   2244.68
+Transfer/sec:      3.23MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php-raw
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune.php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.32ms   77.34ms 815.16ms   89.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  67094 requests in 30.00s, 96.68MB read
+Requests/sec:   2236.31
+Transfer/sec:      3.22MB
+
+---------------------------------------------------------
+ Concurrency: 128 for php-raw
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune.php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    90.24ms  251.32ms   3.89s    96.66%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  67208 requests in 30.00s, 96.84MB read
+  Socket errors: connect 0, read 0, write 0, timeout 126
+Requests/sec:   2239.94
+Transfer/sec:      3.23MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   138.04ms  186.34ms   2.38s    95.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  64597 requests in 30.01s, 93.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 68
+Requests/sec:   2152.85
+Transfer/sec:      3.10MB

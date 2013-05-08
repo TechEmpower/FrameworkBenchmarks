@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 23:23:24 PDT 2013
+
+  System load:  1.08                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer onion-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   703.86us  222.61us   1.38ms   71.38%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  55618 requests in 5.00s, 9.32MB read
+Requests/sec:  11123.87
+Transfer/sec:      1.86MB
+
+---------------------------------------------------------
+ Running Warmup onion-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.29ms    4.89ms  53.56ms   81.13%
+    Req/Sec     1.50k   662.55     4.00k    91.56%
+  507385 requests in 30.00s, 85.06MB read
+  Socket errors: connect 0, read 258, write 0, timeout 1337
+Requests/sec:  16913.12
+Transfer/sec:      2.84MB
+
+---------------------------------------------------------
+ Queries: 1 for onion-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.02ms    2.45ms   6.99ms   46.42%
+    Req/Sec     3.93k     1.72k    7.00k    70.97%
+  1049420 requests in 30.00s, 150.01MB read
+  Socket errors: connect 0, read 169, write 0, timeout 1040
+Requests/sec:  34980.83
+Transfer/sec:      5.00MB
+
+---------------------------------------------------------
+ Queries: 5 for onion-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.51ms   79.11ms   3.14s    99.94%
+    Req/Sec   122.36    327.80     1.00k    87.76%
+  199501 requests in 30.00s, 48.41MB read
+  Socket errors: connect 0, read 186, write 0, timeout 1034
+Requests/sec:   6649.77
+Transfer/sec:      1.61MB
+
+---------------------------------------------------------
+ Queries: 10 for onion-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.59ms   54.45ms   1.66s    99.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  98813 requests in 30.00s, 36.18MB read
+  Socket errors: connect 0, read 238, write 0, timeout 1071
+Requests/sec:   3293.55
+Transfer/sec:      1.21MB
+
+---------------------------------------------------------
+ Queries: 15 for onion-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.34ms   51.40ms 986.98ms   93.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  66136 requests in 30.00s, 32.38MB read
+  Socket errors: connect 0, read 231, write 0, timeout 1177
+Requests/sec:   2204.39
+Transfer/sec:      1.08MB
+
+---------------------------------------------------------
+ Queries: 20 for onion-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.70ms   50.08ms 208.46ms   30.92%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  49514 requests in 30.00s, 30.35MB read
+  Socket errors: connect 0, read 231, write 0, timeout 1261
+Requests/sec:   1650.31
+Transfer/sec:      1.01MB

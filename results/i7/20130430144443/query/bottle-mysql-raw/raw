@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 06:13:23 PDT 2013
+
+  System load:  1.25                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-mysql-raw
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/dbraw?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/dbraw?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms  174.53us   1.88ms   73.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33654 requests in 5.00s, 7.34MB read
+Requests/sec:   6730.50
+Transfer/sec:      1.47MB
+
+---------------------------------------------------------
+ Running Warmup bottle-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.78ms    7.51ms 114.82ms   84.18%
+    Req/Sec     0.98k   137.63     1.00k    98.07%
+  332612 requests in 30.00s, 72.50MB read
+Requests/sec:  11087.15
+Transfer/sec:      2.42MB
+
+---------------------------------------------------------
+ Queries: 1 for bottle-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.70ms    6.56ms  60.45ms   80.05%
+    Req/Sec     1.09k   316.18     2.00k    89.19%
+  447738 requests in 30.00s, 84.02MB read
+Requests/sec:  14925.93
+Transfer/sec:      2.80MB
+
+---------------------------------------------------------
+ Queries: 5 for bottle-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.53ms   16.79ms 261.01ms   90.96%
+    Req/Sec    28.45    170.05     2.00k    97.22%
+  189733 requests in 30.00s, 58.79MB read
+Requests/sec:   6324.52
+Transfer/sec:      1.96MB
+
+---------------------------------------------------------
+ Queries: 10 for bottle-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.00ms   20.60ms 302.75ms   88.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  111608 requests in 30.00s, 51.50MB read
+Requests/sec:   3719.92
+Transfer/sec:      1.72MB
+
+---------------------------------------------------------
+ Queries: 15 for bottle-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.37ms   29.95ms 353.35ms   85.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  78843 requests in 30.00s, 48.33MB read
+Requests/sec:   2627.88
+Transfer/sec:      1.61MB
+
+---------------------------------------------------------
+ Queries: 20 for bottle-mysql-raw
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dbraw?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dbraw?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   131.25ms   41.50ms 362.01ms   86.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  60774 requests in 30.00s, 46.46MB read
+Requests/sec:   2025.71
+Transfer/sec:      1.55MB

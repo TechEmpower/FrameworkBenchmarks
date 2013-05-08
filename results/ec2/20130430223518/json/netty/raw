@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 04:08:45 UTC 2013
+
+  System load:  0.08               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer netty
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.98ms    2.11ms  24.93ms   95.54%
+    Req/Sec    40.89    198.41     1.00k    95.91%
+  42159 requests in 5.00s, 7.24MB read
+Requests/sec:   8432.74
+Transfer/sec:      1.45MB
+
+---------------------------------------------------------
+ Running Warmup netty
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.68ms    6.95ms  82.73ms   85.13%
+    Req/Sec     4.39k   777.77     5.00k    93.75%
+  1229023 requests in 30.00s, 210.98MB read
+Requests/sec:  40967.76
+Transfer/sec:      7.03MB
+
+---------------------------------------------------------
+ Concurrency: 8 for netty
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   396.77us    1.34ms  51.69ms   99.50%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  597128 requests in 30.00s, 102.50MB read
+Requests/sec:  19904.77
+Transfer/sec:      3.42MB
+
+---------------------------------------------------------
+ Concurrency: 16 for netty
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   538.18us  502.27us  12.29ms   96.38%
+    Req/Sec     3.09k   306.96     4.00k    89.83%
+  934512 requests in 30.00s, 160.42MB read
+Requests/sec:  31150.67
+Transfer/sec:      5.35MB
+
+---------------------------------------------------------
+ Concurrency: 32 for netty
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.88ms    1.58ms  29.51ms   96.78%
+    Req/Sec     3.99k   116.09     5.00k    98.64%
+  1059703 requests in 30.00s, 181.91MB read
+Requests/sec:  35325.31
+Transfer/sec:      6.06MB
+
+---------------------------------------------------------
+ Concurrency: 64 for netty
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.56ms    2.57ms  24.74ms   93.61%
+    Req/Sec     4.12k   335.71     5.00k    87.27%
+  1161107 requests in 30.00s, 199.32MB read
+Requests/sec:  38705.42
+Transfer/sec:      6.64MB
+
+---------------------------------------------------------
+ Concurrency: 128 for netty
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.92ms    3.66ms  26.61ms   89.89%
+    Req/Sec     4.48k   524.28     5.00k    99.13%
+  1225566 requests in 30.00s, 210.38MB read
+Requests/sec:  40854.19
+Transfer/sec:      7.01MB
+
+---------------------------------------------------------
+ Concurrency: 256 for netty
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.80ms   18.61ms 712.98ms   99.06%
+    Req/Sec     4.05k   783.82     5.00k    64.12%
+  1207941 requests in 30.00s, 207.36MB read
+Requests/sec:  40266.12
+Transfer/sec:      6.91MB

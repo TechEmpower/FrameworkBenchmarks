@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 05:13:11 UTC 2013
+
+  System load:  0.09               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer http-kit
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/http-kit/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/http-kit/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.10ms    2.50ms  24.78ms   88.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26461 requests in 5.00s, 4.24MB read
+Requests/sec:   5293.28
+Transfer/sec:    868.43KB
+
+---------------------------------------------------------
+ Running Warmup http-kit
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/http-kit/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.62ms    7.78ms 223.00ms   97.46%
+    Req/Sec     1.95k   355.31     5.00k    92.13%
+  656121 requests in 30.00s, 105.12MB read
+Requests/sec:  21871.02
+Transfer/sec:      3.50MB
+
+---------------------------------------------------------
+ Concurrency: 8 for http-kit
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/http-kit/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   632.82us    5.29ms 212.01ms   99.75%
+    Req/Sec     1.38k   486.38     2.00k    61.65%
+  385452 requests in 30.00s, 61.76MB read
+Requests/sec:  12847.61
+Transfer/sec:      2.06MB
+
+---------------------------------------------------------
+ Concurrency: 16 for http-kit
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/http-kit/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.02ms  538.72us   9.30ms   97.82%
+    Req/Sec     1.73k   442.83     2.00k    73.24%
+  481888 requests in 30.00s, 77.21MB read
+Requests/sec:  16063.48
+Transfer/sec:      2.57MB
+
+---------------------------------------------------------
+ Concurrency: 32 for http-kit
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/http-kit/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.81ms  841.58us  16.17ms   91.82%
+    Req/Sec     2.00k    43.25     2.00k    99.81%
+  539852 requests in 30.00s, 86.49MB read
+Requests/sec:  17995.60
+Transfer/sec:      2.88MB
+
+---------------------------------------------------------
+ Concurrency: 64 for http-kit
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/http-kit/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.33ms    1.27ms  16.01ms   84.86%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  585295 requests in 30.00s, 93.77MB read
+Requests/sec:  19509.79
+Transfer/sec:      3.13MB
+
+---------------------------------------------------------
+ Concurrency: 128 for http-kit
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/http-kit/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.14ms    1.84ms  22.59ms   83.81%
+    Req/Sec     2.01k   280.90     4.00k    93.04%
+  620601 requests in 30.00s, 99.43MB read
+Requests/sec:  20685.58
+Transfer/sec:      3.31MB
+
+---------------------------------------------------------
+ Concurrency: 256 for http-kit
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/http-kit/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/http-kit/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.49ms    2.84ms  32.47ms   83.24%
+    Req/Sec     2.03k   268.87     5.00k    94.83%
+  654135 requests in 30.00s, 104.80MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:  21807.16
+Transfer/sec:      3.49MB

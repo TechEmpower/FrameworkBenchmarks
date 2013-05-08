@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 23:46:54 UTC 2013
+
+  System load:  0.6                Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer express-mysql
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.21ms    2.57ms  32.92ms   91.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2855 requests in 5.01s, 3.83MB read
+Requests/sec:    569.86
+Transfer/sec:    783.00KB
+
+---------------------------------------------------------
+ Running Warmup express-mysql
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   246.91ms   79.21ms 733.40ms   68.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32866 requests in 30.01s, 44.10MB read
+Requests/sec:   1095.34
+Transfer/sec:      1.47MB
+
+---------------------------------------------------------
+ Concurrency: 8 for express-mysql
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.12ms    3.29ms  31.69ms   68.65%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31753 requests in 30.00s, 42.61MB read
+Requests/sec:   1058.34
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Concurrency: 16 for express-mysql
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.47ms    3.04ms  33.16ms   62.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34240 requests in 30.00s, 45.94MB read
+Requests/sec:   1141.25
+Transfer/sec:      1.53MB
+
+---------------------------------------------------------
+ Concurrency: 32 for express-mysql
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.62ms   12.77ms  75.62ms   56.23%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34195 requests in 30.00s, 45.88MB read
+Requests/sec:   1139.75
+Transfer/sec:      1.53MB
+
+---------------------------------------------------------
+ Concurrency: 64 for express-mysql
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.58ms   22.89ms 165.55ms   53.51%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  35176 requests in 30.00s, 47.20MB read
+Requests/sec:   1172.46
+Transfer/sec:      1.57MB
+
+---------------------------------------------------------
+ Concurrency: 128 for express-mysql
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   114.73ms   47.69ms 987.92ms   93.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33305 requests in 30.00s, 44.69MB read
+Requests/sec:   1110.01
+Transfer/sec:      1.49MB
+
+---------------------------------------------------------
+ Concurrency: 256 for express-mysql
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   309.90ms  139.09ms 877.75ms   70.12%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34003 requests in 30.00s, 45.63MB read
+Requests/sec:   1133.33
+Transfer/sec:      1.52MB

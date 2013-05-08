@@ -1,0 +1,119 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 23:43:28 UTC 2013
+
+  System load:  0.47               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer express-mysql
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/sequelize?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/sequelize?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.28ms    2.86ms  24.86ms   64.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4129 requests in 5.01s, 0.92MB read
+Requests/sec:    824.70
+Transfer/sec:    188.89KB
+
+---------------------------------------------------------
+ Running Warmup express-mysql
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/sequelize?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sequelize?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   417.76ms  170.05ms 786.62ms   75.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25032 requests in 30.01s, 5.60MB read
+Requests/sec:    834.21
+Transfer/sec:    191.08KB
+
+---------------------------------------------------------
+ Queries: 1 for express-mysql
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/sequelize?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sequelize?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   204.99ms   82.68ms 630.05ms   65.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  43107 requests in 30.01s, 8.34MB read
+Requests/sec:   1436.63
+Transfer/sec:    284.49KB
+
+---------------------------------------------------------
+ Queries: 5 for express-mysql
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/sequelize?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sequelize?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   897.60ms  375.87ms   1.52s    73.22%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10928 requests in 30.01s, 3.45MB read
+Requests/sec:    364.20
+Transfer/sec:    117.68KB
+
+---------------------------------------------------------
+ Queries: 10 for express-mysql
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/sequelize?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sequelize?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.42s   539.53ms   2.22s    67.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5740 requests in 30.01s, 2.68MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:    191.27
+Transfer/sec:     91.48KB
+
+---------------------------------------------------------
+ Queries: 15 for express-mysql
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/sequelize?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sequelize?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.09s     1.38s    4.60s    81.24%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3947 requests in 30.01s, 2.44MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1561
+Requests/sec:    131.53
+Transfer/sec:     83.31KB
+
+---------------------------------------------------------
+ Queries: 20 for express-mysql
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/sequelize?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/sequelize?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.98s     1.61s    5.69s    84.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1564 requests in 30.01s, 1.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2082
+Requests/sec:     52.11
+Transfer/sec:     41.09KB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer phalcon
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.56ms    3.73ms  27.24ms   68.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3183 requests in 5.01s, 840.83KB read
+Requests/sec:    635.72
+Transfer/sec:    167.93KB
+
+---------------------------------------------------------
+ Running Warmup phalcon
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   415.66ms  150.37ms   1.07s    71.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18451 requests in 30.01s, 4.76MB read
+Requests/sec:    614.88
+Transfer/sec:    162.45KB
+
+---------------------------------------------------------
+ Queries: 1 for phalcon
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   350.90ms  175.17ms   2.29s    74.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21875 requests in 30.01s, 4.90MB read
+  Socket errors: connect 0, read 0, write 0, timeout 23
+Requests/sec:    729.00
+Transfer/sec:    167.14KB
+
+---------------------------------------------------------
+ Queries: 5 for phalcon
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   609.31ms  314.38ms   2.74s    72.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13245 requests in 30.00s, 4.77MB read
+Requests/sec:    441.44
+Transfer/sec:    162.90KB
+
+---------------------------------------------------------
+ Queries: 10 for phalcon
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   810.18ms  264.74ms   1.59s    76.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9260 requests in 30.00s, 4.93MB read
+Requests/sec:    308.63
+Transfer/sec:    168.09KB
+
+---------------------------------------------------------
+ Queries: 15 for phalcon
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07s   420.06ms   1.88s    70.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6883 requests in 30.01s, 4.84MB read
+Requests/sec:    229.38
+Transfer/sec:    165.01KB
+
+---------------------------------------------------------
+ Queries: 20 for phalcon
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.29s   452.73ms   2.17s    74.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5589 requests in 30.01s, 4.88MB read
+  Socket errors: connect 0, read 0, write 0, timeout 8
+Requests/sec:    186.23
+Transfer/sec:    166.49KB

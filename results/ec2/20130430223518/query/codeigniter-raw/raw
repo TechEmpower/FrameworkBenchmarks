@@ -1,0 +1,119 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 09:23:02 UTC 2013
+
+  System load:  0.17               Processes:           77
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer codeigniter-raw
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/index.php/bench/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/index.php/bench/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.45ms   14.69ms 111.17ms   90.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2485 requests in 5.01s, 656.45KB read
+Requests/sec:    495.63
+Transfer/sec:    130.93KB
+
+---------------------------------------------------------
+ Running Warmup codeigniter-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/index.php/bench/db/2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   557.47ms  216.40ms   1.47s    72.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13389 requests in 30.01s, 3.45MB read
+Requests/sec:    446.18
+Transfer/sec:    117.89KB
+
+---------------------------------------------------------
+ Queries: 1 for codeigniter-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/index.php/bench/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   520.68ms  182.34ms   1.22s    72.04%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14207 requests in 30.01s, 3.18MB read
+Requests/sec:    473.41
+Transfer/sec:    108.54KB
+
+---------------------------------------------------------
+ Queries: 5 for codeigniter-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/index.php/bench/db/5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   641.38ms  215.61ms   1.58s    72.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11720 requests in 30.01s, 4.22MB read
+Requests/sec:    390.54
+Transfer/sec:    144.12KB
+
+---------------------------------------------------------
+ Queries: 10 for codeigniter-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/index.php/bench/db/10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   790.49ms  246.82ms   1.63s    75.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9298 requests in 30.01s, 4.95MB read
+Requests/sec:    309.85
+Transfer/sec:    168.76KB
+
+---------------------------------------------------------
+ Queries: 15 for codeigniter-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/index.php/bench/db/15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   924.13ms  267.01ms   1.57s    78.12%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7961 requests in 30.01s, 5.59MB read
+Requests/sec:    265.28
+Transfer/sec:    190.84KB
+
+---------------------------------------------------------
+ Queries: 20 for codeigniter-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/index.php/bench/db/20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/index.php/bench/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.04s   327.47ms   2.02s    78.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6964 requests in 30.01s, 6.08MB read
+Requests/sec:    232.04
+Transfer/sec:    207.45KB

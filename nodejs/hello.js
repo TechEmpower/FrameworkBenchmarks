@@ -1,5 +1,6 @@
 var cluster = require('cluster')
-  , numCPUs = require('os').cpus().length;
+  , numCPUs = require('os').cpus().length
+  , windows = require('os').platform() == 'win32';
 
 if(cluster.isMaster) {
   // Fork workers.
@@ -18,33 +19,22 @@ var http = require('http')
   , url = require('url')
   , async = require('async')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://localhost/hello_world')
+  , conn = mongoose.connect('mongodb://172.16.98.98/hello_world')
   , MongoClient = require('mongodb').MongoClient
-  , mysql = require('mysql')
-  , pool  = mysql.createPool({
-      host: 'localhost',
-      user     : 'benchmarkdbuser',
-      password : 'benchmarkdbpass',
-      database : 'hello_world',
-      connectionLimit : 256
-    })
-  , Sequelize = require("sequelize")
-  , sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-    host: 'localhost',
-    logging: false,
-    define: { timestamps: false },
-    maxConcurrentQueries: 100,
-    pool: { maxConnections: 800, maxIdleTime: 30 }
-  })
-  , World      = sequelize.define('World', {
-    randomNumber: Sequelize.INTEGER
-  }, {
-    freezeTableName: true
-  });
+  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
+
+if (!windows) {
+  var Mapper = require('mapper')  
+    , libmysql = require('mysql-libmysqlclient').createConnectionSync();
+    
+    Mapper.connect(connMap, {verbose: false, strict: false});
+    var World = Mapper.map("World", "id", "randomNumber")
+    libmysql.connectSync('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+}
 
 var collection = null;
 
-MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
+MongoClient.connect('mongodb://172.16.98.98/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
 
@@ -58,8 +48,6 @@ var WorldSchema = new Schema({
 }, { collection : 'world' });
 var MWorld = conn.model('World', WorldSchema);
 
-
-
 function getRandomNumber() {
   return Math.floor(Math.random() * 10000) + 1;
 }
@@ -71,15 +59,13 @@ function mongooseQuery(callback) {
 }
 
 function mongodbDriverQuery(callback) {
-  process.nextTick(function() {
-  collection.find({ id: getRandomNumber()}).toArray(function(err, world) {
-    callback(err, world[0]);
+  collection.findOne({ id: getRandomNumber()}, function(err, world) {
+    callback(err, world);
   });
-  })
 }
 
 function sequelizeQuery(callback) {
-  World.find(getRandomNumber()).success(function (world) {
+  World.findById(getRandomNumber(), function (err, world) {
     callback(null, world);
   });
 }
@@ -89,6 +75,11 @@ http.createServer(function (req, res) {
   var hello = {message: "Hello, world"};
 
   var path = url.parse(req.url).pathname;
+  
+  // mysql on windows is not supported
+  if (windows && (path.substr(0, 3) == '/my' || path == '/update')) {
+    path = '/doesntexist';
+  }
 
   switch (path) {
   case '/json':
@@ -132,7 +123,7 @@ http.createServer(function (req, res) {
     });
     break;
 
-  case '/sequelize':
+  case '/mysql-orm':
     var values = url.parse(req.url, true);
     var queries = values.query.queries || 1;
     var queryFunctions = new Array(queries);
@@ -151,22 +142,72 @@ http.createServer(function (req, res) {
   case '/mysql':
     res.writeHead(200, {'Content-Type': 'application/json'});
 
-    function mysqlQuery(callback) {
-      pool.getConnection(function(err, connection) {
-        if (err) callback(err);
-        connection.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function(err, rows) {
-          callback(null, rows[0]);
-          connection.end();
+    function libmysqlQuery(callback) {
+      libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
+        if (err) {
+	        throw err;
+	      }
+	
+	      res.fetchAll(function(err, rows) {
+      	  if (err) {
+      	    throw err;
+      	  }
+
+      	  res.freeSync();
+      	  callback(null, rows[0]);
         });
       });
-    }
+    } 
 
     var values = url.parse(req.url, true);
     var queries = values.query.queries || 1;
     var queryFunctions = new Array(queries);
 
     for (var i = 0; i < queries; i += 1) {
-      queryFunctions[i] = mysqlQuery;
+      queryFunctions[i] = libmysqlQuery;
+    }
+    async.parallel(queryFunctions, function(err, results) {
+      if (err) {
+        res.writeHead(500);
+        return res.end('MYSQL CONNECTION ERROR.');
+      }
+      res.end(JSON.stringify(results));
+    });
+    break;
+
+  case '/update':
+    res.writeHead(200, {'Content-Type': 'application/json'});
+
+    function libmysqlQuery(callback) {
+      libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
+        if (err) {
+          throw err;
+        }
+  
+        res.fetchAll(function(err, rows) {
+          if (err) {
+            throw err;
+          }
+
+          res.freeSync();
+
+          rows[0].randomNumber = getRandomNumber();
+          libmysql.query("UPDATE World SET randomNumber = " + rows[0].randomNumber + " WHERE id = " + rows[0]['id'], function (err, res) {
+            if (err) {
+              throw err;
+            }
+          });
+          callback(null, rows[0]);
+        });
+      });
+    } 
+
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    var queryFunctions = new Array(queries);
+
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = libmysqlQuery;
     }
     async.parallel(queryFunctions, function(err, results) {
       if (err) {
@@ -179,7 +220,7 @@ http.createServer(function (req, res) {
 
   default:
     // File not found handler
-    res.writeHead(404, {'Content-Type': 'text/html; charset=UTF-8'});
+    res.writeHead(501, {'Content-Type': 'text/plain; charset=UTF-8'});
     res.end("NOT IMPLEMENTED");
   }
 }).listen(8080);

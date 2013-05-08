@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 17:15:58 PDT 2013
+
+  System load:  1.18                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/dborm.php
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/dborm.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.19ms  443.50us   5.70ms   73.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12622 requests in 5.00s, 2.85MB read
+Requests/sec:   2523.70
+Transfer/sec:    583.45KB
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dborm.php
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dborm.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.61ms   58.57ms 552.81ms   87.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  117616 requests in 30.00s, 26.55MB read
+Requests/sec:   3920.63
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/dborm.php
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dborm.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.15ms  435.25us   5.77ms   72.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  76124 requests in 30.00s, 17.19MB read
+Requests/sec:   2537.39
+Transfer/sec:    586.60KB
+
+---------------------------------------------------------
+ Concurrency: 16 for php
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/dborm.php
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dborm.php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.31ms    1.49ms  15.90ms   83.67%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  109442 requests in 30.00s, 24.71MB read
+Requests/sec:   3647.98
+Transfer/sec:    843.36KB
+
+---------------------------------------------------------
+ Concurrency: 32 for php
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/dborm.php
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dborm.php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.34ms   10.55ms 219.99ms   95.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  119587 requests in 30.00s, 27.00MB read
+Requests/sec:   3986.18
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/dborm.php
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dborm.php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.75ms   20.37ms 378.72ms   91.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  121756 requests in 30.00s, 27.49MB read
+Requests/sec:   4058.51
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Concurrency: 128 for php
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/dborm.php
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dborm.php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.98ms   38.26ms 601.08ms   90.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  120803 requests in 30.00s, 27.27MB read
+Requests/sec:   4026.67
+Transfer/sec:      0.91MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/dborm.php
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/dborm.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.59ms   49.69ms   1.04s    83.05%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  119541 requests in 30.00s, 26.99MB read
+Requests/sec:   3984.70
+Transfer/sec:      0.90MB

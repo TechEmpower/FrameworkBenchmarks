@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Apr 30 15:29:48 PDT 2013
+
+  System load:  0.25                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 16%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cake
+ wrk -d 5 -c 8 -t 8 http://172.16.98.122:8080/world.json?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/world.json?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.56ms    5.33ms  90.61ms   97.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4682 requests in 5.00s, 1.24MB read
+Requests/sec:    935.69
+Transfer/sec:    254.51KB
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/world.json?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   236.26ms  121.49ms   1.09s    75.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32274 requests in 30.00s, 8.57MB read
+Requests/sec:   1075.72
+Transfer/sec:    292.59KB
+
+---------------------------------------------------------
+ Queries: 1 for cake
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/world.json?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   224.07ms  130.34ms   1.23s    76.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33874 requests in 30.00s, 7.84MB read
+Requests/sec:   1128.96
+Transfer/sec:    267.62KB
+
+---------------------------------------------------------
+ Queries: 5 for cake
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/world.json?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   266.81ms  130.63ms 974.27ms   74.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28198 requests in 30.00s, 10.40MB read
+Requests/sec:    939.92
+Transfer/sec:    355.10KB
+
+---------------------------------------------------------
+ Queries: 10 for cake
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/world.json?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   317.63ms  142.13ms   1.05s    74.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23446 requests in 30.00s, 12.65MB read
+Requests/sec:    781.50
+Transfer/sec:    431.81KB
+
+---------------------------------------------------------
+ Queries: 15 for cake
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/world.json?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   379.45ms  152.29ms 991.76ms   72.24%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20050 requests in 30.00s, 14.24MB read
+Requests/sec:    668.27
+Transfer/sec:    486.01KB
+
+---------------------------------------------------------
+ Queries: 20 for cake
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/world.json?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   427.67ms  167.27ms   1.27s    74.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17576 requests in 30.00s, 15.48MB read
+Requests/sec:    585.81
+Transfer/sec:    528.37KB

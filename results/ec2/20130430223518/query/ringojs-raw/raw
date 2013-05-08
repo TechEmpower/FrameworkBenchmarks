@@ -1,0 +1,112 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer ringojs-raw
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.99ms    5.47ms  71.32ms   96.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11133 requests in 5.00s, 2.33MB read
+Requests/sec:   2226.38
+Transfer/sec:    477.34KB
+
+---------------------------------------------------------
+ Running Warmup ringojs-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.94ms   44.56ms 449.23ms   71.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  86607 requests in 30.00s, 18.13MB read
+Requests/sec:   2886.66
+Transfer/sec:    618.91KB
+
+---------------------------------------------------------
+ Queries: 1 for ringojs-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    70.91ms   68.26ms   1.02s    93.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  109641 requests in 30.00s, 19.63MB read
+Requests/sec:   3654.42
+Transfer/sec:    670.12KB
+
+---------------------------------------------------------
+ Queries: 5 for ringojs-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   150.22ms   56.59ms 489.42ms   79.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  49915 requests in 30.00s, 15.04MB read
+Requests/sec:   1663.65
+Transfer/sec:    513.18KB
+
+---------------------------------------------------------
+ Queries: 10 for ringojs-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   243.98ms   85.76ms 612.60ms   79.72%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  30910 requests in 30.01s, 13.99MB read
+Requests/sec:   1029.99
+Transfer/sec:    477.52KB
+
+---------------------------------------------------------
+ Queries: 15 for ringojs-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   344.17ms   94.38ms 807.46ms   80.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21578 requests in 30.01s, 13.04MB read
+Requests/sec:    719.11
+Transfer/sec:    444.97KB
+
+---------------------------------------------------------
+ Queries: 20 for ringojs-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   435.74ms  112.34ms   1.27s    83.08%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17020 requests in 30.01s, 12.86MB read
+Requests/sec:    567.21
+Transfer/sec:    438.98KB

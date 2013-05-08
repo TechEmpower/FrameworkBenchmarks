@@ -22,7 +22,7 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)    
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake mercurial", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("sudo sh -c \"echo '*               soft    nofile          8192' >> /etc/security/limits.conf\"")
@@ -56,6 +56,7 @@ class Installer:
     self.__run_command("sudo python setup.py install", cwd="psycopg2-2.5")
     self.__run_command("git clone https://github.com/iiilx/django-psycopg2-pool.git")
     self.__run_command("sudo python setup.py install", cwd="django-psycopg2-pool")
+    self.__run_command("sudo pip install --upgrade numpy==1.7.1")
 
     #
     # nodejs
@@ -90,8 +91,8 @@ class Installer:
     #
     # go
     #
-    self.__run_command("hg clone -u 2489327864d7 https://code.google.com/p/go")
-    self.__run_command("./all.bash", cwd="go/src")
+    
+    self.__run_command("curl http://go.googlecode.com/files/go1.1rc1.linux-amd64.tar.gz | tar xvz")
 
     #
     # Perl
@@ -131,14 +132,29 @@ class Installer:
     # RingoJs
     #
     self.__run_command("wget http://www.ringojs.org/downloads/ringojs_0.9-1_all.deb")
-    self.__run_command("sudo apt-get install jsvc")
-    self.__run_command("sudo dpkg -i ringojs_0.9-1_all.deb")
+    self.__run_command("sudo apt-get install jsvc", True)
+    self.__run_command("sudo dpkg -i ringojs_0.9-1_all.deb", True)
     self.__run_command("rm ringojs_0.9-1_all.deb")
     self.__run_command("sudo ringo-admin install oberhamsi/sql-ringojs-client")
     self.__run_command("sudo ringo-admin install ringo/stick")
     self.__run_command("sudo ringo-admin install oberhamsi/reinhardt")
     self.__run_command("sudo ringo-admin install grob/ringo-sqlstore")
+    
+    #
+    # Mono
+    #
+    self.__run_command("git clone git://github.com/mono/mono")
+    self.__run_command("git checkout mono-3.10", cwd="mono")
+    self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
+    self.__run_command("make get-monolite-latest", cwd="mono")
+    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
+    self.__run_command("sudo make install", cwd="mono")
 
+    self.__run_command("git clone git://github.com/mono/xsp")
+    self.__run_command("git checkout 3.0", cwd="xsp")
+    self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
+    self.__run_command("make", cwd="xsp")
+    self.__run_command("sudo make install", cwd="xsp")
     #######################################
     # Webservers
     #######################################

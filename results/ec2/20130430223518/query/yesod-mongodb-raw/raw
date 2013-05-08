@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 13:08:06 UTC 2013
+
+  System load:  0.15               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer yesod-mongodb-raw
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8000/mongo/raw/dbs/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8000/mongo/raw/dbs/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.53ms    4.59ms  83.68ms   98.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  997 requests in 5.01s, 194.26KB read
+Requests/sec:    199.15
+Transfer/sec:     38.80KB
+
+---------------------------------------------------------
+ Running Warmup yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/mongo/raw/dbs/2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/mongo/raw/dbs/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    96.14ms   43.24ms 383.67ms   75.05%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  82618 requests in 30.00s, 15.72MB read
+Requests/sec:   2753.49
+Transfer/sec:    536.56KB
+
+---------------------------------------------------------
+ Queries: 1 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/mongo/raw/dbs/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/mongo/raw/dbs/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    63.76ms   23.19ms 215.65ms   82.54%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  122279 requests in 30.00s, 19.10MB read
+Requests/sec:   4075.58
+Transfer/sec:    651.83KB
+
+---------------------------------------------------------
+ Queries: 5 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/mongo/raw/dbs/5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/mongo/raw/dbs/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   232.47ms  194.21ms   1.84s    90.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  37213 requests in 30.01s, 10.89MB read
+Requests/sec:   1240.16
+Transfer/sec:    371.64KB
+
+---------------------------------------------------------
+ Queries: 10 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/mongo/raw/dbs/10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/mongo/raw/dbs/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   408.13ms  242.43ms   1.36s    71.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20573 requests in 30.00s, 9.53MB read
+Requests/sec:    685.69
+Transfer/sec:    325.23KB
+
+---------------------------------------------------------
+ Queries: 15 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/mongo/raw/dbs/15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/mongo/raw/dbs/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   593.97ms  478.99ms   4.34s    80.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12685 requests in 30.01s, 8.04MB read
+  Socket errors: connect 0, read 0, write 0, timeout 111
+Requests/sec:    422.68
+Transfer/sec:    274.32KB
+
+---------------------------------------------------------
+ Queries: 20 for yesod-mongodb-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8000/mongo/raw/dbs/20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8000/mongo/raw/dbs/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   758.88ms  479.03ms   3.63s    74.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9989 requests in 30.01s, 8.03MB read
+  Socket errors: connect 0, read 0, write 0, timeout 22
+Requests/sec:    332.80
+Transfer/sec:    274.12KB

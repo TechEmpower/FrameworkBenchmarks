@@ -5,28 +5,12 @@
 
 var cluster = require('cluster')
   , numCPUs = require('os').cpus().length
+  , windows = require('os').platform() == 'win32'
   , express = require('express')
   , mongoose = require('mongoose')
   , async = require('async')
   , conn = mongoose.connect('mongodb://localhost/hello_world')
-  , Sequelize = require("sequelize")
-  , sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-    host: 'localhost',
-    logging: false,
-    define: { timestamps: false },
-    maxConcurrentQueries: 100,
-    pool: { maxConnections: 800, maxIdleTime: 30 }
-  })
-  , World      = sequelize.define('World', {
-    randomNumber: Sequelize.INTEGER
-  }, {
-    freezeTableName: true
-  })
-  , Fortune      = sequelize.define('Fortune', {
-    message: Sequelize.STRING
-  }, {
-    freezeTableName: true
-  });
+  , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
 
 var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId;
@@ -37,6 +21,12 @@ var WorldSchema = new Schema({
 }, { collection : 'world' });
 var MWorld = conn.model('World', WorldSchema);
 
+if (!windows) {
+  var Mapper = require('mapper');
+  Mapper.connect(connMap, {verbose: false, strict: false});
+  var World = Mapper.map("World", "id", "randomNumber");
+  var Fortune = Mapper.map("Fortune", "id", "message");
+}
 
 if (cluster.isMaster) {
   // Fork workers.
@@ -93,14 +83,16 @@ if (cluster.isMaster) {
     });
   });
 
-  app.get('/sequelize', function(req, res) {
+  app.get('/mysql-orm', function(req, res) {
+    if (!windows) return res.send(501, 'Not supported on windows');
+    
     var queries = req.query.queries || 1
       , worlds  = []
       , queryFunctions = [];
 
     for (var i = 1; i <= queries; i++ ) {
       queryFunctions.push(function(callback) {
-        World.find(Math.floor(Math.random()*10000) + 1).success(function (world) {
+        World.findById(Math.floor(Math.random()*10000) + 1, function (err, world) {
           worlds.push(world);
           callback(null, 'success');
         });
@@ -113,8 +105,10 @@ if (cluster.isMaster) {
   });
 
   app.get('/fortune', function(req, res) {
-    Fortune.findAll().success(function (fortunes) {
-      var newFortune = Fortune.build({message: "Additional fortune added at request time."});
+    if (!windows) return res.send(501, 'Not supported on windows');
+    
+    Fortune.all(function (err, fortunes) {
+      var newFortune = {id: 0, message: "Additional fortune added at request time."};
       fortunes.push(newFortune);
       fortunes.sort(sortFortunes);
 

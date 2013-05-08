@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 00:06:06 UTC 2013
+
+  System load:  1.45               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 5%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer nodejs
+ wrk -d 60 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.37ms  677.33us   5.32ms   64.02%
+    Req/Sec   234.85    627.14     2.00k    87.12%
+  36312 requests in 5.00s, 6.65MB read
+Requests/sec:   7262.59
+Transfer/sec:      1.33MB
+
+---------------------------------------------------------
+ Running Warmup nodejs
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.27ms   18.40ms 738.04ms   99.88%
+    Req/Sec     1.00k    43.19     1.00k    99.81%
+  314737 requests in 30.00s, 57.63MB read
+Requests/sec:  10491.53
+Transfer/sec:      1.92MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nodejs
+ wrk -d 30 -c 8 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.88ms  399.25us   4.78ms   69.26%
+    Req/Sec   630.99    482.69     1.00k    63.10%
+  309337 requests in 30.00s, 56.64MB read
+Requests/sec:  10311.39
+Transfer/sec:      1.89MB
+
+---------------------------------------------------------
+ Concurrency: 16 for nodejs
+ wrk -d 30 -c 16 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.79ms    0.94ms  13.98ms   80.75%
+    Req/Sec     0.99k   108.69     1.00k    98.81%
+  320896 requests in 30.00s, 58.76MB read
+Requests/sec:  10696.67
+Transfer/sec:      1.96MB
+
+---------------------------------------------------------
+ Concurrency: 32 for nodejs
+ wrk -d 30 -c 32 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.36ms    1.33ms  10.39ms   80.15%
+    Req/Sec     0.98k   130.88     1.00k    98.26%
+  321913 requests in 30.00s, 58.94MB read
+Requests/sec:  10730.73
+Transfer/sec:      1.96MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nodejs
+ wrk -d 30 -c 64 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.59ms    2.38ms  19.68ms   73.64%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  323070 requests in 30.00s, 59.16MB read
+Requests/sec:  10768.83
+Transfer/sec:      1.97MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nodejs
+ wrk -d 30 -c 128 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.98ms    3.71ms  29.87ms   59.57%
+    Req/Sec     0.86k   351.76     1.00k    85.54%
+  325949 requests in 30.00s, 59.68MB read
+Requests/sec:  10863.76
+Transfer/sec:      1.99MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.78ms   10.14ms  62.78ms   64.77%
+    Req/Sec   749.37    662.84     2.00k    49.81%
+  321840 requests in 30.00s, 58.93MB read
+Requests/sec:  10727.18
+Transfer/sec:      1.96MB

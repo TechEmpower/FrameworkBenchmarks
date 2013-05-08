@@ -1,0 +1,125 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 08:03:57 UTC 2013
+
+  System load:  0.2                Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer tornado-raw
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.71ms    9.57ms  47.91ms   83.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3356 requests in 5.01s, 0.98MB read
+Requests/sec:    670.53
+Transfer/sec:    200.03KB
+
+---------------------------------------------------------
+ Running Warmup tornado-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   346.08ms  492.57ms   2.39s    85.93%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20087 requests in 30.01s, 5.85MB read
+  Socket errors: connect 0, read 0, write 0, timeout 33
+Requests/sec:    669.42
+Transfer/sec:    199.73KB
+
+---------------------------------------------------------
+ Queries: 1 for tornado-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   267.52ms  364.88ms   2.29s    86.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27399 requests in 30.00s, 6.94MB read
+  Socket errors: connect 0, read 0, write 0, timeout 14
+Requests/sec:    913.18
+Transfer/sec:    236.98KB
+
+---------------------------------------------------------
+ Queries: 5 for tornado-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   644.72ms  963.44ms   5.30s    87.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10406 requests in 30.01s, 4.23MB read
+  Socket errors: connect 0, read 0, write 0, timeout 873
+Requests/sec:    346.79
+Transfer/sec:    144.22KB
+
+---------------------------------------------------------
+ Queries: 10 for tornado-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07s     1.94s    9.03s    89.03%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6221 requests in 30.01s, 3.71MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1744
+Requests/sec:    207.30
+Transfer/sec:    126.48KB
+
+---------------------------------------------------------
+ Queries: 15 for tornado-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.36s     2.10s   11.46s    87.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4359 requests in 30.01s, 3.42MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2019
+Requests/sec:    145.26
+Transfer/sec:    116.83KB
+
+---------------------------------------------------------
+ Queries: 20 for tornado-raw
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.58s     2.47s   12.24s    86.99%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3245 requests in 30.00s, 3.16MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2232
+Requests/sec:    108.16
+Transfer/sec:    107.98KB

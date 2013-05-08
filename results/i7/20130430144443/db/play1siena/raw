@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 08:34:34 PDT 2013
+
+  System load:  0.88                Processes:           119
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 15%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play1siena
+ wrk -d 60 -c 8 -t 8 http://172.16.98.122:8080/play1/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/play1/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.67ms    2.55ms  18.57ms   95.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36005 requests in 5.00s, 15.10MB read
+Requests/sec:   7201.86
+Transfer/sec:      3.02MB
+
+---------------------------------------------------------
+ Running Warmup play1siena
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.45ms    4.77ms  73.86ms   93.09%
+    Req/Sec     0.97k   175.40     1.00k    96.82%
+  273634 requests in 30.00s, 114.97MB read
+Requests/sec:   9120.90
+Transfer/sec:      3.83MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play1siena
+ wrk -d 30 -c 8 -t 8 http://172.16.98.122:8080/play1/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   798.42us  592.67us  23.85ms   99.56%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  298327 requests in 30.00s, 125.12MB read
+Requests/sec:   9944.16
+Transfer/sec:      4.17MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play1siena
+ wrk -d 30 -c 16 -t 8 http://172.16.98.122:8080/play1/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.64ms    1.52ms  47.83ms   92.36%
+    Req/Sec     1.00k    25.02     1.00k    99.94%
+  294575 requests in 30.00s, 123.55MB read
+Requests/sec:   9819.15
+Transfer/sec:      4.12MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play1siena
+ wrk -d 30 -c 32 -t 8 http://172.16.98.122:8080/play1/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.48ms    1.16ms  14.00ms   87.50%
+    Req/Sec     1.00k    60.99     1.00k    99.63%
+  273391 requests in 30.00s, 114.66MB read
+Requests/sec:   9112.90
+Transfer/sec:      3.82MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play1siena
+ wrk -d 30 -c 64 -t 8 http://172.16.98.122:8080/play1/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.01ms    1.79ms  55.61ms   92.48%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  273689 requests in 30.00s, 114.79MB read
+Requests/sec:   9122.87
+Transfer/sec:      3.83MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play1siena
+ wrk -d 30 -c 128 -t 8 http://172.16.98.122:8080/play1/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.90ms    2.95ms  60.23ms   92.64%
+    Req/Sec     0.99k    78.74     1.00k    99.38%
+  272868 requests in 30.00s, 114.44MB read
+Requests/sec:   9095.56
+Transfer/sec:      3.81MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play1siena
+ wrk -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.39ms    5.07ms  76.56ms   92.31%
+    Req/Sec     0.97k   175.78     1.00k    96.81%
+  276184 requests in 30.00s, 115.83MB read
+Requests/sec:   9205.89
+Transfer/sec:      3.86MB

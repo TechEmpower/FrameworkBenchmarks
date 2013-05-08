@@ -1,0 +1,122 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May  1 10:11:14 UTC 2013
+
+  System load:  0.18               Processes:           75
+  Usage of /:   25.4% of 19.69GB   Users logged in:     1
+  Memory usage: 7%                 IP address for eth0: 10.254.7.166
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+85 packages can be updated.
+41 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer slim
+ wrk -d 5 -c 8 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.26ms    8.81ms  64.57ms   74.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2360 requests in 5.01s, 628.06KB read
+Requests/sec:    471.40
+Transfer/sec:    125.45KB
+
+---------------------------------------------------------
+ Running Warmup slim
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   560.08ms  173.86ms   1.84s    74.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13262 requests in 30.01s, 3.45MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    441.99
+Transfer/sec:    117.64KB
+
+---------------------------------------------------------
+ Queries: 1 for slim
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   538.70ms  182.44ms   1.31s    75.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14044 requests in 30.01s, 3.16MB read
+Requests/sec:    467.95
+Transfer/sec:    107.75KB
+
+---------------------------------------------------------
+ Queries: 5 for slim
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   734.52ms  234.05ms   1.69s    76.06%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10244 requests in 30.01s, 3.74MB read
+Requests/sec:    341.39
+Transfer/sec:    127.64KB
+
+---------------------------------------------------------
+ Queries: 10 for slim
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   897.20ms  260.19ms   1.76s    78.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8168 requests in 30.01s, 4.42MB read
+Requests/sec:    272.18
+Transfer/sec:    150.91KB
+
+---------------------------------------------------------
+ Queries: 15 for slim
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.09s   377.49ms   2.63s    74.28%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6619 requests in 30.00s, 4.74MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    220.60
+Transfer/sec:    161.92KB
+
+---------------------------------------------------------
+ Queries: 20 for slim
+ wrk -d 30 -c 256 -t 8 http://10.253.36.240:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.253.36.240:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.34s   427.49ms   2.30s    80.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5412 requests in 30.01s, 4.83MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    180.35
+Transfer/sec:    164.76KB
