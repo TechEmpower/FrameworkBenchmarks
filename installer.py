@@ -7,8 +7,11 @@ class Installer:
   # install_software
   ############################################################
   def install_software(self):
-    self.__install_server_software()
-    self.__install_client_software()
+    if self.benchmarker.install == 'all' or self.benchmarker.install == 'server':
+        self.__install_server_software()    
+
+    if self.benchmarker.install == 'all' or self.benchmarker.install == 'client':
+        self.__install_client_software()
   ############################################################
   # End install_software
   ############################################################
