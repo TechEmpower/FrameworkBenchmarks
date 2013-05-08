@@ -40,7 +40,8 @@ namespace Benchmarks.AspNet
             RouteTable.Routes.MapRoute(
                 name: "WithProviders",
                 url: "{controller}/{providerName}/{action}",
-                defaults: new { action = "Index" }
+                defaults: new { action = "Index" },
+                constraints: new { controller = "ado|entityframework", providerName = "mysql|postgresql" }
             );
 
             RouteTable.Routes.MapRoute(
