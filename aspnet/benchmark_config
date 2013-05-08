@@ -1,5 +1,6 @@
 {
   "framework": "aspnet",
+  "os": "nt",
   "tests": [{
     "default": {
       "setup_file": "setup_iis",
