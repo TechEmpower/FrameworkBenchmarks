@@ -42,6 +42,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc">
       <Private>True</Private>
       <HintPath>..\lib\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
@@ -74,27 +75,31 @@
       <Private>True</Private>
       <HintPath>..\lib\EntityFramework.6.0.0-alpha3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data">
+    <Reference Include="EntityFramework">
+      <Private>True</Private>
+      <HintPath>..\lib\EntityFramework.6.0.0-alpha3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql">
       <Private>True</Private>
       <HintPath>..\lib\MySql.Data.Entity.6.7.2-beta-ef6\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data.Entity">
+    <Reference Include="MySql">
       <Private>True</Private>
       <HintPath>..\lib\MySql.Data.Entity.6.7.2-beta-ef6\lib\net45\MySql.Data.Entity.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql">
       <Private>True</Private>
-      <HintPath>..\lib\Npgsql.EF6.2.0.12-pre2\lib\net45\Npgsql.dll</HintPath>
+      <HintPath>..\lib\Npgsql.EF6.2.0.12-pre4\lib\net45\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql">
       <Private>True</Private>
-      <HintPath>..\lib\Npgsql.EF6.2.0.12-pre2\lib\net45\Mono.Security.dll</HintPath>
+      <HintPath>..\lib\Npgsql.EF6.2.0.12-pre4\lib\net45\Mono.Security.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Bson">
+    <Reference Include="MongoDB">
       <Private>True</Private>
       <HintPath>..\lib\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver">
+    <Reference Include="MongoDB">
       <Private>True</Private>
       <HintPath>..\lib\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
@@ -111,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\EntityFramework.cs" />
+    <Compile Include="Models\MongoDB.cs" />
     <Compile Include="Models\World.cs" />
     <Compile Include="Models\Fortune.cs" />
   </ItemGroup>
