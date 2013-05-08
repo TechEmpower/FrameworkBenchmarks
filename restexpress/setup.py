@@ -4,6 +4,7 @@ import sys
 import setup_util
 
 def start(args):
+  setup_util.replace_text("restexpress/config/dev/environment.properties", "mongodb:\/\/.*\/hello_world", "mongodb://" + args.database_host + "/hello_world")
   setup_util.replace_text("restexpress/config/dev/environment.properties", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 
   try:
