@@ -31,7 +31,7 @@ type Fortune struct {
 const (
 	ConnectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
 	WorldSelect        = "SELECT id, randomNumber FROM World where id = ?"
-	WorldUpdate				 = "UPDATE World SET randomNumber = ? where id = ?"
+	WorldUpdate        = "UPDATE World SET randomNumber = ? where id = ?"
 	FortuneSelect      = "SELECT id, message FROM Fortune;"
 	WorldRowCount      = 10000
 	MaxConnectionCount = 100
@@ -40,9 +40,9 @@ const (
 var (
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
-	worldStatement    *sql.Stmt
+	worldStatement   *sql.Stmt
 	fortuneStatement *sql.Stmt
-	updateStatement		*sql.Stmt
+	updateStatement  *sql.Stmt
 )
 
 func main() {
