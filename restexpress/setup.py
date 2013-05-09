@@ -2,6 +2,7 @@
 import subprocess
 import sys
 import setup_util
+import os
 
 def start(args):
   setup_util.replace_text("restexpress/config/dev/environment.properties", "mongodb:\/\/.*\/hello_world", "mongodb://" + args.database_host + "/hello_world")
@@ -19,7 +20,7 @@ def stop():
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if 'hello.Main' in line:
+    if 'world-1.0-SNAPSHOT.jar' in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 9)
   return 0
