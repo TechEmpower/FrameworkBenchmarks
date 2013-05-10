@@ -31,6 +31,8 @@ public class MysqlConfig
 		{
 			ds.setUseConfigs(useConfigs);
 		}
+		ds.setUser("benchmarkdbuser");
+		ds.setPassword("benchmarkdbpass");
 
 		this.dataSource = ds;
     }
