@@ -7,7 +7,7 @@
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <non-jta-data-source>DefaultDS</non-jta-data-source>
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
         </properties>
     </persistence-unit>
     

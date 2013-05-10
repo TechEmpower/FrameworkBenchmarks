@@ -15,7 +15,7 @@ public class World {
     public Long randomNumber;
 
     public static World findById(final Long id) throws Throwable {
-      return JPA.withTransaction(new play.libs.F.Function0<World>() {
+      return JPA.withTransaction("default", true, new play.libs.F.Function0<World>() {
         public World apply() {
             return JPA.em().find(World.class, id);
         }
