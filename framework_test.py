@@ -201,6 +201,7 @@ class FrameworkTest:
     try:
       if self.json_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "json"):
         sys.stdout.write("BENCHMARKING JSON ... ") 
+        sys.stdout.flush()
         remote_script = self.__generate_concurrency_script(self.json_url, self.port)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'json'))
         results = self.__parse_test('json')
@@ -214,6 +215,7 @@ class FrameworkTest:
     try:
       if self.db_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "db"):
         sys.stdout.write("BENCHMARKING DB ... ") 
+        sys.stdout.flush()
         remote_script = self.__generate_concurrency_script(self.db_url, self.port)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'db'))
         results = self.__parse_test('db')
@@ -227,6 +229,7 @@ class FrameworkTest:
     try:
       if self.query_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "query"):
         sys.stdout.write("BENCHMARKING Query ... ") 
+        sys.stdout.flush()
         remote_script = self.__generate_query_script(self.query_url, self.port)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'query'))
         results = self.__parse_test('query')
@@ -239,6 +242,7 @@ class FrameworkTest:
     try:
       if self.fortune_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "fortune"):
         sys.stdout.write("BENCHMARKING Fortune ... ") 
+        sys.stdout.flush()
         remote_script = self.__generate_concurrency_script(self.fortune_url, self.port)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'fortune'))
         results = self.__parse_test('fortune')
@@ -251,6 +255,7 @@ class FrameworkTest:
     try:
       if self.update_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "update"):
         sys.stdout.write("BENCHMARKING Update ... ") 
+        sys.stdout.flush()
         remote_script = self.__generate_query_script(self.update_url, self.port)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'update'))
         results = self.__parse_test('update')
