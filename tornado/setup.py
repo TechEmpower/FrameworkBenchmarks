@@ -12,7 +12,6 @@ def start(args):
     setup_util.replace_text(
         cwd + "/server.py", "localhost", args.database_host)
 
-    subprocess.check_call("sudo pip install -r requirements.txt", cwd=cwd, shell=True)
     subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8080 --logging=error" % home, shell=True, cwd=cwd)
     return 0
 
