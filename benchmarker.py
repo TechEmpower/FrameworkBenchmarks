@@ -509,6 +509,7 @@ class Benchmarker:
       self.results['concurrencyLevels'] = self.concurrency_levels
       self.results['queryIntervals'] = self.query_intervals
       self.results['frameworks'] = [t.name for t in self.__gather_tests()]
+      self.results['duration'] = self.duration
       self.results['rawData'] = dict()
       self.results['rawData']['json'] = dict()
       self.results['rawData']['db'] = dict()
