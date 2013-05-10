@@ -4,7 +4,6 @@ import re
 def replace_text(file, to_replace, replacement):
   with open(file, "r") as conf:
     contents = conf.read()
-    replaced_text = re.sub(to_replace, replacement, contents)
-  f = open(file, "w")
-  f.write(replaced_text)
-  f.close()
+  replaced_text = re.sub(to_replace, replacement, contents)
+  with open(file, "w") as f:
+    f.write(replaced_text)
