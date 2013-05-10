@@ -15,6 +15,14 @@
       "query_url": "/dbraw?queries=",
       "port": 8080,
       "sort": 84
+    },
+    "pypy": {
+      "setup_file": "setup_pypy",
+      "json_url": "/json",
+      "db_url": "/dbs",
+      "query_url": "/db?queries=",
+      "port": 8080,
+      "sort": 107
     }
   }]
 }

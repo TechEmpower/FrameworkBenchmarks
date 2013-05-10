@@ -46,12 +46,17 @@ class Installer:
     # Python
     #
 
+    self.__run_command("curl https://bitbucket.org/pypy/pypy/downloads/pypy-2.0-linux64.tar.bz2 | tar xvz")
     self.__run_command("curl http://www.python.org/ftp/python/2.7.4/Python-2.7.4.tgz | tar xvz")
     self.__run_command("./configure", cwd="Python-2.7.4")
+    self.__run_command("make -j", cwd="Python-2.7.4")
     self.__run_command("sudo make install", cwd="Python-2.7.4")
     self.__run_command("curl https://pypi.python.org/packages/source/d/distribute/distribute-0.6.38.tar.gz | tar xvz")
+    # run pypy before python. (`setup.py install` fails after `sudo setup.py install`)
+    self.__run_command("../pypy-2.0/bin/pypy setup.py install", cwd="distribute-0.6.38")
     self.__run_command("sudo python setup.py install", cwd="distribute-0.6.38")
     self.__run_command("curl https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz | tar xvz")
+    self.__run_command("../pypy-2.0/bin/pypy setup.py install", cwd="pip-1.3.1")
     self.__run_command("sudo python setup.py install", cwd="pip-1.3.1")
     self.__run_command("sudo pip install MySQL-python==1.2.4")
     self.__run_command("sudo pip install simplejson==3.0.7")
