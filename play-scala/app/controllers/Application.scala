@@ -74,8 +74,14 @@ object Application extends Controller {
       Async {
         val random = ThreadLocalRandom.current()
 
+        val boundsCheckedQueries = queries match {
+          case q if q > 500 => 500
+          case q if q <   1 => 1
+          case _ => queries
+        }
+
         val worlds = Future.sequence((for {
-          _ <- 1 to queries
+          _ <- 1 to boundsCheckedQueries
         } yield Future {
             val world = World.findById(random.nextInt(TestDatabaseRows) + 1)
             val updatedWorld = world.copy(randomNumber = random.nextInt(TestDatabaseRows) + 1)
@@ -85,7 +91,7 @@ object Application extends Controller {
         ).toList)
 
         worlds.map {
-          w => Ok(Json.toJson(w))
+          w => Ok(Json.toJson(w)).withHeaders("Server" -> "Netty")
         }
       }
     }
