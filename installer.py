@@ -46,13 +46,18 @@ class Installer:
     # Python
     #
 
-    self.__run_command("curl http://www.python.org/ftp/python/2.7.3/Python-2.7.3.tgz | tar xvz")
-    self.__run_command("./configure", cwd="Python-2.7.3")
-    self.__run_command("sudo make install", cwd="Python-2.7.3")
-    self.__run_command("curl http://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c11.tar.gz | tar xvz")
-    self.__run_command("sudo python setup.py install", cwd="setuptools-0.6c11")
-    self.__run_command("curl http://pypi.python.org/packages/source/p/pip/pip-1.1.tar.gz | tar xvz")
-    self.__run_command("sudo python setup.py install", cwd="pip-1.1")
+    self.__run_command("curl -L http://bitbucket.org/pypy/pypy/downloads/pypy-2.0-linux64.tar.bz2 | tar xvj")
+    self.__run_command("curl http://www.python.org/ftp/python/2.7.4/Python-2.7.4.tgz | tar xvz")
+    self.__run_command("./configure", cwd="Python-2.7.4")
+    self.__run_command("make -j", cwd="Python-2.7.4")
+    self.__run_command("sudo make install", cwd="Python-2.7.4")
+    self.__run_command("curl https://pypi.python.org/packages/source/d/distribute/distribute-0.6.38.tar.gz | tar xvz")
+    # run pypy before python. (`setup.py install` fails after `sudo setup.py install`)
+    self.__run_command("../pypy-2.0/bin/pypy setup.py install", cwd="distribute-0.6.38")
+    self.__run_command("sudo python setup.py install", cwd="distribute-0.6.38")
+    self.__run_command("curl https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz | tar xvz")
+    self.__run_command("../pypy-2.0/bin/pypy setup.py install", cwd="pip-1.3.1")
+    self.__run_command("sudo python setup.py install", cwd="pip-1.3.1")
     self.__run_command("sudo pip install MySQL-python==1.2.4")
     self.__run_command("sudo pip install simplejson==3.0.7")
     self.__run_command("curl http://initd.org/psycopg/tarballs/PSYCOPG-2-5/psycopg2-2.5.tar.gz | tar xvz")
@@ -60,6 +65,8 @@ class Installer:
     self.__run_command("git clone https://github.com/iiilx/django-psycopg2-pool.git")
     self.__run_command("sudo python setup.py install", cwd="django-psycopg2-pool")
     self.__run_command("sudo pip install --upgrade numpy==1.7.1")
+    self.__run_command("sudo pip install --upgrade tornado motor Flask Flask-SQLAlchemy meinheld gunicorn")
+    self.__run_command("pypy-2.0/bin/pip install --upgrade tornado motor Flask Flask-SQLAlchemy PyMySQL")
 
     #
     # nodejs
@@ -396,7 +403,7 @@ class Installer:
     ##############################
     # MongoDB
     ##############################
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
     sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
     sudo apt-get update
     yes | sudo apt-get install mongodb-10gen

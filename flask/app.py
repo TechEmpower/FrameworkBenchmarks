@@ -3,8 +3,15 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from random import randint
 
+try:
+    import MySQLdb
+    mysql_schema = "mysql:"
+except ImportError:
+    mysql_schema = "mysql+pymysql:"
+
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world'
+app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world'
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
