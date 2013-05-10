@@ -66,7 +66,7 @@ class Installer:
     self.__run_command("sudo python setup.py install", cwd="django-psycopg2-pool")
     self.__run_command("sudo pip install --upgrade numpy==1.7.1")
     self.__run_command("sudo pip install --upgrade tornado motor Flask Flask-SQLAlchemy meinheld gunicorn")
-    self.__run_command("pypy-2.0/bin/pip install --upgrade tornado motor Flask Flask-SQLAlchemy")
+    self.__run_command("pypy-2.0/bin/pip install --upgrade tornado motor Flask Flask-SQLAlchemy PyMySQL")
 
     #
     # nodejs
