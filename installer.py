@@ -46,7 +46,7 @@ class Installer:
     # Python
     #
 
-    self.__run_command("curl -L https://bitbucket.org/pypy/pypy/downloads/pypy-2.0-linux64.tar.bz2 | tar xvz")
+    self.__run_command("curl -L http://bitbucket.org/pypy/pypy/downloads/pypy-2.0-linux64.tar.bz2 | tar xvj")
     self.__run_command("curl http://www.python.org/ftp/python/2.7.4/Python-2.7.4.tgz | tar xvz")
     self.__run_command("./configure", cwd="Python-2.7.4")
     self.__run_command("make -j", cwd="Python-2.7.4")
