@@ -10,5 +10,5 @@ import app
 container = tornado.wsgi.WSGIContainer(app.app)
 server = tornado.httpserver.HTTPServer(container)
 server.bind(options.port)
-server.start(16)
+server.start(8)
 tornado.ioloop.IOLoop.instance().start()
