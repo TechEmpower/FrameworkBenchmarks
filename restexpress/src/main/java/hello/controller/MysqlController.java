@@ -35,16 +35,23 @@ public class MysqlController
 
 		// Get the count of queries to run.
 		int count = 1;
-		count = Integer.parseInt(request.getHeader("queries"));
-
-		// Bounds check.
-		if (count > 500)
+		try
 		{
-			count = 500;
+			count = Integer.parseInt(request.getHeader("queries"));
+		
+			// Bounds check.
+			if (count > 500)
+			{
+				count = 500;
+			}
+			if (count < 1)
+			{
+				count = 1;
+			}
 		}
-		if (count < 1)
+		catch(NumberFormatException nfexc)
 		{
-			count = 1;
+			// do nothing
 		}
 
 		// Fetch some rows from the database.
