@@ -3,46 +3,58 @@
   "tests": [{
     "default": {
       "setup_file": "setup_iis",
+      "os": "nt",
       "json_url": "/json",
       "port": 8080,
       "sort": 90
     },
     "mysql-raw": {
       "setup_file": "setup_iis",
+      "os": "nt",
       "db_url": "/ado/mysql",
       "query_url": "/ado/mysql?queries=",
       "fortune_url": "/ado/mysql/fortunes",
+      "update_url": "/ado/mysql/update?queries=",
       "port": 8080,
       "sort": 91
     },
     "postgresql-raw": {
       "setup_file": "setup_iis",
+      "os": "nt",
       "db_url": "/ado/postgresql",
       "query_url": "/ado/postgresql?queries=",
       "fortune_url": "/ado/postgresql/fortunes",
+      "update_url": "/ado/postgresql/update?queries=",
       "port": 8080,
       "sort": 92
     },
     "mongodb-raw": {
       "setup_file": "setup_iis",
+      "os": "nt",
       "db_url": "/mongodb",
       "query_url": "/mongodb?queries=",
+      "fortune_url": "/mongodb/fortunes",
+      "update_url": "/mongodb/update?queries=",
       "port": 8080,
       "sort": 93
     },
     "mysql-entityframework": {
       "setup_file": "setup_iis",
+      "os": "nt",
       "db_url": "/entityframework/mysql",
       "query_url": "/entityframework/mysql?queries=",
       "fortune_url": "/entityframework/mysql/fortunes",
+      "update_url": "/entityframework/mysql/update?queries=",
       "port": 8080,
       "sort": 94
     },
     "postgresql-entityframework": {
       "setup_file": "setup_iis",
+      "os": "nt",
       "db_url": "/entityframework/postgresql",
       "query_url": "/entityframework/postgresql?queries=",
       "fortune_url": "/entityframework/postgresql/fortunes",
+      "update_url": "/entityframework/postgresql/update?queries=",
       "port": 8080,
       "sort": 95
     },
@@ -50,46 +62,52 @@
       "setup_file": "setup_nginx",
       "json_url": "/json",
       "port": 8080,
-      "sort": 98
+      "sort": 100
     },
     "mono-mysql-raw": {
       "setup_file": "setup_nginx",
       "db_url": "/ado/mysql",
       "query_url": "/ado/mysql?queries=",
       "fortune_url": "/ado/mysql/fortunes",
+      "update_url": "/ado/mysql/update?queries=",
       "port": 8080,
-      "sort": 99
+      "sort": 101
     },
     "mono-postgresql-raw": {
       "setup_file": "setup_nginx",
       "db_url": "/ado/postgresql",
       "query_url": "/ado/postgresql?queries=",
       "fortune_url": "/ado/postgresql/fortunes",
+      "update_url": "/ado/postgresql/update?queries=",
       "port": 8080,
-      "sort": 100
+      "sort": 102
     },
     "mono-mongodb-raw": {
       "setup_file": "setup_nginx",
       "db_url": "/mongodb",
       "query_url": "/mongodb?queries=",
+      "fortune_url": "/mongodb/fortunes",
+      "update_url": "/mongodb/update?queries=",
       "port": 8080,
-      "sort": 101
+      "sort": 103
     },
     "mono-mysql-entityframework": {
       "setup_file": "setup_nginx",
       "db_url": "/entityframework/mysql",
       "query_url": "/entityframework/mysql?queries=",
       "fortune_url": "/entityframework/mysql/fortunes",
+      "update_url": "/entityframework/mysql/update?queries=",
       "port": 8080,
-      "sort": 102
+      "sort": 104
     },
     "mono-postgresql-entityframework": {
       "setup_file": "setup_nginx",
       "db_url": "/entityframework/postgresql",
       "query_url": "/entityframework/postgresql?queries=",
       "fortune_url": "/entityframework/postgresql/fortunes",
+      "update_url": "/entityframework/postgresql/update?queries=",
       "port": 8080,
-      "sort": 103
+      "sort": 105
     }
   }]
 }
