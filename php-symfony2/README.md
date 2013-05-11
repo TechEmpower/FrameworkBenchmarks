@@ -5,7 +5,7 @@ This is the Symfony 2 PHP portion of a [benchmarking test suite](../) comparing 
 ### JSON Encoding Test
 Uses the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-encode.php).
 
-* [JSON test controller](src/Skamander/BenchmarkBundle/BenchController.php)
+* [JSON test controller](src/Skamander/BenchmarkBundle/Controller/BenchController.php)
 
 
 ### Data-Store/Database Mapping Test
