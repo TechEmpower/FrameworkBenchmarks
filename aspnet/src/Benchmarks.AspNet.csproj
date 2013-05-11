@@ -140,7 +140,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != '' And Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
-  <Import Project="..\lib\MSBuild.Microsoft.VisualStudio.Web.targets.11.0.2.1\tools\VSToolsPath\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' == '' Or !Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
+  <Import Project="..\lib\MSBuild.Microsoft.VisualStudio.Web.targets.11.0.2.1\tools\VSToolsPath\WebApplications\Microsoft.WebApplication.targets" Condition="('$(VSToolsPath)' == '' Or !Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')) And Exists('..\lib\MSBuild.Microsoft.VisualStudio.Web.targets.11.0.2.1\tools\VSToolsPath\WebApplications\Microsoft.WebApplication.targets')" />
   <Import Project="..\lib\.nuget\NuGet.targets" Condition="Exists('..\lib\.nuget\NuGet.targets')" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)' == 'true'">
     <AspNetCompiler VirtualPath="/" PhysicalPath="$(WebProjectOutputDir)" />
