@@ -78,7 +78,7 @@ Write-Host "Installing PHP...`n"
 
 # Download PHP
 $php_installer_file = "php-5.4.14-nts-Win32-VC9-x86.zip"
-$php_installer_url = "http://windows.php.net/downloads/releases/$php_installer_file"
+$php_installer_url = "http://windows.php.net/downloads/releases/archives/$php_installer_file"
 $php_installer_local = "$workdir\$php_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($php_installer_url, $php_installer_local)
 
@@ -96,6 +96,7 @@ Copy-Item "$php\php.ini-production" $phpini
 (Get-Content $phpini) -Replace "short_open_tag = Off", "short_open_tag = On" | Set-Content $phpini
 (Get-Content $phpini) -Replace '; extension_dir = "./"', "extension_dir = `"$php\ext`"" | Set-Content $phpini
 (Get-Content $phpini) -Replace ";extension=", "extension=" | Set-Content $phpini
+(Get-Content $phpini) -Replace "extension=php_(interbase|oci8|oci8_11g|firebird|oci|pspell|sybase_ct|zip|pdo_firebird|pdo_oci|snmp).dll.*", "" | Set-Content $phpini
 
 # IIS with PHP via FastCGI
 Install-WindowsFeature Web-CGI | Out-Null
@@ -116,6 +117,13 @@ Set-ItemProperty "c:\inetpub\wwwroot\wincache.php" -name IsReadOnly -value $fals
 (Get-Content "c:\inetpub\wwwroot\wincache.php") -Replace "'USE_AUTHENTICATION', 1", "'USE_AUTHENTICATION', 0" | Set-Content "c:\inetpub\wwwroot\wincache.php"
 Add-Content $phpini "`n`n[PHP]`n"
 Add-Content $phpini "extension=php_wincache.dll"
+
+# composer
+$composer_url = "https://getcomposer.org/Composer-Setup.exe"
+$composer_local = "$workdir\Composer-Setup.exe"
+(New-Object System.Net.WebClient).DownloadFile($composer_url, $composer_local)
+Start-Process $composer_local "/silent" -Wait
+$env:Path += ";C:\ProgramData\Composer\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # Firewall
