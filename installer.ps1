@@ -136,6 +136,60 @@ Start-Process $go_local "/passive" -Wait
 $env:Path += ";C:\Go\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
+# Java
+#
+Write-Host "Installing Java...`n"
+
+# jre
+#$jre_url = "http://img.cs.montana.edu/windows/jre-7u21-windows-x64.exe"
+#$jre_local = "$workdir\jre-7u21-windows-x64.exe"
+#$jre_dir = "C:\Java\jre"
+#(New-Object System.Net.WebClient).DownloadFile($jre_url, $jre_local)
+#Start-Process $jre_local "/s INSTALLDIR=$jre_dir" -Wait
+#$env:Path += ";$jre_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+#$env:JAVA_HOME = $jre_dir; [Environment]::SetEnvironmentVariable("JAVA_HOME", $jre_dir, [System.EnvironmentVariableTarget]::Machine)
+
+# jdk
+$jdk_url = "http://uni-smr.ac.ru/archive/dev/java/SDKs/sun/j2se/7/jdk-7u21-windows-x64.exe"
+$jdk_local = "$workdir\jdk-7u21-windows-x64.exe"
+$jdk_dir = "C:\Java\jdk"
+(New-Object System.Net.WebClient).DownloadFile($jdk_url, $jdk_local)
+Start-Process $jdk_local "/s INSTALLDIR=$jdk_dir" -Wait
+$env:Path += ";$jdk_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+$env:JAVA_HOME = $jdk_dir; [Environment]::SetEnvironmentVariable("JAVA_HOME", $jre_dir, [System.EnvironmentVariableTarget]::Machine)
+
+# resin
+$resin_url = "http://www.caucho.com/download/resin-4.0.36.zip"
+$resin_local = "$workdir\resin-4.0.36.zip"
+$resin_dir = "C:\Java\resin"
+(New-Object System.Net.WebClient).DownloadFile($resin_url, $resin_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($resin_local, $workdir) | Out-Null
+Move-Item "$workdir\resin-4.0.36" $resin_dir
+Copy-Item "$basedir\config\resin.properties" "$resin_dir\conf\resin.properties"
+#$env:Path += ";$resin_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+# ant
+#$ant_url = "http://apache.mirrors.hoobly.com//ant/binaries/apache-ant-1.9.0-bin.zip"
+#$ant_local = "$workdir\apache-ant-1.9.0-bin.zip"
+#$ant_dir = "C:\Java\ant"
+#(New-Object System.Net.WebClient).DownloadFile($ant_url, $ant_local)
+#[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+#[System.IO.Compression.ZipFile]::ExtractToDirectory($ant_local, $workdir) | Out-Null
+#Move-Item "$workdir\apache-ant-1.9.0" $ant_dir
+#$env:Path += ";$ant_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+# maven
+$maven_url = "http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.zip"
+$maven_local = "$workdir\apache-maven-3.0.5-bin.zip"
+$maven_dir = "C:\Java\maven"
+(New-Object System.Net.WebClient).DownloadFile($maven_url, $maven_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($maven_local, $workdir) | Out-Null
+Move-Item "$workdir\apache-maven-3.0.5" $maven_dir
+$env:Path += ";$maven_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+#
 # Firewall
 #
 Write-Host "Configuring firewall...`n"
