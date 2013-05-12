@@ -1,0 +1,14 @@
+<%#
+DelegateChain<void(Request&, Response&, Delegate<void()>)>::item* it;
+Server* server;
+void handleRequest(void*, Request& req, Response& resp, Delegate<void()> cb) {
+	server->handleDynamicRequest(req.path,req,resp,cb);
+}
+extern "C" void initModule(Server* s) {
+	server=s;
+	it=s->handleRequest.attach(&handleRequest);
+}
+extern "C" void deinitModule() {
+	server->handleRequest.detach(it);
+}
+%>
