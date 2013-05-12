@@ -23,3 +23,13 @@ With ORM:
 
 Without ORM (raw):
     http://localhost:8080/dbraw?queries=2
+
+### Fortune Test
+
+With ORM:
+    http://localhost:8080/fortune
+
+Without ORM (raw):
+    http://localhost:8080/fortuneraw
+
+
