@@ -126,6 +126,16 @@ Start-Process $composer_local "/silent" -Wait
 $env:Path += ";C:\ProgramData\Composer\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
+# Go
+#
+Write-Host "Installing Go...`n"
+$go_url = "https://go.googlecode.com/files/go1.1rc3.windows-amd64.msi"
+$go_local = "$workdir\go1.1rc3.windows-amd64.msi"
+(New-Object System.Net.WebClient).DownloadFile($go_url, $go_local)
+Start-Process $go_local "/passive" -Wait
+$env:Path += ";C:\Go\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+#
 # Firewall
 #
 Write-Host "Configuring firewall...`n"

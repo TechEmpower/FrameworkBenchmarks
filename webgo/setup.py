@@ -4,11 +4,18 @@ import sys
 import os
 
 def start(args):
+  if os.name == 'nt':
+    subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\webgo&&go get ./...", shell=True, cwd="webgo")
+    subprocess.Popen("setup.bat", shell=True, cwd="webgo") 
+    return 0
   subprocess.call("go get ./...", shell=True, cwd="webgo")
   subprocess.Popen("go run src/hello/hello.go".rsplit(" "), cwd="webgo")
   return 0
 def stop():
-  
+  if os.name == 'nt':
+    subprocess.call("taskkill /f /im go.exe > NUL", shell=True)
+    subprocess.call("taskkill /f /im hello.exe > NUL", shell=True)
+    return 0
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
