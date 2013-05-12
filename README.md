@@ -134,6 +134,7 @@ Note: The following tests are the only known tests to run on Windows
 * cake
 * express
 * express-mongodb
+* go
 * nodejs
 * nodejs-mongodb
 * express
@@ -151,6 +152,7 @@ Note: The following tests are the only known tests to run on Windows
 * micromvc
 * slim
 * phreeze
+* webgo
 
 Server installation scripts for Windows Server 2012 R2 on Amazon EC2.
 
