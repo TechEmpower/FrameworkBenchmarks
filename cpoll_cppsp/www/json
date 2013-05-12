@@ -1,0 +1,16 @@
+<%!-ljson%><%#
+#include <string.h>
+#include <json/json.h>
+%><%
+
+json_object *hello=json_object_new_object();
+json_object_object_add(hello, "message", json_object_new_string("Hello, world"));
+
+const char *hello_str=json_object_to_json_string(hello);
+
+response->headers["Content-Type"]="application/json";
+response->headers["Server"]="cppsp/0.2";
+output.write(hello_str);
+json_object_put(hello);
+
+%>
