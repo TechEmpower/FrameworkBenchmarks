@@ -5,7 +5,8 @@ import setup_util
 import os
 
 def start(args):
-  subprocess.Popen("gunicorn hello:app -b 0.0.0.0:8080 -w " + str((args.max_threads * 2)) + " --log-level=critical", shell=True, cwd="wsgi")
+  subprocess.Popen('gunicorn hello:app --worker-class="egg:meinheld#gunicorn_worker" -b 0.0.0.0:8080 -w '
+                   + str((args.max_threads * 2)) + " --log-level=critical", shell=True, cwd="wsgi")
   return 0
 def stop():
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)

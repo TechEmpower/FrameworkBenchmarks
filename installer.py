@@ -65,8 +65,7 @@ class Installer:
     self.__run_command("git clone https://github.com/iiilx/django-psycopg2-pool.git")
     self.__run_command("sudo python setup.py install", cwd="django-psycopg2-pool")
     self.__run_command("sudo pip install --upgrade numpy==1.7.1")
-    self.__run_command("sudo pip install --upgrade tornado motor Flask Flask-SQLAlchemy meinheld gunicorn")
-    self.__run_command("pypy-2.0/bin/pip install --upgrade tornado motor Flask Flask-SQLAlchemy PyMySQL")
+    self.__run_command("pypy-2.0/bin/pip install PyMySQL==0.5")
 
     #
     # nodejs
@@ -261,6 +260,13 @@ class Installer:
     ##############################################################
 
     ##############################
+    # Tornado
+    ##############################
+    packages = "tornado==3.0.1 motor==0.1 pymongo==2.5"
+    self.__run_command("sudo pip install " + packages)
+    self.__run_command("pypy-2.0/bin/pip install " + packages)
+
+    ##############################
     # Django
     ##############################
     self.__run_command("curl http://www.djangoproject.com/m/releases/1.4/Django-1.4.tar.gz | tar xvz")
@@ -279,7 +285,9 @@ class Installer:
     ##############################
     # Flask
     ##############################
-    self.__run_command("sudo pip install flask flask-sqlalchemy")
+    packages = "flask==0.9 flask-sqlalchemy==0.16 sqlalchemy==0.8.1 jinja2==2.6 werkzeug==0.8.3"
+    self.__run_command("sudo pip install " + packages)
+    self.__run_command("pypy-2.0/bin/pip install " + packages)
 
     ##############################
     # Bottle
