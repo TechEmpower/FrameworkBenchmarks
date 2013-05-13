@@ -1,0 +1,7 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /db                                     App.Db
+GET     /json                                   App.Json
+GET     /fortune                                App.Fortune
