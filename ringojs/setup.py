@@ -6,6 +6,7 @@ import os
 
 def start(args):
   setup_util.replace_text("ringojs/ringo-main.js", "dbHost = '.*';", "dbHost = '" + args.database_host + "';")
+  setup_util.replace_text("ringojs/ringo-main.js", "mongodb:\/\/.*\/hello_world", "mongodb://" + args.database_host + "/hello_world")
 
   try:
     subprocess.Popen("ringo --production ringo-main.js", shell=True, cwd="ringojs")
