@@ -12,10 +12,13 @@ def start(args):
   return 0
 
 def stop():
-  global proc
-  if not proc:
-    return 0
-  proc.terminate()
-  ret = proc.wait()
-  proc = None
-  return ret
+  p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+  out, err = p.communicate()
+  for line in out.splitlines():
+    if 'pypy' in line and 'run-tests' not in line:
+      try:
+        pid = int(line.split(None, 2)[1])
+        os.kill(pid, 9)
+      except OSError:
+        pass
+  return 0 
