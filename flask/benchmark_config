@@ -22,7 +22,7 @@
       "db_url": "/dbs",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 107
+      "sort": 110
     }
   }]
 }
