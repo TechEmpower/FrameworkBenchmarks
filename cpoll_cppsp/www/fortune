@@ -1,0 +1,63 @@
+<%!-lmysqlclient%><%#
+#include <mysql/mysql.h>
+#include <json/json.h>
+#include "connectioninfo.H"
+using namespace CP;
+using namespace cppsp;
+
+
+MYSQL* db=NULL;
+
+
+bool comp_string(const String& x, const String& y) {
+	if (x.len == 0 || y.len == 0) return x.len < y.len;
+	int complen = x.len < y.len ? x.len : y.len;
+	int tmp = memcmp(x.d, y.d, complen);
+	if (tmp == 0) return x.len < y.len;
+	else return tmp < 0;
+}
+
+%><%
+if(db==NULL) {
+	db=doConnect(NULL);
+	mysql_set_character_set(db, "utf8");
+	mysql_options(db, MYSQL_SET_CHARSET_NAME, "utf8");
+}
+mysql_query(db, "SELECT id, message FROM Fortune;");
+MYSQL_RES *sqlres = mysql_store_result(db);
+if (sqlres==NULL) throw runtime_error(mysql_error(db));
+MYSQL_ROW row;
+struct fortune
+{
+	String message;
+	int id;
+	bool operator<(const fortune& other) const {
+		return comp_string(message,other.message);
+	}
+};
+vector<fortune> fortunes;
+while( (row=mysql_fetch_row(sqlres)) ){
+	fortunes.push_back({sp->addString(row[1]),atoi(row[0])});
+}
+mysql_free_result(sqlres);
+
+fortunes.push_back({"fgjdhskgsdhgjfksd",12345});
+sort(fortunes.begin(),fortunes.end());
+
+response->headers["Server"]="cppsp/0.2";
+%>
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+<tr><th>id</th><th>message</th></tr>
+<%
+for(int i=0;i<fortunes.size();i++) {
+	%>
+	<tr><td><%=fortunes[i].id%></td><td><%htmlEscape(fortunes[i].message,output);%></td></tr><%
+}
+%>
+</table>
+</body>
+</html>
