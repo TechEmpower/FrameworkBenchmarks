@@ -41,7 +41,7 @@ while( (row=mysql_fetch_row(sqlres)) ){
 }
 mysql_free_result(sqlres);
 
-fortunes.push_back({"fgjdhskgsdhgjfksd",12345});
+fortunes.push_back({"Additional fortune added at request time.",0});
 sort(fortunes.begin(),fortunes.end());
 
 response->headers["Server"]="cppsp/0.2";
