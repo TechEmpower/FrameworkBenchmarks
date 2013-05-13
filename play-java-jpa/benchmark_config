@@ -1,13 +1,13 @@
 {
   "framework": "play",
   "tests": [{
-    "default": {
+    "jpa": {
       "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 9000,
-      "sort": 13
+      "sort": 113
     }
   }]
 }
