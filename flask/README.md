@@ -2,6 +2,24 @@
 
 Single file test, [app.py](app.py)
 
+## Description
+
+Flask + Flask-SQLAlchemy
+
+### Interpreter
+
+* CPython 2.7.4
+* PyPy 2.0
+
+### Database
+
+MySQL (MySQL-python on CPython, PyMySQL on PyPy)
+
+### Server
+
+* gunicorn+meinheld on CPython
+* Tornado on PyPy
+
 
 ## Test URLs
 ### JSON Encoding 
