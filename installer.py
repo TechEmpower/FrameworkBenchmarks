@@ -331,7 +331,8 @@ class Installer:
     ##############################
     # Maven
     ##############################
-    self.__run_command("sudo apt-get install maven2", send_yes=True)
+    # self.__run_command("sudo apt-get install maven2", send_yes=True)
+    self.__run_command("curl www.us.apache.org/dist/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz | tar xvz")
 
     ##############################
     # Leiningen
