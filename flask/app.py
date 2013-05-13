@@ -86,6 +86,7 @@ def get_random_world_single_raw():
 @app.route("/fortunes")
 def get_fortunes():
     fortunes = list(Fortune.query.all())
+    fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
     fortunes.sort(key=attrgetter('message'))
     return render_template('fortunes.html', fortunes=fortunes)
 
@@ -94,6 +95,7 @@ def get_forutens_raw():
     fortunes = []
     for row in dbraw_engine.execute("SELECT * FROM Fortune"):
         fortunes.append(Fortune(id=row.id, message=row.message))
+    fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
     fortunes.sort(key=attrgetter('message'))
     return render_template('fortunes.html', fortunes=fortunes)
 
