@@ -28,6 +28,7 @@ When propmted to create a security group for the instances, here are the ports t
 * 27017 (MongoDB)
 * 3000 (yesod)
 * 8000 (snap)
+* 16989 (cpoll)
 
 
 #### 2. Setting up the servers
