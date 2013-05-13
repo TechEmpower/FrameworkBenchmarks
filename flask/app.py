@@ -91,7 +91,9 @@ def get_fortunes():
 
 @app.route("/fortunesraw")
 def get_forutens_raw():
-    fortunes = list(dbraw_engine.execute("SELECT * FROM Fortune"))
+    fortunes = []
+    for row in dbraw_engine.execute("SELECT * FROM Fortune"):
+        fortunes.append(Fortune(id=row.id, message=row.message))
     fortunes.sort(key=attrgetter('message'))
     return render_template('fortunes.html', fortunes=fortunes)
 
