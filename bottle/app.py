@@ -43,7 +43,7 @@ def hello():
 def get_random_world(db):
   num_queries = request.query.queries or '1'
   worlds = []
-  rp = partial(randint, 10000)
+  rp = partial(randint, 1, 10000)
   for i in xrange(int(num_queries)):
     worlds.append(db.query(World).get(rp()).serialize)
   return ujson.dumps(worlds)
@@ -59,7 +59,7 @@ def get_random_world_raw():
   connection = db_engine.connect()
   num_queries = request.query.queries or '1'
   worlds = []
-  rp = partial(randint, 10000)
+  rp = partial(randint, 1, 10000)
   for i in range(int(num_queries)):
     result = connection.execute("SELECT * FROM world WHERE id = " + str(rp())).fetchone()
     worlds.append({'id': result[0], 'randomNumber': result[1]})
