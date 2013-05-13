@@ -8,7 +8,7 @@ class Installer:
   ############################################################
   def install_software(self):
     if self.benchmarker.install == 'all' or self.benchmarker.install == 'server':
-        self.__install_server_software()    
+        self.__install_server_software()
 
     if self.benchmarker.install == 'all' or self.benchmarker.install == 'client':
         self.__install_client_software()
@@ -24,7 +24,7 @@ class Installer:
     # Prerequisites
     #######################################
     self.__run_command("sudo apt-get update", True)
-    self.__run_command("sudo apt-get upgrade", True)    
+    self.__run_command("sudo apt-get upgrade", True)
     self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext", True)
     self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test", True)
     self.__run_command("sudo apt-get update", True)
@@ -151,7 +151,8 @@ class Installer:
     self.__run_command("sudo ringo-admin install ringo/stick")
     self.__run_command("sudo ringo-admin install oberhamsi/reinhardt")
     self.__run_command("sudo ringo-admin install grob/ringo-sqlstore")
-    
+    self.__run_command("sudo ringo-admin install amigrave/ringo-mongodb")
+
     #
     # Mono
     #
