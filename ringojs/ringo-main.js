@@ -87,7 +87,7 @@ exports.app = function(req) {
       var randId, world;
       for (var i = 0; i < queryCount; i++) {
          randId = ((Math.random() * 10000) | 0) + 1;
-         world = col.findOne(randId);
+         world = col.findOne({id: randId});
          body.push(world ? world.data : "Record not found for id#" + randId);
       }
       return {
