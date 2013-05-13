@@ -13,11 +13,12 @@ import com.sun.jersey.spi.resource.Singleton;
 
 @Singleton
 @Path("/json")
-public class HelloResource {
+public class JsonResource {
+  
   @GET
-  @Produces(APPLICATION_JSON)
-  public Object hello() {
-    Map<String, String> data = new HashMap<String, String>();
+  @Produces(APPLICATION_JSON + "; charset=utf-8")
+  public Object json() {
+    Map<String, String> data = new HashMap<String, String>(1);
     data.put("message", "Hello, World!");
     return data;
   }
