@@ -10,35 +10,36 @@ class FrameworkTest:
   ##########################################################################################
   # Class variables
   ##########################################################################################
+  headers = "-H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive'"
   concurrency_template = """
     mysqladmin flush-hosts -uroot -psecret
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " wrk -d 60 -c 8 -t 8 http://{server_host}:{port}{url}"
+    echo " wrk {headers} -d 60 -c 8 -t 8 http://{server_host}:{port}{url}"
     echo "---------------------------------------------------------"
     echo ""
-    wrk -d 5 -c 8 -t 8 http://{server_host}:{port}{url}
+    wrk {headers} -d 5 -c 8 -t 8 http://{server_host}:{port}{url}
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"
+    echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"
     echo "---------------------------------------------------------"
     echo ""
-    wrk -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}
+    wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}
     sleep 5
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " wrk -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) http://{server_host}:{port}{url}"
+      echo " wrk {headers} -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) http://{server_host}:{port}{url}"
       echo "---------------------------------------------------------"
       echo ""
-      wrk -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      wrk {headers} -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
       sleep 2
     done
   """
@@ -49,29 +50,29 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " wrk -d 5 -c 8 -t 8 http://{server_host}:{port}{url}2"
+    echo " wrk {headers} -d 5 -c 8 -t 8 http://{server_host}:{port}{url}2"
     echo "---------------------------------------------------------"
     echo ""
-    wrk -d 5 -c 8 -t 8 http://{server_host}:{port}{url}2
+    wrk {headers} -d 5 -c 8 -t 8 http://{server_host}:{port}{url}2
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}2"
+    echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}2"
     echo "---------------------------------------------------------"
     echo ""
-    wrk -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}2
+    wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}2
     sleep 5
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}$c"
+      echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}$c"
       echo "---------------------------------------------------------"
       echo ""
-      wrk -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"$c"
+      wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"$c"
       sleep 2
     done
   """
@@ -422,7 +423,7 @@ class FrameworkTest:
     return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
       interval=" ".join("{}".format(item) for item in self.benchmarker.concurrency_levels), 
-      server_host=self.benchmarker.server_host, port=port, url=url)
+      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers)
   ############################################################
   # End __generate_concurrency_script
   ############################################################
@@ -437,7 +438,7 @@ class FrameworkTest:
     return self.query_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
       interval=" ".join("{}".format(item) for item in self.benchmarker.query_intervals), 
-      server_host=self.benchmarker.server_host, port=port, url=url)
+      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers)
   ############################################################
   # End __generate_query_script
   ############################################################
