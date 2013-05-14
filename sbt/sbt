@@ -1,0 +1,2 @@
+MYSBT=`dirname $0`
+java -Xss2M -XX:MaxPermSize=512M -Xmx1536M -XX:+CMSClassUnloadingEnabled -Dsbt.global.base=$MYSBT/.sbtboot -Dsbt.boot.directory=$MYSBT/.boot -Dsbt.ivy.home=$MYSBT/.ivy -jar $MYSBT/sbt-launch.jar "$@"
