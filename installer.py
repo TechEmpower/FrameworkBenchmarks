@@ -435,7 +435,7 @@ class Installer:
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf
     sudo cp -R -p /var/lib/mongodb /ssd/
-    suod cp -R -p /var/log/mongodb /ssd/log/
+    sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo start mongodb
     """
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
