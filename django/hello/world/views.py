@@ -54,3 +54,18 @@ def fortunes(request):
 
   context = {'fortunes': fortunes}
   return render(request, 'fortunes.html', context)
+
+def update(request):
+  queries = int(request.GET.get('queries', 1))
+  g = World.objects.get
+  rp = partial(nprnd.randint, 1, 10000)
+  
+  worlds = []
+  for r in [rp() for q in xrange(queries)]:
+    w = g(id=r)
+    w.randomnumber=rp()
+    w.save()
+
+    worlds.append({'id' : r, 'randomNumber' : w.randomnumber})
+
+  return HttpResponse(worlds, mimetype="application/json")
