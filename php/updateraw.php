@@ -33,7 +33,7 @@ while (0 < $query_count--) {
   
   // Store result in array.
   $world = array('id' => $id, 'randomNumber' => $statement->fetchColumn());
-  $world['randomNumber'] = $randomNumber
+  $world['randomNumber'] = $randomNumber;
   $updateStatement->execute();
   
   $arr[] = $world;
