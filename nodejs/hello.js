@@ -64,6 +64,12 @@ function mongodbDriverQuery(callback) {
   });
 }
 
+function mongodbDriverUpdateQuery(callback) {
+  collection.findAndModify({ id: getRandomNumber()}, [['_id','asc']], {$set: {randomNumber: getRandomNumber()}}, {}, function(err, world) {
+    callback(err, world);
+  });
+}
+
 function sequelizeQuery(callback) {
   World.findById(getRandomNumber(), function (err, world) {
     callback(null, world);
@@ -196,14 +202,19 @@ http.createServer(function (req, res) {
             if (err) {
               throw err;
             }
+            callback(null, rows[0]);
           });
-          callback(null, rows[0]);
         });
       });
     } 
 
     var values = url.parse(req.url, true);
     var queries = values.query.queries || 1;
+    if queries < 1 {
+      queries = 1;
+    } else if queries > 500 {
+      queries = 500;
+    }
     var queryFunctions = new Array(queries);
 
     for (var i = 0; i < queries; i += 1) {
@@ -214,6 +225,29 @@ http.createServer(function (req, res) {
         res.writeHead(500);
         return res.end('MYSQL CONNECTION ERROR.');
       }
+      res.end(JSON.stringify(results));
+    });
+    break;
+
+  case '/update-mongodb':
+    // Database Test
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    if queries < 1 {
+      queries = 1;
+    } else if queries > 500 {
+      queries = 500;
+    }
+
+    var queryFunctions = new Array(queries);
+
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = mongodbDriverUpdateQuery;
+    }
+
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+
+    async.parallel(queryFunctions, function(err, results) {
       res.end(JSON.stringify(results));
     });
     break;
