@@ -365,6 +365,9 @@ class Installer:
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
     sudo sh -c "echo '*               soft    nofile          8192' >> /etc/security/limits.conf"
 
+    sudo mkdir -p /ssd
+    sudo mkdir -p /ssd/log
+
     ##############################
     # MySQL
     ##############################
@@ -373,10 +376,14 @@ class Installer:
 
     yes | sudo apt-get install mysql-server
 
+    sudo stop mysql
     # use the my.cnf file to overwrite /etc/mysql/my.cnf
     sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
     sudo mv my.cnf /etc/mysql/my.cnf
-    sudo restart mysql
+
+    sudo cp -R -p /var/lib/mysql /ssd/
+    sudo cp -R -p /var/log/mysql /ssd/log
+    sudo start mysql
 
     # Insert data
     mysql -uroot -psecret < create.sql
@@ -388,9 +395,12 @@ class Installer:
     sudo -u postgres psql template1 < create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
 
+    sudo -u postgres -H /etc/init.d/postgresql stop
     sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
     sudo mv pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
-    sudo -u postgres -H /etc/init.d/postgresql restart
+
+    sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/
+    sudo -u postgres -H /etc/init.d/postgresql start
 
     ##############################
     # Weighttp
@@ -421,9 +431,12 @@ class Installer:
     sudo apt-get update
     yes | sudo apt-get install mongodb-10gen
 
+    sudo stop mongodb
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf
-    sudo restart mongodb
+    sudo cp -R -p /var/lib/mongodb /ssd/
+    suod cp -R -p /var/log/mongodb /ssd/log/
+    sudo start mongodb
     """
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)
