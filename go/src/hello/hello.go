@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	_ "github.com/go-sql-driver/mysql"
 	"html/template"
 	"log"
 	"math/rand"
@@ -12,9 +11,11 @@ import (
 	"sort"
 	"strconv"
 	"sync"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-type MessageStruct struct {
+type Message struct {
 	Message string
 }
 
@@ -75,9 +76,7 @@ func main() {
 
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/javascript")
-	j, _ := json.Marshal(&MessageStruct{"Hello, world"})
-	w.Header().Set("Content-Length", strconv.Itoa(len(j)))
-	w.Write(j)
+	json.NewEncoder(w).Encode(&Message{"Hello, world"})
 }
 
 func worldHandler(w http.ResponseWriter, r *http.Request) {
@@ -87,7 +86,10 @@ func worldHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	ww := make([]World, n)
 	if n == 1 {
-		worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[0].Id, &ww[0].RandomNumber)
+		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[0].Id, &ww[0].RandomNumber)
+		if err != nil {
+			log.Fatalf("Error scanning world row: %v", err)
+		}
 	} else {
 		var wg sync.WaitGroup
 		wg.Add(n)
@@ -102,30 +104,23 @@ func worldHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		wg.Wait()
 	}
-	j, _ := json.Marshal(ww)
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Content-Length", strconv.Itoa(len(j)))
-	w.Write(j)
+	json.NewEncoder(w).Encode(ww)
 }
 
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
-	fortunes := make([]*Fortune, 0, 16)
-
-	//Execute the query
 	rows, err := fortuneStatement.Query()
 	if err != nil {
 		log.Fatalf("Error preparing statement: %v", err)
 	}
 
-	i := 0
-	var fortune *Fortune
+	fortunes := make([]*Fortune, 0, 16)
 	for rows.Next() { //Fetch rows
-		fortune = new(Fortune)
-		if err = rows.Scan(&fortune.Id, &fortune.Message); err != nil {
+		fortune := new(Fortune)
+		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {
 			log.Fatalf("Error scanning fortune row: %v", err)
 		}
 		fortunes = append(fortunes, fortune)
-		i++
 	}
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 
