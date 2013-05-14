@@ -60,6 +60,27 @@ class BenchController extends \Phalcon\Mvc\Controller
         $this->view->fortunes = $fortunes;
     }
 
+    public function updateAction() {
+
+        $queries = $this->request->getQuery('queries', null, 1);
+        if($queries < 1) {
+            $queries = 1;
+        } else if ($queries > 500) {
+            $queries = 500;
+        }
+
+        $worlds = array();
+
+        for ($i = 0; $i < $queries; ++$i) {
+            $world = Worlds::findFirst(mt_rand(1, 10000));
+            $world->randomNumber = mt_rand(1, 10000);
+            $world->save();
+            $worlds[] = $world
+        }
+
+        return $this->sendContentAsJson($worlds);
+    }
+
     private function sendContentAsJson($content) {
         $response = new Phalcon\Http\Response(json_encode($content));
         $response->setHeader("Content-Type", "application/json");
