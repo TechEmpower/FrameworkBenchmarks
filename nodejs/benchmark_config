@@ -18,6 +18,7 @@
       "setup_file": "setup",
       "db_url": "/mongodbdriver",
       "query_url": "/mongodbdriver?queries=",
+      "update_url": "/update-mongodb?queries=",
       "port": 8080,
       "sort": 47
     },
