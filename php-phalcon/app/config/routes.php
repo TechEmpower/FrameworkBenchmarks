@@ -18,4 +18,9 @@ $router->add('/fortunes', array(
     'action' => 'fortunes',
 ));
 
+$router->add('/update', array(
+    'controller' => 'bench',
+    'action' => 'update',
+));
+
 return $router;
