@@ -84,7 +84,7 @@ if (cluster.isMaster) {
   });
 
   app.get('/mysql-orm', function(req, res) {
-    if (!windows) return res.send(501, 'Not supported on windows');
+    if (windows) return res.send(501, 'Not supported on windows');
     
     var queries = req.query.queries || 1
       , worlds  = []
@@ -105,7 +105,7 @@ if (cluster.isMaster) {
   });
 
   app.get('/fortune', function(req, res) {
-    if (!windows) return res.send(501, 'Not supported on windows');
+    if (windows) return res.send(501, 'Not supported on windows');
     
     Fortune.all(function (err, fortunes) {
       var newFortune = {id: 0, message: "Additional fortune added at request time."};
