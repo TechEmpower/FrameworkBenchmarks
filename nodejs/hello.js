@@ -19,7 +19,7 @@ var http = require('http')
   , url = require('url')
   , async = require('async')
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://172.16.98.98/hello_world')
+  , conn = mongoose.connect('mongodb://localhost/hello_world')
   , MongoClient = require('mongodb').MongoClient
   , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
 
@@ -34,7 +34,7 @@ if (!windows) {
 
 var collection = null;
 
-MongoClient.connect('mongodb://172.16.98.98/hello_world?maxPoolSize=5', function(err, db) {
+MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
 
@@ -210,9 +210,9 @@ http.createServer(function (req, res) {
 
     var values = url.parse(req.url, true);
     var queries = values.query.queries || 1;
-    if queries < 1 {
+    if(queries < 1) {
       queries = 1;
-    } else if queries > 500 {
+    } else if(queries > 500) {
       queries = 500;
     }
     var queryFunctions = new Array(queries);
@@ -233,9 +233,9 @@ http.createServer(function (req, res) {
     // Database Test
     var values = url.parse(req.url, true);
     var queries = values.query.queries || 1;
-    if queries < 1 {
+    if (queries < 1) {
       queries = 1;
-    } else if queries > 500 {
+    } else if (queries > 500) {
       queries = 500;
     }
 
