@@ -399,7 +399,7 @@ class Installer:
     sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
     sudo mv pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
 
-    sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/
+    sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/postgresql
     sudo -u postgres -H /etc/init.d/postgresql start
 
     ##############################
