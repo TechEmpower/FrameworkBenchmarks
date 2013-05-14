@@ -75,7 +75,7 @@ class BenchController extends \Phalcon\Mvc\Controller
             $world = Worlds::findFirst(mt_rand(1, 10000));
             $world->randomNumber = mt_rand(1, 10000);
             $world->save();
-            $worlds[] = $world
+            $worlds[] = $world;
         }
 
         return $this->sendContentAsJson($worlds);
