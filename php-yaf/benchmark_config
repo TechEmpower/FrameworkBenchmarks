@@ -1,0 +1,14 @@
+{
+  "framework": "yaf",
+  "tests": [{
+    "raw": {
+      "setup_file": "setup",
+      "json_url": "/bench/raw/json",
+      "db_url": "/bench/raw/db",
+      "query_url": "/bench/raw/db?queries=",
+      "fortune_url": "/bench/raw/fortunes",
+      "port": 8080,
+      "sort": 107
+    }
+  }]
+}
