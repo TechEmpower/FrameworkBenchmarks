@@ -78,7 +78,7 @@ Write-Host "Installing PHP...`n"
 
 # Download PHP
 $php_installer_file = "php-5.4.14-nts-Win32-VC9-x86.zip"
-$php_installer_url = "http://windows.php.net/downloads/releases/$php_installer_file"
+$php_installer_url = "http://windows.php.net/downloads/releases/archives/$php_installer_file"
 $php_installer_local = "$workdir\$php_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($php_installer_url, $php_installer_local)
 
@@ -96,6 +96,7 @@ Copy-Item "$php\php.ini-production" $phpini
 (Get-Content $phpini) -Replace "short_open_tag = Off", "short_open_tag = On" | Set-Content $phpini
 (Get-Content $phpini) -Replace '; extension_dir = "./"', "extension_dir = `"$php\ext`"" | Set-Content $phpini
 (Get-Content $phpini) -Replace ";extension=", "extension=" | Set-Content $phpini
+(Get-Content $phpini) -Replace "extension=php_(interbase|oci8|oci8_11g|firebird|oci|pspell|sybase_ct|zip|pdo_firebird|pdo_oci|snmp).dll.*", "" | Set-Content $phpini
 
 # IIS with PHP via FastCGI
 Install-WindowsFeature Web-CGI | Out-Null
@@ -116,6 +117,77 @@ Set-ItemProperty "c:\inetpub\wwwroot\wincache.php" -name IsReadOnly -value $fals
 (Get-Content "c:\inetpub\wwwroot\wincache.php") -Replace "'USE_AUTHENTICATION', 1", "'USE_AUTHENTICATION', 0" | Set-Content "c:\inetpub\wwwroot\wincache.php"
 Add-Content $phpini "`n`n[PHP]`n"
 Add-Content $phpini "extension=php_wincache.dll"
+
+# composer
+$composer_url = "https://getcomposer.org/Composer-Setup.exe"
+$composer_local = "$workdir\Composer-Setup.exe"
+(New-Object System.Net.WebClient).DownloadFile($composer_url, $composer_local)
+Start-Process $composer_local "/silent" -Wait
+$env:Path += ";C:\ProgramData\Composer\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+#
+# Go
+#
+Write-Host "Installing Go...`n"
+$go_url = "https://go.googlecode.com/files/go1.1rc3.windows-amd64.msi"
+$go_local = "$workdir\go1.1rc3.windows-amd64.msi"
+(New-Object System.Net.WebClient).DownloadFile($go_url, $go_local)
+Start-Process $go_local "/passive" -Wait
+$env:Path += ";C:\Go\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+#
+# Java
+#
+Write-Host "Installing Java...`n"
+
+# jre
+#$jre_url = "http://img.cs.montana.edu/windows/jre-7u21-windows-x64.exe"
+#$jre_local = "$workdir\jre-7u21-windows-x64.exe"
+#$jre_dir = "C:\Java\jre"
+#(New-Object System.Net.WebClient).DownloadFile($jre_url, $jre_local)
+#Start-Process $jre_local "/s INSTALLDIR=$jre_dir" -Wait
+#$env:Path += ";$jre_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+#$env:JAVA_HOME = $jre_dir; [Environment]::SetEnvironmentVariable("JAVA_HOME", $jre_dir, [System.EnvironmentVariableTarget]::Machine)
+
+# jdk
+$jdk_url = "http://uni-smr.ac.ru/archive/dev/java/SDKs/sun/j2se/7/jdk-7u21-windows-x64.exe"
+$jdk_local = "$workdir\jdk-7u21-windows-x64.exe"
+$jdk_dir = "C:\Java\jdk"
+(New-Object System.Net.WebClient).DownloadFile($jdk_url, $jdk_local)
+Start-Process $jdk_local "/s INSTALLDIR=$jdk_dir" -Wait
+$env:Path += ";$jdk_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+$env:JAVA_HOME = $jdk_dir; [Environment]::SetEnvironmentVariable("JAVA_HOME", $jre_dir, [System.EnvironmentVariableTarget]::Machine)
+
+# resin
+$resin_url = "http://www.caucho.com/download/resin-4.0.36.zip"
+$resin_local = "$workdir\resin-4.0.36.zip"
+$resin_dir = "C:\Java\resin"
+(New-Object System.Net.WebClient).DownloadFile($resin_url, $resin_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($resin_local, $workdir) | Out-Null
+Move-Item "$workdir\resin-4.0.36" $resin_dir
+Copy-Item "$basedir\config\resin.properties" "$resin_dir\conf\resin.properties"
+#$env:Path += ";$resin_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+# ant
+#$ant_url = "http://apache.mirrors.hoobly.com//ant/binaries/apache-ant-1.9.0-bin.zip"
+#$ant_local = "$workdir\apache-ant-1.9.0-bin.zip"
+#$ant_dir = "C:\Java\ant"
+#(New-Object System.Net.WebClient).DownloadFile($ant_url, $ant_local)
+#[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+#[System.IO.Compression.ZipFile]::ExtractToDirectory($ant_local, $workdir) | Out-Null
+#Move-Item "$workdir\apache-ant-1.9.0" $ant_dir
+#$env:Path += ";$ant_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+# maven
+$maven_url = "http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.zip"
+$maven_local = "$workdir\apache-maven-3.0.5-bin.zip"
+$maven_dir = "C:\Java\maven"
+(New-Object System.Net.WebClient).DownloadFile($maven_url, $maven_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($maven_local, $workdir) | Out-Null
+Move-Item "$workdir\apache-maven-3.0.5" $maven_dir
+$env:Path += ";$maven_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # Firewall
