@@ -19,7 +19,7 @@ def start(args):
   try:
     subprocess.check_call("qmake -r CONFIG+=release", shell=True, cwd="treefrog")
     subprocess.check_call("make", shell=True, cwd="treefrog")
-    subprocess.check_call("rm -f ./*.log", shell=True, cwd="treefrog/log")
+    subprocess.check_call("rm -f log/*.log", shell=True, cwd="treefrog")
     subprocess.check_call("treefrog -d " + home + "/FrameworkBenchmarks/treefrog", shell=True)
     return 0
   except subprocess.CalledProcessError:
