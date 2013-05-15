@@ -1,0 +1,141 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May 15 19:31:15 UTC 2013
+
+  System load:  0.1                Processes:           75
+  Usage of /:   43.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.253.60.84
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+89 packages can be updated.
+42 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer micromvc
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.97.155:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.23ms    3.77ms  43.28ms   80.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3617 requests in 5.01s, 743.79KB read
+  Non-2xx or 3xx responses: 1
+Requests/sec:    722.40
+Transfer/sec:    148.55KB
+
+---------------------------------------------------------
+ Running Warmup micromvc
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   335.44ms  106.18ms 966.17ms   76.04%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  22210 requests in 30.01s, 4.55MB read
+  Non-2xx or 3xx responses: 23
+Requests/sec:    740.16
+Transfer/sec:    155.32KB
+
+---------------------------------------------------------
+ Concurrency: 8 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.06ms    3.96ms  52.56ms   79.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21410 requests in 30.00s, 4.30MB read
+  Non-2xx or 3xx responses: 6
+Requests/sec:    713.63
+Transfer/sec:    146.76KB
+
+---------------------------------------------------------
+ Concurrency: 16 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.82ms    7.28ms 116.32ms   79.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21951 requests in 30.00s, 4.39MB read
+  Non-2xx or 3xx responses: 2
+Requests/sec:    731.64
+Transfer/sec:    149.70KB
+
+---------------------------------------------------------
+ Concurrency: 32 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.36ms   12.91ms 190.61ms   75.47%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21979 requests in 30.00s, 4.45MB read
+  Non-2xx or 3xx responses: 13
+Requests/sec:    732.57
+Transfer/sec:    151.92KB
+
+---------------------------------------------------------
+ Concurrency: 64 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.92ms   26.10ms 279.13ms   73.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21927 requests in 30.00s, 4.41MB read
+  Non-2xx or 3xx responses: 8
+Requests/sec:    730.83
+Transfer/sec:    150.64KB
+
+---------------------------------------------------------
+ Concurrency: 128 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   169.59ms   54.05ms 626.21ms   75.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  22244 requests in 30.01s, 4.50MB read
+  Non-2xx or 3xx responses: 12
+Requests/sec:    741.33
+Transfer/sec:    153.53KB
+
+---------------------------------------------------------
+ Concurrency: 256 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   337.97ms  108.98ms 774.48ms   76.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  22264 requests in 30.01s, 4.61MB read
+  Non-2xx or 3xx responses: 31
+Requests/sec:    741.90
+Transfer/sec:    157.16KB
