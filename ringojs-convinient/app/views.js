@@ -29,7 +29,7 @@ app.get('/db/:queries?', function(request, queries) {
 });
 
 app.get('/fortune', function() {
-   var fortunes = models.Fortune.all();
+   var fortunes = models.store.query('select Fortune.* from Fortune');
    fortunes.push({
       _id: 0,
       message: 'Additional fortune added at request time.'
