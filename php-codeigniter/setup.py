@@ -24,7 +24,7 @@ def start(args):
 def stop():
   try:
     if os.name == 'nt':
-      subprocess.check_call('appcmd delete site PHP', shell=True)
+      subprocess.call('appcmd delete site PHP', shell=True)
       return 0
     subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
     subprocess.call("sudo kill -QUIT $( cat php-codeigniter/deploy/php-fpm.pid )", shell=True)
