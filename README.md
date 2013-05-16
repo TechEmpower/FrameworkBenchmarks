@@ -126,6 +126,7 @@ This will run the full set of tests. Results of all the tests will output to ~/F
 Generously provided by [@pdonald](https://github.com/pdonald)
 
 Note: The following tests are the only known tests to run on Windows
+
 * aspnet
 * aspnet-mysql-raw
 * aspnet-postgresql-raw
@@ -134,12 +135,8 @@ Note: The following tests are the only known tests to run on Windows
 * aspnet-postgres-entityframework
 * cake
 * express
-* express-mongodb
 * go
 * nodejs
-* nodejs-mongodb
-* express
-* express-mongodb
 * php
 * php-raw
 * codeigniter
