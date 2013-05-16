@@ -19,9 +19,12 @@ Install-WindowsFeature Web-Mgmt-Console
 Install-WindowsFeature NET-Framework-45-ASPNET
 Install-WindowsFeature Web-Asp-Net45
 
-# Enable detailed error pages
 $env:Path += ";C:\Windows\system32\inetsrv"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
-appcmd set config -section:system.webServer/httpErrors -errorMode:Detailed | Out-Null
+# Optimize performance
+appcmd set config -section:httpProtocol /allowKeepAlive:true | Out-Null
+appcmd set config -section:httpLogging /dontLog:True | Out-Null
+# Enable detailed error pages
+#appcmd set config -section:system.webServer/httpErrors -errorMode:Detailed | Out-Null
 
 # URL Rewrite
 $rewrite_url = "http://download.microsoft.com/download/6/7/D/67D80164-7DD0-48AF-86E3-DE7A182D6815/rewrite_2.0_rtw_x64.msi"
@@ -92,15 +95,20 @@ $env:Path += ";" + $php; [Environment]::SetEnvironmentVariable("Path", $env:Path
 $phpini = "$php\php.ini"
 Copy-Item "$php\php.ini-production" $phpini
 (Get-Content $phpini) -Replace ";date.timezone =", "date.timezone = UTC" | Set-Content $phpini
-(Get-Content $phpini) -Replace "display_errors = Off", "display_errors = On" | Set-Content $phpini
 (Get-Content $phpini) -Replace "short_open_tag = Off", "short_open_tag = On" | Set-Content $phpini
+(Get-Content $phpini) -Replace "display_errors = Off", "display_errors = Off" | Set-Content $phpini
+(Get-Content $phpini) -Replace "log_errors = On", "log_errors = Off" | Set-Content $phpini
+(Get-Content $phpini) -Replace "output_buffering = 4096", "output_buffering = Off" | Set-Content $phpini
+(Get-Content $phpini) -Replace ";cgi.force_redirect = 1", "cgi.force_redirect = 0" | Set-Content $phpini
+(Get-Content $phpini) -Replace ";fastcgi.impersonate = 1", "fastcgi.impersonate = 0" | Set-Content $phpini
+(Get-Content $phpini) -Replace ";fastcgi.logging = 0", "fastcgi.logging = 0" | Set-Content $phpini
 (Get-Content $phpini) -Replace '; extension_dir = "./"', "extension_dir = `"$php\ext`"" | Set-Content $phpini
 (Get-Content $phpini) -Replace ";extension=", "extension=" | Set-Content $phpini
 (Get-Content $phpini) -Replace "extension=php_(interbase|oci8|oci8_11g|firebird|oci|pspell|sybase_ct|zip|pdo_firebird|pdo_oci|snmp).dll.*", "" | Set-Content $phpini
 
 # IIS with PHP via FastCGI
 Install-WindowsFeature Web-CGI | Out-Null
-appcmd set config -section:system.webServer/fastCgi /+"[fullPath='C:\PHP\php-cgi.exe', arguments='', maxInstances='4', instanceMaxRequests='10000', queueLength='1000', rapidFailsPerMinute='1000', idleTimeout='300', activityTimeout='30', requestTimeout='90',protocol='NamedPipe', flushNamedPipe='False']" /commit:apphost | Out-Null
+appcmd set config -section:system.webServer/fastCgi /+"[fullPath='C:\PHP\php-cgi.exe', arguments='', maxInstances='0', instanceMaxRequests='10000', queueLength='1000', rapidFailsPerMinute='10', idleTimeout='300', activityTimeout='30', requestTimeout='90', protocol='NamedPipe', flushNamedPipe='False']" /commit:apphost | Out-Null
 appcmd set config -section:system.webServer/fastCgi /+"[fullPath='C:\PHP\php-cgi.exe'].environmentVariables.[name='PHPRC', value='C:\PHP\php.ini']" /commit:apphost | Out-Null
 appcmd set config -section:system.webServer/handlers /+"[name='PHP FastCGI', path='*.php', modules='FastCgiModule', verb='*', scriptProcessor='C:\PHP\php-cgi.exe', resourceType='File', requireAccess='Script']" /commit:apphost | Out-Null
 
