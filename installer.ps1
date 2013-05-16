@@ -63,8 +63,8 @@ $env:Path += ";C:\Program Files\nodejs"; [Environment]::SetEnvironmentVariable("
 # Python
 #
 Write-Host "Installing Python...`n"
-$python_installer_file = "python-2.7.4.amd64.msi"
-$python_installer_url = "http://www.python.org/ftp/python/2.7.4/$python_installer_file"
+$python_installer_file = "python-2.7.5.amd64.msi"
+$python_installer_url = "http://www.python.org/ftp/python/2.7.5/$python_installer_file"
 $python_installer_local = "$workdir\$python_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($python_installer_url, $python_installer_local)
 
