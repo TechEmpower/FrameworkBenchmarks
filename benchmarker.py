@@ -25,7 +25,7 @@ class Benchmarker:
     all_tests = self.__gather_tests()
 
     for test in all_tests:
-      print test.name
+      print str(test.sort) + ": " + test.name
 
     self.__finish()
 
