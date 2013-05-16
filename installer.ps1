@@ -51,8 +51,8 @@ Start-Process "msiexec" "/i $webdeploy_local /passive" -Wait
 # node.js
 #
 Write-Host "Installing node.js...`n"
-$node_installer_file = "node-v0.10.5-x64.msi"
-$node_installer_url = "http://nodejs.org/dist/v0.10.5/x64/$node_installer_file"
+$node_installer_file = "node-v0.10.6-x64.msi"
+$node_installer_url = "http://nodejs.org/dist/v0.10.6/x64/$node_installer_file"
 $node_installer_local = "$workdir\$node_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($node_installer_url, $node_installer_local)
 
