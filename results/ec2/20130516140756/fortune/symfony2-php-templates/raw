@@ -1,0 +1,138 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 14:39:21 UTC 2013
+
+  System load:  0.1               Processes:           75
+  Usage of /:   64.0% of 7.87GB   Users logged in:     1
+  Memory usage: 11%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.19.48:8080/fortunes-php
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/fortunes-php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   163.93ms   61.99ms 364.63ms   74.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  236 requests in 5.05s, 519.94KB read
+Requests/sec:     46.75
+Transfer/sec:    102.99KB
+
+---------------------------------------------------------
+ Running Warmup symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/fortunes-php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunes-php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.51s     1.02s    7.29s    86.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2689 requests in 30.01s, 5.79MB read
+  Socket errors: connect 0, read 0, write 0, timeout 996
+Requests/sec:     89.60
+Transfer/sec:    197.46KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.19.48:8080/fortunes-php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunes-php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    79.77ms   23.28ms 178.90ms   69.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3004 requests in 30.00s, 6.46MB read
+Requests/sec:    100.13
+Transfer/sec:    220.59KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.19.48:8080/fortunes-php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunes-php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   160.02ms   50.44ms 399.25ms   69.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2979 requests in 30.00s, 6.41MB read
+Requests/sec:     99.29
+Transfer/sec:    218.75KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.19.48:8080/fortunes-php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunes-php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   330.91ms  127.39ms 780.30ms   69.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2925 requests in 30.00s, 6.29MB read
+Requests/sec:     97.49
+Transfer/sec:    214.79KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.19.48:8080/fortunes-php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunes-php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   654.26ms  231.13ms   1.67s    71.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2878 requests in 30.00s, 6.19MB read
+Requests/sec:     95.92
+Transfer/sec:    211.33KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.19.48:8080/fortunes-php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunes-php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.26s   422.58ms   2.62s    79.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2833 requests in 30.01s, 6.10MB read
+  Socket errors: connect 0, read 0, write 0, timeout 14
+Requests/sec:     94.41
+Transfer/sec:    208.01KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/fortunes-php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunes-php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.49s   881.53ms   6.81s    87.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2727 requests in 30.01s, 5.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 917
+Requests/sec:     90.87
+Transfer/sec:    200.21KB
