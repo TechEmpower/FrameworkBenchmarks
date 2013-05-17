@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 00:19:15 UTC 2013
+
+  System load:  0.07              Processes:           75
+  Usage of /:   63.4% of 7.87GB   Users logged in:     1
+  Memory usage: 11%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.19.48:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.08ms   21.06ms 176.73ms   71.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  695 requests in 5.02s, 195.15KB read
+Requests/sec:    138.32
+Transfer/sec:     38.84KB
+
+---------------------------------------------------------
+ Running Warmup symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.83s   605.58ms   6.46s    81.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3766 requests in 30.01s, 1.03MB read
+  Socket errors: connect 0, read 0, write 0, timeout 383
+Requests/sec:    125.48
+Transfer/sec:     35.24KB
+
+---------------------------------------------------------
+ Queries: 1 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.81s   612.21ms   4.96s    81.54%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3873 requests in 30.01s, 0.94MB read
+  Socket errors: connect 0, read 0, write 0, timeout 232
+Requests/sec:    129.07
+Transfer/sec:     32.24KB
+
+---------------------------------------------------------
+ Queries: 5 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.98s   672.29ms   3.89s    80.74%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3497 requests in 30.01s, 1.28MB read
+  Socket errors: connect 0, read 0, write 0, timeout 402
+Requests/sec:    116.53
+Transfer/sec:     43.57KB
+
+---------------------------------------------------------
+ Queries: 10 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.16s   775.06ms   6.60s    82.28%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3132 requests in 30.01s, 1.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 627
+Requests/sec:    104.36
+Transfer/sec:     55.31KB
+
+---------------------------------------------------------
+ Queries: 15 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.34s   819.77ms   3.82s    84.22%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2863 requests in 30.01s, 1.92MB read
+  Socket errors: connect 0, read 0, write 0, timeout 788
+Requests/sec:     95.40
+Transfer/sec:     65.37KB
+
+---------------------------------------------------------
+ Queries: 20 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.56s   913.09ms   4.47s    85.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2599 requests in 30.01s, 2.13MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1063
+Requests/sec:     86.60
+Transfer/sec:     72.78KB

@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 04:59:47 UTC 2013
+
+  System load:  0.06              Processes:           75
+  Usage of /:   63.7% of 7.87GB   Users logged in:     1
+  Memory usage: 10%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer kelp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.19.48:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.67ms    3.76ms  58.20ms   92.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5299 requests in 5.01s, 1.00MB read
+Requests/sec:   1057.78
+Transfer/sec:    203.45KB
+
+---------------------------------------------------------
+ Running Warmup kelp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   236.11ms   23.51ms 407.83ms   96.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32268 requests in 30.01s, 6.06MB read
+Requests/sec:   1075.29
+Transfer/sec:    206.83KB
+
+---------------------------------------------------------
+ Queries: 1 for kelp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   206.04ms   19.22ms 339.65ms   95.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36917 requests in 30.01s, 6.93MB read
+Requests/sec:   1230.27
+Transfer/sec:    236.64KB
+
+---------------------------------------------------------
+ Queries: 5 for kelp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   315.20ms   32.39ms 500.35ms   96.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24132 requests in 30.01s, 4.53MB read
+Requests/sec:    804.23
+Transfer/sec:    154.72KB
+
+---------------------------------------------------------
+ Queries: 10 for kelp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   418.96ms   61.63ms 878.80ms   95.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18019 requests in 30.01s, 3.39MB read
+Requests/sec:    600.45
+Transfer/sec:    115.52KB
+
+---------------------------------------------------------
+ Queries: 15 for kelp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   555.14ms   77.04ms 730.64ms   90.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13569 requests in 30.01s, 2.55MB read
+Requests/sec:    452.22
+Transfer/sec:     87.00KB
+
+---------------------------------------------------------
+ Queries: 20 for kelp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   726.36ms  104.76ms 883.86ms   94.24%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10339 requests in 30.01s, 1.94MB read
+Requests/sec:    344.49
+Transfer/sec:     66.27KB

@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 16:43:46 UTC 2013
+
+  System load:  0.06              Processes:           75
+  Usage of /:   64.8% of 7.87GB   Users logged in:     1
+  Memory usage: 11%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.19.48:8080/dbsraw
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/dbsraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.14ms   10.98ms  81.15ms   90.46%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2254 requests in 5.01s, 393.54KB read
+Requests/sec:    449.86
+Transfer/sec:     78.54KB
+
+---------------------------------------------------------
+ Running Warmup flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/dbsraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/dbsraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   435.95ms  277.72ms   2.12s    79.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21968 requests in 30.01s, 3.75MB read
+Requests/sec:    732.12
+Transfer/sec:    127.82KB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.19.48:8080/dbsraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/dbsraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.05ms    4.08ms  35.63ms   66.54%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  37313 requests in 30.00s, 6.36MB read
+Requests/sec:   1243.68
+Transfer/sec:    217.13KB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.19.48:8080/dbsraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/dbsraw
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.85ms    6.76ms  91.50ms   89.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  48956 requests in 30.00s, 8.35MB read
+Requests/sec:   1631.82
+Transfer/sec:    284.90KB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.19.48:8080/dbsraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/dbsraw
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.55ms   10.30ms 162.59ms   84.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  53773 requests in 30.00s, 9.17MB read
+Requests/sec:   1792.21
+Transfer/sec:    312.90KB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.19.48:8080/dbsraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/dbsraw
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.88ms   25.70ms 259.65ms   76.65%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  61491 requests in 30.00s, 10.48MB read
+Requests/sec:   2049.58
+Transfer/sec:    357.84KB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.19.48:8080/dbsraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/dbsraw
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.27ms   48.17ms 352.32ms   71.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  70724 requests in 30.00s, 12.06MB read
+Requests/sec:   2357.40
+Transfer/sec:    411.58KB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/dbsraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/dbsraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   114.08ms   40.97ms 669.96ms   82.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  72923 requests in 30.00s, 12.43MB read
+Requests/sec:   2430.77
+Transfer/sec:    424.39KB

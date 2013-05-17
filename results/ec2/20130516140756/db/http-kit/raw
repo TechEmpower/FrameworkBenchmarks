@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 21:21:10 UTC 2013
+
+  System load:  1.05              Processes:           75
+  Usage of /:   63.4% of 7.87GB   Users logged in:     1
+  Memory usage: 10%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.19.48:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/http-kit/db/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.59ms    1.93ms  11.82ms   82.71%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11918 requests in 5.01s, 1.86MB read
+Requests/sec:   2380.70
+Transfer/sec:    381.04KB
+
+---------------------------------------------------------
+ Running Warmup http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/http-kit/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.79ms    8.31ms 251.79ms   97.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  166510 requests in 30.00s, 26.02MB read
+Requests/sec:   5550.46
+Transfer/sec:      0.87MB
+
+---------------------------------------------------------
+ Concurrency: 8 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.19.48:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/http-kit/db/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.42ms  718.23us   8.74ms   96.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  170592 requests in 30.00s, 26.66MB read
+Requests/sec:   5685.92
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Concurrency: 16 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.19.48:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/http-kit/db/1
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.75ms  806.29us   8.94ms   94.90%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  171169 requests in 30.00s, 26.75MB read
+Requests/sec:   5705.53
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Concurrency: 32 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.19.48:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/http-kit/db/1
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.46ms    0.95ms  20.44ms   92.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  175509 requests in 30.00s, 27.43MB read
+Requests/sec:   5850.30
+Transfer/sec:      0.91MB
+
+---------------------------------------------------------
+ Concurrency: 64 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.19.48:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/http-kit/db/1
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.35ms    1.75ms  28.38ms   85.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  169220 requests in 30.00s, 26.45MB read
+Requests/sec:   5640.68
+Transfer/sec:      0.88MB
+
+---------------------------------------------------------
+ Concurrency: 128 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.19.48:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/http-kit/db/1
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.71ms   10.34ms 274.64ms   99.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  162779 requests in 30.00s, 25.44MB read
+Requests/sec:   5426.01
+Transfer/sec:    868.42KB
+
+---------------------------------------------------------
+ Concurrency: 256 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/http-kit/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.62ms    9.70ms 253.67ms   95.71%
+    Req/Sec    11.82    108.12     1.00k    98.82%
+  169931 requests in 30.00s, 26.56MB read
+Requests/sec:   5664.12
+Transfer/sec:      0.89MB

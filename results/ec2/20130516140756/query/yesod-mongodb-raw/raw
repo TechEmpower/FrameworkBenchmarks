@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 14:04:57 UTC 2013
+
+  System load:  0.2               Processes:           75
+  Usage of /:   64.0% of 7.87GB   Users logged in:     1
+  Memory usage: 11%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.19.48:8000/mongo/raw/dbs/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8000/mongo/raw/dbs/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    80.34ms    1.17ms  84.80ms   87.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  504 requests in 5.07s, 96.24KB read
+Requests/sec:     99.32
+Transfer/sec:     18.97KB
+
+---------------------------------------------------------
+ Running Warmup yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8000/mongo/raw/dbs/2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8000/mongo/raw/dbs/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   114.16ms   53.18ms 775.26ms   94.23%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  69710 requests in 30.00s, 13.00MB read
+Requests/sec:   2323.36
+Transfer/sec:    443.69KB
+
+---------------------------------------------------------
+ Queries: 1 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8000/mongo/raw/dbs/1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8000/mongo/raw/dbs/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    89.99ms   63.82ms 774.74ms   88.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  104517 requests in 30.00s, 16.13MB read
+Requests/sec:   3484.16
+Transfer/sec:    550.45KB
+
+---------------------------------------------------------
+ Queries: 5 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8000/mongo/raw/dbs/5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8000/mongo/raw/dbs/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   225.00ms   34.02ms 445.20ms   91.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33823 requests in 30.01s, 9.58MB read
+Requests/sec:   1126.99
+Transfer/sec:    326.75KB
+
+---------------------------------------------------------
+ Queries: 10 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8000/mongo/raw/dbs/10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8000/mongo/raw/dbs/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   435.16ms   79.04ms 912.53ms   93.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  17247 requests in 30.01s, 7.66MB read
+Requests/sec:    574.64
+Transfer/sec:    261.38KB
+
+---------------------------------------------------------
+ Queries: 15 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8000/mongo/raw/dbs/15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8000/mongo/raw/dbs/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   652.71ms  113.32ms 883.10ms   94.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11399 requests in 30.02s, 6.90MB read
+Requests/sec:    379.72
+Transfer/sec:    235.33KB
+
+---------------------------------------------------------
+ Queries: 20 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8000/mongo/raw/dbs/20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8000/mongo/raw/dbs/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   835.44ms  152.38ms   1.07s    95.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8802 requests in 30.01s, 6.75MB read
+Requests/sec:    293.28
+Transfer/sec:    230.15KB
