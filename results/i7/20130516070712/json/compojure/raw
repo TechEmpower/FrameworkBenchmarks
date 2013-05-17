@@ -2,9 +2,9 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu May 16 07:29:23 PDT 2013
+  System information as of Fri May 17 14:35:26 PDT 2013
 
-  System load:  0.54                Processes:           125
+  System load:  0.12                Processes:           128
   Usage of /:   10.1% of 131.63GB   Users logged in:     1
   Memory usage: 32%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/compojure/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   453.41us    1.32ms  20.82ms   96.63%
-    Req/Sec     2.00k     0.95k    3.00k    34.08%
-  133216 requests in 5.00s, 21.85MB read
-Requests/sec:  26649.16
-Transfer/sec:      4.37MB
+    Latency   447.39us    0.91ms  10.07ms   98.44%
+    Req/Sec     1.99k     0.96k    3.00k    32.81%
+  134898 requests in 5.00s, 22.13MB read
+Requests/sec:  26984.79
+Transfer/sec:      4.43MB
 
 ---------------------------------------------------------
  Running Warmup compojure
@@ -37,11 +37,12 @@ Transfer/sec:      4.37MB
 Running 30s test @ http://172.16.98.122:8080/compojure/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.14ms   28.44ms 554.46ms   96.50%
-    Req/Sec     7.91k     1.51k   10.00k    69.56%
-  2365981 requests in 30.00s, 389.78MB read
-Requests/sec:  78869.70
-Transfer/sec:     12.99MB
+    Latency     8.84ms   21.61ms 129.53ms   92.05%
+    Req/Sec     8.98k     3.66k   15.00k    52.97%
+  2448534 requests in 30.00s, 403.38MB read
+  Socket errors: connect 0, read 2162, write 0, timeout 2743
+Requests/sec:  81621.62
+Transfer/sec:     13.45MB
 
 ---------------------------------------------------------
  Concurrency: 8 for compojure
@@ -51,11 +52,11 @@ Transfer/sec:     12.99MB
 Running 30s test @ http://172.16.98.122:8080/compojure/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   257.95us  144.21us   3.84ms   95.11%
-    Req/Sec     3.81k   391.33     4.00k    81.14%
-  959706 requests in 30.00s, 157.42MB read
-Requests/sec:  31991.32
-Transfer/sec:      5.25MB
+    Latency   251.65us  103.40us   3.40ms   91.76%
+    Req/Sec     3.99k   105.05     4.00k    98.88%
+  974155 requests in 30.00s, 159.79MB read
+Requests/sec:  32472.11
+Transfer/sec:      5.33MB
 
 ---------------------------------------------------------
  Concurrency: 16 for compojure
@@ -65,11 +66,11 @@ Transfer/sec:      5.25MB
 Running 30s test @ http://172.16.98.122:8080/compojure/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   284.56us  212.15us   4.16ms   92.77%
-    Req/Sec     6.99k    89.69     7.00k    99.19%
-  1692250 requests in 30.00s, 277.58MB read
-Requests/sec:  56411.14
-Transfer/sec:      9.25MB
+    Latency   279.53us  153.67us   1.19ms   88.90%
+    Req/Sec     7.00k    66.31     7.00k    99.56%
+  1755439 requests in 30.00s, 287.95MB read
+Requests/sec:  58516.09
+Transfer/sec:      9.60MB
 
 ---------------------------------------------------------
  Concurrency: 32 for compojure
@@ -79,11 +80,11 @@ Transfer/sec:      9.25MB
 Running 30s test @ http://172.16.98.122:8080/compojure/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   360.82us  321.40us  10.31ms   93.95%
-    Req/Sec    10.99k   149.97    11.00k    99.06%
-  2682622 requests in 30.00s, 440.04MB read
-Requests/sec:  89423.53
-Transfer/sec:     14.67MB
+    Latency   352.26us  248.31us   6.78ms   90.15%
+    Req/Sec    10.65k     1.03k   11.00k    92.72%
+  2782142 requests in 30.00s, 456.36MB read
+Requests/sec:  92742.26
+Transfer/sec:     15.21MB
 
 ---------------------------------------------------------
  Concurrency: 64 for compojure
@@ -93,11 +94,11 @@ Transfer/sec:     14.67MB
 Running 30s test @ http://172.16.98.122:8080/compojure/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   732.98us  586.75us  11.33ms   88.56%
-    Req/Sec    11.92k   609.81    13.00k    91.48%
-  2963622 requests in 30.00s, 486.13MB read
-Requests/sec:  98791.94
-Transfer/sec:     16.21MB
+    Latency   697.52us  455.00us   8.18ms   86.95%
+    Req/Sec    11.59k   548.62    13.00k    59.77%
+  2906309 requests in 30.00s, 476.73MB read
+Requests/sec:  96882.16
+Transfer/sec:     15.89MB
 
 ---------------------------------------------------------
  Concurrency: 128 for compojure
@@ -107,11 +108,11 @@ Transfer/sec:     16.21MB
 Running 30s test @ http://172.16.98.122:8080/compojure/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.44ms    1.38ms  45.86ms   91.68%
-    Req/Sec    10.54k     0.86k   14.00k    85.55%
-  2764657 requests in 30.00s, 453.49MB read
-Requests/sec:  92156.54
-Transfer/sec:     15.12MB
+    Latency     1.40ms  806.16us   7.74ms   84.55%
+    Req/Sec    11.35k   708.42    14.00k    95.20%
+  2792175 requests in 30.00s, 458.01MB read
+Requests/sec:  93076.94
+Transfer/sec:     15.27MB
 
 ---------------------------------------------------------
  Concurrency: 256 for compojure
@@ -121,8 +122,8 @@ Transfer/sec:     15.12MB
 Running 30s test @ http://172.16.98.122:8080/compojure/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.12ms   16.85ms 168.92ms   95.43%
-    Req/Sec     9.98k   736.97    17.00k    71.09%
-  2646956 requests in 30.00s, 434.19MB read
-Requests/sec:  88235.93
-Transfer/sec:     14.47MB
+    Latency     9.60ms   77.81ms   1.18s    98.43%
+    Req/Sec    11.01k   464.75    19.00k    94.24%
+  2696813 requests in 30.00s, 442.50MB read
+Requests/sec:  89898.01
+Transfer/sec:     14.75MB

@@ -2,9 +2,9 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu May 16 12:50:42 PDT 2013
+  System information as of Fri May 17 12:42:42 PDT 2013
 
-  System load:  1.36                Processes:           125
+  System load:  1.03                Processes:           125
   Usage of /:   10.1% of 131.63GB   Users logged in:     1
   Memory usage: 32%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:9000/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.05ms  336.15us   3.46ms   91.51%
+    Latency     1.03ms  621.19us  10.42ms   97.77%
     Req/Sec     0.00      0.00     0.00    100.00%
-  36681 requests in 5.00s, 5.27MB read
-Requests/sec:   7336.17
-Transfer/sec:      1.05MB
+  38056 requests in 5.00s, 5.46MB read
+Requests/sec:   7611.91
+Transfer/sec:      1.09MB
 
 ---------------------------------------------------------
  Running Warmup play-scala
@@ -37,11 +37,11 @@ Transfer/sec:      1.05MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    18.70ms   12.14ms 149.26ms   85.04%
-    Req/Sec     1.01k   190.31     2.00k    96.37%
-  402366 requests in 30.00s, 57.77MB read
-Requests/sec:  13411.57
-Transfer/sec:      1.93MB
+    Latency    18.90ms   11.81ms 140.05ms   84.54%
+    Req/Sec     1.01k   154.13     2.00k    97.62%
+  399872 requests in 30.00s, 57.38MB read
+Requests/sec:  13330.07
+Transfer/sec:      1.91MB
 
 ---------------------------------------------------------
  Queries: 1 for play-scala
@@ -51,11 +51,11 @@ Transfer/sec:      1.93MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    12.50ms    6.53ms  97.55ms   86.24%
-    Req/Sec     2.00k   179.01     3.00k    97.17%
-  612460 requests in 30.00s, 69.38MB read
-Requests/sec:  20415.92
-Transfer/sec:      2.31MB
+    Latency    12.26ms    5.02ms  48.90ms   80.61%
+    Req/Sec     1.98k   219.56     3.00k    97.20%
+  616049 requests in 30.00s, 69.76MB read
+Requests/sec:  20535.02
+Transfer/sec:      2.33MB
 
 ---------------------------------------------------------
  Queries: 5 for play-scala
@@ -65,11 +65,11 @@ Transfer/sec:      2.31MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.25ms   24.23ms 695.54ms   85.55%
-    Req/Sec    13.70    116.27     1.00k    98.63%
-  182980 requests in 30.00s, 43.08MB read
-Requests/sec:   6099.40
-Transfer/sec:      1.44MB
+    Latency    38.43ms   16.96ms 253.81ms   77.06%
+    Req/Sec    25.42    157.44     1.00k    97.46%
+  184414 requests in 30.00s, 43.38MB read
+Requests/sec:   6147.20
+Transfer/sec:      1.45MB
 
 ---------------------------------------------------------
  Queries: 10 for play-scala
@@ -79,10 +79,10 @@ Transfer/sec:      1.44MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    72.60ms   29.64ms 307.77ms   77.99%
+    Latency    72.83ms   29.03ms 294.69ms   78.36%
     Req/Sec     0.00      0.00     0.00    100.00%
-  99114 requests in 30.00s, 38.35MB read
-Requests/sec:   3303.69
+  99470 requests in 30.00s, 38.45MB read
+Requests/sec:   3315.85
 Transfer/sec:      1.28MB
 
 ---------------------------------------------------------
@@ -93,10 +93,10 @@ Transfer/sec:      1.28MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   108.86ms   33.99ms 750.11ms   84.47%
+    Latency   107.79ms   31.01ms 325.87ms   82.36%
     Req/Sec     0.00      0.00     0.00    100.00%
-  67175 requests in 30.00s, 36.17MB read
-Requests/sec:   2239.02
+  67757 requests in 30.00s, 36.45MB read
+Requests/sec:   2258.48
 Transfer/sec:      1.21MB
 
 ---------------------------------------------------------
@@ -107,8 +107,8 @@ Transfer/sec:      1.21MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   146.60ms   40.78ms 362.72ms   84.74%
+    Latency   144.51ms   41.41ms 760.82ms   84.91%
     Req/Sec     0.00      0.00     0.00    100.00%
-  50612 requests in 30.00s, 34.92MB read
-Requests/sec:   1686.91
-Transfer/sec:      1.16MB
+  50841 requests in 30.00s, 35.04MB read
+Requests/sec:   1694.58
+Transfer/sec:      1.17MB
