@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 00:42:36 PDT 2013
+
+  System load:  0.44                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8000/mongo/raw/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.56ms   14.00ms 191.91ms   95.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  980 requests in 5.04s, 152.92KB read
+Requests/sec:    194.55
+Transfer/sec:     30.36KB
+
+---------------------------------------------------------
+ Running Warmup yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.21ms    5.39ms  98.76ms   97.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  188006 requests in 30.00s, 28.65MB read
+Requests/sec:   6266.47
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Concurrency: 8 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.98ms  108.79us  40.68ms   81.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5998 requests in 30.00s, 0.91MB read
+Requests/sec:    199.93
+Transfer/sec:     31.19KB
+
+---------------------------------------------------------
+ Concurrency: 16 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.98ms  259.97us  44.01ms   83.55%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11988 requests in 30.00s, 1.83MB read
+Requests/sec:    399.58
+Transfer/sec:     62.35KB
+
+---------------------------------------------------------
+ Concurrency: 32 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.05ms    1.44ms  79.92ms   99.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23970 requests in 30.00s, 3.65MB read
+Requests/sec:    798.96
+Transfer/sec:    124.66KB
+
+---------------------------------------------------------
+ Concurrency: 64 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.94ms    1.50ms  44.10ms   98.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  47864 requests in 30.00s, 7.29MB read
+Requests/sec:   1595.33
+Transfer/sec:    248.93KB
+
+---------------------------------------------------------
+ Concurrency: 128 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.86ms    2.53ms  46.09ms   98.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  95442 requests in 30.00s, 14.54MB read
+Requests/sec:   3181.42
+Transfer/sec:    496.41KB
+
+---------------------------------------------------------
+ Concurrency: 256 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8000/mongo/raw/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.90ms    4.60ms  87.01ms   97.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  187998 requests in 30.00s, 28.65MB read
+Requests/sec:   6266.70
+Transfer/sec:      0.95MB
