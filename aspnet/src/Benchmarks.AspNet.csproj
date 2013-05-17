@@ -42,6 +42,12 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\Newtonsoft.Json.5.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\lib\ServiceStack.Text.3.9.45\lib\net35\ServiceStack.Text.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -108,9 +114,11 @@
     <Compile Include="Controllers\AdoController.cs" />
     <Compile Include="Controllers\EntityFrameworkController.cs" />
     <Compile Include="Controllers\MongoDBController.cs" />
+    <Compile Include="JsonNetResult.cs" />
     <Compile Include="Models\EntityFramework.cs" />
     <Compile Include="Models\World.cs" />
     <Compile Include="Models\Fortune.cs" />
+    <Compile Include="ServiceStackResult.cs" />
     <Content Include="Global.asax" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -124,6 +132,7 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\IIS.pubxml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
