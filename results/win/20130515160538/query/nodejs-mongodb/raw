@@ -1,0 +1,125 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May 15 16:31:10 UTC 2013
+
+  System load:  0.56               Processes:           75
+  Usage of /:   43.4% of 19.69GB   Users logged in:     1
+  Memory usage: 4%                 IP address for eth0: 10.253.60.84
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+89 packages can be updated.
+42 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.97.155:8080/mongoose?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.97.155:8080/mongoose?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.42ms    2.70ms  17.23ms   85.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7861 requests in 5.00s, 2.22MB read
+Requests/sec:   1571.66
+Transfer/sec:    455.12KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/mongoose?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/mongoose?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   140.44ms    1.20s   22.11s    99.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  51498 requests in 30.00s, 14.56MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1281
+Requests/sec:   1716.56
+Transfer/sec:    497.10KB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/mongoose?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/mongoose?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.88ms    1.03s   22.17s    99.69%
+    Req/Sec    49.63    217.24     1.00k    95.04%
+  80163 requests in 30.01s, 17.72MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1242
+Requests/sec:   2671.55
+Transfer/sec:    604.68KB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/mongoose?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/mongoose?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   295.43ms  143.18ms   4.28s    92.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25705 requests in 30.01s, 12.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+Requests/sec:    856.56
+Transfer/sec:    411.42KB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/mongoose?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/mongoose?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   466.70ms  773.56ms  10.35s    99.06%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14120 requests in 30.01s, 10.98MB read
+  Socket errors: connect 0, read 0, write 0, timeout 546
+Requests/sec:    470.45
+Transfer/sec:    374.75KB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/mongoose?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/mongoose?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   312.48ms    1.50s   27.56s    99.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9350 requests in 30.01s, 10.16MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1834
+Requests/sec:    311.51
+Transfer/sec:    346.69KB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/mongoose?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/mongoose?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   307.64ms    1.35s   27.98s    99.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7066 requests in 30.02s, 9.86MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1932
+Requests/sec:    235.40
+Transfer/sec:    336.41KB

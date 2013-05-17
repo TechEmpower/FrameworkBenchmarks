@@ -383,6 +383,8 @@ class Installer:
 
     sudo cp -R -p /var/lib/mysql /ssd/
     sudo cp -R -p /var/log/mysql /ssd/log
+    sudo cp usr.sbin.mysqld /etc/apparmor.d/
+    sudo /etc/init.d/apparmor reload
     sudo start mysql
 
     # Insert data
