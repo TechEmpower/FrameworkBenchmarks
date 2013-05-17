@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 17:10:04 PDT 2013
+
+  System load:  0.51                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/play1/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/play1/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   799.48us    1.40ms  16.99ms   93.89%
+    Req/Sec   793.89    615.48     2.00k    58.02%
+  86445 requests in 5.00s, 35.70MB read
+Requests/sec:  17281.86
+Transfer/sec:      7.14MB
+
+---------------------------------------------------------
+ Running Warmup play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.06ms   26.15ms 467.09ms   96.42%
+    Req/Sec     5.04k     0.90k    7.00k    27.75%
+  1562638 requests in 30.00s, 647.14MB read
+Requests/sec:  52090.18
+Transfer/sec:     21.57MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:8080/play1/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   288.29us  205.80us   7.85ms   97.76%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  859201 requests in 30.00s, 354.80MB read
+Requests/sec:  28640.35
+Transfer/sec:     11.83MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:8080/play1/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   339.38us  303.43us   7.98ms   95.57%
+    Req/Sec     5.96k   205.81     6.00k    95.57%
+  1447556 requests in 30.00s, 597.76MB read
+Requests/sec:  48252.92
+Transfer/sec:     19.93MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:8080/play1/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   505.98us  295.42us   7.81ms   88.46%
+    Req/Sec     7.87k   334.54     8.00k    87.40%
+  1877937 requests in 30.00s, 775.48MB read
+Requests/sec:  62600.50
+Transfer/sec:     25.85MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:8080/play1/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.96ms  682.22us  16.67ms   90.93%
+    Req/Sec     8.00k    78.48     9.00k    99.38%
+  2041139 requests in 30.00s, 842.87MB read
+Requests/sec:  68037.05
+Transfer/sec:     28.10MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:8080/play1/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.91ms    1.22ms  21.10ms   83.77%
+    Req/Sec     7.99k   126.82     8.00k    98.88%
+  2017558 requests in 30.00s, 833.13MB read
+Requests/sec:  67254.00
+Transfer/sec:     27.77MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.66ms   19.16ms 750.68ms   98.70%
+    Req/Sec     6.91k   685.21    13.00k    79.73%
+  1912474 requests in 30.00s, 789.74MB read
+Requests/sec:  63750.61
+Transfer/sec:     26.33MB
