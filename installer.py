@@ -301,9 +301,9 @@ class Installer:
     ##############################
     # Play 2
     ##############################
-    self.__run_command("wget http://downloads.typesafe.com/play/2.1.1/play-2.1.1.zip")
-    self.__run_command("unzip -o play-2.1.1.zip")
-    self.__run_command("rm play-2.1.1.zip")
+    self.__run_command("wget http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip")
+    self.__run_command("unzip -o play-2.1.2-RC1.zip")
+    self.__run_command("rm play-2.1.2-RC1.zip")
 
     ##############################
     # Play 1
