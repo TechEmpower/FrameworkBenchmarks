@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 10:04:38 PDT 2013
+
+  System load:  1.8                 Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.45ms  806.53us   5.97ms   82.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16318 requests in 5.00s, 3.49MB read
+Requests/sec:   3263.07
+Transfer/sec:    713.64KB
+
+---------------------------------------------------------
+ Running Warmup codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    65.93ms   43.05ms 446.50ms   80.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  116374 requests in 30.00s, 24.86MB read
+Requests/sec:   3879.03
+Transfer/sec:    848.37KB
+
+---------------------------------------------------------
+ Concurrency: 8 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.38ms  741.85us   7.02ms   78.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  98921 requests in 30.00s, 21.13MB read
+Requests/sec:   3297.24
+Transfer/sec:    721.11KB
+
+---------------------------------------------------------
+ Concurrency: 16 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.35ms    4.67ms 168.82ms   96.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  112557 requests in 30.00s, 24.04MB read
+Requests/sec:   3751.93
+Transfer/sec:    820.55KB
+
+---------------------------------------------------------
+ Concurrency: 32 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.00ms    7.58ms 115.71ms   92.72%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  119704 requests in 30.00s, 25.57MB read
+Requests/sec:   3990.16
+Transfer/sec:      0.85MB
+
+---------------------------------------------------------
+ Concurrency: 64 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.40ms   19.47ms 231.28ms   90.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  120077 requests in 30.00s, 25.65MB read
+Requests/sec:   4002.41
+Transfer/sec:      0.85MB
+
+---------------------------------------------------------
+ Concurrency: 128 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.13ms   35.50ms 437.23ms   88.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  119569 requests in 30.00s, 25.54MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+Requests/sec:   3985.47
+Transfer/sec:      0.85MB
+
+---------------------------------------------------------
+ Concurrency: 256 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/index.php/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    65.50ms   44.86ms 628.10ms   84.87%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  118301 requests in 30.00s, 25.27MB read
+Requests/sec:   3943.45
+Transfer/sec:    862.46KB

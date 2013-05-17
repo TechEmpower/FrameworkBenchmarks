@@ -2,9 +2,9 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu May 16 17:44:51 PDT 2013
+  System information as of Fri May 17 12:10:50 PDT 2013
 
-  System load:  0.86                Processes:           125
+  System load:  0.75                Processes:           125
   Usage of /:   10.1% of 131.63GB   Users logged in:     1
   Memory usage: 32%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/spark/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   644.35us  120.35us   1.36ms   71.16%
-    Req/Sec     0.94k   244.62     1.00k    93.63%
-  46513 requests in 5.00s, 8.63MB read
-Requests/sec:   9303.82
-Transfer/sec:      1.73MB
+    Latency   664.44us  268.90us   4.72ms   98.10%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  60977 requests in 5.00s, 11.31MB read
+Requests/sec:  12197.34
+Transfer/sec:      2.26MB
 
 ---------------------------------------------------------
  Running Warmup spark
@@ -37,11 +37,11 @@ Transfer/sec:      1.73MB
 Running 30s test @ http://172.16.98.122:8080/spark/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    16.84ms   27.78ms 391.39ms   90.81%
-    Req/Sec     1.35k   475.96     2.00k    65.36%
-  470433 requests in 30.00s, 87.29MB read
-Requests/sec:  15681.49
-Transfer/sec:      2.91MB
+    Latency    15.64ms   22.14ms 186.28ms   87.29%
+    Req/Sec     1.67k   485.44     2.00k    67.53%
+  484137 requests in 30.00s, 89.83MB read
+Requests/sec:  16138.76
+Transfer/sec:      2.99MB
 
 ---------------------------------------------------------
  Queries: 1 for spark
@@ -51,11 +51,11 @@ Transfer/sec:      2.91MB
 Running 30s test @ http://172.16.98.122:8080/spark/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    11.57ms   16.45ms 145.68ms   87.73%
-    Req/Sec     2.02k   170.50     3.00k    97.06%
-  637621 requests in 30.00s, 98.99MB read
-Requests/sec:  21253.97
-Transfer/sec:      3.30MB
+    Latency    11.01ms   14.06ms  97.62ms   84.73%
+    Req/Sec     2.01k    90.05     3.00k    99.19%
+  638802 requests in 30.00s, 99.17MB read
+Requests/sec:  21293.89
+Transfer/sec:      3.31MB
 
 ---------------------------------------------------------
  Queries: 5 for spark
@@ -65,11 +65,11 @@ Transfer/sec:      3.30MB
 Running 30s test @ http://172.16.98.122:8080/spark/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    31.86ms   69.74ms   1.40s    93.77%
-    Req/Sec     0.98k   123.87     1.00k    98.44%
-  266337 requests in 30.00s, 73.89MB read
-Requests/sec:   8878.54
-Transfer/sec:      2.46MB
+    Latency    27.07ms   38.03ms 327.45ms   87.84%
+    Req/Sec     0.98k   126.36     1.00k    98.38%
+  279780 requests in 30.00s, 77.62MB read
+Requests/sec:   9326.04
+Transfer/sec:      2.59MB
 
 ---------------------------------------------------------
  Queries: 10 for spark
@@ -79,10 +79,10 @@ Transfer/sec:      2.46MB
 Running 30s test @ http://172.16.98.122:8080/spark/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    48.55ms   70.10ms 753.23ms   88.87%
+    Latency    51.83ms   77.19ms 680.49ms   89.39%
     Req/Sec     0.00      0.00     0.00    100.00%
-  162451 requests in 30.00s, 69.69MB read
-Requests/sec:   5414.79
+  162344 requests in 30.00s, 69.65MB read
+Requests/sec:   5411.43
 Transfer/sec:      2.32MB
 
 ---------------------------------------------------------
@@ -93,11 +93,11 @@ Transfer/sec:      2.32MB
 Running 30s test @ http://172.16.98.122:8080/spark/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    69.48ms  105.47ms 896.66ms   88.81%
+    Latency    74.78ms  115.59ms   1.26s    89.74%
     Req/Sec     0.00      0.00     0.00    100.00%
-  115228 requests in 30.00s, 66.90MB read
-Requests/sec:   3840.70
-Transfer/sec:      2.23MB
+  116133 requests in 30.00s, 67.42MB read
+Requests/sec:   3870.78
+Transfer/sec:      2.25MB
 
 ---------------------------------------------------------
  Queries: 20 for spark
@@ -107,8 +107,8 @@ Transfer/sec:      2.23MB
 Running 30s test @ http://172.16.98.122:8080/spark/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   105.82ms  167.34ms   1.39s    89.66%
+    Latency   101.28ms  154.56ms   1.11s    88.85%
     Req/Sec     0.00      0.00     0.00    100.00%
-  89188 requests in 30.00s, 65.29MB read
-Requests/sec:   2972.85
-Transfer/sec:      2.18MB
+  90024 requests in 30.00s, 65.91MB read
+Requests/sec:   3000.76
+Transfer/sec:      2.20MB

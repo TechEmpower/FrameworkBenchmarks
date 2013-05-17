@@ -2,14 +2,7 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu May 16 07:20:03 PDT 2013
-
-  System load:  2.15                Processes:           125
-  Usage of /:   10.1% of 131.63GB   Users logged in:     1
-  Memory usage: 32%                 IP address for eth1: 172.16.98.98
-  Swap usage:   0%
-
-  Graph this data and manage this system at https://landscape.canonical.com/
+ System information disabled due to load higher than 8.0
 
 121 packages can be updated.
 65 updates are security updates.
@@ -23,11 +16,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.42ms  648.11us   6.99ms   87.88%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  16179 requests in 5.00s, 22.46MB read
-Requests/sec:   3234.98
-Transfer/sec:      4.49MB
+    Latency   690.56us  108.58us   1.12ms   69.92%
+    Req/Sec     0.97k   171.12     1.00k    96.99%
+  58356 requests in 5.00s, 79.47MB read
+Requests/sec:  11672.42
+Transfer/sec:     15.90MB
 
 ---------------------------------------------------------
  Running Warmup gemini
@@ -37,12 +30,11 @@ Transfer/sec:      4.49MB
 Running 30s test @ http://172.16.98.122:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    52.88ms   72.61ms 885.01ms   91.98%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  150644 requests in 30.00s, 209.17MB read
-  Socket errors: connect 0, read 0, write 0, timeout 42
-Requests/sec:   5021.13
-Transfer/sec:      6.97MB
+    Latency     5.24ms    3.06ms  46.48ms   83.61%
+    Req/Sec     6.02k   289.12     9.00k    96.62%
+  1594154 requests in 30.00s, 2.12GB read
+Requests/sec:  53140.86
+Transfer/sec:     72.37MB
 
 ---------------------------------------------------------
  Concurrency: 8 for gemini
@@ -52,11 +44,11 @@ Transfer/sec:      6.97MB
 Running 30s test @ http://172.16.98.122:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.43ms    3.96ms 159.44ms   99.57%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  102485 requests in 30.00s, 142.30MB read
-Requests/sec:   3416.11
-Transfer/sec:      4.74MB
+    Latency   680.83us  129.95us   3.90ms   81.07%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  355724 requests in 30.00s, 484.44MB read
+Requests/sec:  11857.77
+Transfer/sec:     16.15MB
 
 ---------------------------------------------------------
  Concurrency: 16 for gemini
@@ -66,11 +58,11 @@ Transfer/sec:      4.74MB
 Running 30s test @ http://172.16.98.122:8080/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.67ms    5.02ms 184.47ms   96.54%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  136106 requests in 30.00s, 188.98MB read
-Requests/sec:   4536.93
-Transfer/sec:      6.30MB
+    Latency   717.10us  225.70us   4.65ms   85.62%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  666664 requests in 30.00s, 0.89GB read
+Requests/sec:  22222.90
+Transfer/sec:     30.26MB
 
 ---------------------------------------------------------
  Concurrency: 32 for gemini
@@ -80,11 +72,11 @@ Transfer/sec:      6.30MB
 Running 30s test @ http://172.16.98.122:8080/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.63ms    8.41ms 218.07ms   94.18%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  145053 requests in 30.00s, 201.41MB read
-Requests/sec:   4835.07
-Transfer/sec:      6.71MB
+    Latency   830.34us  465.79us   9.75ms   87.68%
+    Req/Sec     4.99k    82.68     5.00k    99.31%
+  1224920 requests in 30.00s, 1.63GB read
+Requests/sec:  40832.84
+Transfer/sec:     55.61MB
 
 ---------------------------------------------------------
  Concurrency: 64 for gemini
@@ -94,11 +86,11 @@ Transfer/sec:      6.71MB
 Running 30s test @ http://172.16.98.122:8080/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    11.70ms   21.81ms 644.07ms   95.26%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  153584 requests in 30.00s, 213.25MB read
-Requests/sec:   5119.49
-Transfer/sec:      7.11MB
+    Latency     1.28ms    0.87ms  11.95ms   86.56%
+    Req/Sec     6.98k   148.39     8.00k    97.95%
+  1746953 requests in 30.00s, 2.32GB read
+Requests/sec:  58234.86
+Transfer/sec:     79.31MB
 
 ---------------------------------------------------------
  Concurrency: 128 for gemini
@@ -108,11 +100,11 @@ Transfer/sec:      7.11MB
 Running 30s test @ http://172.16.98.122:8080/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    27.09ms   56.48ms 810.64ms   94.46%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  152386 requests in 30.00s, 211.59MB read
-Requests/sec:   5079.26
-Transfer/sec:      7.05MB
+    Latency     2.64ms    1.64ms  23.07ms   81.10%
+    Req/Sec     6.78k   437.66    10.00k    77.10%
+  1698825 requests in 30.00s, 2.26GB read
+Requests/sec:  56628.29
+Transfer/sec:     77.12MB
 
 ---------------------------------------------------------
  Concurrency: 256 for gemini
@@ -122,8 +114,8 @@ Transfer/sec:      7.05MB
 Running 30s test @ http://172.16.98.122:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    53.50ms   67.61ms   1.07s    90.69%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  150941 requests in 30.00s, 209.58MB read
-Requests/sec:   5031.48
-Transfer/sec:      6.99MB
+    Latency     5.06ms    2.61ms  25.51ms   82.00%
+    Req/Sec     6.07k   432.23    12.00k    93.00%
+  1598864 requests in 30.00s, 2.13GB read
+Requests/sec:  53303.97
+Transfer/sec:     72.59MB
