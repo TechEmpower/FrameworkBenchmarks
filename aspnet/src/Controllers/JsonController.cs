@@ -6,7 +6,29 @@ namespace Benchmarks.AspNet.Controllers
     {
         public ActionResult Index()
         {
-            return Json(new { message = "Hello World" }, JsonRequestBehavior.AllowGet);
+            return new JsonResult
+            {
+                Data = new { message = "Hello World" },
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
+
+        public ActionResult JsonNet()
+        {
+            return new JsonNetResult
+            {
+                Data = new { message = "Hello World" },
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
+
+        public ActionResult ServiceStack()
+        {
+            return new ServiceStackResult
+            {
+                Data = new { message = "Hello World" },
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
         }
     }
 }
