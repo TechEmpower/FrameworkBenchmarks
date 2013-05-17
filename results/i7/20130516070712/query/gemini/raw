@@ -2,14 +2,7 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu May 16 07:16:37 PDT 2013
-
-  System load:  2.75                Processes:           125
-  Usage of /:   10.1% of 131.63GB   Users logged in:     1
-  Memory usage: 32%                 IP address for eth1: 172.16.98.98
-  Swap usage:   0%
-
-  Graph this data and manage this system at https://landscape.canonical.com/
+ System information disabled due to load higher than 8.0
 
 121 packages can be updated.
 65 updates are security updates.
@@ -23,11 +16,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.42ms  396.85us   4.65ms   78.73%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  16737 requests in 5.00s, 4.32MB read
-Requests/sec:   3346.86
-Transfer/sec:      0.86MB
+    Latency   797.44us  108.43us   1.09ms   67.18%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  49737 requests in 5.00s, 9.99MB read
+Requests/sec:   9947.92
+Transfer/sec:      2.00MB
 
 ---------------------------------------------------------
  Running Warmup gemini
@@ -37,11 +30,11 @@ Transfer/sec:      0.86MB
 Running 30s test @ http://172.16.98.122:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    57.32ms   67.73ms 603.12ms   89.01%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  142028 requests in 30.00s, 36.64MB read
-Requests/sec:   4734.02
-Transfer/sec:      1.22MB
+    Latency     5.45ms   10.85ms 211.63ms   94.40%
+    Req/Sec     7.00k   318.65    10.00k    94.52%
+  1746922 requests in 30.00s, 350.81MB read
+Requests/sec:  58233.21
+Transfer/sec:     11.69MB
 
 ---------------------------------------------------------
  Queries: 1 for gemini
@@ -51,11 +44,11 @@ Transfer/sec:      1.22MB
 Running 30s test @ http://172.16.98.122:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    46.71ms   65.37ms   1.40s    90.69%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  177743 requests in 30.00s, 39.79MB read
-Requests/sec:   5924.57
-Transfer/sec:      1.33MB
+    Latency     3.37ms    3.36ms  82.51ms   88.61%
+    Req/Sec    11.01k   408.19    15.00k    94.55%
+  2704755 requests in 30.00s, 461.17MB read
+Requests/sec:  90166.35
+Transfer/sec:     15.37MB
 
 ---------------------------------------------------------
  Queries: 5 for gemini
@@ -65,11 +58,11 @@ Transfer/sec:      1.33MB
 Running 30s test @ http://172.16.98.122:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    81.30ms   89.53ms   1.12s    90.11%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  96236 requests in 30.00s, 34.68MB read
-Requests/sec:   3207.78
-Transfer/sec:      1.16MB
+    Latency    11.64ms   20.99ms 313.65ms   92.41%
+    Req/Sec     2.99k   163.66     4.00k    97.30%
+  790258 requests in 30.00s, 231.31MB read
+Requests/sec:  26342.82
+Transfer/sec:      7.71MB
 
 ---------------------------------------------------------
  Queries: 10 for gemini
@@ -79,11 +72,11 @@ Transfer/sec:      1.16MB
 Running 30s test @ http://172.16.98.122:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   124.81ms  113.79ms 875.17ms   83.80%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  63329 requests in 30.00s, 33.68MB read
-Requests/sec:   2110.88
-Transfer/sec:      1.12MB
+    Latency    19.98ms   30.99ms 490.33ms   92.68%
+    Req/Sec     1.01k    74.56     2.00k    99.44%
+  416285 requests in 29.99s, 184.94MB read
+Requests/sec:  13879.94
+Transfer/sec:      6.17MB
 
 ---------------------------------------------------------
  Queries: 15 for gemini
@@ -93,11 +86,11 @@ Transfer/sec:      1.12MB
 Running 30s test @ http://172.16.98.122:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   167.26ms  150.77ms   1.71s    84.04%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  47686 requests in 30.00s, 33.50MB read
-Requests/sec:   1589.57
-Transfer/sec:      1.12MB
+    Latency    28.39ms   40.39ms 494.29ms   92.52%
+    Req/Sec     1.00k    61.07     1.00k    99.63%
+  283321 requests in 30.00s, 168.81MB read
+Requests/sec:   9443.99
+Transfer/sec:      5.63MB
 
 ---------------------------------------------------------
  Queries: 20 for gemini
@@ -107,8 +100,8 @@ Transfer/sec:      1.12MB
 Running 30s test @ http://172.16.98.122:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   203.24ms  174.16ms   1.43s    77.42%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  38378 requests in 30.00s, 33.51MB read
-Requests/sec:   1279.23
-Transfer/sec:      1.12MB
+    Latency    36.83ms   50.45ms 890.72ms   93.18%
+    Req/Sec    24.39    154.31     1.00k    97.56%
+  215213 requests in 30.00s, 160.85MB read
+Requests/sec:   7173.63
+Transfer/sec:      5.36MB

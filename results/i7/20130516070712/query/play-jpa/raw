@@ -2,9 +2,9 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Fri May 17 07:11:00 PDT 2013
+  System information as of Fri May 17 13:09:14 PDT 2013
 
-  System load:  2.93                Processes:           125
+  System load:  4.9                 Processes:           125
   Usage of /:   10.1% of 131.63GB   Users logged in:     1
   Memory usage: 32%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:9000/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.98ms  481.49us   6.09ms   92.67%
+    Latency     2.02ms  597.87us   7.34ms   90.38%
     Req/Sec     0.00      0.00     0.00    100.00%
-  19898 requests in 5.00s, 2.86MB read
-Requests/sec:   3978.97
-Transfer/sec:    585.05KB
+  20371 requests in 5.00s, 2.92MB read
+Requests/sec:   4074.45
+Transfer/sec:    599.01KB
 
 ---------------------------------------------------------
  Running Warmup play-jpa
@@ -37,11 +37,11 @@ Transfer/sec:    585.05KB
 Running 30s test @ http://172.16.98.122:9000/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    39.32ms   31.22ms 691.60ms   95.31%
-    Req/Sec    16.26    126.51     1.00k    98.37%
-  185592 requests in 30.00s, 26.65MB read
-Requests/sec:   6185.92
-Transfer/sec:      0.89MB
+    Latency    36.14ms   20.74ms 658.03ms   86.34%
+    Req/Sec    12.41    110.76     1.00k    98.76%
+  198158 requests in 30.00s, 28.45MB read
+Requests/sec:   6604.94
+Transfer/sec:      0.95MB
 
 ---------------------------------------------------------
  Queries: 1 for play-jpa
@@ -51,11 +51,11 @@ Transfer/sec:      0.89MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    33.71ms   10.96ms 108.16ms   72.64%
-    Req/Sec    17.10    129.68     1.00k    98.29%
-  214683 requests in 30.00s, 24.32MB read
-Requests/sec:   7155.79
-Transfer/sec:    830.07KB
+    Latency    32.22ms   21.88ms 674.31ms   93.12%
+    Req/Sec    55.03    228.12     1.00k    94.50%
+  229990 requests in 30.00s, 26.05MB read
+Requests/sec:   7666.41
+Transfer/sec:      0.87MB
 
 ---------------------------------------------------------
  Queries: 5 for play-jpa
@@ -65,11 +65,11 @@ Transfer/sec:    830.07KB
 Running 30s test @ http://172.16.98.122:9000/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    52.69ms   18.58ms 108.76ms   71.33%
-    Req/Sec     0.62     24.94     1.00k    99.94%
-  136673 requests in 30.00s, 32.18MB read
-Requests/sec:   4555.61
-Transfer/sec:      1.07MB
+    Latency    50.67ms   20.60ms 243.42ms   76.03%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  145173 requests in 30.00s, 34.18MB read
+Requests/sec:   4839.48
+Transfer/sec:      1.14MB
 
 ---------------------------------------------------------
  Queries: 10 for play-jpa
@@ -79,11 +79,11 @@ Transfer/sec:      1.07MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    74.84ms   31.68ms 720.19ms   78.12%
+    Latency    71.99ms   31.28ms 718.41ms   79.43%
     Req/Sec     0.00      0.00     0.00    100.00%
-  96236 requests in 30.00s, 37.25MB read
-Requests/sec:   3207.50
-Transfer/sec:      1.24MB
+  101725 requests in 30.00s, 39.36MB read
+Requests/sec:   3390.52
+Transfer/sec:      1.31MB
 
 ---------------------------------------------------------
  Queries: 15 for play-jpa
@@ -93,11 +93,11 @@ Transfer/sec:      1.24MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    94.82ms   36.98ms 270.96ms   70.60%
+    Latency    93.21ms   33.56ms 196.79ms   72.39%
     Req/Sec     0.00      0.00     0.00    100.00%
-  74359 requests in 30.00s, 40.05MB read
-Requests/sec:   2478.80
-Transfer/sec:      1.34MB
+  78276 requests in 30.00s, 42.15MB read
+Requests/sec:   2609.44
+Transfer/sec:      1.40MB
 
 ---------------------------------------------------------
  Queries: 20 for play-jpa
@@ -107,8 +107,8 @@ Transfer/sec:      1.34MB
 Running 30s test @ http://172.16.98.122:9000/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   118.16ms   45.19ms 286.76ms   70.06%
+    Latency   111.31ms   44.68ms 317.28ms   69.14%
     Req/Sec     0.00      0.00     0.00    100.00%
-  60605 requests in 30.00s, 41.83MB read
-Requests/sec:   2020.04
-Transfer/sec:      1.39MB
+  63919 requests in 30.01s, 44.10MB read
+Requests/sec:   2130.19
+Transfer/sec:      1.47MB

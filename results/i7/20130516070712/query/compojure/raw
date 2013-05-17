@@ -2,9 +2,9 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu May 16 07:37:18 PDT 2013
+  System information as of Fri May 17 14:43:21 PDT 2013
 
-  System load:  2.15                Processes:           125
+  System load:  2.37                Processes:           128
   Usage of /:   10.1% of 131.63GB   Users logged in:     1
   Memory usage: 32%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/compojure/db/2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.11ms  172.19us   2.07ms   71.06%
+    Latency     1.10ms  247.06us   4.06ms   88.10%
     Req/Sec     0.00      0.00     0.00    100.00%
-  34633 requests in 5.00s, 6.92MB read
-Requests/sec:   6926.96
-Transfer/sec:      1.38MB
+  35266 requests in 5.00s, 7.05MB read
+Requests/sec:   7053.48
+Transfer/sec:      1.41MB
 
 ---------------------------------------------------------
  Running Warmup compojure
@@ -37,11 +37,11 @@ Transfer/sec:      1.38MB
 Running 30s test @ http://172.16.98.122:8080/compojure/db/2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    19.79ms   43.47ms 845.13ms   91.23%
-    Req/Sec     1.02k   123.79     2.00k    98.44%
-  426822 requests in 30.00s, 85.30MB read
-Requests/sec:  14227.61
-Transfer/sec:      2.84MB
+    Latency    20.03ms   42.40ms 539.75ms   92.46%
+    Req/Sec     1.03k   177.55     2.00k    96.76%
+  446741 requests in 30.00s, 89.28MB read
+Requests/sec:  14891.91
+Transfer/sec:      2.98MB
 
 ---------------------------------------------------------
  Queries: 1 for compojure
@@ -51,11 +51,11 @@ Transfer/sec:      2.84MB
 Running 30s test @ http://172.16.98.122:8080/compojure/db/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    13.57ms   38.39ms 738.57ms   94.53%
-    Req/Sec     2.11k   325.21     4.00k    89.55%
-  710554 requests in 30.00s, 120.57MB read
-Requests/sec:  23686.10
-Transfer/sec:      4.02MB
+    Latency    11.74ms   28.74ms 701.55ms   91.94%
+    Req/Sec     2.91k   306.83     4.00k    89.70%
+  746621 requests in 30.00s, 126.58MB read
+Requests/sec:  24889.10
+Transfer/sec:      4.22MB
 
 ---------------------------------------------------------
  Queries: 5 for compojure
@@ -65,11 +65,11 @@ Transfer/sec:      4.02MB
 Running 30s test @ http://172.16.98.122:8080/compojure/db/5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    39.40ms   63.52ms 562.83ms   90.52%
-    Req/Sec     1.25     35.31     1.00k    99.88%
-  195713 requests in 30.00s, 57.10MB read
-Requests/sec:   6524.07
-Transfer/sec:      1.90MB
+    Latency    39.63ms   53.89ms 569.30ms   88.41%
+    Req/Sec    11.28    105.63     1.00k    98.87%
+  202520 requests in 30.00s, 59.08MB read
+Requests/sec:   6750.52
+Transfer/sec:      1.97MB
 
 ---------------------------------------------------------
  Queries: 10 for compojure
@@ -79,11 +79,11 @@ Transfer/sec:      1.90MB
 Running 30s test @ http://172.16.98.122:8080/compojure/db/10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    72.78ms   89.70ms   1.19s    89.07%
+    Latency    68.40ms   78.71ms 771.53ms   88.62%
     Req/Sec     0.00      0.00     0.00    100.00%
-  102051 requests in 30.00s, 45.24MB read
-Requests/sec:   3401.55
-Transfer/sec:      1.51MB
+  105985 requests in 30.00s, 46.98MB read
+Requests/sec:   3532.61
+Transfer/sec:      1.57MB
 
 ---------------------------------------------------------
  Queries: 15 for compojure
@@ -93,11 +93,11 @@ Transfer/sec:      1.51MB
 Running 30s test @ http://172.16.98.122:8080/compojure/db/15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    97.51ms   96.43ms 694.26ms   86.76%
+    Latency   102.04ms   94.67ms 753.83ms   84.94%
     Req/Sec     0.00      0.00     0.00    100.00%
-  69464 requests in 30.00s, 41.32MB read
-Requests/sec:   2315.30
-Transfer/sec:      1.38MB
+  70674 requests in 30.00s, 42.03MB read
+Requests/sec:   2355.59
+Transfer/sec:      1.40MB
 
 ---------------------------------------------------------
  Queries: 20 for compojure
@@ -107,8 +107,8 @@ Transfer/sec:      1.38MB
 Running 30s test @ http://172.16.98.122:8080/compojure/db/20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   129.67ms  115.49ms 946.76ms   85.71%
+    Latency   128.84ms  105.74ms 859.76ms   81.70%
     Req/Sec     0.00      0.00     0.00    100.00%
-  52380 requests in 30.00s, 39.09MB read
-Requests/sec:   1745.88
-Transfer/sec:      1.30MB
+  54481 requests in 30.00s, 40.66MB read
+Requests/sec:   1815.91
+Transfer/sec:      1.36MB
