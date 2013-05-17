@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May 15 19:09:41 UTC 2013
+
+  System load:  0.04               Processes:           75
+  Usage of /:   43.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.253.60.84
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+89 packages can be updated.
+42 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.97.155:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.97.155:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.88ms   21.95ms 152.97ms   69.20%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  550 requests in 5.05s, 137.76KB read
+Requests/sec:    108.91
+Transfer/sec:     27.28KB
+
+---------------------------------------------------------
+ Running Warmup fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.18s   799.82ms   4.39s    74.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3072 requests in 30.01s, 813.43KB read
+  Socket errors: connect 0, read 0, write 0, timeout 824
+  Non-2xx or 3xx responses: 8
+Requests/sec:    102.37
+Transfer/sec:     27.11KB
+
+---------------------------------------------------------
+ Queries: 1 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.07s   790.33ms   4.15s    71.71%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3315 requests in 30.01s, 736.76KB read
+  Socket errors: connect 0, read 0, write 0, timeout 605
+  Non-2xx or 3xx responses: 4
+Requests/sec:    110.46
+Transfer/sec:     24.55KB
+
+---------------------------------------------------------
+ Queries: 5 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.38s   726.10ms   3.75s    84.66%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2899 requests in 30.01s, 1.03MB read
+  Socket errors: connect 0, read 0, write 0, timeout 926
+  Non-2xx or 3xx responses: 4
+Requests/sec:     96.61
+Transfer/sec:     35.13KB
+
+---------------------------------------------------------
+ Queries: 10 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.60s   871.58ms   4.30s    82.75%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2685 requests in 30.01s, 1.41MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1099
+  Non-2xx or 3xx responses: 4
+Requests/sec:     89.47
+Transfer/sec:     48.17KB
+
+---------------------------------------------------------
+ Queries: 15 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.90s   997.20ms   4.63s    83.35%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2334 requests in 30.01s, 1.64MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1444
+  Non-2xx or 3xx responses: 6
+Requests/sec:     77.77
+Transfer/sec:     55.85KB
+
+---------------------------------------------------------
+ Queries: 20 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.13s     1.05s    4.21s    87.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2160 requests in 30.00s, 1.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1549
+  Non-2xx or 3xx responses: 4
+Requests/sec:     71.99
+Transfer/sec:     63.96KB
