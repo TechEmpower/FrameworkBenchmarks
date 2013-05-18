@@ -63,6 +63,13 @@ ini_set('unserialize_callback_func', 'spl_autoload_call');
  */
 I18n::lang('en-us');
 
+
+/**
+ * Set a magic salt to the Cookie (required)
+ * http://kohanaframework.org/3.3/guide/kohana/cookies#cookie-settings
+ */
+Cookie::$salt = 'please, set a Cookie salt';
+
 /**
  * Set Kohana::$environment if a 'KOHANA_ENV' environment variable has been supplied.
  *
