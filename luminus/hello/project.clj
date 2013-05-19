@@ -3,7 +3,7 @@
   "luminus"
   :dependencies
   [[org.clojure/clojure "1.5.1"]
-   [lib-noir "0.5.4"]
+   [lib-noir "0.5.5"]
    [compojure "1.1.5"]
    [ring-server "0.2.8"]
    [clabango "0.5"]
