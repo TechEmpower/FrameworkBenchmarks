@@ -15,7 +15,7 @@ The dependencies are documented in [project.clj](hello/project.clj),
 but the main ones are:
 
 * [Clojure 1.5.1](http://clojure.org/)
-* [lib-noor 0.5.5](https://github.com/noir-clojure/lib-noir)
+* [lib-noir 0.5.5](https://github.com/noir-clojure/lib-noir)
 * [Compojure 1.1.5](https://github.com/weavejester/compojure)
 * [Cheshire 5.1.1](https://github.com/dakrone/cheshire), which in turn uses [Jackson](http://jackson.codehaus.org/)
 * [Korma 0.3.0-RC5](http://sqlkorma.com/)
