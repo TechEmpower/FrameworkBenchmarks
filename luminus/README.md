@@ -1,6 +1,6 @@
-# Compojure Benchmarking Test
+# Luminus Benchmarking Test
 
-This is the Compojure portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the Luminus portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### JSON Encoding Test
 
@@ -15,8 +15,9 @@ The dependencies are documented in [project.clj](hello/project.clj),
 but the main ones are:
 
 * [Clojure 1.5.1](http://clojure.org/)
+* [lib-noor 0.5.5](https://github.com/noir-clojure/lib-noir)
 * [Compojure 1.1.5](https://github.com/weavejester/compojure)
-* [Ring-JSON 0.2.0](https://github.com/ring-clojure/ring-json), which in turn uses [Cheshire](https://github.com/dakrone/cheshire), which in turn uses [Jackson](http://jackson.codehaus.org/)
+* [Cheshire 5.1.1](https://github.com/dakrone/cheshire), which in turn uses [Jackson](http://jackson.codehaus.org/)
 * [Korma 0.3.0-RC5](http://sqlkorma.com/)
 
 ## Test URLs
