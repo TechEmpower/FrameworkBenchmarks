@@ -1,0 +1,11 @@
+{
+	"name": "application-name",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {
+		"hapi": "1.2.0",
+		"mongoose": "3.5.5",
+		"async": "0.2.5",
+		"mapper": "0.2.4-pre"
+	}
+}
