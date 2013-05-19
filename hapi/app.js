@@ -53,6 +53,8 @@ if (cluster.isMaster) {
 			var queries = req.params.queries || 1,
 				queryFunctions = [];
 
+			queries = Math.min(Math.max(queries, 1), 500);
+
 			for (var i = 1; i <= queries; i++) {
 				queryFunctions.push(function(callback){
 					MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) }).exec(callback);
@@ -60,7 +62,7 @@ if (cluster.isMaster) {
 			}
 
 			async.parallel(queryFunctions, function(err, results){
-				req.reply(results);
+				req.reply(results).header('Server', 'hapi');
 			});
 		}
 	});
@@ -72,7 +74,9 @@ if (cluster.isMaster) {
 			if (windows) return req.reply(Hapi.error.internal('Not supported on windows'));
 
 			var queries = req.params.queries || 1,
-					queryFunctions = [];
+				queryFunctions = [];
+
+			queries = Math.min(Math.max(queries, 1), 500);
 
 			for (var i = 1; i <= queries; i++) {
 				queryFunctions.push(function(callback){
@@ -81,7 +85,7 @@ if (cluster.isMaster) {
 			}
 
 			async.parallel(queryFunctions, function(err, results){
-				req.reply(results);
+				req.reply(results).header('Server', 'hapi');
 			});
 		}
 	});
