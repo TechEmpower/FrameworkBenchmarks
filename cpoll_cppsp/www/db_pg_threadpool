@@ -1,0 +1,105 @@
+<%!-lpq%><%!-I/usr/include/postgresql%><%@ class mypage %><%#
+#include <libpq-fe.h>
+#include <postgres.h>
+#include <catalog/pg_type.h>
+#include <json/json.h>
+#include <cpoll/threadpool.H>
+#include <list>
+#include "connectioninfo.H"
+#include "generic_pool.H"
+
+using namespace CP;
+using namespace cppsp;
+using namespace std;
+
+class myStatement
+{
+public:
+	PGconn* db;
+	int paramLengths[1];
+	int paramFormats[1];
+	myStatement() {
+		db=doConnect_pg(NULL);
+		Oid oid=INT4OID;
+		PGresult* res;
+		if((res=PQprepare(db, "zxcvb", "SELECT randomnumber FROM World where id=$1", 1, &oid))==NULL)
+			goto fail;
+		PQclear(res);
+		paramLengths[0] = sizeof(int);
+		paramFormats[0] = 1; //binary
+		return;
+	fail:
+		doDisconnect_pg(NULL,db);
+		throw runtime_error("error preparing statement");
+	}
+	~myStatement() {
+		doDisconnect_pg(NULL,db);
+	}
+	PGresult* exec(int id) {
+		const char *params[1];
+		id=htonl(id);
+		params[0]=(const char*)&id;
+		return PQexecPrepared(db,"zxcvb",1,params,paramLengths,paramFormats,1/*binary*/);
+	}
+};
+myStatement* cStatement(void*) {
+	return new myStatement();
+}
+void dStatement(void*, myStatement* s) {
+	delete s;
+}
+genericPool<myStatement*,64> stmtPool(&cStatement,&dStatement);
+
+ThreadPool tp(32);
+
+
+%><%$
+EventFD efd{0,EFD_SEMAPHORE};
+int queries=1;
+int* items;
+myStatement* stmt;
+
+void tpFunc() {
+	for (int i=0;i<queries;i++){
+		PGresult* res;
+		if((res=stmt->exec(rand()%10000))==NULL) throw bad_alloc();
+		if(PQntuples(res)>0) {
+			items[i]=ntohl(*(const int*)PQgetvalue(res,0,0));
+		}
+		else items[i]=0;
+		PQclear(res);
+	}
+	efd.sendEvent(1);
+}
+//asynchronously load the data in the doInit() function, and defer page rendering until data is available
+void doInit() override {
+	auto it=request->queryString.find("queries");
+	if(it!=request->queryString.end()) {
+		queries=atoi((*it).second);
+	}
+	if(queries<1)queries=1;
+	if(queries>500)queries=500;
+	
+	items=(int*)sp->alloc(sizeof(int)*queries);
+	stmt=stmtPool.get();
+	poll->add(efd);
+	tp.invoke({&mypage::tpFunc,this});
+	efd.getEvent({&mypage::efdCB,this});
+}
+void efdCB(eventfd_t efdVal) {
+	stmtPool.put(stmt);
+	Page::doInit();
+}
+void waitCB(eventfd_t efdVal) {
+	this->doInit();
+}
+
+%>{ "json": [ <%
+for (int i=0;i<queries;i++){
+	if(i>0) {%>, <%}
+	%>{ "randomNumber": <%=items[i]%> }<%
+}
+
+response->headers["Content-Type"]="application/json";
+response->headers["Server"]="cppsp/0.2";
+%> ] }
