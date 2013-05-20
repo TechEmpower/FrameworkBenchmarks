@@ -38,3 +38,8 @@ http://localhost:8080/mongoose/2
 
 MySQL:
 http://localhost:8080/mysql-orm/2
+
+### Fortune Test
+
+MySQL:
+http://localhost:8080/fortune

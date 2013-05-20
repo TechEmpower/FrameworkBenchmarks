@@ -18,6 +18,7 @@
       "setup_file": "setup",
       "db_url": "/mysql-orm/",
       "query_url": "/mysql-orm/",
+      "fortune_url": "/fortune",
       "port": 8080,
       "sort": 120
     }

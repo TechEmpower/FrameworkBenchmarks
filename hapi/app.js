@@ -36,7 +36,14 @@ if (cluster.isMaster) {
 		console.log('worker ' + worker.pid + ' died');
 	});
 } else {
-	var server = module.exports = Hapi.createServer(null, 8080);
+	var server = module.exports = Hapi.createServer(null, 8080, {
+		views: {
+			engines: {
+				handlebars: 'handlebars'
+			},
+			path: __dirname + '/views'
+		}
+	});
 
 	server.route({
 		method: 'GET',
@@ -86,6 +93,28 @@ if (cluster.isMaster) {
 
 			async.parallel(queryFunctions, function(err, results){
 				req.reply(results).header('Server', 'hapi');
+			});
+		}
+	});
+
+	server.route({
+		method: 'GET',
+		path: '/fortune',
+		handler: function(req){
+			if (windows) return req.reply(Hapi.error.internal('Not supported on windows'));
+
+			Fortune.all(function(err, fortunes){
+				fortunes.push({
+					id: 0,
+					message: 'Additional fortune added at request time.'
+				});
+				fortunes.sort(function(a, b){
+					return (a.message < b.message) ? -1 : 1;
+				});
+
+				req.reply.view('fortunes.handlebars', {
+					fortunes: fortunes
+				}).header('Server', 'hapi');
 			});
 		}
 	});
