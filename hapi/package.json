@@ -6,6 +6,7 @@
 		"hapi": "1.2.0",
 		"mongoose": "3.5.5",
 		"async": "0.2.5",
-		"mapper": "0.2.4-pre"
+		"mapper": "0.2.4-pre",
+		"handlebars": "1.0.11"
 	}
 }
