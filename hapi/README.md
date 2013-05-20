@@ -43,3 +43,12 @@ http://localhost:8080/mysql-orm/2
 
 MySQL:
 http://localhost:8080/fortune
+
+### Database Update Test
+
+MongoDB:
+http://localhost:8080/mongoose-update/2
+
+MySQL:
+http://localhost:8080/mysql-orm-update/2
+

@@ -11,6 +11,7 @@
       "setup_file": "setup",
       "db_url": "/mongoose/",
       "query_url": "/mongoose/",
+      "update_url": "/mongoose-update/",
       "port": 8080,
       "sort": 119
     },
@@ -19,6 +20,7 @@
       "db_url": "/mysql-orm/",
       "query_url": "/mysql-orm/",
       "fortune_url": "/fortune",
+      "update_url": "/mysql-orm-update/",
       "port": 8080,
       "sort": 120
     }
