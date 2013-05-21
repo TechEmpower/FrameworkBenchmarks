@@ -7,6 +7,7 @@
 #include <list>
 #include "connectioninfo.H"
 #include "generic_pool.H"
+#include "world.H"
 
 using namespace CP;
 using namespace cppsp;
@@ -56,17 +57,17 @@ ThreadPool tp(32);
 %><%$
 EventFD efd{0,EFD_SEMAPHORE};
 int queries=1;
-int* items;
+world* items;
 myStatement* stmt;
 
 void tpFunc() {
 	for (int i=0;i<queries;i++){
 		PGresult* res;
-		if((res=stmt->exec(rand()%10000))==NULL) throw bad_alloc();
+		if((res=stmt->exec(items[i].id=(rand()%10000)))==NULL) throw bad_alloc();
 		if(PQntuples(res)>0) {
-			items[i]=ntohl(*(const int*)PQgetvalue(res,0,0));
+			items[i].rnd=ntohl(*(const int*)PQgetvalue(res,0,0));
 		}
-		else items[i]=0;
+		else items[i].rnd=0;
 		PQclear(res);
 	}
 	efd.sendEvent(1);
@@ -80,7 +81,7 @@ void doInit() override {
 	if(queries<1)queries=1;
 	if(queries>500)queries=500;
 	
-	items=(int*)sp->alloc(sizeof(int)*queries);
+	items=(world*)sp->alloc(sizeof(world)*queries);
 	stmt=stmtPool.get();
 	poll->add(efd);
 	tp.invoke({&mypage::tpFunc,this});
@@ -94,12 +95,12 @@ void waitCB(eventfd_t efdVal) {
 	this->doInit();
 }
 
-%>{ "json": [ <%
+%>[<%
 for (int i=0;i<queries;i++){
-	if(i>0) {%>, <%}
-	%>{ "randomNumber": <%=items[i]%> }<%
+	if(i>0) output.write(',');
+	%>{"id":<%=items[i].id%>,"randomNumber":<%=items[i].rnd%>}<%
 }
 
 response->headers["Content-Type"]="application/json";
 response->headers["Server"]="cppsp/0.2";
-%> ] }
+%>]
