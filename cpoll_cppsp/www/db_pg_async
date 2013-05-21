@@ -7,6 +7,7 @@
 #include <list>
 #include "connectioninfo.H"
 #include "generic_pool.H"
+#include "world.H"
 
 using namespace CP;
 using namespace cppsp;
@@ -60,7 +61,7 @@ genericPool<myStatement*,128> stmtPool(&cStatement,&dStatement);
 
 %><%$
 int queries=1;
-int* items;
+world* items;
 int n=0;
 myStatement* stmt;
 //asynchronously load the data in the doInit() function, and defer page rendering until data is available
@@ -72,7 +73,7 @@ void doInit() override {
 	if(queries<1)queries=1;
 	if(queries>500)queries=500;
 	int i;
-	items=(int*)sp->alloc(sizeof(int)*queries);
+	items=(world*)sp->alloc(sizeof(world)*queries);
 	stmt=stmtPool.get();
 	if(!stmt->addedToPoll) {
 		poll->add(stmt->f);
@@ -87,7 +88,8 @@ void beginGetItems() {
 		Page::doInit();
 		return;
 	}
-	stmt->exec(rand()%10000);
+	items[n++].id=rand()%10000;
+	stmt->exec(items[n-1].id);
 	stmt->f.waitForEvent(Events::in,{&mypage::evtIn,this});
 }
 void evtIn(int) {
@@ -101,17 +103,17 @@ void evtIn(int) {
 	if(PQntuples(res)>0)
 		tmp=*(const int*)PQgetvalue(res,0,0);
 	else tmp=0;
-	items[n++]=ntohl(tmp);
+	items[n-1].rnd=ntohl(tmp);
 	PQclear(res);
 	beginGetItems();
 }
 
-%>{ "json": [ <%
+%>[<%
 for (int i=0;i<queries;i++){
-	if(i>0) {%>, <%}
-	%>{ "randomNumber": <%=items[i]%> }<%
+	if(i>0) output.write(',');
+	%>{"id":<%=items[i].id%>,"randomNumber":<%=items[i].rnd%>}<%
 }
 
 response->headers["Content-Type"]="application/json";
 response->headers["Server"]="cppsp/0.2";
-%> ] }
+%>]

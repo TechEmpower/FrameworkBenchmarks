@@ -5,6 +5,7 @@
 #include <list>
 #include "connectioninfo.H"
 #include "generic_pool.H"
+#include "world.H"
 
 using namespace CP;
 using namespace cppsp;
@@ -73,18 +74,18 @@ extern "C" void initModule() {
 %><%$
 EventFD efd{0,EFD_SEMAPHORE};
 int queries=1;
-int* items;
+world* items;
 myStatement* stmt;
 
 void tpFunc() {
 	//mysql_thread_init();
 	for (int i=0;i<queries;i++){
-		stmt->rn=rand()%10000;
+		items[i].id=stmt->rn=rand()%10000;
 		if(mysql_stmt_execute(stmt->stmt)) throw runtime_error(mysql_stmt_error(stmt->stmt));
 		if(mysql_stmt_fetch(stmt->stmt)==0) {
-			items[i]=stmt->r;
+			items[i].rnd=stmt->r;
 		} else {
-			items[i]=0;
+			items[i].rnd=0;
 		}
 	}
 	efd.sendEvent(1);
@@ -107,7 +108,7 @@ void doInit() override {
 	if(queries>500)queries=500;
 	int i;
 	
-	items=(int*)sp->alloc(sizeof(int)*queries);
+	items=(world*)sp->alloc(sizeof(world)*queries);
 	stmt=stmtPool.get();
 	poll->add(efd);
 	tp.invoke({&mypage::tpFunc,this});
@@ -128,12 +129,12 @@ void waitCB(eventfd_t efdVal) {
 	this->doInit();
 }
 
-%>{ "json": [ <%
+%>[<%
 for (int i=0;i<queries;i++){
-	if(i>0) {%>, <%}
-	%>{ "randomNumber": <%=items[i]%> }<%
+	if(i>0) output.write(',');
+	%>{"id":<%=items[i].id%>,"randomNumber":<%=items[i].rnd%>}<%
 }
 
 response->headers["Content-Type"]="application/json";
 response->headers["Server"]="cppsp/0.2";
-%> ] }
+%>]
