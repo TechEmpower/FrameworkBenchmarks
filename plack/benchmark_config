@@ -2,7 +2,7 @@
   "framework": "plack",
   "tests": [{
     "default": {
-      "setup_file": "setup.py",
+      "setup_file": "setup",
       "port": 8080,
       "sort": 118
     }
