@@ -109,7 +109,9 @@ class Installer:
     #
     # Perl
     #
-
+    
+    self.__run_command("curl http://downloads.activestate.com/ActivePerl/releases/5.16.3.1603/ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz | tar xvz");
+    self.__run_command("sudo ./install.sh --license-accepted --prefix /opt/ActivePerl-5.16 --no-install-html", cwd="ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746", send_yes=True)
     self.__run_command("curl -L http://cpanmin.us | perl - --sudo App::cpanminus")
     self.__run_command("cpanm -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg")
 
