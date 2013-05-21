@@ -12,6 +12,7 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
       "port": 16969,
       "sort": 115
     },
