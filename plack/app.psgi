@@ -6,7 +6,7 @@ use DBI;
 
 my $dbh = DBI->connect_cached(
     'dbi:mysql:database=hello_world;host=localhost;port=3306', 
-    qw(benchmarkdbuser benchmarkdbpassword)
+    qw(benchmarkdbuser benchmarkdbpass)
 ) || die $!;
 
 my $sth = $dbh->prepare_cached('SELECT randomNumber FROM World WHERE id = ?');
