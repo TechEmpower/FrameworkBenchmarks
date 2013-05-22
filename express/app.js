@@ -120,5 +120,71 @@ if (cluster.isMaster) {
     return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
   }
 
+  app.get('/mongoose-update', function(req, res) {
+    var queries = req.query.queries || 1
+      , selectFunctions = [];
+
+    queries = Math.min(queries, 500);
+
+    for (var i = 1; i <= queries; i++ ) {
+      selectFunctions.push(function(callback) {
+        MWorld.findOne({ id: Math.floor(Math.random() * 10000) + 1 }).exec(callback);
+      });
+    }
+
+    async.parallel(selectFunctions, function(err, worlds) {
+      var updateFunctions = [];
+
+      for (var i = 0; i < queries; i++) {
+        (function(i){
+          updateFunctions.push(function(callback){
+            worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
+            MWorld.update({
+              id: worlds[i]
+            }, {
+              randomNumber: worlds[i].randomNumber
+            }, callback);
+          });
+        })(i);
+      }
+
+      async.parallel(updateFunctions, function(err, updates) {
+        res.send(worlds);
+      });
+    });
+  });
+
+  app.get('/mysql-orm-update', function(req, res) {
+    if (windows) return res.send(501, 'Not supported on windows');
+
+    var queries = req.query.queries || 1
+      , selectFunctions = [];
+
+    queries = Math.min(queries, 500);
+
+    for (var i = 1; i <= queries; i++ ) {
+      selectFunctions.push(function(callback) {
+        World.findById(Math.floor(Math.random() * 10000) + 1, callback);
+      });
+    }
+
+    async.parallel(selectFunctions, function(err, worlds) {
+      var updateFunctions = [];
+
+      for (var i = 0; i < queries; i++) {
+        (function(i){
+          updateFunctions.push(function(callback){
+            worlds[i].randomNumber = Math.ceil(Math.random() * 10000);
+            World.save(worlds[i], callback);
+          });
+        })(i);
+      }
+
+      async.parallel(updateFunctions, function(err, updates) {
+        res.send(worlds);
+      });
+    });   
+  });
+
   app.listen(8080);
 }
