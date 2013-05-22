@@ -1,0 +1,22 @@
+{
+  "framework": "servicestack",
+  "tests": [{
+    "default": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 8080,
+      "sort": 118
+    },
+    "mono": {
+      "setup_file": "setup_nginx",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 8080,
+      "sort": 119
+    }
+  }]
+}
