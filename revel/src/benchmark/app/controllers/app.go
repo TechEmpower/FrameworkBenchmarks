@@ -27,6 +27,7 @@ type Fortune struct {
 const (
 	WorldSelect        = "SELECT id,randomNumber FROM World where id=?"
 	FortuneSelect      = "SELECT id,message FROM Fortune"
+	WorldUpdate        = "UPDATE World SET randomNumber = ? where id = ?"
 	WorldRowCount      = 10000
 	MaxConnectionCount = 100
 )
@@ -34,6 +35,7 @@ const (
 var (
 	worldStatement   *sql.Stmt
 	fortuneStatement *sql.Stmt
+	updateStatement  *sql.Stmt
 )
 
 func init() {
@@ -46,6 +48,9 @@ func init() {
 			revel.ERROR.Fatalln(err)
 		}
 		if fortuneStatement, err = db.Db.Prepare(FortuneSelect); err != nil {
+			revel.ERROR.Fatalln(err)
+		}
+		if updateStatement, err = db.Db.Prepare(WorldUpdate); err != nil {
 			revel.ERROR.Fatalln(err)
 		}
 	})
@@ -77,6 +82,36 @@ func (c App) Db(queries int) revel.Result {
 			if err != nil {
 				revel.ERROR.Fatalf("Error scanning world row: %v", err)
 			}
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+	return c.RenderJson(ww)
+}
+
+func (c App) Update(queries int) revel.Result {
+	rowNum := rand.Intn(WorldRowCount) + 1
+	if queries <= 1 {
+		var w World
+		worldStatement.QueryRow(rowNum).Scan(&w.Id, &w.RandomNumber)
+		w.RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
+		updateStatement.Exec(w.RandomNumber, w.Id)
+		return c.RenderJson(&w)
+	}
+
+	var (
+		ww = make([]World, queries)
+		wg sync.WaitGroup
+	)
+	wg.Add(queries)
+	for i := 0; i < queries; i++ {
+		go func(i int) {
+			err := worldStatement.QueryRow(rowNum).Scan(&ww[i].Id, &ww[i].RandomNumber)
+			if err != nil {
+				revel.ERROR.Fatalf("Error scanning world row: %v", err)
+			}
+			ww[i].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
+			updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
 			wg.Done()
 		}(i)
 	}
