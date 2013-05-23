@@ -45,7 +45,7 @@
 **Platforms**
 
 * .NET Framework 4.5 (Windows)
-* Mono 3.0.10 (Linux)
+* Mono 3.0.X (Linux)
 
 **Web Servers**
 
@@ -59,8 +59,8 @@
 
 **Databases**
 
-* MySQL Connector/Net 6.7.2-beta (custom build)
+* MySQL Connector/Net
 
 **Developer Tools**
 
-* Visual Studio 2012 Update 2
+* Visual Studio 2012
