@@ -1,17 +1,17 @@
-Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Fri May 17 10:40:52 PDT 2013
+  System information as of Thu May 23 14:20:25 PDT 2013
 
-  System load:  0.13                Processes:           125
-  Usage of /:   10.1% of 131.63GB   Users logged in:     1
-  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  System load:  2.32               Processes:           129
+  Usage of /:   8.9% of 129.62GB   Users logged in:     1
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-121 packages can be updated.
+124 packages can be updated.
 65 updates are security updates.
 
 
@@ -23,12 +23,11 @@ Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/bench/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.21ms    1.13ms   8.18ms   73.64%
+    Latency     4.89ms    1.24ms  13.44ms   84.91%
     Req/Sec     0.00      0.00     0.00    100.00%
-  9338 requests in 5.00s, 191.75MB read
-  Non-2xx or 3xx responses: 9338
-Requests/sec:   1866.95
-Transfer/sec:     38.34MB
+  8161 requests in 5.00s, 16.69MB read
+Requests/sec:   1631.12
+Transfer/sec:      3.34MB
 
 ---------------------------------------------------------
  Running Warmup kohana-raw
@@ -38,12 +37,11 @@ Transfer/sec:     38.34MB
 Running 30s test @ http://172.16.98.122:8080/bench/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   120.74ms   89.57ms 654.08ms   74.48%
+    Latency   128.93ms  140.73ms   1.42s    90.76%
     Req/Sec     0.00      0.00     0.00    100.00%
-  62181 requests in 30.00s, 1.25GB read
-  Non-2xx or 3xx responses: 62181
-Requests/sec:   2072.61
-Transfer/sec:     42.56MB
+  62054 requests in 30.00s, 126.94MB read
+Requests/sec:   2068.19
+Transfer/sec:      4.23MB
 
 ---------------------------------------------------------
  Concurrency: 8 for kohana-raw
@@ -53,12 +51,11 @@ Transfer/sec:     42.56MB
 Running 30s test @ http://172.16.98.122:8080/bench/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.26ms    2.41ms  87.53ms   95.98%
+    Latency     4.89ms    1.12ms  11.06ms   78.32%
     Req/Sec     0.00      0.00     0.00    100.00%
-  56763 requests in 30.00s, 1.14GB read
-  Non-2xx or 3xx responses: 56763
-Requests/sec:   1892.04
-Transfer/sec:     38.85MB
+  48969 requests in 30.00s, 100.17MB read
+Requests/sec:   1632.15
+Transfer/sec:      3.34MB
 
 ---------------------------------------------------------
  Concurrency: 16 for kohana-raw
@@ -68,12 +65,11 @@ Transfer/sec:     38.85MB
 Running 30s test @ http://172.16.98.122:8080/bench/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.23ms   13.64ms 316.50ms   99.44%
+    Latency     8.13ms    3.80ms  35.68ms   84.13%
     Req/Sec     0.00      0.00     0.00    100.00%
-  62243 requests in 30.00s, 1.25GB read
-  Non-2xx or 3xx responses: 62243
-Requests/sec:   2074.71
-Transfer/sec:     42.60MB
+  58191 requests in 30.00s, 119.03MB read
+Requests/sec:   1939.44
+Transfer/sec:      3.97MB
 
 ---------------------------------------------------------
  Concurrency: 32 for kohana-raw
@@ -83,12 +79,11 @@ Transfer/sec:     42.60MB
 Running 30s test @ http://172.16.98.122:8080/bench/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    15.72ms   20.45ms 584.08ms   93.12%
+    Latency    15.46ms   13.25ms 164.32ms   90.88%
     Req/Sec     0.00      0.00     0.00    100.00%
-  61866 requests in 30.00s, 1.24GB read
-  Non-2xx or 3xx responses: 61866
-Requests/sec:   2062.10
-Transfer/sec:     42.34MB
+  61033 requests in 30.00s, 124.85MB read
+Requests/sec:   2034.35
+Transfer/sec:      4.16MB
 
 ---------------------------------------------------------
  Concurrency: 64 for kohana-raw
@@ -98,12 +93,11 @@ Transfer/sec:     42.34MB
 Running 30s test @ http://172.16.98.122:8080/bench/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    31.61ms   44.53ms 423.22ms   89.83%
+    Latency    32.61ms   38.72ms 320.35ms   90.76%
     Req/Sec     0.00      0.00     0.00    100.00%
-  61940 requests in 30.00s, 1.24GB read
-  Non-2xx or 3xx responses: 61940
-Requests/sec:   2064.52
-Transfer/sec:     42.39MB
+  61830 requests in 30.00s, 126.48MB read
+Requests/sec:   2060.88
+Transfer/sec:      4.22MB
 
 ---------------------------------------------------------
  Concurrency: 128 for kohana-raw
@@ -113,12 +107,11 @@ Transfer/sec:     42.39MB
 Running 30s test @ http://172.16.98.122:8080/bench/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    65.40ms   70.14ms 523.82ms   88.94%
+    Latency    61.24ms   76.74ms 770.57ms   90.30%
     Req/Sec     0.00      0.00     0.00    100.00%
-  61740 requests in 30.00s, 1.24GB read
-  Non-2xx or 3xx responses: 61740
-Requests/sec:   2057.93
-Transfer/sec:     42.26MB
+  62013 requests in 30.00s, 126.85MB read
+Requests/sec:   2067.10
+Transfer/sec:      4.23MB
 
 ---------------------------------------------------------
  Concurrency: 256 for kohana-raw
@@ -128,9 +121,9 @@ Transfer/sec:     42.26MB
 Running 30s test @ http://172.16.98.122:8080/bench/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   126.24ms   85.42ms 646.71ms   72.99%
+    Latency   136.98ms  186.41ms   2.29s    92.88%
     Req/Sec     0.00      0.00     0.00    100.00%
-  61519 requests in 30.00s, 1.23GB read
-  Non-2xx or 3xx responses: 61519
-Requests/sec:   2050.64
-Transfer/sec:     42.11MB
+  61686 requests in 30.00s, 126.18MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:   2056.10
+Transfer/sec:      4.21MB
