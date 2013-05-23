@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.MySql;
@@ -43,10 +45,13 @@ namespace ServiceStackBenchmark
                     return GetRandomWorld(db, random);
                 else
                 {
-                    var worlds = new World[request.queries];
+                    var worldCount = request.queries > 500 ? 500 : request.queries;
+                    worldCount = worldCount < 1 ? 1 : worldCount;
 
-                    // TODO: Execute these concurrently (or is that cheating?)
-                    for (int i = 0; i < request.queries; ++i)
+                    // NOTE: Experiment with running the DB requests in parallel, on both Mono and Windows CLRs.
+                    var worlds = new World[worldCount];
+
+                    for (int i = 0; i < worldCount; ++i)
                     {
                         worlds[i] = GetRandomWorld(db, random);
                     }
