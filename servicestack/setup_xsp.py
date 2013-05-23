@@ -10,9 +10,9 @@ def start(args):
   setup_util.replace_text("servicestack/src/Web.config", "localhost", args.database_host)
 
   try:
-    subprocess.check_call("rm -rf bin obj", shell=True, cwd="aspnet/src")
+    subprocess.check_call("rm -rf bin obj", shell=True, cwd="servicestack/src")
     subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="servicestack/src/Web.config")
-    subprocess.Popen("xsp4 --nonstop", shell=True, cwd="servicestack/src/Web.config")
+    subprocess.Popen("xsp4 --nonstop", shell=True, cwd="servicestack/src")
     return 0
   except subprocess.CalledProcessError:
     return 1
