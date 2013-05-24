@@ -184,6 +184,7 @@ class Installer:
     self.__run_command("sudo mv /etc/apache2/ports.conf /etc/apache2/ports.conf.orig")
     self.__run_command("sudo sh -c \"cat ../config/ports.conf > /etc/apache2/ports.conf\"")
     self.__run_command("sudo /etc/init.d/apache2 stop")
+    self.__run_command("sudo update-rc.d apache2 disable")
 
     #
     # Nginx
