@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	// _ "github.com/go-sql-driver/mysql"
 	"github.com/robfig/revel"
 	"github.com/robfig/revel/modules/db/app"
 	"math/rand"
@@ -41,7 +40,7 @@ func init() {
 	revel.OnAppStart(func() {
 		var err error
 		runtime.GOMAXPROCS(runtime.NumCPU())
-		db.DbFilter{}.OnAppStart()
+		db.Init()
 		db.Db.SetMaxIdleConns(MaxConnectionCount)
 		if worldStatement, err = db.Db.Prepare(WorldSelect); err != nil {
 			revel.ERROR.Fatalln(err)
@@ -62,10 +61,9 @@ func (c App) Json() revel.Result {
 }
 
 func (c App) Db(queries int) revel.Result {
-	rowNum := rand.Intn(WorldRowCount) + 1
 	if queries <= 1 {
 		var w World
-		worldStatement.QueryRow(rowNum).Scan(&w.Id, &w.RandomNumber)
+		worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&w.Id, &w.RandomNumber)
 		return c.RenderJson(w)
 	}
 
@@ -74,7 +72,8 @@ func (c App) Db(queries int) revel.Result {
 	wg.Add(queries)
 	for i := 0; i < queries; i++ {
 		go func(i int) {
-			err := worldStatement.QueryRow(rowNum).Scan(&ww[i].Id, &ww[i].RandomNumber)
+			err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).
+				Scan(&ww[i].Id, &ww[i].RandomNumber)
 			if err != nil {
 				revel.ERROR.Fatalf("Error scanning world row: %v", err)
 			}
