@@ -7,7 +7,6 @@ import time
 def start(args):
   setup_util.replace_text("revel/src/benchmark/conf/app.conf", "tcp\(.*:3306\)", "tcp(" + args.database_host + ":3306)")
   subprocess.call("go get github.com/robfig/revel/cmd", shell=True, cwd="revel")
-  subprocess.call("git checkout filters", shell=True, cwd="revel/src/github.com/robfig/revel")
   subprocess.call("go build -o bin/revel github.com/robfig/revel/cmd", shell=True, cwd="revel")
   subprocess.Popen("bin/revel run benchmark prod".rsplit(" "), cwd="revel")
   return 0
@@ -19,5 +18,4 @@ def stop():
     if 'revel' in line and 'run-tests' not in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 9)
-  subprocess.call("git checkout master", shell=True, cwd="revel/src/github.com/robfig/revel")
   return 0
