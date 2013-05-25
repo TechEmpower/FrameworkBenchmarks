@@ -16,7 +16,7 @@ def stop():
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if 'revel' in line:
+    if 'revel' in line and 'run-tests' not in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 9)
   subprocess.call("git checkout master", shell=True, cwd="revel/src/github.com/robfig/revel")
