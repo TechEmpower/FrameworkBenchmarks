@@ -1,0 +1,3 @@
+{
+    modules => ['JSON::XS']
+}

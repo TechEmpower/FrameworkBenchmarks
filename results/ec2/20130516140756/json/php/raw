@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 16:23:02 UTC 2013
+
+  System load:  0.14              Processes:           75
+  Usage of /:   63.4% of 7.87GB   Users logged in:     1
+  Memory usage: 10%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.19.48:8080/json.php
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/json.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.24ms    4.05ms  42.72ms   94.32%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18881 requests in 5.00s, 4.05MB read
+Requests/sec:   3775.93
+Transfer/sec:    829.49KB
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/json.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.19ms   81.36ms   1.08s    96.13%
+    Req/Sec     1.87     43.22     1.00k    99.81%
+  117457 requests in 30.00s, 25.20MB read
+Requests/sec:   3914.99
+Transfer/sec:    860.06KB
+
+---------------------------------------------------------
+ Concurrency: 8 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.19.48:8080/json.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.57ms    8.89ms 231.84ms   98.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  111004 requests in 30.00s, 23.81MB read
+Requests/sec:   3700.19
+Transfer/sec:    812.85KB
+
+---------------------------------------------------------
+ Concurrency: 16 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.19.48:8080/json.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json.php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.70ms    9.02ms 101.52ms   92.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  114032 requests in 30.00s, 24.46MB read
+Requests/sec:   3801.13
+Transfer/sec:    835.02KB
+
+---------------------------------------------------------
+ Concurrency: 32 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.19.48:8080/json.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json.php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.70ms   32.26ms 492.40ms   95.86%
+    Req/Sec     3.09     55.50     1.00k    99.69%
+  115604 requests in 30.00s, 24.80MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:   3853.52
+Transfer/sec:    846.54KB
+
+---------------------------------------------------------
+ Concurrency: 64 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.19.48:8080/json.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json.php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.02ms   33.26ms 887.21ms   94.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  117548 requests in 30.00s, 25.22MB read
+Requests/sec:   3918.14
+Transfer/sec:    860.73KB
+
+---------------------------------------------------------
+ Concurrency: 128 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.19.48:8080/json.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json.php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.37ms   62.27ms 997.80ms   96.50%
+    Req/Sec     0.62     25.00     1.00k    99.94%
+  116944 requests in 30.00s, 25.09MB read
+  Socket errors: connect 0, read 0, write 0, timeout 47
+Requests/sec:   3898.03
+Transfer/sec:    856.32KB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/json.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.33ms   94.43ms   2.59s    97.18%
+    Req/Sec     3.13     55.88     1.00k    99.69%
+  116269 requests in 30.00s, 24.94MB read
+Requests/sec:   3875.81
+Transfer/sec:    851.45KB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 12:34:47 PDT 2013
+
+  System load:  1.4                 Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.03ms    1.17ms  11.44ms   90.11%
+    Req/Sec   472.53    500.16     1.00k    52.75%
+  56900 requests in 5.00s, 6.08MB read
+Requests/sec:  11382.23
+Transfer/sec:      1.22MB
+
+---------------------------------------------------------
+ Running Warmup play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.41ms    1.51ms  18.90ms   86.90%
+    Req/Sec     4.11k   657.07     7.00k    77.65%
+  1157139 requests in 30.00s, 123.60MB read
+Requests/sec:  38574.32
+Transfer/sec:      4.12MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   585.00us  173.15us   3.49ms   96.43%
+    Req/Sec     1.02k   138.01     2.00k    98.06%
+  413906 requests in 30.00s, 44.21MB read
+Requests/sec:  13797.47
+Transfer/sec:      1.47MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   548.17us  164.96us   2.94ms   83.45%
+    Req/Sec     3.00k     0.00     3.00k   100.00%
+  877313 requests in 30.00s, 93.71MB read
+Requests/sec:  29245.04
+Transfer/sec:      3.12MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   801.70us  454.41us  12.15ms   97.01%
+    Req/Sec     4.98k   133.24     5.00k    98.19%
+  1212747 requests in 30.00s, 129.54MB read
+Requests/sec:  40425.11
+Transfer/sec:      4.32MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.58ms  364.87us   4.33ms   83.84%
+    Req/Sec     4.96k   285.70     6.00k    95.57%
+  1207465 requests in 30.00s, 128.97MB read
+Requests/sec:  40250.09
+Transfer/sec:      4.30MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.18ms  631.13us  14.03ms   85.17%
+    Req/Sec     4.22k   485.36     7.00k    75.53%
+  1183430 requests in 30.00s, 126.40MB read
+Requests/sec:  39449.69
+Transfer/sec:      4.21MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.45ms    2.47ms  76.76ms   93.37%
+    Req/Sec     4.17k   564.77     8.00k    77.77%
+  1165333 requests in 30.00s, 124.47MB read
+Requests/sec:  38845.53
+Transfer/sec:      4.15MB

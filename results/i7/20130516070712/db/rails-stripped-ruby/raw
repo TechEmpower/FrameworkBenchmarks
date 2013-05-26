@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 13:19:37 PDT 2013
+
+  System load:  0.39                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.60ms    2.91ms  38.58ms   98.90%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  15607 requests in 5.00s, 5.85MB read
+Requests/sec:   3120.93
+Transfer/sec:      1.17MB
+
+---------------------------------------------------------
+ Running Warmup rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    75.95ms   10.34ms 126.06ms   84.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  99433 requests in 30.00s, 37.24MB read
+Requests/sec:   3314.22
+Transfer/sec:      1.24MB
+
+---------------------------------------------------------
+ Concurrency: 8 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.52ms    2.21ms  41.53ms   98.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  94024 requests in 30.00s, 35.21MB read
+Requests/sec:   3134.02
+Transfer/sec:      1.17MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.73ms    2.50ms  50.09ms   96.56%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100666 requests in 30.00s, 37.70MB read
+Requests/sec:   3355.47
+Transfer/sec:      1.26MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.83ms    3.61ms  59.31ms   95.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  99869 requests in 30.00s, 37.40MB read
+Requests/sec:   3328.80
+Transfer/sec:      1.25MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.12ms    4.23ms  70.71ms   92.01%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  100382 requests in 30.00s, 37.60MB read
+Requests/sec:   3346.00
+Transfer/sec:      1.25MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.22ms    8.64ms 252.46ms   92.52%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  98796 requests in 30.00s, 37.00MB read
+Requests/sec:   3293.11
+Transfer/sec:      1.23MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/hello_world/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/hello_world/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    78.68ms   13.64ms 235.62ms   83.20%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  96675 requests in 30.00s, 36.21MB read
+Requests/sec:   3222.49
+Transfer/sec:      1.21MB

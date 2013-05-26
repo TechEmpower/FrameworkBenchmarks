@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 01:30:16 PDT 2013
+
+  System load:  0.15                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer symfony2-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db-raw?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db-raw?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.77ms    2.82ms  21.84ms   71.04%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4006 requests in 5.01s, 1.13MB read
+Requests/sec:    800.23
+Transfer/sec:    230.94KB
+
+---------------------------------------------------------
+ Running Warmup symfony2-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db-raw?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db-raw?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   272.02ms  140.59ms   1.07s    72.38%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27323 requests in 30.00s, 7.70MB read
+Requests/sec:    910.68
+Transfer/sec:    262.83KB
+
+---------------------------------------------------------
+ Queries: 1 for symfony2-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db-raw?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db-raw?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   278.59ms  152.58ms   1.23s    74.66%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27475 requests in 30.00s, 6.81MB read
+Requests/sec:    915.77
+Transfer/sec:    232.29KB
+
+---------------------------------------------------------
+ Queries: 5 for symfony2-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db-raw?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db-raw?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   282.66ms  169.05ms   1.31s    75.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26581 requests in 30.00s, 10.21MB read
+Requests/sec:    885.92
+Transfer/sec:    348.56KB
+
+---------------------------------------------------------
+ Queries: 10 for symfony2-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db-raw?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db-raw?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   306.70ms  209.97ms   1.77s    81.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25617 requests in 30.00s, 14.24MB read
+Requests/sec:    853.81
+Transfer/sec:    485.96KB
+
+---------------------------------------------------------
+ Queries: 15 for symfony2-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db-raw?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db-raw?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   309.49ms  187.73ms   1.50s    76.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24845 requests in 30.00s, 18.05MB read
+Requests/sec:    828.05
+Transfer/sec:    615.98KB
+
+---------------------------------------------------------
+ Queries: 20 for symfony2-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db-raw?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db-raw?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   312.74ms  225.29ms   2.01s    81.27%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24084 requests in 30.00s, 21.61MB read
+Requests/sec:    802.73
+Transfer/sec:    737.42KB

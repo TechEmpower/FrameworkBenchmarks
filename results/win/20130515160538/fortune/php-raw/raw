@@ -1,0 +1,142 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May 15 16:56:12 UTC 2013
+
+  System load:  0.97               Processes:           75
+  Usage of /:   43.4% of 19.69GB   Users logged in:     1
+  Memory usage: 4%                 IP address for eth0: 10.253.60.84
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+89 packages can be updated.
+42 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.97.155:8080/fortune.php
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.97.155:8080/fortune.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.55ms    3.32ms  39.08ms   98.13%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8782 requests in 5.00s, 13.17MB read
+  Non-2xx or 3xx responses: 17
+Requests/sec:   1755.79
+Transfer/sec:      2.63MB
+
+---------------------------------------------------------
+ Running Warmup php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/fortune.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   142.07ms   20.81ms 323.36ms   80.92%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  53736 requests in 30.00s, 80.59MB read
+  Non-2xx or 3xx responses: 108
+Requests/sec:   1790.97
+Transfer/sec:      2.69MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.97.155:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/fortune.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.45ms    4.57ms 130.93ms   99.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  53725 requests in 30.00s, 80.45MB read
+  Non-2xx or 3xx responses: 77
+Requests/sec:   1790.78
+Transfer/sec:      2.68MB
+
+---------------------------------------------------------
+ Concurrency: 16 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.97.155:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/fortune.php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.10ms    7.26ms 145.40ms   98.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  53651 requests in 30.00s, 80.44MB read
+  Non-2xx or 3xx responses: 101
+Requests/sec:   1788.32
+Transfer/sec:      2.68MB
+
+---------------------------------------------------------
+ Concurrency: 32 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.97.155:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/fortune.php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.75ms    7.34ms 160.91ms   94.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  53715 requests in 30.00s, 80.57MB read
+  Non-2xx or 3xx responses: 109
+Requests/sec:   1790.46
+Transfer/sec:      2.69MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.97.155:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/fortune.php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.75ms    8.20ms 112.40ms   70.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5132 requests in 30.00s, 7.70MB read
+  Socket errors: connect 0, read 0, write 0, timeout 832
+  Non-2xx or 3xx responses: 11
+Requests/sec:    171.04
+Transfer/sec:    262.78KB
+
+---------------------------------------------------------
+ Concurrency: 128 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.97.155:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/fortune.php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  0 requests in 30.00s, 0.00B read
+  Socket errors: connect 0, read 0, write 0, timeout 1815
+Requests/sec:      0.00
+Transfer/sec:       0.00B
+
+---------------------------------------------------------
+ Concurrency: 256 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/fortune.php
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/fortune.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   144.25ms   25.12ms 345.64ms   90.86%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  52952 requests in 30.01s, 79.40MB read
+  Non-2xx or 3xx responses: 103
+Requests/sec:   1764.68
+Transfer/sec:      2.65MB

@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 04:01:24 UTC 2013
+
+  System load:  0.8               Processes:           75
+  Usage of /:   63.7% of 7.87GB   Users logged in:     1
+  Memory usage: 10%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.19.48:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.68ms   43.21ms 701.86ms   99.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4346 requests in 5.01s, 768.19KB read
+Requests/sec:    868.00
+Transfer/sec:    153.43KB
+
+---------------------------------------------------------
+ Running Warmup ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   149.52ms  698.79ms  20.63s    98.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  49610 requests in 30.00s, 8.56MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1437
+Requests/sec:   1653.49
+Transfer/sec:    292.27KB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.19.48:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.90ms    3.95ms  82.77ms   96.07%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  143707 requests in 30.00s, 24.81MB read
+Requests/sec:   4790.27
+Transfer/sec:    846.72KB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.19.48:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.83ms    9.00ms 107.92ms   95.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  145264 requests in 30.00s, 25.07MB read
+Requests/sec:   4842.10
+Transfer/sec:    855.88KB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.19.48:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.60ms   13.68ms 127.01ms   94.10%
+    Req/Sec     0.62     24.93     1.00k    99.94%
+  168934 requests in 30.00s, 29.16MB read
+Requests/sec:   5630.93
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.19.48:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.25ms   19.06ms 162.77ms   90.23%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  176964 requests in 30.00s, 30.55MB read
+Requests/sec:   5899.12
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.19.48:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.90ms   34.57ms 234.14ms   87.20%
+    Req/Sec     5.62     74.77     1.00k    99.44%
+  185502 requests in 30.00s, 32.02MB read
+Requests/sec:   6183.53
+Transfer/sec:      1.07MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.26ms   73.10ms 619.66ms   87.63%
+    Req/Sec    81.82    287.53     2.00k    92.19%
+  192001 requests in 30.00s, 33.14MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:   6400.12
+Transfer/sec:      1.10MB

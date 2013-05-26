@@ -1,0 +1,122 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 00:37:23 UTC 2013
+
+  System load:  1.58              Processes:           75
+  Usage of /:   63.5% of 7.87GB   Users logged in:     1
+  Memory usage: 10%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.19.48:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.95ms    2.31ms  12.80ms   54.68%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4799 requests in 5.00s, 1.27MB read
+Requests/sec:    959.26
+Transfer/sec:    260.00KB
+
+---------------------------------------------------------
+ Running Warmup tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   336.95ms   99.58ms 495.43ms   60.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  24496 requests in 30.00s, 6.48MB read
+Requests/sec:    816.41
+Transfer/sec:    221.28KB
+
+---------------------------------------------------------
+ Queries: 1 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   226.39ms   57.32ms 474.10ms   64.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34815 requests in 30.01s, 7.96MB read
+Requests/sec:   1160.14
+Transfer/sec:    271.66KB
+
+---------------------------------------------------------
+ Queries: 5 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   660.54ms  190.56ms 954.91ms   69.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12089 requests in 30.00s, 4.52MB read
+Requests/sec:    402.91
+Transfer/sec:    154.19KB
+
+---------------------------------------------------------
+ Queries: 10 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.18s   385.02ms   1.69s    77.09%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6617 requests in 30.01s, 3.66MB read
+Requests/sec:    220.47
+Transfer/sec:    125.04KB
+
+---------------------------------------------------------
+ Queries: 15 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.62s   441.25ms   2.08s    94.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4449 requests in 30.01s, 3.27MB read
+Requests/sec:    148.26
+Transfer/sec:    111.43KB
+
+---------------------------------------------------------
+ Queries: 20 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.15s   774.03ms   2.98s    91.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3370 requests in 30.01s, 3.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 530
+Requests/sec:    112.31
+Transfer/sec:    105.13KB

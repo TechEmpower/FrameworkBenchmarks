@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 07:26:08 PDT 2013
+
+  System load:  1.2                 Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:16969/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:16969/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   504.37us  285.03us   1.23ms   70.94%
+    Req/Sec   701.89    762.40     2.00k    81.51%
+  63358 requests in 5.00s, 9.42MB read
+Requests/sec:  12673.00
+Transfer/sec:      1.88MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:16969/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:16969/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.58ms    7.48ms  24.36ms   55.74%
+    Req/Sec     3.27k   719.73     5.00k    74.43%
+  960331 requests in 30.00s, 142.78MB read
+Requests/sec:  32013.62
+Transfer/sec:      4.76MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:16969/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:16969/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   682.34us  220.15us   1.56ms   63.25%
+    Req/Sec     1.25k   434.58     2.00k    74.75%
+  381369 requests in 30.00s, 56.70MB read
+Requests/sec:  12712.57
+Transfer/sec:      1.89MB
+
+---------------------------------------------------------
+ Concurrency: 16 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:16969/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:16969/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   815.04us  439.17us   2.53ms   67.12%
+    Req/Sec     2.63k   697.89     4.00k    87.37%
+  711786 requests in 30.00s, 105.82MB read
+Requests/sec:  23726.85
+Transfer/sec:      3.53MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:16969/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:16969/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.31ms  605.17us   3.53ms   63.05%
+    Req/Sec     3.00k     1.12k    5.00k    87.48%
+  845947 requests in 30.00s, 125.77MB read
+Requests/sec:  28199.33
+Transfer/sec:      4.19MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:16969/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:16969/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.53ms    2.52ms  10.47ms   68.31%
+    Req/Sec     3.55k     1.01k    5.00k    75.06%
+  924892 requests in 30.00s, 137.51MB read
+Requests/sec:  30831.35
+Transfer/sec:      4.58MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:16969/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:16969/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.12ms    1.29ms   9.29ms   72.05%
+    Req/Sec     3.48k   567.67     6.00k    97.63%
+  977424 requests in 30.00s, 145.32MB read
+Requests/sec:  32582.51
+Transfer/sec:      4.84MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:16969/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:16969/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.65ms    5.95ms  21.85ms   56.54%
+    Req/Sec     3.62k   730.08     6.00k    86.30%
+  974249 requests in 30.00s, 144.84MB read
+Requests/sec:  32476.31
+Transfer/sec:      4.83MB

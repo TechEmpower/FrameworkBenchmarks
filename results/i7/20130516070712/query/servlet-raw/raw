@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/servlet/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   832.41us  104.65us   1.06ms   67.30%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  47055 requests in 5.00s, 8.73MB read
+Requests/sec:   9411.95
+Transfer/sec:      1.75MB
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.47ms    9.98ms 180.54ms   92.88%
+    Req/Sec     6.01k   442.06    11.00k    90.13%
+  1618092 requests in 30.00s, 300.34MB read
+Requests/sec:  53937.73
+Transfer/sec:     10.01MB
+
+---------------------------------------------------------
+ Queries: 1 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.52ms    9.30ms 221.24ms   94.88%
+    Req/Sec     9.42k   693.70    16.00k    96.51%
+  2378499 requests in 30.00s, 369.30MB read
+Requests/sec:  79283.04
+Transfer/sec:     12.31MB
+
+---------------------------------------------------------
+ Queries: 5 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.60ms   20.13ms 264.80ms   92.65%
+    Req/Sec     2.07k   262.36     4.00k    92.78%
+  694329 requests in 30.00s, 192.65MB read
+Requests/sec:  23144.53
+Transfer/sec:      6.42MB
+
+---------------------------------------------------------
+ Queries: 10 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.07ms   38.00ms 516.27ms   93.02%
+    Req/Sec     1.00k    83.18     2.00k    99.31%
+  364201 requests in 30.00s, 156.23MB read
+Requests/sec:  12141.15
+Transfer/sec:      5.21MB
+
+---------------------------------------------------------
+ Queries: 15 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.13ms   36.27ms 513.92ms   91.01%
+    Req/Sec     0.87k   333.46     1.00k    87.27%
+  248151 requests in 30.00s, 144.05MB read
+Requests/sec:   8271.61
+Transfer/sec:      4.80MB
+
+---------------------------------------------------------
+ Queries: 20 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/servlet/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/servlet/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.26ms   31.25ms 258.79ms   81.55%
+    Req/Sec     3.74     61.07     1.00k    99.63%
+  188480 requests in 30.00s, 137.97MB read
+Requests/sec:   6282.49
+Transfer/sec:      4.60MB

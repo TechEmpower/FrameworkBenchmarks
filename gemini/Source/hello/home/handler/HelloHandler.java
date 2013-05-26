@@ -73,4 +73,27 @@ public class HelloHandler
     return mustache("fortunes", fortunes);
   }
 
+  /**
+   * Return a list of World objects as JSON, selected randomly from the World
+   * table.  For each row that is retrieved, that row will have it's randomNumber
+   * field updated and persisted. For consistency, we have assumed the table has 10,000 rows.
+   */
+  @PathSegment
+  public boolean update()
+  {
+    final Random random = ThreadLocalRandom.current();
+    final int queries = context().getInt("queries", 1, 1, 500);
+    final World[] worlds = new World[queries];
+
+    for (int i = 0; i < queries; i++)
+    {
+      worlds[i] = store.get(World.class, random.nextInt(DB_ROWS) + 1);
+      worlds[i].setRandomNumber(random.nextInt(DB_ROWS) + 1);
+    }
+
+    store.putAll(Arrays.asList(worlds));
+    
+    return json(worlds);
+  }
+
 }

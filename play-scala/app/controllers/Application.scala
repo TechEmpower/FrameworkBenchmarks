@@ -62,8 +62,36 @@ object Application extends Controller {
     Action {
       Async {
         Future(Fortune.getAll())(dbEc).map { fs =>
-          val fortunes =  fs :+ Fortune(anorm.NotAssigned, "Additional fortune added at request time.")
+          val fortunes =  Fortune(anorm.NotAssigned, "Additional fortune added at request time.") +: fs
           Ok(views.html.fortune(fortunes))
+        }
+      }
+    }
+  }
+
+  def update(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
+    Action {
+      Async {
+        val random = ThreadLocalRandom.current()
+
+        val boundsCheckedQueries = queries match {
+          case q if q > 500 => 500
+          case q if q <   1 => 1
+          case _ => queries
+        }
+
+        val worlds = Future.sequence((for {
+          _ <- 1 to boundsCheckedQueries
+        } yield Future {
+            val world = World.findById(random.nextInt(TestDatabaseRows) + 1)
+            val updatedWorld = world.copy(randomNumber = random.nextInt(TestDatabaseRows) + 1)
+            World.updateRandom(updatedWorld)
+            updatedWorld
+          }(dbEc)
+        ).toList)
+
+        worlds.map {
+          w => Ok(Json.toJson(w)).withHeaders("Server" -> "Netty")
         }
       }
     }

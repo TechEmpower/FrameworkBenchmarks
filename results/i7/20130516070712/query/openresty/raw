@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.85ms  127.30us   1.25ms   66.79%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  46893 requests in 5.00s, 11.02MB read
+Requests/sec:   9380.07
+Transfer/sec:      2.21MB
+
+---------------------------------------------------------
+ Running Warmup openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.78ms   10.97ms 168.58ms   93.80%
+    Req/Sec     5.84k   617.21     6.00k    91.11%
+  1638293 requests in 30.00s, 385.12MB read
+Requests/sec:  54612.93
+Transfer/sec:     12.84MB
+
+---------------------------------------------------------
+ Queries: 1 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.54ms    6.55ms 150.29ms   94.61%
+    Req/Sec    10.85k     1.85k   16.00k    90.73%
+  2916699 requests in 30.00s, 597.27MB read
+Requests/sec:  97230.19
+Transfer/sec:     19.91MB
+
+---------------------------------------------------------
+ Queries: 5 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.65ms   34.41ms 535.94ms   96.46%
+    Req/Sec     1.98k   676.90     6.00k    72.33%
+  662949 requests in 30.00s, 216.11MB read
+Requests/sec:  22098.73
+Transfer/sec:      7.20MB
+
+---------------------------------------------------------
+ Queries: 10 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.91ms   33.99ms 499.52ms   91.70%
+    Req/Sec     1.00k    49.92     1.00k    99.75%
+  358385 requests in 30.00s, 171.47MB read
+Requests/sec:  11946.39
+Transfer/sec:      5.72MB
+
+---------------------------------------------------------
+ Queries: 15 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.37ms   32.12ms 295.17ms   87.94%
+    Req/Sec     0.89k   318.34     1.00k    88.56%
+  246963 requests in 30.00s, 155.58MB read
+Requests/sec:   8232.21
+Transfer/sec:      5.19MB
+
+---------------------------------------------------------
+ Queries: 20 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.01ms   56.44ms 797.14ms   92.62%
+    Req/Sec     1.88     43.27     1.00k    99.81%
+  188342 requests in 30.00s, 147.18MB read
+Requests/sec:   6277.80
+Transfer/sec:      4.91MB

@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 15:33:55 UTC 2013
+
+  System load:  0.22              Processes:           75
+  Usage of /:   63.4% of 7.87GB   Users logged in:     1
+  Memory usage: 10%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.19.48:8080/mysql-orm
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/mysql-orm
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.73ms    1.57ms  14.07ms   76.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  11829 requests in 5.00s, 2.29MB read
+Requests/sec:   2365.57
+Transfer/sec:    468.45KB
+
+---------------------------------------------------------
+ Running Warmup express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/mysql-orm
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql-orm
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    75.30ms   20.89ms 489.91ms   91.91%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  103706 requests in 30.01s, 20.06MB read
+Requests/sec:   3456.25
+Transfer/sec:    684.46KB
+
+---------------------------------------------------------
+ Concurrency: 8 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.19.48:8080/mysql-orm
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql-orm
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.14ms    1.38ms  16.50ms   75.90%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  87248 requests in 30.00s, 16.87MB read
+Requests/sec:   2908.26
+Transfer/sec:    575.94KB
+
+---------------------------------------------------------
+ Concurrency: 16 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.19.48:8080/mysql-orm
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql-orm
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.75ms    5.03ms  75.19ms   76.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  93232 requests in 30.00s, 18.03MB read
+Requests/sec:   3107.57
+Transfer/sec:    615.40KB
+
+---------------------------------------------------------
+ Concurrency: 32 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.19.48:8080/mysql-orm
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql-orm
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.76ms    8.40ms  97.73ms   75.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  93567 requests in 30.00s, 18.10MB read
+Requests/sec:   3118.66
+Transfer/sec:    617.60KB
+
+---------------------------------------------------------
+ Concurrency: 64 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.19.48:8080/mysql-orm
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql-orm
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.14ms   13.41ms 152.27ms   70.49%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  103177 requests in 30.00s, 19.95MB read
+Requests/sec:   3439.06
+Transfer/sec:    681.05KB
+
+---------------------------------------------------------
+ Concurrency: 128 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.19.48:8080/mysql-orm
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql-orm
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.60ms   21.30ms 242.35ms   57.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  104816 requests in 30.00s, 20.27MB read
+Requests/sec:   3493.60
+Transfer/sec:    691.86KB
+
+---------------------------------------------------------
+ Concurrency: 256 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/mysql-orm
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql-orm
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    90.83ms   40.45ms 189.75ms   53.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  104931 requests in 30.00s, 20.29MB read
+Requests/sec:   3497.18
+Transfer/sec:    692.56KB

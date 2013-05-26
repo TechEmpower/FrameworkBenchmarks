@@ -1,6 +1,6 @@
 <?php
 
-$router = new Phalcon\Mvc\Router();
+$router = new Phalcon\Mvc\Router(false);
 
 $router->add('/json', array(
     'controller' => 'bench',
@@ -16,6 +16,11 @@ $router->add('/db', array(
 $router->add('/fortunes', array(
     'controller' => 'bench',
     'action' => 'fortunes',
+));
+
+$router->add('/update', array(
+    'controller' => 'bench',
+    'action' => 'update',
 ));
 
 return $router;

@@ -25,7 +25,7 @@ class Benchmarker:
     all_tests = self.__gather_tests()
 
     for test in all_tests:
-      print test.name
+      print str(test.sort) + ": " + test.name
 
     self.__finish()
 
@@ -175,18 +175,11 @@ class Benchmarker:
   ############################################################
   # report_results
   ############################################################
-  def report_results(self, framework, test, results, latency, requests, total_time, errors, total_requests):
+  def report_results(self, framework, test, results):
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
-      self.results['weighttpData'][test] = dict()
 
     self.results['rawData'][test][framework.sort] = results
-    self.results['weighttpData'][test][framework.sort] = dict()
-    self.results['weighttpData'][test][framework.sort]['latency'] = latency
-    self.results['weighttpData'][test][framework.sort]['requests'] = requests
-    self.results['weighttpData'][test][framework.sort]['totalTime'] = total_time
-    self.results['weighttpData'][test][framework.sort]['errors'] = errors
-    self.results['weighttpData'][test][framework.sort]['totalRequests'] = total_requests
 
   ############################################################
   # End report_results
@@ -249,6 +242,8 @@ class Benchmarker:
   ############################################################
   def __setup_server(self):
     try:
+      if os.name == 'nt':
+        return True
       subprocess.check_call("sudo sysctl -w net.core.somaxconn=1024".rsplit(" "))
       subprocess.check_call("sudo -s ulimit -n 8192".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
@@ -290,6 +285,10 @@ class Benchmarker:
   ############################################################
   def __run_tests(self, tests):
     for test in tests:
+      if test.os == 'nt' and os.name != 'nt':
+        # this is a windows only test, but we're not on windows. abort.
+        continue
+        
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
@@ -510,16 +509,13 @@ class Benchmarker:
       self.results['concurrencyLevels'] = self.concurrency_levels
       self.results['queryIntervals'] = self.query_intervals
       self.results['frameworks'] = [t.name for t in self.__gather_tests()]
+      self.results['duration'] = self.duration
       self.results['rawData'] = dict()
       self.results['rawData']['json'] = dict()
       self.results['rawData']['db'] = dict()
       self.results['rawData']['query'] = dict()
       self.results['rawData']['fortune'] = dict()
-      self.results['weighttpData'] = dict()
-      self.results['weighttpData']['json'] = dict()
-      self.results['weighttpData']['db'] = dict()
-      self.results['weighttpData']['query'] = dict()
-      self.results['weighttpData']['fortune'] = dict()
+      self.results['rawData']['update'] = dict()
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:

@@ -1,0 +1,139 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May 15 17:59:53 UTC 2013
+
+  System load:  0.09               Processes:           75
+  Usage of /:   43.4% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.253.60.84
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+89 packages can be updated.
+42 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.97.155:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.69ms   11.58ms  81.42ms   77.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1104 requests in 5.02s, 242.58KB read
+Requests/sec:    219.98
+Transfer/sec:     48.34KB
+
+---------------------------------------------------------
+ Running Warmup lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.04s   432.46ms   2.30s    70.89%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6732 requests in 30.01s, 1.50MB read
+  Non-2xx or 3xx responses: 10
+Requests/sec:    224.31
+Transfer/sec:     51.14KB
+
+---------------------------------------------------------
+ Concurrency: 8 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.59ms   13.58ms 189.87ms   78.55%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6609 requests in 30.00s, 1.42MB read
+Requests/sec:    220.29
+Transfer/sec:     48.40KB
+
+---------------------------------------------------------
+ Concurrency: 16 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.38ms   21.01ms 259.34ms   80.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6662 requests in 30.00s, 1.44MB read
+  Non-2xx or 3xx responses: 2
+Requests/sec:    222.05
+Transfer/sec:     49.16KB
+
+---------------------------------------------------------
+ Concurrency: 32 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   138.59ms   39.56ms 442.46ms   74.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6819 requests in 30.00s, 1.47MB read
+  Non-2xx or 3xx responses: 2
+Requests/sec:    227.27
+Transfer/sec:     50.31KB
+
+---------------------------------------------------------
+ Concurrency: 64 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   276.68ms   88.05ms 600.59ms   71.17%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6846 requests in 30.00s, 1.50MB read
+  Non-2xx or 3xx responses: 6
+Requests/sec:    228.18
+Transfer/sec:     51.25KB
+
+---------------------------------------------------------
+ Concurrency: 128 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   536.61ms  201.98ms   1.69s    73.83%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6857 requests in 30.01s, 1.51MB read
+  Non-2xx or 3xx responses: 7
+Requests/sec:    228.50
+Transfer/sec:     51.50KB
+
+---------------------------------------------------------
+ Concurrency: 256 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.06s   415.05ms   3.08s    72.40%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6741 requests in 30.00s, 1.51MB read
+  Non-2xx or 3xx responses: 12
+Requests/sec:    224.67
+Transfer/sec:     51.59KB

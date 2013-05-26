@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.19.48:8080/spring/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/spring/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.49ms    1.50ms  11.93ms   74.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9518 requests in 5.01s, 1.96MB read
+Requests/sec:   1901.40
+Transfer/sec:    400.22KB
+
+---------------------------------------------------------
+ Running Warmup spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/spring/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/spring/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    95.90ms   23.96ms 396.15ms   90.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  80935 requests in 30.00s, 16.66MB read
+Requests/sec:   2697.66
+Transfer/sec:    568.76KB
+
+---------------------------------------------------------
+ Queries: 1 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/spring/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/spring/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    65.66ms   16.34ms 312.37ms   87.34%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  118582 requests in 30.00s, 20.78MB read
+Requests/sec:   3952.32
+Transfer/sec:    709.33KB
+
+---------------------------------------------------------
+ Queries: 5 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/spring/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/spring/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   156.91ms   56.95ms 709.76ms   89.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  49586 requests in 30.01s, 14.74MB read
+Requests/sec:   1652.42
+Transfer/sec:    502.95KB
+
+---------------------------------------------------------
+ Queries: 10 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/spring/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/spring/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   266.73ms   51.08ms 416.85ms   81.59%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  28935 requests in 30.01s, 12.96MB read
+Requests/sec:    964.04
+Transfer/sec:    442.27KB
+
+---------------------------------------------------------
+ Queries: 15 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/spring/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/spring/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   364.58ms   72.30ms 727.96ms   79.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  20721 requests in 30.01s, 12.42MB read
+Requests/sec:    690.38
+Transfer/sec:    423.83KB
+
+---------------------------------------------------------
+ Queries: 20 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/spring/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/spring/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   474.48ms  110.47ms 894.38ms   83.92%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  15990 requests in 30.02s, 12.01MB read
+Requests/sec:    532.69
+Transfer/sec:    409.67KB

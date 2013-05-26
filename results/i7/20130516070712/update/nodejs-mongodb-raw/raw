@@ -1,0 +1,116 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 15:54:27 PDT 2013
+
+  System load:  3.55                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/update-mongodb?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/update-mongodb?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.20ms    1.30ms  11.64ms   84.67%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7920 requests in 5.00s, 2.24MB read
+Requests/sec:   1582.76
+Transfer/sec:    458.36KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/update-mongodb?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   205.76ms   67.74ms 340.50ms   68.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  39960 requests in 30.00s, 11.30MB read
+Requests/sec:   1331.88
+Transfer/sec:    385.72KB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/update-mongodb?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.86ms   24.20ms 143.55ms   70.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  79946 requests in 30.00s, 17.67MB read
+Requests/sec:   2664.78
+Transfer/sec:    603.15KB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/update-mongodb?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   543.55ms  186.39ms 845.20ms   79.16%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16163 requests in 30.00s, 7.58MB read
+Requests/sec:    538.73
+Transfer/sec:    258.78KB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/update-mongodb?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   969.40ms  345.45ms   1.45s    67.06%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8069 requests in 30.00s, 6.28MB read
+Requests/sec:    268.94
+Transfer/sec:    214.25KB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/update-mongodb?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.76s   907.48ms   3.09s    56.29%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5471 requests in 30.00s, 5.95MB read
+  Socket errors: connect 0, read 0, write 0, timeout 366
+Requests/sec:    182.35
+Transfer/sec:    202.95KB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/update-mongodb?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.85s   704.58ms   2.84s    70.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4072 requests in 30.00s, 5.68MB read
+  Socket errors: connect 0, read 0, write 0, timeout 364
+Requests/sec:    135.72
+Transfer/sec:    193.99KB

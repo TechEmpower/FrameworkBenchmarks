@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 08:11:43 PDT 2013
+
+  System load:  0.41                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.05ms  351.38us   2.94ms   82.44%
+    Req/Sec   274.81    447.27     1.00k    72.52%
+  39019 requests in 5.00s, 8.77MB read
+Requests/sec:   7803.40
+Transfer/sec:      1.75MB
+
+---------------------------------------------------------
+ Running Warmup express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.40ms    9.37ms  58.69ms   73.60%
+    Req/Sec     1.11k   345.28     2.00k    86.77%
+  429500 requests in 30.00s, 96.57MB read
+Requests/sec:  14316.76
+Transfer/sec:      3.22MB
+
+---------------------------------------------------------
+ Concurrency: 8 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.00ms  249.62us   4.48ms   86.87%
+    Req/Sec    14.45    119.36     1.00k    98.56%
+  238306 requests in 30.00s, 53.58MB read
+Requests/sec:   7943.54
+Transfer/sec:      1.79MB
+
+---------------------------------------------------------
+ Concurrency: 16 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.92ms    1.18ms  11.69ms   88.28%
+    Req/Sec   754.36    430.60     1.00k    75.44%
+  316315 requests in 30.00s, 71.12MB read
+Requests/sec:  10543.69
+Transfer/sec:      2.37MB
+
+---------------------------------------------------------
+ Concurrency: 32 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.08ms    1.69ms  16.67ms   78.87%
+    Req/Sec     1.12k   329.13     2.00k    87.65%
+  373878 requests in 30.00s, 84.07MB read
+Requests/sec:  12462.59
+Transfer/sec:      2.80MB
+
+---------------------------------------------------------
+ Concurrency: 64 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.73ms    4.20ms  33.48ms   78.76%
+    Req/Sec     1.25k   432.78     2.00k    75.19%
+  409327 requests in 30.00s, 92.04MB read
+Requests/sec:  13644.23
+Transfer/sec:      3.07MB
+
+---------------------------------------------------------
+ Concurrency: 128 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.70ms    5.67ms  42.74ms   77.22%
+    Req/Sec     1.25k   438.58     2.00k    74.55%
+  432347 requests in 30.00s, 97.21MB read
+Requests/sec:  14411.98
+Transfer/sec:      3.24MB
+
+---------------------------------------------------------
+ Concurrency: 256 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.95ms   10.97ms 230.58ms   89.61%
+    Req/Sec     1.11k   314.02     2.00k    88.92%
+  451261 requests in 30.00s, 101.47MB read
+Requests/sec:  15042.30
+Transfer/sec:      3.38MB

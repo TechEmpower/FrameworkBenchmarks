@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 15:14:54 UTC 2013
+
+  System load:  0.22              Processes:           139
+  Usage of /:   63.4% of 7.87GB   Users logged in:     1
+  Memory usage: 12%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.19.48:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.87ms    5.31ms  56.62ms   70.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1005 requests in 5.02s, 243.96KB read
+Requests/sec:    200.19
+Transfer/sec:     48.60KB
+
+---------------------------------------------------------
+ Running Warmup django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/update?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.33s   465.55ms   2.78s    77.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5175 requests in 30.01s, 1.28MB read
+  Socket errors: connect 0, read 325, write 0, timeout 143
+Requests/sec:    172.45
+Transfer/sec:     43.69KB
+
+---------------------------------------------------------
+ Queries: 1 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/update?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   862.65ms  275.84ms   2.22s    79.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8790 requests in 30.01s, 1.75MB read
+  Socket errors: connect 0, read 22, write 0, timeout 11
+Requests/sec:    292.93
+Transfer/sec:     59.85KB
+
+---------------------------------------------------------
+ Queries: 5 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/update?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.42s   785.63ms   4.26s    72.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2333 requests in 30.02s, 1.09MB read
+  Socket errors: connect 0, read 1675, write 0, timeout 944
+Requests/sec:     77.73
+Transfer/sec:     37.35KB
+
+---------------------------------------------------------
+ Queries: 10 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/update?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.19s     1.62s    6.58s    70.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1196 requests in 30.01s, 0.86MB read
+  Socket errors: connect 0, read 1271, write 0, timeout 1697
+Requests/sec:     39.85
+Transfer/sec:     29.21KB
+
+---------------------------------------------------------
+ Queries: 15 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/update?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.32s     2.69s    9.95s    61.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  802 requests in 30.01s, 746.70KB read
+  Socket errors: connect 0, read 870, write 0, timeout 2147
+Requests/sec:     26.72
+Transfer/sec:     24.88KB
+
+---------------------------------------------------------
+ Queries: 20 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/update?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.01s     3.57s   12.95s    56.36%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  600 requests in 30.01s, 686.93KB read
+  Socket errors: connect 0, read 721, write 0, timeout 2473
+Requests/sec:     19.99
+Transfer/sec:     22.89KB

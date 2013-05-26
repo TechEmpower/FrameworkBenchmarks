@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<table>
+<tr>
+<th>id</th>
+<th>message</th>
+</tr>
+{% for f in fortunes %}
+<tr>
+<td>{{f.id}}</td>
+<td>{{f.message}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+

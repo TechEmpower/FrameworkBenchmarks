@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 22:39:41 PDT 2013
+
+  System load:  0.42                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.82ms    6.07ms  99.05ms   98.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33082 requests in 5.00s, 5.86MB read
+Requests/sec:   6616.51
+Transfer/sec:      1.17MB
+
+---------------------------------------------------------
+ Running Warmup ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.03ms   27.12ms 752.65ms   91.58%
+    Req/Sec     1.88k   697.84     3.00k    59.07%
+  752253 requests in 30.00s, 133.28MB read
+Requests/sec:  25077.14
+Transfer/sec:      4.44MB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   768.13us  253.71us   7.00ms   95.84%
+    Req/Sec     1.00k     0.00     1.00k   100.00%
+  308326 requests in 30.00s, 54.63MB read
+Requests/sec:  10277.79
+Transfer/sec:      1.82MB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   764.56us  437.20us   6.09ms   96.58%
+    Req/Sec     2.00k     0.00     2.00k   100.00%
+  636008 requests in 30.00s, 112.69MB read
+Requests/sec:  21201.09
+Transfer/sec:      3.76MB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.23ms    1.23ms  15.47ms   94.94%
+    Req/Sec     3.00k    55.83     3.00k    99.69%
+  782330 requests in 30.00s, 138.61MB read
+Requests/sec:  26078.48
+Transfer/sec:      4.62MB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.41ms    3.21ms  40.83ms   94.02%
+    Req/Sec     2.99k   163.30     4.00k    98.44%
+  882764 requests in 30.00s, 156.41MB read
+Requests/sec:  29426.43
+Transfer/sec:      5.21MB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.81ms    6.69ms  61.57ms   89.18%
+    Req/Sec     3.03k   312.47     4.00k    93.03%
+  903977 requests in 30.00s, 160.16MB read
+Requests/sec:  30134.15
+Transfer/sec:      5.34MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.07ms   16.50ms  94.50ms   89.71%
+    Req/Sec     3.07k   437.79     6.00k    88.27%
+  924362 requests in 30.00s, 163.78MB read
+Requests/sec:  30813.21
+Transfer/sec:      5.46MB

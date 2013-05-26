@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 17:18:02 PDT 2013
+
+  System load:  0.92                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/play1/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/play1/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.16ms  201.04us   2.09ms   77.15%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  33590 requests in 5.00s, 15.11MB read
+Requests/sec:   6718.35
+Transfer/sec:      3.02MB
+
+---------------------------------------------------------
+ Running Warmup play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.03ms    8.14ms 236.75ms   94.67%
+    Req/Sec     0.98k   150.62     1.00k    97.68%
+  261402 requests in 30.00s, 117.55MB read
+Requests/sec:   8713.27
+Transfer/sec:      3.92MB
+
+---------------------------------------------------------
+ Queries: 1 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.88ms    4.32ms  45.56ms   92.34%
+    Req/Sec     0.93k   247.34     1.00k    93.46%
+  243854 requests in 30.00s, 102.27MB read
+Requests/sec:   8128.66
+Transfer/sec:      3.41MB
+
+---------------------------------------------------------
+ Queries: 5 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.62ms   24.37ms 593.26ms   98.82%
+    Req/Sec     5.61     74.72     1.00k    99.44%
+  162105 requests in 30.00s, 87.79MB read
+Requests/sec:   5403.52
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Queries: 10 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    88.61ms   13.39ms 107.42ms   95.43%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  84293 requests in 30.00s, 58.42MB read
+Requests/sec:   2809.65
+Transfer/sec:      1.95MB
+
+---------------------------------------------------------
+ Queries: 15 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   132.25ms   15.58ms 149.49ms   95.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  56984 requests in 30.00s, 48.13MB read
+Requests/sec:   1899.39
+Transfer/sec:      1.60MB
+
+---------------------------------------------------------
+ Queries: 20 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/play1/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/play1/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   175.20ms   18.71ms 348.41ms   95.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  43202 requests in 30.00s, 43.03MB read
+Requests/sec:   1439.93
+Transfer/sec:      1.43MB

@@ -1,0 +1,115 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 22:22:08 PDT 2013
+
+  System load:  1.97                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.36ms  307.90us   3.48ms   71.21%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16912 requests in 5.00s, 4.36MB read
+Requests/sec:   3381.58
+Transfer/sec:      0.87MB
+
+---------------------------------------------------------
+ Running Warmup phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.28ms   59.67ms 916.58ms   91.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  157078 requests in 30.00s, 40.52MB read
+Requests/sec:   5236.23
+Transfer/sec:      1.35MB
+
+---------------------------------------------------------
+ Queries: 1 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.11ms   45.93ms 483.98ms   89.81%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  194884 requests in 30.00s, 43.63MB read
+  Socket errors: connect 0, read 0, write 0, timeout 24
+Requests/sec:   6496.02
+Transfer/sec:      1.45MB
+
+---------------------------------------------------------
+ Queries: 5 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.91ms   82.68ms 947.70ms   90.69%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  105251 requests in 30.00s, 37.92MB read
+Requests/sec:   3508.19
+Transfer/sec:      1.26MB
+
+---------------------------------------------------------
+ Queries: 10 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   118.03ms  118.79ms   1.64s    89.74%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  68781 requests in 30.00s, 36.58MB read
+Requests/sec:   2292.59
+Transfer/sec:      1.22MB
+
+---------------------------------------------------------
+ Queries: 15 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   151.77ms  110.48ms 920.83ms   77.37%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  52132 requests in 30.00s, 36.62MB read
+Requests/sec:   1737.56
+Transfer/sec:      1.22MB
+
+---------------------------------------------------------
+ Queries: 20 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   182.34ms  131.27ms   1.38s    77.48%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  41829 requests in 30.00s, 36.52MB read
+Requests/sec:   1394.22
+Transfer/sec:      1.22MB

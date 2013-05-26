@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 19:52:43 UTC 2013
+
+  System load:  1.93              Processes:           75
+  Usage of /:   63.4% of 7.87GB   Users logged in:     1
+  Memory usage: 10%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.19.48:8080/mysql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/mysql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.62ms   35.82ms 324.94ms   61.85%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  545 requests in 5.05s, 114.75KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    107.85
+Transfer/sec:     22.71KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/mysql?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.41s     1.76s    8.56s    71.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2899 requests in 30.01s, 610.22KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1672
+Requests/sec:     96.59
+Transfer/sec:     20.33KB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/mysql?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.29s   438.86ms   3.95s    90.53%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5989 requests in 30.01s, 1.05MB read
+  Socket errors: connect 0, read 0, write 0, timeout 40
+Requests/sec:    199.58
+Transfer/sec:     35.82KB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/mysql?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.26s     4.69s   21.79s    55.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1148 requests in 30.01s, 348.50KB read
+  Socket errors: connect 0, read 0, write 0, timeout 2520
+Requests/sec:     38.25
+Transfer/sec:     11.61KB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/mysql?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.68s     6.60s   20.48s    37.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  487 requests in 30.01s, 223.89KB read
+  Socket errors: connect 0, read 0, write 0, timeout 3120
+Requests/sec:     16.23
+Transfer/sec:      7.46KB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/mysql?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.41s     7.26s   29.50s    77.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  270 requests in 30.01s, 165.98KB read
+  Socket errors: connect 0, read 0, write 0, timeout 3357
+Requests/sec:      9.00
+Transfer/sec:      5.53KB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/mysql?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/mysql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.68s     6.64s   28.60s    84.78%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  143 requests in 30.01s, 110.13KB read
+  Socket errors: connect 0, read 0, write 0, timeout 3483
+Requests/sec:      4.77
+Transfer/sec:      3.67KB

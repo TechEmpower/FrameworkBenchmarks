@@ -1,0 +1,124 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 15:16:02 PDT 2013
+
+  System load:  1.83                Processes:           125
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   777.67us  230.19us   1.56ms   76.69%
+    Req/Sec     0.97k   171.12     1.00k    96.99%
+  48753 requests in 5.00s, 66.12MB read
+Requests/sec:   9751.56
+Transfer/sec:     13.22MB
+
+---------------------------------------------------------
+ Running Warmup onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.19ms   38.63ms 678.62ms   98.94%
+    Req/Sec     1.59k   596.99     3.00k    94.29%
+  428610 requests in 30.00s, 581.25MB read
+  Socket errors: connect 0, read 188, write 0, timeout 862
+Requests/sec:  14285.66
+Transfer/sec:     19.37MB
+
+---------------------------------------------------------
+ Concurrency: 8 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.94ms   30.07ms 594.98ms   99.44%
+    Req/Sec    25.03    156.27     1.00k    97.50%
+  103509 requests in 30.00s, 140.37MB read
+Requests/sec:   3450.28
+Transfer/sec:      4.68MB
+
+---------------------------------------------------------
+ Concurrency: 16 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.71ms   10.99ms 240.98ms   99.38%
+    Req/Sec    44.21    220.25     2.00k    95.89%
+  108753 requests in 30.00s, 147.48MB read
+Requests/sec:   3624.89
+Transfer/sec:      4.92MB
+
+---------------------------------------------------------
+ Concurrency: 32 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.19ms   26.25ms 457.86ms   99.01%
+    Req/Sec    76.73    343.43     3.00k    94.37%
+  108423 requests in 30.00s, 147.04MB read
+Requests/sec:   3613.70
+Transfer/sec:      4.90MB
+
+---------------------------------------------------------
+ Concurrency: 64 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.24ms   38.17ms 531.44ms   97.94%
+    Req/Sec    67.33    359.11     4.00k    95.57%
+  105968 requests in 30.00s, 143.71MB read
+  Socket errors: connect 0, read 4, write 0, timeout 15
+Requests/sec:   3531.96
+Transfer/sec:      4.79MB
+
+---------------------------------------------------------
+ Concurrency: 128 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.16ms   35.65ms 384.90ms   94.51%
+    Req/Sec    51.15    271.18     2.00k    96.13%
+  66715 requests in 30.00s, 90.47MB read
+  Socket errors: connect 0, read 872876, write 0, timeout 199
+Requests/sec:   2223.48
+Transfer/sec:      3.02MB
+
+---------------------------------------------------------
+ Concurrency: 256 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+unable to connect to 172.16.98.122:8080 Connection refused

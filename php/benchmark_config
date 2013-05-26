@@ -14,6 +14,7 @@
       "db_url": "/dbraw.php",
       "query_url": "/dbraw.php?queries=",
       "fortune_url": "/fortune.php",
+      "update_url": "/updateraw.php?queries=",
       "port": 8080,
       "sort": 12
     }
