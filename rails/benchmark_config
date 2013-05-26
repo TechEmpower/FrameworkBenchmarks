@@ -7,6 +7,7 @@
       "db_url": "/hello_world/db",
       "query_url": "/hello_world/db?queries=",
       "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
       "port": 8080,
       "sort": 16
     },
@@ -16,6 +17,7 @@
       "db_url": "/rails/hello_world/db",
       "query_url": "/rails/hello_world/db?queries=",
       "fortune_url": "/rails/fortune",
+      "update_url": "/rails/update?queries=",
       "port": 8080,
       "sort": 17
     }

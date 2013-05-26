@@ -1,12 +1,24 @@
-from flask import Flask, jsonify, request
+#!/usr/bin/env python
+from flask import Flask, jsonify, request, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from random import randint
+from operator import attrgetter
+
+try:
+    import MySQLdb
+    mysql_schema = "mysql:"
+except ImportError:
+    mysql_schema = "mysql+pymysql:"
+
+# setup
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world'
+app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world?charset=utf8'
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+
+# models
 
 class World(db.Model):
   __tablename__ = "World"
@@ -21,6 +33,14 @@ class World(db.Model):
          'id'         : self.id,
          'randomNumber': self.randomNumber
      }
+
+class Fortune(db.Model):
+    __tablename__ = "Fortune"
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String)
+
+
+# views
 
 @app.route("/json")
 def hello():
@@ -63,5 +83,20 @@ def get_random_world_single_raw():
   connection.close()
   return jsonify(worlds=worlds)
 
+@app.route("/fortunes")
+def get_fortunes():
+    fortunes = list(Fortune.query.all())
+    fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
+    fortunes.sort(key=attrgetter('message'))
+    return render_template('fortunes.html', fortunes=fortunes)
+
+@app.route("/fortunesraw")
+def get_forutens_raw():
+    fortunes = list(dbraw_engine.execute("SELECT * FROM Fortune"))
+    fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
+    fortunes.sort(key=attrgetter('message'))
+    return render_template('fortunes.html', fortunes=fortunes)
+
+# entry point for debugging
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

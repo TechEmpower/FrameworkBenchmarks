@@ -1,5 +1,6 @@
 var cluster = require('cluster')
-  , numCPUs = require('os').cpus().length;
+  , numCPUs = require('os').cpus().length
+  , windows = require('os').platform() == 'win32';
 
 if(cluster.isMaster) {
   // Fork workers.
@@ -17,19 +18,23 @@ if(cluster.isMaster) {
 var http = require('http')
   , url = require('url')
   , async = require('async')
-  , libmysql = require('mysql-libmysqlclient').createConnectionSync()
   , mongoose = require('mongoose')
-  , conn = mongoose.connect('mongodb://172.16.98.98/hello_world')
+  , conn = mongoose.connect('mongodb://localhost/hello_world')
   , MongoClient = require('mongodb').MongoClient
-  , Mapper = require('mapper')
   , connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
 
-var collection = null;
-Mapper.connect(connMap, {verbose: false, strict: false});
-var World = Mapper.map("World", "id", "randomNumber")
+if (!windows) {
+  var Mapper = require('mapper')  
+    , libmysql = require('mysql-libmysqlclient').createConnectionSync();
+    
+    Mapper.connect(connMap, {verbose: false, strict: false});
+    var World = Mapper.map("World", "id", "randomNumber")
+    libmysql.connectSync('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+}
 
-libmysql.connectSync('localhost', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
-MongoClient.connect('mongodb://172.16.98.98/hello_world?maxPoolSize=5', function(err, db) {
+var collection = null;
+
+MongoClient.connect('mongodb://localhost/hello_world?maxPoolSize=5', function(err, db) {
   collection = db.collection('world');
 });
 
@@ -59,6 +64,12 @@ function mongodbDriverQuery(callback) {
   });
 }
 
+function mongodbDriverUpdateQuery(callback) {
+  collection.findAndModify({ id: getRandomNumber()}, [['_id','asc']], {$set: {randomNumber: getRandomNumber()}}, {}, function(err, world) {
+    callback(err, world);
+  });
+}
+
 function sequelizeQuery(callback) {
   World.findById(getRandomNumber(), function (err, world) {
     callback(null, world);
@@ -70,6 +81,11 @@ http.createServer(function (req, res) {
   var hello = {message: "Hello, world"};
 
   var path = url.parse(req.url).pathname;
+  
+  // mysql on windows is not supported
+  if (windows && (path.substr(0, 3) == '/my' || path == '/update')) {
+    path = '/doesntexist';
+  }
 
   switch (path) {
   case '/json':
@@ -135,16 +151,16 @@ http.createServer(function (req, res) {
     function libmysqlQuery(callback) {
       libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
         if (err) {
-	  throw err;
-	}
+	        throw err;
+	      }
 	
-	res.fetchAll(function(err, rows) {
-	  if (err) {
-	    throw err;
-	  }
+	      res.fetchAll(function(err, rows) {
+      	  if (err) {
+      	    throw err;
+      	  }
 
-	  res.freeSync();
-	  callback(null, rows[0]);
+      	  res.freeSync();
+      	  callback(null, rows[0]);
         });
       });
     } 
@@ -165,9 +181,80 @@ http.createServer(function (req, res) {
     });
     break;
 
+  case '/update':
+    res.writeHead(200, {'Content-Type': 'application/json'});
+
+    function libmysqlQuery(callback) {
+      libmysql.query("SELECT * FROM world WHERE id = " + getRandomNumber(), function (err, res) {
+        if (err) {
+          throw err;
+        }
+  
+        res.fetchAll(function(err, rows) {
+          if (err) {
+            throw err;
+          }
+
+          res.freeSync();
+
+          rows[0].randomNumber = getRandomNumber();
+          libmysql.query("UPDATE World SET randomNumber = " + rows[0].randomNumber + " WHERE id = " + rows[0]['id'], function (err, res) {
+            if (err) {
+              throw err;
+            }
+            callback(null, rows[0]);
+          });
+        });
+      });
+    } 
+
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    if(queries < 1) {
+      queries = 1;
+    } else if(queries > 500) {
+      queries = 500;
+    }
+    var queryFunctions = new Array(queries);
+
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = libmysqlQuery;
+    }
+    async.parallel(queryFunctions, function(err, results) {
+      if (err) {
+        res.writeHead(500);
+        return res.end('MYSQL CONNECTION ERROR.');
+      }
+      res.end(JSON.stringify(results));
+    });
+    break;
+
+  case '/update-mongodb':
+    // Database Test
+    var values = url.parse(req.url, true);
+    var queries = values.query.queries || 1;
+    if (queries < 1) {
+      queries = 1;
+    } else if (queries > 500) {
+      queries = 500;
+    }
+
+    var queryFunctions = new Array(queries);
+
+    for (var i = 0; i < queries; i += 1) {
+      queryFunctions[i] = mongodbDriverUpdateQuery;
+    }
+
+    res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
+
+    async.parallel(queryFunctions, function(err, results) {
+      res.end(JSON.stringify(results));
+    });
+    break;
+
   default:
     // File not found handler
-    res.writeHead(404, {'Content-Type': 'text/html; charset=UTF-8'});
+    res.writeHead(501, {'Content-Type': 'text/plain; charset=UTF-8'});
     res.end("NOT IMPLEMENTED");
   }
 }).listen(8080);

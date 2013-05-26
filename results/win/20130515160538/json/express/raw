@@ -1,0 +1,138 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May 15 16:07:21 UTC 2013
+
+  System load:  0.03               Processes:           74
+  Usage of /:   43.4% of 19.69GB   Users logged in:     1
+  Memory usage: 4%                 IP address for eth0: 10.253.60.84
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+89 packages can be updated.
+42 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer express
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.97.155:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.25ms  824.59us   4.04ms   84.33%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14576 requests in 5.00s, 2.79MB read
+Requests/sec:   2914.93
+Transfer/sec:    572.17KB
+
+---------------------------------------------------------
+ Running Warmup express
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.30ms  184.98ms   7.37s    99.94%
+    Req/Sec   438.79    610.98     2.00k    93.66%
+  180878 requests in 30.00s, 34.67MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1351
+Requests/sec:   6028.48
+Transfer/sec:      1.16MB
+
+---------------------------------------------------------
+ Concurrency: 8 for express
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.32ms  235.64us   4.82ms   87.24%
+    Req/Sec    17.96    132.84     1.00k    98.20%
+  179374 requests in 30.00s, 34.38MB read
+Requests/sec:   5979.18
+Transfer/sec:      1.15MB
+
+---------------------------------------------------------
+ Concurrency: 16 for express
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.64ms    2.21ms  83.68ms   97.75%
+    Req/Sec    46.85    225.67     2.00k    95.63%
+  181421 requests in 30.00s, 34.78MB read
+Requests/sec:   6047.29
+Transfer/sec:      1.16MB
+
+---------------------------------------------------------
+ Concurrency: 32 for express
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.19ms    6.45ms 201.60ms   99.69%
+    Req/Sec   118.79    375.80     3.00k    89.57%
+  181097 requests in 30.00s, 34.71MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:   6036.33
+Transfer/sec:      1.16MB
+
+---------------------------------------------------------
+ Concurrency: 64 for express
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.90ms    3.55ms  51.88ms   85.45%
+    Req/Sec   276.70    523.46     3.00k    75.95%
+  184209 requests in 30.00s, 35.31MB read
+  Socket errors: connect 0, read 0, write 0, timeout 55
+Requests/sec:   6140.00
+Transfer/sec:      1.18MB
+
+---------------------------------------------------------
+ Concurrency: 128 for express
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.96ms    9.77ms  66.63ms   61.42%
+    Req/Sec   209.11    430.67     2.00k    80.09%
+  178549 requests in 30.00s, 34.23MB read
+  Socket errors: connect 0, read 0, write 0, timeout 166
+Requests/sec:   5951.18
+Transfer/sec:      1.14MB
+
+---------------------------------------------------------
+ Concurrency: 256 for express
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.97.155:8080/json
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.97.155:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.84ms   21.58ms 225.34ms   48.00%
+    Req/Sec   141.88    349.03     1.00k    85.81%
+  145377 requests in 30.01s, 27.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1084
+Requests/sec:   4844.22
+Transfer/sec:      0.93MB

@@ -28,6 +28,7 @@ When propmted to create a security group for the instances, here are the ports t
 * 27017 (MongoDB)
 * 3000 (yesod)
 * 8000 (snap)
+* 16969 (cpoll)
 
 
 #### 2. Setting up the servers
@@ -120,6 +121,65 @@ Assuming this finished without error, we're ready to start the test suite:
 	nohup ./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --max-threads cores --name unique-machine-name &
 
 This will run the full set of tests. Results of all the tests will output to ~/FrameworkBenchmarks/results/unique-machine-name/*timestamp*.
+
+### Windows Instructions
+Generously provided by [@pdonald](https://github.com/pdonald)
+
+Note: The following tests are the only known tests to run on Windows
+* aspnet
+* aspnet-mysql-raw
+* aspnet-postgresql-raw
+* aspnet-mongodb-raw
+* aspnet-mysql-entityframework
+* aspnet-postgres-entityframework
+* cake
+* express
+* express-mongodb
+* go
+* nodejs
+* nodejs-mongodb
+* express
+* express-mongodb
+* php
+* php-raw
+* codeigniter
+* codeigniter-raw
+* fuel
+* kohana
+* kohana-raw
+* laravel
+* laravel-raw
+* lithium
+* micromvc
+* slim
+* phreeze
+* servlet
+* servlet-raw
+* servlet-postgres-raw
+* webgo
+
+Server installation scripts for Windows Server 2012 R2 on Amazon EC2.
+
+Instructions:
+
+* Create an instance from the `Microsoft Windows Server 2012 Base` image on Amazon EC2
+* Connect to it via Remote Desktop
+* Copy `installer-bootstrap.ps1` from this repo to the server (for files CTRL-C + CTRL-V works alright)
+* Copy your client private key too while you're at it
+* Right click on the installer script and select `Run with PowerShell`
+* It will ask something, just hit enter
+* It will install git and then launch `installer.ps1` from the repo which will install everything else
+* Installation shouldn't take more than 5 to 10 minutes
+* Then you have a working console: try `python`, `git`, `ssh`, `curl`, `node` etc. everything works + PowerShell goodies
+
+The client/database machine is still assumed to be a Linux box, you can install just the client software via
+
+    python run-tests.py -s server-ip -c client-ip -i "C:\Users\Administrator\Desktop\client.key" --install-software --install client --list-tests
+
+Now you can run tests:
+
+    python run-tests.py -s server-ip -c client-ip -i "C:\Users\Administrator\Desktop\client.key" --max-threads 2 --duration 30 --sleep 5 --name win --test aspnet --type all
+
 
 ## Result Files
 

@@ -7,8 +7,11 @@ class Installer:
   # install_software
   ############################################################
   def install_software(self):
-    self.__install_server_software()
-    self.__install_client_software()
+    if self.benchmarker.install == 'all' or self.benchmarker.install == 'server':
+        self.__install_server_software()
+
+    if self.benchmarker.install == 'all' or self.benchmarker.install == 'client':
+        self.__install_client_software()
   ############################################################
   # End install_software
   ############################################################
@@ -22,8 +25,11 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake mercurial", True)
-
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext", True)
+    self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test", True)
+    self.__run_command("sudo apt-get update", True)
+    self.__run_command("sudo apt-get install gcc-4.8 g++-4.8", True)
+    
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("sudo sh -c \"echo '*               soft    nofile          8192' >> /etc/security/limits.conf\"")
 
@@ -43,13 +49,18 @@ class Installer:
     # Python
     #
 
-    self.__run_command("curl http://www.python.org/ftp/python/2.7.3/Python-2.7.3.tgz | tar xvz")
-    self.__run_command("./configure", cwd="Python-2.7.3")
-    self.__run_command("sudo make install", cwd="Python-2.7.3")
-    self.__run_command("curl http://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c11.tar.gz | tar xvz")
-    self.__run_command("sudo python setup.py install", cwd="setuptools-0.6c11")
-    self.__run_command("curl http://pypi.python.org/packages/source/p/pip/pip-1.1.tar.gz | tar xvz")
-    self.__run_command("sudo python setup.py install", cwd="pip-1.1")
+    self.__run_command("curl -L http://bitbucket.org/pypy/pypy/downloads/pypy-2.0-linux64.tar.bz2 | tar xvj")
+    self.__run_command("curl http://www.python.org/ftp/python/2.7.4/Python-2.7.4.tgz | tar xvz")
+    self.__run_command("./configure", cwd="Python-2.7.4")
+    self.__run_command("make -j", cwd="Python-2.7.4")
+    self.__run_command("sudo make install", cwd="Python-2.7.4")
+    self.__run_command("curl https://pypi.python.org/packages/source/d/distribute/distribute-0.6.38.tar.gz | tar xvz")
+    # run pypy before python. (`setup.py install` fails after `sudo setup.py install`)
+    self.__run_command("../pypy-2.0/bin/pypy setup.py install", cwd="distribute-0.6.38")
+    self.__run_command("sudo python setup.py install", cwd="distribute-0.6.38")
+    self.__run_command("curl https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz | tar xvz")
+    self.__run_command("../pypy-2.0/bin/pypy setup.py install", cwd="pip-1.3.1")
+    self.__run_command("sudo python setup.py install", cwd="pip-1.3.1")
     self.__run_command("sudo pip install MySQL-python==1.2.4")
     self.__run_command("sudo pip install simplejson==3.0.7")
     self.__run_command("curl http://initd.org/psycopg/tarballs/PSYCOPG-2-5/psycopg2-2.5.tar.gz | tar xvz")
@@ -57,6 +68,7 @@ class Installer:
     self.__run_command("git clone https://github.com/iiilx/django-psycopg2-pool.git")
     self.__run_command("sudo python setup.py install", cwd="django-psycopg2-pool")
     self.__run_command("sudo pip install --upgrade numpy==1.7.1")
+    self.__run_command("pypy-2.0/bin/pip install PyMySQL==0.5")
 
     #
     # nodejs
@@ -92,14 +104,14 @@ class Installer:
     # go
     #
 
-    self.__run_command("curl http://go.googlecode.com/files/go1.1rc1.linux-amd64.tar.gz | tar xvz")
+    self.__run_command("curl http://go.googlecode.com/files/go1.1.linux-amd64.tar.gz | tar xvz")
 
     #
     # Perl
     #
 
     self.__run_command("curl -L http://cpanmin.us | perl - --sudo App::cpanminus")
-    self.__run_command("cpanm -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON")
+    self.__run_command("cpanm -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg")
 
     #
     # php
@@ -139,7 +151,23 @@ class Installer:
     self.__run_command("sudo ringo-admin install ringo/stick")
     self.__run_command("sudo ringo-admin install oberhamsi/reinhardt")
     self.__run_command("sudo ringo-admin install grob/ringo-sqlstore")
+    self.__run_command("sudo ringo-admin install amigrave/ringo-mongodb")
 
+    #
+    # Mono
+    #
+    self.__run_command("git clone git://github.com/mono/mono")
+    self.__run_command("git checkout mono-3.10", cwd="mono")
+    self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
+    self.__run_command("make get-monolite-latest", cwd="mono")
+    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
+    self.__run_command("sudo make install", cwd="mono")
+
+    self.__run_command("git clone git://github.com/mono/xsp")
+    self.__run_command("git checkout 3.0", cwd="xsp")
+    self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
+    self.__run_command("make", cwd="xsp")
+    self.__run_command("sudo make install", cwd="xsp")
     #######################################
     # Webservers
     #######################################
@@ -236,6 +264,13 @@ class Installer:
     ##############################################################
 
     ##############################
+    # Tornado
+    ##############################
+    packages = "tornado==3.0.1 motor==0.1 pymongo==2.5"
+    self.__run_command("sudo pip install " + packages)
+    self.__run_command("pypy-2.0/bin/pip install " + packages)
+
+    ##############################
     # Django
     ##############################
     self.__run_command("curl http://www.djangoproject.com/m/releases/1.4/Django-1.4.tar.gz | tar xvz")
@@ -254,7 +289,9 @@ class Installer:
     ##############################
     # Flask
     ##############################
-    self.__run_command("sudo pip install flask flask-sqlalchemy")
+    packages = "flask==0.9 flask-sqlalchemy==0.16 sqlalchemy==0.8.1 jinja2==2.6 werkzeug==0.8.3"
+    self.__run_command("sudo pip install " + packages)
+    self.__run_command("pypy-2.0/bin/pip install " + packages)
 
     ##############################
     # Bottle
@@ -264,9 +301,9 @@ class Installer:
     ##############################
     # Play 2
     ##############################
-    self.__run_command("wget http://downloads.typesafe.com/play/2.1.1/play-2.1.1.zip")
-    self.__run_command("unzip -o play-2.1.1.zip")
-    self.__run_command("rm play-2.1.1.zip")
+    self.__run_command("wget http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip")
+    self.__run_command("unzip -o play-2.1.2-RC1.zip")
+    self.__run_command("rm play-2.1.2-RC1.zip")
 
     ##############################
     # Play 1
@@ -299,7 +336,8 @@ class Installer:
     ##############################
     # Maven
     ##############################
-    self.__run_command("sudo apt-get install maven2", send_yes=True)
+    # self.__run_command("sudo apt-get install maven2", send_yes=True)
+    self.__run_command("curl www.us.apache.org/dist/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz | tar xvz")
 
     ##############################
     # Leiningen
@@ -327,6 +365,9 @@ class Installer:
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
     sudo sh -c "echo '*               soft    nofile          8192' >> /etc/security/limits.conf"
 
+    sudo mkdir -p /ssd
+    sudo mkdir -p /ssd/log
+
     ##############################
     # MySQL
     ##############################
@@ -335,10 +376,16 @@ class Installer:
 
     yes | sudo apt-get install mysql-server
 
+    sudo stop mysql
     # use the my.cnf file to overwrite /etc/mysql/my.cnf
     sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
     sudo mv my.cnf /etc/mysql/my.cnf
-    sudo restart mysql
+
+    sudo cp -R -p /var/lib/mysql /ssd/
+    sudo cp -R -p /var/log/mysql /ssd/log
+    sudo cp usr.sbin.mysqld /etc/apparmor.d/
+    sudo /etc/init.d/apparmor reload
+    sudo start mysql
 
     # Insert data
     mysql -uroot -psecret < create.sql
@@ -350,9 +397,12 @@ class Installer:
     sudo -u postgres psql template1 < create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
 
+    sudo -u postgres -H /etc/init.d/postgresql stop
     sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
     sudo mv pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
-    sudo -u postgres -H /etc/init.d/postgresql restart
+
+    sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/postgresql
+    sudo -u postgres -H /etc/init.d/postgresql start
 
     ##############################
     # Weighttp
@@ -378,14 +428,17 @@ class Installer:
     ##############################
     # MongoDB
     ##############################
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
     sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
     sudo apt-get update
     yes | sudo apt-get install mongodb-10gen
 
+    sudo stop mongodb
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf
-    sudo restart mongodb
+    sudo cp -R -p /var/lib/mongodb /ssd/
+    sudo cp -R -p /var/log/mongodb /ssd/log/
+    sudo start mongodb
     """
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)

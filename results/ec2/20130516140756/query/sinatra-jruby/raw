@@ -1,0 +1,126 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu May 16 18:22:15 UTC 2013
+
+  System load:  0.27              Processes:           75
+  Usage of /:   63.4% of 7.87GB   Users logged in:     1
+  Memory usage: 11%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.19.48:8080/sinatra/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/sinatra/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.70ms   13.26ms  91.36ms   84.44%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1499 requests in 5.00s, 464.81KB read
+Requests/sec:    299.60
+Transfer/sec:     92.90KB
+
+---------------------------------------------------------
+ Running Warmup sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/sinatra/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/sinatra/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   873.51ms  396.59ms   2.35s    72.19%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8024 requests in 30.01s, 2.43MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:    267.38
+Transfer/sec:     82.92KB
+
+---------------------------------------------------------
+ Queries: 1 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/sinatra/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/sinatra/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   770.18ms  307.63ms   1.65s    77.50%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9364 requests in 30.01s, 2.46MB read
+Requests/sec:    312.02
+Transfer/sec:     84.03KB
+
+---------------------------------------------------------
+ Queries: 5 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/sinatra/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/sinatra/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14s   440.62ms   2.89s    77.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6214 requests in 30.01s, 2.63MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:    207.10
+Transfer/sec:     89.77KB
+
+---------------------------------------------------------
+ Queries: 10 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/sinatra/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/sinatra/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.58s   561.37ms   3.17s    79.76%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4415 requests in 30.01s, 2.75MB read
+  Socket errors: connect 0, read 0, write 0, timeout 120
+Requests/sec:    147.10
+Transfer/sec:     93.77KB
+
+---------------------------------------------------------
+ Queries: 15 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/sinatra/db?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/sinatra/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.97s   732.28ms   3.99s    81.18%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3451 requests in 30.01s, 2.84MB read
+  Socket errors: connect 0, read 0, write 0, timeout 405
+Requests/sec:    114.99
+Transfer/sec:     96.76KB
+
+---------------------------------------------------------
+ Queries: 20 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/sinatra/db?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/sinatra/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.46s   973.96ms   5.76s    79.61%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2705 requests in 30.01s, 2.76MB read
+  Socket errors: connect 0, read 0, write 0, timeout 939
+Requests/sec:     90.13
+Transfer/sec:     94.23KB
