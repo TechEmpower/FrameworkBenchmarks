@@ -1,5 +1,6 @@
 import subprocess
 import os
+import time
 
 class Installer:
 
@@ -110,7 +111,17 @@ class Installer:
     # Perl
     #
     
-    self.__run_command("curl http://downloads.activestate.com/ActivePerl/releases/5.16.3.1603/ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz | tar xvz");
+    # Sometimes this HTTP server returns 404, so retry a few times until it works, but don't retry forever
+    tries = 0
+    while True:
+        self.__run_command("curl http://downloads.activestate.com/ActivePerl/releases/5.16.3.1603/ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz | tar xvz");
+        if os.path.exists(os.path.join('installs', 'ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746')):
+            break
+        tries += 1
+        if tries >= 30:
+            raise Exception('Could not download ActivePerl after many retries')
+        time.sleep(5)
+
     self.__run_command("sudo ./install.sh --license-accepted --prefix /opt/ActivePerl-5.16 --no-install-html", cwd="ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746", send_yes=True)
     self.__run_command("curl -L http://cpanmin.us | perl - --sudo App::cpanminus")
     self.__run_command("cpanm -f -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros")
