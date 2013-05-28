@@ -8,7 +8,7 @@
       "query_url": "/bench/raw/db?queries=",
       "fortune_url": "/bench/raw/fortunes",
       "port": 8080,
-      "sort": 107
+      "sort": 124
     }
   }]
 }
