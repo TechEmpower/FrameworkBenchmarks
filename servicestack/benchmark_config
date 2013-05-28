@@ -8,7 +8,7 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 118
+      "sort": 127
     },
     "mono": {
       "setup_file": "setup_nginx",
@@ -16,7 +16,7 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 119
+      "sort": 128
     }
   }]
 }
