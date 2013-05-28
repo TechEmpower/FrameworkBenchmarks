@@ -1,0 +1,21 @@
+{
+  "framework": "luminus",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/luminus/json",
+      "db_url": "/luminus/db/1",
+      "query_url": "/luminus/db/",
+      "fortune_url": "/luminus/fortune",
+      "port": 8080,
+      "sort": 2
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/luminus/dbraw/1",
+      "query_url": "/luminus/dbraw/",
+      "port": 8080,
+      "sort": 85
+    }
+  }]
+}
