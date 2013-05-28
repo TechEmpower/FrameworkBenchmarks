@@ -74,7 +74,7 @@ class Installer:
     # nodejs
     #
 
-    self.__run_command("curl http://nodejs.org/dist/v0.10.2/node-v0.10.2-linux-x64.tar.gz | tar xvz")
+    self.__run_command("curl http://nodejs.org/dist/v0.10.8/node-v0.10.8-linux-x64.tar.gz | tar xvz")
 
     #
     # Java
@@ -175,23 +175,12 @@ class Installer:
     #######################################
 
     #
-    # Apache
-    #
-
-    self.__run_command("sudo apt-get install apache2 libapache2-mod-php5", True)
-    self.__run_command("sudo mv /etc/apache2/apache2.conf /etc/apache2/apache2.conf.orig")
-    self.__run_command("sudo sh -c \"cat ../config/apache2.conf > /etc/apache2/apache2.conf\"")
-    self.__run_command("sudo mv /etc/apache2/ports.conf /etc/apache2/ports.conf.orig")
-    self.__run_command("sudo sh -c \"cat ../config/ports.conf > /etc/apache2/ports.conf\"")
-    self.__run_command("sudo /etc/init.d/apache2 stop")
-
-    #
     # Nginx
     #
-    self.__run_command("curl http://nginx.org/download/nginx-1.4.0.tar.gz | tar xvz")
-    self.__run_command("./configure", cwd="nginx-1.4.0")
-    self.__run_command("make", cwd="nginx-1.4.0")
-    self.__run_command("sudo make install", cwd="nginx-1.4.0")
+    self.__run_command("curl http://nginx.org/download/nginx-1.4.1.tar.gz | tar xvz")
+    self.__run_command("./configure", cwd="nginx-1.4.1")
+    self.__run_command("make", cwd="nginx-1.4.1")
+    self.__run_command("sudo make install", cwd="nginx-1.4.1")
 
     #
     # Openresty (nginx with openresty stuff)
@@ -205,7 +194,7 @@ class Installer:
     # Gunicorn
     #
 
-    self.__run_command("sudo easy_install -U 'gunicorn==0.17.2'")
+    self.__run_command("sudo easy_install -U 'gunicorn==0.17.4'")
     self.__run_command("sudo pip install --upgrade meinheld")
     self.__run_command("sudo easy_install -U 'eventlet==0.12.1'")
     self.__run_command("sudo pip install --upgrade 'gevent==0.13.8'")
@@ -215,49 +204,12 @@ class Installer:
     #
 
     self.__run_command("sudo cp -r /usr/lib/jvm/java-1.7.0-openjdk-amd64/include /usr/lib/jvm/java-1.7.0-openjdk-amd64/jre/bin/")
-    self.__run_command("curl http://www.caucho.com/download/resin-4.0.34.tar.gz | tar xvz")
-    self.__run_command("./configure --prefix=`pwd`", cwd="resin-4.0.34")
-    self.__run_command("make", cwd="resin-4.0.34")
-    self.__run_command("make install", cwd="resin-4.0.34")
-    self.__run_command("mv conf/resin.properties conf/resin.properties.orig", cwd="resin-4.0.34")
-    self.__run_command("cat ../config/resin.properties > resin-4.0.34/conf/resin.properties")
-
-    #
-    # Passenger
-    #
-
-    self.__run_command("git clone https://github.com/FooBarWidget/passenger.git")
-    self.__run_command("git checkout 65d36dbbadd399f65d81f5febadce9b0c6c1a430", cwd="passenger")
-    subprocess.call(["bash", "-c", "cd installs/passenger && source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem build passenger.gemspec"])
-    subprocess.call(["bash", "-c", "cd installs/passenger && source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install passenger-3.9.5.rc3.gem"])
-
-    ##############################
-    # Tomcat
-    # We don't use tomcat in our tests yet, but this is here to remind us of how we
-    # installed the apr connector
-    ##############################
-    self.__run_command("curl http://apache.cs.utah.edu/tomcat/tomcat-7/v7.0.35/bin/apache-tomcat-7.0.35.tar.gz | tar xvz")
-    #wget http://apache.cs.utah.edu/tomcat/tomcat-7/v7.0.35/bin/apache-tomcat-7.0.35.tar.gz
-    #tar -xvzf apache-tomcat-7.0.35.tar.gz
-    #rm apache-tomcat-7.0.35.tar.gz
-    # use the native APR
-    # http://evgeny-goldin.com/blog/ubuntu-installing-apr-tomcat/
-    #wget http://apache.claz.org/apr/apr-1.4.6.tar.gz
-    #tar xvf apr-1.4.6.tar.gz
-    #cd apr-1.4.6
-    #./configure
-    #make
-    #sudo make install
-    #cd ..
-    #rm apr-1.4.6.tar.gz
-    #wget http://apache.tradebit.com/pub/tomcat/tomcat-connectors/native/1.1.24/source/tomcat-native-1.1.24-src.tar.gz
-    #tar xvf tomcat-native-1.1.24-src.tar.gz
-    #cd tomcat-native-1.1.24-src/jni/native
-    #./configure --with-apr=/usr/local/apr
-    #make
-    #sudo make install
-    #cd ../../..
-    #rm tomcat-native-1.1.24-src.tar.gz
+    self.__run_command("curl http://www.caucho.com/download/resin-4.0.36.tar.gz | tar xvz")
+    self.__run_command("./configure --prefix=`pwd`", cwd="resin-4.0.36")
+    self.__run_command("make", cwd="resin-4.0.36")
+    self.__run_command("make install", cwd="resin-4.0.36")
+    self.__run_command("mv conf/resin.properties conf/resin.properties.orig", cwd="resin-4.0.36")
+    self.__run_command("cat ../config/resin.properties > resin-4.0.36/conf/resin.properties")
 
     ##############################################################
     #
@@ -405,17 +357,6 @@ class Installer:
 
     sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/postgresql
     sudo -u postgres -H /etc/init.d/postgresql start
-
-    ##############################
-    # Weighttp
-    ##############################
-
-    git clone git://git.lighttpd.net/weighttp
-    cd weighttp
-    ./waf configure
-    ./waf build
-    sudo ./waf install
-    cd ~
 
     ##############################
     # wrk
