@@ -8,14 +8,14 @@
       "query_url": "/luminus/db/",
       "fortune_url": "/luminus/fortune",
       "port": 8080,
-      "sort": 2
+      "sort": 125
     },
     "raw": {
       "setup_file": "setup",
       "db_url": "/luminus/dbraw/1",
       "query_url": "/luminus/dbraw/",
       "port": 8080,
-      "sort": 85
+      "sort": 126
     }
   }]
 }
