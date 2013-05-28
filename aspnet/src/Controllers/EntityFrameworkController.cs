@@ -8,14 +8,14 @@ namespace Benchmarks.AspNet.Controllers
 {
     public class EntityFrameworkController : Controller
     {
+        Random random = new Random();
+
         public ActionResult Index(string providerName, int? queries)
         {
-            List<World> worlds = new List<World>(queries ?? 1);
+            List<World> worlds = new List<World>(Math.Max(1, Math.Min(500, queries ?? 1)));
 
             using (EntityFramework db = new EntityFramework(providerName))
             {
-                Random random = new Random();
-                
                 for (int i = 0; i < worlds.Capacity; i++)
                 {
                     int randomID = random.Next(0, 10000) + 1;
@@ -40,6 +40,29 @@ namespace Benchmarks.AspNet.Controllers
             fortunes.Sort();
 
             return View("Fortunes", fortunes);
+        }
+
+        public ActionResult Update(string providerName, int? queries)
+        {
+            List<World> worlds = new List<World>(Math.Max(1, Math.Min(500, queries ?? 1)));
+
+            using (EntityFramework db = new EntityFramework(providerName))
+            {
+                for (int i = 0; i < worlds.Capacity; i++)
+                {
+                    int randomID = random.Next(0, 10000) + 1;
+                    int randomNumber = random.Next(0, 10000) + 1;
+                    
+                    World world = db.Worlds.Find(randomID);
+                    world.randomNumber = randomNumber;
+                    worlds.Add(world);
+                }
+
+                // batch update
+                db.SaveChanges();
+            }
+
+            return Json(worlds, JsonRequestBehavior.AllowGet);
         }
     }
 }
