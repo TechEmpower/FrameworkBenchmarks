@@ -12,6 +12,7 @@ def start(args):
   try:
     subprocess.check_call("rm -rf bin obj", shell=True, cwd="aspnet/src")
     subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="aspnet/src")
+    subprocess.check_call("sudo chown -R ubuntu:ubuntu /usr/local/etc/mono", shell=True)
     subprocess.Popen("xsp4 --nonstop", shell=True, cwd="aspnet/src")
     return 0
   except subprocess.CalledProcessError:
