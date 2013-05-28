@@ -136,6 +136,9 @@ class Installer:
     self.__run_command("git clone git://github.com/phalcon/cphalcon.git")
     self.__run_command("sudo ./install", cwd="cphalcon/build")
 
+    # YAF
+    self.__run_command("sudo pecl install yaf")
+
     #
     # Haskell
     #
