@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue May 28 10:49:58 PDT 2013
+
+  System load:  0.27               Processes:           217
+  Usage of /:   8.9% of 129.62GB   Users logged in:     1
+  Memory usage: 4%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+124 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.20ms   95.17ms 923.37ms   98.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2617 requests in 5.01s, 4.35MB read
+Requests/sec:    522.87
+Transfer/sec:      0.87MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   297.03ms  277.02ms   1.55s    62.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25310 requests in 30.00s, 42.07MB read
+Requests/sec:    843.57
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.15ms   15.14ms 149.26ms   96.08%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  21450 requests in 30.01s, 35.65MB read
+Requests/sec:    714.81
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.72ms   25.42ms 183.62ms   92.63%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25456 requests in 30.00s, 42.31MB read
+Requests/sec:    848.46
+Transfer/sec:      1.41MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.65ms   51.24ms 510.04ms   89.04%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  26493 requests in 30.00s, 44.04MB read
+Requests/sec:    883.06
+Transfer/sec:      1.47MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.68ms   87.71ms 468.87ms   83.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  27327 requests in 30.00s, 45.42MB read
+Requests/sec:    910.86
+Transfer/sec:      1.51MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   149.29ms  154.67ms   1.34s    81.88%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25895 requests in 30.00s, 43.04MB read
+Requests/sec:    863.12
+Transfer/sec:      1.43MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   327.63ms  300.73ms   1.41s    60.41%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23442 requests in 30.00s, 38.97MB read
+Requests/sec:    781.31
+Transfer/sec:      1.30MB
