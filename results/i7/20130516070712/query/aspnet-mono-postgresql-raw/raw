@@ -1,0 +1,118 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue May 28 10:46:33 PDT 2013
+
+  System load:  0.31               Processes:           213
+  Usage of /:   8.9% of 129.62GB   Users logged in:     1
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+124 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/ado/postgresql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.97ms   10.46ms  97.04ms   96.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  4234 requests in 5.06s, 1.46MB read
+Requests/sec:    837.01
+Transfer/sec:    294.68KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   324.90ms  273.37ms   1.52s    62.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23449 requests in 30.00s, 8.06MB read
+Requests/sec:    781.56
+Transfer/sec:    275.18KB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   312.73ms  289.16ms   1.61s    64.25%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  23792 requests in 30.00s, 7.46MB read
+Requests/sec:    793.00
+Transfer/sec:    254.60KB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   150.16ms  209.63ms 871.96ms   87.14%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1791 requests in 30.00s, 799.16KB read
+  Socket errors: connect 0, read 0, write 0, timeout 3560
+Requests/sec:     59.69
+Transfer/sec:     26.63KB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   124.02ms  141.12ms 650.63ms   80.99%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1790 requests in 30.00s, 1.05MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3575
+Requests/sec:     59.66
+Transfer/sec:     35.87KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   134.41ms  155.40ms 895.69ms   84.39%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1792 requests in 30.01s, 1.32MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3532
+Requests/sec:     59.72
+Transfer/sec:     45.19KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/ado/postgresql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   394.24ms    1.49s   17.33s    99.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  12651 requests in 30.00s, 11.26MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1650
+Requests/sec:    421.65
+Transfer/sec:    384.42KB

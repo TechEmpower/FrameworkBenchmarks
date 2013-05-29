@@ -20,7 +20,12 @@ namespace Benchmarks.AspNet.Models
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // disable migrations checks
+            Database.SetInitializer<EntityFramework>(null);
+
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+            modelBuilder.Ignore<MongoWorld>();
             
             if (Database.Connection is Npgsql.NpgsqlConnection)
                 modelBuilder.Conventions.Add<PostgreSqlConfigurationConvention>();
