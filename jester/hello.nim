@@ -2,7 +2,7 @@ import jester, strtabs, json, asyncio, sockets
 
 get "/json":
   var obj = %{"message": %"Hello, World!"}
-  resp($obj)
+  resp($obj, "application/json")
 
 var disp = newDispatcher()
 disp.register(port = TPort(9000), http=false)
