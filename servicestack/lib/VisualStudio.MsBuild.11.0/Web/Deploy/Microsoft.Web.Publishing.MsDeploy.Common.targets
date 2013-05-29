@@ -1,0 +1,1192 @@
+﻿<!--
+***********************************************************************************************
+Microsoft.Web.Publishing.MSDeploy.Common.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your web deploy projects from the command-line or the IDE.
+
+This file defines the steps in the standard package/publish process for Deploy 
+Currently
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Import task from our dll-->
+  <UsingTask TaskName="GetPublishingLocalizedString" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="MSDeploy" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="VSMSDeploy" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="ImportParametersFile" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="ExportParametersFile" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="SortParametrsByPriority" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+  <UsingTask TaskName="CreateProviderList" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+
+  <!--ImportBefore Extension-->
+  <PropertyGroup>
+    <ImportByWildcardBeforeMicrosoftWebPublishingMSDeployCommonTargets Condition="'$(ImportByWildcardBeforeMicrosoftWebPublishingMSDeployCommonTargets)'==''">true</ImportByWildcardBeforeMicrosoftWebPublishingMSDeployCommonTargets>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportBefore\*" Condition="'$(ImportByWildcardBeforeMicrosoftWebPublishingMSDeployCommonTargets)' == 'true' and exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportBefore')"/>
+
+  <!--Indicate that we already imported to avoid duplicate import-->
+  <PropertyGroup>
+    <Microsoft_Web_Publishing_MSDeploy_Common_targets_Imported>True</Microsoft_Web_Publishing_MSDeploy_Common_targets_Imported>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <InsertEFCodeFirstDeployWebCofig Condition="'$(InsertEFCodeFirstDeployWebCofig)' == ''">True</InsertEFCodeFirstDeployWebCofig>
+    <InsertEFCodeFirstDeployWebCofigIntermediateOutput Condition="'$(InsertEFCodeFirstDeployWebCofigIntermediateOutput)'==''">InsertEFCodeFirstDeploy</InsertEFCodeFirstDeployWebCofigIntermediateOutput>
+    <InsertEFCodeFirstDeployWebCofigLocation Condition="'$(InsertEFCodeFirstDeployWebCofigLocation)'==''">$(_WPPDefaultIntermediateOutputPath)$(InsertEFCodeFirstDeployWebCofigIntermediateOutput)</InsertEFCodeFirstDeployWebCofigLocation>
+  </PropertyGroup>
+  
+  <!--********************************************************************-->
+  <!-- ProcessPublishDatabaseSettings  -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <PublishDatabases Condition="'$(PublishDatabases)'==''">True</PublishDatabases>
+    <ProcessPublishDatabaseSettingsDependsOn>
+      GetMSDeployInstalledVersionPath;
+    </ProcessPublishDatabaseSettingsDependsOn>
+  </PropertyGroup>
+
+  <Target Name="ProcessPublishDatabaseSettings" DependsOnTargets="$(ProcessPublishDatabaseSettingsDependsOn)" Condition="$(PublishDatabases) And '$(FilePreview)'!='true' And ('$(PublishDatabaseSettings)' != '' Or '$(PublishDatabaseSettingsFile)' != '')">
+
+    <MakeDir Directories="$(DatabaseDeployIntermediateOutputPath)" Condition="!Exists($(DatabaseDeployIntermediateOutputPath))" />
+    <CreateProviderList ProjectFileFullPath="$(WebPublishPipeLineProjectFullPath)"
+                        ProvidersXml="$(PublishDatabaseSettings)"
+                        IntermediateOutputPath="$(DatabaseDeployIntermediateOutputPath)"
+                        MSDeployVersionsToTry="$(_MSDeployVersionsToTry)"
+                        UseMSDeployExe="$(UseMsdeployExe)"
+                        MSDeployExePath="$(MSDeployPath)"
+                        ImportInSyncCheck="$(VerifyDatabaseSettingWithImport)"
+                        LocalDBVersionToUseForSqlExpress="$(_LocalDBVersionToUseForSqlExpress)"
+                        Condition="'$(PublishDatabaseSettings)' != ''">
+      <Output TaskParameter="List" ItemName="_DatabasesToPackage" />
+      <Output TaskParameter="SourceManifest" ItemName="_DatabasesToSourceManifest" />
+    </CreateProviderList>
+    <CreateProviderList ProjectFileFullPath="$(WebPublishPipeLineProjectFullPath)"
+                        ProvidersFile="$(PublishDatabaseSettingsFile)"
+                        IntermediateOutputPath="$(DatabaseDeployIntermediateOutputPath)"
+                        MSDeployVersionsToTry="$(_MSDeployVersionsToTry)"
+                        UseMSDeployExe="$(UseMsdeployExe)"
+                        MSDeployExePath="$(MSDeployPath)"
+                        ImportInSyncCheck="$(VerifyDatabaseSettingWithImport)"
+                        LocalDBVersionToUseForSqlExpress="$(_LocalDBVersionToUseForSqlExpress)"
+                        Condition="'$(PublishDatabaseSettingsFile)' != ''">
+      <Output TaskParameter="List" ItemName="_DatabasesToPackage" />
+      <Output TaskParameter="SourceManifest" ItemName="_DatabasesToSourceManifest" />
+    </CreateProviderList>
+
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert)"
+                   Encoding="utf-8"
+                   File="$(PackageLogDir)\DatabasesToPackage.txt"
+                   Lines="@(_DatabasesToPackage->'
+                      Name:%(Identity) 
+                      SourceProvider:%(SourceProvider)
+                      SourcePath=%(SourcePath)
+                      SourcePath_RegExExcaped=%(SourcePath_RegExExcaped)
+                      DestinationGroup=%(DestinationGroup)')" Overwrite="True" />
+
+  </Target>
+
+
+
+  <!--********************************************************************-->
+  <!-- ParseSQLScriptForMSDeployParameters  -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <PublishDatabases Condition="'$(PublishDatabases)'==''">True</PublishDatabases>
+    <ParseSQLScriptForMSDeployParametersDependsOn>
+      $(ParseSQLScriptForMSDeployParametersDependsOn);
+      GetMSDeployInstalledVersionPath;
+      ProcessPublishDatabaseSettings;
+    </ParseSQLScriptForMSDeployParametersDependsOn>
+  </PropertyGroup>
+  <Target Name="ParseSQLScriptForMSDeployParameters" DependsOnTargets="$(ParseSQLScriptForMSDeployParametersDependsOn)" Condition="$(PublishDatabases) And ('$(PublishDatabaseSettings)' != '' Or '$(PublishDatabaseSettingsFile)' != '')">
+    <ItemGroup>
+      <_DatabasesToPackageForSQL  Include="@(_DatabasesToPackage)"
+                                  Condition="$(EnableSqlScriptVariableParameterize) 
+                                              And '%(_DatabasesToPackage.SourceProvider)' == 'DbFullSql' 
+                                              And '%(_DatabasesToPackage.SourcePath)' != '' 
+                                              And Exists('%(_DatabasesToPackage.SourcePath)') 
+                                              And '$([System.IO.Path]::GetExtension($([System.String]::new(%(_DatabasesToPackage.SourcePath)))))' == '.sql'">
+      </_DatabasesToPackageForSQL>
+    </ItemGroup>
+
+    <!-- this is very costly operation depend on sql file size. For example,  256 Meg sql file, it takes about 11 second to process (merely open it and scan it.)
+         We should avoid process if we have any knowledge on the sql file-->
+    <SqlScriptPreprocessSqlVariables
+      UnsupportedKeywords="$(MsdeploySqlUnsupportedCommand)"
+      CheckForUnsupportCommands="$(CheckSqlScriptForUnsupportedCommands)"
+      TreadSqlScriptUnsupportedCommandsAsWarning="$(TreadSqlScriptUnsupportedCommandsAsWarning)"
+      SqlScriptFile="%(_DatabasesToPackageForSQL.SourcePath)"
+      DestinationGroup="%(_DatabasesToPackageForSQL.DestinationGroup)"
+      ResolveIncludes="$(SqlScriptPreProcessResolveIncludes)"
+      BatchDelimiter="$(SqlScriptPreProcessBatchDelimiter)"
+      Condition="$(EnableSqlScriptVariableParameterize) And '%(_DatabasesToPackageForSQL.SourcePath)' != '' And Exists('%(_DatabasesToPackageForSQL.SourcePath)')  ">
+      <Output TaskParameter="List" ItemName="_DatabasesToPackage_SqlVariables" />
+    </SqlScriptPreprocessSqlVariables>
+
+    <!--Log the information  Set $(EnablePackageProcessLoggingAndAssert) to True if you want to see this information-->
+    <MakeDir Condition="$(EnableSqlScriptVariableParameterize) And $(EnablePackageProcessLoggingAndAssert) And !Exists('$(PackageLogDir)')"
+             Directories="$(PackageLogDir)" />
+
+    <!-- (Debug Only, Turn on EnablePackageProcessLoggingAndAssert if needed )
+    Dump the list to the log file in the log dir-->
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert) and $(EnableSqlScriptVariableParameterize)"
+                      Encoding="utf-8"
+                      File="$(PackageLogDir)\SqlVariables.txt"
+                      Lines="@(_DatabasesToPackage_SqlVariables->'
+                      Name:%(Identity) 
+                      Vaule:%(Value)
+                      IsDeclared:%(IsDeclared)
+                      SourcePath=%(SourcePath)
+                      SourcePath_RegExExcaped=%(SourcePath_RegExExcaped)
+                      DestinationGroup=%(DestinationGroup)')" Overwrite="True" />
+  </Target>
+
+
+
+  <!--********************************************************************-->
+  <!-- HandleEFCodeFirstDataMigration  -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <PublishDatabases Condition="'$(PublishDatabases)'==''">True</PublishDatabases>
+    <HandleEFCodeFirstDataMigrationDependsOn>
+      $(HandleEFCodeFirstDataMigrationDependsOn);
+      GetMSDeployInstalledVersionPath;
+      ProcessPublishDatabaseSettings;
+    </HandleEFCodeFirstDataMigrationDependsOn>
+  </PropertyGroup>
+  <Target Name="HandleEFCodeFirstDataMigration" DependsOnTargets="$(HandleEFCodeFirstDataMigrationDependsOn)" Condition="$(PublishDatabases) And ('$(PublishDatabaseSettings)' != '' Or '$(PublishDatabaseSettingsFile)' != '')">
+
+   <ItemGroup>
+      <_DatabasesToPackageForEFCodeFirst  Include="@(_DatabasesToPackage)"
+                                  Condition="'%(_DatabasesToPackage.SourceProvider)' == 'DbCodeFirst' 
+                                              And '%(_DatabasesToPackage.SourcePath)' == 'DBMigration'">
+      </_DatabasesToPackageForEFCodeFirst>
+    </ItemGroup>
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert)"
+                 Encoding="utf-8"
+                 File="$(PackageLogDir)\DatabasesToPackageForEFCodeFirst.txt"
+                 Lines="@(_DatabasesToPackageForEFCodeFirst->'
+                      Name:%(Identity) 
+                      SourceProvider:%(SourceProvider)
+                      SourcePath=%(SourcePath)
+                      SourcePath_RegExExcaped=%(SourcePath_RegExExcaped)
+                      SourceMigrationConfiguration=%(SourceMigrationConfiguration)
+                      SourceDbContext=%(SourceDbContext)
+                      DestinationGroup=%(DestinationGroup)')" Overwrite="True" />
+
+  </Target>
+
+
+  <!--********************************************************************
+  Target PreInsertEFCodeFirstDeployWebCofig 
+  ********************************************************************-->
+  <PropertyGroup>
+    <PreInsertEFCodeFirstDeployWebCofigDependsOn>
+      HandleEFCodeFirstDataMigration;
+      ProfileTransformWebConfig;
+    </PreInsertEFCodeFirstDeployWebCofigDependsOn>
+    <PreInsertEFCodeFirstDeployWebCofigBeforeTarget>
+      $(PreInsertEFCodeFirstDeployWebCofigBeforeTarget);
+      AutoParameterizationWebConfigConnectionStrings;
+      PreAutoParameterizationWebConfigConnectionStrings;
+    </PreInsertEFCodeFirstDeployWebCofigBeforeTarget>
+  </PropertyGroup>
+
+  <Target Name="PreInsertEFCodeFirstDeployWebCofig"
+          DependsOnTargets="$(PreInsertEFCodeFirstDeployWebCofigDependsOn)"
+          Condition="'@(_DatabasesToPackageForEFCodeFirst)' !=''"
+          BeforeTargets="$(PreInsertEFCodeFirstDeployWebCofigBeforeTarget)">
+    <ItemGroup>
+      <_WebConfigsToInsertEFCodeFirstDeployContext Include="@(FilesForPackagingFromProject)"
+                             Condition="'%(FilesForPackagingFromProject.Filename)%(FilesForPackagingFromProject.Extension)'=='$(ProjectConfigFileName)' 
+                                         And !%(FilesForPackagingFromProject.Exclude)
+                                         And '%(DestinationRelativePath)' == '$(ProjectConfigFileName)'">
+        <TransformOriginalFolder>$(InsertEFCodeFirstDeployWebCofigLocation)\original</TransformOriginalFolder>
+        <TransformOutputFile>$(InsertEFCodeFirstDeployWebCofigLocation)\transformed\%(DestinationRelativePath)</TransformOutputFile>
+        <TransformScope>$([System.IO.Path]::GetFullPath($(WPPAllFilesInSingleFolder)\%(DestinationRelativePath)))</TransformScope>
+      </_WebConfigsToInsertEFCodeFirstDeployContext>
+      <_WebConfigsToInsertEFCodeFirstDeployContextOuputFiles Include="@(_WebConfigsToInsertEFCodeFirstDeployContext->'%(TransformOutputFile)')">
+      </_WebConfigsToInsertEFCodeFirstDeployContextOuputFiles>
+    </ItemGroup>
+
+    <PropertyGroup>
+      <_WebConfigsToInsertEFCodeFirstDeployContextOuputDirectories>@(_WebConfigsToInsertEFCodeFirstDeployContextOuputFiles->'%(RootDir)%(Directory)')</_WebConfigsToInsertEFCodeFirstDeployContextOuputDirectories>
+      <_WebConfigsToInsertEFCodeFirstDeployContextOuput>@(_WebConfigsToInsertEFCodeFirstDeployContext->'%(TransformOutputFile)');</_WebConfigsToInsertEFCodeFirstDeployContextOuput>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_WebConfigsToInsertEFCodeFirstDeployContextOuputDirectories Include="$(_WebConfigsToInsertEFCodeFirstDeployContextOuputDirectories)" />
+    </ItemGroup>
+
+     <!--Make sure required directories exist-->  
+    <MakeDir Directories="@(_WebConfigsToInsertEFCodeFirstDeployContextOuputDirectories)" Condition="!Exists(%(Identity))"/>
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert) And ('@(_WebConfigsToInsertEFCodeFirstDeployContext)'!='') And !%(Exclude)"
+                      Encoding="utf-8"
+                      Overwrite="True"
+                      File="$(PackageLogDir)\PreInsertEFCodeFirstDeployWebCofig.Log"
+                      Lines="@(_WebConfigsToInsertEFCodeFirstDeployContext->'
+    InsertEFCodeFirstDeployContextTransform   input: %(Identity) 
+                      output: %(TransformOutputFile)
+                      From:%(Identity) 
+                      DestinationRelativePath:%(DestinationRelativePath) 
+                      Exclude:%(Exclude) 
+                      FromTarget:%(FromTarget) 
+                      Category:%(Category)
+                      ProjectFileType:%(ProjectFileType)
+                      ')" />
+
+
+    <!--Copy the original web.config-->
+    <CopyPipelineFiles PipelineItems="@(_WebConfigsToInsertEFCodeFirstDeployContext)"
+                           SourceDirectory="$(WebPublishPipelineProjectDirectory)"
+                           TargetDirectory="%(TransformOriginalFolder)"
+                           SkipMetadataExcludeTrueItems="True"
+                           UpdateItemSpec="False"
+                           DeleteItemsMarkAsExcludeTrue ="True"
+                       Condition="'@(_WebConfigsToInsertEFCodeFirstDeployContext)' != ''">
+      <Output TaskParameter="UpdatedPipelineItems" ItemName="_UpdatedWebConfigsToInsertEFCodeFirstDeployContext"/>
+    </CopyPipelineFiles>
+
+     <!--Delete those web.config have been updated if existed-->
+    <Delete Files="@(_UpdatedWebConfigsToInsertEFCodeFirstDeployContext->'%(TransformOutputFile)')" />
+
+
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_EFCodeFirstConnectionStringParameterDescription">
+      <Output TaskParameter="Result" PropertyName="_PublishLocalizedString_EFCodeFirstConnectionStringParameterDescription" />
+    </GetPublishingLocalizedString>
+
+    <PropertyGroup>
+      <DeployParameterEFCodeFirstConnectionStringDescription Condition="'$(DeployParameterEFCodeFirstConnectionStringDescription)'==''">$(_PublishLocalizedString_EFCodeFirstConnectionStringParameterDescription)</DeployParameterEFCodeFirstConnectionStringDescription>
+    </PropertyGroup>
+
+    <!--Description might have the xml special character, we need to escape it. -->
+    <EscapeXMLString
+      Source="$(DeployParameterEFCodeFirstConnectionStringDescription)" >
+      <Output TaskParameter="Result" PropertyName="_EscapedDeployParameterEFCodeFirstConnectionStringDescription" />
+    </EscapeXMLString>
+
+    
+    <ItemGroup>
+      <MSDeployParameterValue Include="@(_DatabasesToPackageForEFCodeFirst->'$(DeployParameterPrefix)%(DestinationGroup)_DatabasePublish-Web.config Connection String')">
+        <ParameterValue>%(_DatabasesToPackageForEFCodeFirst.DestinationPath)</ParameterValue>
+        <Description>%(_DatabasesToPackageForEFCodeFirst.DestinationGroup) $(_EscapedDeployParameterEFCodeFirstConnectionStringDescription)</Description>
+        <UpdateDestWebConfig>True</UpdateDestWebConfig>
+        <AllowUIUpdate>False</AllowUIUpdate>
+      </MSDeployParameterValue>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_InsertEFCodeFirstDeployContextNames Include="@(_DatabasesToPackageForEFCodeFirst)">
+        <TransformXMLFragement_CSInsert>
+          &lt;add
+          name=&quot;%(_DatabasesToPackageForEFCodeFirst.DestinationGroup)_DatabasePublish&quot;&#13;&#10;
+          connectionString=&quot;%(_DatabasesToPackageForEFCodeFirst.DestinationGroup)_DatabasePublish.ConnetionString&quot;&#13;&#10;
+          providerName=&quot;$(InsertAdditionalWebConfigConnectionStringProviderName)&quot;&#13;&#10;
+          xdt:Transform=&quot;InsertIfMissing&quot; &#13;&#10;
+          xdt:Locator=&quot;Match(name)&quot;&#13;&#10;
+          xdt:SupressWarnings=&quot;True&quot;&#13;&#10;
+          /&gt;
+        </TransformXMLFragement_CSInsert>
+        <TransformXMLFragement_Deploy>
+          &lt;context type="%(_DatabasesToPackageForEFCodeFirst.SourceDbContext)" &#13;&#10;
+          xdt:Transform="InsertIfMissing" &#13;&#10;
+          xdt:Locator=&quot;Match(type)&quot;&#13;&#10;
+          xdt:SupressWarnings=&quot;true&quot;&#13;&#10;
+          &gt;&#13;&#10;
+            &lt;databaseInitializer type="System.Data.Entity.MigrateDatabaseToLatestVersion`2[[%(_DatabasesToPackageForEFCodeFirst.SourceDbContext)], [%(_DatabasesToPackageForEFCodeFirst.SourceMigrationConfiguration)]], EntityFramework, PublicKeyToken=b77a5c561934e089"&gt;&#13;&#10;
+              &lt;parameters&gt;&#13;&#10;
+                &lt;parameter value="%(_DatabasesToPackageForEFCodeFirst.DestinationGroup)_DatabasePublish" /&gt;&#13;&#10;
+              &lt;/parameters&gt;&#13;&#10;
+            &lt;/databaseInitializer&gt;&#13;&#10;
+          &lt;/context&gt;
+        </TransformXMLFragement_Deploy>
+      </_InsertEFCodeFirstDeployContextNames>
+    </ItemGroup>
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert) And ('@(_InsertEFCodeFirstDeployContextNames)'!='') "
+                  Encoding="utf-8"
+                  Overwrite="True"
+                  File="$(PackageLogDir)\InsertEFCodeFirstDeployContextName.Log"
+                  Lines="@(_InsertEFCodeFirstDeployContextNames->'
+    _InsertEFCodeFirstDeployContextNames   
+                      TransformXMLFragement_CSInsert: %(TransformXMLFragement_CSInsert)
+                      TransformXMLFragement_Deploy: %(TransformXMLFragement_Deploy)
+                      ')" />
+
+    <PropertyGroup>
+      <_WebConfigsToInsertEFCodeFirstDeployContext_Transform>&lt;?xml version=&quot;1.0&quot;?&gt;
+        &lt;configuration xmlns:xdt=&quot;http://schemas.microsoft.com/XML-Document-Transform&quot;&gt;
+        &lt;connectionStrings xdt:Transform=&quot;InsertIfMissing&quot; xdt:SupressWarnings=&quot;True&quot;&gt;
+        @(_InsertEFCodeFirstDeployContextNames->'%(TransformXMLFragement_CSInsert)', '')
+        &lt;/connectionStrings&gt;
+        &lt;entityFramework xdt:Transform=&quot;InsertIfMissing&quot; xdt:SupressWarnings=&quot;true&quot;&gt;
+        &lt;contexts xdt:Transform=&quot;InsertIfMissing&quot; xdt:SupressWarnings=&quot;true&quot;&gt;
+        @(_InsertEFCodeFirstDeployContextNames->'%(TransformXMLFragement_Deploy)', '')
+        &lt;/contexts&gt;
+        &lt;/entityFramework&gt;
+        &lt;/configuration&gt;
+      </_WebConfigsToInsertEFCodeFirstDeployContext_Transform>
+    </PropertyGroup>
+
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert) And ('@(_InsertEFCodeFirstDeployContextNames)'!='') "
+                Encoding="utf-8"
+                Overwrite="False"
+                File="$(PackageLogDir)\InsertEFCodeFirstDeployContextName.Log"
+                Lines="Final Transform-------------------------------
+                $(_WebConfigsToInsertEFCodeFirstDeployContext_Transform)" />
+
+  </Target>
+
+  <!--********************************************************************-->
+  <!--Target InsertEFCodeFirstDeployWebCofigCore -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <InsertEFCodeFirstDeployWebCofigCoreDependsOn>
+      HandleEFCodeFirstDataMigration;
+      ProfileTransformWebConfig;
+      PreInsertEFCodeFirstDeployWebCofig;
+    </InsertEFCodeFirstDeployWebCofigCoreDependsOn>
+  </PropertyGroup>
+
+  <Target Name="InsertEFCodeFirstDeployWebCofigCore"
+          Inputs="@(_WebConfigsToInsertEFCodeFirstDeployContext)"
+          Outputs="%(TransformOutputFile)"
+          DependsOnTargets="$(InsertEFCodeFirstDeployWebCofigCoreDependsOn)"
+          Condition="'@(_DatabasesToPackageForEFCodeFirst)' !=''">
+
+    <!-- First Delete the output parameter file-->
+    <!-- Remove the output file if there is change on $(UseParameterizeToTransformWebConfig)-->
+    <Delete Files="@(_WebConfigsToInsertEFCodeFirstDeployContext->'%(TransformOutputFile)')"/>
+
+
+    <PropertyGroup>
+      <_WebConfigToInsertEFCodeFirstDeployContext_Identity>%(_WebConfigsToInsertEFCodeFirstDeployContext.Identity)</_WebConfigToInsertEFCodeFirstDeployContext_Identity>
+      <_WebConfigToInsertEFCodeFirstDeployContext_TransformOutputFile>%(_WebConfigsToInsertEFCodeFirstDeployContext.TransformOutputFile)</_WebConfigToInsertEFCodeFirstDeployContext_TransformOutputFile>
+      <_WebConfigsToInsertEFCodeFirstDeployContext_TransformScope>%(_WebConfigsToInsertEFCodeFirstDeployContext.TransformScope)</_WebConfigsToInsertEFCodeFirstDeployContext_TransformScope>
+    </PropertyGroup>
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert)"
+                  Encoding="utf-8"
+                  Overwrite="False"
+                  File="$(PackageLogDir)\InsertEFCodeFirstDeployContextName.Log"
+                  Lines="_WebConfigToInsertEFCodeFirstDeployContext_Identity: $(_WebConfigToInsertEFCodeFirstDeployContext_Identity) 
+                      _WebConfigToInsertEFCodeFirstDeployContext_TransformOutputFile: $(_WebConfigToInsertEFCodeFirstDeployContext_TransformOutputFile)
+                      _WebConfigsToInsertEFCodeFirstDeployContext_TransformScope: $(_WebConfigsToInsertEFCodeFirstDeployContext_TransformScope)
+                      _WebConfigsToInsertEFCodeFirstDeployContext_Transform: $(_WebConfigsToInsertEFCodeFirstDeployContext_Transform)
+                      " />
+
+    <!-- Now we use the tokenize transform to auto parameterize the web.config-->
+    <ParameterizeTransformXml
+      Source="$(_WebConfigToInsertEFCodeFirstDeployContext_Identity)"
+      IsSourceAFile="True"
+      Transform="$(_WebConfigsToInsertEFCodeFirstDeployContext_Transform)"
+      IsTransformAFile="False"
+      Destination="$(_WebConfigToInsertEFCodeFirstDeployContext_TransformOutputFile)"
+      IsDestinationAFile="True"
+      Scope="$(_WebConfigsToInsertEFCodeFirstDeployContext_TransformScope)"
+      StackTrace="$(TransformWebConfigStackTraceEnabled)"
+      SourceRootPath="$(WebPublishPipelineSourceRootDirectory)">
+    </ParameterizeTransformXml>
+  </Target>
+
+  <!--********************************************************************-->
+  <!--Target PostInsertEFCodeFirstDeployWebCofig -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <PostInsertEFCodeFirstDeployWebCofigDependsOn>
+      HandleEFCodeFirstDataMigration;
+      ProfileTransformWebConfig;
+      PreInsertEFCodeFirstDeployWebCofig;
+      InsertEFCodeFirstDeployWebCofigCore;
+    </PostInsertEFCodeFirstDeployWebCofigDependsOn>
+  </PropertyGroup>
+
+  <Target Name="PostInsertEFCodeFirstDeployWebCofig"
+          DependsOnTargets="$(PostInsertEFCodeFirstDeployWebCofigDependsOn)"
+          Condition="'@(_DatabasesToPackageForEFCodeFirst)' !=''">
+
+    <ItemGroup>
+      <!--Remove untransformed Web.configs from the pipeline-->
+      <FilesForPackagingFromProject Remove="@(_WebConfigsToInsertEFCodeFirstDeployContext)" Condition="'@(_WebConfigsToInsertEFCodeFirstDeployContext)'!='' And !%(_WebConfigsToInsertEFCodeFirstDeployContext.Exclude) And Exists(%(_WebConfigsToInsertEFCodeFirstDeployContext.TransformOutputFile))"/>
+      <!--Add the transformed Web.configs at the new loction to the pipeline-->
+      <FilesForPackagingFromProject Include="@(_WebConfigsToInsertEFCodeFirstDeployContext->'%(TransformOutputFile)')" Condition="'@(_WebConfigsToInsertEFCodeFirstDeployContext)'!='' And !%(_WebConfigsToInsertEFCodeFirstDeployContext.Exclude) And Exists(%(_WebConfigsToInsertEFCodeFirstDeployContext.TransformOutputFile))"/>
+    </ItemGroup>
+
+    <!--Get Localized string before displaying message-->
+    <GetPublishingLocalizedString
+       Importance="High"
+       Condition="'@(_WebConfigsToInsertEFCodeFirstDeployContext)'!='' And !%(_WebConfigsToInsertEFCodeFirstDeployContext.Exclude) And Exists(%(_WebConfigsToInsertEFCodeFirstDeployContext.TransformOutputFile))"
+       ID="PublishLocalizedString_InsertEFCodeFirstDeployContextTransformConfigToTransformOutputFile"
+       ArgumentCount="2"
+       Arguments="@(_WebConfigsToInsertEFCodeFirstDeployContext->'%(Identity)');%(TransformOutputFile)"
+       LogType="Message" />
+    <!--<Message Importance="high"
+             Condition="'@(_WebConfigsToInsertEFCodeFirstDeployContext)'!='' And !%(_WebConfigsToInsertEFCodeFirstDeployContext.Exclude) And Exists(%(_WebConfigsToInsertEFCodeFirstDeployContext.TransformOutputFile))"
+             Text="Auto ConnectionString Transformed @(_WebConfigsToInsertEFCodeFirstDeployContext) into %(TransformOutputFile)" />-->
+
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert)"
+                      Encoding="utf-8"
+                      File="$(PackageLogDir)\PostInsertEFCodeFirstDeployWebCofig.txt"
+                      Lines="@(FilesForPackagingFromProject->'
+                      From:%(Identity) 
+                      DestinationRelativePath:%(DestinationRelativePath) 
+                      Exclude:%(Exclude) 
+                      FromTarget:%(FromTarget) 
+                      Category:%(Category)
+                      ProjectFileType:%(ProjectFileType)')" Overwrite="True" />
+
+  </Target>
+
+  <!--********************************************************************-->
+  <!--Target InsertEFCodeFirstDeployWebCofig-->
+  <!--**********************************************************************-->
+  <PropertyGroup>
+    <InsertEFCodeFirstDeployWebCofigDependsOn>
+      $(OnBeforeInsertEFCodeFirstDeployWebCofig);
+      $(InsertEFCodeFirstDeployWebCofigDependsOn);
+      TransformWebConfig;
+      HandleEFCodeFirstDataMigration;
+      ProfileTransformWebConfig;
+      PreInsertEFCodeFirstDeployWebCofig;
+      InsertEFCodeFirstDeployWebCofigCore;
+      PostInsertEFCodeFirstDeployWebCofig;
+    </InsertEFCodeFirstDeployWebCofigDependsOn>
+    <InsertEFCodeFirstDeployWebCofigBeforeTargets>
+      $(InsertEFCodeFirstDeployWebCofigBeforeTargets);
+      PreAutoParameterizationWebConfigConnectionStrings;
+      AutoParameterizationWebConfigConnectionStrings;
+      PipelineMsdeploySpecificTransformPhase;
+    </InsertEFCodeFirstDeployWebCofigBeforeTargets>
+  </PropertyGroup>
+  <Target Name="InsertEFCodeFirstDeployWebCofig" 
+          DependsOnTargets="$(InsertEFCodeFirstDeployWebCofigDependsOn)"
+          BeforeTargets="$(InsertEFCodeFirstDeployWebCofigBeforeTargets)"
+          Condition="'$(InsertEFCodeFirstDeployWebCofig)' != 'False'">
+
+  </Target>
+
+  <Target Name="_GatherDbDacFxDestinationPathes">
+    <ItemGroup>
+      <_DbDacFxDestinationPathesToPublish Include="@(_DatabasesToPackage->'%(DestinationPath)')" Condition="'%(_DatabasesToPackage.SourceProvider)' == 'dbDacFx'" />
+    </ItemGroup>
+  </Target>
+  
+  <!--********************************************************************-->
+  <!-- _CheckDBProvidersAreAvailableAtServer  -->
+  <!--********************************************************************-->
+  <Target Name="_CheckDBProvidersAreAvailableAtServer"
+          DependsOnTargets="_GatherDbDacFxDestinationPathes"
+          Condition="'$(WebPublishMethod)' != 'Package' And '$(MsDeployServiceUrl)' != ''">
+    <CallTarget Targets="_DetectDbDacFxProvider" RunEachTargetSeparately="false" Condition="'@(_DbDacFxDestinationPathesToPublish)' != ''" />      
+  </Target>
+
+  <!--********************************************************************-->
+  <!-- CollectDatabasesToPublish  -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <PublishDatabases Condition="'$(PublishDatabases)'==''">True</PublishDatabases>
+    <CollectDatabasesToPublishDependsOn>
+      $(CollectDatabasesToPublishDependsOn);
+      GetMSDeployInstalledVersionPath;
+      ProcessPublishDatabaseSettings;
+      _CheckDBProvidersAreAvailableAtServer;
+      ParseSQLScriptForMSDeployParameters;
+      HandleEFCodeFirstDataMigration;
+      InsertEFCodeFirstDeployWebCofig;
+    </CollectDatabasesToPublishDependsOn>
+  </PropertyGroup>
+  <Target Name="CollectDatabasesToPublish" DependsOnTargets="$(CollectDatabasesToPublishDependsOn)" Condition="$(PublishDatabases) And ('$(PublishDatabaseSettings)' != '' Or '$(PublishDatabaseSettingsFile)' != '')">
+  </Target>
+
+  <!--********************************************************************-->
+  <!-- AddDeclareParametersItemsForDatabaseScript  -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <BeforeAddDeclareParametersItemsForDatabaseScript Condition="'$(BeforeAddDeclareParametersItemsForDatabaseScript)'==''">
+    </BeforeAddDeclareParametersItemsForDatabaseScript>
+    <AfterAddDeclareParametersItemsForDatabaseScript Condition="'$(AfterAddDeclareParametersItemsForDatabaseScript)'==''">
+    </AfterAddDeclareParametersItemsForDatabaseScript>
+    <AddDeclareParametersItemsForDatabaseScriptDependsOn>
+      $(BeforeAddDeclareParametersItemsForDatabaseScript);
+      CollectDatabasesToPublish;
+    </AddDeclareParametersItemsForDatabaseScriptDependsOn>
+  </PropertyGroup>
+  <Target Name="AddDeclareParametersItemsForDatabaseScript"
+          DependsOnTargets="$(AddDeclareParametersItemsForDatabaseScriptDependsOn)">
+
+    <!--Get localized $(DeployParameterSqlScriptVariablesDescription) from the Task.dll if it wasn't bee set by user.-->
+    <GetPublishingLocalizedString
+      Condition="'$(DeployParameterSqlScriptVariablesDescription)'==''"
+      ID="PublishLocalizedString_SqlCommandVariableParameterDescription">
+      <Output TaskParameter="Result" PropertyName="DeployParameterSqlScriptVariablesDescription" />
+    </GetPublishingLocalizedString>
+
+
+    <!--Get localized $(DeployParameterIISAppConnectionStringDescription) from the Task.dll if it wasn't bee set by user.-->
+    <GetPublishingLocalizedString
+      Condition="'$(DeployParameterIISAppConnectionStringDescription)'=='' And !$(DeployParameterAutoDescriptionbyTags)"
+      ID="PublishLocalizedString_DatabaseConnectionStringParameterDescription">
+      <Output TaskParameter="Result" PropertyName="DeployParameterIISAppConnectionStringDescription" />
+    </GetPublishingLocalizedString>
+
+    <!--if $(DeployParameterAutoDescriptionbyTags), we turn off the description.-->
+    <DeployParameterIISAppConnectionStringDescription Condition="'$(DeployParameterIISAppConnectionStringDescription)'!='' And $(DeployParameterAutoDescriptionbyTags)"></DeployParameterIISAppConnectionStringDescription>
+
+    <ItemGroup  Condition="!$(DisableAllVSGeneratedMSDeployParameter)">
+      <_VsPublish_DatabaseToPackage_DeclareParameters Include="@(_DatabasesToPackage->'$(DeployParameterPrefix)%(DestinationGroup)-Deployment Connection String')"
+                                                      Condition="'%(_DatabasesToPackage.Identity)' !=''  And '%(_DatabasesToPackage.SourceProvider)' != 'DbCodeFirst' ">
+        <Kind>ProviderPath</Kind>
+        <Scope>%(_DatabasesToPackage.SourceProvider)</Scope>
+        <Match>^%(_DatabasesToPackage.SourcePath_RegExExcaped)$</Match>
+        <Description>$(DeployParameterIISAppConnectionStringDescription)</Description>
+        <DefaultValue>%(_DatabasesToPackage.DestinationPath)</DefaultValue>
+        <Value>%(_DatabasesToPackage.DestinationPath)</Value>
+        <Tags>$(MsDeployDatabaseTag)</Tags>
+      </_VsPublish_DatabaseToPackage_DeclareParameters>
+
+      
+      <_VsPublish_DatabaseToPackage_DeclareParameters Include="@(_DatabasesToPackage_SqlVariables->'$(DeployParameterPrefix)Sql script variable %24(%(Identity)) in %(DestinationGroup) scripts')"
+                                                      Condition="$(EnableSqlScriptVariableParameterize) And '%(_DatabasesToPackage_SqlVariables.Identity)' !=''">
+        <Kind>$(MsDeploySqlCommandVariableKind)</Kind>
+        <Scope>^%(_DatabasesToPackage_SqlVariables.SourcePath_RegExExcaped)$</Scope>
+        <Match>%(_DatabasesToPackage_SqlVariables.Identity)</Match>
+        <Description>$(DeployParameterSqlScriptVariablesDescription)</Description>
+        <DefaultValue>%(_DatabasesToPackage_SqlVariables.Value)</DefaultValue>
+        <Value>%(_DatabasesToPackage_SqlVariables.Value)</Value>
+        <Tags>sql</Tags>
+      </_VsPublish_DatabaseToPackage_DeclareParameters>
+
+      <!--Work around the TSData script when there are Sqlcommand variable that declare as Empty string-->
+      <_VsPublish_DatabaseToPackage_DeclareParameters Include="@(_DatabasesToPackage_SqlVariables->'$(DeployParameterPrefix)Sql script variable %24(%(Identity)) in %(DestinationGroup) scripts')"
+                                                      Condition="$(EnableSqlScriptVariableParameterize) and '%(_DatabasesToPackage_SqlVariables.Identity)' !='' and ('%(_DatabasesToPackage_SqlVariables.Value)' == '') and ('%(_DatabasesToPackage_SqlVariables.IsDeclared)' == 'true') ">
+        <Element>parameterValidation</Element>
+        <Kind>AllowEmpty</Kind>
+      </_VsPublish_DatabaseToPackage_DeclareParameters>
+
+      <MsDeployDeclareParameters Include="@(_VsPublish_DatabaseToPackage_DeclareParameters)">
+        <Priority>$(VsSQLDatabaseScriptParametersPriority)</Priority>
+      </MsDeployDeclareParameters>
+    </ItemGroup>
+
+    <CallTarget Targets="$(AfterAddDeclareParametersItemsForDatabaseScript)" RunEachTargetSeparately="false" Condition="'$(AfterAddDeclareParametersItemsForDatabaseScript)' != ''" />
+  </Target>
+
+
+  <!--********************************************************************-->
+  <!-- AddDatabasesToSourceManifest  -->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <WriteItemsToSourceManifestDependsOn>
+      $(WriteItemsToSourceManifestDependsOn);
+      AddDatabasesToSourceManifest;
+    </WriteItemsToSourceManifestDependsOn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <BeforeAddDatabasesToSourceManifest Condition="'$(BeforeAddDatabasesToSourceManifest)'==''">
+    </BeforeAddDatabasesToSourceManifest>
+    <AfterAddDatabasesToSourceManifest Condition="'$(AfterAddDatabasesToSourceManifest)'==''">
+    </AfterAddDatabasesToSourceManifest>
+    <AddDatabasesToSourceManifestDependsOn>
+      $(BeforeAddDatabasesToSourceManifest);
+      CollectDatabasesToPublish;
+    </AddDatabasesToSourceManifestDependsOn>
+    <AddDatabasesToSourceManifestAfterTargets>
+      $(AddDatabasesToSourceManifestAfterTargets);
+      AddIisSettingAndFileContentsToSourceManifest;
+    </AddDatabasesToSourceManifestAfterTargets>
+  </PropertyGroup>
+  <Target Name="AddDatabasesToSourceManifest"
+          DependsOnTargets="$(AddDatabasesToSourceManifestDependsOn)">
+
+    <ItemGroup>
+      <MsDeploySourceManifest Include="@(_DatabasesToSourceManifest)" Condition="'%(_DatabasesToSourceManifest.Identity)' != 'DbCodeFirst'"/>
+    </ItemGroup>
+
+    <CallTarget Targets="$(AfterAddDatabasesToSourceManifest)" RunEachTargetSeparately="false" Condition="'$(AfterAddDatabasesToSourceManifest)' != ''" />
+  </Target>
+
+  
+
+
+  <!--***********************************************************************-->
+  <!--GenerateSampleDeployScript task-->
+  <!--***********************************************************************-->
+  <PropertyGroup>
+    <GenerateSampleDeployScriptDependsOn Condition="'$(GenerateSampleDeployScriptDependsOn)'==''">
+      GetMSDeployInstalledVersionPath;
+      GenerateMsDeployManifestSettings;
+      GenerateMsdeployManifestFiles;
+    </GenerateSampleDeployScriptDependsOn>
+    <GenerateSampleDeployScriptAfterTargets>
+      $(GenerateSampleDeployScriptAfterTargets);
+      PackageUsingManifest;
+    </GenerateSampleDeployScriptAfterTargets>
+  </PropertyGroup>
+
+  <Target Condition="$(GenerateSampleDeployScript)"
+          Name="GenerateSampleDeployScript"
+          DependsOnTargets="$(GenerateSampleDeployScriptDependsOn)"
+          AfterTargets="$(GenerateSampleDeployScriptAfterTargets)">
+
+    <!--Get Localized string before displaying message-->
+    <GetPublishingLocalizedString
+       Importance="Low"
+       ID="PublishLocalizedString_GenerateSampleMsdeployBatchScript"
+       LogType="Message" />
+    <!--<Message Text="GenerateSampleDeployScript the package..." Importance="low"/>-->
+
+    <PropertyGroup>
+      <!--
+        MSDeployPublishSourceType can be 
+        SingleFilePackage(a single ziped file package)
+        Manifest(a file with Iis VDir info plus file pathes)
+        RawIisVDir(Let MSDeploy published all files underneath the phisical path)
+        ArchiveDir(a folder genearated by package with all files to be transferred)
+      -->
+      <!--So far, if we see the single file package, we pick it up; otherwise, we GenerateSampleDeployScript from Iis vdir -->
+      <GenerateSampleDeployScriptSourceType>manifest</GenerateSampleDeployScriptSourceType>
+      <GenerateSampleDeployScriptSourceFileName>@(_MSDeploySourceManifest->'%(FileName)%(Extension)')</GenerateSampleDeployScriptSourceFileName>
+      <GenerateSampleDeployScriptSourceType Condition="$(_CreatePackage) And $(PackageAsSingleFile)">package</GenerateSampleDeployScriptSourceType>
+      <GenerateSampleDeployScriptSourceFileName Condition="$(_CreatePackage) And $(PackageAsSingleFile)">@(_MSDeployPackageFile->'%(FileName)%(Extension)')</GenerateSampleDeployScriptSourceFileName>
+      <GenerateSampleDeployScriptSourceType Condition="$(_CreatePackage) And !$(PackageAsSingleFile)">archiveDir</GenerateSampleDeployScriptSourceType>
+      <GenerateSampleDeployScriptSourceFileName Condition="$(_CreatePackage) And !$(PackageAsSingleFile)">@(_MSDeployArchiveDir->'%(FileName)%(Extension)')</GenerateSampleDeployScriptSourceFileName>
+      <GenerateSampleDeployScriptSourceRoot>%25RootPath%25$(GenerateSampleDeployScriptSourceFileName)</GenerateSampleDeployScriptSourceRoot>
+      <GenerateSampleDeployScriptDestinationType>%25_Destination%25</GenerateSampleDeployScriptDestinationType>
+      <GenerateSampleDeployScriptDestinationRoot></GenerateSampleDeployScriptDestinationRoot>
+      <GenerateSampleDeployScriptParameters>@(_MSDeploySampleParametersValue->'%25RootPath%25%(FileName)%(Extension)')</GenerateSampleDeployScriptParameters>
+      <_ScriptGenerateSampleDeployScriptReadMeLocation>%25RootPath%25$(GenerateSampleDeployScriptReadMeFileName)</_ScriptGenerateSampleDeployScriptReadMeLocation>
+      <_MSdeployFwdLink>http://go.microsoft.com/?linkid=9278654</_MSdeployFwdLink>
+      <_SampleDeployCmdFwdLink>http://go.microsoft.com/fwlink/?LinkID=183544</_SampleDeployCmdFwdLink>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_MsDeployDeclareParametersNotExclude Include="@(MsDeployDeclareParameters)" Condition="'%(ExcludeFromSetParameter)' != true and '%(MsDeployDeclareParameters.Identity)' !=''" />
+    </ItemGroup>
+
+    <SortParametrsByPriority Parameters="@(_MsDeployDeclareParametersNotExclude)"
+                             OptimisticParameterDefaultValue="$(EnableOptimisticParameterDefaultValue)"
+                             OptimisticParameterMetadataName="Value"
+                             >
+      <Output TaskParameter="Result" ItemName="_SortedMsDeployDeclareParameters"/>
+    </SortParametrsByPriority>
+
+    <RemoveDuplicates Inputs="@(_SortedMsDeployDeclareParameters)">
+      <Output TaskParameter="Filtered" ItemName="_SampleSetParametersFiltered"/>
+    </RemoveDuplicates>
+
+    <ItemGroup>
+      <MsDeploySourceProviderSetting Remove="@(MsDeploySourceProviderSetting)" />
+      <MsDeploySourceProviderSetting Include="$(GenerateSampleDeployScriptSourceType)">
+        <Path>$(GenerateSampleDeployScriptSourceRoot)</Path>
+        <EncryptPassword>$(DeployEncryptKey)</EncryptPassword>
+      </MsDeploySourceProviderSetting>
+      <MsDeployDestinationProviderSetting Remove="@(MsDeployDestinationProviderSetting)" />
+      <MsDeployDestinationProviderSetting Include="$(GenerateSampleDeployScriptDestinationType)">
+        <Path>$(GenerateSampleDeployScriptDestinationRoot)</Path>
+        <EncryptPassword>$(DeployEncryptKey)</EncryptPassword>
+      </MsDeployDestinationProviderSetting>
+    </ItemGroup>
+
+    <!--Debug/Diagnostic message is not localized-->
+    <Message Text="GenerateSampleDeployScript MsDeploySourceProviderSetting is @(MsDeploySourceProviderSetting)" Condition="$(EnablePackageProcessLoggingAndAssert)" />
+    <Message Text="GenerateSampleDeployScript MsDeployDestinationProviderSetting is @(MsDeployDestinationProviderSetting)" Condition="$(EnablePackageProcessLoggingAndAssert)"/>
+
+    <!--Generate the command line  script for straight deploy-->
+    <MSdeploy
+        PreviewCommandLineOnly="True"
+        Verb="sync"
+        Source="@(MsDeploySourceProviderSetting)"
+        Destination="@(MsDeployDestinationProviderSetting)"
+        DisableLink="$(PublishDisableLinks)"
+        EnableLink="$(PublishEnableLinks)"
+        SkipRuleItems="@(MsDeploySkipRules)"
+        ExePath="%25MSDeployPath%25">
+      <Output TaskParameter="CommandLine" PropertyName="_SampleDeployScript" />
+    </MSdeploy>
+
+    <MSdeploy
+      PreviewCommandLineOnly="True"
+      Verb="sync"
+      Source="@(MsDeploySourceProviderSetting)"
+      Destination="@(MsDeployDestinationProviderSetting)"
+      DisableLink="$(PublishDisableLinks)"
+      EnableLink="$(PublishEnableLinks)"
+      SkipRuleItems="@(MsDeploySkipRules)"
+      ImportSetParametersItems="%25_DeploySetParametersFile%25"
+      ExePath="%25MSDeployPath%25">
+      <Output TaskParameter="CommandLine" PropertyName="_SampleDeployScriptOnSetParametersFile" />
+    </MSdeploy>
+    <!--Generate the command line script for the what-if msdeploy-->
+    <MSdeploy
+      PreviewCommandLineOnly="True"
+      WhatIf="True"
+      Verb="sync"
+      Source="@(MsDeploySourceProviderSetting)"
+      Destination="@(MsDeployDestinationProviderSetting)"
+      DisableLink="$(PublishDisableLinks)"
+      EnableLink="$(PublishEnableLinks)"
+      SkipRuleItems="@(MsDeploySkipRules)"
+      ImportSetParametersItems="%25_DeploySetParametersFile%25"
+      ExePath="%25MSDeployPath%25">
+      <Output TaskParameter="CommandLine" PropertyName="_SampleDeployScriptOnSetParametersFileWithWhatIf" />
+    </MSdeploy>
+
+
+    <!--Generate the Set Parameter file-->
+    <ExportParametersFile
+      Parameters="@(_SampleSetParametersFiltered)"
+      OptimisticParameterDefaultValue="$(EnableOptimisticParameterDefaultValue)"
+      SetParameterFile="$(GenerateSampleParametersValueLocation)"
+      GenerateFileEvenIfEmpty="True"
+      />
+
+    <ItemGroup>
+      <FileWrites Include="$(GenerateSampleParametersValueLocation)" />
+    </ItemGroup>
+
+
+
+
+    <!--Now write the sample batch file. Note this relies on the fact that the Batch file should be under the same location as the package and manifestfiles -->
+    <!--Note that by default Command line file only support the ANSI. Even if we code it against utf-8, the cmd.exe won't be able to handle it.
+    Only the package and setparameters.xml file name matter.  You change the deploy parameters into setparameters.xml which support utf-8 properly.-->
+    <WriteLinesToFile File="$(GenerateSampleDeployScriptLocation)"
+                      Overwrite="True"
+                      Encoding="us-ascii"
+                      Lines="@rem ---------------------------------------------------------------------------------
+@rem Copyright 2008 Microsoft Corporation. All rights reserved.
+@rem This is provided as sample to deploy the package using msdeploy.exe
+@rem For information about IIS Web Deploy technology,
+@rem please visit $(_MSdeployFwdLink)
+@rem Note: This batch file assumes the package and setparametsrs.xml are in the same folder with this file
+@rem ---------------------------------------------------------------------------------
+@if %_echo%!==! echo off
+setlocal
+@rem ---------------------------------------------------------------------------------
+@rem Please Make sure you have Web Deploy install in your machine. 
+@rem Alternatively, you can explicit set the MsDeployPath to the location it is on your machine
+@rem set MSDeployPath=&quot;$(MSDeployPath)&quot;
+@rem ---------------------------------------------------------------------------------
+                      
+@rem ---------------------------------------------------------------------------------
+@rem if user does not set MsDeployPath environment variable, we will try to retrieve it from registry.
+@rem ---------------------------------------------------------------------------------
+if &quot;%MSDeployPath%&quot; == &quot;&quot; (
+for /F &quot;usebackq tokens=1,2,*&quot; %%h  in (`reg query &quot;HKLM\SOFTWARE\Microsoft\IIS Extensions\MSDeploy&quot; /s  ^| findstr -i &quot;InstallPath&quot;`) do (
+if /I &quot;%%h&quot; == &quot;InstallPath&quot; ( 
+if /I &quot;%%i&quot; == &quot;REG_SZ&quot; ( 
+if not &quot;%%j&quot; == &quot;&quot; ( 
+if &quot;%%~dpj&quot; == &quot;%%j&quot; ( 
+set MSDeployPath=%%j
+))))))
+
+@rem ------------------------------------------
+$(_GenerateSampleDeployScript_Set_MSDeployPath)
+@rem ------------------------------------------
+
+                      
+if not exist &quot;%MSDeployPath%msdeploy.exe&quot; (
+echo. msdeploy.exe is not found on this machine. Please install Web Deploy before execute the script. 
+echo. Please visit $(_MSdeployFwdLink)
+goto :usage
+)
+
+set RootPath=%~dp0
+if /I &quot;%_DeploySetParametersFile%&quot; == &quot;&quot; (
+set _DeploySetParametersFile=$(GenerateSampleDeployScriptParameters)
+)
+
+@rem ------------------------------------------
+$(_GenerateSampleDeployScript_Set_DeploySetParametersFile)
+@rem ------------------------------------------
+
+                      
+set _ArgTestDeploy=
+set _ArgDestinationType=auto
+set _ArgComputerNameWithQuote=&quot;&quot;
+set _ArgUserNameWithQuote=&quot;&quot;
+set _ArgPasswordWithQuote=&quot;&quot;
+set _ArgEncryptPasswordWithQuote=&quot;&quot;
+set _ArgIncludeAclsWithQuote=&quot;False&quot;
+set _ArgAuthTypeWithQuote=&quot;&quot;
+set _ArgtempAgentWithQuote=&quot;&quot;
+set _ArgLocalIIS=
+set _ArgLocalIISVersion=
+set _HaveArgMSDeployAdditonalFlags=
+                      
+                      
+@rem ---------------------------------------------------------------------------------
+@rem Simple Parse the arguments
+@rem ---------------------------------------------------------------------------------
+:NextArgument
+set _ArgCurrent=%~1
+set _ArgFlagFirst=%_ArgCurrent:~0,1%
+set _ArgFlag=%_ArgCurrent:~0,3%
+set _ArgValue=%_ArgCurrent:~3%
+
+if /I &quot;%_ArgFlag%&quot; == &quot;&quot; goto :GetStarted
+if /I &quot;%_ArgFlag%&quot; == &quot;~0,3&quot; goto :GetStarted
+if /I &quot;%_ArgFlag%&quot; == &quot;/T&quot; set _ArgTestDeploy=true&amp;goto :ArgumentOK
+if /I &quot;%_ArgFlag%&quot; == &quot;/Y&quot; set _ArgTestDeploy=false&amp;goto :ArgumentOK
+if /I &quot;%_ArgFlag%&quot; == &quot;/L&quot; set _ArgLocalIIS=true&amp;goto :ArgumentOK
+
+if /I &quot;%_ArgFlag%&quot; == &quot;/M:&quot; set _ArgComputerNameWithQuote=&quot;%_ArgValue%&quot;&amp;goto :ArgumentOK
+if /I &quot;%_ArgFlag%&quot; == &quot;/U:&quot; set _ArgUserNameWithQuote=&quot;%_ArgValue%&quot;&amp;goto :ArgumentOK
+if /I &quot;%_ArgFlag%&quot; == &quot;/P:&quot; set _ArgPasswordWithQuote=&quot;%_ArgValue%&quot;&amp;goto :ArgumentOK
+if /I &quot;%_ArgFlag%&quot; == &quot;/E:&quot; set _ArgEncryptPasswordWithQuote=&quot;%_ArgValue%&quot;&amp;goto :ArgumentOK
+if /I &quot;%_ArgFlag%&quot; == &quot;/I:&quot; set _ArgIncludeAclsWithQuote=&quot;%_ArgValue%&quot;&amp;goto :ArgumentOK
+if /I &quot;%_ArgFlag%&quot; == &quot;/A:&quot; set _ArgAuthTypeWithQuote=&quot;%_ArgValue%&quot;&amp;goto :ArgumentOK
+if /I &quot;%_ArgFlag%&quot; == &quot;/G:&quot; set _ArgtempAgentWithQuote=&quot;%_ArgValue%&quot;&amp;goto :ArgumentOK
+
+@rem Any addition flags, pass through to the msdeploy
+if &quot;%_HaveArgMSDeployAdditonalFlags%&quot; == &quot;&quot; (
+goto :Assign_ArgMsDeployAdditionalFlags
+)
+set _ArgMsDeployAdditionalFlags=%_ArgMsDeployAdditionalFlags:&amp;=^&amp;% %_ArgCurrent:&amp;=^&amp;%
+set _HaveArgMSDeployAdditonalFlags=1
+goto :ArgumentOK
+
+
+:Assign_ArgMsDeployAdditionalFlags
+set _ArgMsDeployAdditionalFlags=%_ArgCurrent:&amp;=^&amp;%
+set _HaveArgMSDeployAdditonalFlags=1
+goto :ArgumentOK
+
+:ArgumentOK
+shift
+goto :NextArgument
+
+:GetStarted
+@rem ------------------------------------------
+$(_GenerateSampleDeployScript_AfterParseArguments)
+@rem ------------------------------------------
+if /I &quot;%_ArgTestDeploy%&quot; == &quot;&quot; goto :usage
+if /I &quot;%_ArgDestinationType%&quot; == &quot;&quot;  goto :usage
+
+set _Destination=%_ArgDestinationType%
+if not %_ArgComputerNameWithQuote% == &quot;&quot; set _Destination=%_Destination%,computerName=%_ArgComputerNameWithQuote%
+if not %_ArgUserNameWithQuote% == &quot;&quot; set _Destination=%_Destination%,userName=%_ArgUserNameWithQuote%
+if not %_ArgPasswordWithQuote% == &quot;&quot; set _Destination=%_Destination%,password=%_ArgPasswordWithQuote%
+if not %_ArgAuthTypeWithQuote% == &quot;&quot; set _Destination=%_Destination%,authtype=%_ArgAuthTypeWithQuote%
+if not %_ArgEncryptPasswordWithQuote% == &quot;&quot; set _Destination=%_Destination%,encryptPassword=%_ArgEncryptPasswordWithQuote%
+if not %_ArgIncludeAclsWithQuote% == &quot;&quot; set _Destination=%_Destination%,includeAcls=%_ArgIncludeAclsWithQuote%
+if not %_ArgtempAgentWithQuote% == &quot;&quot; set _Destination=%_Destination%,tempAgent=%_ArgtempAgentWithQuote%
+
+@rem ------------------------------------------
+$(_GenerateSampleDeployScript_AfterSet_Destination)
+@rem ------------------------------------------
+
+                      
+@rem ---------------------------------------------------------------------------------
+@rem add -whatif when -T is specified                      
+@rem ---------------------------------------------------------------------------------
+if /I &quot;%_ArgTestDeploy%&quot; NEQ &quot;false&quot; (
+set _MsDeployAdditionalFlags=-whatif %_MsDeployAdditionalFlags%
+)
+
+@rem ------------------------------------------
+$(_GenerateSampleDeployScript_AfterSet_WhatIf)
+@rem ------------------------------------------
+
+@rem ---------------------------------------------------------------------------------
+@rem add flags for IISExpress when -L is specified                      
+@rem ---------------------------------------------------------------------------------
+
+if /I &quot;%_ArgLocalIIS%&quot; == &quot;true&quot; (
+call :SetIISExpressArguments
+)
+if /I &quot;%_ArgLocalIIS%&quot; == &quot;true&quot; (
+if not exist &quot;%IISExpressPath%%IISExpressManifest%&quot; (
+echo. IISExpress is not found on this machine. Please install through Web Platform Installer before execute the script. 
+echo. or remove /L flag
+echo. Please visit $(_MSdeployFwdLink)
+goto :usage
+)
+if not exist &quot;%IISExpressUserProfileDirectory%&quot; (
+echo. %IISExpressUserProfileDirectory% is not exists
+echo. IISExpress is found on the machine. But the user have run IISExpress at least once.
+echo. Please visit $(_MSdeployFwdLink) for detail
+goto :usage
+)
+                      
+set _MsDeployAdditionalFlags=%_MsDeployAdditionalFlags% -appHostConfigDir:%IISExpressUserProfileDirectory% -WebServerDir:&quot;%IISExpressPath%&quot; -webServerManifest:&quot;%IISExpressManifest%&quot;
+)
+
+@rem ---------------------------------------------------------------------------------
+@rem check the existence of the package file
+@rem ---------------------------------------------------------------------------------
+if not exist &quot;$(GenerateSampleDeployScriptSourceRoot)&quot; (
+echo &quot;$(GenerateSampleDeployScriptSourceRoot)&quot; does not exist. 
+echo This batch file relies on this deploy source file^(s^) in the same folder.
+goto :usage
+)
+
+@rem ---------------------------------------------
+$(_GenerateSampleDeployScript_BeforeExecuteMsDeployExe)
+@rem ---------------------------------------------
+
+@rem ---------------------------------------------------------------------------------
+@rem Execute msdeploy.exe command line
+@rem ---------------------------------------------------------------------------------
+call :CheckParameterFile
+echo. Start executing msdeploy.exe
+echo -------------------------------------------------------
+if  not exist &quot;%_DeploySetParametersFile%&quot; (
+set _MSDeployCommandline=$(_SampleDeployScript)
+) else (
+set _MSDeployCommandline=$(_SampleDeployScriptOnSetParametersFile)
+)
+
+if &quot;%_HaveArgMSDeployAdditonalFlags%&quot; == &quot;&quot; (
+goto :MSDeployWithOutArgMsDeployAdditionalFlag
+) 
+goto :MSDeployWithArgMsDeployAdditionalFlag
+goto :eof
+
+@rem ---------------------------------------------------------------------------------
+@rem MSDeployWithArgMsDeployAdditionalFlag
+@rem ---------------------------------------------------------------------------------
+:MSDeployWithArgMsDeployAdditionalFlag
+echo. %_MSDeployCommandline% %_MsDeployAdditionalFlags% %_ArgMsDeployAdditionalFlags:&amp;=^&amp;%
+%_MSDeployCommandline% %_MsDeployAdditionalFlags% %_ArgMsDeployAdditionalFlags:&amp;=^&amp;%
+goto :eof
+
+@rem ---------------------------------------------------------------------------------
+@rem MSDeployWithOutArgMsDeployAdditionalFlag
+@rem ---------------------------------------------------------------------------------
+:MSDeployWithOutArgMsDeployAdditionalFlag
+echo. %_MSDeployCommandline% %_MsDeployAdditionalFlags%
+%_MSDeployCommandline% %_MsDeployAdditionalFlags%
+goto :eof
+
+@rem ---------------------------------------------------------------------------------
+@rem Find and set IISExpress argument.
+@rem ---------------------------------------------------------------------------------
+:SetIISExpressArguments
+                      
+if &quot;%IISExpressPath%&quot; == &quot;&quot; (
+for /F &quot;usebackq tokens=1,2,*&quot; %%h  in (`reg query &quot;HKLM\SOFTWARE\Microsoft\IISExpress&quot; /s  ^| findstr -i &quot;InstallPath&quot;`) do (
+if /I &quot;%%h&quot; == &quot;InstallPath&quot; ( 
+if /I &quot;%%i&quot; == &quot;REG_SZ&quot; ( 
+if not &quot;%%j&quot; == &quot;&quot; ( 
+if &quot;%%~dpj&quot; == &quot;%%j&quot; ( 
+set IISExpressPath=%%j
+))))))
+
+if &quot;%IISExpressPath%&quot; == &quot;&quot; (
+for /F &quot;usebackq tokens=1,2,*&quot; %%h  in (`reg query &quot;HKLM\SOFTWARE\Wow6432Node\Microsoft\IISExpress&quot; /s  ^| findstr -i &quot;InstallPath&quot;`) do (
+if /I &quot;%%h&quot; == &quot;InstallPath&quot; ( 
+if /I &quot;%%i&quot; == &quot;REG_SZ&quot; ( 
+if not &quot;%%j&quot; == &quot;&quot; ( 
+if &quot;%%~dpj&quot; == &quot;%%j&quot; ( 
+set IISExpressPath=%%j
+))))))
+
+if &quot;%PersonalDocumentFolder%&quot; == &quot;&quot; (
+for /F &quot;usebackq tokens=2*&quot; %%i  in (`reg query &quot;HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders&quot; /v Personal`) do (
+set PersonalDocumentFolder=%%j
+))
+
+if &quot;%IISExpressManifest%&quot; == &quot;&quot; (
+for /F &quot;usebackq tokens=1,2,*&quot; %%h  in (`reg query &quot;HKLM\SOFTWARE\Microsoft\IISExpress&quot; /s  ^| findstr -i &quot;Manifest&quot;`) do (
+if /I &quot;%%h&quot; == &quot;Manifest&quot; ( 
+if /I &quot;%%i&quot; == &quot;REG_SZ&quot; ( 
+if not &quot;%%j&quot; == &quot;&quot; ( 
+set IISExpressManifest=%%j
+)))))
+
+if &quot;%IISExpressManifest%&quot; == &quot;&quot; (
+for /F &quot;usebackq tokens=1,2,*&quot; %%h  in (`reg query &quot;HKLM\SOFTWARE\Wow6432Node\Microsoft\IISExpress&quot; /s  ^| findstr -i &quot;Manifest&quot;`) do (
+if /I &quot;%%h&quot; == &quot;Manifest&quot; ( 
+if /I &quot;%%i&quot; == &quot;REG_SZ&quot; ( 
+if not &quot;%%j&quot; == &quot;&quot; ( 
+set IISExpressManifest=%%j
+)))))
+                      
+set IISExpressUserProfileDirectory=&quot;%PersonalDocumentFolder%\IISExpress\config&quot;
+
+@rem ---------------------------------------------
+$(_GenerateSampleDeployScript_AfterSetIISexpressRelatedVariable)
+@rem ---------------------------------------------
+
+goto :eof                      
+                      
+@rem ---------------------------------------------------------------------------------
+@rem CheckParameterFile -- check if the package's setparamters.xml exists or not
+@rem ---------------------------------------------------------------------------------
+:CheckParameterFile
+if exist &quot;%_DeploySetParametersFile%&quot; (
+echo SetParameters from:
+echo &quot;%_DeploySetParametersFile%&quot;
+echo You can change IIS Application Name, Physical path, connectionString
+echo or other deploy parameters in the above file.
+) else (
+echo SetParamterFiles does not exist in package location.
+echo Use package embedded defaultValue to deploy.
+)
+echo -------------------------------------------------------
+goto :eof
+
+@rem ---------------------------------------------------------------------------------
+@rem Usage
+@rem ---------------------------------------------------------------------------------
+:usage
+echo =========================================================
+if not exist &quot;$(_ScriptGenerateSampleDeployScriptReadMeLocation)&quot; (
+echo Usage:%~nx0 [/T^|/Y] [/M:ComputerName] [/U:userName] [/P:password] [/G:tempAgent] [additional msdeploy flags ...]
+echo Required flags:
+echo /T  Calls msdeploy.exe with the &quot;-whatif&quot; flag, which simulates deployment. 
+echo /Y  Calls msdeploy.exe without the &quot;-whatif&quot; flag, which deploys the package to the current machine or destination server 
+echo Optional flags:  
+echo. By Default, this script deploy to the current machine where this script is invoked which will use current user credential without tempAgent. 
+echo.   Only pass these arguments when in advance scenario.
+echo /M:  Msdeploy destination name of remote computer or proxy-URL. Default is local.
+echo /U:  Msdeploy destination user name. 
+echo /P:  Msdeploy destination password.
+echo /G:  Msdeploy destination tempAgent. True or False. Default is false.
+echo /A:  specifies the type of authentication to be used. The possible values are NTLM and Basic. If the wmsvc provider setting is specified, the default authentication type is Basic; otherwise, the default authentication type is NTLM.
+echo /L:  Deploy to Local IISExpress User Instance.  
+
+echo.[additional msdeploy flags]: note: &quot; is required for passing = through command line.
+echo  &quot;-skip:objectName=setAcl&quot; &quot;-skip:objectName=dbFullSql&quot;
+echo.Alternative environment variable _MsDeployAdditionalFlags is also honored.
+echo.
+echo. Please make sure MSDeploy is installed in the box $(_MSdeployFwdLink)
+echo.
+echo In addition, you can change IIS Application Name, Physical path, 
+echo connectionString and other deploy parameters in the following file:
+echo &quot;%_DeploySetParametersFile%&quot;
+echo.
+echo For more information about this batch file, visit $(_SampleDeployCmdFwdLink) 
+) else (
+start notepad &quot;$(_ScriptGenerateSampleDeployScriptReadMeLocation)&quot;
+)
+echo =========================================================
+goto :eof
+"/>
+
+
+    <ItemGroup>
+      <FileWrites Include="$(GenerateSampleDeployScriptLocation)" />
+    </ItemGroup>
+
+    <!--Force evaluation of the $(GenerateSampleDeployScriptLocation)-->
+    <CreateProperty Value="$(GenerateSampleDeployScriptLocation)">
+      <Output TaskParameter="Value" PropertyName="_GenerateSampleDeployScriptLocation"/>
+    </CreateProperty>
+
+    <!--Generate localized readme.txt for this batch file-->
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpPrerequisites"
+      ArgumentCount="3"
+      Arguments="$(_MSdeployFwdLink);$(GenerateSampleDeployScriptSourceFileName);$(GenerateSampleParametersValueFileName)">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpSection1"
+      ArgumentCount="1"
+      Arguments="$([System.IO.Path]::GetFileName($(_GenerateSampleDeployScriptLocation)))">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpRequired">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpRequiredExplainedFlagT">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+    ID="PublishLocalizedString_SampleScriptHelpRequiredExplainedFlagY">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpOptional">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpOptionalExplainedFlagM">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpOptionalExplainedFlagUP">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpOptionalExplainedFlagG">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpOptionalExplainedFlagA">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpOptionalExplainedFlagL">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpOptionalExplainedAdditionalFlags">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpEnviroment">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpEnviromentExplained"
+      ArgumentCount="1"
+      Arguments="$(GenerateSampleParametersValueFileName)">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+    <GetPublishingLocalizedString
+      ID="PublishLocalizedString_SampleScriptHelpMoreInfo"
+      ArgumentCount="1"
+      Arguments="$(_SampleDeployCmdFwdLink)">
+      <Output TaskParameter="Result" ItemName="_PublishLocalizedString_SampleScriptHelpString" />
+    </GetPublishingLocalizedString>
+
+    <WriteLinesToFile File="$(GenerateSampleDeployScriptReadMeLocation)"
+                      Overwrite="True"
+                       Encoding="utf-8"
+                       Lines="@(_PublishLocalizedString_SampleScriptHelpString,'')" />
+
+
+    <ItemGroup>
+      <FileWrites Include="$(GenerateSampleDeployScriptReadMeLocation)" />
+    </ItemGroup>
+
+
+    <!--Get Localized string before displaying message where we generate the batch file-->
+    <GetPublishingLocalizedString
+       Importance="High"
+       ID="PublishLocalizedString_FinishGenerateSampleMsDeployBatchScript"
+       ArgumentCount="2"
+       Arguments="$(GenerateSampleDeployScriptLocation);$(GenerateSampleParametersValueLocation)"
+       LogType="Message" />
+
+    <!--<Message Importance="high"
+         Text="Sample script for deploying this package is generated at the following location:
+$(GenerateSampleDeployScriptLocation)
+For this sample script, you can change the deploy parameters by changing the following file:
+$(GenerateSampleParametersValueLocation)" />-->
+
+  </Target>
+
+
+  <!--ImportAfter Extension-->
+  <PropertyGroup>
+    <ImportByWildcardAfterMicrosoftWebPublishingMSDeployCommonTargets Condition="'$(ImportByWildcardAfterMicrosoftWebPublishingMSDeployCommonTargets)'==''">true</ImportByWildcardAfterMicrosoftWebPublishingMSDeployCommonTargets>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportAfter\*" Condition="'$(ImportByWildcardAfterMicrosoftWebPublishingMSDeployCommonTargets)' == 'true' and exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportAfter')"/>
+
+</Project>

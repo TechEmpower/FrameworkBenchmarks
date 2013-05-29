@@ -16,7 +16,7 @@ def start(args):
     # build
     subprocess.check_call("rm -rf bin obj", shell=True, cwd=app)
     subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd=app)
-    subprocess.check_call("sudo chown -R ubuntu:ubuntu /usr/local/etc/mono", shell=True)
+    subprocess.check_call("sudo chown -R $USER:$USER /usr/local/etc/mono", shell=True)
     
     # nginx
     workers = 'worker_processes ' + str(args.max_threads) + ';'
