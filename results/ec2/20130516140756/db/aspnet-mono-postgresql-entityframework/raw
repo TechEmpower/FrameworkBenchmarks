@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed May 29 17:45:23 UTC 2013
+
+  System load:  0.09              Processes:           75
+  Usage of /:   64.7% of 7.87GB   Users logged in:     0
+  Memory usage: 2%                IP address for eth0: 10.255.1.149
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+31 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.7.12:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.7.12:8080/entityframework/postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    55.25ms  147.14ms   1.40s    97.42%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  815 requests in 5.04s, 2.90MB read
+Requests/sec:    161.68
+Transfer/sec:    588.31KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.7.12:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.7.12:8080/entityframework/postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   972.16ms    1.22s    5.20s    84.73%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7541 requests in 30.01s, 27.56MB read
+  Socket errors: connect 0, read 0, write 0, timeout 843
+Requests/sec:    251.27
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.7.12:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.7.12:8080/entityframework/postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.24ms   45.03ms 272.67ms   86.98%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7308 requests in 30.00s, 25.96MB read
+Requests/sec:    243.59
+Transfer/sec:      0.87MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.7.12:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.7.12:8080/entityframework/postgresql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    79.41ms   91.26ms 464.32ms   82.82%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7021 requests in 30.00s, 24.92MB read
+Requests/sec:    234.01
+Transfer/sec:    850.67KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.7.12:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.7.12:8080/entityframework/postgresql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   145.49ms  174.59ms 895.57ms   81.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6930 requests in 30.00s, 24.68MB read
+Requests/sec:    230.97
+Transfer/sec:    842.35KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.7.12:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.7.12:8080/entityframework/postgresql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   313.28ms  333.92ms   1.51s    80.40%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6494 requests in 30.00s, 23.24MB read
+Requests/sec:    216.45
+Transfer/sec:    793.13KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.7.12:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.7.12:8080/entityframework/postgresql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   668.19ms  747.62ms   3.24s    85.46%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6300 requests in 30.01s, 22.69MB read
+  Socket errors: connect 0, read 0, write 0, timeout 82
+Requests/sec:    209.96
+Transfer/sec:    774.20KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.7.12:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.7.12:8080/entityframework/postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.24s     1.22s    4.78s    65.57%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  6216 requests in 30.01s, 22.90MB read
+  Socket errors: connect 0, read 0, write 0, timeout 788
+Requests/sec:    207.12
+Transfer/sec:    781.31KB

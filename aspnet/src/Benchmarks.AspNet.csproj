@@ -14,11 +14,7 @@
     <AssemblyName>Benchmarks.AspNet</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugSymbols>true</DebugSymbols>
@@ -46,94 +42,107 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mvc.dll">
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc">
       <Private>True</Private>
       <HintPath>..\lib\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Helpers">
       <Private>True</Private>
       <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Razor">
+      <Private>True</Private>
+      <HintPath>..\lib\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages">
+      <Private>True</Private>
+      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment">
+      <Private>True</Private>
+      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor">
+      <Private>True</Private>
+      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
       <Private>True</Private>
       <HintPath>..\lib\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data">
-      <Private>True</Private>
-      <HintPath>..\lib\MySql.Data.6.7.2\MySql.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data.Entity">
-      <Private>True</Private>
-      <HintPath>..\lib\MySql.Data.6.7.2\MySql.Data.Entity.dll</HintPath>
-    </Reference>
-    <Reference Include="Npgsql">
-      <Private>True</Private>
-      <HintPath>..\lib\Npgsql.2.0.12-EF6\Npgsql.dll</HintPath>
-    </Reference>
-    <Reference Include="Npgsql">
-      <Private>True</Private>
-      <HintPath>..\lib\Npgsql.2.0.12-EF6\Mono.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Driver">
-      <Private>True</Private>
-      <HintPath>..\lib\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Bson">
-      <Private>True</Private>
-      <HintPath>..\lib\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Bson.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
       <Private>True</Private>
       <HintPath>..\lib\EntityFramework.6.0.0-alpha3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework">
+      <Private>True</Private>
+      <HintPath>..\lib\EntityFramework.6.0.0-alpha3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql">
+      <Private>True</Private>
+      <HintPath>..\lib\MySql.Data.Entity.6.7.2-beta-ef6\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql">
+      <Private>True</Private>
+      <HintPath>..\lib\MySql.Data.Entity.6.7.2-beta-ef6\lib\net45\MySql.Data.Entity.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <Private>True</Private>
+      <HintPath>..\lib\Npgsql.EF6.2.0.12-pre4\lib\net45\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <Private>True</Private>
+      <HintPath>..\lib\Npgsql.EF6.2.0.12-pre4\lib\net45\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB">
+      <Private>True</Private>
+      <HintPath>..\lib\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB">
+      <Private>True</Private>
+      <HintPath>..\lib\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JsonController.cs" />
     <Compile Include="Controllers\AdoController.cs" />
     <Compile Include="Controllers\EntityFrameworkController.cs" />
     <Compile Include="Controllers\MongoDBController.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Models\EntityFramework.cs" />
+    <Compile Include="Models\MongoDB.cs" />
     <Compile Include="Models\World.cs" />
     <Compile Include="Models\Fortune.cs" />
-    <Content Include="Global.asax" />
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\Index.cshtml" />
+    <Content Include="Views\Fortunes.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Fortunes.cshtml">
-      <Generator>RazorGenerator</Generator>
-    </Content>
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\IIS.pubxml" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
   </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != '' And Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
-  <Import Project="..\lib\VisualStudio.MsBuild.11.0\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' == '' Or !Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
-  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+  <Import Project="..\lib\MSBuild.Microsoft.VisualStudio.Web.targets.11.0.2.1\tools\VSToolsPath\WebApplications\Microsoft.WebApplication.targets" Condition="('$(VSToolsPath)' == '' Or !Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')) And Exists('..\lib\MSBuild.Microsoft.VisualStudio.Web.targets.11.0.2.1\tools\VSToolsPath\WebApplications\Microsoft.WebApplication.targets')" />
+  <Import Project="..\lib\.nuget\NuGet.targets" Condition="Exists('..\lib\.nuget\NuGet.targets')" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)' == 'true'">
     <AspNetCompiler VirtualPath="/" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
   <ProjectExtensions>

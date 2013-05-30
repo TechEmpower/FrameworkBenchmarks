@@ -54,8 +54,8 @@ Next, we're going to setup the servers with all the necessary software:
     ulimit -n 8192
     # Most software is installed autormatically by the script, but running the mongo command below from 
     # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
-    cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
+    cd installs/jruby-rack && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
+    cd target && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
     cd ../../..
     cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
     cd ..
@@ -108,8 +108,8 @@ Next, we're going to setup the servers with all the necessary software:
     # For your first time through the tests, set the ulimit for open files
     # Most software is installed autormatically by the script, but running the mongo command below from
     # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
-    cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
+    cd installs/jruby-rack && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
+    cd target && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
     cd ../../..
     cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
     cd ..
