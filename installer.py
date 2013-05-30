@@ -25,7 +25,7 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl", True)
     self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test", True)
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get install gcc-4.8 g++-4.8", True)
@@ -74,7 +74,7 @@ class Installer:
     # nodejs
     #
 
-    self.__run_command("curl http://nodejs.org/dist/v0.10.2/node-v0.10.2-linux-x64.tar.gz | tar xvz")
+    self.__run_command("curl http://nodejs.org/dist/v0.10.8/node-v0.10.8-linux-x64.tar.gz | tar xvz")
 
     #
     # Java
@@ -91,14 +91,14 @@ class Installer:
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
     subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0"])
     subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler"])
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.3"])
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do gem install bundler"])
+    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.4"])
+    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install bundler"])
 
     # We need a newer version of jruby-rack
     self.__run_command("git clone git://github.com/jruby/jruby-rack.git")
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do bundle install"])
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"])
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem"])
+    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do bundle install"])
+    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"])
+    subprocess.call(["bash", "-c", "cd installs/jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem"])
 
     #
     # go
@@ -109,9 +109,11 @@ class Installer:
     #
     # Perl
     #
-
+    
+    self.__run_command("curl http://downloads.activestate.com/ActivePerl/releases/5.16.3.1603/ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz | tar xvz");
+    self.__run_command("sudo ./install.sh --license-accepted --prefix /opt/ActivePerl-5.16 --no-install-html", cwd="ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746", send_yes=True)
     self.__run_command("curl -L http://cpanmin.us | perl - --sudo App::cpanminus")
-    self.__run_command("cpanm -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg")
+    self.__run_command("cpanm -f -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros")
 
     #
     # php
@@ -133,6 +135,9 @@ class Installer:
     # Phalcon
     self.__run_command("git clone git://github.com/phalcon/cphalcon.git")
     self.__run_command("sudo ./install", cwd="cphalcon/build")
+
+    # YAF
+    self.__run_command("sudo pecl install yaf")
 
     #
     # Haskell
@@ -157,11 +162,13 @@ class Installer:
     # Mono
     #
     self.__run_command("git clone git://github.com/mono/mono")
-    self.__run_command("git checkout mono-3.10", cwd="mono")
+    self.__run_command("git checkout mono-3.0.10", cwd="mono")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
     self.__run_command("make get-monolite-latest", cwd="mono")
     self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
     self.__run_command("sudo make install", cwd="mono")
+    
+    self.__run_command("mozroots --import --sync")
 
     self.__run_command("git clone git://github.com/mono/xsp")
     self.__run_command("git checkout 3.0", cwd="xsp")
@@ -173,23 +180,12 @@ class Installer:
     #######################################
 
     #
-    # Apache
-    #
-
-    self.__run_command("sudo apt-get install apache2 libapache2-mod-php5", True)
-    self.__run_command("sudo mv /etc/apache2/apache2.conf /etc/apache2/apache2.conf.orig")
-    self.__run_command("sudo sh -c \"cat ../config/apache2.conf > /etc/apache2/apache2.conf\"")
-    self.__run_command("sudo mv /etc/apache2/ports.conf /etc/apache2/ports.conf.orig")
-    self.__run_command("sudo sh -c \"cat ../config/ports.conf > /etc/apache2/ports.conf\"")
-    self.__run_command("sudo /etc/init.d/apache2 stop")
-
-    #
     # Nginx
     #
-    self.__run_command("curl http://nginx.org/download/nginx-1.4.0.tar.gz | tar xvz")
-    self.__run_command("./configure", cwd="nginx-1.4.0")
-    self.__run_command("make", cwd="nginx-1.4.0")
-    self.__run_command("sudo make install", cwd="nginx-1.4.0")
+    self.__run_command("curl http://nginx.org/download/nginx-1.4.1.tar.gz | tar xvz")
+    self.__run_command("./configure", cwd="nginx-1.4.1")
+    self.__run_command("make", cwd="nginx-1.4.1")
+    self.__run_command("sudo make install", cwd="nginx-1.4.1")
 
     #
     # Openresty (nginx with openresty stuff)
@@ -203,7 +199,7 @@ class Installer:
     # Gunicorn
     #
 
-    self.__run_command("sudo easy_install -U 'gunicorn==0.17.2'")
+    self.__run_command("sudo easy_install -U 'gunicorn==0.17.4'")
     self.__run_command("sudo pip install --upgrade meinheld")
     self.__run_command("sudo easy_install -U 'eventlet==0.12.1'")
     self.__run_command("sudo pip install --upgrade 'gevent==0.13.8'")
@@ -213,49 +209,12 @@ class Installer:
     #
 
     self.__run_command("sudo cp -r /usr/lib/jvm/java-1.7.0-openjdk-amd64/include /usr/lib/jvm/java-1.7.0-openjdk-amd64/jre/bin/")
-    self.__run_command("curl http://www.caucho.com/download/resin-4.0.34.tar.gz | tar xvz")
-    self.__run_command("./configure --prefix=`pwd`", cwd="resin-4.0.34")
-    self.__run_command("make", cwd="resin-4.0.34")
-    self.__run_command("make install", cwd="resin-4.0.34")
-    self.__run_command("mv conf/resin.properties conf/resin.properties.orig", cwd="resin-4.0.34")
-    self.__run_command("cat ../config/resin.properties > resin-4.0.34/conf/resin.properties")
-
-    #
-    # Passenger
-    #
-
-    self.__run_command("git clone https://github.com/FooBarWidget/passenger.git")
-    self.__run_command("git checkout 65d36dbbadd399f65d81f5febadce9b0c6c1a430", cwd="passenger")
-    subprocess.call(["bash", "-c", "cd installs/passenger && source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem build passenger.gemspec"])
-    subprocess.call(["bash", "-c", "cd installs/passenger && source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install passenger-3.9.5.rc3.gem"])
-
-    ##############################
-    # Tomcat
-    # We don't use tomcat in our tests yet, but this is here to remind us of how we
-    # installed the apr connector
-    ##############################
-    self.__run_command("curl http://apache.cs.utah.edu/tomcat/tomcat-7/v7.0.35/bin/apache-tomcat-7.0.35.tar.gz | tar xvz")
-    #wget http://apache.cs.utah.edu/tomcat/tomcat-7/v7.0.35/bin/apache-tomcat-7.0.35.tar.gz
-    #tar -xvzf apache-tomcat-7.0.35.tar.gz
-    #rm apache-tomcat-7.0.35.tar.gz
-    # use the native APR
-    # http://evgeny-goldin.com/blog/ubuntu-installing-apr-tomcat/
-    #wget http://apache.claz.org/apr/apr-1.4.6.tar.gz
-    #tar xvf apr-1.4.6.tar.gz
-    #cd apr-1.4.6
-    #./configure
-    #make
-    #sudo make install
-    #cd ..
-    #rm apr-1.4.6.tar.gz
-    #wget http://apache.tradebit.com/pub/tomcat/tomcat-connectors/native/1.1.24/source/tomcat-native-1.1.24-src.tar.gz
-    #tar xvf tomcat-native-1.1.24-src.tar.gz
-    #cd tomcat-native-1.1.24-src/jni/native
-    #./configure --with-apr=/usr/local/apr
-    #make
-    #sudo make install
-    #cd ../../..
-    #rm tomcat-native-1.1.24-src.tar.gz
+    self.__run_command("curl http://www.caucho.com/download/resin-4.0.36.tar.gz | tar xvz")
+    self.__run_command("./configure --prefix=`pwd`", cwd="resin-4.0.36")
+    self.__run_command("make", cwd="resin-4.0.36")
+    self.__run_command("make install", cwd="resin-4.0.36")
+    self.__run_command("mv conf/resin.properties conf/resin.properties.orig", cwd="resin-4.0.36")
+    self.__run_command("cat ../config/resin.properties > resin-4.0.36/conf/resin.properties")
 
     ##############################################################
     #
@@ -403,17 +362,6 @@ class Installer:
 
     sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/postgresql
     sudo -u postgres -H /etc/init.d/postgresql start
-
-    ##############################
-    # Weighttp
-    ##############################
-
-    git clone git://git.lighttpd.net/weighttp
-    cd weighttp
-    ./waf configure
-    ./waf build
-    sudo ./waf install
-    cd ~
 
     ##############################
     # wrk
