@@ -4,8 +4,6 @@ TODO items for the Dart benchmark:
 
 2. Modify setup.py to run multiple dart servers behind nginx as a load balancer.  See server.dart's "main" function for command line options for choosing a port and connection pool size.
 
-3. Wait for an issue with the dart/postgresql package to be resolved.  Right now, the latest version (which contains a fix we need) won't install.  https://github.com/xxgreg/postgresql/issues/9
+3. Modify benchmark_config to have the correct "sort" number.
 
-4. Modify benchmark_config to have the correct "sort" number.
-
-5. See if any Dart experts are willing to give this a code review.
+4. See if any Dart experts are willing to give this a code review.
