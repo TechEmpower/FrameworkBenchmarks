@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Fri May 17 01:30:40 UTC 2013
+  System information as of Wed May 29 17:19:52 UTC 2013
 
-  System load:  0.02              Processes:           75
-  Usage of /:   63.7% of 7.87GB   Users logged in:     1
-  Memory usage: 10%               IP address for eth0: 10.254.54.43
+  System load:  0.26              Processes:           71
+  Usage of /:   64.7% of 7.87GB   Users logged in:     0
+  Memory usage: 2%                IP address for eth0: 10.255.1.149
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,114 +17,108 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-27 packages can be updated.
+31 packages can be updated.
 15 updates are security updates.
 
-*** System restart required ***
 
 ---------------------------------------------------------
  Running Primer kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.19.48:8080/bench/db/2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.254.7.12:8080/bench/db/2
 ---------------------------------------------------------
 
-Running 5s test @ http://10.254.19.48:8080/bench/db/2
+Running 5s test @ http://10.254.7.12:8080/bench/db/2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    29.03ms   37.05ms 331.70ms   92.19%
+    Latency    25.67ms   15.18ms 182.61ms   87.73%
     Req/Sec     0.00      0.00     0.00    100.00%
-  1624 requests in 5.01s, 33.33MB read
-  Non-2xx or 3xx responses: 1624
-Requests/sec:    323.98
-Transfer/sec:      6.65MB
+  1553 requests in 5.02s, 410.27KB read
+Requests/sec:    309.07
+Transfer/sec:     81.65KB
 
 ---------------------------------------------------------
  Running Warmup kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/bench/db/2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.7.12:8080/bench/db/2
 ---------------------------------------------------------
 
-Running 30s test @ http://10.254.19.48:8080/bench/db/2
+Running 30s test @ http://10.254.7.12:8080/bench/db/2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   743.09ms  225.51ms   2.53s    77.71%
+    Latency   812.50ms  324.24ms   1.87s    74.10%
     Req/Sec     0.00      0.00     0.00    100.00%
-  9881 requests in 30.01s, 202.86MB read
-  Socket errors: connect 0, read 0, write 0, timeout 3
-  Non-2xx or 3xx responses: 9881
-Requests/sec:    329.30
-Transfer/sec:      6.76MB
+  8970 requests in 30.01s, 2.31MB read
+Requests/sec:    298.92
+Transfer/sec:     78.98KB
 
 ---------------------------------------------------------
  Queries: 1 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/bench/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.7.12:8080/bench/db/1
 ---------------------------------------------------------
 
-Running 30s test @ http://10.254.19.48:8080/bench/db/1
+Running 30s test @ http://10.254.7.12:8080/bench/db/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   740.29ms  224.39ms   1.65s    76.00%
+    Latency   791.85ms  268.83ms   2.91s    77.36%
     Req/Sec     0.00      0.00     0.00    100.00%
-  9909 requests in 30.01s, 203.72MB read
-  Non-2xx or 3xx responses: 9909
-Requests/sec:    330.24
-Transfer/sec:      6.79MB
+  9330 requests in 30.01s, 2.09MB read
+Requests/sec:    310.91
+Transfer/sec:     71.28KB
 
 ---------------------------------------------------------
  Queries: 5 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/bench/db/5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.7.12:8080/bench/db/5
 ---------------------------------------------------------
 
-Running 30s test @ http://10.254.19.48:8080/bench/db/5
+Running 30s test @ http://10.254.7.12:8080/bench/db/5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   755.85ms  236.22ms   2.15s    75.70%
+    Latency   920.01ms  302.19ms   1.89s    75.00%
     Req/Sec     0.00      0.00     0.00    100.00%
-  9893 requests in 30.01s, 203.31MB read
+  8024 requests in 30.01s, 2.89MB read
   Socket errors: connect 0, read 0, write 0, timeout 1
-  Non-2xx or 3xx responses: 9893
-Requests/sec:    329.67
-Transfer/sec:      6.77MB
+Requests/sec:    267.41
+Transfer/sec:     98.68KB
 
 ---------------------------------------------------------
  Queries: 10 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/bench/db/10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.7.12:8080/bench/db/10
 ---------------------------------------------------------
 
-Running 30s test @ http://10.254.19.48:8080/bench/db/10
+Running 30s test @ http://10.254.7.12:8080/bench/db/10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   739.56ms  227.91ms   1.48s    75.06%
+    Latency     1.07s   335.30ms   3.00s    78.50%
     Req/Sec     0.00      0.00     0.00    100.00%
-  9871 requests in 30.01s, 202.67MB read
-  Non-2xx or 3xx responses: 9871
-Requests/sec:    328.92
-Transfer/sec:      6.75MB
+  6755 requests in 30.01s, 3.59MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    225.10
+Transfer/sec:    122.62KB
 
 ---------------------------------------------------------
  Queries: 15 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/bench/db/15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.7.12:8080/bench/db/15
 ---------------------------------------------------------
 
-Running 30s test @ http://10.254.19.48:8080/bench/db/15
+Running 30s test @ http://10.254.7.12:8080/bench/db/15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   745.76ms  231.87ms   1.43s    74.95%
+    Latency     1.21s   415.75ms   2.56s    73.75%
     Req/Sec     0.00      0.00     0.00    100.00%
-  9956 requests in 30.01s, 204.41MB read
-  Non-2xx or 3xx responses: 9956
-Requests/sec:    331.77
-Transfer/sec:      6.81MB
+  6004 requests in 30.01s, 4.22MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:    200.06
+Transfer/sec:    143.93KB
 
 ---------------------------------------------------------
  Queries: 20 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/bench/db/20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.7.12:8080/bench/db/20
 ---------------------------------------------------------
 
-Running 30s test @ http://10.254.19.48:8080/bench/db/20
+Running 30s test @ http://10.254.7.12:8080/bench/db/20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   738.01ms  234.17ms   1.78s    74.95%
+    Latency     1.34s   430.67ms   2.46s    79.30%
     Req/Sec     0.00      0.00     0.00    100.00%
-  9913 requests in 30.00s, 203.80MB read
-  Non-2xx or 3xx responses: 9913
-Requests/sec:    330.39
-Transfer/sec:      6.79MB
+  5335 requests in 30.01s, 4.66MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:    177.76
+Transfer/sec:    158.94KB
