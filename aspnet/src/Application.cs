@@ -23,6 +23,8 @@ namespace Benchmarks.AspNet
 
         private void Start()
         {
+            // Remove X-AspNetMvc-Version HTTP response header
+            MvcHandler.DisableMvcResponseHeader = true;
             Routes();
             Views();
         }
