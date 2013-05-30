@@ -23,9 +23,6 @@ Install-WindowsFeature Web-Asp-Net45
 $env:Path += ";C:\Windows\system32\inetsrv"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 appcmd set config -section:system.webServer/httpErrors -errorMode:Detailed | Out-Null
 
-# Disable logging
-appcmd set config -section:system.webServer/httpLogging -dontLog:True | Out-Null
-
 # URL Rewrite
 $rewrite_url = "http://download.microsoft.com/download/6/7/D/67D80164-7DD0-48AF-86E3-DE7A182D6815/rewrite_2.0_rtw_x64.msi"
 $rewrite_local = "$workdir\rewrite_2.0_rtw_x64.msi"
