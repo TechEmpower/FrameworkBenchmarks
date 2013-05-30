@@ -244,7 +244,7 @@ class Benchmarker:
     try:
       if os.name == 'nt':
         return True
-      subprocess.check_call("sudo sysctl -w net.core.somaxconn=1024".rsplit(" "))
+      subprocess.check_call("sudo sysctl -w net.core.somaxconn=5000".rsplit(" "))
       subprocess.check_call("sudo -s ulimit -n 8192".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_recycle=1".rsplit(" "))
@@ -265,7 +265,7 @@ class Benchmarker:
   def __setup_client(self):
     p = subprocess.Popen(self.ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
-      sudo sysctl -w net.core.somaxconn=1024
+      sudo sysctl -w net.core.somaxconn=5000
       sudo -s ulimit -n 8192
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
