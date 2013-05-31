@@ -10,7 +10,8 @@ export PLAY_HOME=~/FrameworkBenchmarks/installs/play-2.1.2-RC1
 export PLAY1_HOME=~/FrameworkBenchmarks/installs/play-1.2.5
 export MAVEN_HOME=~/FrameworkBenchmarks/installs/apache-maven-3.0.5
 export PERL_HOME=/opt/ActivePerl-5.16
-export PATH="$JAVA_HOME/bin:$GRAILS_HOME/bin:$PLAY_HOME:$PLAY1_HOME:$VERTX_HOME/bin:$GOROOT/bin:$NODE_HOME/bin:$HOME/FrameworkBenchmarks/installs/bin:$MAVEN_HOME/bin:$PERL_HOME/bin:$PERL_HOME/site/bin:$PATH"
+export DART_HOME=~/FrameworkBenchmarks/installs/dart-sdk
+export PATH="$JAVA_HOME/bin:$GRAILS_HOME/bin:$PLAY_HOME:$PLAY1_HOME:$VERTX_HOME/bin:$GOROOT/bin:$NODE_HOME/bin:$HOME/FrameworkBenchmarks/installs/bin:$MAVEN_HOME/bin:$PERL_HOME/bin:$PERL_HOME/site/bin:$DART_HOME/bin:$PATH"
 
 export LD_LIBRARY_PATH='$LD_LIBRARY_PATH:/usr/local/apr/lib'
 
