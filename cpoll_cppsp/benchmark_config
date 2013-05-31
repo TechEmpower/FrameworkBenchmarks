@@ -4,9 +4,37 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
+      "port": 16969,
+      "sort": 115
+    },
+    "raw": {
+      "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
+      "port": 16969,
+      "sort": 115
+    },
+    "postgres-raw": {
+      "setup_file": "setup",
+      "db_url": "/db_pg_async",
+      "query_url": "/db_pg_async?queries=", 
+      "port": 16969,
+      "sort": 115
+    },
+    "postgres-raw-threadpool": {
+      "setup_file": "setup",
+      "db_url": "/db_pg_threadpool",
+      "query_url": "/db_pg_threadpool?queries=", 
+      "port": 16969,
+      "sort": 115
+    },
+    "raw-old": {
+	  "setup_file": "setup",
+      "db_url": "/db_old",
+      "query_url": "/db_old?queries=",
+      "fortune_url": "/fortune_old",
       "port": 16969,
       "sort": 115
     }
