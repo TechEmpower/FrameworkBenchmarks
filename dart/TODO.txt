@@ -1,0 +1,7 @@
+TODO items for the Dart benchmark:
+
+1. Make sure the DART_SDK environment variable is set correctly.
+
+2. Modify benchmark_config to have the correct "sort" number.
+
+3. See if any Dart experts are willing to give this a code review.
