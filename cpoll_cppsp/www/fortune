@@ -1,12 +1,16 @@
-<%!-lmysqlclient%><%#
+<%!-lmysqlclient%><%@ class mypage %><%#
 #include <mysql/mysql.h>
 #include <json/json.h>
+#include <cpoll/threadpool.H>
+#include <list>
 #include "connectioninfo.H"
+#include "generic_pool.H"
+
 using namespace CP;
 using namespace cppsp;
+using namespace std;
 
 
-MYSQL* db=NULL;
 
 
 bool comp_string(const String& x, const String& y) {
@@ -17,16 +21,6 @@ bool comp_string(const String& x, const String& y) {
 	else return tmp < 0;
 }
 
-%><%
-if(db==NULL) {
-	db=doConnect(NULL);
-	mysql_set_character_set(db, "utf8");
-	mysql_options(db, MYSQL_SET_CHARSET_NAME, "utf8");
-}
-mysql_query(db, "SELECT id, message FROM Fortune;");
-MYSQL_RES *sqlres = mysql_store_result(db);
-if (sqlres==NULL) throw runtime_error(mysql_error(db));
-MYSQL_ROW row;
 struct fortune
 {
 	String message;
@@ -35,16 +29,55 @@ struct fortune
 		return comp_string(message,other.message);
 	}
 };
-vector<fortune> fortunes;
-while( (row=mysql_fetch_row(sqlres)) ){
-	fortunes.push_back({sp->addString(row[1]),atoi(row[0])});
+genericPool<MYSQL*,64> sqlPool(&doConnect,&doDisconnect);
+ThreadPool tp(16);
+
+void do_init_thread(void*) {
+	mysql_thread_init();
 }
-mysql_free_result(sqlres);
+void do_deinit_thread(void*) {
+	mysql_thread_end();
+}
+extern "C" void initModule() {
+	mysql_library_init(0,NULL,NULL);
+	tp.afterStart=&do_init_thread;
+	tp.beforeExit=&do_deinit_thread;
+}
+%><%$
+EventFD efd{0,EFD_SEMAPHORE};
+vector<fortune> fortunes;
+MYSQL* db;
 
-fortunes.push_back({"Additional fortune added at request time.",0});
-sort(fortunes.begin(),fortunes.end());
 
-response->headers["Server"]="cppsp/0.2";
+//function to be executed in the thread pool
+void tpFunc() {
+	mysql_query(db, "SELECT id, message FROM Fortune;");
+	MYSQL_RES *sqlres = mysql_store_result(db);
+	if (sqlres==NULL) throw runtime_error(mysql_error(db));
+	MYSQL_ROW row;
+	while( (row=mysql_fetch_row(sqlres)) ){
+		fortunes.push_back({sp->addString(row[1]),atoi(row[0])});
+	}
+	mysql_free_result(sqlres);
+
+	fortunes.push_back({"Additional fortune added at request time.",0});
+	sort(fortunes.begin(),fortunes.end());
+	efd.sendEvent(1);
+}
+
+//asynchronously load the data in the doInit() function, and defer page rendering until data is available
+void doInit() override {
+	response->headers["Server"]="cppsp/0.2";
+	
+	db=sqlPool.get();
+	poll->add(efd);
+	tp.invoke({&mypage::tpFunc,this});
+	efd.getEvent({&mypage::efdCB,this});
+}
+void efdCB(eventfd_t efdVal) {
+	sqlPool.put(db);
+	Page::doInit();
+}
 %>
 <!DOCTYPE html>
 <html>
