@@ -38,6 +38,11 @@ class Installer:
     #######################################
 
     #
+    # Dart
+    #
+    self.__run_command("curl https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-64.tar.gz | tar xvz")
+
+    #
     # Erlang
     #
     self.__run_command("sudo cp ../config/erlang.list /etc/apt/sources.list.d/erlang.list")
