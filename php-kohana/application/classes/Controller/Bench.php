@@ -20,11 +20,6 @@ Class Controller_Bench extends Controller
 
         $query = DB::query(Database::SELECT, 'SELECT * FROM World WHERE id = :id')->bind(':id', $id);
 
-        foreach ($new_users as $username => $password)
-        {
-            $query->execute();
-        }
-
         for ($i = 0; $i < $queries; $i++) {
             $worlds[] = $query->param(':id', mt_rand(1, 10000))->execute()->current();
         }
