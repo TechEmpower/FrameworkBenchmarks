@@ -6,23 +6,27 @@ Class Controller_Bench extends Controller
     {
         $this->response
             ->headers(array('Content-Type' => 'application/json'))
-            ->body(json_encode(array("message" => "Hello World!")));
+            ->body(json_encode(array('message' => 'Hello World!')));
     }
 
     public function action_db()
     {
-        $queries = $this->request->param('queries');
-        $queries = (isset($queries) && is_numeric($queries))
-            ? $queries
-            : 1;
+        $queries = $this->request->param('queries', false);
+        $queries = $queries
+                    ? $queries
+                    : 1;
 
         $worlds = array();
 
-        for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = DB::select()->from('World')
-                ->where('id', '=', mt_rand(1, 10000))
-                ->execute()
-                ->current();
+        $query = DB::query(Database::SELECT, 'SELECT * FROM World WHERE id = :id')->bind(':id', $id);
+
+        foreach ($new_users as $username => $password)
+        {
+            $query->execute();
+        }
+
+        for ($i = 0; $i < $queries; $i++) {
+            $worlds[] = $query->param(':id', mt_rand(1, 10000))->execute()->current();
         }
 
         $this->response
