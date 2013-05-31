@@ -195,4 +195,17 @@ $env:Path += ";$maven_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $e
 Write-Host "Configuring firewall...`n"
 New-NetFirewallRule -DisplayName "HTTP 8080" -Action Allow -Direction Inbound -LocalPort 8080 -Protocol TCP | Out-Null
 
+#
+# Mercurial
+#
+Write-Host "Installing Mercurial...`n"
+
+$hg_installer_file = "mercurial-2.6.1-x64.msi"
+$hg_installer_url = "https://bitbucket.org/tortoisehg/files/downloads/$hg_installer_file"
+$hg_installer_local = "$workdir\$hg_installer_file"
+(New-Object System.Net.WebClient).DownloadFile($hg_installer_url, $hg_installer_local)
+
+Start-Process $hg_installer_local '/passive' -Wait
+$env:Path += ";C:\Program Files\Mercurial"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
 cd $basedir
