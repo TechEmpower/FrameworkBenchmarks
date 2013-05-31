@@ -180,6 +180,17 @@ class Installer:
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
     self.__run_command("make", cwd="xsp")
     self.__run_command("sudo make install", cwd="xsp")
+    
+    # 
+    # Nimrod
+    # 
+    self.__run_command("wget http://www.nimrod-code.org/download/nimrod_0.9.2.zip")
+    self.__run_command("unzip nimrod_0.9.2.zip")
+    self.__run_command("chmod +x build.sh", cwd="nimrod")
+    self.__run_command("./build.sh", cwd="nimrod")
+    self.__run_command("chmod +x install.sh", cwd="nimrod")
+    self.__run_command("sudo ./install.sh /usr/bin", cwd="nimrod")
+    
     #######################################
     # Webservers
     #######################################
@@ -290,6 +301,11 @@ class Installer:
     ##############################
     self.__run_command("cabal update")
     self.__run_command("cabal install yesod persistent-mysql")
+
+    ##############################
+    # Jester
+    ##############################
+    self.__run_command("git clone git://github.com/dom96/jester.git jester/jester")
 
     ##############################################################
     #
