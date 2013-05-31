@@ -9,5 +9,5 @@ cppsp_0.2: cppsp_0.2-rc9.tar.xz
 	$(MAKE) CXX=g++-4.8 -C cppsp_0.2 all
 
 cppsp_0.2-rc9.tar.xz:
-	wget -c https://downloads.sourceforge.net/project/cpollcppsp/CPPSP%200.2%20%28unstable%29/cppsp_0.2-rc9.tar.xz
+	wget -c http://downloads.sourceforge.net/project/cpollcppsp/CPPSP%200.2%20%28testing%29/cppsp_0.2-rc9.tar.xz
 
