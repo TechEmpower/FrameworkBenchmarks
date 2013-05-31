@@ -1,9 +1,7 @@
 TODO items for the Dart benchmark:
 
-1. Modify the framework benchmark installer to install Dart.  I think the URL is: https://storage.googleapis.com/dart-editor-archive-integration/latest/darteditor-linux-64.zip
+1. Make sure the DART_SDK environment variable is set correctly.
 
-2. Modify setup.py to run multiple dart servers behind nginx as a load balancer.  See server.dart's "main" function for command line options for choosing a port and connection pool size.
+2. Modify benchmark_config to have the correct "sort" number.
 
-3. Modify benchmark_config to have the correct "sort" number.
-
-4. See if any Dart experts are willing to give this a code review.
+3. See if any Dart experts are willing to give this a code review.
