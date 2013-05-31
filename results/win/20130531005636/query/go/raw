@@ -1,0 +1,101 @@
+Warning: Permanently added '10.147.171.14' (RSA) to the list of known hosts.
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-36-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+75 packages can be updated.
+35 updates are security updates.
+
+Get cloud support with Ubuntu Advantage Cloud Guest
+  http://www.ubuntu.com/business/services/cloud
+
+Use Juju to deploy your cloud instances and workloads.
+  https://juju.ubuntu.com/#cloud-precise
+
+---------------------------------------------------------
+ Running Primer go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.224.30.149:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.224.30.149:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.10ms  738.94us   7.10ms   82.77%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  13357 requests in 5.00s, 2.21MB read
+Requests/sec:   2671.39
+Transfer/sec:    452.80KB
+
+---------------------------------------------------------
+ Running Warmup go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 2 http://10.224.30.149:8080/db?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://10.224.30.149:8080/db?queries=2
+  2 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   112.71ms  105.56ms 620.51ms   79.80%
+    Req/Sec     1.01k    86.28     2.00k    99.25%
+  70571 requests in 30.00s, 11.68MB read
+Requests/sec:   2352.25
+Transfer/sec:    398.69KB
+
+---------------------------------------------------------
+ Queries: 1 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 2 http://10.224.30.149:8080/db?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://10.224.30.149:8080/db?queries=1
+  2 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.47ms   39.32ms 336.76ms   88.50%
+    Req/Sec     2.31k   667.80     5.00k    47.75%
+  210097 requests in 30.01s, 28.41MB read
+Requests/sec:   7001.98
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Queries: 5 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 2 http://10.224.30.149:8080/db?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://10.224.30.149:8080/db?queries=5
+  2 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.79ms  255.96ms   3.11s    98.47%
+    Req/Sec     0.98k   122.92     1.00k    98.47%
+  70352 requests in 30.00s, 18.11MB read
+  Socket errors: connect 0, read 0, write 0, timeout 637
+Requests/sec:   2344.94
+Transfer/sec:    618.08KB
+
+---------------------------------------------------------
+ Queries: 10 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 2 http://10.224.30.149:8080/db?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://10.224.30.149:8080/db?queries=10
+  2 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   335.62ms    1.14s    7.52s    94.26%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14036 requests in 30.01s, 5.74MB read
+  Socket errors: connect 0, read 256, write 0, timeout 2775
+Requests/sec:    467.74
+Transfer/sec:    195.86KB
+
+---------------------------------------------------------
+ Queries: 15 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 2 http://10.224.30.149:8080/db?queries=15
+---------------------------------------------------------
+
+unable to connect to 10.224.30.149:8080 Connection timed out
+
+---------------------------------------------------------
+ Queries: 20 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 2 http://10.224.30.149:8080/db?queries=20
+---------------------------------------------------------
+
+unable to connect to 10.224.30.149:8080 Connection timed out
