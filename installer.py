@@ -25,7 +25,7 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev", True)
     self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test", True)
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get install gcc-4.8 g++-4.8", True)
@@ -53,29 +53,34 @@ class Installer:
     #
     # Python
     #
+    
+    # .profile is not loaded yet. So we should use full path.
+    pypy_bin   = "~/FrameworkBenchmarks/installs/pypy-2.0.2/bin"
+    python_bin = "~/FrameworkBenchmarks/installs/python-2.7.5/bin"
+
     self.__run_command("curl -L http://bitbucket.org/pypy/pypy/downloads/pypy-2.0.2-linux64.tar.bz2 | tar xj")
-    self.__run_command("curl http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz | tar xvz")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/python-2.7.5", cwd="Python-2.7.5")
+    self.__run_command("curl http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz | tar xz")
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/python-2.7.5 --disable-shared", cwd="Python-2.7.5")
     self.__run_command("make -j", cwd="Python-2.7.5")
     self.__run_command("make install", cwd="Python-2.7.5")
 
-    self.__run_command("curl https://pypi.python.org/packages/source/d/distribute/distribute-0.6.45.tar.gz | tar xvz")
-    self.__run_command("../pypy-2.0/bin/pypy setup.py install", cwd="distribute-0.6.45")
-    self.__run_command("python setup.py install", cwd="distribute-0.6.45")
+    self.__run_command("curl https://pypi.python.org/packages/source/d/distribute/distribute-0.6.45.tar.gz | tar xz")
+    self.__run_command(pypy_bin + "/pypy setup.py install", cwd="distribute-0.6.45")
+    self.__run_command(python_bin + "/python setup.py install", cwd="distribute-0.6.45")
 
-    self.__run_command("curl https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz | tar xvz")
-    self.__run_command("../pypy-2.0/bin/pypy setup.py install", cwd="pip-1.3.1")
-    self.__run_command("python setup.py install", cwd="pip-1.3.1")
+    self.__run_command("curl https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz | tar xz")
+    self.__run_command(pypy_bin + "/pypy setup.py install", cwd="pip-1.3.1")
+    self.__run_command(python_bin + "/python setup.py install", cwd="pip-1.3.1")
 
-    self.__run_command("pip install MySQL-python==1.2.4")
-    self.__run_command("pip install simplejson==3.3.0")
-    self.__run_command("curl http://initd.org/psycopg/tarballs/PSYCOPG-2-5/psycopg2-2.5.tar.gz | tar xvz")
-    self.__run_command("python setup.py install", cwd="psycopg2-2.5")
+    self.__run_command(python_bin + "/pip install MySQL-python==1.2.4")
+    self.__run_command(python_bin + "/pip install simplejson==3.3.0")
+    self.__run_command("curl http://initd.org/psycopg/tarballs/PSYCOPG-2-5/psycopg2-2.5.tar.gz | tar xz")
+    self.__run_command(python_bin + "/python setup.py install", cwd="psycopg2-2.5")
     self.__run_command("git clone https://github.com/iiilx/django-psycopg2-pool.git")
-    self.__run_command("python setup.py install", cwd="django-psycopg2-pool")
-    self.__run_command("pip install --upgrade numpy==1.7.1")
-    self.__run_command("pypy-2.0/bin/pip install PyMySQL==0.5")
-    self.__run_command("easy_install -U 'ujson==1.30'")
+    self.__run_command(python_bin + "/python setup.py install", cwd="django-psycopg2-pool")
+    self.__run_command(python_bin + "/pip install --upgrade numpy==1.7.1")
+    self.__run_command(pypy_bin + "/pip install PyMySQL==0.5")
+    self.__run_command(python_bin + "/easy_install -U 'ujson==1.30'")
 
     #
     # nodejs
@@ -217,15 +222,15 @@ class Installer:
     # Gunicorn
     #
 
-    self.__run_command("easy_install -U 'gunicorn==0.17.4'")
-    self.__run_command("pip install --upgrade meinheld")
+    self.__run_command(python_bin + "/easy_install -U 'gunicorn==0.17.4'")
+    self.__run_command(python_bin + "/pip install -U meinheld")
 
     #
     # Resin
     #
 
     self.__run_command("sudo cp -r /usr/lib/jvm/java-1.7.0-openjdk-amd64/include /usr/lib/jvm/java-1.7.0-openjdk-amd64/jre/bin/")
-    self.__run_command("curl http://www.caucho.com/download/resin-4.0.36.tar.gz | tar xvz")
+    self.__run_command("curl http://www.caucho.com/download/resin-4.0.36.tar.gz | tar xz")
     self.__run_command("./configure --prefix=`pwd`", cwd="resin-4.0.36")
     self.__run_command("make", cwd="resin-4.0.36")
     self.__run_command("make install", cwd="resin-4.0.36")
@@ -242,14 +247,14 @@ class Installer:
     # Tornado
     ##############################
     packages = "tornado==3.0.1 motor==0.1 pymongo==2.5"
-    self.__run_command("pip install " + packages)
-    self.__run_command("pypy-2.0/bin/pip install " + packages)
+    self.__run_command(python_bin + "/pip install " + packages)
+    self.__run_command(pypy_bin   + "/pip install " + packages)
 
     ##############################
     # Django
     ##############################
     self.__run_command("rm -rf python-2.7.5/lib/python2.7/site-packages/django")
-    self.__run_command("pip install -U Django==1.5.1")
+    self.__run_command(python_bin + "/pip install -U Django==1.5.1")
 
     ##############################
     # Grails
@@ -263,13 +268,13 @@ class Installer:
     # Flask
     ##############################
     packages = "flask==0.9 flask-sqlalchemy==0.16 sqlalchemy==0.8.1 jinja2==2.6 werkzeug==0.8.3"
-    self.__run_command("pip install " + packages)
-    self.__run_command("pypy-2.0/bin/pip install " + packages)
+    self.__run_command(python_bin + "/pip install " + packages)
+    self.__run_command(pypy_bin + "/pip install " + packages)
 
     ##############################
     # Bottle
     ##############################
-    self.__run_command("pip install bottle bottle-sqlalchemy")
+    self.__run_command(python_bin + "/pip install bottle bottle-sqlalchemy")
 
     ##############################
     # Play 2
