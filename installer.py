@@ -77,10 +77,11 @@ class Installer:
     self.__run_command("curl http://initd.org/psycopg/tarballs/PSYCOPG-2-5/psycopg2-2.5.tar.gz | tar xz")
     self.__run_command(python_bin + "/python setup.py install", cwd="psycopg2-2.5")
     self.__run_command("git clone https://github.com/iiilx/django-psycopg2-pool.git")
-    self.__run_command(python_bin + "/python setup.py install", cwd="django-psycopg2-pool")
+    self.__run_command(python_bin + "/python setup.py install", cwd="django-psycopg2-pool")  # Can be removed when Djang 1.6
     self.__run_command(python_bin + "/pip install --upgrade numpy==1.7.1")
     self.__run_command(pypy_bin + "/pip install PyMySQL==0.5")
     self.__run_command(python_bin + "/easy_install -U 'ujson==1.30'")
+    self.__run_command(python_bin + "/pip install -U gevent")  # Need for django-psycopg2-pool.
 
     #
     # nodejs
