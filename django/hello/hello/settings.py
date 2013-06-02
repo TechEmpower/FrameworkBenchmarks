@@ -167,3 +167,5 @@ LOGGING = {
         },
     }
 }
+
+ALLOWED_HOSTS = ['*']
