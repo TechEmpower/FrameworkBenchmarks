@@ -251,8 +251,7 @@ class Installer:
     ##############################
     # Django
     ##############################
-    self.__run_command("rm -rf python-2.7.5/lib/python2.7/site-packages/django")
-    self.__run_command(python_bin + "/pip install -U Django==1.5.1")
+    self.__run_command(python_bin + "/pip install -U Django==1.6a1")
 
     ##############################
     # Grails
