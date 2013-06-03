@@ -91,7 +91,6 @@ func (c App) Db(queries int) revel.Result {
 
 func (c App) Update(queries int) revel.Result {
 	if queries <= 1 {
-		rowNum := rand.Intn(WorldRowCount) + 1
 		var w World
 		worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&w.Id, &w.RandomNumber)
 		w.RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
