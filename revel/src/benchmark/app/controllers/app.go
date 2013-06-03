@@ -42,7 +42,7 @@ func init() {
 	revel.OnAppStart(func() {
 		var err error
 		runtime.GOMAXPROCS(runtime.NumCPU())
-		db.DbPlugin{}.OnAppStart()
+		db.Init()
 		db.Db.SetMaxIdleConns(MaxConnectionCount)
 		if worldStatement, err = db.Db.Prepare(WorldSelect); err != nil {
 			revel.ERROR.Fatalln(err)
@@ -91,6 +91,7 @@ func (c App) Db(queries int) revel.Result {
 
 func (c App) Update(queries int) revel.Result {
 	if queries <= 1 {
+		rowNum := rand.Intn(WorldRowCount) + 1
 		var w World
 		worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&w.Id, &w.RandomNumber)
 		w.RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
