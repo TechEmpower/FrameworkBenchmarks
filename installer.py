@@ -251,7 +251,7 @@ class Installer:
     ##############################
     # Django
     ##############################
-    self.__run_command(python_bin + "/pip install -U Django==1.6a1")
+    self.__run_command(python_bin + "/pip install -U https://www.djangoproject.com/download/1.6a1/tarball/")
 
     ##############################
     # Grails
