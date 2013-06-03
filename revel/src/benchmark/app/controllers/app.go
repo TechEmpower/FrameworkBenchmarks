@@ -42,7 +42,7 @@ func init() {
 	revel.OnAppStart(func() {
 		var err error
 		runtime.GOMAXPROCS(runtime.NumCPU())
-		db.DbPlugin{}.OnAppStart()
+		db.Init()
 		db.Db.SetMaxIdleConns(MaxConnectionCount)
 		if worldStatement, err = db.Db.Prepare(WorldSelect); err != nil {
 			revel.ERROR.Fatalln(err)
