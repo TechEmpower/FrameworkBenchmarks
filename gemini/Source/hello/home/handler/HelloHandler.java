@@ -47,7 +47,7 @@ public class HelloHandler
   @PathSegment
   public boolean db()
   {
-    return json(store.get(World.class, ThreadLocalRandom.current().nextInt(DB_ROWS)));
+    return json(store.get(World.class, ThreadLocalRandom.current().nextInt(DB_ROWS) + 1));
   }
 
   /**
