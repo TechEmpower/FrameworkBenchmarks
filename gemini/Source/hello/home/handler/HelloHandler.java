@@ -11,11 +11,10 @@ import com.techempower.gemini.path.*;
 import com.techempower.gemini.path.annotation.*;
 
 /**
- * Responds to the framework benchmarking requests for "hello, world" and
- * simple database queries.
+ * Handles the various framework benchmark request types.
  */
 public class HelloHandler
-    extends  BasicPathHandler<Context>
+    extends  MethodPathHandler<Context>
 {
 
   private static final int DB_ROWS = 10000;
@@ -34,6 +33,7 @@ public class HelloHandler
   /**
    * Return "hello world" as a JSON-encoded message.
    */
+  @PathSegment("json")
   @PathDefault
   public boolean helloworld()
   {
@@ -41,14 +41,24 @@ public class HelloHandler
   }
 
   /**
-   * Return a list of World objects as JSON, selected randomly from the World
-   * table.  For consistency, we have assumed the table has 10,000 rows.
+   * Return a single World objects as JSON, selected randomly from the World
+   * table.  Assume the table has 10,000 rows.
    */
   @PathSegment
   public boolean db()
   {
+    return json(store.get(World.class, ThreadLocalRandom.current().nextInt(DB_ROWS)));
+  }
+
+  /**
+   * Return a list of World objects as JSON, selected randomly from the World
+   * table.  Assume the table has 10,000 rows.
+   */
+  @PathSegment("query")
+  public boolean multipleQueries()
+  {
     final Random random = ThreadLocalRandom.current();
-    final int queries = context().getInt("queries", 1, 1, 500);
+    final int queries = query().getInt("queries", 1, 1, 500);
     final World[] worlds = new World[queries];
 
     for (int i = 0; i < queries; i++)
@@ -75,14 +85,15 @@ public class HelloHandler
 
   /**
    * Return a list of World objects as JSON, selected randomly from the World
-   * table.  For each row that is retrieved, that row will have it's randomNumber
-   * field updated and persisted. For consistency, we have assumed the table has 10,000 rows.
+   * table.  For each row that is retrieved, that row will have its 
+   * randomNumber field updated and then the row will be persisted.  We
+   * assume the table has 10,000 rows.
    */
   @PathSegment
   public boolean update()
   {
     final Random random = ThreadLocalRandom.current();
-    final int queries = context().getInt("queries", 1, 1, 500);
+    final int queries = query().getInt("queries", 1, 1, 500);
     final World[] worlds = new World[queries];
 
     for (int i = 0; i < queries; i++)
@@ -94,6 +105,15 @@ public class HelloHandler
     store.putAll(Arrays.asList(worlds));
     
     return json(worlds);
+  }
+  
+  /**
+   * Responds with a plaintext "Hello, World!" 
+   */
+  @PathSegment
+  public boolean plaintext()
+  {
+    return text("Hello, World!");
   }
 
 }
