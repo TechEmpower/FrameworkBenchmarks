@@ -29,7 +29,7 @@ const (
 	FortuneSelect      = "SELECT id,message FROM Fortune"
 	WorldUpdate        = "UPDATE World SET randomNumber = ? where id = ?"
 	WorldRowCount      = 10000
-	MaxConnectionCount = 100
+	MaxConnectionCount = 256
 )
 
 var (
@@ -39,6 +39,11 @@ var (
 )
 
 func init() {
+	revel.Filters = []revel.Filter{
+		revel.RouterFilter,
+		revel.ParamsFilter,
+		revel.ActionInvoker,
+	}
 	revel.OnAppStart(func() {
 		var err error
 		runtime.GOMAXPROCS(runtime.NumCPU())
