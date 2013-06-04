@@ -35,7 +35,7 @@ const (
 	WorldUpdate        = "UPDATE World SET randomNumber = ? where id = ?"
 	FortuneSelect      = "SELECT id, message FROM Fortune;"
 	WorldRowCount      = 10000
-	MaxConnectionCount = 5000
+	MaxConnectionCount = 256
 )
 
 var (
