@@ -70,6 +70,10 @@ func (c App) Json() revel.Result {
 	return c.RenderJson(MessageStruct{"Hello, world"})
 }
 
+func (c App) Plaintext() revel.Result {
+	return c.RenderText("Hello, World!")
+}
+
 func (c App) Db(queries int) revel.Result {
 	if queries <= 1 {
 		var w World
