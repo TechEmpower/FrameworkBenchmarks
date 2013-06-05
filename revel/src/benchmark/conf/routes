@@ -2,7 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /db                                     App.Db
+GET     /plaintext                              App.Plaintext
 GET     /json                                   App.Json
+GET     /db                                     App.Db
 GET     /fortune                                App.Fortune
 GET     /update                                 App.Update
