@@ -45,6 +45,8 @@ var (
 	worldStatement   *sql.Stmt
 	fortuneStatement *sql.Stmt
 	updateStatement  *sql.Stmt
+
+	helloWorld = []byte("Hello, World!")
 )
 
 func main() {
@@ -81,13 +83,6 @@ func main() {
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/javascript")
 	json.NewEncoder(w).Encode(&Message{"Hello, world"})
-}
-
-var HelloWorld = []byte("Hello, World!")
-
-func plaintextHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/plain")
-	w.Write(HelloWorld)
 }
 
 // Test 2: Single database query
@@ -179,6 +174,12 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		encoder.Encode(world)
 	}
+}
+
+// Test 6: Plaintext
+func plaintextHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write(helloWorld)
 }
 
 type Fortunes []*Fortune
