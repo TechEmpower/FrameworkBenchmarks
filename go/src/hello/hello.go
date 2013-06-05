@@ -28,7 +28,7 @@ type Fortune struct {
 	Message string `json:"message"`
 }
 
-// TODO: remove ?charset=utf8 drom DSN after the next Go-MySQL-Driver release
+// TODO: remove ?charset=utf8 from DSN after the next Go-MySQL-Driver release
 // https://github.com/go-sql-driver/mysql#unicode-support
 const (
 	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
@@ -157,14 +157,15 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		n, _ = strconv.Atoi(nStr)
 	}
 
-	var jsonData []byte
+	w.Header().Set("Content-Type", "application/json")
+	encoder := json.NewEncoder(w)
 
 	if n <= 1 {
 		var world World
 		worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
 		world.RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
 		updateStatement.Exec(world.RandomNumber, world.Id)
-		jsonData, _ = json.Marshal(world)
+		encoder.Encode(&world)
 	} else {
 		world := make([]World, n)
 		for i := 0; i < n; i++ {
@@ -176,12 +177,8 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 				log.Fatalf("Error updating world row: %s", err.Error())
 			}
 		}
-		jsonData, _ = json.Marshal(world)
+		encoder.Encode(world)
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Content-Length", strconv.Itoa(len(jsonData)))
-	w.Write(jsonData)
 }
 
 type Fortunes []*Fortune
