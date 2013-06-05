@@ -29,6 +29,9 @@ object Application extends Controller {
     new NamedThreadFactory("dbEc"))
   private val dbEc = ExecutionContext.fromExecutorService(tpe)
 
+  private val worldsTable = new Worlds
+  private val fortunesTable = new Fortunes
+
   // A predicate for checking our ability to service database requests is determined by ensuring that the request
   // queue doesn't fill up beyond a certain threshold. For convenience we use the max number of connections * the max
   // # of db requests per web request to determine this threshold. It is a rough check as we don't know how many
@@ -41,12 +44,12 @@ object Application extends Controller {
       Async {
         val random = ThreadLocalRandom.current()
 
-        val worlds = Future.sequence((for {
+        val _worlds = Future.sequence((for {
           _ <- 1 to queries
-        } yield Future(Worlds.findById(random.nextInt(TestDatabaseRows) + 1))(dbEc)
+        } yield Future(worldsTable.findById(random.nextInt(TestDatabaseRows) + 1))(dbEc)
           ).toList)
 
-        worlds map {
+        _worlds map {
           w => Ok(Json.toJson(w))
         }
       }
@@ -56,7 +59,7 @@ object Application extends Controller {
   def fortunes() = PredicatedAction(isDbAvailable, ServiceUnavailable) {
     Action {
       Async {
-        Future(Fortunes.getAll())(dbEc).map { fs =>
+        Future(fortunesTable.getAll())(dbEc).map { fs =>
           val fortunes =  Fortune(-1, "Additional fortune added at request time.") +: fs
           Ok(views.html.fortune(fortunes))
         }
@@ -79,10 +82,10 @@ object Application extends Controller {
           _ <- 1 to boundsCheckedQueries
         } yield Future {
             for {
-              world <- Worlds.findById(random.nextInt(TestDatabaseRows) + 1) 
+              world <- worldsTable.findById(random.nextInt(TestDatabaseRows) + 1) 
             } yield {
               val updatedWorld = world.copy(randomNumber = random.nextInt(TestDatabaseRows) + 1)
-              Worlds.updateRandom(updatedWorld)
+              worldsTable.updateRandom(updatedWorld)
               updatedWorld
             }
           }(dbEc)
