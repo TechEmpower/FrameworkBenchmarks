@@ -2,34 +2,29 @@ import 'dart:async' show Future;
 import 'dart:io';
 import 'dart:json' as json;
 import 'dart:math' show Random;
-import 'dart:utf' as utf;
-import 'package:args/args.dart' show ArgParser, ArgResults;
+import 'package:args/args.dart' show ArgParser;
 import 'package:mustache/mustache.dart' as mustache;
 import 'package:postgresql/postgresql.dart' as pg;
 import 'package:postgresql/postgresql_pool.dart' as pgpool;
 import 'package:yaml/yaml.dart' as yaml;
 
-/**
- * Starts a new HTTP server that implements the tests to be benchmarked.  The
- * address and port for incoming connections is configurable via command line
- * arguments, as is the number of database connections to be maintained in the
- * connection pool.
- */
+/// Starts a new HTTP server that implements the tests to be benchmarked.  The
+/// address and port for incoming connections is configurable via command line
+/// arguments, as is the number of database connections to be maintained in the
+/// connection pool.
 main() {
-  ArgParser parser = new ArgParser();
+  var parser = new ArgParser();
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
   parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
-  ArgResults arguments = parser.parse(new Options().arguments);
+  var arguments = parser.parse(new Options().arguments);
   _startServer(
       arguments['address'],
       int.parse(arguments['port']),
       int.parse(arguments['dbconnections']));
 }
 
-/**
- * The entity used in the database query and update tests.
- */
+/// The entity used in the database query and update tests.
 class World {
   int id;
   int randomNumber;
@@ -39,221 +34,206 @@ class World {
   toJson() => { 'id': id, 'randomNumber': randomNumber };
 }
 
-/**
- * The entity used in the fortunes test.
- */
+/// The entity used in the fortunes test.
 class Fortune implements Comparable<Fortune> {
   int id;
   String message;
 
   Fortune(this.id, this.message);
 
-  int compareTo(Fortune other) => message.compareTo(other.message);
+  compareTo(Fortune other) => message.compareTo(other.message);
 }
 
-/**
- * The number of rows in the world entity table.
- */
+/// The number of rows in the world entity table.
 const _WORLD_TABLE_SIZE = 10000;
 
-/**
- * A random number generator.
- */
+/// A random number generator.
 final _RANDOM = new Random();
 
-/**
- * The 'text/html; charset=utf-8' content type.
- */
+/// The 'text/html; charset=utf-8' content type.
 final _TYPE_HTML = new ContentType('text', 'html', charset: 'utf-8');
 
-/**
- * The 'application/json; charset=utf-8' content type.
- */
-final _TYPE_JSON = new ContentType('application', 'json', charset: 'utf-8');
+/// The 'application/json' content type.
+final _TYPE_JSON = new ContentType('application', 'json');
 
-/**
- * The PostgreSQL connection pool used by all the tests that require database
- * connectivity.
- */
-pgpool.Pool _connectionPool;
+/// The 'text/html; charset=utf-8' content type.
+final _TYPE_TEXT = new ContentType('text', 'plain', charset: 'utf-8');
 
-/**
- * The mustache template which is rendered in the fortunes test.
- */
-mustache.Template _fortunesTemplate;
+/// The PostgreSQL connection pool used by all the tests that require database
+/// connectivity.
+var _connectionPool;
 
-/**
- * Starts a benchmark server, which listens for connections from
- * '[address] : [port]' and maintains [dbConnections] connections to the
- * database.
- */
-void _startServer(String address, int port, int dbConnections) {
+/// The mustache template which is rendered in the fortunes test.
+var _fortunesTemplate;
+
+/// Starts a benchmark server, which listens for connections from
+/// '[address] : [port]' and maintains [dbConnections] connections to the
+/// database.
+_startServer(address, port, dbConnections) {
   Future.wait([
-    new File('postgresql.yaml').readAsString().then((String config) {
+    new File('postgresql.yaml').readAsString().then((config) {
       _connectionPool = new pgpool.Pool(
           new pg.Settings.fromMap(yaml.loadYaml(config)).toUri(),
           min: dbConnections,
           max: dbConnections);
       return _connectionPool.start();
     }),
-    new File('fortunes.mustache').readAsString().then((String template) {
+    new File('fortunes.mustache').readAsString().then((template) {
       _fortunesTemplate = mustache.parse(template);
     })
   ]).then((_) {
-    HttpServer.bind(address, port).then((HttpServer server) {
-      server.listen((HttpRequest request) {
+    HttpServer.bind(address, port).then((server) {
+      server.listen((request) {
         switch (request.uri.path) {
-          case '/':         return _jsonTest(request);
-          case '/db':       return _dbTest(request);
-          case '/fortunes': return _fortunesTest(request);
-          case '/update':   return _updateTest(request);
-          default:          return _sendResponse(request, HttpStatus.NOT_FOUND);
+          case '/':
+            _jsonTest(request);
+            break;
+          case '/db':
+            _dbTest(request);
+            break;
+          case '/fortunes':
+            _fortunesTest(request);
+            break;
+          case '/update':
+            _updateTest(request);
+            break;
+          case '/plaintext':
+            _plaintextTest(request);
+            break;
+          default:
+            _sendResponse(request, HttpStatus.NOT_FOUND);
+            break;
         }
       });
     });
   });
 }
 
-/**
- * Returns the given [text] parsed as a base 10 integer.  If the text is null
- * or is an otherwise invalid representation of a base 10 integer, zero is
- * returned.
- */
-int _parseInt(String text) =>
+/// Returns the given [text] parsed as a base 10 integer.  If the text is null
+/// or is an otherwise invalid representation of a base 10 integer, zero is
+/// returned.
+_parseInt(text) =>
     (text == null) ? 0 : int.parse(text, radix: 10, onError: ((_) => 0));
 
-/**
- * Completes the given [request] by writing the [response] with the given
- * [statusCode] and [type].
- */
-void _sendResponse(HttpRequest request, int statusCode,
-                   [ ContentType type, String response ]) {
+/// Completes the given [request] by writing the [response] with the given
+/// [statusCode] and [type].
+_sendResponse(request, statusCode, [ type, response ]) {
   request.response.statusCode = statusCode;
-  request.response.headers.add(
-      HttpHeaders.CONNECTION,
-      (request.persistentConnection) ? 'keep-alive' : 'close');
   request.response.headers.add(HttpHeaders.SERVER, 'dart');
   request.response.headers.date = new DateTime.now();
+  //
+  // Prevent GZIP encoding, because it is disallowed in the rules for these
+  // benchmark tests.
+  //
+  request.response.headers.add(HttpHeaders.CONTENT_ENCODING, '');
   if (type != null) {
     request.response.headers.contentType = type;
   }
   if (response != null) {
-    //
-    // A simpler way to write a response would be to:
-    //
-    //   1. Not set the contentLength header.
-    //   2. Use response.write instead of response.add.
-    //
-    // However, doing that results in a chunked, gzip-encoded response, and
-    // gzip is explicitly disallowed by the requirements for these benchmark
-    // tests.
-    //
-    // See:  http://www.techempower.com/benchmarks/#section=code
-    //
-    List<int> encodedResponse = utf.encodeUtf8(response);
-    request.response.headers.contentLength = encodedResponse.length;
-    request.response.add(encodedResponse);
+    request.response.write(response);
   }
-  //
-  // The load-testing tool will close any currently open connection at the end
-  // of each run.  That potentially causes an error to be thrown here.  Since
-  // we want the server to remain alive for subsequent runs, we catch the
-  // error.
-  //
-  request.response.close().catchError(print);
+  request.response.close();
 }
 
-/**
- * Completes the given [request] by writing the [response] as HTML.
- */
-void _sendHtml(HttpRequest request, String response) {
+/// Completes the given [request] by writing the [response] as HTML.
+_sendHtml(request, response) {
   _sendResponse(request, HttpStatus.OK, _TYPE_HTML, response);
 }
 
-/**
- * Completes the given [request] by writing the [response] as JSON.
- */
-void _sendJson(HttpRequest request, Object response) {
+/// Completes the given [request] by writing the [response] as JSON.
+_sendJson(request, response) {
   _sendResponse(request, HttpStatus.OK, _TYPE_JSON, json.stringify(response));
 }
 
-/**
- * Responds with the JSON test to the [request].
- */
-void _jsonTest(HttpRequest request) {
+/// Completes the given [request] by writing the [response] as plain text.
+_sendText(request, response) {
+  _sendResponse(request, HttpStatus.OK, _TYPE_TEXT, response);
+}
+
+/// Responds with the JSON test to the [request].
+_jsonTest(request) {
   _sendJson(request, { 'message': 'Hello, World!' });
 }
 
-/**
- * Responds with the database query test to the [request].
- */
-void _dbTest(HttpRequest request) {
-  int queries = _parseInt(request.queryParameters['queries']).clamp(1, 500);
-  List<World> worlds = new List<World>(queries);
-  Future.wait(new List.generate(queries, (int index) {
-    return _connectionPool.connect().then((pg.Connection connection) {
+/// Responds with the database query test to the [request].
+_dbTest(request) {
+  var queries = _parseInt(request.uri.queryParameters['queries']).clamp(1, 500);
+  var worlds = new List<World>(queries);
+  Future.wait(new List.generate(queries, (index) {
+    return _connectionPool.connect().then((connection) {
       return connection.query(
               'SELECT id, randomNumber FROM world WHERE id = @id;',
               { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
-          .map((row) => new World(row[0], row[1]))
-          //
-          // The benchmark's constraints tell us there is exactly one row here.
-          //
-          .forEach((World world) { worlds[index] = world; })
-          .then((_) { connection.close(); });
+          .toList()
+          .then((rows) {
+            //
+            // The benchmark's constraints tell us there is exactly one row.
+            //
+            var row = rows[0];
+            worlds[index] = new World(row[0], row[1]);
+          })
+          .whenComplete(() { connection.close(); });
     });
   }, growable: false)).then((_) { _sendJson(request, worlds); });
 }
 
-/**
- * Responds with the fortunes test to the [request].
- */
-void _fortunesTest(HttpRequest request) {
-  List<Fortune> fortunes = [];
-  _connectionPool.connect().then((pg.Connection connection) {
+/// Responds with the fortunes test to the [request].
+_fortunesTest(request) {
+  var fortunes = [];
+  _connectionPool.connect().then((connection) {
     return connection.query('SELECT id, message FROM fortune;')
-        .map((row) => new Fortune(row[0], row[1]))
-        .forEach(fortunes.add)
-        .then((_) { connection.close(); });
+        .toList()
+        .then((rows) {
+          for (var row in rows) {
+            fortunes.add(new Fortune(row[0], row[1]));
+          }
+        })
+        .whenComplete(() { connection.close(); });
   }).then((_) {
     fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
     _sendHtml(request, _fortunesTemplate.renderString({
-      'fortunes': fortunes.map((Fortune fortune) => {
+      'fortunes': fortunes.map((fortune) => {
               'id': fortune.id, 'message': fortune.message
           }).toList()
     }));
   });
 }
 
-/**
- * Responds with the updates test to the [request].
- */
-void _updateTest(HttpRequest request) {
-  int queries = _parseInt(request.queryParameters['queries']).clamp(1, 500);
-  List<World> worlds = new List<World>(queries);
-  Future.wait(new List.generate(queries, (int index) {
-    return _connectionPool.connect().then((pg.Connection connection) {
+/// Responds with the updates test to the [request].
+_updateTest(request) {
+  var queries = _parseInt(request.uri.queryParameters['queries']).clamp(1, 500);
+  var worlds = new List<World>(queries);
+  Future.wait(new List.generate(queries, (index) {
+    return _connectionPool.connect().then((connection) {
       return connection.query(
               'SELECT id, randomNumber FROM world WHERE id = @id;',
               { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
-          .map((row) => new World(row[0], row[1]))
-          //
-          // The benchmark's constraints tell us there is exactly one row here.
-          //
-          .forEach((World world) { worlds[index] = world; })
-          .then((_) { connection.close(); });
+          .toList()
+          .then((rows) {
+            //
+            // The benchmark's constraints tell us there is exactly one row.
+            //
+            var row = rows[0];
+            worlds[index] = new World(row[0], row[1]);
+          })
+          .whenComplete(() { connection.close(); });
     });
   }, growable: false)).then((_) {
     Future.wait(new List.generate(queries, (int index) {
-      World world = worlds[index];
+      var world = worlds[index];
       world.randomNumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
-      return _connectionPool.connect().then((pg.Connection connection) {
+      return _connectionPool.connect().then((connection) {
         return connection.execute(
                 'UPDATE world SET randomNumber = @randomNumber WHERE id = @id;',
                 { 'randomNumber': world.randomNumber, 'id': world.id })
-            .then((_) { connection.close(); });
+            .whenComplete(() { connection.close(); });
       });
     }, growable: false)).then((_) { _sendJson(request, worlds); });
   });
+}
+
+/// Responds with the plaintext test to the [request].
+_plaintextTest(request) {
+  _sendText(request, 'Hello, World!');
 }
