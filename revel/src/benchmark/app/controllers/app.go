@@ -73,7 +73,11 @@ func (c App) Json() revel.Result {
 func (c App) Db(queries int) revel.Result {
 	if queries <= 1 {
 		var w World
-		worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&w.Id, &w.RandomNumber)
+		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).
+			Scan(&w.Id, &w.RandomNumber)
+		if err != nil {
+			revel.ERROR.Fatalf("Error scanning world row: %v", err)
+		}
 		return c.RenderJson(w)
 	}
 
@@ -97,9 +101,16 @@ func (c App) Db(queries int) revel.Result {
 func (c App) Update(queries int) revel.Result {
 	if queries <= 1 {
 		var w World
-		worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&w.Id, &w.RandomNumber)
+		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).
+			Scan(&w.Id, &w.RandomNumber)
+		if err != nil {
+			revel.ERROR.Fatalf("Error scanning world row: %v", err)
+		}
 		w.RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
-		updateStatement.Exec(w.RandomNumber, w.Id)
+		_, err = updateStatement.Exec(w.RandomNumber, w.Id)
+		if err != nil {
+			revel.ERROR.Fatalf("Error updating row: %v", err)
+		}
 		return c.RenderJson(&w)
 	}
 
@@ -116,7 +127,10 @@ func (c App) Update(queries int) revel.Result {
 				revel.ERROR.Fatalf("Error scanning world row: %v", err)
 			}
 			ww[i].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
-			updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
+			_, err = updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
+			if err != nil {
+				revel.ERROR.Fatalf("Error updating world row: %v", err)
+			}
 			wg.Done()
 		}(i)
 	}
