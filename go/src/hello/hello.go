@@ -31,22 +31,27 @@ type Fortune struct {
 // TODO: remove ?charset=utf8 from DSN after the next Go-MySQL-Driver release
 // https://github.com/go-sql-driver/mysql#unicode-support
 const (
+	// Database
 	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
 	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect      = "SELECT id, message FROM Fortune;"
 	worldRowCount      = 10000
 	maxConnectionCount = 256
+
+	helloWorldString = "Hello, World!"
 )
 
 var (
+	// Templates
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
+	// Database
 	worldStatement   *sql.Stmt
 	fortuneStatement *sql.Stmt
 	updateStatement  *sql.Stmt
 
-	helloWorld = []byte("Hello, World!")
+	helloWorldBytes = []byte(helloWorldString)
 )
 
 func main() {
@@ -82,7 +87,7 @@ func main() {
 // Test 1: JSON serialization
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/javascript")
-	json.NewEncoder(w).Encode(&Message{"Hello, world"})
+	json.NewEncoder(w).Encode(&Message{helloWorldString})
 }
 
 // Test 2: Single database query
@@ -179,7 +184,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 // Test 6: Plaintext
 func plaintextHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
-	w.Write(helloWorld)
+	w.Write(helloWorldBytes)
 }
 
 type Fortunes []*Fortune
