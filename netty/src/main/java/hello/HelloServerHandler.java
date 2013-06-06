@@ -59,6 +59,7 @@ public class HelloServerHandler extends ChannelInboundMessageHandlerAdapter<Obje
             }
 
             if("/plaintext".equals(request.getUri())) {
+		buf.setLength(0);
                 buf.append("Hello, World!");
             } else {
                 Map<String, String> data = new HashMap<String, String>();
