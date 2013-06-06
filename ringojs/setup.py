@@ -9,6 +9,8 @@ def start(args):
   setup_util.replace_text("ringojs/ringo-main.js", "mongodb:\/\/.*\/hello_world", "mongodb://" + args.database_host + "/hello_world")
 
   try:
+    subprocess.check_call("sudo rm -rf /usr/share/ringojs/packages/*", shell=True)
+    subprocess.check_call("sudo ringo-admin install oberhamsi/sql-ringojs-client", shell=True)
     subprocess.Popen("ringo --production -Dserver -DXmx=512m -DXms=512m ringo-main.js", shell=True, cwd="ringojs")
     return 0
   except subprocess.CalledProcessError:
