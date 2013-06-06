@@ -453,7 +453,7 @@ class FrameworkTest:
     return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
       interval=" ".join("{}".format(item) for item in intervals), 
-      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers)
+      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers, wrk=wrk)
   ############################################################
   # End __generate_concurrency_script
   ############################################################
