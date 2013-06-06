@@ -394,6 +394,13 @@ class Installer:
     sudo cp wrk /usr/local/bin
     cd ~
 
+    git clone https://github.com/wg/wrk.git wrk-pipeline
+    cd wrk-pipeline
+    git checkout pipeline
+    make
+    sudo cp wrk /usr/local/bin/wrk-pipeline
+    cd ~
+
     ##############################
     # MongoDB
     ##############################
