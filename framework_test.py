@@ -163,6 +163,16 @@ class FrameworkTest:
       self.update_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.update_url_passed = False
+
+    # plaintext
+    try:
+      print "VERIFYING Plaintext (" + self.plaintext_url + ") ..."
+      url = self.benchmarker.generate_url(self.plaintext_url, self.port)
+      subprocess.check_call(["curl", "-f", url])
+      print ""
+      self.plaintext_url_passed = True
+    except (AttributeError, subprocess.CalledProcessError) as e:
+      self.plaintext_url_passed = False
   ############################################################
   # End verify_urls
   ############################################################
@@ -183,6 +193,8 @@ class FrameworkTest:
       if type == 'fortune' and self.fortune_url != None:
         return True
       if type == 'update' and self.update_url != None:
+        return True
+      if type == 'plaintext' and self.plaintext_url != None:
         return True
     except AttributeError:
       pass
@@ -264,6 +276,19 @@ class FrameworkTest:
         print "Complete"
     except AttributeError:
       pass
+
+    # plaintext
+    try:
+      if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "plaintext"):
+        sys.stdout.write("BENCHMARKING Plaintext ... ") 
+        sys.stdout.flush()
+        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port)
+        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'plaintext'))
+        results = self.__parse_test('plaintext')
+        self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
+        print "Complete"
+    except AttributeError:
+      pass
   ############################################################
   # End benchmark
   ############################################################
@@ -297,6 +322,11 @@ class FrameworkTest:
     if os.path.exists(self.benchmarker.output_file(self.name, 'update')):
       results = self.__parse_test('update')
       self.benchmarker.report_results(framework=self, test="update", results=results['results'])
+
+    # Plaintext
+    if os.path.exists(self.benchmarker.output_file(self.name, 'plaintext')):
+      results = self.__parse_test('plaintext')
+      self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
   ############################################################
   # End parse_all
   ############################################################
@@ -419,10 +449,12 @@ class FrameworkTest:
   # specifically works for the variable concurrency tests (JSON
   # and DB)
   ############################################################
-  def __generate_concurrency_script(self, url, port):
+  def __generate_concurrency_script(self, url, port, wrk_command="wrk", intervals=[]):
+    if len(intervals) == 0:
+      intervals = self.benchmarker.concurrency_levels
     return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
-      interval=" ".join("{}".format(item) for item in self.benchmarker.concurrency_levels), 
+      interval=" ".join("{}".format(item) for item in intervals), 
       server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers)
   ############################################################
   # End __generate_concurrency_script
