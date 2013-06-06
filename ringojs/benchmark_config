@@ -14,13 +14,6 @@
       "fortune_url": "/fortune",
       "port": 8080,
       "sort": 74
-    },
-    "mongodb": {
-      "setup_file": "setup",
-      "db_url": "/mongodb",
-      "query_url": "/mongodb?queries=",
-      "port": 8080,
-      "sort": 116
     }
   }]
 }
