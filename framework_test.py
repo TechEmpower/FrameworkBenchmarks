@@ -280,7 +280,7 @@ class FrameworkTest:
       if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "plaintext"):
         sys.stdout.write("BENCHMARKING Plaintext ... ") 
         sys.stdout.flush()
-        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, wrk="wrk-pipeline", intervals=[256,1024,4096,16384])
+        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384])
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'plaintext'))
         results = self.__parse_test('plaintext')
         self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
@@ -453,7 +453,7 @@ class FrameworkTest:
     return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
       interval=" ".join("{}".format(item) for item in intervals), 
-      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers, wrk=wrk)
+      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers, wrk=wrk_command)
   ############################################################
   # End __generate_concurrency_script
   ############################################################
