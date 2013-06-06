@@ -37,3 +37,13 @@ app.get('/fortune', function() {
    fortunes.sort(models.Fortune.sort);
    return response.html(fortuneTemplate.render({fortunes: fortunes}));
 });
+
+app.get('/plaintext', function() {
+   // @@ not available in ringojs 0.9
+   // return response.text('Hello World');
+   return {
+     status: 200,
+     headers: {"Content-Type": 'text/plain'},
+     body: ['Hello World']
+   };
+});
