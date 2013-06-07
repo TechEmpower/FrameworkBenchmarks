@@ -1,12 +1,13 @@
-# ASP.NET MVC on Mono and Windows
+# ASP.NET MVC on Windows and Mono
 
 ## Tests
 
 * JSON serialization
-* Single query
-* Multiple queries
+* Single database query
+* Multiple database queries
 * Server-side templates and collections
-* Updates
+* Database updates
+* Plaintext
 
 ## Versions
 
@@ -23,7 +24,7 @@
 
 * IIS 8 (Windows)
 * XSP 2.11.0.0 (3.0?) (Linux)
-* nginx 1.4.0 & XSP FastCGI (Linux)
+* nginx 1.4.1 & XSP FastCGI (Linux)
 
 **Web Stack**
 
@@ -47,7 +48,7 @@
 
     git clone git://github.com/mono/mono
     cd mono
-    git checkout mono-3.10
+    git checkout mono-3.0.10
     ./autogen.sh --prefix=/usr/local
     make get-monolite-latest
     make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe
@@ -61,3 +62,5 @@
     ./autogen.sh --prefix=/usr/local
     make
     sudo make install
+    
+    mozroots --import --sync
