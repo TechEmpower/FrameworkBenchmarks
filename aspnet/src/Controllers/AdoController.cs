@@ -45,7 +45,9 @@ namespace Benchmarks.AspNet.Controllers
                         command.Parameters.Clear();
                         command.Parameters.Add(parameter);
                         
-                        using (DbDataReader reader = command.ExecuteReader(CommandBehavior.SingleRow))
+                        // Don't use CommandBehavior.SingleRow because that will make the MySql provider
+                        // send two extra commands to limit the result to one row.
+                        using (DbDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -124,7 +126,9 @@ namespace Benchmarks.AspNet.Controllers
 
                         World world = null;
 
-                        using (DbDataReader reader = selectCommand.ExecuteReader(CommandBehavior.SingleRow))
+                        // Don't use CommandBehavior.SingleRow because that will make the MySql provider
+                        // send two extra commands to limit the result to one row.
+                        using (DbDataReader reader = selectCommand.ExecuteReader())
                         {
                             if (reader.Read())
                             {
