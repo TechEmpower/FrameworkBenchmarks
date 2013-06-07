@@ -125,39 +125,6 @@ This will run the full set of tests. Results of all the tests will output to ~/F
 ### Windows Instructions
 Generously provided by [@pdonald](https://github.com/pdonald)
 
-Note: The following tests are the only known tests to run on Windows
-* aspnet
-* aspnet-mysql-raw
-* aspnet-postgresql-raw
-* aspnet-mongodb-raw
-* aspnet-mysql-entityframework
-* aspnet-postgres-entityframework
-* cake
-* express
-* express-mongodb
-* go
-* nodejs
-* nodejs-mongodb
-* express
-* express-mongodb
-* php
-* php-raw
-* codeigniter
-* codeigniter-raw
-* fuel
-* kohana
-* kohana-raw
-* laravel
-* laravel-raw
-* lithium
-* micromvc
-* slim
-* phreeze
-* servlet
-* servlet-raw
-* servlet-postgres-raw
-* webgo
-
 Server installation scripts for Windows Server 2012 R2 on Amazon EC2.
 
 Instructions:

@@ -12,40 +12,38 @@ class FrameworkTest:
   ##########################################################################################
   headers = "-H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive'"
   concurrency_template = """
-    mysqladmin flush-hosts -uroot -psecret
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " wrk {headers} -d 60 -c 8 -t 8 http://{server_host}:{port}{url}"
+    echo " {wrk} {headers} -d 60 -c 8 -t 8 http://{server_host}:{port}{url}"
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d 5 -c 8 -t 8 http://{server_host}:{port}{url}
+    {wrk} {headers} -d 5 -c 8 -t 8 http://{server_host}:{port}{url}
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"
+    echo " {wrk} {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}"
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}
+    {wrk} {headers} -d {duration} -c {max_concurrency} -t {max_threads} http://{server_host}:{port}{url}
     sleep 5
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " wrk {headers} -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) http://{server_host}:{port}{url}"
+      echo " {wrk} {headers} -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) http://{server_host}:{port}{url}"
       echo "---------------------------------------------------------"
       echo ""
-      wrk {headers} -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      {wrk} {headers} -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
       sleep 2
     done
   """
 
   query_template = """
-    mysqladmin flush-hosts -uroot -psecret
     
     echo ""
     echo "---------------------------------------------------------"
@@ -163,6 +161,16 @@ class FrameworkTest:
       self.update_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.update_url_passed = False
+
+    # plaintext
+    try:
+      print "VERIFYING Plaintext (" + self.plaintext_url + ") ..."
+      url = self.benchmarker.generate_url(self.plaintext_url, self.port)
+      subprocess.check_call(["curl", "-f", url])
+      print ""
+      self.plaintext_url_passed = True
+    except (AttributeError, subprocess.CalledProcessError) as e:
+      self.plaintext_url_passed = False
   ############################################################
   # End verify_urls
   ############################################################
@@ -183,6 +191,8 @@ class FrameworkTest:
       if type == 'fortune' and self.fortune_url != None:
         return True
       if type == 'update' and self.update_url != None:
+        return True
+      if type == 'plaintext' and self.plaintext_url != None:
         return True
     except AttributeError:
       pass
@@ -264,6 +274,19 @@ class FrameworkTest:
         print "Complete"
     except AttributeError:
       pass
+
+    # plaintext
+    try:
+      if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "plaintext"):
+        sys.stdout.write("BENCHMARKING Plaintext ... ") 
+        sys.stdout.flush()
+        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384])
+        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'plaintext'))
+        results = self.__parse_test('plaintext')
+        self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
+        print "Complete"
+    except AttributeError:
+      pass
   ############################################################
   # End benchmark
   ############################################################
@@ -297,6 +320,11 @@ class FrameworkTest:
     if os.path.exists(self.benchmarker.output_file(self.name, 'update')):
       results = self.__parse_test('update')
       self.benchmarker.report_results(framework=self, test="update", results=results['results'])
+
+    # Plaintext
+    if os.path.exists(self.benchmarker.output_file(self.name, 'plaintext')):
+      results = self.__parse_test('plaintext')
+      self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
   ############################################################
   # End parse_all
   ############################################################
@@ -419,11 +447,13 @@ class FrameworkTest:
   # specifically works for the variable concurrency tests (JSON
   # and DB)
   ############################################################
-  def __generate_concurrency_script(self, url, port):
+  def __generate_concurrency_script(self, url, port, wrk_command="wrk", intervals=[]):
+    if len(intervals) == 0:
+      intervals = self.benchmarker.concurrency_levels
     return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
-      interval=" ".join("{}".format(item) for item in self.benchmarker.concurrency_levels), 
-      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers)
+      interval=" ".join("{}".format(item) for item in intervals), 
+      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers, wrk=wrk_command)
   ############################################################
   # End __generate_concurrency_script
   ############################################################

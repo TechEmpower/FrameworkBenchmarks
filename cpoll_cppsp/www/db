@@ -1,63 +1,140 @@
-<%!-lmysqlclient%><%#
+<%!-lmysqlclient%><%@ class mypage %><%#
 #include <mysql/mysql.h>
 #include <json/json.h>
+#include <cpoll/threadpool.H>
+#include <list>
 #include "connectioninfo.H"
+#include "generic_pool.H"
+#include "world.H"
+
 using namespace CP;
 using namespace cppsp;
+using namespace std;
 
-MYSQL* db=NULL;
-int rn;
-int r;
-long unsigned int len1;
-MYSQL_STMT* stmt;
-MYSQL_BIND param[1], results[1];
-%>
-{ "json": [ <%
-int queries=1;
-auto it=request->queryString.find("queries");
-if(it!=request->queryString.end()) {
-	queries=atoi((*it).second);
-}
-if(queries<1)queries=1;
-if(queries>500)queries=500;
-int i;
-char query[256];
-
-if(db==NULL) {
-	db=doConnect(NULL);
-	stmt=mysql_stmt_init(db);
-	const char* sql="SELECT randomNumber FROM World WHERE id = ?";
-	mysql_stmt_prepare(stmt,sql,strlen(sql));
-	memset(param, 0, sizeof(param));
-	memset(results, 0, sizeof(results));
-	param[0].buffer_type = MYSQL_TYPE_LONG;
-	param[0].buffer = (char *)&rn;
-	param[0].buffer_length = sizeof(rn);
-	param[0].is_null = 0;
-	param[0].length = NULL;
-	results[0].buffer_type= MYSQL_TYPE_LONG;
-	results[0].buffer = &r;
-	results[0].buffer_length = sizeof(r);
-	results[0].is_null = 0;
-	results[0].length = &len1;
-	if(mysql_stmt_bind_param(stmt,param)) throw runtime_error(mysql_stmt_error(stmt));
-	if(mysql_stmt_bind_result(stmt, results)) throw runtime_error(mysql_stmt_error(stmt));
-}
-int items[queries];
-for (int i=0;i<queries;i++){
-	rn=rand()%10000;
-	if(mysql_stmt_execute(stmt)) throw runtime_error(mysql_stmt_error(stmt));
-	if(mysql_stmt_fetch(stmt)==0) {
-		items[i]=r;
-	} else {
-		items[i]=0;
+class myStatement
+{
+public:
+	MYSQL* db;
+	int rn;
+	int r;
+	long unsigned int len1;
+	MYSQL_STMT* stmt;
+	MYSQL_BIND param[1], results[1];
+	myStatement() {
+		db=doConnect(NULL);
+		stmt=mysql_stmt_init(db);
+		const char* sql="SELECT randomNumber FROM World WHERE id = ?";
+		mysql_stmt_prepare(stmt,sql,strlen(sql));
+		memset(param, 0, sizeof(param));
+		memset(results, 0, sizeof(results));
+		param[0].buffer_type = MYSQL_TYPE_LONG;
+		param[0].buffer = (char *)&rn;
+		param[0].buffer_length = sizeof(rn);
+		param[0].is_null = 0;
+		param[0].length = NULL;
+		results[0].buffer_type= MYSQL_TYPE_LONG;
+		results[0].buffer = &r;
+		results[0].buffer_length = sizeof(r);
+		results[0].is_null = 0;
+		results[0].length = &len1;
+		if(mysql_stmt_bind_param(stmt,param)) throw runtime_error(mysql_stmt_error(stmt));
+		if(mysql_stmt_bind_result(stmt, results)) throw runtime_error(mysql_stmt_error(stmt));
 	}
+	~myStatement() {
+		mysql_stmt_close(stmt);
+		doDisconnect(NULL,db);
+	}
+};
+myStatement* cStatement(void*) {
+	return new myStatement();
 }
+void dStatement(void*, myStatement* s) {
+	delete s;
+}
+genericPool<myStatement*,128> stmtPool(&cStatement,&dStatement);
+
+ThreadPool tp(32);
+
+int curOperations=0;
+static const int maxOperations=MYSQL_MAX_CONNECTIONS;
+list<EventFD*> waitingThreads;
+
+void do_init_thread(void*) {
+	mysql_thread_init();
+}
+void do_deinit_thread(void*) {
+	mysql_thread_end();
+}
+extern "C" void initModule() {
+	mysql_library_init(0,NULL,NULL);
+	tp.afterStart=&do_init_thread;
+	tp.beforeExit=&do_deinit_thread;
+}
+
+%><%$
+EventFD efd{0,EFD_SEMAPHORE};
+int queries=1;
+world* items;
+myStatement* stmt;
+
+void tpFunc() {
+	//mysql_thread_init();
+	for (int i=0;i<queries;i++){
+		items[i].id=stmt->rn=rand()%10000;
+		if(mysql_stmt_execute(stmt->stmt)) throw runtime_error(mysql_stmt_error(stmt->stmt));
+		if(mysql_stmt_fetch(stmt->stmt)==0) {
+			items[i].rnd=stmt->r;
+		} else {
+			items[i].rnd=0;
+		}
+	}
+	efd.sendEvent(1);
+}
+//asynchronously load the data in the doInit() function, and defer page rendering until data is available
+void doInit() override {
+	if(unlikely(curOperations>=maxOperations)) {
+		//too many threads. need to wait.
+		waitingThreads.push_back(&efd);
+		efd.getEvent({&mypage::waitCB,this});
+		poll->add(efd);
+		return;
+	}
+	curOperations++;
+	auto it=request->queryString.find("queries");
+	if(it!=request->queryString.end()) {
+		queries=atoi((*it).second);
+	}
+	if(queries<1)queries=1;
+	if(queries>500)queries=500;
+	int i;
+	
+	items=(world*)sp->alloc(sizeof(world)*queries);
+	stmt=stmtPool.get();
+	poll->add(efd);
+	tp.invoke({&mypage::tpFunc,this});
+	efd.getEvent({&mypage::efdCB,this});
+}
+void efdCB(eventfd_t efdVal) {
+	curOperations--;
+	if(curOperations<maxOperations) {
+		if(unlikely(!waitingThreads.empty())) {
+			waitingThreads.front()->sendEvent(1);
+			waitingThreads.pop_front();
+		}
+	}
+	stmtPool.put(stmt);
+	Page::doInit();
+}
+void waitCB(eventfd_t efdVal) {
+	this->doInit();
+}
+
+%>[<%
 for (int i=0;i<queries;i++){
-	if(i>0) {%>, <%}
-	%>{ "randomNumber": <%=items[i]%> }<%
+	if(i>0) output.write(',');
+	%>{"id":<%=items[i].id%>,"randomNumber":<%=items[i].rnd%>}<%
 }
 
 response->headers["Content-Type"]="application/json";
 response->headers["Server"]="cppsp/0.2";
-%> ] }
+%>]
