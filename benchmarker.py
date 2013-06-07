@@ -516,6 +516,7 @@ class Benchmarker:
       self.results['rawData']['query'] = dict()
       self.results['rawData']['fortune'] = dict()
       self.results['rawData']['update'] = dict()
+      self.results['rawData']['plaintext'] = dict()
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:

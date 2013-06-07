@@ -35,7 +35,7 @@ const (
 	WorldUpdate        = "UPDATE World SET randomNumber = ? where id = ?"
 	FortuneSelect      = "SELECT id, message FROM Fortune;"
 	WorldRowCount      = 10000
-	MaxConnectionCount = 100
+	MaxConnectionCount = 256
 )
 
 var (
@@ -71,12 +71,20 @@ func main() {
 	http.HandleFunc("/json", jsonHandler)
 	http.HandleFunc("/fortune", fortuneHandler)
 	http.HandleFunc("/update", updateHandler)
+	http.HandleFunc("/plaintext", plaintextHandler)
 	http.ListenAndServe(":8080", nil)
 }
 
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/javascript")
 	json.NewEncoder(w).Encode(&Message{"Hello, world"})
+}
+
+var HelloWorld = []byte("Hello, World!")
+
+func plaintextHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write(HelloWorld)
 }
 
 func worldHandler(w http.ResponseWriter, r *http.Request) {

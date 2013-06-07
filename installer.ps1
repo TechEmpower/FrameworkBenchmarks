@@ -19,9 +19,12 @@ Install-WindowsFeature Web-Mgmt-Console
 Install-WindowsFeature NET-Framework-45-ASPNET
 Install-WindowsFeature Web-Asp-Net45
 
-# Enable detailed error pages
 $env:Path += ";C:\Windows\system32\inetsrv"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
-appcmd set config -section:system.webServer/httpErrors -errorMode:Detailed | Out-Null
+# Optimize performance
+appcmd set config -section:httpProtocol /allowKeepAlive:true | Out-Null
+appcmd set config -section:httpLogging /dontLog:True | Out-Null
+# Enable detailed error pages
+#appcmd set config -section:system.webServer/httpErrors -errorMode:Detailed | Out-Null
 
 # URL Rewrite
 $rewrite_url = "http://download.microsoft.com/download/6/7/D/67D80164-7DD0-48AF-86E3-DE7A182D6815/rewrite_2.0_rtw_x64.msi"
@@ -51,8 +54,8 @@ Start-Process "msiexec" "/i $webdeploy_local /passive" -Wait
 # node.js
 #
 Write-Host "Installing node.js...`n"
-$node_installer_file = "node-v0.10.5-x64.msi"
-$node_installer_url = "http://nodejs.org/dist/v0.10.5/x64/$node_installer_file"
+$node_installer_file = "node-v0.10.10-x64.msi"
+$node_installer_url = "http://nodejs.org/dist/v0.10.10/x64/$node_installer_file"
 $node_installer_local = "$workdir\$node_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($node_installer_url, $node_installer_local)
 
@@ -63,8 +66,8 @@ $env:Path += ";C:\Program Files\nodejs"; [Environment]::SetEnvironmentVariable("
 # Python
 #
 Write-Host "Installing Python...`n"
-$python_installer_file = "python-2.7.4.amd64.msi"
-$python_installer_url = "http://www.python.org/ftp/python/2.7.4/$python_installer_file"
+$python_installer_file = "python-2.7.5.amd64.msi"
+$python_installer_url = "http://www.python.org/ftp/python/2.7.5/$python_installer_file"
 $python_installer_local = "$workdir\$python_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($python_installer_url, $python_installer_local)
 
@@ -77,8 +80,8 @@ $env:Path += ";C:\Python27"; [Environment]::SetEnvironmentVariable("Path", $env:
 Write-Host "Installing PHP...`n"
 
 # Download PHP
-$php_installer_file = "php-5.4.14-nts-Win32-VC9-x86.zip"
-$php_installer_url = "http://windows.php.net/downloads/releases/archives/$php_installer_file"
+$php_installer_file = "php-5.4.16-nts-Win32-VC9-x86.zip"
+$php_installer_url = "http://windows.php.net/downloads/releases/$php_installer_file"
 $php_installer_local = "$workdir\$php_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($php_installer_url, $php_installer_local)
 
@@ -92,15 +95,20 @@ $env:Path += ";" + $php; [Environment]::SetEnvironmentVariable("Path", $env:Path
 $phpini = "$php\php.ini"
 Copy-Item "$php\php.ini-production" $phpini
 (Get-Content $phpini) -Replace ";date.timezone =", "date.timezone = UTC" | Set-Content $phpini
-(Get-Content $phpini) -Replace "display_errors = Off", "display_errors = On" | Set-Content $phpini
 (Get-Content $phpini) -Replace "short_open_tag = Off", "short_open_tag = On" | Set-Content $phpini
+(Get-Content $phpini) -Replace "display_errors = Off", "display_errors = Off" | Set-Content $phpini
+(Get-Content $phpini) -Replace "log_errors = On", "log_errors = Off" | Set-Content $phpini
+(Get-Content $phpini) -Replace "output_buffering = 4096", "output_buffering = Off" | Set-Content $phpini
+(Get-Content $phpini) -Replace ";cgi.force_redirect = 1", "cgi.force_redirect = 0" | Set-Content $phpini
+(Get-Content $phpini) -Replace ";fastcgi.impersonate = 1", "fastcgi.impersonate = 0" | Set-Content $phpini
+(Get-Content $phpini) -Replace ";fastcgi.logging = 0", "fastcgi.logging = 0" | Set-Content $phpini
 (Get-Content $phpini) -Replace '; extension_dir = "./"', "extension_dir = `"$php\ext`"" | Set-Content $phpini
 (Get-Content $phpini) -Replace ";extension=", "extension=" | Set-Content $phpini
 (Get-Content $phpini) -Replace "extension=php_(interbase|oci8|oci8_11g|firebird|oci|pspell|sybase_ct|zip|pdo_firebird|pdo_oci|snmp).dll.*", "" | Set-Content $phpini
 
 # IIS with PHP via FastCGI
 Install-WindowsFeature Web-CGI | Out-Null
-appcmd set config -section:system.webServer/fastCgi /+"[fullPath='C:\PHP\php-cgi.exe', arguments='', maxInstances='4', instanceMaxRequests='10000', queueLength='1000', rapidFailsPerMinute='1000', idleTimeout='300', activityTimeout='30', requestTimeout='90',protocol='NamedPipe', flushNamedPipe='False']" /commit:apphost | Out-Null
+appcmd set config -section:system.webServer/fastCgi /+"[fullPath='C:\PHP\php-cgi.exe', arguments='', maxInstances='0', instanceMaxRequests='10000', queueLength='1000', rapidFailsPerMinute='10', idleTimeout='300', activityTimeout='30', requestTimeout='90', protocol='NamedPipe', flushNamedPipe='False']" /commit:apphost | Out-Null
 appcmd set config -section:system.webServer/fastCgi /+"[fullPath='C:\PHP\php-cgi.exe'].environmentVariables.[name='PHPRC', value='C:\PHP\php.ini']" /commit:apphost | Out-Null
 appcmd set config -section:system.webServer/handlers /+"[name='PHP FastCGI', path='*.php', modules='FastCgiModule', verb='*', scriptProcessor='C:\PHP\php-cgi.exe', resourceType='File', requireAccess='Script']" /commit:apphost | Out-Null
 
@@ -129,8 +137,8 @@ $env:Path += ";C:\ProgramData\Composer\bin"; [Environment]::SetEnvironmentVariab
 # Go
 #
 Write-Host "Installing Go...`n"
-$go_url = "https://go.googlecode.com/files/go1.1rc3.windows-amd64.msi"
-$go_local = "$workdir\go1.1rc3.windows-amd64.msi"
+$go_url = "https://go.googlecode.com/files/go1.1.windows-amd64.msi"
+$go_local = "$workdir\go1.1.windows-amd64.msi"
 (New-Object System.Net.WebClient).DownloadFile($go_url, $go_local)
 Start-Process $go_local "/passive" -Wait
 $env:Path += ";C:\Go\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
@@ -194,5 +202,18 @@ $env:Path += ";$maven_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $e
 #
 Write-Host "Configuring firewall...`n"
 New-NetFirewallRule -DisplayName "HTTP 8080" -Action Allow -Direction Inbound -LocalPort 8080 -Protocol TCP | Out-Null
+
+#
+# Mercurial
+#
+Write-Host "Installing Mercurial...`n"
+
+$hg_installer_file = "mercurial-2.6.1-x64.msi"
+$hg_installer_url = "https://bitbucket.org/tortoisehg/files/downloads/$hg_installer_file"
+$hg_installer_local = "$workdir\$hg_installer_file"
+(New-Object System.Net.WebClient).DownloadFile($hg_installer_url, $hg_installer_local)
+
+Start-Process $hg_installer_local '/passive' -Wait
+$env:Path += ";C:\Program Files\Mercurial"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 cd $basedir

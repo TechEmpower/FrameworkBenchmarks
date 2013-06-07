@@ -57,18 +57,23 @@ public class HelloServerHandler extends ChannelInboundMessageHandlerAdapter<Obje
             if (is100ContinueExpected(request)) {
                 send100Continue(out);
             }
-            
-            Map<String, String> data = new HashMap<String, String>();
-            data.put("message", "Hello, world");
-            
-            buf.setLength(0);
-            try
-            {
-              buf.append(HelloServerHandler.mapper.writeValueAsString(data));
-            }
-            catch (IOException ex)
-            {
-              // do nothing
+
+            if("/plaintext".equals(request.getUri())) {
+		buf.setLength(0);
+                buf.append("Hello, World!");
+            } else {
+                Map<String, String> data = new HashMap<String, String>();
+                data.put("message", "Hello, world");
+                
+                buf.setLength(0);
+                try
+                {
+                  buf.append(HelloServerHandler.mapper.writeValueAsString(data));
+                }
+                catch (IOException ex)
+                {
+                  // do nothing
+                }
             }
 
             appendDecoderResult(buf, request);

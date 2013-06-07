@@ -20,7 +20,7 @@ parser.add_argument('--install-software', action='store_true', help='runs the in
 parser.add_argument('--install', choices=['client', 'server', 'all'], default='all', help='Allows you to only install the server or client software')
 parser.add_argument('--test', nargs='+', help='names of tests to run')
 parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
-parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update'], default='all', help='which type of test to run')
+parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
 parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
 parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
 parser.add_argument('--next-sort', action='store_true', default=False, help='displays the next value that can be used as a sort value')
