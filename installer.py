@@ -30,7 +30,7 @@ class Installer:
     self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test", True)
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get install gcc-4.8 g++-4.8", True)
-    
+
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          8192' >> /etc/security/limits.conf\"")
 
@@ -168,11 +168,6 @@ class Installer:
     self.__run_command("sudo apt-get install jsvc", True)
     self.__run_command("sudo dpkg -i ringojs_0.9-1_all.deb", True)
     self.__run_command("rm ringojs_0.9-1_all.deb")
-    self.__run_command("sudo ringo-admin install oberhamsi/sql-ringojs-client")
-    self.__run_command("sudo ringo-admin install ringo/stick")
-    self.__run_command("sudo ringo-admin install oberhamsi/reinhardt")
-    self.__run_command("sudo ringo-admin install grob/ringo-sqlstore")
-    self.__run_command("sudo ringo-admin install amigrave/ringo-mongodb")
 
     #
     # Mono
@@ -183,7 +178,7 @@ class Installer:
     self.__run_command("make get-monolite-latest", cwd="mono")
     self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
     self.__run_command("sudo make install", cwd="mono")
-    
+
     self.__run_command("mozroots --import --sync")
 
     self.__run_command("git clone git://github.com/mono/xsp")
@@ -191,17 +186,17 @@ class Installer:
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
     self.__run_command("make", cwd="xsp")
     self.__run_command("sudo make install", cwd="xsp")
-    
-    # 
+
+    #
     # Nimrod
-    # 
+    #
     self.__run_command("wget http://www.nimrod-code.org/download/nimrod_0.9.2.zip")
     self.__run_command("unzip nimrod_0.9.2.zip")
     self.__run_command("chmod +x build.sh", cwd="nimrod")
     self.__run_command("./build.sh", cwd="nimrod")
     self.__run_command("chmod +x install.sh", cwd="nimrod")
     self.__run_command("sudo ./install.sh /usr/bin", cwd="nimrod")
-    
+
     #######################################
     # Webservers
     #######################################
