@@ -37,3 +37,34 @@ app.get('/fortune', function() {
    fortunes.sort(models.Fortune.sort);
    return response.html(fortuneTemplate.render({fortunes: fortunes}));
 });
+
+app.get('/plaintext', function() {
+   // @@ not available in ringojs 0.9
+   // return response.text('Hello World');
+   return {
+     status: 200,
+     headers: {"Content-Type": 'text/plain'},
+     body: ['Hello World']
+   };
+});
+
+app.get('/updates/:queries?', function(request, queries) {
+   queries = parseInt(queries, 10) || 1;
+   if (isNaN(queries) || queries < 1) {
+      queries = 1;
+   } else if (queries > 500) {
+      queries = 500;
+   }
+   var worlds = [];
+   var randId, world;
+   models.store.beginTransaction();
+   for (var i = 0; i < queries; i++) {
+      randId = ((Math.random() * 10000) | 0) + 1;
+      world = models.store.query('select World.* from World where World.id = :id', {id: randId})[0];
+      world.randomId = ((Math.random() * 10000) | 0) + 1;
+      world.save();
+      worlds.push(world.toJSON());
+   }
+   models.store.commitTransaction();
+   return response.json(worlds);
+});
