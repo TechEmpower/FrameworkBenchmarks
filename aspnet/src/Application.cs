@@ -41,7 +41,7 @@ namespace Benchmarks.AspNet
                 name: "WithProviders",
                 url: "{controller}/{providerName}/{action}",
                 defaults: new { action = "Index" },
-                constraints: new { controller = "ado|entityframework", providerName = "mysql|postgresql" }
+                constraints: new { controller = "ado|entityframework", providerName = "mysql|postgresql|sqlserver" }
             );
 
             RouteTable.Routes.MapRoute(
