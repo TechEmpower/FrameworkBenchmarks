@@ -80,7 +80,7 @@ $env:Path += ";C:\Python27"; [Environment]::SetEnvironmentVariable("Path", $env:
 Write-Host "Installing PHP...`n"
 
 # Download PHP
-$php_installer_file = "php-5.4.15-nts-Win32-VC9-x86.zip"
+$php_installer_file = "php-5.4.16-nts-Win32-VC9-x86.zip"
 $php_installer_url = "http://windows.php.net/downloads/releases/$php_installer_file"
 $php_installer_local = "$workdir\$php_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($php_installer_url, $php_installer_local)
