@@ -71,6 +71,12 @@
       <Private>True</Private>
       <HintPath>..\lib\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\lib\ServiceStack.Text.3.9.48\lib\net35\ServiceStack.Text.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <Private>True</Private>
       <HintPath>..\lib\EntityFramework.6.0.0-alpha3\lib\net45\EntityFramework.dll</HintPath>
@@ -110,6 +116,7 @@
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JsonController.cs" />
+    <Compile Include="Controllers\PlaintextController.cs" />
     <Compile Include="Controllers\AdoController.cs" />
     <Compile Include="Controllers\EntityFrameworkController.cs" />
     <Compile Include="Controllers\MongoDBController.cs" />

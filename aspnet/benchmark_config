@@ -4,9 +4,24 @@
     "default": {
       "setup_file": "setup_iis",
       "os": "nt",
-      "json_url": "/json",
+      "json_url": "/json/default",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "sort": 90
+    },
+    "jsonnet": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "json_url": "/json/jsonnet",
+      "port": 8080,
+      "sort": 134
+    },
+    "servicestack": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "json_url": "/json/servicestack",
+      "port": 8080,
+      "sort": 135
     },
     "mysql-raw": {
       "setup_file": "setup_iis",
