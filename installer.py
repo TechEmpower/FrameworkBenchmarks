@@ -264,7 +264,7 @@ class Installer:
     ##############################
     # Flask
     ##############################
-    packages = "flask==0.9 flask-sqlalchemy==0.16 sqlalchemy==0.8.1 jinja2==2.6 werkzeug==0.8.3"
+    packages = "flask==0.9 flask-sqlalchemy==0.16 sqlalchemy==0.8.1 jinja2==2.7 werkzeug==0.8.3"
     self.__run_command(python_bin + "/pip install " + packages)
     self.__run_command(pypy_bin + "/pip install " + packages)
 
