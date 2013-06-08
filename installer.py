@@ -221,7 +221,7 @@ class Installer:
     #
 
     self.__run_command(python_bin + "/easy_install -U 'gunicorn==0.17.4'")
-    self.__run_command(python_bin + "/pip install -U meinheld")
+    self.__run_command(python_bin + "/easy_install -U meinheld")
 
     #
     # Resin
