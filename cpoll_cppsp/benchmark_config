@@ -4,6 +4,7 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
+	"plaintext_url": "/plaintext",
       "port": 16969,
       "sort": 115
     },
