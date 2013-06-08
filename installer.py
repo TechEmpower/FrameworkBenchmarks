@@ -64,9 +64,9 @@ class Installer:
     self.__run_command("make -j", cwd="Python-2.7.5")
     self.__run_command("make install", cwd="Python-2.7.5")
 
-    self.__run_command("curl https://pypi.python.org/packages/source/d/distribute/distribute-0.6.45.tar.gz | tar xz")
-    self.__run_command(pypy_bin + "/pypy setup.py install", cwd="distribute-0.6.45")
-    self.__run_command(python_bin + "/python setup.py install", cwd="distribute-0.6.45")
+    self.__run_command("curl -L https://bitbucket.org/pypa/setuptools/downloads/setuptools-0.7.1.tar.gz | tar xz")
+    self.__run_command(pypy_bin + "/pypy setup.py install", cwd="setuptools-0.7.1")
+    self.__run_command(python_bin + "/python setup.py install", cwd="setuptools-0.7.1")
 
     self.__run_command("curl https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz | tar xz")
     self.__run_command(pypy_bin + "/pypy setup.py install", cwd="pip-1.3.1")
