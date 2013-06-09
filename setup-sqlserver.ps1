@@ -34,4 +34,10 @@ Start-Process "$sqlserver_exe_local" "/q /action=install /features=SQLEngine /IN
 Write-Host "Configuring firewall...`n"
 New-NetFirewallRule -DisplayName "SQL 1433" -Action Allow -Direction Inbound -LocalPort 1433 -Protocol TCP | Out-Null
 
-# TODO: Run T-SQL files to create database and tables? To do that, we'd need to have the files config\create-sqlserver*.sql locally
+Write-Host "Creating SQL Server login and populated database...`n"
+
+Import-Module sqlps
+
+Invoke-Sqlcmd -InputFile "$basedir\config\create-sqlserver-login-and-database.sql" -OutputSqlErrors $True
+
+Invoke-Sqlcmd -Username benchmarkdbuser -Password B3nchmarkDBPass -Database hello_world -InputFile "$basedir\config\create-sqlserver.sql" -OutputSqlErrors $True

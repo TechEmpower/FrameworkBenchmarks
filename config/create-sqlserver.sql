@@ -5,7 +5,9 @@
 --
 -- "%ProgramFiles%\Microsoft SQL Server\110\Tools\binn\sqlcmd.exe" -U benchmarkdbuser -P B3nchmarkDBPass -d hello_world -i <filename of this file>
 
--- TODO: Check for an existing World table and drop it.
+IF OBJECT_ID('World', 'U') IS NOT NULL
+    DROP TABLE World
+GO
 
 CREATE TABLE World (
   id int NOT NULL IDENTITY PRIMARY KEY,
@@ -27,7 +29,9 @@ END
 
 GO
 
--- TODO: Check for an existing Fortune table and drop it.
+IF OBJECT_ID('Fortune', 'U') IS NOT NULL
+    DROP TABLE Fortune
+GO
 
 -- Note that this uses nvarchar to make sure that the column is Unicode.
 CREATE TABLE Fortune (
