@@ -5,6 +5,10 @@
 -- "%ProgramFiles%\Microsoft SQL Server\110\Tools\binn\sqlcmd.exe" -i <filename of this file>
 --
 
+IF EXISTS (SELECT * FROM sys.server_principals WHERE name = 'benchmarkdbuser')
+    DROP LOGIN benchmarkdbuser
+GO
+
 -- This password has mixed-case and a number to satisfy the Windows password policy
 CREATE LOGIN benchmarkdbuser WITH PASSWORD = 'B3nchmarkDBPass'
 GO
