@@ -66,7 +66,6 @@ type App struct {
 }
 
 func (c App) Json() revel.Result {
-	c.Response.ContentType = "application/json"
 	return c.RenderJson(MessageStruct{"Hello, world"})
 }
 
