@@ -14,7 +14,7 @@ CREATE LOGIN benchmarkdbuser WITH PASSWORD = 'B3nchmarkDBPass'
 GO
 
 IF EXISTS(SELECT * FROM SYS.DATABASES WHERE NAME='hello_world')
-DROP DATABASE hello_world
+    DROP DATABASE hello_world
 GO
 
 CREATE DATABASE hello_world

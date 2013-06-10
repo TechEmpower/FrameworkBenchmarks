@@ -143,12 +143,16 @@ namespace Benchmarks.AspNet.Controllers
                         if (world == null)
                             continue;
                         
+                        DbParameter idUpdateParameter = updateCommand.CreateParameter();
+                        idUpdateParameter.ParameterName = "@ID";
+                        idUpdateParameter.Value = randomID;
+
                         DbParameter numberParameter = updateCommand.CreateParameter();
                         numberParameter.ParameterName = "@Number";
                         numberParameter.Value = randomNumber;
 
                         updateCommand.Parameters.Clear();
-                        updateCommand.Parameters.Add(idParameter);
+                        updateCommand.Parameters.Add(idUpdateParameter);
                         updateCommand.Parameters.Add(numberParameter);
 
                         updateCommand.ExecuteNonQuery();
