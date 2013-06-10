@@ -15,7 +15,7 @@ $create_sqlserver_url = $config_url + "/create-sqlserver.sql"
 $create_sqlserver_local = $config_local + "/create-sqlserver.sql"
 
 Write-Host "Creating directory: $config`n"
-New-Item -Path $config -Type Directory -Force | Out-Null
+New-Item -Path $config_local -Type Directory -Force | Out-Null
 
 Write-Host "Downloading setup files...`n"
 (New-Object System.Net.WebClient).DownloadFile($setup_sqlserver_url, $setup_sqlserver_local)
