@@ -10,7 +10,6 @@ import (
 	"runtime"
 	"sort"
 	"strconv"
-	"sync"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -99,18 +98,12 @@ func worldHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatalf("Error scanning world row: %v", err)
 		}
 	} else {
-		var wg sync.WaitGroup
-		wg.Add(n)
 		for i := 0; i < n; i++ {
-			go func(i int) {
-				err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
-				if err != nil {
-					log.Fatalf("Error scanning world row: %v", err)
-				}
-				wg.Done()
-			}(i)
+			err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
+			if err != nil {
+				log.Fatalf("Error scanning world row: %v", err)
+			}
 		}
-		wg.Wait()
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(ww)
@@ -150,20 +143,14 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 		ww[0].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
 		updateStatement.Exec(ww[0].RandomNumber, ww[0].Id)
 	} else {
-		var wg sync.WaitGroup
-		wg.Add(n)
 		for i := 0; i < n; i++ {
-			go func(i int) {
-				err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
-				ww[i].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
-				updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
-				if err != nil {
-					log.Fatalf("Error scanning world row: %v", err)
-				}
-				wg.Done()
-			}(i)
+			err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
+			ww[i].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
+			updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
+			if err != nil {
+				log.Fatalf("Error scanning world row: %v", err)
+			}
 		}
-		wg.Wait()
 	}
 	j, _ := json.Marshal(ww)
 	w.Header().Set("Content-Type", "application/json")
