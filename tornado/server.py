@@ -13,11 +13,17 @@ tornado.options.define('port', default=8888, type=int, help=(
     "Server port"))
 
 class JsonSerializeTestHandler(tornado.web.RequestHandler):
+    def compute_etag(self):
+        return None
+
     def get(self):
         obj = dict(message="Hello, World!")
         self.write(obj)
 
 class QueryTestHandler(tornado.web.RequestHandler):
+    def compute_etag(self):
+        return None
+
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
