@@ -1,15 +1,14 @@
 {
-  "framework": "play-scala",
+  "framework": "play-slick",
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 9000,
-      "sort": 32
+      "sort": 135
     }
   }]
 }
