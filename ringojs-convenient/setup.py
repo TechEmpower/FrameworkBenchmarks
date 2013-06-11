@@ -5,7 +5,7 @@ import setup_util
 import os
 
 def start(args):
-  setup_util.replace_text("ringojs-convinient/app/models.js", "dbHost = '.*';", "dbHost = '" + args.database_host + "';")
+  setup_util.replace_text("ringojs-convenient/app/models.js", "dbHost = '.*';", "dbHost = '" + args.database_host + "';")
 
   try:
 
@@ -17,7 +17,7 @@ def start(args):
 
     subprocess.check_call("sudo mkdir -p /usr/share/ringojs/packages/ringo-sqlstore/jars/", shell=True)
     subprocess.check_call("sudo cp /usr/share/ringojs//packages/sql-ringojs-client/jars/mysql.jar /usr/share/ringojs/packages/ringo-sqlstore/jars/", shell=True)
-    subprocess.Popen("ringo --production -Dserver -DXmx=512m -DXms=512m ringo-main.js", shell=True, cwd="ringojs-convinient")
+    subprocess.Popen("ringo --production -Dserver -DXmx=512m -DXms=512m ringo-main.js", shell=True, cwd="ringojs-convenient")
     return 0
   except subprocess.CalledProcessError:
     return 1
