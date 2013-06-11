@@ -1,0 +1,60 @@
+﻿<!--
+***********************************************************************************************
+Microsoft.Web.Publishing.Deploy.FTP.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your web deploy projects from the command-line or the IDE.
+
+This file defines the steps in the standard package/publish process for Deploy 
+Currently
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Import task from our dll-->
+  <UsingTask TaskName="GetPublishingLocalizedString" AssemblyFile="..\Microsoft.Web.Publishing.Tasks.dll"/>
+
+
+  <!--Append WebFTPPublish to the supported list.-->
+  <PropertyGroup>
+    <_WPPWebPublishMethodSupports>$(_WPPWebPublishMethodSupports);WebFTPPublish</_WPPWebPublishMethodSupports>
+  </PropertyGroup>
+
+
+  <!--********************************************************************-->
+  <!--Target WebFTPPublish -->
+  <!--Current this is not supported through the command line, show the error message.-->
+  <!--********************************************************************-->
+  <PropertyGroup>
+    <WebFTPPublishDependsOn>
+      $(OnBeforeWebFTPPublish);
+      $(WebFTPPublishDependsOn);
+    </WebFTPPublishDependsOn>
+  </PropertyGroup>
+
+  <Target Name="WebFTPPublish"
+          DependsOnTargets="$(WebFTPPublishDependsOn)"
+          Condition="'$(WebFTPPublish)' != 'False'">
+
+    <!--This is not yet implemented through the command line for Log the error -->
+    <GetPublishingLocalizedString
+       ID="PublishLocalizedString_WebPublishMethodIsNotSupportedInCmdLine"
+       ArgumentCount="1"
+       Arguments="$(WebPublishMethod)"
+       LogType="Error" />
+
+    <Error  Text ="Target WebFTPPublish Failed" />
+
+    <CallTarget Targets="$(OnAfterWebFTPPublish)" RunEachTargetSeparately="False" />
+  </Target>
+
+  <!--ImportAfter Extension-->
+  <PropertyGroup>
+    <ImportByWildcardAfterMicrosoftWebPublishingDeployFTPTargets Condition="'$(ImportByWildcardAfterMicrosoftWebPublishingDeployFTPTargets)'==''">true</ImportByWildcardAfterMicrosoftWebPublishingDeployFTPTargets>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportAfter\*" Condition="'$(ImportByWildcardAfterMicrosoftWebPublishingDeployFTPTargets)' == 'true' and exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName)\ImportAfter')"/>
+
+
+</Project>
