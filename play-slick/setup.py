@@ -5,12 +5,12 @@ import setup_util
 import os
 
 def start(args):
-  setup_util.replace_text("play-scala/conf/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
+  setup_util.replace_text("play-slick/conf/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
 
-  subprocess.check_call("play dist", shell=True, cwd="play-scala")
-  subprocess.check_call("unzip play-scala-1.0-SNAPSHOT.zip", shell=True, cwd="play-scala/dist")
-  subprocess.check_call("chmod +x start", shell=True, cwd="play-scala/dist/play-scala-1.0-SNAPSHOT")
-  subprocess.Popen("./start", shell=True, cwd="play-scala/dist/play-scala-1.0-SNAPSHOT")
+  subprocess.check_call("play dist", shell=True, cwd="play-slick")
+  subprocess.check_call("unzip play-slick-1.0-SNAPSHOT.zip", shell=True, cwd="play-slick/dist")
+  subprocess.check_call("chmod +x start", shell=True, cwd="play-slick/dist/play-slick-1.0-SNAPSHOT")
+  subprocess.Popen("./start", shell=True, cwd="play-slick/dist/play-slick-1.0-SNAPSHOT")
 
   return 0
 def stop():
@@ -21,7 +21,7 @@ def stop():
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 9)
   try:
-    os.remove("play-scala/RUNNING_PID")
+    os.remove("play-slick/RUNNING_PID")
   except OSError:
     pass
 
