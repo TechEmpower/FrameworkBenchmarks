@@ -1,0 +1,12 @@
+{
+  "framework": "silica",
+  "tests": [{
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 8080,
+      "sort": 64
+    }
+  }]
+}
