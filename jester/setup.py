@@ -11,7 +11,7 @@ def start(args):
   subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/jester/config/nginx.conf", shell=True)
   
   for i in range(0, 8):
-    subprocess.Popen("./hello 900" + i + " > /dev/null", shell=True, cwd="jester")
+    subprocess.Popen("./hello 900" + str(i) + " > /dev/null", shell=True, cwd="jester")
   return 0
 
 def stop():
