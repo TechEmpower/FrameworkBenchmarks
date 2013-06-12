@@ -8,7 +8,7 @@ def start(args):
   try:
     subprocess.check_call("./rebar get-deps", shell=True, cwd="cowboy")
     subprocess.check_call("./rebar compile", shell=True, cwd="cowboy")
-    subprocess.check_call("erl -pa ebin deps/*/ebin +K true +sbwt very_long +swt very_low -s hello_world -noshell -detached", shell=True, cwd="cowboy")
+    subprocess.check_call("erl -pa ebin deps/*/ebin +sbwt very_long +swt very_low -s hello_world -noshell -detached", shell=True, cwd="cowboy")
     return 0
   except subprocess.CalledProcessError:
     return 1
