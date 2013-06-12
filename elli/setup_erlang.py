@@ -1,4 +1,3 @@
-
 import subprocess
 import sys
 import setup_util
@@ -9,7 +8,7 @@ def start(args):
   try:
     subprocess.check_call("./rebar get-deps", shell=True, cwd="elli")
     subprocess.check_call("./rebar compile", shell=True, cwd="elli")
-    subprocess.check_call("erl -pa ebin deps/*/ebin -s elli_bench -noshell -detached", shell=True, cwd="elli")
+    subprocess.check_call("erl -pa ebin deps/*/ebin +K true +sbwt very_long +swt very_low -s elli_bench -noshell -detached", shell=True, cwd="elli")
     return 0
   except subprocess.CalledProcessError:
     return 1
