@@ -14,14 +14,14 @@
       "os": "nt",
       "json_url": "/json/jsonnet",
       "port": 8080,
-      "sort": 134
+      "sort": 138
     },
     "servicestack": {
       "setup_file": "setup_iis",
       "os": "nt",
       "json_url": "/json/servicestack",
       "port": 8080,
-      "sort": 135
+      "sort": 139
     },
     "mysql-raw": {
       "setup_file": "setup_iis",
@@ -90,7 +90,7 @@
       "setup_file": "setup_nginx",
       "json_url": "/json/servicestack",
       "port": 8080,
-      "sort": 137
+      "sort": 140
     },
     "mono-mysql-raw": {
       "setup_file": "setup_nginx",
