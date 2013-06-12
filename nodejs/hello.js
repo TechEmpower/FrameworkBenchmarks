@@ -79,7 +79,7 @@ function sequelizeQuery(callback) {
 http.createServer(function (req, res) {
   // JSON response object
   var hello = {message: "Hello, world"};
-
+  var helloStr = "Hello, World!";
   var path = url.parse(req.url).pathname;
   
   // mysql on windows is not supported
@@ -93,6 +93,13 @@ http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
     // Write JSON object to response
     res.end(JSON.stringify(hello));
+    break;
+
+  case '/plaintext':
+    // JSON Response Test
+    res.writeHead(200, {'Content-Type': 'text/plain; charset=UTF-8'});
+    // Write JSON object to response
+    res.end(helloStr);
     break;
 
   case '/mongodbdriver':
