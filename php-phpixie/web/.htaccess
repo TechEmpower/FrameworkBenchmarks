@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule .* index.php?$0 [PT,L,QSA]
+
+
+
+
+
