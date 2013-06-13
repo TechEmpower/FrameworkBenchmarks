@@ -1,4 +1,3 @@
-
 -module(elli_bench_sup).
 
 -behaviour(supervisor).
@@ -26,7 +25,7 @@ start_link() ->
 init([]) ->
     crypto:start(),
     application:start(emysql),
-    emysql:add_pool(test_pool, 32,
+    emysql:add_pool(test_pool, 5000,
        "benchmarkdbuser", "benchmarkdbpass", "localhost", 3306,
        "hello_world", utf8),
     emysql:prepare(db_stmt, <<"SELECT * FROM World where id = ?">>),

@@ -4,6 +4,7 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json.php",
+      "plaintext_url": "/plaintext.php",
       "db_url": "/dborm.php",
       "query_url": "/dborm.php?queries=",
       "port": 8080,

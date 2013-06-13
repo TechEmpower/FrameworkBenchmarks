@@ -7,6 +7,7 @@
       "db_url": "/compojure/db/1",
       "query_url": "/compojure/db/",
       "fortune_url": "/compojure/fortune-hiccup",
+      "plaintext_url": "/compojure/plaintext",
       "port": 8080,
       "sort": 2
     },
