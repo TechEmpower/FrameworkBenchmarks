@@ -10,13 +10,12 @@ import (
 	"runtime"
 	"sort"
 	"strconv"
-	"sync"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type Message struct {
-	Message string
+	Message string `json:"message"`
 }
 
 type World struct {
@@ -29,45 +28,55 @@ type Fortune struct {
 	Message string `json:"message"`
 }
 
+// TODO: remove ?charset=utf8 from DSN after the next Go-MySQL-Driver release
+// https://github.com/go-sql-driver/mysql#unicode-support
 const (
-	ConnectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
-	WorldSelect        = "SELECT id, randomNumber FROM World where id = ?"
-	WorldUpdate        = "UPDATE World SET randomNumber = ? where id = ?"
-	FortuneSelect      = "SELECT id, message FROM Fortune;"
-	WorldRowCount      = 10000
-	MaxConnectionCount = 256
+	// Database
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
+	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
+	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
+	fortuneSelect      = "SELECT id, message FROM Fortune;"
+	worldRowCount      = 10000
+	maxConnectionCount = 256
+
+	helloWorldString = "Hello, World!"
 )
 
 var (
+	// Templates
 	tmpl = template.Must(template.ParseFiles("templates/layout.html", "templates/fortune.html"))
 
+	// Database
 	worldStatement   *sql.Stmt
 	fortuneStatement *sql.Stmt
 	updateStatement  *sql.Stmt
+
+	helloWorldBytes = []byte(helloWorldString)
 )
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	db, err := sql.Open("mysql", ConnectionString)
+	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
 	}
-	db.SetMaxIdleConns(MaxConnectionCount)
-	worldStatement, err = db.Prepare(WorldSelect)
+	db.SetMaxIdleConns(maxConnectionCount)
+	worldStatement, err = db.Prepare(worldSelect)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fortuneStatement, err = db.Prepare(FortuneSelect)
+	fortuneStatement, err = db.Prepare(fortuneSelect)
 	if err != nil {
 		log.Fatal(err)
 	}
-	updateStatement, err = db.Prepare(WorldUpdate)
+	updateStatement, err = db.Prepare(worldUpdate)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	http.HandleFunc("/db", worldHandler)
+	http.HandleFunc("/db", dbHandler)
+	http.HandleFunc("/queries", queriesHandler)
 	http.HandleFunc("/json", jsonHandler)
 	http.HandleFunc("/fortune", fortuneHandler)
 	http.HandleFunc("/update", updateHandler)
@@ -75,100 +84,107 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
+// Test 1: JSON serialization
 func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/javascript")
-	json.NewEncoder(w).Encode(&Message{"Hello, world"})
+	json.NewEncoder(w).Encode(&Message{helloWorldString})
 }
 
-var HelloWorld = []byte("Hello, World!")
+// Test 2: Single database query
+func dbHandler(w http.ResponseWriter, r *http.Request) {
+	var world World
+	err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
+	if err != nil {
+		log.Fatalf("Error scanning world row: %s", err.Error())
+	}
 
-func plaintextHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/plain")
-	w.Write(HelloWorld)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(&world)
 }
 
-func worldHandler(w http.ResponseWriter, r *http.Request) {
+// Test 3: Multiple database queries
+func queriesHandler(w http.ResponseWriter, r *http.Request) {
 	n := 1
-	if nStr := r.URL.Query().Get("queries"); len(nStr) != 0 {
+	if nStr := r.URL.Query().Get("queries"); len(nStr) > 0 {
 		n, _ = strconv.Atoi(nStr)
 	}
-	ww := make([]World, n)
-	if n == 1 {
-		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[0].Id, &ww[0].RandomNumber)
-		if err != nil {
-			log.Fatalf("Error scanning world row: %v", err)
-		}
-	} else {
-		var wg sync.WaitGroup
-		wg.Add(n)
-		for i := 0; i < n; i++ {
-			go func(i int) {
-				err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
-				if err != nil {
-					log.Fatalf("Error scanning world row: %v", err)
-				}
-				wg.Done()
-			}(i)
-		}
-		wg.Wait()
+
+	if n <= 1 {
+		dbHandler(w, r)
+		return
 	}
+
+	world := make([]World, n)
+	for i := 0; i < n; i++ {
+		err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber)
+		if err != nil {
+			log.Fatalf("Error scanning world row: %s", err.Error())
+		}
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(ww)
+	json.NewEncoder(w).Encode(world)
 }
 
+// Test 4: Fortunes
 func fortuneHandler(w http.ResponseWriter, r *http.Request) {
 	rows, err := fortuneStatement.Query()
 	if err != nil {
 		log.Fatalf("Error preparing statement: %v", err)
 	}
 
-	fortunes := make([]*Fortune, 0, 16)
+	fortunes := make(Fortunes, 0, 16)
 	for rows.Next() { //Fetch rows
-		fortune := new(Fortune)
+		fortune := Fortune{}
 		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {
-			log.Fatalf("Error scanning fortune row: %v", err)
+			log.Fatalf("Error scanning fortune row: %s", err.Error())
 		}
-		fortunes = append(fortunes, fortune)
+		fortunes = append(fortunes, &fortune)
 	}
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 
 	sort.Sort(ByMessage{fortunes})
 	w.Header().Set("Content-Type", "text/html")
-	if err := tmpl.Execute(w, map[string]interface{}{"fortunes": fortunes}); err != nil {
+	if err := tmpl.Execute(w, fortunes); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
+// Test 5: Database updates
 func updateHandler(w http.ResponseWriter, r *http.Request) {
 	n := 1
-	if nStr := r.URL.Query().Get("queries"); len(nStr) != 0 {
+	if nStr := r.URL.Query().Get("queries"); len(nStr) > 0 {
 		n, _ = strconv.Atoi(nStr)
 	}
-	ww := make([]World, n)
-	if n == 1 {
-		worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[0].Id, &ww[0].RandomNumber)
-		ww[0].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
-		updateStatement.Exec(ww[0].RandomNumber, ww[0].Id)
-	} else {
-		var wg sync.WaitGroup
-		wg.Add(n)
-		for i := 0; i < n; i++ {
-			go func(i int) {
-				err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).Scan(&ww[i].Id, &ww[i].RandomNumber)
-				ww[i].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
-				updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
-				if err != nil {
-					log.Fatalf("Error scanning world row: %v", err)
-				}
-				wg.Done()
-			}(i)
-		}
-		wg.Wait()
-	}
-	j, _ := json.Marshal(ww)
+
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Content-Length", strconv.Itoa(len(j)))
-	w.Write(j)
+	encoder := json.NewEncoder(w)
+
+	if n <= 1 {
+		var world World
+		worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
+		world.RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
+		updateStatement.Exec(world.RandomNumber, world.Id)
+		encoder.Encode(&world)
+	} else {
+		world := make([]World, n)
+		for i := 0; i < n; i++ {
+			if err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world[i].Id, &world[i].RandomNumber); err != nil {
+				log.Fatalf("Error scanning world row: %s", err.Error())
+			}
+			world[i].RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
+			if _, err := updateStatement.Exec(world[i].RandomNumber, world[i].Id); err != nil {
+				log.Fatalf("Error updating world row: %s", err.Error())
+			}
+		}
+		encoder.Encode(world)
+	}
+}
+
+// Test 6: Plaintext
+func plaintextHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write(helloWorldBytes)
 }
 
 type Fortunes []*Fortune

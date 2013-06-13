@@ -1,0 +1,530 @@
+﻿<!--
+***********************************************************************************************
+Microsoft.WebDeploy.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your web deploy projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process for web deploy projects.
+
+Copyright (C) 2005 Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="FilterByItems" AssemblyFile="$(MSBuildThisFileDirectory)\Microsoft.Web.Publishing.Tasks.dll" Condition="Exists('Microsoft.Web.Publishing.Tasks.dll')"/>
+  <UsingTask TaskName="CollectFilesinFolder" AssemblyFile="$(MSBuildThisFileDirectory)\Microsoft.Web.Publishing.Tasks.dll" Condition="Exists('Microsoft.Web.Publishing.Tasks.dll')"/>
+  <UsingTask TaskName="CopyPipelineFiles" AssemblyFile="$(MSBuildThisFileDirectory)\Microsoft.Web.Publishing.Tasks.dll" Condition="Exists('Microsoft.Web.Publishing.Tasks.dll')"/>
+
+  <!--***************************************************************-->
+  <!-- Setting up the property like MS.Common.Targets files has it.  -->
+  <!--This is to handle some project doesn't include the MS.Common.Targets file-->
+  <!--***************************************************************-->
+  <PropertyGroup>
+    <_WebProjectType>WebSite</_WebProjectType>
+    <OutputPath Condition="'$(OutputPath)' == ''">$([System.IO.Path]::GetTempPath())WebSitePublish\$([System.IO.Path]::GetFileName($(MSBuildProjectDirectory)))-$(MSBuildProjectDirectory.GetHashCode())</OutputPath>
+    <OutputPath Condition="'$(OutputPath)' != '' and !HasTrailingSlash('$(OutputPath)')">$(OutputPath)\</OutputPath>
+    <OutDir Condition=" '$(OutDir)' == '' ">$(OutputPath)</OutDir>
+    <!-- Example, bin\Debug\. Ensure OutDir has a trailing slash, so it can be concatenated -->
+    <OutDir Condition="'$(OutDir)' != '' and !HasTrailingSlash('$(OutDir)')">$(OutDir)\</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(BaseIntermediateOutputPath)'=='' ">
+    <BaseIntermediateOutputPath>$(OutputPath)obj\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath Condition="!HasTrailingSlash('$(BaseIntermediateOutputPath)')">$(BaseIntermediateOutputPath)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(IntermediateOutputPath)' == '' ">
+    <IntermediateOutputPath Condition=" '$(PlatformName)' == 'AnyCPU' Or '$(PlatformName)' == ''">$(BaseIntermediateOutputPath)$(Configuration)\</IntermediateOutputPath>
+    <IntermediateOutputPath Condition=" '$(IntermediateOutputPath)' == '' ">$(BaseIntermediateOutputPath)$(PlatformName)\$(Configuration)\</IntermediateOutputPath>
+    <IntermediateOutputPath Condition="!HasTrailingSlash('$(IntermediateOutputPath)')">$(IntermediateOutputPath)\</IntermediateOutputPath>
+  </PropertyGroup>
+ 
+  <Target Name="PrepareResourceNames" />
+  <Target Name="ComputeIntermediateSatelliteAssemblies" />
+  <Target Name="GetCopyToOutputDirectoryItems" />
+  <Target Name="_SGenCheckForOutputs" />
+  <Target Name="CreateManifestResourceNames" />
+  
+  <!--
+    ============================================================
+  Initialial setup
+    ============================================================
+  -->
+  <PropertyGroup>
+    <!-- Make sure OutputPath has a trailing slash on it -->
+    <WDOutDir Condition="'$(OutDir)' != '$(OutputPath)'">$(OutDir)</WDOutDir>
+    <CopyBeforeBuildTargetPath  Condition="'$(CopyBeforeBuildTargetPath)' == ''">$(IntermediateOutputPath)AspnetCompileMerge\source</CopyBeforeBuildTargetPath>
+    <_WDPSourceWebPhysicalPath>$(SourceWebPhysicalPath)</_WDPSourceWebPhysicalPath>
+    <TempBuildDir Condition="'$(TempBuildDir)' == ''" >$(IntermediateOutputPath)TempBuildDir</TempBuildDir>
+    <_ExcludeAppOffline Condition="'$(_ExcludeAppOffline)' ==''">true</_ExcludeAppOffline>
+    <_ExcludeWebInfo Condition="'$(_ExcludeWebInfo)' ==''">true</_ExcludeWebInfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_SkipHiddenItems Condition="'$(_SkipHiddenItems)'==''">true</_SkipHiddenItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <ExcludeFromPackageFiles Include="$(SourceWebPhysicalPath)\App_Data\PublishProfiles\**\*.*"/>
+    <ExcludeFromPackageFiles Include="$(SourceWebPhysicalPath)\*.publishproj"/>
+    <ExcludeFromPackageFiles Include="$(SourceWebPhysicalPath)\app_offline.htm" Condition="'$(_ExcludeAppOffline)'== 'true'"/>
+    <ExcludeFromPackageFiles Include="$(SourceWebPhysicalPath)\Bin\*.refresh" />
+    <ExcludeFromPackageFiles Include="$(SourceWebPhysicalPath)\**\*.exclude" />
+    <ExcludeFromPackageFiles Include="$(SourceWebPhysicalPath)\**\*.webinfo" Condition="'$(_ExcludeWebInfo)'=='true'" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition="'$(SourceWebMetabasePath)' != ''">
+    <UseIis Condition="'$(UseIis)'==''">True</UseIis>
+    <IisUrl Condition="'$(IisUrl)'==''">$(SourceWebProjectPath)</IisUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SourceWebMetabasePath)' == ''">
+    <UseIis Condition="'$(UseIis)'==''">false</UseIis>
+  </PropertyGroup>
+  
+  <!-- Create the output path as an item so that we can use %(FullPath) on it. -->
+  <!-- _PublishedWebsites folder enables team build scenarios when OutDir is overiden -->
+  <ItemGroup>
+    <_WDOutputPathItem Condition="'$(WDOutDir)' != '' and !HasTrailingSlash('$(WDOutDir)')" Include="$(WDOutDir)\_PublishedWebsites\$(MSBuildProjectName)\"/>
+    <_WDOutputPathItem Condition="'$(WDOutDir)' != '' and HasTrailingSlash('$(WDOutDir)')" Include="$(WDOutDir)_PublishedWebsites\$(MSBuildProjectName)\"/>
+    <_WDOutputPathItem Condition="'$(WDOutDir)' == ''" Include="$(OutputPath)"/>
+    <_WDPSourceWebPathItem Include="$(_WDPSourceWebPhysicalPath)"/>
+    <_KeyFile Include="$(KeyFile)"/>
+  </ItemGroup>
+
+  <!-- AvailablePlatforms is the list of platform targets available. -->
+  <PropertyGroup>
+    <AvailablePlatforms>Any CPU</AvailablePlatforms>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <WDTargetDir Condition="'$(WDTargetDir)' == ''">$(WDOutDir)\_PublishedWebsites\$(MSBuildProjectName)\</WDTargetDir>
+    <_FullSourceWebDir>$(_WDPSourceWebPhysicalPath)</_FullSourceWebDir>
+    <_FullKeyFile Condition="'$(KeyFile)' != ''">@(_KeyFile->'%(FullPath)')</_FullKeyFile>
+  </PropertyGroup>
+
+  <!--
+    The set of properties passed to the aspnet_compiler when merge is not enabled
+  -->
+  <PropertyGroup>
+      <_AspNetCompilerFixedNames  Condition="'$(UseMerge)' != 'true'">$(UseFixedNames)</_AspNetCompilerFixedNames>
+      <_AspNetCompilerKeyContainer Condition="'$(UseMerge)' != 'true'">$(KeyContainer)</_AspNetCompilerKeyContainer>
+      <_AspNetCompilerMetabasePath Condition="'$(UseMetabasePath)' == 'true'">$(SourceWebMetabasePath)</_AspNetCompilerMetabasePath>
+      <_AspNetCompilerSourceWebPath Condition="'$(UseMetabasePath)' != 'true'">$(_FullSourceWebDir)</_AspNetCompilerSourceWebPath>
+      <_AspNetCompilerVirtualPath Condition="'$(UseMetabasePath)' != 'true'">$(SourceWebVirtualPath)</_AspNetCompilerVirtualPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildingProject>true</BuildingProject>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+  </PropertyGroup>
+  <!--
+    ============================================================
+  Basic Hook in for WPP
+    ============================================================
+  -->
+  <PropertyGroup>
+    <WebPublishPipelineProjectDirectory Condition="'$(WebPublishPipelineProjectDirectory)'==''">$(MSBuildProjectDirectory)</WebPublishPipelineProjectDirectory>
+    <DefaultDeployIisAppPhysicalPath Condition="'$(DefaultDeployIisAppPhysicalPath)'==''">$(MSBuildProjectDirectory)$(DefaultMsDeployAltSuffix)</DefaultDeployIisAppPhysicalPath>
+    <FilesToIncludeForPublish>AllFilesInProjectFolder</FilesToIncludeForPublish>
+    <!--We do want to exclude TransformAssistFile-->
+    <ExcludeTransformAssistFilesFromPublish Condition="'$(ExcludeTransformAssistFilesFromPublish)'==''">True</ExcludeTransformAssistFilesFromPublish>
+    <ExcludeGeneratedDebugSymbol Condition="'$(ExcludeGeneratedDebugSymbol)'=='' And '$(DebugSymbols)' == 'true'">False</ExcludeGeneratedDebugSymbol>
+    <ProjectParametersXMLFile Condition="'$(ProjectParametersXMLFile)'=='' And Exists('$(MSBuildProjectDirectory)\Parameters.xml')">$(OutputPath)\Parameters.xml</ProjectParametersXMLFile>
+    <_WDPDefaultIntermediateOutputPathPathRoot Condition="'$(_WPPDefaultIntermediateOutputPathPathRoot)' == ''">$(OutputPath)\</_WDPDefaultIntermediateOutputPathPathRoot>
+  </PropertyGroup>
+ 
+  <PropertyGroup Condition="'$(_WDPDefaultIntermediateOutputPath)' == ''">
+    <_WDPDefaultIntermediateOutputPath>$(IntermediateOutputPath)</_WDPDefaultIntermediateOutputPath>
+    <_WDPDefaultIntermediateOutputPath Condition="!$([System.IO.path]::IsPathRooted($(IntermediateOutputPath)))">$(_WDPDefaultIntermediateOutputPathPathRoot)$(IntermediateOutputPath)</_WDPDefaultIntermediateOutputPath>
+  </PropertyGroup>
+
+  <!--******************************************************-->
+  <!--Include the WPP targets file-->
+  <!--******************************************************-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="Microsoft.Web.Publishing.targets" />
+  
+  <PropertyGroup>
+    <!--In earlier version of WPP, Web.config transformation doesn't support anthing other than the Msbuild Project project folder to find the web.config-->
+    <PreTransformWebConfigDependsOn>
+      $(PreTransformWebConfigDependsOn);
+      FixupTransformAssistFilesAsExclude;
+    </PreTransformWebConfigDependsOn>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <_AllExecutableUnderBin Include="$(SourceWebPhysicalPath)\Bin\*.dll;$(SourceWebPhysicalPath)\Bin\*.exe"/>
+    <ExcludeFromPackageFiles Include="@(_AllExecutableUnderBin -> '%(RelativeDir)%(FileName).xml')" Condition=" '$(ExcludeXmlAssemblyFiles)'=='true' "/>
+  </ItemGroup>
+  
+  <Target Name="FixupTransformAssistFilesAsExclude"
+          DependsOnTargets="CollectWebConfigsToTransform"
+          Condition="'$(FixupTransformAssistFilesAsExclude)' != 'False'">
+    <PropertyGroup>
+       <_WDP_IdentifyTransformAssistFile>web\.[^\\\.]*\.config$</_WDP_IdentifyTransformAssistFile>
+    </PropertyGroup>
+    <!--Find all item with web.*.config-->
+    <CollectFilesinFolder RootPath="$(WebPublishPipelineProjectDirectory)"
+                          RelativePathMatchs="$(_WDP_IdentifyTransformAssistFile)" >
+      <Output TaskParameter="Result" ItemName="_WDP_WebConfigAssistFilesToFixupTemp" />
+    </CollectFilesinFolder>
+
+    <FilterByItems PipelineItems="@(FilesForPackagingFromProject)"
+                  Filter="@(_WDP_WebConfigAssistFilesToFixupTemp)">
+      <Output TaskParameter="InFilter" ItemName="_WDP_WebConfigAssistFilesToFixup"/>
+    </FilterByItems>
+    
+    <ItemGroup>
+      <!--Change all web.*.config to full path and add DependentUpon with Web.config-->
+      <FilesForPackagingFromProject Remove="@(_WDP_WebConfigAssistFilesToFixup)" />
+      <FilesForPackagingFromProject Include="@(_WDP_WebConfigAssistFilesToFixup->'$(WebPublishPipelineProjectDirectory)%(Identity)')">
+        <DependentUpon>Web.config</DependentUpon>
+      </FilesForPackagingFromProject>
+    </ItemGroup>
+  </Target>
+
+  <!--
+    ============================================================
+                            _PrepareForBuild
+
+    Sets up variables in preparation to build.
+    ============================================================
+    -->
+    <Target Name="_PrepareForBuild">
+        <!-- 
+        Here converting to a property is required because TargetDir and TargetPath are defined 
+        to contain an item list. We want that item list to be expanded so that it can be used
+        as a regular property value and not as an item-list-with-transform.
+        -->
+      <PropertyGroup>
+        <WDTargetDir>$(WDTargetDir)</WDTargetDir>
+      </PropertyGroup>
+      <PropertyGroup>
+        <_FullSourceWebDir>$(_FullSourceWebDir)</_FullSourceWebDir>
+      </PropertyGroup>
+      
+      <MakeDir Directories="$(IntermediateOutputPath)" />
+    </Target>
+
+  <!--
+    ============================================================
+                              _CollectFilesForCopyBeforeBuild
+
+    Copy the web to a new folder excluding predefined items in @(ExcludeFromBuild)
+    <ItemGroup>
+      <ExcludeFromBuild Include="$(SourceWebPhysicalPath)\Test\**\*.*"/>
+      <ExcludeFromBuild Include="$(SourceWebPhysicalPath)\Images\**\*.*"/>
+    </ItemGroup>
+    The following support regular expreesion Exclude For example
+    <PropertyGroup>
+      <_WDPExcludeFullPathFromBuildRegEx>$(_WDPExcludeFullPathFromBuildRegEx);C:\\myfoo</_WDPExcludeFullPathFromBuildRegEx>
+      <_WDPExcludeRelativePathFromBuildRegex>$(_WDPExcludeRelativePathFromBuildRegex);[^\\]*\.scc$;[^\\]*\.vssscc$;[^\\]*\.vspscc$</_WDPExcludeRelativePathFromBuildRegex>
+    </PropertyGroup>
+    <CopyBeforeBuildTargetPath  Condition="'$(CopyBeforeBuildTargetPath)' == ''">$(IntermediateOutputPath)Source</CopyBeforeBuildTargetPath>
+    ============================================================
+    -->
+  <ItemDefinitionGroup>
+    <_WebFiles>
+      <DestinationRelativePath></DestinationRelativePath>
+      <Exclude>False</Exclude>
+      <FromTarget>Unknown</FromTarget>
+      <Category>Run</Category>
+      <ProjectFileType>Default</ProjectFileType>
+    </_WebFiles>
+  </ItemDefinitionGroup>
+
+  <Target Name="_CollectFilesForCopyBeforeBuild"
+          DependsOnTargets="$(_CollectFilesForCopyBeforeBuildDependsOn)">
+
+    <!--********************************************************************-->
+    <!-- Enforce that all items have these metadata values -->
+    <!-- Default for Exclude is False -->
+    <!--********************************************************************-->
+    <CollectFilesinFolder RootPath="$(_WDPSourceWebPhysicalPath)"
+                         ExcludeFullPathMatchs="$(_WDPExcludeFullPathFromBuildRegEx)"
+                         ExcludeRelativePathMatchs="$(_WDPExcludeRelativePathFromBuildRegex)">
+      <Output TaskParameter="Result" ItemName="_WebFilesNoMetadata" />
+    </CollectFilesinFolder>
+
+    <PropertyGroup>
+      <_OriginalSourceWebPhysicalFullPath>$([System.IO.Path]::GetFullPath($(SourceWebPhysicalPath)))</_OriginalSourceWebPhysicalFullPath>
+      <_OriginalSourceWebPhysicalFullPath Condition="!HasTrailingSlash('$(_OriginalSourceWebPhysicalFullPath)')">$(_OriginalSourceWebPhysicalFullPath)\</_OriginalSourceWebPhysicalFullPath>
+    </PropertyGroup>
+
+    <!-- For Team Build scenarios when WAP is used the exclude may be different from the source path -->
+    <ItemGroup Condition ="'$(_WDPSourceWebPhysicalPath)' != '$(SourceWebPhysicalPath)'">
+      <_WebFilesExclude Include="%(ExcludeFromBuild.Identity)">
+        <SourceRelativePath Condition="$([System.String]::new(%(ExcludeFromBuild.FullPath)).StartsWith($(_OriginalSourceWebPhysicalFullPath), StringComparison.OrdinalIgnoreCase ))" >$([System.String]::new(%(ExcludeFromBuild.FullPath)).SubString($(_OriginalSourceWebPhysicalFullPath.Length)))</SourceRelativePath>
+      </_WebFilesExclude>
+      <_WebFilesExclude Condition="'%(SourceRelativePath)'==''">
+        <SourceRelativePath>%(Identity)</SourceRelativePath>
+      </_WebFilesExclude>
+      <_WebFilesNoMetadata Remove="%(_WebFilesExclude.SourceRelativePath)" Condition="'%(_WebFilesExclude.SourceRelativePath)' != ''"/>
+    </ItemGroup>
+
+    <!-- Log debug for potential issue -->
+    <WriteLinesToFile Condition ="$(EnablePackageProcessLoggingAndAssert) And '$(_WDPSourceWebPhysicalPath)' != '$(SourceWebPhysicalPath)'"
+                  Encoding="utf-8"
+                  File="$(IntermediateOutputPath)\_WebFilesExclude.txt"
+                  Lines="@(_WebFilesExclude->'
+                      Files:%(Identity) 
+                      SourceRelativePath:%(SourceRelativePath)')"
+                  Overwrite="True" />
+
+    <!-- _WebFilesNoMetadata doesn't have metadata yet, need to fill the data.  Fill in the metadata now for CopyPipelineFiles to use -->
+    <ItemGroup>
+      <_WebFiles Include="$([System.IO.Path]::Combine($(_WDPSourceWebPhysicalPath), %(_WebFilesNoMetadata.Identity)))" >
+        <DestinationRelativePath>%(_WebFilesNoMetadata.Identity)</DestinationRelativePath>
+      </_WebFiles>
+    </ItemGroup>
+
+    <!-- For backwards compatability -->
+    <ItemGroup Condition ="'$(_WDPSourceWebPhysicalPath)' == '$(SourceWebPhysicalPath)'">
+      <_WebFiles Remove="@(ExcludeFromBuild)" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert)"
+                      Encoding="utf-8"
+                      File="$(IntermediateOutputPath)\webfilesToBeCopied.txt"
+                      Lines="@(_WebFiles->'
+                      Files:%(Identity) 
+                      FromTarget:%(FromTarget)
+                      DestinationRelativePath:%(DestinationRelativePath)')"
+                      Overwrite="True" />
+  </Target>
+
+  <Target Name="_CopyBeforeBuild"
+          Condition=" '$(EnableCopyBeforeBuild)' == 'true' or '@(ExcludeFromBuild)' != ''  "
+          DependsOnTargets="_CollectFilesForCopyBeforeBuild">
+
+    <ItemGroup>
+      <_WDPAllExtraFilesUnderTempFolder Condition="'$(CopyBeforeBuildTargetPath)' != ''" Include="$(CopyBeforeBuildTargetPath)\**" />
+      <_WDPAllExtraFilesUnderTempFolder
+        Remove="@(FilesForPackagingFromProject->'$(CopyBeforeBuildTargetPath)\%(DestinationRelativePath)')" />
+    </ItemGroup>
+    <!-- Remove all extra files in the temp folder that's not in the @(FilesForPackagingFromProject) -->
+    <Delete Files="@(_WDPAllExtraFilesUnderTempFolder)"  />
+
+    <!-- This method supports incremental copy, instead of a full copy everytime -->
+    <!-- We've already expanded the path as relative path to the project. There is no need for sourceDirectory -->
+    <CopyPipelineFiles PipelineItems="@(_WebFiles)"
+                           SourceDirectory="$(MSBuildProjectDirectory)" 
+                           TargetDirectory="$(CopyBeforeBuildTargetPath)"
+                           SkipMetadataExcludeTrueItems="True"
+                           UpdateItemSpec="False"
+                           DeleteItemsMarkAsExcludeTrue ="True">
+      <Output TaskParameter="UpdatedPipelineItems" ItemName="_WebFilesCopied"/>
+    </CopyPipelineFiles>
+    
+    <PropertyGroup>
+      <_AspNetCompilerSourceWebPath>$(CopyBeforeBuildTargetPath)</_AspNetCompilerSourceWebPath>
+    </PropertyGroup>
+  </Target>
+
+  <!--
+    ============================================================
+                              Clean
+    ============================================================
+   -->
+  <Target Name="Clean">
+    <PropertyGroup>
+      <Clean>true</Clean>
+    </PropertyGroup>
+      
+    <RemoveDir Condition="Exists('$(CopyBeforeBuildTargetPath)')" Directories="$(CopyBeforeBuildTargetPath)"/>
+    <RemoveDir Condition="Exists('$(TempBuildDir)')" Directories="$(TempBuildDir)" />
+    <RemoveDir Condition="Exists('$(WDTargetDir)')" Directories="$(WDTargetDir)" />
+  </Target>
+
+  <!--
+    ============================================================
+                              Reference Resolving
+
+    Updates the bin folder with the lastest .refresh files
+    ============================================================
+    -->
+    <Target Name="_ResolveAssemblyReferencesWithRefreshFile" DependsOnTargets="_PrepareForBuild">
+      <ItemGroup>
+        <References_RefreshFile Include="$(_FullSourceWebDir)\Bin\*.refresh"/>
+      </ItemGroup>
+      <ReadLinesFromFile File="%(References_RefreshFile.Identity)" Condition=" '%(References_RefreshFile.Identity)' != '' ">
+          <Output TaskParameter="Lines" ItemName="References_ReferenceRelPath" />
+      </ReadLinesFromFile>
+      <CombinePath BasePath="$(_FullSourceWebDir)" Paths="@(References_ReferenceRelPath)">
+          <Output TaskParameter="CombinedPaths" ItemName="References" />
+      </CombinePath>
+      
+      <Copy 
+        SourceFiles="@(References->'%(FullPath)')" 
+        DestinationFolder="$(_FullSourceWebDir)\Bin\" 
+        Condition="!Exists('%(References.Identity)')" 
+        ContinueOnError="true" 
+        SkipUnchangedFiles="true"
+        Retries="$(CopyRetryCount)"
+        RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+    </Target>
+
+   <!--
+    ============================================================
+                                        AfterResolveReferences
+    ============================================================
+    -->
+  <Target Name="AfterResolveReferences">
+    
+    <Copy SourceFiles="@(ReferencePath->'%(FullPath)')"
+        DestinationFolder="$(_FullSourceWebDir)\Bin\"
+        ContinueOnError="true"
+        SkipUnchangedFiles="true"
+        Retries="$(CopyRetryCount)"
+        RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+    
+    <Copy SourceFiles="@(ReferenceComWrappersToCopyLocal); @(ResolvedIsolatedComModules); @(_DeploymentLooseManifestFile); @(NativeReferenceFile)"
+        DestinationFolder="$(_FullSourceWebDir)\bin"
+        SkipUnchangedFiles="true"
+        Retries="$(CopyRetryCount)"
+        RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+
+    <Copy SourceFiles="@(ReferenceCopyLocalPaths)"
+         DestinationFiles="@(ReferenceCopyLocalPaths->'$(_FullSourceWebDir)\bin\%(DestinationSubDirectory)%(Filename)%(Extension)')"
+         SkipUnchangedFiles="true"
+         Retries="$(CopyRetryCount)"
+         RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"/>
+  </Target>
+
+  <!--
+    ============================================================
+                              Build
+    The main build entry point.
+    ============================================================
+    -->
+  <PropertyGroup>
+    <BuildDependsOn>
+      _PrepareForBuild;
+      ResolveProjectReferences;
+      _ResolveAssemblyReferencesWithRefreshFile;
+      ResolveReferences;
+      _CopyBeforeBuild;
+    </BuildDependsOn>
+    <PipelineDeployPhaseAfterTargets Condition="'$(DeployOnBuild)'=='True'">_CopyBeforeBuild</PipelineDeployPhaseAfterTargets>  
+  </PropertyGroup>
+
+  <Target
+      Name="Build"
+      DependsOnTargets="$(BuildDependsOn)" />
+
+  <!--
+    ============================================================
+                              CopyToOutputDir                              
+    From the temp building location copy the output to the actual oput dir
+    ============================================================
+    -->
+  <ItemDefinitionGroup>
+    <_WDPOutputFiles>
+      <DestinationRelativePath></DestinationRelativePath>
+      <Exclude>False</Exclude>
+      <FromTarget>Unknown</FromTarget>
+      <Category>Run</Category>
+      <ProjectFileType>Default</ProjectFileType>
+    </_WDPOutputFiles>
+  </ItemDefinitionGroup>
+
+  <Target Name="_CollectFilesForCopyToOutputDir"
+          DependsOnTargets="$(_CollectFilesForCopyToOutputDirDependsOn)">
+    <PropertyGroup>
+      <_TempDirFullPath>$(MSBuildProjectDirectory)\$(TempBuildDir)</_TempDirFullPath>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(_TempDirFullPath)" />
+    <!--********************************************************************-->    
+    <!-- Enforce that all items have these metadata values -->
+    <!-- Default for Exclude is False -->
+    <!--********************************************************************-->
+    <CollectFilesinFolder RootPath="$(_TempDirFullPath)"
+                         ExcludeFullPathMatchs="$(_WDPExcludeFullPathToOutputDirRegEx)"
+                         ExcludeRelativePathMatchs="$(_WDPExcludeRelativePathToOutputDirRegex)">
+      <Output TaskParameter="Result" ItemName="_WDPOutputFilesNoMetadata" />
+    </CollectFilesinFolder>
+
+    <!-- _WDPOutputFilesNoMetadata doesn't have metadata yet, need to fill the data.  Fill in the metadata now for CopyPipelineFiles to use -->
+    <ItemGroup>
+      <_WDPOutputFiles Include="@(_WDPOutputFilesNoMetadata)" >
+        <DestinationRelativePath>%(_WDPOutputFilesNoMetadata.Identity)</DestinationRelativePath>
+      </_WDPOutputFiles>
+    </ItemGroup>
+
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <WriteLinesToFile Condition="$(EnablePackageProcessLoggingAndAssert)"
+                      Encoding="utf-8"
+                      File="$(IntermediateOutputPath)\WDPOutputFilesToBeCopied.txt"
+                      Lines="@(_WDPOutputFiles->'
+                      Files:%(Identity) 
+                      FromTarget:%(FromTarget)
+                      DestinationRelativePath:%(DestinationRelativePath)')"
+                      Overwrite="True" />
+  </Target>
+
+  <PropertyGroup>
+    <_CopyToOutputDirDependsOn>
+      $(_CopyToOutputDirDependsOn);
+      CoreCopyToOutputDir;
+      CleanTempBuildDir
+    </_CopyToOutputDirDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CopyToOutputDir" DependsOnTargets="$(_CopyToOutputDirDependsOn)"/>
+  
+  <Target Name="CoreCopyToOutputDir"
+          Condition=" '$(CopyToOutputDir)' != 'False'"
+          DependsOnTargets="_CollectFilesForCopyToOutputDir">
+
+    <ItemGroup>
+      <_WDPAllExtraFilesUnderTargetDir Condition="'$(WDTargetDir)' != ''" Include="$(WDTargetDir)\**" />
+      <_WDPAllExtraFilesUnderTargetDir
+        Remove="@(_WDPOutputFiles->'$(WDTargetDir)\%(DestinationRelativePath)')" />
+    </ItemGroup>
+    <!-- Remove all extra files in the temp folder that's not in the @(FilesForPackagingFromProject -->
+    <Delete Files="@(_WDPAllExtraFilesUnderTargetDir)"  />
+
+    <!-- This method supports incremental copy, instead of a full copy everytime -->
+    <!-- @(_WDPOutputFiles) contain relative path to $(TempBuildDir), pass in sourceDirectory -->
+    <CopyPipelineFiles PipelineItems="@(_WDPOutputFiles)"
+                           SourceDirectory="$(TempBuildDir)"
+                           TargetDirectory="$(WDTargetDir)"
+                           SkipMetadataExcludeTrueItems="True"
+                           UpdateItemSpec="False"
+                           DeleteItemsMarkAsExcludeTrue ="True">
+      <Output TaskParameter="UpdatedPipelineItems" ItemName="_WDPOutputFilesCopied"/>
+    </CopyPipelineFiles>   
+  </Target>
+
+  <!--
+    ============================================================
+                              CleanTempBuildDir
+    Clean Temp Build Dir
+    ============================================================
+    -->
+  <Target Name="CleanTempBuildDir"
+          Condition="'$(CleanTempBuildDir)' == 'True'">
+    <RemoveDir Directories="$(TempBuildDir)" />
+  </Target>
+
+  <!--
+  This is required for setup project support
+    -->
+  <Target Name="BuiltProjectOutputGroup" DependsOnTargets="_PrepareForBuild">
+    <ItemGroup>
+      <_BuiltProjectOutputGroupOutput Include="$(WDTargetDir)**\*.*"/>
+      <BuiltProjectOutputGroupOutput Include="@(_BuiltProjectOutputGroupOutput)">
+        <TargetPath>%(_BuiltProjectOutputGroupOutput.SubFolder)%(_BuiltProjectOutputGroupOutput.RecursiveDir)%(Filename)%(Extension)</TargetPath>
+      </BuiltProjectOutputGroupOutput>
+    </ItemGroup>
+  </Target>
+
+</Project>

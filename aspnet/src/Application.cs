@@ -37,8 +37,8 @@ namespace Benchmarks.AspNet
 
             RouteTable.Routes.MapRoute(
                 name: "JSON",
-                url: "json",
-                defaults: new { controller = "Json", action = "Index" }
+                url: "json/{action}",
+                defaults: new { controller = "Json", action = "Default" }
             );
 
             RouteTable.Routes.MapRoute(

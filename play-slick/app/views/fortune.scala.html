@@ -1,0 +1,18 @@
+@(fortunes: List[Fortune])
+
+@main("Testcase 4 :: Fortune :: FrameworkBenchmark") {
+    <table>
+        <tr>
+            <th>id</th>
+            <th>message</th>
+        </tr>
+
+        @fortunes.sortBy(_.message).map { case Fortune(id, message) =>
+            <tr>
+                <td>@id</td>
+                <td>@message</td>
+            </tr>
+        }
+
+    </table>
+}
