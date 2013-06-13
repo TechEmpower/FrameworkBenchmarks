@@ -1,6 +1,6 @@
 # Web Framework Performance Comparison
 
-This project is an attempt to provide representative and objective performance measures across a wide field of web application frameworks. With much help from the community, we now have very broad coverage and are happy to broaden it further with contributions. The project presently includes frameworks on many languages including Go, Python, Java, Ruby, PHP, Clojure, Groovy, JavaScript, Erlang, Haskell, Scala, Lua, and C.  The current tests exercise the frameworks' JSON seralization and object-relational model (ORM).  Future tests will exercise server-side template libraries and other computation.
+This project provides representative performance measures across a wide field of web application frameworks. With much help from the community, coverage is quite broad and we are happy to broaden it further with contributions. The project presently includes frameworks on many languages including Go, Python, Java, Ruby, PHP, Clojure, Groovy, JavaScript, Erlang, Haskell, Scala, Lua, and C.  The current tests exercise plaintext responses, JSON seralization, database reads and writes via the object-relational mapper (ORM), collections, sorting, server-side templates, and XSS counter-measures.  Future tests will exercise other components and greater computation.
 
 Read more and see the results of our tests on Amazon EC2 and physical hardware at http://www.techempower.com/benchmarks/
 
