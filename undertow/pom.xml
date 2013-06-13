@@ -12,7 +12,7 @@
     <dependency>
     	<groupId>io.undertow</groupId>
     	<artifactId>undertow-core</artifactId>
-    	<version>1.0.0.Alpha15</version>
+    	<version>1.0.0.Alpha19</version>
     </dependency>
 	 <dependency>
 		<groupId>com.fasterxml.jackson.core</groupId>
