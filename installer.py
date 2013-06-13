@@ -115,7 +115,7 @@ class Installer:
     # go
     #
 
-    self.__run_command("curl http://go.googlecode.com/files/go1.1.linux-amd64.tar.gz | tar xvz")
+    self.__run_command("curl http://go.googlecode.com/files/go1.1.1.linux-amd64.tar.gz | tar xvz")
 
     #
     # Perl
