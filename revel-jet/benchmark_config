@@ -1,5 +1,5 @@
 {
-  "framework": "revel",
+  "framework": "revel-jet",
   "tests": [{
     "default": {
       "setup_file": "setup",
