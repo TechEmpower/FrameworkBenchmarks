@@ -79,6 +79,7 @@ class Installer:
     self.__run_command(python_bin + "/python setup.py install", cwd="psycopg2-2.5")
     self.__run_command(python_bin + "/pip install --upgrade numpy==1.7.1")
     self.__run_command(pypy_bin + "/pip install PyMySQL==0.5")
+    self.__run_command(python_bin + "/pip install PyMySQL==0.5")
     self.__run_command(python_bin + "/easy_install -U 'ujson==1.30'")
 
     #
