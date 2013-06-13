@@ -1,0 +1,14 @@
+{{template "header.html" .}}
+<table>
+<tr>
+<th>id</th>
+<th>message</th>
+</tr>
+{{range .fortunes}}
+<tr>
+<td>{{.Id}}</td>
+<td>{{.Message}}</td>
+</tr>
+{{end}}
+</table>
+{{template "footer.html" .}}
