@@ -1,0 +1,23 @@
+{
+  "framework": "aspnet-stripped",
+  "tests": [{
+    "default": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "json_url": "/json",
+      "port": 8080,
+      "sort": 134
+    },
+    "sqlserver-raw": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "sort": 135
+    }
+  }]
+}
