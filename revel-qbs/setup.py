@@ -7,7 +7,7 @@ import time
 CWD = 'revel-qbs'
 
 def start(args):
-  setup_util.replace_text("revel/src/benchmark/conf/app.conf", "tcp\(.*:3306\)", "tcp(" + args.database_host + ":3306)")
+  setup_util.replace_text(CWD + "/src/benchmark/conf/app.conf", "tcp\(.*:3306\)", "tcp(" + args.database_host + ":3306)")
   if os.name == 'nt':
     env = os.environ.copy()
     env["GOPATH"] = "C:\\FrameworkBenchmarks\\" + CWD
