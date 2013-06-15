@@ -8,8 +8,10 @@ public class Common
 {
     public static DbConnection CreateConnection(HttpRequest request)
     {
-        // Never tried this with any other provider
-        string providerName = "sqlserver";
+        string providerName = request.QueryString["provider"];
+        if (providerName == null) {
+            throw new ApplicationException("Missing provider querystring argument");
+        }
         ConnectionStringSettings connectionSettings = ConfigurationManager.ConnectionStrings[providerName];
         DbProviderFactory factory = DbProviderFactories.GetFactory(connectionSettings.ProviderName);
         DbConnection connection = factory.CreateConnection();
