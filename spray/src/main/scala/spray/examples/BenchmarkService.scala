@@ -17,7 +17,7 @@ class BenchmarkService extends Actor {
   def fastPath: Http.FastPath = {
     case HttpRequest(GET, Uri(_, _, Slash(Segment("json", Path.Empty)), _, _), _, _, _) =>
       val json = JsObject("message" -> JsString("Hello, World!"))
-      HttpResponse(entity = HttpEntity(ContentType.`application/json`, json.compactPrint))
+      HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, json.compactPrint))
   }
 
   def receive = {
