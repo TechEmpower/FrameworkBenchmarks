@@ -10,7 +10,9 @@ class FrameworkTest:
   ##########################################################################################
   # Class variables
   ##########################################################################################
-  headers = "-H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive'"
+  headers = "-H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'"
+  headers_full = "-H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive'"
+ 
   concurrency_template = """
     
     echo ""
@@ -35,7 +37,7 @@ class FrameworkTest:
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) http://{server_host}:{port}{url}"
+      echo " {wrk} {headers} {pipeline} -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) http://{server_host}:{port}{url}"
       echo "---------------------------------------------------------"
       echo ""
       {wrk} {headers} {pipeline} -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
