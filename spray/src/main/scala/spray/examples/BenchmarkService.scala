@@ -23,8 +23,10 @@ class BenchmarkService extends Actor {
         case "json" =>
           val json = JsObject("message" -> JsString("Hello, World!"))
           HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, json.compactPrint))
-        case "plaintext" =>
-          HttpResponse(entity = HttpEntity(ContentTypes.`text/plain`, message))
+        case "plaintext" => HttpResponse(entity = HttpEntity(ContentTypes.`text/plain`, message))
+        case "stop" =>
+          context.system.scheduler.scheduleOnce(1.second) { context.system.shutdown() }
+          HttpResponse(entity = "Shutting down in 1 second ...")
         case _ => unknownResource
       }
   }
@@ -48,10 +50,6 @@ class BenchmarkService extends Actor {
         </html>.toString()
       )
     )
-
-    case HttpRequest(GET, Path("/stop"), _, _, _) =>
-      sender ! HttpResponse(entity = "Shutting down in 1 second ...")
-      context.system.scheduler.scheduleOnce(1.second) { context.system.shutdown() }
 
     case _: HttpRequest => sender ! unknownResource
   }
