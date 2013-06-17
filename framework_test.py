@@ -38,7 +38,7 @@ class FrameworkTest:
       echo " {wrk} {headers} -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) http://{server_host}:{port}{url}"
       echo "---------------------------------------------------------"
       echo ""
-      {wrk} {headers} -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      {wrk} {headers} {pipeline} -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
       sleep 2
     done
   """
@@ -280,7 +280,7 @@ class FrameworkTest:
       if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "plaintext"):
         sys.stdout.write("BENCHMARKING Plaintext ... ") 
         sys.stdout.flush()
-        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384])
+        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 64")
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'plaintext'))
         results = self.__parse_test('plaintext')
         self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
@@ -447,13 +447,14 @@ class FrameworkTest:
   # specifically works for the variable concurrency tests (JSON
   # and DB)
   ############################################################
-  def __generate_concurrency_script(self, url, port, wrk_command="wrk", intervals=[]):
+  def __generate_concurrency_script(self, url, port, wrk_command="wrk", intervals=[], pipeline=""):
     if len(intervals) == 0:
       intervals = self.benchmarker.concurrency_levels
     return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
       interval=" ".join("{}".format(item) for item in intervals), 
-      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers, wrk=wrk_command)
+      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers, wrk=wrk_command,
+      pipeline=pipeline)
   ############################################################
   # End __generate_concurrency_script
   ############################################################
