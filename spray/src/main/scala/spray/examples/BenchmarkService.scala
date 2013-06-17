@@ -15,6 +15,7 @@ class BenchmarkService extends Actor {
   import Uri._
   import Uri.Path._
   val message = "Hello, World!".getAsciiBytes
+  val unknownResource = HttpResponse(NotFound, entity = "Unknown resource!")
 
   def fastPath: Http.FastPath = {
     case HttpRequest(GET, Uri(_, _, Slash(Segment(x, Path.Empty)), _, _), _, _, _) =>
@@ -24,6 +25,7 @@ class BenchmarkService extends Actor {
           HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, json.compactPrint))
         case "plaintext" =>
           HttpResponse(entity = HttpEntity(ContentTypes.`text/plain`, message))
+        case _ => unknownResource
       }
   }
 
@@ -51,6 +53,6 @@ class BenchmarkService extends Actor {
       sender ! HttpResponse(entity = "Shutting down in 1 second ...")
       context.system.scheduler.scheduleOnce(1.second) { context.system.shutdown() }
 
-    case _: HttpRequest => sender ! HttpResponse(NotFound, entity = "Unknown resource!")
+    case _: HttpRequest => sender ! unknownResource
   }
 }
