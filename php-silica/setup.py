@@ -7,10 +7,10 @@ from os.path import expanduser
 home = expanduser("~")
 
 def start(args):
-  setup_util.replace_text("php-silex/web/index.php", "192.168.100.102", "" + args.database_host + "")
-  setup_util.replace_text("php-silex/deploy/php-silica", "\".*\/FrameworkBenchmarks", "\"" + home + "/FrameworkBenchmarks")
-  setup_util.replace_text("php-silex/deploy/php-silica", "Directory .*\/FrameworkBenchmarks", "Directory " + home + "/FrameworkBenchmarks")
-  setup_util.replace_text("php-silex/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
+  setup_util.replace_text("php-silica/web/app.php", "192.168.100.102", "" + args.database_host + "")
+  setup_util.replace_text("php-silica/deploy/php-silica", "\".*\/FrameworkBenchmarks", "\"" + home + "/FrameworkBenchmarks")
+  setup_util.replace_text("php-silica/deploy/php-silica", "Directory .*\/FrameworkBenchmarks", "Directory " + home + "/FrameworkBenchmarks")
+  setup_util.replace_text("php-silica/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
 
   try:
     #subprocess.check_call("sudo cp cake/deploy/cake /etc/apache2/sites-available/", shell=True)
