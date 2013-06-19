@@ -282,7 +282,7 @@ class FrameworkTest:
       if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "plaintext"):
         sys.stdout.write("BENCHMARKING Plaintext ... ") 
         sys.stdout.flush()
-        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 64")
+        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'plaintext'))
         results = self.__parse_test('plaintext')
         self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
