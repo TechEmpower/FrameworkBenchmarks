@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 22:28:59 UTC 2013
+
+  System load:  0.55               Processes:           75
+  Usage of /:   25.0% of 19.69GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   450.35us    1.20ms  23.07ms   99.60%
+    Req/Sec     2.03k   322.74     3.00k    91.09%
+  96285 requests in 5.00s, 19.19MB read
+Requests/sec:  19261.49
+Transfer/sec:      3.84MB
+
+---------------------------------------------------------
+ Running Warmup openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.72ms    8.04ms  93.93ms   92.03%
+    Req/Sec     4.13k     1.01k   18.00k    72.06%
+  518215 requests in 15.00s, 103.27MB read
+Requests/sec:  34550.02
+Transfer/sec:      6.88MB
+
+---------------------------------------------------------
+ Concurrency: 8 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   793.50us    5.86ms  83.49ms   99.50%
+    Req/Sec     2.05k   306.10     3.00k    92.36%
+  292645 requests in 15.00s, 58.32MB read
+Requests/sec:  19511.05
+Transfer/sec:      3.89MB
+
+---------------------------------------------------------
+ Concurrency: 16 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   593.60us  457.06us  10.97ms   93.90%
+    Req/Sec     3.06k   691.88     6.00k    60.57%
+  396896 requests in 15.00s, 79.09MB read
+Requests/sec:  26462.66
+Transfer/sec:      5.27MB
+
+---------------------------------------------------------
+ Concurrency: 32 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.10ms    1.75ms  25.39ms   93.17%
+    Req/Sec     3.51k     0.95k    8.00k    75.38%
+  449083 requests in 15.00s, 89.49MB read
+Requests/sec:  29943.06
+Transfer/sec:      5.97MB
+
+---------------------------------------------------------
+ Concurrency: 64 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.07ms    3.83ms  28.66ms   88.93%
+    Req/Sec     3.69k     1.04k   11.00k    69.68%
+  468365 requests in 15.00s, 93.33MB read
+Requests/sec:  31228.89
+Transfer/sec:      6.22MB
+
+---------------------------------------------------------
+ Concurrency: 128 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.02ms    5.42ms  30.93ms   79.05%
+    Req/Sec     3.82k     0.95k   12.00k    72.41%
+  475625 requests in 15.00s, 94.78MB read
+Requests/sec:  31710.05
+Transfer/sec:      6.32MB
+
+---------------------------------------------------------
+ Concurrency: 256 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.62ms   11.06ms 130.50ms   96.28%
+    Req/Sec     4.01k     1.10k   13.00k    89.51%
+  500284 requests in 15.00s, 99.69MB read
+Requests/sec:  33360.07
+Transfer/sec:      6.65MB
