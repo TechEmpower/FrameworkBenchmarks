@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/rack/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:8080/rack/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1689 requests in 5.01s, 291.95KB read
+Requests/sec:    336.98
+Transfer/sec:     58.25KB
+
+---------------------------------------------------------
+ Running Warmup rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/rack/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  13365 requests in 16.01s, 2.42MB read
+  Socket errors: connect 0, read 584, write 0, timeout 1255
+Requests/sec:    834.90
+Transfer/sec:    154.94KB
+
+---------------------------------------------------------
+ Concurrency: 8 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/rack/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  65101 requests in 15.00s, 10.99MB read
+Requests/sec:   4340.18
+Transfer/sec:    750.21KB
+
+---------------------------------------------------------
+ Concurrency: 16 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/rack/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  62617 requests in 15.00s, 10.57MB read
+Requests/sec:   4173.70
+Transfer/sec:    721.43KB
+
+---------------------------------------------------------
+ Concurrency: 32 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/rack/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  66241 requests in 15.00s, 11.18MB read
+Requests/sec:   4414.75
+Transfer/sec:    763.10KB
+
+---------------------------------------------------------
+ Concurrency: 64 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/rack/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  65387 requests in 15.00s, 11.04MB read
+Requests/sec:   4358.34
+Transfer/sec:    753.35KB
+
+---------------------------------------------------------
+ Concurrency: 128 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/rack/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  65580 requests in 15.00s, 11.07MB read
+Requests/sec:   4372.14
+Transfer/sec:    755.73KB
+
+---------------------------------------------------------
+ Concurrency: 256 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/rack/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   166.12ms  347.85ms   1.19s    89.10%
+    Req/Sec   117.97    329.08     2.00k    88.41%
+  56147 requests in 15.00s, 9.93MB read
+  Socket errors: connect 0, read 546, write 0, timeout 351
+Requests/sec:   3743.24
+Transfer/sec:    677.96KB

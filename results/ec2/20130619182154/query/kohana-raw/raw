@@ -1,0 +1,123 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 23:17:03 UTC 2013
+
+  System load:  0.28               Processes:           75
+  Usage of /:   25.1% of 19.69GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/bench/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:8080/bench/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1577 requests in 5.01s, 416.63KB read
+Requests/sec:    314.60
+Transfer/sec:     83.12KB
+
+---------------------------------------------------------
+ Running Warmup kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/bench/db/2
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/bench/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  4562 requests in 15.08s, 1.18MB read
+Requests/sec:    302.49
+Transfer/sec:     79.92KB
+
+---------------------------------------------------------
+ Queries: 1 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/bench/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/bench/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  4807 requests in 15.05s, 1.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    319.38
+Transfer/sec:     73.22KB
+
+---------------------------------------------------------
+ Queries: 5 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/bench/db/5
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/bench/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  4096 requests in 15.06s, 1.48MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    272.06
+Transfer/sec:    100.40KB
+
+---------------------------------------------------------
+ Queries: 10 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/bench/db/10
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/bench/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  3445 requests in 15.02s, 1.83MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    229.34
+Transfer/sec:    124.92KB
+
+---------------------------------------------------------
+ Queries: 15 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/bench/db/15
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/bench/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  3021 requests in 15.03s, 2.12MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    200.98
+Transfer/sec:    144.57KB
+
+---------------------------------------------------------
+ Queries: 20 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/bench/db/20
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/bench/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2698 requests in 15.08s, 2.36MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:    178.86
+Transfer/sec:    159.90KB

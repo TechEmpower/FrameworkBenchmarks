@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 19:38:28 UTC 2013
+
+  System load:  0.12               Processes:           75
+  Usage of /:   25.0% of 19.69GB   Users logged in:     1
+  Memory usage: 9%                 IP address for eth0: 10.253.41.249
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/json.php
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:8080/json.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  30290 requests in 5.00s, 6.50MB read
+Requests/sec:   6058.53
+Transfer/sec:      1.30MB
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  72892 requests in 15.00s, 15.64MB read
+  Socket errors: connect 0, read 0, write 0, timeout 25
+Requests/sec:   4860.17
+Transfer/sec:      1.04MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  89077 requests in 15.00s, 19.11MB read
+Requests/sec:   5938.85
+Transfer/sec:      1.27MB
+
+---------------------------------------------------------
+ Concurrency: 16 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json.php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  90774 requests in 15.00s, 19.47MB read
+Requests/sec:   6051.74
+Transfer/sec:      1.30MB
+
+---------------------------------------------------------
+ Concurrency: 32 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json.php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  87975 requests in 15.00s, 18.87MB read
+Requests/sec:   5864.87
+Transfer/sec:      1.26MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json.php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.42ms   10.23ms  91.54ms   78.25%
+    Req/Sec   213.21    436.88     2.00k    79.83%
+  84635 requests in 15.00s, 18.16MB read
+Requests/sec:   5642.84
+Transfer/sec:      1.21MB
+
+---------------------------------------------------------
+ Concurrency: 128 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json.php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.10ms   40.18ms 298.55ms   96.53%
+    Req/Sec   168.46    398.56     3.00k    84.06%
+  78662 requests in 15.00s, 16.88MB read
+Requests/sec:   5244.37
+Transfer/sec:      1.13MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   203.33ms  979.38ms   6.86s    97.45%
+    Req/Sec   148.11    380.73     3.00k    86.06%
+  76271 requests in 15.00s, 16.36MB read
+  Socket errors: connect 0, read 0, write 0, timeout 149
+Requests/sec:   5085.95
+Transfer/sec:      1.09MB

@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 17:28:30 UTC 2013
+
+  System load:  0.07               Processes:           75
+  Usage of /:   25.5% of 19.69GB   Users logged in:     1
+  Memory usage: 11%                IP address for eth0: 10.253.41.249
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+42 packages can be updated.
+21 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1466 requests in 5.01s, 13.81MB read
+Requests/sec:    292.88
+Transfer/sec:      2.76MB
+
+---------------------------------------------------------
+ Running Warmup servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  3853 requests in 15.02s, 36.33MB read
+  Socket errors: connect 0, read 0, write 0, timeout 61
+Requests/sec:    256.56
+Transfer/sec:      2.42MB
+
+---------------------------------------------------------
+ Queries: 1 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  5058 requests in 15.04s, 47.50MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    336.24
+Transfer/sec:      3.16MB
+
+---------------------------------------------------------
+ Queries: 5 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  4169 requests in 15.06s, 39.67MB read
+  Socket errors: connect 0, read 0, write 0, timeout 25
+Requests/sec:    276.81
+Transfer/sec:      2.63MB
+
+---------------------------------------------------------
+ Queries: 10 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  3445 requests in 15.05s, 33.31MB read
+  Socket errors: connect 0, read 0, write 0, timeout 105
+Requests/sec:    228.91
+Transfer/sec:      2.21MB
+
+---------------------------------------------------------
+ Queries: 15 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2910 requests in 15.13s, 28.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 92
+Requests/sec:    192.30
+Transfer/sec:      1.89MB
+
+---------------------------------------------------------
+ Queries: 20 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2505 requests in 15.05s, 25.02MB read
+  Socket errors: connect 0, read 0, write 0, timeout 162
+Requests/sec:    166.44
+Transfer/sec:      1.66MB
