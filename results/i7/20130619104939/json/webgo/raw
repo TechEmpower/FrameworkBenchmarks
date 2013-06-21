@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 13:34:52 PDT 2013
+
+  System load:  0.22                Processes:           132
+  Usage of /:   10.1% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer webgo
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   422.05us  168.37us   1.63ms   93.53%
+    Req/Sec     2.00k    50.02     3.00k    99.75%
+  93092 requests in 5.00s, 14.03MB read
+Requests/sec:  18619.55
+Transfer/sec:      2.81MB
+
+---------------------------------------------------------
+ Running Warmup webgo
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.54ms    4.67ms  58.91ms   84.93%
+    Req/Sec     9.13k     1.54k   16.00k    68.36%
+  1088016 requests in 15.00s, 163.94MB read
+Requests/sec:  72537.81
+Transfer/sec:     10.93MB
+
+---------------------------------------------------------
+ Concurrency: 8 for webgo
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.35ms   65.70ms 406.43ms   97.31%
+    Req/Sec     1.95k   333.60     3.00k    96.89%
+  273906 requests in 15.00s, 41.27MB read
+Requests/sec:  18260.58
+Transfer/sec:      2.75MB
+
+---------------------------------------------------------
+ Concurrency: 16 for webgo
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   358.64us  153.83us   3.84ms   87.44%
+    Req/Sec     5.32k   484.82     7.00k    66.32%
+  656757 requests in 15.00s, 98.96MB read
+Requests/sec:  43784.05
+Transfer/sec:      6.60MB
+
+---------------------------------------------------------
+ Concurrency: 32 for webgo
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.77ms   53.67ms 355.51ms   97.65%
+    Req/Sec     8.83k     1.60k   12.00k    93.37%
+  1053180 requests in 15.00s, 158.69MB read
+Requests/sec:  70216.97
+Transfer/sec:     10.58MB
+
+---------------------------------------------------------
+ Concurrency: 64 for webgo
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.87ms  811.03us  11.15ms   87.48%
+    Req/Sec     9.23k     1.09k   13.00k    63.36%
+  1099080 requests in 15.00s, 165.61MB read
+Requests/sec:  73275.78
+Transfer/sec:     11.04MB
+
+---------------------------------------------------------
+ Concurrency: 128 for webgo
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.57ms  181.90ms 774.73ms   94.04%
+    Req/Sec     8.65k     2.53k   14.00k    88.58%
+  1031258 requests in 15.00s, 155.39MB read
+Requests/sec:  68753.47
+Transfer/sec:     10.36MB
+
+---------------------------------------------------------
+ Concurrency: 256 for webgo
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.56ms    4.72ms  72.10ms   85.37%
+    Req/Sec     9.11k     1.58k   16.00k    66.93%
+  1085609 requests in 15.00s, 163.58MB read
+Requests/sec:  72374.80
+Transfer/sec:     10.91MB

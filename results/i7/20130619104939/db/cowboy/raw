@@ -1,0 +1,133 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 15:04:54 PDT 2013
+
+  System load:  1.0                 Processes:           134
+  Usage of /:   10.1% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  26117 requests in 5.00s, 4.50MB read
+Requests/sec:   5223.42
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Running Warmup cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.78ms    3.02ms  39.26ms   69.66%
+    Req/Sec     2.18k   570.89     4.00k    65.83%
+  298745 requests in 15.00s, 51.49MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:  19916.31
+Transfer/sec:      3.43MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  75894 requests in 16.00s, 13.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:   4743.12
+Transfer/sec:    837.11KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.11ms  644.75us   9.80ms   96.61%
+    Req/Sec     1.65k   499.35     2.00k    65.79%
+  222859 requests in 15.00s, 38.41MB read
+Requests/sec:  14857.62
+Transfer/sec:      2.56MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.60ms  485.38us  11.35ms   86.73%
+    Req/Sec     2.13k   416.91     3.00k    80.93%
+  297877 requests in 15.00s, 51.34MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:  19859.71
+Transfer/sec:      3.42MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.18ms  810.70us  11.12ms   75.36%
+    Req/Sec     2.18k   410.22     3.00k    79.85%
+  303836 requests in 15.00s, 52.37MB read
+Requests/sec:  20256.53
+Transfer/sec:      3.49MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.43ms    1.62ms  29.28ms   73.63%
+    Req/Sec     2.18k   446.69     3.00k    77.32%
+  299793 requests in 15.00s, 51.67MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:  19985.68
+Transfer/sec:      3.44MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.97ms    3.02ms  27.60ms   68.71%
+    Req/Sec     2.16k   569.02     4.00k    66.23%
+  295222 requests in 15.00s, 50.88MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:  19681.23
+Transfer/sec:      3.39MB

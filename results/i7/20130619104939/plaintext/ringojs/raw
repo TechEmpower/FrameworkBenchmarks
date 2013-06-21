@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 08:50:24 PDT 2013
+
+  System load:  0.5                 Processes:           135
+  Usage of /:   10.3% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   593.98us  313.65us   4.90ms   91.90%
+    Req/Sec     1.33k   480.46     2.00k    65.99%
+  69436 requests in 5.00s, 9.60MB read
+Requests/sec:  13887.43
+Transfer/sec:      1.92MB
+
+---------------------------------------------------------
+ Running Warmup ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.28ms   12.99ms 623.64ms   90.73%
+    Req/Sec     5.94k     1.75k   14.00k    62.55%
+  723437 requests in 15.00s, 100.04MB read
+Requests/sec:  48230.27
+Transfer/sec:      6.67MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   145.16ms  130.35ms 382.21ms   55.70%
+    Req/Sec     6.67k     2.97k   22.00k    70.30%
+  797070 requests in 15.01s, 110.22MB read
+  Socket errors: connect 0, read 41, write 0, timeout 234
+Requests/sec:  53097.32
+Transfer/sec:      7.34MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   714.89ms  663.31ms   1.87s    70.57%
+    Req/Sec     6.76k     2.67k   21.00k    65.19%
+  807395 requests in 15.00s, 111.65MB read
+  Socket errors: connect 0, read 214, write 0, timeout 1221
+Requests/sec:  53825.59
+Transfer/sec:      7.44MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.82s     1.35s    4.30s    75.14%
+    Req/Sec     6.62k     2.92k   36.00k    71.83%
+  800149 requests in 15.00s, 110.65MB read
+  Socket errors: connect 0, read 637, write 0, timeout 4963
+Requests/sec:  53333.51
+Transfer/sec:      7.38MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.52s   908.66ms   6.20s    70.03%
+    Req/Sec     5.66k     3.20k   30.00k    67.31%
+  677899 requests in 15.01s, 93.74MB read
+  Socket errors: connect 0, read 2634, write 0, timeout 69445
+Requests/sec:  45163.91
+Transfer/sec:      6.25MB

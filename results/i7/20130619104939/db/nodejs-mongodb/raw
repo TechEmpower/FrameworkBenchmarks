@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 11:55:10 PDT 2013
+
+  System load:  0.19                Processes:           133
+  Usage of /:   10.1% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  37401 requests in 5.00s, 8.27MB read
+Requests/sec:   7480.15
+Transfer/sec:      1.65MB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.31ms    6.81ms  81.97ms   82.16%
+    Req/Sec     1.74k   564.79     4.00k    63.37%
+  247691 requests in 15.00s, 54.75MB read
+Requests/sec:  16510.84
+Transfer/sec:      3.65MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.00ms  364.97us  11.83ms   95.34%
+    Req/Sec   841.51    365.23     1.00k    84.15%
+  119667 requests in 15.00s, 26.45MB read
+Requests/sec:   7977.69
+Transfer/sec:      1.76MB
+
+---------------------------------------------------------
+ Concurrency: 16 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.43ms  728.58us  16.49ms   90.85%
+    Req/Sec     1.01k   301.59     2.00k    90.90%
+  174630 requests in 15.00s, 38.60MB read
+Requests/sec:  11641.89
+Transfer/sec:      2.57MB
+
+---------------------------------------------------------
+ Concurrency: 32 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.06ms    1.12ms  19.06ms   86.72%
+    Req/Sec     1.61k   582.03     3.00k    51.96%
+  232677 requests in 15.00s, 51.43MB read
+Requests/sec:  15511.67
+Transfer/sec:      3.43MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.93ms    2.61ms  41.26ms   82.68%
+    Req/Sec     1.66k   548.44     3.00k    58.83%
+  240229 requests in 15.00s, 53.10MB read
+Requests/sec:  16015.40
+Transfer/sec:      3.54MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.62ms    3.28ms  35.52ms   80.12%
+    Req/Sec     1.84k   412.76     3.00k    80.40%
+  254461 requests in 15.00s, 56.25MB read
+Requests/sec:  16964.40
+Transfer/sec:      3.75MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.54ms    4.60ms  48.23ms   78.31%
+    Req/Sec     1.85k   515.87     3.00k    71.49%
+  261220 requests in 15.00s, 57.74MB read
+Requests/sec:  17416.37
+Transfer/sec:      3.85MB

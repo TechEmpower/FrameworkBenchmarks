@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 14:03:10 PDT 2013
+
+  System load:  0.21                Processes:           132
+  Usage of /:   10.1% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer netty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   274.23us   72.98us 643.00us   69.98%
+    Req/Sec     3.24k   527.98     4.00k    67.62%
+  134311 requests in 5.00s, 23.06MB read
+Requests/sec:  26863.26
+Transfer/sec:      4.61MB
+
+---------------------------------------------------------
+ Running Warmup netty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.20ms  624.28us  18.56ms   91.04%
+    Req/Sec    27.75k     2.25k   40.00k    69.71%
+  3162161 requests in 15.00s, 542.82MB read
+Requests/sec: 210818.81
+Transfer/sec:     36.19MB
+
+---------------------------------------------------------
+ Concurrency: 8 for netty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   270.96us   75.69us   2.14ms   73.05%
+    Req/Sec     3.31k   467.25     4.00k    68.43%
+  433662 requests in 15.00s, 74.44MB read
+Requests/sec:  28911.31
+Transfer/sec:      4.96MB
+
+---------------------------------------------------------
+ Concurrency: 16 for netty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   239.38us  162.77us   9.11ms   96.68%
+    Req/Sec     8.15k     0.96k   11.00k    76.34%
+  976842 requests in 15.00s, 167.69MB read
+Requests/sec:  65125.45
+Transfer/sec:     11.18MB
+
+---------------------------------------------------------
+ Concurrency: 32 for netty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   216.59us  163.23us   6.95ms   96.01%
+    Req/Sec    18.63k     2.15k   24.00k    72.10%
+  2164734 requests in 15.00s, 371.60MB read
+Requests/sec: 144322.14
+Transfer/sec:     24.77MB
+
+---------------------------------------------------------
+ Concurrency: 64 for netty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   304.04us  280.77us  16.46ms   94.92%
+    Req/Sec    27.36k     3.32k   37.00k    71.51%
+  3144983 requests in 15.00s, 539.87MB read
+Requests/sec: 209674.44
+Transfer/sec:     35.99MB
+
+---------------------------------------------------------
+ Concurrency: 128 for netty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   602.83us  361.12us  12.03ms   93.40%
+    Req/Sec    27.60k     2.58k   36.00k    78.14%
+  3172181 requests in 15.00s, 544.54MB read
+Requests/sec: 211491.10
+Transfer/sec:     36.30MB
+
+---------------------------------------------------------
+ Concurrency: 256 for netty
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.20ms  661.64us  24.90ms   91.50%
+    Req/Sec    27.69k     2.31k   38.00k    88.14%
+  3180891 requests in 15.00s, 546.04MB read
+Requests/sec: 212067.78
+Transfer/sec:     36.40MB

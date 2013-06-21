@@ -1,0 +1,123 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/bench/raw/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  34082 requests in 5.00s, 58.21MB read
+Requests/sec:   6816.38
+Transfer/sec:     11.64MB
+
+---------------------------------------------------------
+ Running Warmup yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/raw/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.43ms  111.57ms   5.48s    98.31%
+    Req/Sec     1.06k   440.68     3.00k    80.72%
+  170409 requests in 15.00s, 291.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 41
+Requests/sec:  11359.79
+Transfer/sec:     19.40MB
+
+---------------------------------------------------------
+ Concurrency: 8 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/raw/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  101560 requests in 15.00s, 173.46MB read
+Requests/sec:   6770.54
+Transfer/sec:     11.56MB
+
+---------------------------------------------------------
+ Concurrency: 16 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/raw/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.57ms  600.67us  16.10ms   91.04%
+    Req/Sec     0.99k    76.45     1.00k    99.41%
+  152895 requests in 15.00s, 261.14MB read
+Requests/sec:  10193.15
+Transfer/sec:     17.41MB
+
+---------------------------------------------------------
+ Concurrency: 32 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/raw/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.60ms   24.05ms 238.82ms   98.33%
+    Req/Sec     1.01k   332.36     2.00k    88.93%
+  168789 requests in 15.00s, 288.29MB read
+Requests/sec:  11252.26
+Transfer/sec:     19.22MB
+
+---------------------------------------------------------
+ Concurrency: 64 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/raw/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.45ms   10.91ms 393.61ms   97.49%
+    Req/Sec     1.06k   405.93     2.00k    83.10%
+  171057 requests in 15.00s, 292.16MB read
+Requests/sec:  11404.13
+Transfer/sec:     19.48MB
+
+---------------------------------------------------------
+ Concurrency: 128 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/raw/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.95ms  247.61ms   2.45s    98.02%
+    Req/Sec     1.01k   496.44     3.00k    75.61%
+  162889 requests in 15.00s, 278.21MB read
+Requests/sec:  10858.39
+Transfer/sec:     18.55MB
+
+---------------------------------------------------------
+ Concurrency: 256 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/raw/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.03ms   90.25ms   4.88s    98.36%
+    Req/Sec     1.05k   485.91     5.00k    78.82%
+  168648 requests in 15.00s, 288.05MB read
+  Socket errors: connect 0, read 0, write 0, timeout 24
+Requests/sec:  11242.83
+Transfer/sec:     19.20MB

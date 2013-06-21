@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 10:07:55 PDT 2013
+
+  System load:  0.09                Processes:           135
+  Usage of /:   10.3% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8000/mongo/raw/dbs/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  504 requests in 5.04s, 96.26KB read
+Requests/sec:     99.94
+Transfer/sec:     19.09KB
+
+---------------------------------------------------------
+ Running Warmup yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/mongo/raw/dbs/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  47729 requests in 15.00s, 8.90MB read
+Requests/sec:   3181.92
+Transfer/sec:    607.68KB
+
+---------------------------------------------------------
+ Queries: 1 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/mongo/raw/dbs/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  94046 requests in 15.00s, 14.51MB read
+Requests/sec:   6268.56
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Queries: 5 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/mongo/raw/dbs/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  18719 requests in 15.01s, 5.30MB read
+Requests/sec:   1247.40
+Transfer/sec:    361.71KB
+
+---------------------------------------------------------
+ Queries: 10 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/mongo/raw/dbs/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  9343 requests in 15.20s, 4.15MB read
+Requests/sec:    614.47
+Transfer/sec:    279.53KB
+
+---------------------------------------------------------
+ Queries: 15 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/mongo/raw/dbs/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  6116 requests in 15.02s, 3.70MB read
+Requests/sec:    407.10
+Transfer/sec:    252.35KB
+
+---------------------------------------------------------
+ Queries: 20 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8000/mongo/raw/dbs/20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/mongo/raw/dbs/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  4590 requests in 15.22s, 3.52MB read
+Requests/sec:    301.58
+Transfer/sec:    236.68KB

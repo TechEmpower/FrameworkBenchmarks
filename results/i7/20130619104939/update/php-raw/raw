@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/updateraw.php?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/updateraw.php?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  20364 requests in 5.00s, 5.02MB read
+Requests/sec:   4071.83
+Transfer/sec:      1.00MB
+
+---------------------------------------------------------
+ Running Warmup php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updateraw.php?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updateraw.php?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.73ms   38.86ms 319.69ms   95.32%
+    Req/Sec     1.61k     0.89k    9.00k    77.44%
+  234550 requests in 15.00s, 57.83MB read
+Requests/sec:  15636.03
+Transfer/sec:      3.85MB
+
+---------------------------------------------------------
+ Queries: 1 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updateraw.php?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updateraw.php?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.00ms  180.25ms 657.79ms   91.01%
+    Req/Sec     2.44k     1.44k   13.00k    63.01%
+  324247 requests in 15.00s, 69.49MB read
+Requests/sec:  21615.56
+Transfer/sec:      4.63MB
+
+---------------------------------------------------------
+ Queries: 5 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updateraw.php?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updateraw.php?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    89.69ms  234.11ms   1.31s    94.95%
+    Req/Sec   498.16    507.50     2.00k    99.62%
+  103753 requests in 15.00s, 35.61MB read
+Requests/sec:   6916.43
+Transfer/sec:      2.37MB
+
+---------------------------------------------------------
+ Queries: 10 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updateraw.php?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updateraw.php?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  48440 requests in 15.01s, 24.47MB read
+Requests/sec:   3227.79
+Transfer/sec:      1.63MB
+
+---------------------------------------------------------
+ Queries: 15 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updateraw.php?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updateraw.php?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  36369 requests in 15.00s, 24.23MB read
+Requests/sec:   2424.06
+Transfer/sec:      1.62MB
+
+---------------------------------------------------------
+ Queries: 20 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updateraw.php?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updateraw.php?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  27518 requests in 15.00s, 22.77MB read
+Requests/sec:   1834.06
+Transfer/sec:      1.52MB

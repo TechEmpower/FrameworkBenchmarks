@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 12:06:14 PDT 2013
+
+  System load:  0.5                 Processes:           133
+  Usage of /:   10.1% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   454.71us   85.76us   1.11ms   71.40%
+    Req/Sec     1.99k   118.90     3.00k    98.58%
+  86881 requests in 5.00s, 18.64MB read
+Requests/sec:  17378.18
+Transfer/sec:      3.73MB
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.74ms    6.06ms 431.18ms   97.24%
+    Req/Sec     6.69k     0.87k   13.00k    79.53%
+  808586 requests in 15.00s, 173.47MB read
+Requests/sec:  53908.80
+Transfer/sec:     11.57MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.29ms  218.02ms 907.73ms   93.84%
+    Req/Sec     1.87k   493.14     3.00k    92.77%
+  244438 requests in 15.00s, 52.44MB read
+Requests/sec:  16296.02
+Transfer/sec:      3.50MB
+
+---------------------------------------------------------
+ Concurrency: 16 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   371.48us   86.57us   4.64ms   71.78%
+    Req/Sec     5.12k   421.14     6.00k    80.98%
+  630602 requests in 15.00s, 135.28MB read
+Requests/sec:  42041.50
+Transfer/sec:      9.02MB
+
+---------------------------------------------------------
+ Concurrency: 32 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.99ms  231.42ms   1.02s    93.18%
+    Req/Sec     6.89k     2.00k   10.00k    88.39%
+  827905 requests in 15.00s, 177.61MB read
+Requests/sec:  55194.94
+Transfer/sec:     11.84MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.01ms  519.69us  12.81ms   81.76%
+    Req/Sec     7.92k     1.01k   12.00k    66.12%
+  937383 requests in 15.00s, 201.10MB read
+Requests/sec:  62495.52
+Transfer/sec:     13.41MB
+
+---------------------------------------------------------
+ Concurrency: 128 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   156.08ms  437.65ms   1.40s    89.03%
+    Req/Sec     6.29k     2.53k   20.00k    83.35%
+  749731 requests in 15.00s, 160.84MB read
+Requests/sec:  49983.89
+Transfer/sec:     10.72MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.82ms    5.22ms 273.53ms   96.22%
+    Req/Sec     6.67k     1.04k   14.00k    76.34%
+  797646 requests in 15.00s, 171.12MB read
+Requests/sec:  53178.14
+Transfer/sec:     11.41MB

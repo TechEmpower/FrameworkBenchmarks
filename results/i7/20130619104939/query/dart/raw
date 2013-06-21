@@ -1,0 +1,126 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 13:54:32 PDT 2013
+
+  System load:  2.88                Processes:           391
+  Usage of /:   10.5% of 129.62GB   Users logged in:     1
+  Memory usage: 15%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  38392 requests in 5.00s, 9.39MB read
+Requests/sec:   7677.78
+Transfer/sec:      1.88MB
+
+---------------------------------------------------------
+ Running Warmup dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.87ms   39.61ms 664.44ms   95.66%
+    Req/Sec     1.57k   635.73     4.00k    92.25%
+  228623 requests in 15.00s, 55.94MB read
+  Socket errors: connect 0, read 7988, write 0, timeout 48
+  Non-2xx or 3xx responses: 87
+Requests/sec:  15241.68
+Transfer/sec:      3.73MB
+
+---------------------------------------------------------
+ Queries: 1 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.93ms   36.96ms   1.13s    95.72%
+    Req/Sec     1.97k   720.63     5.00k    55.11%
+  273193 requests in 15.00s, 58.56MB read
+  Socket errors: connect 0, read 20856, write 0, timeout 24
+  Non-2xx or 3xx responses: 81
+Requests/sec:  18213.36
+Transfer/sec:      3.90MB
+
+---------------------------------------------------------
+ Queries: 5 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.33ms   51.77ms 504.53ms   92.93%
+    Req/Sec   805.61    530.50     4.00k    68.31%
+  139042 requests in 15.00s, 46.66MB read
+  Socket errors: connect 0, read 30001, write 0, timeout 23
+  Non-2xx or 3xx responses: 170
+Requests/sec:   9269.45
+Transfer/sec:      3.11MB
+
+---------------------------------------------------------
+ Queries: 10 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.18ms   52.55ms 405.76ms   87.65%
+    Req/Sec   235.86    432.15     2.00k    76.73%
+  81313 requests in 15.00s, 39.67MB read
+  Socket errors: connect 0, read 15989, write 0, timeout 65
+  Non-2xx or 3xx responses: 100
+Requests/sec:   5420.32
+Transfer/sec:      2.64MB
+
+---------------------------------------------------------
+ Queries: 15 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  58232 requests in 15.00s, 37.18MB read
+  Socket errors: connect 0, read 35214, write 0, timeout 48
+  Non-2xx or 3xx responses: 228
+Requests/sec:   3881.75
+Transfer/sec:      2.48MB
+
+---------------------------------------------------------
+ Queries: 20 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  45513 requests in 15.00s, 35.95MB read
+  Socket errors: connect 0, read 21103, write 0, timeout 15
+  Non-2xx or 3xx responses: 118
+Requests/sec:   3033.53
+Transfer/sec:      2.40MB

@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 10:23:00 PDT 2013
+
+  System load:  4.97                Processes:           136
+  Usage of /:   10.4% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/servlet/postgres
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   676.57us  113.76us   1.46ms   72.33%
+    Req/Sec     1.00k    17.16     2.00k    99.97%
+  56225 requests in 5.00s, 8.73MB read
+Requests/sec:  11244.58
+Transfer/sec:      1.75MB
+
+---------------------------------------------------------
+ Running Warmup servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.15ms  162.54ms 798.11ms   91.42%
+    Req/Sec     6.03k     3.87k   29.00k    63.39%
+  657025 requests in 15.00s, 102.64MB read
+  Socket errors: connect 0, read 49, write 0, timeout 132
+Requests/sec:  43806.42
+Transfer/sec:      6.84MB
+
+---------------------------------------------------------
+ Concurrency: 8 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.95ms   17.29ms 135.12ms   98.31%
+    Req/Sec     0.98k   138.59     2.00k    98.05%
+  172433 requests in 15.00s, 26.77MB read
+Requests/sec:  11495.89
+Transfer/sec:      1.78MB
+
+---------------------------------------------------------
+ Concurrency: 16 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.17ms   24.18ms 134.37ms   96.60%
+    Req/Sec     2.85k   593.66     4.00k    91.33%
+  364095 requests in 15.00s, 56.52MB read
+Requests/sec:  24273.57
+Transfer/sec:      3.77MB
+
+---------------------------------------------------------
+ Concurrency: 32 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.87ms   33.73ms 155.44ms   94.83%
+    Req/Sec     4.36k     1.63k    7.00k    68.96%
+  526838 requests in 15.00s, 81.78MB read
+Requests/sec:  35123.95
+Transfer/sec:      5.45MB
+
+---------------------------------------------------------
+ Concurrency: 64 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.51ms   44.16ms 284.26ms   93.21%
+    Req/Sec     5.71k     2.96k   13.00k    66.62%
+  613132 requests in 15.00s, 95.18MB read
+Requests/sec:  40876.33
+Transfer/sec:      6.35MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.32ms   63.57ms 325.39ms   90.98%
+    Req/Sec     6.24k     3.62k   24.00k    67.14%
+  650929 requests in 15.00s, 101.05MB read
+Requests/sec:  43393.58
+Transfer/sec:      6.74MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.78ms   89.01ms 508.36ms   91.28%
+    Req/Sec     6.37k     4.19k   30.00k    67.02%
+  666589 requests in 15.00s, 104.09MB read
+  Socket errors: connect 0, read 15, write 0, timeout 28
+Requests/sec:  44435.71
+Transfer/sec:      6.94MB

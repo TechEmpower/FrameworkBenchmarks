@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 14:08:26 PDT 2013
+
+  System load:  0.51                Processes:           132
+  Usage of /:   10.1% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   693.64us  607.11us  21.45ms   96.49%
+    Req/Sec     1.17k   404.24     2.00k    80.77%
+  60527 requests in 5.00s, 10.85MB read
+Requests/sec:  12104.96
+Transfer/sec:      2.17MB
+
+---------------------------------------------------------
+ Running Warmup flask
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.39ms   10.17ms 169.57ms   72.16%
+    Req/Sec     1.71k   579.82     4.00k    59.04%
+  245243 requests in 15.00s, 43.97MB read
+Requests/sec:  16349.40
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   677.39us  299.76us  12.04ms   90.52%
+    Req/Sec     1.15k   386.83     2.00k    82.67%
+  182141 requests in 15.00s, 32.66MB read
+Requests/sec:  12142.77
+Transfer/sec:      2.18MB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.08ms  796.56us  13.88ms   97.08%
+    Req/Sec     1.56k   638.17     4.00k    91.97%
+  227010 requests in 15.00s, 40.70MB read
+Requests/sec:  15134.05
+Transfer/sec:      2.71MB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.06ms    2.58ms  26.71ms   94.52%
+    Req/Sec     1.70k   806.05     4.00k    81.36%
+  242925 requests in 15.00s, 43.55MB read
+Requests/sec:  16195.33
+Transfer/sec:      2.90MB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.89ms    2.80ms  31.87ms   76.80%
+    Req/Sec     1.74k   602.94     4.00k    61.30%
+  245341 requests in 15.00s, 43.99MB read
+Requests/sec:  16355.56
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.81ms    8.23ms  66.29ms   79.84%
+    Req/Sec     1.68k   727.72     4.00k    85.63%
+  242947 requests in 15.00s, 43.56MB read
+Requests/sec:  16193.17
+Transfer/sec:      2.90MB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.84ms   10.08ms  77.58ms   54.04%
+    Req/Sec     1.70k   671.20     5.00k    52.40%
+  243110 requests in 15.00s, 43.59MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:  16205.82
+Transfer/sec:      2.91MB

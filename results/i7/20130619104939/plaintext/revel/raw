@@ -1,0 +1,95 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer revel
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   372.30us  201.39us   3.06ms   99.36%
+    Req/Sec     2.35k   483.29     3.00k    64.68%
+  107509 requests in 5.00s, 11.79MB read
+Requests/sec:  21502.24
+Transfer/sec:      2.36MB
+
+---------------------------------------------------------
+ Running Warmup revel
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.63ms    0.86ms  14.28ms   83.59%
+    Req/Sec    20.49k     2.71k   29.00k    71.13%
+  2375453 requests in 15.00s, 260.52MB read
+Requests/sec: 158368.65
+Transfer/sec:     17.37MB
+
+---------------------------------------------------------
+ Concurrency: 256 for revel
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    77.50ms   76.86ms 235.63ms   68.70%
+    Req/Sec    22.65k     5.24k   46.00k    65.77%
+  2622745 requests in 15.00s, 287.64MB read
+Requests/sec: 174847.78
+Transfer/sec:     19.18MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for revel
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   214.75ms  172.78ms 558.83ms   65.47%
+    Req/Sec    22.85k     7.34k   52.00k    67.63%
+  2642275 requests in 15.00s, 289.79MB read
+Requests/sec: 176143.56
+Transfer/sec:     19.32MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for revel
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   544.01ms  315.71ms   1.53s    71.63%
+    Req/Sec    23.71k     9.72k  101.00k    70.62%
+  2735887 requests in 15.00s, 300.05MB read
+  Socket errors: connect 0, read 2, write 0, timeout 1276
+Requests/sec: 182357.82
+Transfer/sec:     20.00MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for revel
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.12s   679.92ms   2.20s    61.84%
+    Req/Sec    23.67k    10.78k   76.00k    72.11%
+  2727650 requests in 15.02s, 299.15MB read
+  Socket errors: connect 0, read 5, write 0, timeout 55741
+Requests/sec: 181658.33
+Transfer/sec:     19.92MB

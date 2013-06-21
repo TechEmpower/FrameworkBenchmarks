@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 12:25:12 PDT 2013
+
+  System load:  1.26                Processes:           135
+  Usage of /:   10.5% of 129.62GB   Users logged in:     1
+  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   324.27us   52.62us   3.53ms   93.66%
+    Req/Sec     2.99k   117.11     3.00k    98.61%
+  122233 requests in 5.00s, 17.14MB read
+Requests/sec:  24448.12
+Transfer/sec:      3.43MB
+
+---------------------------------------------------------
+ Running Warmup spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.19ms    2.35ms 625.04ms   99.43%
+    Req/Sec    28.47k     2.80k   35.00k    95.13%
+  3269269 requests in 15.00s, 458.32MB read
+Requests/sec: 217967.35
+Transfer/sec:     30.56MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   229.32ms  367.70ms   1.31s    79.28%
+    Req/Sec    38.37k     5.72k   60.00k    72.70%
+  4359171 requests in 15.00s, 611.11MB read
+  Socket errors: connect 0, read 8, write 0, timeout 48
+Requests/sec: 290602.51
+Transfer/sec:     40.74MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   294.03ms  529.13ms   1.59s    79.86%
+    Req/Sec    45.02k     7.64k   81.00k    69.25%
+  5115031 requests in 15.00s, 717.08MB read
+  Socket errors: connect 0, read 231, write 0, timeout 1547
+Requests/sec: 340986.04
+Transfer/sec:     47.80MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.04s     2.62s   10.73s    88.48%
+    Req/Sec    49.92k    10.43k   91.00k    71.86%
+  5636843 requests in 15.00s, 790.27MB read
+  Socket errors: connect 0, read 474, write 0, timeout 10178
+Requests/sec: 375707.35
+Transfer/sec:     52.67MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.02s     5.50s   13.73s    78.32%
+    Req/Sec    48.91k    11.89k   95.00k    72.53%
+  5530701 requests in 15.02s, 775.39MB read
+  Socket errors: connect 0, read 1997, write 0, timeout 86736
+Requests/sec: 368334.41
+Transfer/sec:     51.64MB
