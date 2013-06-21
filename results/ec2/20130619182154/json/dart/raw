@@ -1,0 +1,141 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 17:31:54 UTC 2013
+
+  System load:  0.12               Processes:           331
+  Usage of /:   25.5% of 19.69GB   Users logged in:     1
+  Memory usage: 14%                IP address for eth0: 10.253.41.249
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+42 packages can be updated.
+21 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  8113 requests in 5.00s, 1.69MB read
+Requests/sec:   1622.52
+Transfer/sec:    346.93KB
+
+---------------------------------------------------------
+ Running Warmup dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  40731 requests in 15.00s, 8.52MB read
+  Socket errors: connect 0, read 8305, write 0, timeout 277
+  Non-2xx or 3xx responses: 77
+Requests/sec:   2715.40
+Transfer/sec:    581.33KB
+
+---------------------------------------------------------
+ Concurrency: 8 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  38181 requests in 15.00s, 7.97MB read
+Requests/sec:   2545.26
+Transfer/sec:    544.23KB
+
+---------------------------------------------------------
+ Concurrency: 16 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  39727 requests in 15.00s, 8.30MB read
+Requests/sec:   2648.01
+Transfer/sec:    566.20KB
+
+---------------------------------------------------------
+ Concurrency: 32 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  41444 requests in 15.00s, 8.65MB read
+Requests/sec:   2762.63
+Transfer/sec:    590.72KB
+
+---------------------------------------------------------
+ Concurrency: 64 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  41440 requests in 15.00s, 8.65MB read
+Requests/sec:   2762.91
+Transfer/sec:    590.78KB
+
+---------------------------------------------------------
+ Concurrency: 128 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  41275 requests in 15.01s, 8.62MB read
+  Socket errors: connect 0, read 1949, write 0, timeout 72
+  Non-2xx or 3xx responses: 15
+Requests/sec:   2750.58
+Transfer/sec:    588.30KB
+
+---------------------------------------------------------
+ Concurrency: 256 for dart
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  41133 requests in 15.00s, 8.59MB read
+  Socket errors: connect 0, read 4303, write 0, timeout 508
+  Non-2xx or 3xx responses: 1
+Requests/sec:   2741.94
+Transfer/sec:    586.36KB

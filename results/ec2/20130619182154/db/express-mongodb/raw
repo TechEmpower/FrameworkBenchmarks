@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 19:05:16 UTC 2013
+
+  System load:  0.01               Processes:           75
+  Usage of /:   25.0% of 19.69GB   Users logged in:     1
+  Memory usage: 8%                 IP address for eth0: 10.253.41.249
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/mongoose
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  10693 requests in 5.00s, 2.40MB read
+Requests/sec:   2138.41
+Transfer/sec:    492.38KB
+
+---------------------------------------------------------
+ Running Warmup express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  36240 requests in 15.02s, 8.15MB read
+Requests/sec:   2412.11
+Transfer/sec:    555.40KB
+
+---------------------------------------------------------
+ Concurrency: 8 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  35180 requests in 15.00s, 7.91MB read
+Requests/sec:   2345.01
+Transfer/sec:    539.95KB
+
+---------------------------------------------------------
+ Concurrency: 16 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/mongoose
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  36282 requests in 15.01s, 8.16MB read
+Requests/sec:   2417.11
+Transfer/sec:    556.55KB
+
+---------------------------------------------------------
+ Concurrency: 32 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/mongoose
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  37494 requests in 15.01s, 8.43MB read
+Requests/sec:   2498.67
+Transfer/sec:    575.33KB
+
+---------------------------------------------------------
+ Concurrency: 64 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/mongoose
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  37296 requests in 15.01s, 8.39MB read
+Requests/sec:   2485.19
+Transfer/sec:    572.22KB
+
+---------------------------------------------------------
+ Concurrency: 128 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/mongoose
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  37239 requests in 15.01s, 8.37MB read
+Requests/sec:   2480.54
+Transfer/sec:    571.16KB
+
+---------------------------------------------------------
+ Concurrency: 256 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  37436 requests in 15.01s, 8.42MB read
+Requests/sec:   2494.71
+Transfer/sec:    574.42KB

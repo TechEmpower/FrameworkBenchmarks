@@ -1,0 +1,117 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:8080/servlet/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  19160 requests in 5.00s, 3.55MB read
+Requests/sec:   3832.09
+Transfer/sec:    727.82KB
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/servlet/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/servlet/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  70371 requests in 14.99s, 13.15MB read
+  Socket errors: connect 0, read 1, write 0, timeout 6
+Requests/sec:   4695.35
+Transfer/sec:      0.88MB
+
+---------------------------------------------------------
+ Queries: 1 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/servlet/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/servlet/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.12ms  366.47ms  10.49s    99.23%
+    Req/Sec   814.67    573.38     4.00k    64.63%
+  116018 requests in 15.00s, 18.24MB read
+  Socket errors: connect 0, read 256, write 0, timeout 291
+Requests/sec:   7733.23
+Transfer/sec:      1.22MB
+
+---------------------------------------------------------
+ Queries: 5 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/servlet/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/servlet/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  30831 requests in 15.01s, 9.00MB read
+  Socket errors: connect 0, read 33, write 0, timeout 78
+Requests/sec:   2054.06
+Transfer/sec:    614.28KB
+
+---------------------------------------------------------
+ Queries: 10 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/servlet/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/servlet/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  16739 requests in 14.99s, 7.46MB read
+  Socket errors: connect 0, read 14, write 0, timeout 43
+Requests/sec:   1116.43
+Transfer/sec:    509.56KB
+
+---------------------------------------------------------
+ Queries: 15 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/servlet/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/servlet/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  11881 requests in 15.01s, 7.10MB read
+  Socket errors: connect 0, read 14, write 0, timeout 34
+Requests/sec:    791.34
+Transfer/sec:    484.12KB
+
+---------------------------------------------------------
+ Queries: 20 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/servlet/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/servlet/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  9257 requests in 15.01s, 6.93MB read
+  Socket errors: connect 0, read 10, write 0, timeout 25
+Requests/sec:    616.62
+Transfer/sec:    472.83KB
