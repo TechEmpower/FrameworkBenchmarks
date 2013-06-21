@@ -1,0 +1,140 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 21:33:55 UTC 2013
+
+  System load:  0.15               Processes:           75
+  Usage of /:   25.0% of 19.69GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  8981 requests in 5.01s, 0.89MB read
+  Non-2xx or 3xx responses: 8981
+Requests/sec:   1793.94
+Transfer/sec:    182.32KB
+
+---------------------------------------------------------
+ Running Warmup grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.27ms   17.36ms 105.87ms   71.98%
+    Req/Sec   389.04    645.67     3.00k    91.33%
+  96635 requests in 15.00s, 9.59MB read
+  Non-2xx or 3xx responses: 96635
+Requests/sec:   6443.42
+Transfer/sec:    654.73KB
+
+---------------------------------------------------------
+ Concurrency: 8 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   696.18us  669.20us  14.89ms   97.10%
+    Req/Sec     1.05k   363.28     2.00k    86.58%
+  179761 requests in 15.00s, 17.84MB read
+  Non-2xx or 3xx responses: 179761
+Requests/sec:  11984.82
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Concurrency: 16 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.48ms    5.00ms  81.73ms   98.90%
+    Req/Sec     1.41k   545.58     3.00k    53.13%
+  209440 requests in 15.00s, 20.79MB read
+  Non-2xx or 3xx responses: 209440
+Requests/sec:  13963.97
+Transfer/sec:      1.39MB
+
+---------------------------------------------------------
+ Concurrency: 32 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.43ms    1.80ms  26.36ms   87.29%
+    Req/Sec     1.35k   531.58     3.00k    60.40%
+  205603 requests in 15.00s, 20.41MB read
+  Non-2xx or 3xx responses: 205603
+Requests/sec:  13708.57
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 64 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.05ms    6.30ms  90.70ms   97.68%
+    Req/Sec     1.37k   527.62     4.00k    59.16%
+  211247 requests in 15.00s, 20.97MB read
+  Non-2xx or 3xx responses: 211247
+Requests/sec:  14085.06
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Concurrency: 128 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.34ms    7.48ms  97.57ms   96.88%
+    Req/Sec     1.48k   547.52     4.00k    97.51%
+  219856 requests in 15.00s, 21.82MB read
+  Non-2xx or 3xx responses: 219856
+Requests/sec:  14658.53
+Transfer/sec:      1.45MB
+
+---------------------------------------------------------
+ Concurrency: 256 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.59ms   10.38ms 109.46ms   94.85%
+    Req/Sec     1.49k   582.26     5.00k    95.82%
+  219773 requests in 15.00s, 21.81MB read
+  Non-2xx or 3xx responses: 219773
+Requests/sec:  14652.12
+Transfer/sec:      1.45MB
