@@ -1,0 +1,105 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 12:33:11 PDT 2013
+
+  System load:  0.56                Processes:           133
+  Usage of /:   10.1% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rack-jruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/rack/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/rack/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.26ms    5.00ms  31.03ms   97.13%
+    Req/Sec     2.26k   815.73     3.00k    88.08%
+  101828 requests in 5.00s, 16.80MB read
+Requests/sec:  20367.16
+Transfer/sec:      3.36MB
+
+---------------------------------------------------------
+ Running Warmup rack-jruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rack/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rack/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.06ms   67.82ms 394.94ms   94.42%
+    Req/Sec     3.14k     1.54k   12.00k    70.43%
+  404892 requests in 15.00s, 68.61MB read
+  Socket errors: connect 0, read 434, write 0, timeout 692
+Requests/sec:  26993.50
+Transfer/sec:      4.57MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rack-jruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/rack/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rack/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15s   230.32ms   1.36s    96.29%
+    Req/Sec   231.51      1.01k   11.00k    94.35%
+  43627 requests in 16.00s, 7.23MB read
+  Socket errors: connect 0, read 2, write 0, timeout 1792
+Requests/sec:   2726.30
+Transfer/sec:    462.43KB
+
+---------------------------------------------------------
+ Concurrency: 1024 for rack-jruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/rack/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rack/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    98.10ms  230.12ms 637.91ms   84.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  8100 requests in 16.01s, 1.37MB read
+  Socket errors: connect 0, read 334428, write 0, timeout 5165
+Requests/sec:    506.01
+Transfer/sec:     87.50KB
+
+---------------------------------------------------------
+ Concurrency: 4096 for rack-jruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/rack/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rack/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5574 requests in 16.02s, 0.98MB read
+  Socket errors: connect 0, read 355409, write 0, timeout 13679
+Requests/sec:    347.87
+Transfer/sec:     62.56KB
+
+---------------------------------------------------------
+ Concurrency: 16384 for rack-jruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/rack/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rack/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2837 requests in 16.06s, 513.74KB read
+  Socket errors: connect 0, read 399491, write 0, timeout 78673
+Requests/sec:    176.67
+Transfer/sec:     31.99KB

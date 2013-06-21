@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/restexpress/mongodb?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/restexpress/mongodb?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  34451 requests in 5.00s, 4.95MB read
+Requests/sec:   6889.76
+Transfer/sec:      0.99MB
+
+---------------------------------------------------------
+ Running Warmup restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/restexpress/mongodb?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/restexpress/mongodb?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.28ms   66.70ms 657.15ms   98.14%
+    Req/Sec     4.39k     1.39k   10.00k    67.55%
+  546768 requests in 15.00s, 78.51MB read
+Requests/sec:  36451.73
+Transfer/sec:      5.23MB
+
+---------------------------------------------------------
+ Queries: 1 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/restexpress/mongodb?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/restexpress/mongodb?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.74ms   67.76ms   1.53s    99.49%
+    Req/Sec     7.95k     2.11k   19.00k    85.50%
+  939150 requests in 15.00s, 106.38MB read
+Requests/sec:  62612.84
+Transfer/sec:      7.09MB
+
+---------------------------------------------------------
+ Queries: 5 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/restexpress/mongodb?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/restexpress/mongodb?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.94ms   37.32ms 718.29ms   97.49%
+    Req/Sec     1.69k   650.97     5.00k    58.60%
+  241670 requests in 15.00s, 56.90MB read
+Requests/sec:  16112.59
+Transfer/sec:      3.79MB
+
+---------------------------------------------------------
+ Queries: 10 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/restexpress/mongodb?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/restexpress/mongodb?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.15ms   43.68ms 708.31ms   97.96%
+    Req/Sec   468.92    507.60     3.00k    53.52%
+  103937 requests in 15.00s, 40.22MB read
+Requests/sec:   6928.46
+Transfer/sec:      2.68MB
+
+---------------------------------------------------------
+ Queries: 15 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/restexpress/mongodb?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/restexpress/mongodb?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.68ms   35.44ms 284.00ms   85.66%
+    Req/Sec   126.73    332.79     1.00k    87.33%
+  70375 requests in 15.00s, 37.90MB read
+Requests/sec:   4691.00
+Transfer/sec:      2.53MB
+
+---------------------------------------------------------
+ Queries: 20 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/restexpress/mongodb?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/restexpress/mongodb?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  52802 requests in 15.00s, 36.44MB read
+Requests/sec:   3519.41
+Transfer/sec:      2.43MB

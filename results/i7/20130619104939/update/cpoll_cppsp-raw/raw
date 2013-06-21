@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:16969/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:16969/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  24726 requests in 5.00s, 4.23MB read
+Requests/sec:   4944.61
+Transfer/sec:    867.01KB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   118.82ms  339.46ms   1.36s    92.37%
+    Req/Sec     1.75k     1.14k    5.00k    50.19%
+  247188 requests in 15.01s, 42.33MB read
+Requests/sec:  16473.68
+Transfer/sec:      2.82MB
+
+---------------------------------------------------------
+ Queries: 1 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.52ms   50.48ms 285.35ms   94.65%
+    Req/Sec     3.91k     1.88k   10.00k    61.26%
+  497004 requests in 15.00s, 70.04MB read
+Requests/sec:  33133.67
+Transfer/sec:      4.67MB
+
+---------------------------------------------------------
+ Queries: 5 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.79ms   60.94ms 460.24ms   92.93%
+    Req/Sec   578.72    514.16     2.00k    55.82%
+  111443 requests in 15.00s, 29.32MB read
+Requests/sec:   7428.30
+Transfer/sec:      1.95MB
+
+---------------------------------------------------------
+ Queries: 10 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  56915 requests in 15.01s, 23.60MB read
+Requests/sec:   3792.59
+Transfer/sec:      1.57MB
+
+---------------------------------------------------------
+ Queries: 15 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  38841 requests in 15.01s, 21.99MB read
+Requests/sec:   2587.80
+Transfer/sec:      1.47MB
+
+---------------------------------------------------------
+ Queries: 20 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  28942 requests in 15.01s, 20.77MB read
+Requests/sec:   1928.63
+Transfer/sec:      1.38MB

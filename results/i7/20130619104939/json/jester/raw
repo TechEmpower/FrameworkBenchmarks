@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 14:24:26 PDT 2013
+
+  System load:  4.38                Processes:           135
+  Usage of /:   10.6% of 129.62GB   Users logged in:     1
+  Memory usage: 13%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer jester
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   476.96us  217.97us   3.99ms   93.51%
+    Req/Sec     1.80k   484.99     3.00k    73.01%
+  84488 requests in 5.00s, 16.35MB read
+Requests/sec:  16898.69
+Transfer/sec:      3.27MB
+
+---------------------------------------------------------
+ Running Warmup jester
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.88ms   28.39ms   1.02s    99.89%
+    Req/Sec     6.60k     1.16k   13.00k    64.35%
+  801121 requests in 15.00s, 155.06MB read
+Requests/sec:  53418.57
+Transfer/sec:     10.34MB
+
+---------------------------------------------------------
+ Concurrency: 8 for jester
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.18ms  134.50ms 621.09ms   95.06%
+    Req/Sec     1.63k   635.81     3.00k    91.45%
+  234116 requests in 15.00s, 45.31MB read
+Requests/sec:  15608.08
+Transfer/sec:      3.02MB
+
+---------------------------------------------------------
+ Concurrency: 16 for jester
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   444.00us  300.63us   5.53ms   97.13%
+    Req/Sec     4.29k   675.62     6.00k    50.24%
+  537872 requests in 15.00s, 104.10MB read
+Requests/sec:  35859.49
+Transfer/sec:      6.94MB
+
+---------------------------------------------------------
+ Concurrency: 32 for jester
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.80ms  158.49ms 734.58ms   95.07%
+    Req/Sec     5.26k     1.48k    8.00k    83.17%
+  647209 requests in 15.00s, 125.27MB read
+Requests/sec:  43149.01
+Transfer/sec:      8.35MB
+
+---------------------------------------------------------
+ Concurrency: 64 for jester
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.33ms    1.26ms  14.85ms   89.35%
+    Req/Sec     6.05k     1.08k   10.00k    85.25%
+  737694 requests in 15.00s, 142.78MB read
+Requests/sec:  49182.92
+Transfer/sec:      9.52MB
+
+---------------------------------------------------------
+ Concurrency: 128 for jester
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.74ms  207.54ms 854.26ms   93.63%
+    Req/Sec     5.83k     1.90k   11.00k    81.32%
+  712585 requests in 15.00s, 137.92MB read
+Requests/sec:  47507.13
+Transfer/sec:      9.19MB
+
+---------------------------------------------------------
+ Concurrency: 256 for jester
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.96ms   27.96ms   1.01s    99.88%
+    Req/Sec     6.33k     1.29k   12.00k    59.58%
+  770449 requests in 15.00s, 149.12MB read
+Requests/sec:  51364.45
+Transfer/sec:      9.94MB

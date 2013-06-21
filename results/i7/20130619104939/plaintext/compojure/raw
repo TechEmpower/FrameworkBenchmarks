@@ -1,0 +1,105 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 11:14:12 PDT 2013
+
+  System load:  1.66                Processes:           133
+  Usage of /:   10.0% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/compojure/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   296.70us  117.38us   4.23ms   88.08%
+    Req/Sec     3.06k   315.81     4.00k    90.46%
+  134446 requests in 5.00s, 19.49MB read
+Requests/sec:  26890.10
+Transfer/sec:      3.90MB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.92ms   47.04ms 120.71ms   77.83%
+    Req/Sec    10.71k     7.08k   36.00k    58.58%
+  1349321 requests in 16.01s, 198.25MB read
+  Socket errors: connect 0, read 491, write 0, timeout 1307
+Requests/sec:  84305.71
+Transfer/sec:     12.39MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   269.39ms   48.18ms 302.75ms   97.18%
+    Req/Sec   732.92      3.74k   54.00k    95.53%
+  145149 requests in 16.00s, 21.07MB read
+  Socket errors: connect 0, read 2, write 0, timeout 1792
+Requests/sec:   9069.61
+Transfer/sec:      1.32MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.14ms  178.06ms 545.46ms   87.87%
+    Req/Sec     0.09      9.62     1.00k    99.99%
+  17928 requests in 16.01s, 2.62MB read
+  Socket errors: connect 0, read 345660, write 0, timeout 4837
+Requests/sec:   1119.94
+Transfer/sec:    167.33KB
+
+---------------------------------------------------------
+ Concurrency: 4096 for compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  6800 requests in 16.02s, 1.01MB read
+  Socket errors: connect 0, read 372746, write 0, timeout 15371
+Requests/sec:    424.50
+Transfer/sec:     64.57KB
+
+---------------------------------------------------------
+ Concurrency: 16384 for compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.41s   214.10ms   8.42s    99.94%
+    Req/Sec    10.37    186.85     6.00k    99.55%
+  4521 requests in 16.06s, 701.35KB read
+  Socket errors: connect 0, read 412382, write 0, timeout 81946
+Requests/sec:    281.59
+Transfer/sec:     43.68KB

@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 15:02:39 PDT 2013
+
+  System load:  0.91                Processes:           133
+  Usage of /:   10.1% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.17ms    3.13ms  13.44ms   93.51%
+    Req/Sec     2.26k     0.90k    4.00k    82.04%
+  104290 requests in 6.00s, 17.40MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:  17380.11
+Transfer/sec:      2.90MB
+
+---------------------------------------------------------
+ Running Warmup cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.28ms    1.30ms  21.49ms   73.62%
+    Req/Sec     9.71k     1.17k   16.00k    65.45%
+  1150475 requests in 15.00s, 191.95MB read
+  Socket errors: connect 0, read 0, write 0, timeout 25
+Requests/sec:  76698.04
+Transfer/sec:     12.80MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.96ms    4.02ms  17.30ms   84.15%
+    Req/Sec     2.17k     1.12k    4.00k    76.30%
+  296431 requests in 16.00s, 49.46MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:  18526.67
+Transfer/sec:      3.09MB
+
+---------------------------------------------------------
+ Concurrency: 16 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   449.77us  846.14us  16.20ms   96.08%
+    Req/Sec     4.50k     1.65k    8.00k    77.94%
+  564172 requests in 15.00s, 94.13MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:  37612.30
+Transfer/sec:      6.28MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   364.32us  164.23us  11.21ms   93.44%
+    Req/Sec     9.69k     2.32k   14.00k    82.00%
+  1149775 requests in 15.00s, 191.83MB read
+  Socket errors: connect 0, read 0, write 0, timeout 18
+Requests/sec:  76654.51
+Transfer/sec:     12.79MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   694.20us  404.84us  19.27ms   95.00%
+    Req/Sec    10.23k     1.52k   16.00k    67.84%
+  1214526 requests in 15.00s, 202.64MB read
+  Socket errors: connect 0, read 0, write 0, timeout 43
+Requests/sec:  80971.17
+Transfer/sec:     13.51MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.58ms  738.26us  23.31ms   82.62%
+    Req/Sec    10.14k     1.32k   16.00k    75.53%
+  1201653 requests in 15.00s, 200.49MB read
+  Socket errors: connect 0, read 0, write 0, timeout 8
+Requests/sec:  80113.39
+Transfer/sec:     13.37MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.23ms    1.32ms  24.48ms   74.65%
+    Req/Sec     9.85k     1.27k   15.00k    77.33%
+  1174681 requests in 15.00s, 195.99MB read
+  Socket errors: connect 0, read 0, write 0, timeout 32
+Requests/sec:  78312.46
+Transfer/sec:     13.07MB

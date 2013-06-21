@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 12:51:46 PDT 2013
+
+  System load:  1.14                Processes:           135
+  Usage of /:   10.5% of 129.62GB   Users logged in:     1
+  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   273.19us   40.41us   1.32ms   79.29%
+    Req/Sec     3.33k   479.77     5.00k    67.60%
+  145397 requests in 5.00s, 14.14MB read
+Requests/sec:  29081.09
+Transfer/sec:      2.83MB
+
+---------------------------------------------------------
+ Running Warmup undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.18ms    2.26ms 625.21ms   99.87%
+    Req/Sec    28.36k     2.55k   44.00k    75.94%
+  3261231 requests in 15.00s, 317.24MB read
+Requests/sec: 217432.36
+Transfer/sec:     21.15MB
+
+---------------------------------------------------------
+ Concurrency: 256 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   207.71ms  334.30ms 815.66ms   73.11%
+    Req/Sec    65.63k    38.09k  309.00k    67.92%
+  7404828 requests in 15.00s, 720.30MB read
+  Socket errors: connect 0, read 27, write 0, timeout 162
+Requests/sec: 493632.16
+Transfer/sec:     48.02MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.65s     3.94s    9.34s    76.46%
+    Req/Sec    81.68k    35.80k  275.00k    69.14%
+  9218357 requests in 15.00s, 0.88GB read
+  Socket errors: connect 0, read 171, write 0, timeout 899
+Requests/sec: 614508.87
+Transfer/sec:     59.78MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.21s     3.92s    9.86s    76.97%
+    Req/Sec    87.17k    17.50k  189.00k    73.45%
+  9851388 requests in 15.00s, 0.94GB read
+  Socket errors: connect 0, read 457, write 0, timeout 8008
+Requests/sec: 656633.13
+Transfer/sec:     63.87MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.84s     5.84s   13.39s    60.08%
+    Req/Sec    86.07k    38.35k  395.00k    80.65%
+  9697467 requests in 15.01s, 0.92GB read
+  Socket errors: connect 0, read 3801, write 0, timeout 80102
+Requests/sec: 645977.01
+Transfer/sec:     62.84MB

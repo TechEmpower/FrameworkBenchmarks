@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 20 13:08:19 PDT 2013
+
+  System load:  0.99                Processes:           135
+  Usage of /:   10.5% of 129.62GB   Users logged in:     1
+  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+24 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mysql-orm/2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mysql-orm/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  25654 requests in 5.00s, 6.13MB read
+Requests/sec:   5130.53
+Transfer/sec:      1.23MB
+
+---------------------------------------------------------
+ Running Warmup hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm/2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.19ms   17.26ms 159.69ms   73.12%
+    Req/Sec   833.28    433.35     2.00k    78.44%
+  138783 requests in 15.00s, 33.16MB read
+Requests/sec:   9250.91
+Transfer/sec:      2.21MB
+
+---------------------------------------------------------
+ Queries: 1 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.25ms   10.45ms  70.60ms   74.36%
+    Req/Sec     1.02k   442.09     3.00k    80.48%
+  167688 requests in 15.00s, 34.99MB read
+Requests/sec:  11178.71
+Transfer/sec:      2.33MB
+
+---------------------------------------------------------
+ Queries: 5 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm/5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  77546 requests in 15.00s, 25.65MB read
+Requests/sec:   5169.66
+Transfer/sec:      1.71MB
+
+---------------------------------------------------------
+ Queries: 10 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm/10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  39495 requests in 15.02s, 19.05MB read
+Requests/sec:   2629.41
+Transfer/sec:      1.27MB
+
+---------------------------------------------------------
+ Queries: 15 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm/15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  24130 requests in 15.01s, 15.30MB read
+Requests/sec:   1607.81
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Queries: 20 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm/20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  17575 requests in 15.03s, 13.80MB read
+Requests/sec:   1169.32
+Transfer/sec:      0.92MB
