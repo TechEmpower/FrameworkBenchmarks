@@ -32,7 +32,7 @@ class Installer:
     self.__run_command("sudo apt-get install gcc-4.8 g++-4.8", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
-    self.__run_command("sudo sh -c \"echo '*               -    nofile          8192' >> /etc/security/limits.conf\"")
+    self.__run_command("sudo sh -c \"echo '*               -    nofile          16384' >> /etc/security/limits.conf\"")
 
     #######################################
     # Languages
@@ -350,7 +350,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
-    sudo sh -c "echo '*               -    nofile          8192' >> /etc/security/limits.conf"
+    sudo sh -c "echo '*               -    nofile          16384' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
     sudo mkdir -p /ssd/log
