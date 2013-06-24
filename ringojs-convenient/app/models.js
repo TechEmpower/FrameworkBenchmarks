@@ -2,7 +2,7 @@ var {Store, ConnectionPool, Cache} = require('ringo-sqlstore');
 
 // DO NOT TOUCH THE FOLLOWING LINE.
 // THIS VARIABLE IS REGEX REPLACED BY setup.py
-var dbHost = 'localhost';
+var dbHost = '172.16.98.98';
 
 // create and configure store
 var connectionPool = module.singleton("connectionPool", function() {
@@ -17,7 +17,7 @@ var store = exports.store = new Store(connectionPool);
 var queryCache = module.singleton("queryCache", function() {
     return new Cache(10000);
 });
-store.setQueryCache(queryCache);
+//store.setQueryCache(queryCache);
 
 // define entities in DB
 exports.World = store.defineEntity('World', {
