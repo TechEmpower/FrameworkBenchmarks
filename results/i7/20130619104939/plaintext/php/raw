@@ -2,16 +2,16 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 12:12:34 PDT 2013
+  System information as of Tue Jun 25 09:01:17 PDT 2013
 
-  System load:  2.32                Processes:           133
-  Usage of /:   10.1% of 129.62GB   Users logged in:     1
-  Memory usage: 7%                  IP address for eth1: 172.16.98.98
+  System load:  0.1                 Processes:           126
+  Usage of /:   10.9% of 129.62GB   Users logged in:     1
+  Memory usage: 2%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/plaintext.php
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.80ms   32.72ms 175.54ms   96.37%
-    Req/Sec     1.92k   413.28     3.00k    94.35%
-  85965 requests in 5.00s, 16.72MB read
-Requests/sec:  17193.39
-Transfer/sec:      3.34MB
+    Latency   444.86us   82.65us   1.27ms   70.60%
+    Req/Sec     2.00k    78.26     3.00k    99.39%
+  88647 requests in 5.00s, 17.24MB read
+Requests/sec:  17731.02
+Transfer/sec:      3.45MB
 
 ---------------------------------------------------------
  Running Warmup php
@@ -37,11 +37,11 @@ Transfer/sec:      3.34MB
 Running 15s test @ http://172.16.98.122:8080/plaintext.php
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.67ms    3.62ms 229.84ms   90.36%
-    Req/Sec     6.83k     0.96k   17.00k    76.05%
-  816793 requests in 15.00s, 158.87MB read
-Requests/sec:  54451.40
-Transfer/sec:     10.59MB
+    Latency     4.61ms    4.61ms 396.30ms   96.82%
+    Req/Sec     6.90k   835.27    11.00k    47.69%
+  832190 requests in 15.00s, 161.86MB read
+Requests/sec:  55481.05
+Transfer/sec:     10.79MB
 
 ---------------------------------------------------------
  Concurrency: 256 for php
@@ -51,11 +51,11 @@ Transfer/sec:     10.59MB
 Running 15s test @ http://172.16.98.122:8080/plaintext.php
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   371.04ms  567.21ms   1.51s    78.45%
-    Req/Sec     6.32k     2.07k   19.00k    88.12%
-  752230 requests in 15.00s, 146.31MB read
-Requests/sec:  50143.72
-Transfer/sec:      9.75MB
+    Latency   570.64ms  567.76ms   1.25s    56.74%
+    Req/Sec     6.53k     1.92k   13.00k    89.68%
+  792397 requests in 15.00s, 154.12MB read
+Requests/sec:  52825.69
+Transfer/sec:     10.27MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for php
@@ -65,12 +65,12 @@ Transfer/sec:      9.75MB
 Running 15s test @ http://172.16.98.122:8080/plaintext.php
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.54s     3.54s   12.84s    87.84%
-    Req/Sec     6.69k     1.27k   16.00k    59.28%
-  796465 requests in 15.00s, 154.92MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1452
-Requests/sec:  53097.40
-Transfer/sec:     10.33MB
+    Latency     2.19s     4.02s   11.08s    80.18%
+    Req/Sec     6.88k     1.74k   16.00k    63.28%
+  817977 requests in 15.00s, 159.10MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2184
+Requests/sec:  54531.25
+Transfer/sec:     10.61MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for php
@@ -80,13 +80,13 @@ Transfer/sec:     10.33MB
 Running 15s test @ http://172.16.98.122:8080/plaintext.php
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.51s     6.84s   14.37s    59.87%
-    Req/Sec     6.10k     2.45k   13.00k    76.90%
-  739122 requests in 15.00s, 143.83MB read
-  Socket errors: connect 0, read 313, write 0, timeout 19613
-  Non-2xx or 3xx responses: 457
-Requests/sec:  49264.36
-Transfer/sec:      9.59MB
+    Latency     7.26s     6.81s   14.52s    39.46%
+    Req/Sec     6.34k     2.37k   15.00k    78.27%
+  767176 requests in 15.00s, 152.94MB read
+  Socket errors: connect 0, read 20, write 0, timeout 18875
+  Non-2xx or 3xx responses: 26152
+Requests/sec:  51133.64
+Transfer/sec:     10.19MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for php
@@ -96,10 +96,10 @@ Transfer/sec:      9.59MB
 Running 15s test @ http://172.16.98.122:8080/plaintext.php
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.91s     7.04s   14.57s    53.82%
-    Req/Sec     6.15k     2.23k   18.00k    82.38%
-  788011 requests in 15.87s, 156.24MB read
-  Socket errors: connect 0, read 2665, write 0, timeout 90229
-  Non-2xx or 3xx responses: 20859
-Requests/sec:  49642.31
-Transfer/sec:      9.84MB
+    Latency     6.40s     6.82s   14.62s    56.01%
+    Req/Sec     6.82k     1.43k   14.00k    73.37%
+  824188 requests in 15.01s, 164.82MB read
+  Socket errors: connect 0, read 1357, write 0, timeout 89939
+  Non-2xx or 3xx responses: 31686
+Requests/sec:  54902.74
+Transfer/sec:     10.98MB
