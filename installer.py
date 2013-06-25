@@ -241,6 +241,8 @@ class Installer:
     self.__run_command("make install", cwd="resin-4.0.36")
     self.__run_command("mv conf/resin.properties conf/resin.properties.orig", cwd="resin-4.0.36")
     self.__run_command("cat ../config/resin.properties > resin-4.0.36/conf/resin.properties")
+    self.__run_command("mv conf/resin.xml conf/resin.xml.orig", cwd="resin-4.0.36")
+    self.__run_command("cat ../config/resin.xml > resin-4.0.36/conf/resin.xml")
 
     ##############################################################
     #
