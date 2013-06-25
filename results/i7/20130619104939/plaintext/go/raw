@@ -2,9 +2,16 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
- System information disabled due to load higher than 8.0
+  System information as of Tue Jun 25 09:14:04 PDT 2013
 
-24 packages can be updated.
+  System load:  0.21                Processes:           126
+  Usage of /:   10.9% of 129.62GB   Users logged in:     1
+  Memory usage: 2%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
 13 updates are security updates.
 
 
@@ -16,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   337.89us  159.41us   2.72ms   99.37%
-    Req/Sec     2.88k   320.34     3.00k    88.39%
-  118498 requests in 5.00s, 13.00MB read
-Requests/sec:  23700.24
-Transfer/sec:      2.60MB
+    Latency   332.71us  112.06us   1.40ms   96.98%
+    Req/Sec     2.75k   431.45     3.00k    75.28%
+  117032 requests in 5.00s, 12.84MB read
+Requests/sec:  23408.21
+Transfer/sec:      2.57MB
 
 ---------------------------------------------------------
  Running Warmup go
@@ -30,11 +37,11 @@ Transfer/sec:      2.60MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.45ms    0.93ms  21.43ms   87.37%
-    Req/Sec    23.09k     3.32k   34.00k    70.18%
-  2673023 requests in 15.00s, 293.16MB read
-Requests/sec: 178206.83
-Transfer/sec:     19.54MB
+    Latency     1.15ms  367.14us  10.51ms   79.79%
+    Req/Sec    28.95k     1.89k   34.00k    50.29%
+  3331361 requests in 15.00s, 365.36MB read
+Requests/sec: 222101.26
+Transfer/sec:     24.36MB
 
 ---------------------------------------------------------
  Concurrency: 256 for go
@@ -44,12 +51,11 @@ Transfer/sec:     19.54MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    90.16ms   95.93ms 247.69ms   64.98%
-    Req/Sec    25.64k     5.61k   53.00k    66.78%
-  2960282 requests in 15.00s, 324.66MB read
-  Socket errors: connect 0, read 0, write 0, timeout 7
-Requests/sec: 197344.27
-Transfer/sec:     21.64MB
+    Latency    96.72ms  121.11ms 439.43ms   65.86%
+    Req/Sec    36.88k     4.25k   52.00k    71.33%
+  4230083 requests in 15.00s, 463.92MB read
+Requests/sec: 281988.41
+Transfer/sec:     30.93MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for go
@@ -59,12 +65,11 @@ Transfer/sec:     21.64MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   187.62ms  149.56ms 438.05ms   72.29%
-    Req/Sec    26.03k     7.60k   57.00k    68.23%
-  3005811 requests in 15.00s, 329.65MB read
-  Socket errors: connect 0, read 0, write 0, timeout 119
-Requests/sec: 200370.88
-Transfer/sec:     21.98MB
+    Latency   142.98ms  121.00ms 332.11ms   66.27%
+    Req/Sec    36.90k     6.77k   69.00k    66.17%
+  4233278 requests in 15.00s, 464.27MB read
+Requests/sec: 282197.03
+Transfer/sec:     30.95MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for go
@@ -74,12 +79,12 @@ Transfer/sec:     21.98MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   570.19ms  439.18ms   1.60s    65.55%
-    Req/Sec    28.28k    10.43k  139.00k    73.95%
-  3251552 requests in 15.01s, 356.61MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1043
-Requests/sec: 216681.55
-Transfer/sec:     23.76MB
+    Latency   324.72ms  213.67ms 656.71ms   64.27%
+    Req/Sec    36.86k     9.64k   76.00k    68.51%
+  4226557 requests in 15.00s, 463.54MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6704
+Requests/sec: 281706.05
+Transfer/sec:     30.90MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for go
@@ -89,9 +94,9 @@ Transfer/sec:     23.76MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.03s   767.13ms   2.78s    66.09%
-    Req/Sec    28.47k    11.30k  105.00k    72.55%
-  3267860 requests in 15.01s, 358.40MB read
-  Socket errors: connect 0, read 3, write 0, timeout 58117
-Requests/sec: 217697.37
-Transfer/sec:     23.88MB
+    Latency     1.27s   801.56ms   4.33s    72.71%
+    Req/Sec    36.41k    19.29k  264.00k    71.85%
+  4156550 requests in 15.01s, 455.86MB read
+  Socket errors: connect 0, read 0, write 0, timeout 35449
+Requests/sec: 276850.22
+Transfer/sec:     30.36MB

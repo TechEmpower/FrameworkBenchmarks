@@ -2,16 +2,16 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 12:33:11 PDT 2013
+  System information as of Tue Jun 25 09:07:34 PDT 2013
 
-  System load:  0.56                Processes:           133
-  Usage of /:   10.1% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  0.1                 Processes:           126
+  Usage of /:   10.9% of 129.62GB   Users logged in:     1
+  Memory usage: 2%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/rack/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.26ms    5.00ms  31.03ms   97.13%
-    Req/Sec     2.26k   815.73     3.00k    88.08%
-  101828 requests in 5.00s, 16.80MB read
-Requests/sec:  20367.16
-Transfer/sec:      3.36MB
+    Latency   454.70us    0.89ms  10.87ms   98.62%
+    Req/Sec     2.43k   791.30     3.00k    89.97%
+  56084 requests in 5.00s, 9.25MB read
+Requests/sec:  11217.30
+Transfer/sec:      1.85MB
 
 ---------------------------------------------------------
  Running Warmup rack-jruby
@@ -37,11 +37,10 @@ Transfer/sec:      3.36MB
 Running 15s test @ http://172.16.98.122:8080/rack/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    20.06ms   67.82ms 394.94ms   94.42%
-    Req/Sec     3.14k     1.54k   12.00k    70.43%
-  404892 requests in 15.00s, 68.61MB read
-  Socket errors: connect 0, read 434, write 0, timeout 692
-Requests/sec:  26993.50
+    Latency    34.04ms  112.57ms   1.21s    94.20%
+    Req/Sec     3.27k     1.70k   11.00k    65.76%
+  415665 requests in 15.00s, 68.58MB read
+Requests/sec:  27711.87
 Transfer/sec:      4.57MB
 
 ---------------------------------------------------------
@@ -52,12 +51,11 @@ Transfer/sec:      4.57MB
 Running 15s test @ http://172.16.98.122:8080/rack/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.15s   230.32ms   1.36s    96.29%
-    Req/Sec   231.51      1.01k   11.00k    94.35%
-  43627 requests in 16.00s, 7.23MB read
-  Socket errors: connect 0, read 2, write 0, timeout 1792
-Requests/sec:   2726.30
-Transfer/sec:    462.43KB
+    Latency   382.70ms  335.41ms 912.59ms   54.40%
+    Req/Sec     3.46k     2.22k   15.00k    62.61%
+  437405 requests in 15.00s, 72.17MB read
+Requests/sec:  29159.97
+Transfer/sec:      4.81MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for rack-jruby
@@ -67,12 +65,12 @@ Transfer/sec:    462.43KB
 Running 15s test @ http://172.16.98.122:8080/rack/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    98.10ms  230.12ms 637.91ms   84.62%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  8100 requests in 16.01s, 1.37MB read
-  Socket errors: connect 0, read 334428, write 0, timeout 5165
-Requests/sec:    506.01
-Transfer/sec:     87.50KB
+    Latency     4.58s     4.91s   11.20s    60.52%
+    Req/Sec     3.09k     2.14k   12.00k    71.65%
+  386496 requests in 15.00s, 63.77MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1287
+Requests/sec:  25764.50
+Transfer/sec:      4.25MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for rack-jruby
@@ -82,12 +80,12 @@ Transfer/sec:     87.50KB
 Running 15s test @ http://172.16.98.122:8080/rack/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us  100.00%
-    Req/Sec     0.00      0.00     0.00    100.00%
-  5574 requests in 16.02s, 0.98MB read
-  Socket errors: connect 0, read 355409, write 0, timeout 13679
-Requests/sec:    347.87
-Transfer/sec:     62.56KB
+    Latency     7.47s     6.91s   14.98s    35.27%
+    Req/Sec     2.91k     2.22k   16.00k    68.93%
+  372604 requests in 15.00s, 61.47MB read
+  Socket errors: connect 0, read 0, write 0, timeout 15708
+Requests/sec:  24835.68
+Transfer/sec:      4.10MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for rack-jruby
@@ -97,9 +95,9 @@ Transfer/sec:     62.56KB
 Running 15s test @ http://172.16.98.122:8080/rack/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2837 requests in 16.06s, 513.74KB read
-  Socket errors: connect 0, read 399491, write 0, timeout 78673
-Requests/sec:    176.67
-Transfer/sec:     31.99KB
+    Latency     7.73s     6.78s   14.92s    33.61%
+    Req/Sec     2.79k     2.40k   14.00k    63.76%
+  359608 requests in 15.01s, 59.33MB read
+  Socket errors: connect 0, read 147, write 0, timeout 98710
+Requests/sec:  23955.99
+Transfer/sec:      3.95MB

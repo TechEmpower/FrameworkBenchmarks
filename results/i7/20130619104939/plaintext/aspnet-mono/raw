@@ -2,16 +2,16 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 10:32:48 PDT 2013
+  System information as of Tue Jun 25 09:26:37 PDT 2013
 
-  System load:  0.27                Processes:           135
-  Usage of /:   10.4% of 129.62GB   Users logged in:     1
-  Memory usage: 10%                 IP address for eth1: 172.16.98.98
+  System load:  0.05                Processes:           126
+  Usage of /:   10.9% of 129.62GB   Users logged in:     1
+  Memory usage: 2%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
@@ -25,9 +25,9 @@ Running 5s test @ http://172.16.98.122:8080/plaintext
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7429 requests in 5.00s, 2.25MB read
-Requests/sec:   1484.84
-Transfer/sec:    461.04KB
+  7459 requests in 5.00s, 2.26MB read
+Requests/sec:   1491.28
+Transfer/sec:    463.04KB
 
 ---------------------------------------------------------
  Running Warmup aspnet-mono
@@ -39,9 +39,9 @@ Running 15s test @ http://172.16.98.122:8080/plaintext
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  21641 requests in 15.01s, 6.56MB read
-Requests/sec:   1442.10
-Transfer/sec:    447.83KB
+  28406 requests in 15.00s, 8.61MB read
+Requests/sec:   1893.49
+Transfer/sec:    587.96KB
 
 ---------------------------------------------------------
  Concurrency: 256 for aspnet-mono
@@ -53,10 +53,10 @@ Running 15s test @ http://172.16.98.122:8080/plaintext
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  21696 requests in 15.01s, 6.58MB read
-  Socket errors: connect 0, read 0, write 0, timeout 520
-Requests/sec:   1445.26
-Transfer/sec:    448.81KB
+  27704 requests in 15.09s, 8.40MB read
+  Socket errors: connect 0, read 0, write 0, timeout 417
+Requests/sec:   1836.36
+Transfer/sec:    570.22KB
 
 ---------------------------------------------------------
  Concurrency: 1024 for aspnet-mono
@@ -68,11 +68,11 @@ Running 15s test @ http://172.16.98.122:8080/plaintext
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  17272 requests in 15.01s, 5.24MB read
-  Socket errors: connect 0, read 0, write 0, timeout 5702
-  Non-2xx or 3xx responses: 22
-Requests/sec:   1151.03
-Transfer/sec:    357.50KB
+  20388 requests in 15.01s, 6.18MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5432
+  Non-2xx or 3xx responses: 25
+Requests/sec:   1358.47
+Transfer/sec:    421.93KB
 
 ---------------------------------------------------------
  Concurrency: 4096 for aspnet-mono
@@ -84,11 +84,11 @@ Running 15s test @ http://172.16.98.122:8080/plaintext
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  19186 requests in 15.01s, 5.91MB read
-  Socket errors: connect 0, read 120, write 0, timeout 24653
-  Non-2xx or 3xx responses: 2835
-Requests/sec:   1278.16
-Transfer/sec:    403.38KB
+  22350 requests in 15.01s, 6.84MB read
+  Socket errors: connect 0, read 88, write 0, timeout 24869
+  Non-2xx or 3xx responses: 1736
+Requests/sec:   1489.35
+Transfer/sec:    466.47KB
 
 ---------------------------------------------------------
  Concurrency: 16384 for aspnet-mono
@@ -99,9 +99,9 @@ Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us  100.00%
-    Req/Sec   506.86    705.65     7.00k    90.30%
-  94595 requests in 15.04s, 31.45MB read
-  Socket errors: connect 0, read 5657, write 0, timeout 92859
-  Non-2xx or 3xx responses: 82767
-Requests/sec:   6288.86
-Transfer/sec:      2.09MB
+    Req/Sec   770.94    793.90    10.00k    85.28%
+  138144 requests in 15.01s, 45.98MB read
+  Socket errors: connect 0, read 1451, write 0, timeout 93130
+  Non-2xx or 3xx responses: 122479
+Requests/sec:   9200.88
+Transfer/sec:      3.06MB

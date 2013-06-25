@@ -2,16 +2,16 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 11:52:37 PDT 2013
+  System information as of Tue Jun 25 08:58:44 PDT 2013
 
-  System load:  0.84                Processes:           133
-  Usage of /:   10.0% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  0.3                 Processes:           126
+  Usage of /:   10.9% of 129.62GB   Users logged in:     1
+  Memory usage: 2%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   362.98us   86.32us   2.70ms   81.55%
-    Req/Sec     2.40k   494.46     3.00k    59.65%
-  109970 requests in 5.00s, 18.04MB read
-Requests/sec:  21994.43
-Transfer/sec:      3.61MB
+    Latency   347.92us   63.60us   1.93ms   80.52%
+    Req/Sec     2.52k   505.79     3.00k    52.14%
+  111620 requests in 5.00s, 18.31MB read
+Requests/sec:  22325.07
+Transfer/sec:      3.66MB
 
 ---------------------------------------------------------
  Running Warmup nodejs
@@ -37,11 +37,11 @@ Transfer/sec:      3.61MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.60ms    1.60ms  18.64ms   74.35%
-    Req/Sec     9.10k     1.23k   15.00k    82.86%
-  1081421 requests in 15.00s, 177.39MB read
-Requests/sec:  72097.41
-Transfer/sec:     11.83MB
+    Latency     3.59ms    1.36ms  23.19ms   66.43%
+    Req/Sec     8.98k     1.04k   12.00k    85.77%
+  1066579 requests in 15.00s, 174.95MB read
+Requests/sec:  71106.57
+Transfer/sec:     11.66MB
 
 ---------------------------------------------------------
  Concurrency: 256 for nodejs
@@ -51,11 +51,11 @@ Transfer/sec:     11.83MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    69.70ms   54.71ms 250.17ms   91.02%
-    Req/Sec    10.26k     2.96k   21.00k    69.19%
-  1204996 requests in 15.00s, 197.66MB read
-Requests/sec:  80326.89
-Transfer/sec:     13.18MB
+    Latency    98.40ms   67.40ms 192.06ms   67.31%
+    Req/Sec     9.38k     3.01k   30.00k    68.87%
+  1114576 requests in 15.00s, 182.83MB read
+Requests/sec:  74297.70
+Transfer/sec:     12.19MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for nodejs
@@ -65,12 +65,11 @@ Transfer/sec:     13.18MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   497.80ms  491.94ms   1.15s    63.17%
-    Req/Sec     9.98k     4.14k   35.00k    78.79%
-  1183655 requests in 15.00s, 194.16MB read
-  Socket errors: connect 0, read 0, write 0, timeout 24
-Requests/sec:  78902.39
-Transfer/sec:     12.94MB
+    Latency   526.29ms  501.94ms   1.48s    84.08%
+    Req/Sec     9.60k     3.73k   40.00k    75.00%
+  1139419 requests in 15.00s, 186.90MB read
+Requests/sec:  75956.95
+Transfer/sec:     12.46MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for nodejs
