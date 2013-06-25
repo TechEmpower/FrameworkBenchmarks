@@ -2,16 +2,16 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 09:09:47 PDT 2013
+  System information as of Tue Jun 25 10:41:11 PDT 2013
 
-  System load:  2.41                Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
-  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  System load:  0.45                Processes:           131
+  Usage of /:   10.9% of 129.62GB   Users logged in:     1
+  Memory usage: 4%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
@@ -25,9 +25,9 @@ Running 5s test @ http://172.16.98.122:8080/fortune
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  18518 requests in 5.00s, 25.70MB read
-Requests/sec:   3702.94
-Transfer/sec:      5.14MB
+  11837 requests in 5.00s, 16.42MB read
+Requests/sec:   2366.43
+Transfer/sec:      3.28MB
 
 ---------------------------------------------------------
  Running Warmup ringojs-convinient
@@ -39,9 +39,9 @@ Running 15s test @ http://172.16.98.122:8080/fortune
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  79893 requests in 15.01s, 110.86MB read
-Requests/sec:   5323.98
-Transfer/sec:      7.39MB
+  49900 requests in 15.00s, 69.24MB read
+Requests/sec:   3326.24
+Transfer/sec:      4.62MB
 
 ---------------------------------------------------------
  Concurrency: 8 for ringojs-convinient
@@ -53,9 +53,9 @@ Running 15s test @ http://172.16.98.122:8080/fortune
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  59613 requests in 15.00s, 82.72MB read
-Requests/sec:   3973.94
-Transfer/sec:      5.51MB
+  39762 requests in 15.00s, 55.17MB read
+Requests/sec:   2650.50
+Transfer/sec:      3.68MB
 
 ---------------------------------------------------------
  Concurrency: 16 for ringojs-convinient
@@ -67,9 +67,9 @@ Running 15s test @ http://172.16.98.122:8080/fortune
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  74083 requests in 15.00s, 102.80MB read
-Requests/sec:   4938.37
-Transfer/sec:      6.85MB
+  48436 requests in 15.00s, 67.21MB read
+Requests/sec:   3228.75
+Transfer/sec:      4.48MB
 
 ---------------------------------------------------------
  Concurrency: 32 for ringojs-convinient
@@ -81,9 +81,9 @@ Running 15s test @ http://172.16.98.122:8080/fortune
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  78699 requests in 15.01s, 109.20MB read
-Requests/sec:   5243.94
-Transfer/sec:      7.28MB
+  49915 requests in 15.00s, 69.26MB read
+Requests/sec:   3327.00
+Transfer/sec:      4.62MB
 
 ---------------------------------------------------------
  Concurrency: 64 for ringojs-convinient
@@ -95,9 +95,9 @@ Running 15s test @ http://172.16.98.122:8080/fortune
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  79263 requests in 15.00s, 109.99MB read
-Requests/sec:   5283.70
-Transfer/sec:      7.33MB
+  50026 requests in 15.00s, 69.42MB read
+Requests/sec:   3334.65
+Transfer/sec:      4.63MB
 
 ---------------------------------------------------------
  Concurrency: 128 for ringojs-convinient
@@ -109,9 +109,9 @@ Running 15s test @ http://172.16.98.122:8080/fortune
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  79811 requests in 15.00s, 110.75MB read
-Requests/sec:   5320.08
-Transfer/sec:      7.38MB
+  50112 requests in 15.00s, 69.54MB read
+Requests/sec:   3339.88
+Transfer/sec:      4.63MB
 
 ---------------------------------------------------------
  Concurrency: 256 for ringojs-convinient
@@ -123,6 +123,6 @@ Running 15s test @ http://172.16.98.122:8080/fortune
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  80125 requests in 15.00s, 111.18MB read
-Requests/sec:   5340.79
-Transfer/sec:      7.41MB
+  49450 requests in 15.00s, 68.62MB read
+Requests/sec:   3296.20
+Transfer/sec:      4.57MB
