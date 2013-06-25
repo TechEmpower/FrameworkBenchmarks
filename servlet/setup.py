@@ -17,7 +17,7 @@ def start(args):
       return 0
     subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
     subprocess.check_call("cp servlet/target/servlet.war $RESIN_HOME/webapps/", shell=True)
-    subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
+    subprocess.check_call("$RESIN_HOME/bin/resinctl -conf config/resin.xml start", shell=True)
     return 0
   except subprocess.CalledProcessError:
     return 1
