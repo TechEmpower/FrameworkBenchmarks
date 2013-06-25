@@ -2,22 +2,22 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 14:50:40 PDT 2013
+  System information as of Tue Jun 25 13:21:48 PDT 2013
 
-  System load:  1.04                Processes:           133
-  Usage of /:   10.1% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  3.34                Processes:           131
+  Usage of /:   10.9% of 129.62GB   Users logged in:     1
+  Memory usage: 4%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/fortunes
@@ -25,27 +25,27 @@ Running 5s test @ http://172.16.98.122:8080/fortunes
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  20688 requests in 5.00s, 28.47MB read
-Requests/sec:   4136.74
-Transfer/sec:      5.69MB
+  27897 requests in 5.00s, 38.39MB read
+Requests/sec:   5579.14
+Transfer/sec:      7.68MB
 
 ---------------------------------------------------------
  Running Warmup grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    19.56ms   10.34ms 131.81ms   99.10%
-    Req/Sec     1.32k   503.97     3.00k    64.33%
-  204664 requests in 15.00s, 281.66MB read
-Requests/sec:  13644.58
-Transfer/sec:     18.78MB
+    Latency    16.90ms    3.18ms  65.25ms   97.72%
+    Req/Sec     1.60k   512.23     3.00k    60.32%
+  229286 requests in 15.00s, 315.55MB read
+Requests/sec:  15286.11
+Transfer/sec:     21.04MB
 
 ---------------------------------------------------------
  Concurrency: 8 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
@@ -53,77 +53,76 @@ Running 15s test @ http://172.16.98.122:8080/fortunes
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  108531 requests in 15.00s, 149.36MB read
-Requests/sec:   7235.26
-Transfer/sec:      9.96MB
+  99032 requests in 15.00s, 136.29MB read
+Requests/sec:   6602.03
+Transfer/sec:      9.09MB
 
 ---------------------------------------------------------
  Concurrency: 16 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.43ms    2.85ms  52.49ms   99.54%
-    Req/Sec     1.02k   176.76     2.00k    96.85%
-  188584 requests in 15.00s, 259.53MB read
-Requests/sec:  12572.29
-Transfer/sec:     17.30MB
+    Latency     1.24ms    2.00ms  42.04ms   99.61%
+    Req/Sec     1.26k   449.66     2.00k    72.95%
+  209933 requests in 15.00s, 288.91MB read
+Requests/sec:  13995.25
+Transfer/sec:     19.26MB
 
 ---------------------------------------------------------
  Concurrency: 32 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.28ms  526.91us   8.58ms   85.58%
-    Req/Sec     1.26k   443.40     2.00k    73.71%
-  204450 requests in 15.00s, 281.37MB read
-  Socket errors: connect 0, read 0, write 0, timeout 5
-Requests/sec:  13630.45
-Transfer/sec:     18.76MB
+    Latency     2.24ms    2.47ms  49.00ms   99.49%
+    Req/Sec     1.67k   479.50     2.00k    67.74%
+  227257 requests in 15.00s, 312.76MB read
+Requests/sec:  15150.43
+Transfer/sec:     20.85MB
 
 ---------------------------------------------------------
  Concurrency: 64 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.91ms    3.50ms  64.43ms   99.19%
-    Req/Sec     1.18k   398.66     2.00k    80.95%
-  204096 requests in 15.00s, 280.88MB read
-Requests/sec:  13606.68
-Transfer/sec:     18.73MB
+    Latency     4.31ms    2.25ms  46.46ms   99.11%
+    Req/Sec     1.65k   484.82     2.00k    65.79%
+  228311 requests in 15.00s, 314.21MB read
+Requests/sec:  15220.16
+Transfer/sec:     20.95MB
 
 ---------------------------------------------------------
  Concurrency: 128 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     9.38ms    0.90ms  18.18ms   89.23%
-    Req/Sec     1.18k   398.77     2.00k    80.75%
-  205154 requests in 15.00s, 282.34MB read
-Requests/sec:  13676.22
-Transfer/sec:     18.82MB
+    Latency     8.56ms    2.92ms  59.70ms   98.93%
+    Req/Sec     1.64k   494.21     2.00k    64.55%
+  228338 requests in 15.00s, 314.24MB read
+Requests/sec:  15222.74
+Transfer/sec:     20.95MB
 
 ---------------------------------------------------------
  Concurrency: 256 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    18.67ms    1.25ms  30.61ms   88.92%
-    Req/Sec     1.33k   491.23     3.00k    64.93%
-  204974 requests in 15.00s, 282.09MB read
-Requests/sec:  13664.75
-Transfer/sec:     18.81MB
+    Latency    16.87ms    3.04ms  65.21ms   97.12%
+    Req/Sec     1.61k   523.65     3.00k    60.67%
+  229501 requests in 15.00s, 315.84MB read
+Requests/sec:  15300.00
+Transfer/sec:     21.06MB
