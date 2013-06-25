@@ -2,16 +2,16 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 09:03:26 PDT 2013
+  System information as of Tue Jun 25 10:34:50 PDT 2013
 
-  System load:  3.65                Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
-  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  System load:  0.0                 Processes:           131
+  Usage of /:   10.9% of 129.62GB   Users logged in:     1
+  Memory usage: 4%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   633.96us  409.39us   7.39ms   92.24%
-    Req/Sec     1.26k   472.50     2.00k    71.19%
-  44588 requests in 5.00s, 7.70MB read
-Requests/sec:   8916.59
-Transfer/sec:      1.54MB
+    Latency   612.94us  384.58us   4.07ms   91.45%
+    Req/Sec     1.36k   532.56     2.00k    58.67%
+  43736 requests in 5.00s, 7.55MB read
+Requests/sec:   8747.25
+Transfer/sec:      1.51MB
 
 ---------------------------------------------------------
  Running Warmup ringojs-convinient
@@ -37,11 +37,12 @@ Transfer/sec:      1.54MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    51.99ms  325.42ms   2.53s    98.14%
-    Req/Sec     3.97k     1.64k   11.00k    66.64%
-  487469 requests in 15.00s, 84.14MB read
-Requests/sec:  32498.92
-Transfer/sec:      5.61MB
+    Latency    62.56ms  385.94ms   2.88s    97.93%
+    Req/Sec     3.97k     1.70k   10.00k    64.50%
+  487929 requests in 15.00s, 84.22MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:  32529.22
+Transfer/sec:      5.62MB
 
 ---------------------------------------------------------
  Concurrency: 8 for ringojs-convinient
@@ -51,11 +52,11 @@ Transfer/sec:      5.61MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   601.05us  343.64us   8.03ms   90.76%
-    Req/Sec     1.37k   500.54     2.00k    61.46%
-  205963 requests in 15.00s, 35.55MB read
-Requests/sec:  13730.71
-Transfer/sec:      2.37MB
+    Latency   596.86us  378.71us  11.56ms   91.86%
+    Req/Sec     1.37k   495.25     2.00k    61.91%
+  207597 requests in 15.00s, 35.83MB read
+Requests/sec:  13839.86
+Transfer/sec:      2.39MB
 
 ---------------------------------------------------------
  Concurrency: 16 for ringojs-convinient
@@ -65,11 +66,11 @@ Transfer/sec:      2.37MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   768.38us    1.33ms  27.92ms   96.80%
-    Req/Sec     2.53k   769.35     4.00k    83.73%
-  338688 requests in 15.00s, 58.46MB read
-Requests/sec:  22579.31
-Transfer/sec:      3.90MB
+    Latency   827.25us    2.02ms  31.11ms   97.60%
+    Req/Sec     2.58k   804.76     4.00k    81.97%
+  343577 requests in 15.00s, 59.31MB read
+Requests/sec:  22905.54
+Transfer/sec:      3.95MB
 
 ---------------------------------------------------------
  Concurrency: 32 for ringojs-convinient
@@ -79,11 +80,11 @@ Transfer/sec:      3.90MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.93ms   10.16ms  71.84ms   95.95%
-    Req/Sec     3.53k     1.29k    9.00k    70.35%
-  450930 requests in 15.00s, 77.84MB read
-Requests/sec:  30060.72
-Transfer/sec:      5.19MB
+    Latency     1.16ms    3.23ms  71.10ms   97.61%
+    Req/Sec     3.55k     0.99k    8.00k    73.65%
+  454069 requests in 15.00s, 78.38MB read
+Requests/sec:  30271.85
+Transfer/sec:      5.23MB
 
 ---------------------------------------------------------
  Concurrency: 64 for ringojs-convinient
@@ -93,11 +94,11 @@ Transfer/sec:      5.19MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.02ms    5.36ms 117.94ms   97.31%
-    Req/Sec     4.08k     1.16k   10.00k    83.12%
-  514058 requests in 15.00s, 88.73MB read
-Requests/sec:  34270.54
-Transfer/sec:      5.92MB
+    Latency     1.97ms    4.21ms  85.68ms   94.92%
+    Req/Sec     4.02k     1.11k    9.00k    84.57%
+  508188 requests in 15.00s, 87.72MB read
+Requests/sec:  33880.96
+Transfer/sec:      5.85MB
 
 ---------------------------------------------------------
  Concurrency: 128 for ringojs-convinient
@@ -107,11 +108,11 @@ Transfer/sec:      5.92MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.64ms    7.23ms 109.78ms   92.63%
-    Req/Sec     4.31k     1.22k   10.00k    62.37%
-  540016 requests in 15.00s, 93.21MB read
-Requests/sec:  36002.37
-Transfer/sec:      6.21MB
+    Latency     3.72ms    8.30ms 121.08ms   92.95%
+    Req/Sec     4.23k     1.30k   10.00k    76.77%
+  532150 requests in 15.00s, 91.86MB read
+Requests/sec:  35479.09
+Transfer/sec:      6.12MB
 
 ---------------------------------------------------------
  Concurrency: 256 for ringojs-convinient
@@ -121,8 +122,8 @@ Transfer/sec:      6.21MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.63ms   22.93ms 703.93ms   91.78%
-    Req/Sec     4.26k     1.52k   12.00k    68.69%
-  534602 requests in 15.00s, 92.28MB read
-Requests/sec:  35641.26
-Transfer/sec:      6.15MB
+    Latency     7.37ms   20.47ms 625.94ms   92.28%
+    Req/Sec     4.35k     1.48k   11.00k    69.54%
+  542766 requests in 15.00s, 93.69MB read
+Requests/sec:  36185.33
+Transfer/sec:      6.25MB
