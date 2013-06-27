@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 20:11:40 UTC 2013
+
+  System load:  0.03               Processes:           66
+  Usage of /:   25.7% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:9000/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  11813 requests in 5.01s, 1.52MB read
+Requests/sec:   2358.86
+Transfer/sec:    310.98KB
+
+---------------------------------------------------------
+ Running Warmup unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.49ms    5.73ms  67.73ms   81.69%
+    Req/Sec     4.08k     0.93k    7.00k    73.19%
+  505735 requests in 15.00s, 65.11MB read
+Requests/sec:  33723.45
+Transfer/sec:      4.34MB
+
+---------------------------------------------------------
+ Concurrency: 8 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   623.94us    1.26ms  32.84ms   99.30%
+    Req/Sec     1.19k   414.88     2.00k    79.24%
+  202473 requests in 15.00s, 26.07MB read
+Requests/sec:  13499.33
+Transfer/sec:      1.74MB
+
+---------------------------------------------------------
+ Concurrency: 16 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   813.13us  553.11us  20.13ms   93.71%
+    Req/Sec     2.21k   525.08     3.00k    68.10%
+  296000 requests in 15.00s, 38.11MB read
+Requests/sec:  19735.47
+Transfer/sec:      2.54MB
+
+---------------------------------------------------------
+ Concurrency: 32 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.42ms    1.46ms  30.83ms   92.39%
+    Req/Sec     2.64k   661.01     6.00k    90.40%
+  349959 requests in 15.00s, 45.06MB read
+Requests/sec:  23333.45
+Transfer/sec:      3.00MB
+
+---------------------------------------------------------
+ Concurrency: 64 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.47ms   44.73ms 212.23ms   95.17%
+    Req/Sec     2.93k     0.97k    7.00k    70.48%
+  379316 requests in 15.03s, 48.84MB read
+Requests/sec:  25234.29
+Transfer/sec:      3.25MB
+
+---------------------------------------------------------
+ Concurrency: 128 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.68ms    7.95ms  92.92ms   94.74%
+    Req/Sec     3.63k   834.73     7.00k    83.24%
+  463083 requests in 15.00s, 59.62MB read
+Requests/sec:  30877.15
+Transfer/sec:      3.98MB
+
+---------------------------------------------------------
+ Concurrency: 256 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.55ms    6.14ms  70.39ms   87.47%
+    Req/Sec     4.10k     0.94k    7.00k    73.51%
+  513622 requests in 15.00s, 66.13MB read
+Requests/sec:  34240.18
+Transfer/sec:      4.41MB

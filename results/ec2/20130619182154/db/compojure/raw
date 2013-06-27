@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 18:39:43 UTC 2013
+  System information as of Wed Jun 26 15:03:39 UTC 2013
 
-  System load:  0.11               Processes:           75
-  Usage of /:   24.9% of 19.69GB   Users logged in:     1
-  Memory usage: 8%                 IP address for eth0: 10.253.41.249
+  System load:  0.11               Processes:           66
+  Usage of /:   25.7% of 19.69GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,118 +17,120 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/compojure/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/compojure/db/1
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/compojure/db/1
+Running 5s test @ http://10.253.67.217:8080/compojure/db/1
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4602 requests in 5.00s, 798.93KB read
-Requests/sec:    920.38
-Transfer/sec:    159.78KB
+  4833 requests in 5.01s, 839.04KB read
+Requests/sec:    965.43
+Transfer/sec:    167.61KB
 
 ---------------------------------------------------------
  Running Warmup compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/compojure/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/compojure/db/1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/db/1
+Running 15s test @ http://10.253.67.217:8080/compojure/db/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  24040 requests in 15.00s, 4.44MB read
-  Socket errors: connect 0, read 7, write 0, timeout 24
-Requests/sec:   1602.35
-Transfer/sec:    303.08KB
+  25179 requests in 15.00s, 4.66MB read
+  Socket errors: connect 0, read 19, write 0, timeout 66
+Requests/sec:   1678.07
+Transfer/sec:    318.01KB
 
 ---------------------------------------------------------
  Concurrency: 8 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/compojure/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/compojure/db/1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/db/1
+Running 15s test @ http://10.253.67.217:8080/compojure/db/1
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  48051 requests in 15.00s, 8.15MB read
-Requests/sec:   3203.41
-Transfer/sec:    556.15KB
+  46590 requests in 15.00s, 7.90MB read
+Requests/sec:   3105.90
+Transfer/sec:    539.22KB
 
 ---------------------------------------------------------
  Concurrency: 16 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/compojure/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/compojure/db/1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/db/1
+Running 15s test @ http://10.253.67.217:8080/compojure/db/1
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  49812 requests in 15.00s, 8.45MB read
-Requests/sec:   3320.82
-Transfer/sec:    576.55KB
+  50508 requests in 15.00s, 8.56MB read
+Requests/sec:   3367.17
+Transfer/sec:    584.58KB
 
 ---------------------------------------------------------
  Concurrency: 32 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/compojure/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/compojure/db/1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/db/1
+Running 15s test @ http://10.253.67.217:8080/compojure/db/1
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  53058 requests in 15.00s, 9.00MB read
-Requests/sec:   3536.49
-Transfer/sec:    613.99KB
+  53796 requests in 15.00s, 9.12MB read
+Requests/sec:   3586.17
+Transfer/sec:    622.61KB
 
 ---------------------------------------------------------
  Concurrency: 64 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/compojure/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/compojure/db/1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/db/1
+Running 15s test @ http://10.253.67.217:8080/compojure/db/1
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  55365 requests in 15.00s, 9.39MB read
-Requests/sec:   3690.30
-Transfer/sec:    640.68KB
+  55868 requests in 15.00s, 9.47MB read
+Requests/sec:   3724.65
+Transfer/sec:    646.66KB
 
 ---------------------------------------------------------
  Concurrency: 128 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/compojure/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/compojure/db/1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/db/1
+Running 15s test @ http://10.253.67.217:8080/compojure/db/1
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  55677 requests in 15.00s, 9.44MB read
-Requests/sec:   3711.96
-Transfer/sec:    644.43KB
+  56712 requests in 15.00s, 9.62MB read
+Requests/sec:   3779.74
+Transfer/sec:    656.23KB
 
 ---------------------------------------------------------
  Concurrency: 256 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/compojure/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/compojure/db/1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/db/1
+Running 15s test @ http://10.253.67.217:8080/compojure/db/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   132.85ms  408.87ms   3.15s    96.46%
-    Req/Sec   193.63    482.96     3.00k    84.31%
-  50297 requests in 15.00s, 8.88MB read
-  Socket errors: connect 0, read 147, write 0, timeout 136
-Requests/sec:   3352.94
-Transfer/sec:    605.84KB
+    Latency   143.20ms  432.67ms   2.48s    96.60%
+    Req/Sec   233.87    572.63     3.00k    83.97%
+  49790 requests in 15.01s, 8.83MB read
+  Socket errors: connect 0, read 53, write 0, timeout 81
+Requests/sec:   3316.71
+Transfer/sec:    602.43KB

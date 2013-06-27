@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 23:32:36 UTC 2013
+  System information as of Wed Jun 26 21:39:04 UTC 2013
 
-  System load:  0.17               Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.09               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 4%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,103 +17,105 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/index.php/bench/db/2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/index.php/bench/db/2
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/index.php/bench/db/2
+Running 5s test @ http://10.253.67.217:8080/index.php/bench/db/2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  2565 requests in 5.01s, 677.59KB read
-Requests/sec:    512.46
-Transfer/sec:    135.38KB
+  2575 requests in 5.01s, 680.27KB read
+Requests/sec:    514.25
+Transfer/sec:    135.86KB
 
 ---------------------------------------------------------
  Running Warmup codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/db/2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/db/2
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/db/2
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/db/2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  6688 requests in 15.11s, 1.73MB read
-  Socket errors: connect 0, read 0, write 0, timeout 289
-Requests/sec:    442.63
-Transfer/sec:    116.94KB
+  6861 requests in 15.08s, 1.77MB read
+  Socket errors: connect 0, read 0, write 0, timeout 111
+Requests/sec:    454.87
+Transfer/sec:    120.18KB
 
 ---------------------------------------------------------
  Queries: 1 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/db/1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/db/1
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/db/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7280 requests in 15.05s, 1.63MB read
-Requests/sec:    483.83
-Transfer/sec:    110.92KB
+  7387 requests in 15.03s, 1.65MB read
+Requests/sec:    491.32
+Transfer/sec:    112.65KB
 
 ---------------------------------------------------------
  Queries: 5 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/db/5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/db/5
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/db/5
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/db/5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5919 requests in 15.02s, 2.13MB read
-Requests/sec:    394.06
-Transfer/sec:    145.41KB
+  6012 requests in 15.04s, 2.17MB read
+Requests/sec:    399.74
+Transfer/sec:    147.53KB
 
 ---------------------------------------------------------
  Queries: 10 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/db/10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/db/10
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/db/10
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/db/10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4862 requests in 15.03s, 2.59MB read
-Requests/sec:    323.54
-Transfer/sec:    176.20KB
+  5002 requests in 15.07s, 2.66MB read
+Requests/sec:    331.96
+Transfer/sec:    180.83KB
 
 ---------------------------------------------------------
  Queries: 15 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/db/15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/db/15
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/db/15
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/db/15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4135 requests in 15.08s, 2.90MB read
-Requests/sec:    274.24
-Transfer/sec:    197.25KB
+  4284 requests in 15.05s, 3.01MB read
+Requests/sec:    284.59
+Transfer/sec:    204.74KB
 
 ---------------------------------------------------------
  Queries: 20 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/db/20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/db/20
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/db/20
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/db/20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3598 requests in 15.01s, 3.14MB read
-Requests/sec:    239.63
-Transfer/sec:    214.20KB
+  3776 requests in 15.03s, 3.30MB read
+Requests/sec:    251.27
+Transfer/sec:    224.68KB

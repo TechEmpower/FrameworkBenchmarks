@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 18:48:33 UTC 2013
+
+  System load:  0.09               Processes:           66
+  Usage of /:   25.7% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yesod
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8000/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.66ms   34.89ms 180.85ms   96.10%
+    Req/Sec     1.24k   577.43     2.00k    60.80%
+  40151 requests in 5.00s, 5.97MB read
+Requests/sec:   8031.60
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Running Warmup yesod
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.29ms   27.04ms 205.69ms   86.49%
+    Req/Sec     0.89k   708.34     4.00k    53.86%
+  146247 requests in 15.00s, 21.76MB read
+Requests/sec:   9751.02
+Transfer/sec:      1.45MB
+
+---------------------------------------------------------
+ Concurrency: 8 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   648.98us  408.65us   7.31ms   95.08%
+    Req/Sec     1.17k   436.72     2.00k    78.09%
+  127407 requests in 15.00s, 18.95MB read
+Requests/sec:   8493.49
+Transfer/sec:      1.26MB
+
+---------------------------------------------------------
+ Concurrency: 16 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.10ms    7.50ms  97.44ms   98.77%
+    Req/Sec     1.10k   564.82     3.00k    69.22%
+  131918 requests in 15.00s, 19.63MB read
+Requests/sec:   8795.08
+Transfer/sec:      1.31MB
+
+---------------------------------------------------------
+ Concurrency: 32 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.45ms    3.40ms  53.66ms   86.08%
+    Req/Sec     0.98k     0.89k    4.00k    41.42%
+  136926 requests in 15.00s, 20.37MB read
+Requests/sec:   9128.75
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 64 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.29ms   28.76ms 206.56ms   97.72%
+    Req/Sec     0.89k   609.45     4.00k    63.51%
+  149231 requests in 15.00s, 22.20MB read
+Requests/sec:   9950.40
+Transfer/sec:      1.48MB
+
+---------------------------------------------------------
+ Concurrency: 128 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.33ms   14.89ms 116.32ms   87.84%
+    Req/Sec     0.90k   688.61     6.00k    57.11%
+  144803 requests in 15.00s, 21.54MB read
+Requests/sec:   9654.12
+Transfer/sec:      1.44MB
+
+---------------------------------------------------------
+ Concurrency: 256 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8000/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.83ms   26.54ms 202.73ms   86.97%
+    Req/Sec     1.04k     1.02k    6.00k    59.49%
+  144857 requests in 15.00s, 21.55MB read
+Requests/sec:   9656.78
+Transfer/sec:      1.44MB

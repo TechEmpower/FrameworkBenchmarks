@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 23:18:59 UTC 2013
+  System information as of Wed Jun 26 21:25:27 UTC 2013
 
-  System load:  0.6                Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.75               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 4%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,119 +17,121 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/bench/fortunes
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/bench/fortunes
+Running 5s test @ http://10.253.67.217:8080/bench/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1443 requests in 5.01s, 2.95MB read
-Requests/sec:    287.86
-Transfer/sec:    602.98KB
+  1498 requests in 5.01s, 3.06MB read
+Requests/sec:    298.72
+Transfer/sec:    625.74KB
 
 ---------------------------------------------------------
  Running Warmup kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/bench/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4118 requests in 15.02s, 8.42MB read
-  Socket errors: connect 0, read 0, write 0, timeout 7
-Requests/sec:    274.25
-Transfer/sec:    574.47KB
+  4236 requests in 15.12s, 8.67MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:    280.08
+Transfer/sec:    586.70KB
 
 ---------------------------------------------------------
  Concurrency: 8 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/bench/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4412 requests in 15.02s, 9.03MB read
-Requests/sec:    293.84
-Transfer/sec:    615.50KB
+  4560 requests in 15.01s, 9.33MB read
+Requests/sec:    303.84
+Transfer/sec:    636.46KB
 
 ---------------------------------------------------------
  Concurrency: 16 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/bench/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4442 requests in 15.02s, 9.09MB read
-Requests/sec:    295.67
-Transfer/sec:    619.33KB
+  4599 requests in 15.02s, 9.41MB read
+Requests/sec:    306.15
+Transfer/sec:    641.29KB
 
 ---------------------------------------------------------
  Concurrency: 32 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/bench/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4382 requests in 15.04s, 8.96MB read
-Requests/sec:    291.41
-Transfer/sec:    610.42KB
+  4617 requests in 15.01s, 9.44MB read
+Requests/sec:    307.50
+Transfer/sec:    644.11KB
 
 ---------------------------------------------------------
  Concurrency: 64 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/bench/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4364 requests in 15.03s, 8.93MB read
-  Socket errors: connect 0, read 0, write 0, timeout 2
-Requests/sec:    290.27
-Transfer/sec:    608.04KB
+  4527 requests in 15.03s, 9.26MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    301.24
+Transfer/sec:    631.01KB
 
 ---------------------------------------------------------
  Concurrency: 128 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/bench/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4301 requests in 15.04s, 8.80MB read
-Requests/sec:    285.93
-Transfer/sec:    598.95KB
+  4399 requests in 15.03s, 9.00MB read
+Requests/sec:    292.66
+Transfer/sec:    613.05KB
 
 ---------------------------------------------------------
  Concurrency: 256 for kohana-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/bench/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4167 requests in 15.05s, 8.52MB read
-  Socket errors: connect 0, read 0, write 0, timeout 9
-Requests/sec:    276.85
-Transfer/sec:    579.94KB
+  4283 requests in 15.03s, 8.76MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:    284.89
+Transfer/sec:    596.78KB

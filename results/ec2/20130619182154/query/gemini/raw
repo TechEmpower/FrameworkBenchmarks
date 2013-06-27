@@ -10,103 +10,105 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer gemini
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/query?queries=2
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/db?queries=2
+Running 5s test @ http://10.253.67.217:8080/query?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  38616 requests in 5.00s, 6.51MB read
-Requests/sec:   7723.17
-Transfer/sec:      1.30MB
+  24045 requests in 5.00s, 4.83MB read
+Requests/sec:   4809.19
+Transfer/sec:      0.97MB
 
 ---------------------------------------------------------
  Running Warmup gemini
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/query?queries=2
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=2
+Running 15s test @ http://10.253.67.217:8080/query?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    35.48ms  190.72ms   4.69s    99.34%
-    Req/Sec     1.16k     1.01k    5.00k    58.83%
-  122824 requests in 15.00s, 20.71MB read
-  Socket errors: connect 0, read 0, write 0, timeout 202
-Requests/sec:   8187.70
-Transfer/sec:      1.38MB
+    Latency    70.51ms  318.99ms   4.30s    98.21%
+    Req/Sec   539.53    776.35     5.00k    88.49%
+  83934 requests in 14.99s, 16.85MB read
+  Socket errors: connect 0, read 0, write 0, timeout 209
+Requests/sec:   5597.94
+Transfer/sec:      1.12MB
 
 ---------------------------------------------------------
  Queries: 1 for gemini
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/query?queries=1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=1
+Running 15s test @ http://10.253.67.217:8080/query?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    32.05ms   38.33ms 618.66ms   96.25%
-    Req/Sec   739.88    470.19     4.00k    71.31%
-  130519 requests in 15.00s, 22.00MB read
-Requests/sec:   8702.52
-Transfer/sec:      1.47MB
+    Latency    29.79ms   17.31ms 302.80ms   97.13%
+    Req/Sec   780.56    430.10     3.00k    76.74%
+  132886 requests in 15.00s, 22.66MB read
+Requests/sec:   8859.68
+Transfer/sec:      1.51MB
 
 ---------------------------------------------------------
  Queries: 5 for gemini
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/query?queries=5
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=5
+Running 15s test @ http://10.253.67.217:8080/query?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    33.30ms   51.61ms   1.05s    96.93%
-    Req/Sec   758.06    484.43     6.00k    71.51%
-  132181 requests in 15.00s, 22.28MB read
-Requests/sec:   8813.36
-Transfer/sec:      1.49MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  37131 requests in 15.01s, 10.87MB read
+Requests/sec:   2474.56
+Transfer/sec:    741.68KB
 
 ---------------------------------------------------------
  Queries: 10 for gemini
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/query?queries=10
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=10
+Running 15s test @ http://10.253.67.217:8080/query?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    32.98ms   43.67ms 588.80ms   96.86%
-    Req/Sec   716.07    484.18     6.00k    68.81%
-  128616 requests in 15.00s, 21.68MB read
-Requests/sec:   8577.11
-Transfer/sec:      1.45MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  21655 requests in 15.00s, 9.62MB read
+Requests/sec:   1443.40
+Transfer/sec:    656.61KB
 
 ---------------------------------------------------------
  Queries: 15 for gemini
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/query?queries=15
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=15
+Running 15s test @ http://10.253.67.217:8080/query?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    30.98ms   36.62ms 534.39ms   96.34%
-    Req/Sec   756.83    469.89     4.00k    72.22%
-  132120 requests in 15.00s, 22.27MB read
-Requests/sec:   8808.11
-Transfer/sec:      1.48MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  14814 requests in 15.01s, 8.83MB read
+Requests/sec:    986.67
+Transfer/sec:    601.97KB
 
 ---------------------------------------------------------
  Queries: 20 for gemini
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/query?queries=20
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=20
+Running 15s test @ http://10.253.67.217:8080/query?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    33.55ms   48.62ms 949.39ms   96.12%
-    Req/Sec   740.99    479.77     3.00k    70.39%
-  130202 requests in 15.00s, 21.95MB read
-Requests/sec:   8680.29
-Transfer/sec:      1.46MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  11203 requests in 15.02s, 8.37MB read
+Requests/sec:    745.89
+Transfer/sec:    570.81KB

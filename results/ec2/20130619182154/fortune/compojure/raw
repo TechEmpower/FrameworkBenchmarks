@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 18:43:52 UTC 2013
+  System information as of Wed Jun 26 15:07:47 UTC 2013
 
-  System load:  0.88               Processes:           75
-  Usage of /:   24.9% of 19.69GB   Users logged in:     1
-  Memory usage: 8%                 IP address for eth0: 10.253.41.249
+  System load:  0.81               Processes:           66
+  Usage of /:   25.7% of 19.69GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,118 +17,120 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/compojure/fortune-hiccup
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/compojure/fortune-hiccup
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/compojure/fortune-hiccup
+Running 5s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  12129 requests in 5.00s, 15.43MB read
-Requests/sec:   2425.64
-Transfer/sec:      3.09MB
+  12066 requests in 5.00s, 15.35MB read
+Requests/sec:   2412.94
+Transfer/sec:      3.07MB
 
 ---------------------------------------------------------
  Running Warmup compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/compojure/fortune-hiccup
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/compojure/fortune-hiccup
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/fortune-hiccup
+Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  42281 requests in 15.00s, 54.23MB read
-  Socket errors: connect 0, read 8, write 0, timeout 18
-Requests/sec:   2817.82
-Transfer/sec:      3.61MB
+  43033 requests in 15.00s, 55.20MB read
+  Socket errors: connect 0, read 1, write 0, timeout 6
+Requests/sec:   2868.99
+Transfer/sec:      3.68MB
 
 ---------------------------------------------------------
  Concurrency: 8 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/compojure/fortune-hiccup
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/compojure/fortune-hiccup
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/fortune-hiccup
+Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  43755 requests in 15.00s, 55.67MB read
-Requests/sec:   2916.87
-Transfer/sec:      3.71MB
+  43227 requests in 15.00s, 54.99MB read
+Requests/sec:   2881.67
+Transfer/sec:      3.67MB
 
 ---------------------------------------------------------
  Concurrency: 16 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/compojure/fortune-hiccup
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/compojure/fortune-hiccup
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/fortune-hiccup
+Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  45298 requests in 15.00s, 57.63MB read
-Requests/sec:   3019.87
-Transfer/sec:      3.84MB
+  45372 requests in 15.00s, 57.72MB read
+Requests/sec:   3024.65
+Transfer/sec:      3.85MB
 
 ---------------------------------------------------------
  Concurrency: 32 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/compojure/fortune-hiccup
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/compojure/fortune-hiccup
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/fortune-hiccup
+Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  47022 requests in 15.00s, 59.82MB read
-Requests/sec:   3134.23
-Transfer/sec:      3.99MB
+  47304 requests in 15.00s, 60.18MB read
+Requests/sec:   3153.13
+Transfer/sec:      4.01MB
 
 ---------------------------------------------------------
  Concurrency: 64 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/compojure/fortune-hiccup
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/compojure/fortune-hiccup
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/fortune-hiccup
+Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  47931 requests in 15.00s, 60.98MB read
-Requests/sec:   3195.19
-Transfer/sec:      4.06MB
+  49258 requests in 15.00s, 62.67MB read
+Requests/sec:   3283.13
+Transfer/sec:      4.18MB
 
 ---------------------------------------------------------
  Concurrency: 128 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/compojure/fortune-hiccup
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/compojure/fortune-hiccup
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/fortune-hiccup
+Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  48539 requests in 15.00s, 61.75MB read
-Requests/sec:   3235.64
-Transfer/sec:      4.12MB
+  49524 requests in 15.01s, 63.00MB read
+Requests/sec:   3300.30
+Transfer/sec:      4.20MB
 
 ---------------------------------------------------------
  Concurrency: 256 for compojure
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/compojure/fortune-hiccup
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/compojure/fortune-hiccup
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/compojure/fortune-hiccup
+Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  41895 requests in 15.00s, 53.75MB read
-  Socket errors: connect 0, read 139, write 0, timeout 201
-Requests/sec:   2793.65
-Transfer/sec:      3.58MB
+  43709 requests in 15.00s, 56.04MB read
+  Socket errors: connect 0, read 5, write 0, timeout 27
+Requests/sec:   2914.28
+Transfer/sec:      3.74MB
