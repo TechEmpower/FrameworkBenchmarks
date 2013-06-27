@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 22:51:37 UTC 2013
+  System information as of Wed Jun 26 21:00:07 UTC 2013
 
-  System load:  0.06               Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.07               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,117 +17,119 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/json
+Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1583 requests in 5.01s, 369.41KB read
-Requests/sec:    316.19
-Transfer/sec:     73.79KB
+  1654 requests in 5.01s, 385.98KB read
+Requests/sec:    329.97
+Transfer/sec:     77.00KB
 
 ---------------------------------------------------------
  Running Warmup lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5318 requests in 15.08s, 1.21MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    352.61
-Transfer/sec:     82.30KB
+  5472 requests in 15.06s, 1.25MB read
+Requests/sec:    363.39
+Transfer/sec:     84.81KB
 
 ---------------------------------------------------------
  Concurrency: 8 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5731 requests in 15.01s, 1.31MB read
-Requests/sec:    381.89
-Transfer/sec:     89.11KB
+  5897 requests in 15.01s, 1.34MB read
+Requests/sec:    392.91
+Transfer/sec:     91.69KB
 
 ---------------------------------------------------------
  Concurrency: 16 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5791 requests in 15.01s, 1.32MB read
-Requests/sec:    385.85
-Transfer/sec:     90.04KB
+  5900 requests in 15.01s, 1.34MB read
+Requests/sec:    393.02
+Transfer/sec:     91.71KB
 
 ---------------------------------------------------------
  Concurrency: 32 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5642 requests in 15.01s, 1.29MB read
-Requests/sec:    375.85
-Transfer/sec:     87.71KB
+  5775 requests in 15.02s, 1.32MB read
+Requests/sec:    384.59
+Transfer/sec:     89.75KB
 
 ---------------------------------------------------------
  Concurrency: 64 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5374 requests in 15.01s, 1.22MB read
-Requests/sec:    358.02
-Transfer/sec:     83.56KB
+  5723 requests in 15.03s, 1.30MB read
+Requests/sec:    380.82
+Transfer/sec:     88.88KB
 
 ---------------------------------------------------------
  Concurrency: 128 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5390 requests in 15.02s, 1.23MB read
-Requests/sec:    358.90
-Transfer/sec:     83.77KB
+  5603 requests in 15.01s, 1.28MB read
+Requests/sec:    373.32
+Transfer/sec:     87.13KB
 
 ---------------------------------------------------------
  Concurrency: 256 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5307 requests in 15.03s, 1.21MB read
-Requests/sec:    353.03
-Transfer/sec:     82.40KB
+  5431 requests in 15.04s, 1.24MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    361.00
+Transfer/sec:     84.26KB

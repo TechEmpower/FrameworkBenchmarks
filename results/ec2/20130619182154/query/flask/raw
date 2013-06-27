@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 21:08:51 UTC 2013
+  System information as of Wed Jun 26 18:17:16 UTC 2013
 
-  System load:  0.05               Processes:           75
-  Usage of /:   25.0% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.03               Processes:           66
+  Usage of /:   25.7% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,106 +17,108 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer flask
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/db?queries=2
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/db?queries=2
+Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  2202 requests in 5.00s, 629.04KB read
-Requests/sec:    439.98
-Transfer/sec:    125.69KB
+  2468 requests in 5.01s, 705.11KB read
+Requests/sec:    493.03
+Transfer/sec:    140.86KB
 
 ---------------------------------------------------------
  Running Warmup flask
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=2
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=2
+Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  6396 requests in 15.02s, 1.78MB read
-Requests/sec:    425.79
-Transfer/sec:    121.65KB
+  6481 requests in 15.09s, 1.81MB read
+Requests/sec:    429.41
+Transfer/sec:    122.68KB
 
 ---------------------------------------------------------
  Queries: 1 for flask
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=1
+Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  9334 requests in 15.21s, 2.08MB read
-Requests/sec:    613.71
-Transfer/sec:    140.10KB
+  9369 requests in 15.04s, 2.09MB read
+Requests/sec:    622.99
+Transfer/sec:    142.23KB
 
 ---------------------------------------------------------
  Queries: 5 for flask
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=5
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=5
+Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3405 requests in 15.06s, 1.52MB read
-  Socket errors: connect 0, read 20, write 0, timeout 11
-Requests/sec:    226.03
-Transfer/sec:    103.05KB
+  3455 requests in 15.07s, 1.54MB read
+  Socket errors: connect 0, read 15, write 0, timeout 8
+Requests/sec:    229.33
+Transfer/sec:    104.51KB
 
 ---------------------------------------------------------
  Queries: 10 for flask
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=10
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=10
+Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1899 requests in 15.21s, 1.42MB read
-  Socket errors: connect 0, read 297, write 0, timeout 152
-Requests/sec:    124.88
-Transfer/sec:     95.34KB
+  1951 requests in 15.18s, 1.42MB read
+  Socket errors: connect 0, read 120, write 0, timeout 70
+Requests/sec:    128.56
+Transfer/sec:     96.10KB
 
 ---------------------------------------------------------
  Queries: 15 for flask
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=15
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=15
+Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1337 requests in 15.25s, 1.46MB read
-  Socket errors: connect 0, read 787, write 0, timeout 563
-Requests/sec:     87.64
-Transfer/sec:     98.04KB
+  1339 requests in 15.19s, 1.47MB read
+  Socket errors: connect 0, read 827, write 0, timeout 566
+Requests/sec:     88.17
+Transfer/sec:     99.06KB
 
 ---------------------------------------------------------
  Queries: 20 for flask
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=20
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=20
+Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1014 requests in 15.30s, 1.41MB read
-  Socket errors: connect 0, read 714, write 0, timeout 491
-Requests/sec:     66.29
-Transfer/sec:     94.20KB
+  1023 requests in 15.52s, 1.43MB read
+  Socket errors: connect 0, read 770, write 0, timeout 591
+Requests/sec:     65.91
+Transfer/sec:     94.22KB

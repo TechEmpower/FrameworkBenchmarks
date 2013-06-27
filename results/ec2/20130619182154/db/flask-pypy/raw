@@ -10,120 +10,119 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-42 packages can be updated.
+47 packages can be updated.
 21 updates are security updates.
 
-*** System restart required ***
 
 ---------------------------------------------------------
  Running Primer flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/dbs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/dbs
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/dbs
+Running 5s test @ http://10.253.67.217:8080/dbs
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1593 requests in 5.02s, 278.13KB read
-Requests/sec:    317.29
-Transfer/sec:     55.40KB
+  1446 requests in 5.02s, 252.43KB read
+Requests/sec:    287.93
+Transfer/sec:     50.26KB
 
 ---------------------------------------------------------
  Running Warmup flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/dbs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/dbs
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbs
+Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4433 requests in 15.24s, 773.92KB read
-  Socket errors: connect 0, read 0, write 0, timeout 87
-Requests/sec:    290.96
-Transfer/sec:     50.80KB
+  4758 requests in 15.07s, 830.72KB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:    315.79
+Transfer/sec:     55.13KB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/dbs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/dbs
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbs
+Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  9585 requests in 15.01s, 1.63MB read
-Requests/sec:    638.73
-Transfer/sec:    111.52KB
+  10595 requests in 15.07s, 1.81MB read
+Requests/sec:    703.04
+Transfer/sec:    122.74KB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/dbs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/dbs
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbs
+Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  8610 requests in 15.01s, 1.47MB read
-Requests/sec:    573.51
-Transfer/sec:    100.13KB
+  9208 requests in 15.01s, 1.57MB read
+Requests/sec:    613.47
+Transfer/sec:    107.10KB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/dbs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/dbs
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbs
+Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  8757 requests in 15.02s, 1.49MB read
-Requests/sec:    582.93
-Transfer/sec:    101.77KB
+  9450 requests in 15.01s, 1.61MB read
+Requests/sec:    629.43
+Transfer/sec:    109.90KB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/dbs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/dbs
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbs
+Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  12183 requests in 15.03s, 2.08MB read
-Requests/sec:    810.61
-Transfer/sec:    141.53KB
+  14209 requests in 15.01s, 2.42MB read
+Requests/sec:    946.54
+Transfer/sec:    165.26KB
 
 ---------------------------------------------------------
  Concurrency: 128 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/dbs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/dbs
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbs
+Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  13258 requests in 15.04s, 2.26MB read
-Requests/sec:    881.80
-Transfer/sec:    153.95KB
+  20435 requests in 15.02s, 3.48MB read
+Requests/sec:   1360.88
+Transfer/sec:    237.60KB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/dbs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/dbs
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbs
+Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  16084 requests in 15.01s, 2.74MB read
-Requests/sec:   1071.66
-Transfer/sec:    187.10KB
+  17970 requests in 15.02s, 3.06MB read
+Requests/sec:   1196.68
+Transfer/sec:    208.93KB

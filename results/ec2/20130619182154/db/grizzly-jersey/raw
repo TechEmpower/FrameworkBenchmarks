@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 21:36:08 UTC 2013
+  System information as of Wed Jun 26 18:58:48 UTC 2013
 
-  System load:  0.08               Processes:           75
-  Usage of /:   25.0% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.13               Processes:           66
+  Usage of /:   25.7% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,124 +17,118 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/db
+Running 5s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.50ms    6.88ms  61.77ms   98.58%
-    Req/Sec     0.93k   360.51     2.00k    86.47%
-  56072 requests in 5.00s, 5.57MB read
-  Non-2xx or 3xx responses: 56072
-Requests/sec:  11216.98
-Transfer/sec:      1.11MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  5340 requests in 5.01s, 0.88MB read
+Requests/sec:   1066.11
+Transfer/sec:    178.90KB
 
 ---------------------------------------------------------
  Running Warmup grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    24.41ms   38.63ms 223.48ms   96.19%
-    Req/Sec     1.54k   642.48     6.00k    92.33%
-  222173 requests in 15.00s, 22.05MB read
-  Non-2xx or 3xx responses: 222173
-Requests/sec:  14812.92
-Transfer/sec:      1.47MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  24039 requests in 15.03s, 3.94MB read
+Requests/sec:   1599.21
+Transfer/sec:    268.29KB
 
 ---------------------------------------------------------
  Concurrency: 8 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.56ms   21.97ms 171.18ms   98.26%
-    Req/Sec     1.07k   389.74     2.00k    84.26%
-  180999 requests in 15.00s, 17.96MB read
-  Non-2xx or 3xx responses: 180999
-Requests/sec:  12067.64
-Transfer/sec:      1.20MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  31733 requests in 15.00s, 5.20MB read
+Requests/sec:   2115.32
+Transfer/sec:    355.00KB
 
 ---------------------------------------------------------
  Concurrency: 16 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.64ms    4.70ms  46.78ms   98.23%
-    Req/Sec     1.38k   554.58     4.00k    55.01%
-  209002 requests in 15.00s, 20.74MB read
-  Non-2xx or 3xx responses: 209002
-Requests/sec:  13934.54
-Transfer/sec:      1.38MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  32639 requests in 15.00s, 5.35MB read
+Requests/sec:   2175.64
+Transfer/sec:    365.11KB
 
 ---------------------------------------------------------
  Concurrency: 32 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.78ms   29.25ms 203.00ms   97.72%
-    Req/Sec     1.35k   564.58     3.00k    56.25%
-  206667 requests in 15.00s, 20.51MB read
-  Non-2xx or 3xx responses: 206667
-Requests/sec:  13778.83
-Transfer/sec:      1.37MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  31271 requests in 15.00s, 5.12MB read
+Requests/sec:   2084.16
+Transfer/sec:    349.75KB
 
 ---------------------------------------------------------
  Concurrency: 64 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.54ms   25.00ms 221.16ms   98.56%
-    Req/Sec     1.40k   541.46     3.00k    55.32%
-  212700 requests in 15.00s, 21.11MB read
-  Non-2xx or 3xx responses: 212700
-Requests/sec:  14181.97
-Transfer/sec:      1.41MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  30540 requests in 15.01s, 5.00MB read
+Requests/sec:   2034.94
+Transfer/sec:    341.45KB
 
 ---------------------------------------------------------
  Concurrency: 128 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.50ms    3.22ms  40.32ms   76.30%
-    Req/Sec     1.57k   541.25     4.00k    55.41%
-  229979 requests in 15.00s, 22.82MB read
-  Non-2xx or 3xx responses: 229979
-Requests/sec:  15333.72
-Transfer/sec:      1.52MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  27740 requests in 15.03s, 4.54MB read
+Requests/sec:   1845.38
+Transfer/sec:    309.58KB
 
 ---------------------------------------------------------
  Concurrency: 256 for grizzly-jersey
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    18.05ms   17.00ms 170.43ms   98.54%
-    Req/Sec     1.65k   647.69     4.00k    90.88%
-  236253 requests in 15.00s, 23.45MB read
-  Non-2xx or 3xx responses: 236253
-Requests/sec:  15747.33
-Transfer/sec:      1.56MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  28155 requests in 15.20s, 4.61MB read
+Requests/sec:   1852.70
+Transfer/sec:    310.80KB

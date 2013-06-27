@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 22:47:59 UTC 2013
+  System information as of Wed Jun 26 20:52:09 UTC 2013
 
-  System load:  0.18               Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.11               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,118 +17,120 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer codeigniter
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/index.php/bench/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/index.php/bench/json
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/index.php/bench/json
+Running 5s test @ http://10.253.67.217:8080/index.php/bench/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3032 requests in 5.00s, 663.13KB read
-Requests/sec:    606.01
-Transfer/sec:    132.54KB
+  3149 requests in 5.00s, 688.72KB read
+Requests/sec:    629.44
+Transfer/sec:    137.66KB
 
 ---------------------------------------------------------
  Running Warmup codeigniter
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/json
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7748 requests in 15.02s, 1.66MB read
+  7971 requests in 15.01s, 1.70MB read
   Socket errors: connect 0, read 0, write 0, timeout 5
-Requests/sec:    515.93
-Transfer/sec:    112.86KB
+Requests/sec:    531.06
+Transfer/sec:    116.17KB
 
 ---------------------------------------------------------
  Concurrency: 8 for codeigniter
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/index.php/bench/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/index.php/bench/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/json
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  9256 requests in 15.00s, 1.98MB read
-Requests/sec:    616.95
-Transfer/sec:    134.93KB
+  8944 requests in 15.01s, 1.91MB read
+Requests/sec:    595.96
+Transfer/sec:    130.34KB
 
 ---------------------------------------------------------
  Concurrency: 16 for codeigniter
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/index.php/bench/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/index.php/bench/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/json
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  9448 requests in 15.01s, 2.02MB read
-Requests/sec:    629.65
-Transfer/sec:    137.71KB
+  9415 requests in 15.01s, 2.01MB read
+Requests/sec:    627.20
+Transfer/sec:    137.17KB
 
 ---------------------------------------------------------
  Concurrency: 32 for codeigniter
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/index.php/bench/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/index.php/bench/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/json
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  8865 requests in 15.02s, 1.89MB read
-Requests/sec:    590.16
-Transfer/sec:    129.08KB
+  9307 requests in 15.01s, 1.99MB read
+Requests/sec:    620.16
+Transfer/sec:    135.63KB
 
 ---------------------------------------------------------
  Concurrency: 64 for codeigniter
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/index.php/bench/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/index.php/bench/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/json
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  8526 requests in 15.05s, 1.82MB read
-Requests/sec:    566.38
-Transfer/sec:    123.87KB
+  8846 requests in 15.02s, 1.89MB read
+Requests/sec:    589.07
+Transfer/sec:    128.84KB
 
 ---------------------------------------------------------
  Concurrency: 128 for codeigniter
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/index.php/bench/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/index.php/bench/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/json
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  8301 requests in 15.01s, 1.77MB read
-Requests/sec:    553.06
-Transfer/sec:    120.98KB
+  8569 requests in 15.02s, 1.83MB read
+Requests/sec:    570.59
+Transfer/sec:    124.82KB
 
 ---------------------------------------------------------
  Concurrency: 256 for codeigniter
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/json
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  8141 requests in 15.04s, 1.74MB read
-  Socket errors: connect 0, read 0, write 0, timeout 318
-Requests/sec:    541.44
-Transfer/sec:    118.44KB
+  8348 requests in 15.02s, 1.78MB read
+  Socket errors: connect 0, read 0, write 0, timeout 363
+Requests/sec:    555.84
+Transfer/sec:    121.59KB

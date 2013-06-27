@@ -1,0 +1,115 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:9000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:9000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  11584 requests in 5.00s, 2.12MB read
+Requests/sec:   2316.39
+Transfer/sec:    433.32KB
+
+---------------------------------------------------------
+ Running Warmup dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   102.43ms   98.39ms 552.39ms   94.93%
+    Req/Sec    34.75    183.20     1.00k    96.53%
+  44222 requests in 15.01s, 8.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:   2946.84
+Transfer/sec:    551.25KB
+
+---------------------------------------------------------
+ Queries: 1 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    80.95ms   73.14ms 511.37ms   94.80%
+    Req/Sec    52.39    224.41     2.00k    94.80%
+  54582 requests in 15.01s, 8.32MB read
+  Socket errors: connect 0, read 0, write 0, timeout 69
+Requests/sec:   3636.46
+Transfer/sec:    567.37KB
+
+---------------------------------------------------------
+ Queries: 5 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  27067 requests in 15.01s, 7.41MB read
+Requests/sec:   1803.82
+Transfer/sec:    505.36KB
+
+---------------------------------------------------------
+ Queries: 10 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  16867 requests in 15.02s, 7.19MB read
+Requests/sec:   1123.33
+Transfer/sec:    490.13KB
+
+---------------------------------------------------------
+ Queries: 15 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  11864 requests in 15.01s, 6.85MB read
+Requests/sec:    790.27
+Transfer/sec:    467.48KB
+
+---------------------------------------------------------
+ Queries: 20 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  9181 requests in 15.02s, 6.69MB read
+Requests/sec:    611.37
+Transfer/sec:    456.48KB

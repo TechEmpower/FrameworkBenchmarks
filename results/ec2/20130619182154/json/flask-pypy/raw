@@ -10,119 +10,118 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-42 packages can be updated.
+47 packages can be updated.
 21 updates are security updates.
 
-*** System restart required ***
 
 ---------------------------------------------------------
  Running Primer flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/json
+Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  9833 requests in 5.00s, 1.24MB read
-Requests/sec:   1966.65
-Transfer/sec:    253.51KB
+  7188 requests in 5.00s, 0.90MB read
+Requests/sec:   1437.18
+Transfer/sec:    185.26KB
 
 ---------------------------------------------------------
  Running Warmup flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  28559 requests in 15.06s, 3.60MB read
-Requests/sec:   1896.70
-Transfer/sec:    244.50KB
+  28740 requests in 15.03s, 3.62MB read
+Requests/sec:   1912.15
+Transfer/sec:    246.49KB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  64067 requests in 15.00s, 8.07MB read
-Requests/sec:   4271.14
-Transfer/sec:    550.58KB
+  67216 requests in 15.00s, 8.46MB read
+Requests/sec:   4481.05
+Transfer/sec:    577.64KB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.80ms    3.80ms  76.96ms   90.55%
-    Req/Sec     0.93k   255.83     1.00k    92.96%
-  64931 requests in 15.00s, 8.17MB read
-Requests/sec:   4328.34
-Transfer/sec:    557.95KB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  68179 requests in 15.00s, 8.58MB read
+Requests/sec:   4544.78
+Transfer/sec:    585.85KB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  68794 requests in 15.00s, 8.66MB read
-Requests/sec:   4586.18
-Transfer/sec:    591.19KB
+    Latency     2.89ms    4.44ms  44.95ms   85.42%
+    Req/Sec     1.18k   568.90     3.00k    64.89%
+  65956 requests in 15.00s, 8.30MB read
+Requests/sec:   4396.27
+Transfer/sec:    566.71KB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  68058 requests in 15.00s, 8.57MB read
-Requests/sec:   4536.81
-Transfer/sec:    584.82KB
+    Latency     7.49ms   16.22ms 246.95ms   91.56%
+    Req/Sec     0.87k   458.90     2.00k    77.25%
+  67933 requests in 15.00s, 8.55MB read
+Requests/sec:   4527.83
+Transfer/sec:    583.67KB
 
 ---------------------------------------------------------
  Concurrency: 128 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  62423 requests in 15.01s, 7.86MB read
-Requests/sec:   4159.84
-Transfer/sec:    536.23KB
+    Latency    34.44ms   61.75ms 240.70ms   91.97%
+    Req/Sec   638.06    627.02     2.00k    47.61%
+  66614 requests in 15.00s, 8.39MB read
+Requests/sec:   4440.80
+Transfer/sec:    572.45KB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  63316 requests in 15.01s, 7.97MB read
-Requests/sec:   4218.88
-Transfer/sec:    543.84KB
+  66163 requests in 15.01s, 8.33MB read
+Requests/sec:   4408.31
+Transfer/sec:    568.26KB

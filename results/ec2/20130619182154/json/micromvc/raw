@@ -2,14 +2,7 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 00:05:22 UTC 2013
-
-  System load:  0.8                Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
-  Swap usage:   0%
-
-  Graph this data and manage this system at https://landscape.canonical.com/
+ System information disabled due to load higher than 2.0
 
   Get cloud support with Ubuntu Advantage Cloud Guest:
     http://www.ubuntu.com/business/services/cloud
@@ -17,116 +10,118 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer micromvc
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/json
+Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7742 requests in 5.00s, 1.65MB read
-Requests/sec:   1547.96
-Transfer/sec:    337.03KB
+  7943 requests in 5.00s, 1.69MB read
+Requests/sec:   1588.04
+Transfer/sec:    345.76KB
 
 ---------------------------------------------------------
  Running Warmup micromvc
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  24403 requests in 15.00s, 5.19MB read
-Requests/sec:   1626.51
-Transfer/sec:    354.19KB
+  24536 requests in 15.01s, 5.22MB read
+Requests/sec:   1634.90
+Transfer/sec:    356.01KB
 
 ---------------------------------------------------------
  Concurrency: 8 for micromvc
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  25064 requests in 15.00s, 5.33MB read
-Requests/sec:   1670.77
-Transfer/sec:    363.77KB
+  26021 requests in 15.00s, 5.53MB read
+Requests/sec:   1734.56
+Transfer/sec:    377.66KB
 
 ---------------------------------------------------------
  Concurrency: 16 for micromvc
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  25862 requests in 15.11s, 5.50MB read
-Requests/sec:   1711.80
-Transfer/sec:    372.70KB
+  25948 requests in 15.00s, 5.52MB read
+Requests/sec:   1729.59
+Transfer/sec:    376.58KB
 
 ---------------------------------------------------------
  Concurrency: 32 for micromvc
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  25579 requests in 15.00s, 5.44MB read
-Requests/sec:   1705.00
-Transfer/sec:    371.23KB
+  25362 requests in 15.00s, 5.39MB read
+Requests/sec:   1690.50
+Transfer/sec:    368.07KB
 
 ---------------------------------------------------------
  Concurrency: 64 for micromvc
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  24792 requests in 15.00s, 5.27MB read
-Requests/sec:   1652.82
-Transfer/sec:    359.87KB
+  25183 requests in 15.00s, 5.35MB read
+Requests/sec:   1678.89
+Transfer/sec:    365.55KB
 
 ---------------------------------------------------------
  Concurrency: 128 for micromvc
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  24228 requests in 15.00s, 5.15MB read
-Requests/sec:   1615.19
-Transfer/sec:    351.69KB
+  23663 requests in 15.01s, 5.03MB read
+Requests/sec:   1576.62
+Transfer/sec:    343.29KB
 
 ---------------------------------------------------------
  Concurrency: 256 for micromvc
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/json
+Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  24193 requests in 15.01s, 5.14MB read
-Requests/sec:   1612.32
-Transfer/sec:    351.10KB
+  24579 requests in 15.01s, 5.23MB read
+Requests/sec:   1637.60
+Transfer/sec:    356.61KB

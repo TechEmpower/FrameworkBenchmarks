@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 00:05:53 UTC 2013
+
+  System load:  0.0                Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/fortunes-php
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/fortunes-php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  229 requests in 5.08s, 504.52KB read
+Requests/sec:     45.11
+Transfer/sec:     99.39KB
+
+---------------------------------------------------------
+ Running Warmup symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes-php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1283 requests in 15.23s, 2.76MB read
+  Socket errors: connect 0, read 0, write 0, timeout 456
+Requests/sec:     84.25
+Transfer/sec:    185.61KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes-php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1542 requests in 15.05s, 3.32MB read
+Requests/sec:    102.49
+Transfer/sec:    225.79KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes-php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1532 requests in 15.08s, 3.30MB read
+Requests/sec:    101.57
+Transfer/sec:    223.78KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes-php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1495 requests in 15.09s, 3.22MB read
+Requests/sec:     99.09
+Transfer/sec:    218.31KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes-php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1500 requests in 15.20s, 3.23MB read
+Requests/sec:     98.67
+Transfer/sec:    217.39KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes-php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1454 requests in 15.17s, 3.13MB read
+  Socket errors: connect 0, read 0, write 0, timeout 19
+Requests/sec:     95.84
+Transfer/sec:    211.15KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes-php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1345 requests in 15.40s, 2.89MB read
+  Socket errors: connect 0, read 0, write 0, timeout 390
+Requests/sec:     87.33
+Transfer/sec:    192.39KB

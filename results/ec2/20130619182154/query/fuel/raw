@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 23:52:01 UTC 2013
+  System information as of Wed Jun 26 22:04:03 UTC 2013
 
-  System load:  0.17               Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.16               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 4%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,108 +17,110 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/db?queries=2
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/db?queries=2
+Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1109 requests in 5.02s, 292.98KB read
-Requests/sec:    220.90
-Transfer/sec:     58.36KB
+  1107 requests in 5.02s, 292.45KB read
+Requests/sec:    220.57
+Transfer/sec:     58.27KB
 
 ---------------------------------------------------------
  Running Warmup fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=2
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=2
+Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3007 requests in 15.13s, 794.46KB read
-  Socket errors: connect 0, read 0, write 0, timeout 19
-Requests/sec:    198.80
-Transfer/sec:     52.52KB
+  3061 requests in 15.13s, 808.84KB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:    202.35
+Transfer/sec:     53.47KB
 
 ---------------------------------------------------------
  Queries: 1 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=1
+Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3241 requests in 15.02s, 743.06KB read
-  Socket errors: connect 0, read 0, write 0, timeout 7
-Requests/sec:    215.82
-Transfer/sec:     49.48KB
+  3271 requests in 15.13s, 750.01KB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    216.13
+Transfer/sec:     49.56KB
 
 ---------------------------------------------------------
  Queries: 5 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=5
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=5
+Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  2533 requests in 15.10s, 0.91MB read
-  Socket errors: connect 0, read 0, write 0, timeout 42
-Requests/sec:    167.76
-Transfer/sec:     61.90KB
+  2500 requests in 15.08s, 0.90MB read
+  Socket errors: connect 0, read 0, write 0, timeout 25
+Requests/sec:    165.79
+Transfer/sec:     61.19KB
 
 ---------------------------------------------------------
  Queries: 10 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=10
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=10
+Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1973 requests in 15.07s, 1.05MB read
-  Socket errors: connect 0, read 0, write 0, timeout 82
-Requests/sec:    130.94
-Transfer/sec:     71.31KB
+  1988 requests in 15.11s, 1.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 101
+Requests/sec:    131.59
+Transfer/sec:     71.68KB
 
 ---------------------------------------------------------
  Queries: 15 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=15
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=15
+Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1613 requests in 15.08s, 1.13MB read
-  Socket errors: connect 0, read 0, write 0, timeout 187
-Requests/sec:    106.97
-Transfer/sec:     76.94KB
+  1614 requests in 15.20s, 1.13MB read
+  Socket errors: connect 0, read 0, write 0, timeout 190
+Requests/sec:    106.21
+Transfer/sec:     76.41KB
 
 ---------------------------------------------------------
  Queries: 20 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=20
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=20
+Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1407 requests in 15.89s, 1.23MB read
-  Socket errors: connect 0, read 0, write 0, timeout 339
-Requests/sec:     88.55
-Transfer/sec:     79.16KB
+  1384 requests in 15.12s, 1.21MB read
+  Socket errors: connect 0, read 0, write 0, timeout 395
+Requests/sec:     91.52
+Transfer/sec:     81.83KB

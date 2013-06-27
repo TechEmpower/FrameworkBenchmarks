@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 23:42:36 UTC 2013
+  System information as of Wed Jun 26 21:54:39 UTC 2013
 
-  System load:  1.01               Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.52               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,103 +17,105 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer play1
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/db?queries=2
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/db?queries=2
+Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5154 requests in 5.00s, 2.09MB read
-Requests/sec:   1029.90
-Transfer/sec:    427.00KB
+  4940 requests in 5.01s, 2.00MB read
+Requests/sec:    987.00
+Transfer/sec:    409.22KB
 
 ---------------------------------------------------------
  Running Warmup play1
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=2
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=2
+Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  16029 requests in 15.09s, 6.49MB read
-Requests/sec:   1062.40
-Transfer/sec:    440.47KB
+  16144 requests in 15.04s, 6.54MB read
+Requests/sec:   1073.56
+Transfer/sec:    445.12KB
 
 ---------------------------------------------------------
  Queries: 1 for play1
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=1
+Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  19648 requests in 15.04s, 7.36MB read
-Requests/sec:   1306.04
-Transfer/sec:    500.95KB
+  19420 requests in 15.06s, 7.27MB read
+Requests/sec:   1289.45
+Transfer/sec:    494.59KB
 
 ---------------------------------------------------------
  Queries: 5 for play1
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=5
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=5
+Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  10849 requests in 15.10s, 5.39MB read
-  Socket errors: connect 0, read 0, write 0, timeout 16
-Requests/sec:    718.37
-Transfer/sec:    365.42KB
+  10904 requests in 15.10s, 5.42MB read
+Requests/sec:    722.02
+Transfer/sec:    367.29KB
 
 ---------------------------------------------------------
  Queries: 10 for play1
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=10
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=10
+Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7059 requests in 15.11s, 4.58MB read
-Requests/sec:    467.15
-Transfer/sec:    310.09KB
+  6916 requests in 15.30s, 4.48MB read
+Requests/sec:    452.14
+Transfer/sec:    300.17KB
 
 ---------------------------------------------------------
  Queries: 15 for play1
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=15
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=15
+Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5177 requests in 15.06s, 4.14MB read
-Requests/sec:    343.66
-Transfer/sec:    281.44KB
+  5028 requests in 15.26s, 4.02MB read
+Requests/sec:    329.40
+Transfer/sec:    269.80KB
 
 ---------------------------------------------------------
  Queries: 20 for play1
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=20
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db?queries=20
+Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4137 requests in 15.34s, 3.94MB read
-Requests/sec:    269.67
-Transfer/sec:    262.67KB
+  4166 requests in 15.25s, 3.96MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    273.11
+Transfer/sec:    266.09KB

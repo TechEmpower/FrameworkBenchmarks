@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 23:02:00 UTC 2013
+  System information as of Wed Jun 26 21:08:28 UTC 2013
 
-  System load:  0.09               Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.04               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,118 +17,120 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer scalatra-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/scalatra/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/scalatra/db
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/scalatra/db
+Running 5s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  2876 requests in 5.01s, 625.70KB read
-Requests/sec:    574.32
-Transfer/sec:    124.95KB
+  2783 requests in 5.01s, 605.47KB read
+Requests/sec:    555.92
+Transfer/sec:    120.95KB
 
 ---------------------------------------------------------
  Running Warmup scalatra-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/scalatra/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/scalatra/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/scalatra/db
+Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  20291 requests in 15.01s, 4.58MB read
-  Socket errors: connect 0, read 337, write 0, timeout 319
-Requests/sec:   1352.23
-Transfer/sec:    312.22KB
+  21423 requests in 15.00s, 4.84MB read
+  Socket errors: connect 0, read 207, write 0, timeout 245
+Requests/sec:   1427.94
+Transfer/sec:    330.08KB
 
 ---------------------------------------------------------
  Concurrency: 8 for scalatra-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/scalatra/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/scalatra/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/scalatra/db
+Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  64351 requests in 15.00s, 13.67MB read
-Requests/sec:   4290.03
-Transfer/sec:      0.91MB
+  66309 requests in 15.00s, 14.09MB read
+Requests/sec:   4420.72
+Transfer/sec:      0.94MB
 
 ---------------------------------------------------------
  Concurrency: 16 for scalatra-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/scalatra/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/scalatra/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/scalatra/db
+Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  70673 requests in 15.00s, 15.01MB read
-Requests/sec:   4711.70
-Transfer/sec:      1.00MB
+  79905 requests in 15.00s, 16.98MB read
+Requests/sec:   5326.83
+Transfer/sec:      1.13MB
 
 ---------------------------------------------------------
  Concurrency: 32 for scalatra-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/scalatra/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/scalatra/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/scalatra/db
+Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  79308 requests in 14.99s, 16.85MB read
-Requests/sec:   5289.13
-Transfer/sec:      1.12MB
+  82222 requests in 15.00s, 17.47MB read
+Requests/sec:   5481.70
+Transfer/sec:      1.16MB
 
 ---------------------------------------------------------
  Concurrency: 64 for scalatra-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/scalatra/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/scalatra/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/scalatra/db
+Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  79494 requests in 15.01s, 16.89MB read
-Requests/sec:   5297.59
-Transfer/sec:      1.13MB
+  84449 requests in 15.00s, 17.94MB read
+Requests/sec:   5630.23
+Transfer/sec:      1.20MB
 
 ---------------------------------------------------------
  Concurrency: 128 for scalatra-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/scalatra/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/scalatra/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/scalatra/db
+Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  82162 requests in 15.00s, 17.46MB read
-Requests/sec:   5477.51
-Transfer/sec:      1.16MB
+  85848 requests in 15.00s, 18.24MB read
+Requests/sec:   5723.68
+Transfer/sec:      1.22MB
 
 ---------------------------------------------------------
  Concurrency: 256 for scalatra-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/scalatra/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/scalatra/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/scalatra/db
+Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    38.18ms   44.06ms 272.64ms   91.59%
-    Req/Sec    68.15    252.09     1.00k    93.18%
-  67181 requests in 15.00s, 14.81MB read
-  Socket errors: connect 0, read 735, write 0, timeout 537
-Requests/sec:   4478.81
-Transfer/sec:      0.99MB
+    Latency    51.66ms   50.77ms 408.67ms   95.35%
+    Req/Sec   111.81    315.24     1.00k    88.82%
+  72381 requests in 15.00s, 15.81MB read
+  Socket errors: connect 0, read 133, write 0, timeout 145
+Requests/sec:   4825.88
+Transfer/sec:      1.05MB
