@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 23:34:32 UTC 2013
+  System information as of Wed Jun 26 21:41:00 UTC 2013
 
-  System load:  0.3                Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.65               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 4%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,116 +17,118 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/index.php/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/index.php/bench/fortunes
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/index.php/bench/fortunes
+Running 5s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  2571 requests in 5.00s, 5.25MB read
-Requests/sec:    513.76
-Transfer/sec:      1.05MB
+  2555 requests in 5.01s, 5.22MB read
+Requests/sec:    510.20
+Transfer/sec:      1.04MB
 
 ---------------------------------------------------------
  Running Warmup codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  6875 requests in 15.05s, 14.05MB read
-Requests/sec:    456.91
-Transfer/sec:      0.93MB
+  6893 requests in 15.03s, 14.09MB read
+Requests/sec:    458.69
+Transfer/sec:      0.94MB
 
 ---------------------------------------------------------
  Concurrency: 8 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/index.php/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/index.php/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7668 requests in 15.01s, 15.67MB read
-Requests/sec:    510.96
-Transfer/sec:      1.04MB
+  7772 requests in 15.01s, 15.88MB read
+Requests/sec:    517.92
+Transfer/sec:      1.06MB
 
 ---------------------------------------------------------
  Concurrency: 16 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/index.php/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/index.php/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7545 requests in 15.01s, 15.42MB read
-Requests/sec:    502.56
-Transfer/sec:      1.03MB
+  7807 requests in 15.01s, 15.96MB read
+Requests/sec:    520.14
+Transfer/sec:      1.06MB
 
 ---------------------------------------------------------
  Concurrency: 32 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/index.php/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/index.php/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7336 requests in 15.01s, 14.99MB read
-Requests/sec:    488.64
-Transfer/sec:      1.00MB
+  7463 requests in 15.01s, 15.25MB read
+Requests/sec:    497.24
+Transfer/sec:      1.02MB
 
 ---------------------------------------------------------
  Concurrency: 64 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/index.php/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/index.php/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7080 requests in 15.01s, 14.47MB read
-Requests/sec:    471.54
-Transfer/sec:      0.96MB
+  7269 requests in 15.03s, 14.86MB read
+Requests/sec:    483.66
+Transfer/sec:      0.99MB
 
 ---------------------------------------------------------
  Concurrency: 128 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/index.php/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/index.php/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7028 requests in 15.05s, 14.36MB read
-Requests/sec:    466.89
+  7015 requests in 15.04s, 14.34MB read
+Requests/sec:    466.44
 Transfer/sec:      0.95MB
 
 ---------------------------------------------------------
  Concurrency: 256 for codeigniter-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/index.php/bench/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/index.php/bench/fortunes
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/index.php/bench/fortunes
+Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  6879 requests in 15.05s, 14.06MB read
-Requests/sec:    456.99
-Transfer/sec:      0.93MB
+  6891 requests in 15.01s, 14.08MB read
+Requests/sec:    459.01
+Transfer/sec:      0.94MB

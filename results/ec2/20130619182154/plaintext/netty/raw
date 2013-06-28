@@ -10,89 +10,91 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer netty
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/plaintext
+Running 5s test @ http://10.253.67.217:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   357.09us  167.55us   5.36ms   98.73%
-    Req/Sec     2.44k   523.44     3.00k    54.06%
-  109570 requests in 5.00s, 17.45MB read
-Requests/sec:  21918.72
-Transfer/sec:      3.49MB
+    Latency   350.00us  100.85us   5.12ms   97.77%
+    Req/Sec     2.47k   510.39     3.00k    51.56%
+  110922 requests in 5.00s, 17.67MB read
+Requests/sec:  22188.23
+Transfer/sec:      3.53MB
 
 ---------------------------------------------------------
  Running Warmup netty
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/plaintext
+Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.01ms    5.79ms  47.61ms   82.68%
-    Req/Sec     5.21k     1.02k   20.00k    76.52%
-  639586 requests in 15.00s, 101.86MB read
-Requests/sec:  42640.22
-Transfer/sec:      6.79MB
+    Latency     6.05ms    5.86ms  48.11ms   84.77%
+    Req/Sec     5.22k     1.16k   10.00k    66.32%
+  640529 requests in 15.00s, 102.01MB read
+Requests/sec:  42703.80
+Transfer/sec:      6.80MB
 
 ---------------------------------------------------------
  Concurrency: 256 for netty
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/plaintext
+Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   134.71ms  189.66ms 542.53ms   78.80%
-    Req/Sec    13.57k     3.51k   34.00k    72.29%
-  1580192 requests in 15.00s, 251.67MB read
-Requests/sec: 105345.47
-Transfer/sec:     16.78MB
+    Latency   109.85ms  165.52ms 518.21ms   82.29%
+    Req/Sec    14.59k     3.58k   37.00k    71.51%
+  1694048 requests in 14.99s, 269.80MB read
+Requests/sec: 112990.14
+Transfer/sec:     18.00MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for netty
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/plaintext
+Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   182.67ms  178.01ms 917.72ms   90.79%
-    Req/Sec    15.45k     5.29k   42.00k    67.72%
-  1767890 requests in 15.01s, 281.56MB read
-Requests/sec: 117775.01
-Transfer/sec:     18.76MB
+    Latency   161.10ms  162.17ms 893.82ms   93.23%
+    Req/Sec    16.52k     5.70k   42.00k    71.26%
+  1884441 requests in 15.00s, 300.12MB read
+Requests/sec: 125610.02
+Transfer/sec:     20.01MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for netty
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/plaintext
+Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   612.90ms  405.86ms   2.14s    89.92%
-    Req/Sec    15.18k     5.64k   55.00k    71.35%
-  1682227 requests in 15.01s, 267.92MB read
-Requests/sec: 112043.86
-Transfer/sec:     17.84MB
+    Latency   942.48ms  757.19ms   2.36s    77.97%
+    Req/Sec    14.76k     5.85k   47.00k    72.73%
+  1636614 requests in 15.02s, 260.66MB read
+Requests/sec: 108965.11
+Transfer/sec:     17.35MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for netty
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/plaintext
+Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.00s   635.49ms   2.48s    80.87%
-    Req/Sec     3.56k     6.37k   36.00k    83.10%
-  77600 requests in 16.66s, 12.36MB read
-  Socket errors: connect 8203, read 356528, write 0, timeout 58888
-Requests/sec:   4658.10
-Transfer/sec:    759.67KB
+    Latency     1.63s   909.47ms   2.95s    49.76%
+    Req/Sec     5.58k     6.91k   41.00k    83.28%
+  116558 requests in 16.79s, 18.56MB read
+  Socket errors: connect 8203, read 371986, write 0, timeout 59110
+Requests/sec:   6941.61
+Transfer/sec:      1.11MB

@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 20:07:54 UTC 2013
+  System information as of Wed Jun 26 16:39:13 UTC 2013
 
-  System load:  0.01               Processes:           75
-  Usage of /:   25.0% of 19.69GB   Users logged in:     1
-  Memory usage: 9%                 IP address for eth0: 10.253.41.249
+  System load:  0.03               Processes:           66
+  Usage of /:   25.7% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,118 +17,120 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer servlet
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/servlet/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/servlet/json
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/servlet/json
+Running 5s test @ http://10.253.67.217:8080/servlet/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  30997 requests in 5.00s, 4.64MB read
-Requests/sec:   6200.31
-Transfer/sec:      0.93MB
+  31717 requests in 5.00s, 4.75MB read
+Requests/sec:   6340.11
+Transfer/sec:      0.95MB
 
 ---------------------------------------------------------
  Running Warmup servlet
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/servlet/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/servlet/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/servlet/json
+Running 15s test @ http://10.253.67.217:8080/servlet/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    11.75ms  121.59ms  10.57s    99.95%
-    Req/Sec     3.02k     1.57k   11.00k    71.45%
-  231781 requests in 15.08s, 34.70MB read
-  Socket errors: connect 0, read 0, write 0, timeout 670
-Requests/sec:  15371.21
-Transfer/sec:      2.30MB
+    Latency    11.26ms  133.60ms   9.07s    99.92%
+    Req/Sec     3.40k     1.66k   13.00k    82.74%
+  252111 requests in 15.03s, 37.75MB read
+  Socket errors: connect 0, read 0, write 0, timeout 668
+Requests/sec:  16768.80
+Transfer/sec:      2.51MB
 
 ---------------------------------------------------------
  Concurrency: 8 for servlet
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/servlet/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/servlet/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/servlet/json
+Running 15s test @ http://10.253.67.217:8080/servlet/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.04ms    7.63ms  91.45ms   99.24%
-    Req/Sec     2.14k   483.85     3.00k    77.58%
-  295596 requests in 15.00s, 44.26MB read
-Requests/sec:  19708.22
-Transfer/sec:      2.95MB
+    Latency   793.72us    5.73ms  80.39ms   99.46%
+    Req/Sec     2.26k   532.44     3.00k    67.17%
+  304225 requests in 15.00s, 45.55MB read
+Requests/sec:  20283.43
+Transfer/sec:      3.04MB
 
 ---------------------------------------------------------
  Concurrency: 16 for servlet
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/servlet/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/servlet/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/servlet/json
+Running 15s test @ http://10.253.67.217:8080/servlet/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   627.49us  292.77us  11.32ms   83.74%
-    Req/Sec     2.87k   673.13     6.00k    56.30%
-  379667 requests in 15.00s, 56.85MB read
-Requests/sec:  25311.86
-Transfer/sec:      3.79MB
+    Latency     0.98ms    4.88ms  67.75ms   99.44%
+    Req/Sec     2.85k   684.20     5.00k    57.57%
+  379026 requests in 15.00s, 56.75MB read
+Requests/sec:  25270.05
+Transfer/sec:      3.78MB
 
 ---------------------------------------------------------
  Concurrency: 32 for servlet
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/servlet/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/servlet/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/servlet/json
+Running 15s test @ http://10.253.67.217:8080/servlet/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.34ms    2.03ms  76.68ms   99.59%
-    Req/Sec     2.93k   588.92    10.00k    69.24%
-  382855 requests in 15.00s, 57.32MB read
-Requests/sec:  25526.82
-Transfer/sec:      3.82MB
+    Latency     1.40ms    2.54ms  35.25ms   99.20%
+    Req/Sec     3.03k   607.97     5.00k    72.05%
+  395800 requests in 15.00s, 59.26MB read
+Requests/sec:  26390.12
+Transfer/sec:      3.95MB
 
 ---------------------------------------------------------
  Concurrency: 64 for servlet
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/servlet/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/servlet/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/servlet/json
+Running 15s test @ http://10.253.67.217:8080/servlet/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.40ms    0.87ms  34.78ms   81.01%
-    Req/Sec     3.07k   463.52    12.00k    80.99%
-  398240 requests in 15.00s, 59.63MB read
-Requests/sec:  26553.77
-Transfer/sec:      3.98MB
+    Latency     2.39ms    1.21ms  25.94ms   91.63%
+    Req/Sec     3.11k   569.96     5.00k    70.23%
+  406146 requests in 15.00s, 60.81MB read
+Requests/sec:  27078.99
+Transfer/sec:      4.05MB
 
 ---------------------------------------------------------
  Concurrency: 128 for servlet
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/servlet/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/servlet/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/servlet/json
+Running 15s test @ http://10.253.67.217:8080/servlet/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    12.49ms   50.33ms 489.24ms   97.92%
-    Req/Sec     2.77k   693.89     7.00k    73.26%
-  361940 requests in 15.00s, 54.19MB read
-Requests/sec:  24127.68
-Transfer/sec:      3.61MB
+    Latency     5.37ms   12.74ms 343.44ms   99.64%
+    Req/Sec     3.02k   504.12     8.00k    79.53%
+  394208 requests in 15.00s, 59.02MB read
+Requests/sec:  26285.24
+Transfer/sec:      3.94MB
 
 ---------------------------------------------------------
  Concurrency: 256 for servlet
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/servlet/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/servlet/json
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/servlet/json
+Running 15s test @ http://10.253.67.217:8080/servlet/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   437.31ms  335.56ms   1.86s    75.26%
-    Req/Sec   540.37      1.15k   11.00k    83.57%
-  81643 requests in 16.01s, 12.39MB read
-  Socket errors: connect 0, read 1135, write 0, timeout 1534
-Requests/sec:   5098.19
-Transfer/sec:    792.26KB
+    Latency     1.41s     1.23s    2.74s    15.58%
+    Req/Sec   498.79      1.41k   11.00k    89.95%
+  74966 requests in 16.01s, 11.39MB read
+  Socket errors: connect 0, read 1357, write 0, timeout 1534
+Requests/sec:   4681.79
+Transfer/sec:    728.42KB

@@ -2,7 +2,14 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
- System information disabled due to load higher than 2.0
+  System information as of Thu Jun 27 16:16:54 UTC 2013
+
+  System load:  0.7                Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
 
   Get cloud support with Ubuntu Advantage Cloud Guest:
     http://www.ubuntu.com/business/services/cloud
@@ -10,121 +17,120 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-42 packages can be updated.
+47 packages can be updated.
 21 updates are security updates.
 
-*** System restart required ***
 
 ---------------------------------------------------------
  Running Primer luminus
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/luminus/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/luminus/fortune
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/luminus/fortune
+Running 5s test @ http://10.253.67.217:8080/luminus/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1101 requests in 5.02s, 1.75MB read
-Requests/sec:    219.40
-Transfer/sec:    357.81KB
+  1097 requests in 5.02s, 1.75MB read
+Requests/sec:    218.62
+Transfer/sec:    356.54KB
 
 ---------------------------------------------------------
  Running Warmup luminus
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/luminus/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/luminus/fortune
+Running 15s test @ http://10.253.67.217:8080/luminus/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4215 requests in 15.02s, 6.77MB read
-  Socket errors: connect 0, read 222, write 0, timeout 167
-Requests/sec:    280.59
-Transfer/sec:    461.67KB
+  4160 requests in 15.06s, 6.68MB read
+  Socket errors: connect 0, read 77, write 0, timeout 29
+Requests/sec:    276.22
+Transfer/sec:    453.94KB
 
 ---------------------------------------------------------
  Concurrency: 8 for luminus
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/luminus/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/luminus/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/luminus/fortune
+Running 15s test @ http://10.253.67.217:8080/luminus/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5023 requests in 15.01s, 8.00MB read
-Requests/sec:    334.61
-Transfer/sec:    545.70KB
+  5077 requests in 15.01s, 8.09MB read
+Requests/sec:    338.15
+Transfer/sec:    551.47KB
 
 ---------------------------------------------------------
  Concurrency: 16 for luminus
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/luminus/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/luminus/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/luminus/fortune
+Running 15s test @ http://10.253.67.217:8080/luminus/fortune
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5107 requests in 15.03s, 8.13MB read
-Requests/sec:    339.85
-Transfer/sec:    554.25KB
+  5115 requests in 15.02s, 8.15MB read
+Requests/sec:    340.59
+Transfer/sec:    555.46KB
 
 ---------------------------------------------------------
  Concurrency: 32 for luminus
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/luminus/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/luminus/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/luminus/fortune
+Running 15s test @ http://10.253.67.217:8080/luminus/fortune
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5038 requests in 15.03s, 8.02MB read
-Requests/sec:    335.30
-Transfer/sec:    546.82KB
+  5134 requests in 15.04s, 8.18MB read
+Requests/sec:    341.29
+Transfer/sec:    556.60KB
 
 ---------------------------------------------------------
  Concurrency: 64 for luminus
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/luminus/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/luminus/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/luminus/fortune
+Running 15s test @ http://10.253.67.217:8080/luminus/fortune
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5043 requests in 15.06s, 8.03MB read
-Requests/sec:    334.84
-Transfer/sec:    546.08KB
+  5081 requests in 15.04s, 8.09MB read
+Requests/sec:    337.94
+Transfer/sec:    551.13KB
 
 ---------------------------------------------------------
  Concurrency: 128 for luminus
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/luminus/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/luminus/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/luminus/fortune
+Running 15s test @ http://10.253.67.217:8080/luminus/fortune
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4931 requests in 15.12s, 7.85MB read
-Requests/sec:    326.16
-Transfer/sec:    531.92KB
+  4911 requests in 15.01s, 7.82MB read
+Requests/sec:    327.16
+Transfer/sec:    533.55KB
 
 ---------------------------------------------------------
  Concurrency: 256 for luminus
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/luminus/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/luminus/fortune
+Running 15s test @ http://10.253.67.217:8080/luminus/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4552 requests in 15.14s, 7.31MB read
-  Socket errors: connect 0, read 29, write 0, timeout 22
-Requests/sec:    300.66
-Transfer/sec:    494.18KB
+  4474 requests in 15.05s, 7.19MB read
+  Socket errors: connect 0, read 95, write 0, timeout 28
+Requests/sec:    297.20
+Transfer/sec:    488.77KB

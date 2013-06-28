@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 01:27:44 UTC 2013
+  System information as of Wed Jun 26 23:38:49 UTC 2013
 
-  System load:  0.47               Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.31               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,116 +17,118 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer flask-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/dbsraw
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/dbsraw
+Running 5s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  6003 requests in 5.00s, 1.34MB read
-Requests/sec:   1200.02
-Transfer/sec:    273.97KB
+  6130 requests in 5.01s, 1.37MB read
+Requests/sec:   1222.71
+Transfer/sec:    279.14KB
 
 ---------------------------------------------------------
  Running Warmup flask-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/dbsraw
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbsraw
+Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  16262 requests in 15.02s, 3.63MB read
-Requests/sec:   1082.90
-Transfer/sec:    247.24KB
+  18226 requests in 15.02s, 4.06MB read
+Requests/sec:   1213.14
+Transfer/sec:    276.95KB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/dbsraw
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbsraw
+Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  18340 requests in 15.00s, 4.09MB read
-Requests/sec:   1222.39
-Transfer/sec:    279.08KB
+  18704 requests in 15.00s, 4.17MB read
+Requests/sec:   1246.72
+Transfer/sec:    284.62KB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/dbsraw
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbsraw
+Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  19049 requests in 15.01s, 4.25MB read
-Requests/sec:   1269.39
-Transfer/sec:    289.80KB
+  19235 requests in 15.00s, 4.29MB read
+Requests/sec:   1281.93
+Transfer/sec:    292.66KB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/dbsraw
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbsraw
+Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  17802 requests in 15.01s, 3.97MB read
-Requests/sec:   1185.76
-Transfer/sec:    270.71KB
+  18787 requests in 15.01s, 4.19MB read
+Requests/sec:   1251.93
+Transfer/sec:    285.82KB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/dbsraw
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbsraw
+Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  16979 requests in 15.02s, 3.79MB read
-Requests/sec:   1130.64
-Transfer/sec:    258.13KB
+  19086 requests in 15.01s, 4.26MB read
+Requests/sec:   1271.19
+Transfer/sec:    290.21KB
 
 ---------------------------------------------------------
  Concurrency: 128 for flask-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/dbsraw
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbsraw
+Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  16499 requests in 15.01s, 3.68MB read
-Requests/sec:   1099.04
-Transfer/sec:    250.91KB
+  18822 requests in 15.02s, 4.20MB read
+Requests/sec:   1253.31
+Transfer/sec:    286.13KB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/dbsraw
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dbsraw
+Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  16867 requests in 15.01s, 3.76MB read
-Requests/sec:   1123.84
-Transfer/sec:    256.57KB
+  18828 requests in 15.03s, 4.20MB read
+Requests/sec:   1253.02
+Transfer/sec:    286.06KB

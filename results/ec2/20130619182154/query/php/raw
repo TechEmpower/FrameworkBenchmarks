@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 19:42:53 UTC 2013
+  System information as of Wed Jun 26 16:07:13 UTC 2013
 
-  System load:  0.97               Processes:           75
-  Usage of /:   25.0% of 19.69GB   Users logged in:     1
-  Memory usage: 9%                 IP address for eth0: 10.253.41.249
+  System load:  0.76               Processes:           66
+  Usage of /:   25.7% of 19.69GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,106 +17,105 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer php
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/dborm.php?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/dborm.php?queries=2
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/dborm.php?queries=2
+Running 5s test @ http://10.253.67.217:8080/dborm.php?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  2730 requests in 5.01s, 731.83KB read
-Requests/sec:    545.20
-Transfer/sec:    146.15KB
+  2780 requests in 5.01s, 745.27KB read
+Requests/sec:    554.99
+Transfer/sec:    148.78KB
 
 ---------------------------------------------------------
  Running Warmup php
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/dborm.php?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/dborm.php?queries=2
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dborm.php?queries=2
+Running 15s test @ http://10.253.67.217:8080/dborm.php?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  7033 requests in 15.05s, 1.84MB read
-  Socket errors: connect 0, read 0, write 0, timeout 8
-Requests/sec:    467.16
-Transfer/sec:    125.26KB
+  7100 requests in 15.06s, 1.86MB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+Requests/sec:    471.31
+Transfer/sec:    126.36KB
 
 ---------------------------------------------------------
  Queries: 1 for php
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/dborm.php?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/dborm.php?queries=1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dborm.php?queries=1
+Running 15s test @ http://10.253.67.217:8080/dborm.php?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  8029 requests in 15.05s, 1.81MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    533.60
-Transfer/sec:    123.38KB
+  8073 requests in 15.01s, 1.82MB read
+Requests/sec:    537.88
+Transfer/sec:    124.38KB
 
 ---------------------------------------------------------
  Queries: 5 for php
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/dborm.php?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/dborm.php?queries=5
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dborm.php?queries=5
+Running 15s test @ http://10.253.67.217:8080/dborm.php?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5435 requests in 15.02s, 2.01MB read
-Requests/sec:    361.84
-Transfer/sec:    137.07KB
+  5413 requests in 15.05s, 2.00MB read
+Requests/sec:    359.65
+Transfer/sec:    136.22KB
 
 ---------------------------------------------------------
  Queries: 10 for php
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/dborm.php?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/dborm.php?queries=10
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dborm.php?queries=10
+Running 15s test @ http://10.253.67.217:8080/dborm.php?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3896 requests in 15.04s, 2.15MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    259.02
-Transfer/sec:    146.16KB
+  3962 requests in 15.07s, 2.18MB read
+Requests/sec:    262.84
+Transfer/sec:    148.30KB
 
 ---------------------------------------------------------
  Queries: 15 for php
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/dborm.php?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/dborm.php?queries=15
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dborm.php?queries=15
+Running 15s test @ http://10.253.67.217:8080/dborm.php?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3041 requests in 15.05s, 2.22MB read
-Requests/sec:    202.02
-Transfer/sec:    151.28KB
+  3099 requests in 15.16s, 2.27MB read
+Requests/sec:    204.43
+Transfer/sec:    153.05KB
 
 ---------------------------------------------------------
  Queries: 20 for php
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/dborm.php?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/dborm.php?queries=20
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/dborm.php?queries=20
+Running 15s test @ http://10.253.67.217:8080/dborm.php?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  2513 requests in 15.12s, 2.29MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    166.25
-Transfer/sec:    155.15KB
+  2536 requests in 15.11s, 2.31MB read
+Requests/sec:    167.78
+Transfer/sec:    156.56KB

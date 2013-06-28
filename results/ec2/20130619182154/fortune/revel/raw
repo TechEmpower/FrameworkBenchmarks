@@ -10,119 +10,118 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-42 packages can be updated.
+47 packages can be updated.
 21 updates are security updates.
 
-*** System restart required ***
 
 ---------------------------------------------------------
  Running Primer revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/fortune
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/fortune
+Running 5s test @ http://10.253.67.217:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  19347 requests in 5.00s, 26.07MB read
-Requests/sec:   3870.24
-Transfer/sec:      5.22MB
+  19468 requests in 5.00s, 26.23MB read
+Requests/sec:   3893.89
+Transfer/sec:      5.25MB
 
 ---------------------------------------------------------
  Running Warmup revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/fortune
+Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  55422 requests in 15.00s, 74.68MB read
-Requests/sec:   3694.02
-Transfer/sec:      4.98MB
+  58347 requests in 15.00s, 78.63MB read
+Requests/sec:   3889.78
+Transfer/sec:      5.24MB
 
 ---------------------------------------------------------
  Concurrency: 8 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/fortune
+Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  57584 requests in 15.00s, 77.60MB read
-Requests/sec:   3838.65
-Transfer/sec:      5.17MB
+  55966 requests in 15.00s, 75.42MB read
+Requests/sec:   3731.24
+Transfer/sec:      5.03MB
 
 ---------------------------------------------------------
  Concurrency: 16 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/fortune
+Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  58087 requests in 15.00s, 78.27MB read
-Requests/sec:   3872.83
-Transfer/sec:      5.22MB
+  58725 requests in 15.00s, 79.13MB read
+Requests/sec:   3914.82
+Transfer/sec:      5.28MB
 
 ---------------------------------------------------------
  Concurrency: 32 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/fortune
+Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  58963 requests in 15.00s, 79.46MB read
-Requests/sec:   3931.25
-Transfer/sec:      5.30MB
+  61886 requests in 15.00s, 83.39MB read
+Requests/sec:   4125.15
+Transfer/sec:      5.56MB
 
 ---------------------------------------------------------
  Concurrency: 64 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/fortune
+Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  58851 requests in 15.00s, 79.30MB read
-Requests/sec:   3922.93
-Transfer/sec:      5.29MB
+  60943 requests in 15.00s, 82.12MB read
+Requests/sec:   4062.09
+Transfer/sec:      5.47MB
 
 ---------------------------------------------------------
  Concurrency: 128 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/fortune
+Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  56310 requests in 15.00s, 75.88MB read
-Requests/sec:   3753.60
-Transfer/sec:      5.06MB
+  58079 requests in 15.00s, 78.26MB read
+Requests/sec:   3871.70
+Transfer/sec:      5.22MB
 
 ---------------------------------------------------------
  Concurrency: 256 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortune
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/fortune
+Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  56800 requests in 15.00s, 76.54MB read
-Requests/sec:   3786.49
-Transfer/sec:      5.10MB
+  57595 requests in 15.00s, 77.61MB read
+Requests/sec:   3839.69
+Transfer/sec:      5.17MB
