@@ -10,95 +10,94 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-42 packages can be updated.
+47 packages can be updated.
 21 updates are security updates.
 
-*** System restart required ***
 
 ---------------------------------------------------------
  Running Primer cpoll_cppsp
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:16969/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:16969/plaintext
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:16969/plaintext
+Running 5s test @ http://10.253.67.217:16969/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   330.98us   38.40us   1.59ms   76.32%
-    Req/Sec     2.79k   410.84     3.00k    79.59%
-  116926 requests in 5.00s, 13.72MB read
-Requests/sec:  23392.23
-Transfer/sec:      2.74MB
+    Latency    13.74ms   51.68ms 213.12ms   93.69%
+    Req/Sec     2.54k   807.99     3.00k    93.10%
+  108650 requests in 5.00s, 12.74MB read
+Requests/sec:  21736.11
+Transfer/sec:      2.55MB
 
 ---------------------------------------------------------
  Running Warmup cpoll_cppsp
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:16969/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:16969/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:16969/plaintext
+Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.86ms    1.37ms  34.07ms   87.44%
-    Req/Sec     8.31k     2.00k   39.00k    82.61%
-  986835 requests in 15.00s, 115.76MB read
-Requests/sec:  65789.23
-Transfer/sec:      7.72MB
+    Latency     4.27ms    1.07ms  28.92ms   85.70%
+    Req/Sec     7.37k     1.68k   24.00k    84.27%
+  883517 requests in 15.00s, 103.64MB read
+Requests/sec:  58911.43
+Transfer/sec:      6.91MB
 
 ---------------------------------------------------------
  Concurrency: 256 for cpoll_cppsp
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.255.5.228:16969/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.253.67.217:16969/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:16969/plaintext
+Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1269 requests in 16.02s, 152.43KB read
-  Socket errors: connect 0, read 0, write 0, timeout 1807
-Requests/sec:     79.22
-Transfer/sec:      9.52KB
+  1152 requests in 16.02s, 138.38KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1804
+Requests/sec:     71.91
+Transfer/sec:      8.64KB
 
 ---------------------------------------------------------
  Concurrency: 1024 for cpoll_cppsp
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.255.5.228:16969/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.253.67.217:16969/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:16969/plaintext
+Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3154 requests in 16.05s, 378.85KB read
-  Socket errors: connect 0, read 0, write 0, timeout 7186
-Requests/sec:    196.51
-Transfer/sec:     23.60KB
+  3526 requests in 16.08s, 423.53KB read
+  Socket errors: connect 0, read 0, write 0, timeout 7180
+Requests/sec:    219.32
+Transfer/sec:     26.34KB
 
 ---------------------------------------------------------
  Concurrency: 4096 for cpoll_cppsp
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.255.5.228:16969/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.253.67.217:16969/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:16969/plaintext
+Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us  100.00%
-    Req/Sec    15.92    354.04    17.00k    99.65%
-  12811 requests in 16.14s, 1.50MB read
-  Socket errors: connect 0, read 0, write 0, timeout 28683
-Requests/sec:    793.68
-Transfer/sec:     95.33KB
+    Req/Sec     5.22    194.10    13.00k    99.89%
+  13299 requests in 16.12s, 1.56MB read
+  Socket errors: connect 0, read 0, write 0, timeout 28690
+Requests/sec:    825.01
+Transfer/sec:     99.10KB
 
 ---------------------------------------------------------
  Concurrency: 16384 for cpoll_cppsp
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.255.5.228:16969/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.253.67.217:16969/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:16969/plaintext
+Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us  100.00%
-    Req/Sec    71.50    620.04    13.00k    98.20%
-  23039 requests in 16.37s, 2.70MB read
-  Socket errors: connect 8203, read 0, write 0, timeout 122900
-Requests/sec:   1407.40
-Transfer/sec:    169.05KB
+    Req/Sec    64.91    679.74    27.00k    98.66%
+  26100 requests in 16.36s, 3.06MB read
+  Socket errors: connect 8203, read 0, write 0, timeout 122891
+Requests/sec:   1595.22
+Transfer/sec:    191.61KB

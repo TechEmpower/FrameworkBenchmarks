@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 00:46:57 UTC 2013
+  System information as of Wed Jun 26 23:11:45 UTC 2013
 
-  System load:  0.37               Processes:           75
-  Usage of /:   25.1% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.12               Processes:           66
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 4%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,102 +17,108 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-*** System restart required ***
+47 packages can be updated.
+21 updates are security updates.
+
 
 ---------------------------------------------------------
  Running Primer ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/updates/2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/updates/2
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/updates/2
+Running 5s test @ http://10.253.67.217:8080/updates/2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5430 requests in 5.00s, 1.15MB read
-Requests/sec:   1085.31
-Transfer/sec:    234.82KB
+  1912 requests in 5.01s, 413.66KB read
+Requests/sec:    381.81
+Transfer/sec:     82.61KB
 
 ---------------------------------------------------------
  Running Warmup ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/updates/2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/updates/2
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/updates/2
+Running 15s test @ http://10.253.67.217:8080/updates/2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  18636 requests in 15.01s, 3.94MB read
-Requests/sec:   1241.64
-Transfer/sec:    268.64KB
+  5502 requests in 15.00s, 1.16MB read
+Requests/sec:    366.74
+Transfer/sec:     79.35KB
 
 ---------------------------------------------------------
  Queries: 1 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/updates/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/updates/1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/updates/1
+Running 15s test @ http://10.253.67.217:8080/updates/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  24584 requests in 15.01s, 4.43MB read
-Requests/sec:   1637.72
-Transfer/sec:    301.93KB
+  9574 requests in 15.01s, 1.72MB read
+Requests/sec:    637.87
+Transfer/sec:    117.60KB
 
 ---------------------------------------------------------
  Queries: 5 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/updates/5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/updates/5
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/updates/5
+Running 15s test @ http://10.253.67.217:8080/updates/5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  11552 requests in 15.01s, 3.54MB read
-Requests/sec:    769.54
-Transfer/sec:    241.17KB
+  2494 requests in 15.10s, 781.51KB read
+  Socket errors: connect 0, read 0, write 0, timeout 62
+Requests/sec:    165.21
+Transfer/sec:     51.77KB
 
 ---------------------------------------------------------
  Queries: 10 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/updates/10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/updates/10
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/updates/10
+Running 15s test @ http://10.253.67.217:8080/updates/10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  6870 requests in 15.03s, 3.18MB read
-Requests/sec:    457.18
-Transfer/sec:    216.44KB
+  1248 requests in 15.30s, 590.75KB read
+  Socket errors: connect 0, read 0, write 0, timeout 464
+Requests/sec:     81.57
+Transfer/sec:     38.61KB
 
 ---------------------------------------------------------
  Queries: 15 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/updates/15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/updates/15
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/updates/15
+Running 15s test @ http://10.253.67.217:8080/updates/15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  5197 requests in 15.10s, 3.22MB read
-Requests/sec:    344.11
-Transfer/sec:    218.01KB
+  773 requests in 15.11s, 489.73KB read
+  Socket errors: connect 0, read 0, write 0, timeout 832
+Requests/sec:     51.14
+Transfer/sec:     32.40KB
 
 ---------------------------------------------------------
  Queries: 20 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/updates/20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/updates/20
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/updates/20
+Running 15s test @ http://10.253.67.217:8080/updates/20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3980 requests in 15.03s, 3.08MB read
-Requests/sec:    264.78
-Transfer/sec:    210.12KB
+  545 requests in 15.35s, 432.51KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1071
+Requests/sec:     35.49
+Transfer/sec:     28.17KB

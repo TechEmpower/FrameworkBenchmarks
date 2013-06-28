@@ -10,106 +10,104 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-42 packages can be updated.
+47 packages can be updated.
 21 updates are security updates.
 
-*** System restart required ***
 
 ---------------------------------------------------------
  Running Primer revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:8080/update?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/update?queries=2
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/update?queries=2
+Running 5s test @ http://10.253.67.217:8080/update?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  1636 requests in 5.01s, 275.72KB read
-Requests/sec:    326.54
-Transfer/sec:     55.03KB
+  3291 requests in 5.01s, 554.56KB read
+Requests/sec:    656.84
+Transfer/sec:    110.68KB
 
 ---------------------------------------------------------
  Running Warmup revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/update?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=2
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/update?queries=2
+Running 15s test @ http://10.253.67.217:8080/update?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  30058 requests in 15.00s, 4.95MB read
-Requests/sec:   2003.59
-Transfer/sec:    337.64KB
+  31041 requests in 15.00s, 5.11MB read
+Requests/sec:   2069.40
+Transfer/sec:    348.72KB
 
 ---------------------------------------------------------
  Queries: 1 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/update?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=1
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/update?queries=1
+Running 15s test @ http://10.253.67.217:8080/update?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  53659 requests in 15.01s, 7.10MB read
-Requests/sec:   3576.02
-Transfer/sec:    484.65KB
+  58097 requests in 15.00s, 7.69MB read
+Requests/sec:   3873.81
+Transfer/sec:    525.01KB
 
 ---------------------------------------------------------
  Queries: 5 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/update?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=5
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/update?queries=5
+Running 15s test @ http://10.253.67.217:8080/update?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  12898 requests in 15.03s, 3.31MB read
-Requests/sec:    858.41
-Transfer/sec:    225.42KB
+  13617 requests in 15.02s, 3.49MB read
+Requests/sec:    906.72
+Transfer/sec:    238.10KB
 
 ---------------------------------------------------------
  Queries: 10 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/update?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=10
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/update?queries=10
+Running 15s test @ http://10.253.67.217:8080/update?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  6345 requests in 15.05s, 2.59MB read
-Requests/sec:    421.47
-Transfer/sec:    176.07KB
+  7124 requests in 15.04s, 2.91MB read
+Requests/sec:    473.64
+Transfer/sec:    197.88KB
 
 ---------------------------------------------------------
  Queries: 15 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/update?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=15
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/update?queries=15
+Running 15s test @ http://10.253.67.217:8080/update?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  4409 requests in 15.09s, 2.47MB read
-Requests/sec:    292.27
-Transfer/sec:    167.46KB
+  4443 requests in 15.03s, 2.49MB read
+Requests/sec:    295.56
+Transfer/sec:    169.34KB
 
 ---------------------------------------------------------
  Queries: 20 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/update?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=20
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/update?queries=20
+Running 15s test @ http://10.253.67.217:8080/update?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us    -nan%
     Req/Sec     0.00      0.00     0.00      -nan%
-  3207 requests in 15.06s, 2.28MB read
-  Socket errors: connect 0, read 0, write 0, timeout 2
-Requests/sec:    212.90
-Transfer/sec:    155.01KB
+  3492 requests in 15.08s, 2.48MB read
+Requests/sec:    231.61
+Transfer/sec:    168.65KB

@@ -10,95 +10,94 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-42 packages can be updated.
+47 packages can be updated.
 21 updates are security updates.
 
-*** System restart required ***
 
 ---------------------------------------------------------
  Running Primer undertow
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/plaintext
+Running 5s test @ http://10.253.67.217:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   566.79us    2.54ms  30.20ms   99.25%
-    Req/Sec     2.47k   574.74     3.00k    98.61%
-  110507 requests in 5.00s, 10.75MB read
-Requests/sec:  22104.76
-Transfer/sec:      2.15MB
+    Latency    20.38ms   59.25ms 195.96ms   89.74%
+    Req/Sec     2.28k     0.94k    3.00k    87.78%
+  99732 requests in 5.00s, 9.70MB read
+Requests/sec:  19948.34
+Transfer/sec:      1.94MB
 
 ---------------------------------------------------------
  Running Warmup undertow
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/plaintext
+Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.84ms    3.17ms 228.58ms   87.09%
-    Req/Sec     6.61k     1.64k   22.00k    83.54%
-  798530 requests in 15.00s, 77.68MB read
-Requests/sec:  53242.79
-Transfer/sec:      5.18MB
+    Latency     4.87ms    3.43ms 626.32ms   93.36%
+    Req/Sec     6.46k     1.26k   14.00k    62.84%
+  783181 requests in 15.00s, 76.18MB read
+Requests/sec:  52227.54
+Transfer/sec:      5.08MB
 
 ---------------------------------------------------------
  Concurrency: 256 for undertow
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/plaintext
+Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    49.70ms   99.03ms 635.47ms   93.48%
-    Req/Sec    16.91k     5.48k   53.00k    73.89%
-  1790823 requests in 14.99s, 174.20MB read
-  Socket errors: connect 0, read 14, write 0, timeout 180
-Requests/sec: 119467.09
-Transfer/sec:     11.62MB
+    Latency    79.39ms  144.32ms   1.12s    87.79%
+    Req/Sec    15.95k     5.08k   44.00k    78.47%
+  1769018 requests in 15.00s, 172.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 47
+Requests/sec: 117925.21
+Transfer/sec:     11.47MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for undertow
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.255.5.228:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/plaintext
+Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   846.59ms    1.29s    3.86s    83.42%
-    Req/Sec    20.55k    12.18k  104.00k    67.42%
-  2392809 requests in 15.00s, 232.76MB read
-  Socket errors: connect 0, read 110, write 0, timeout 723
-Requests/sec: 159488.43
-Transfer/sec:     15.51MB
-
----------------------------------------------------------
- Concurrency: 4096 for undertow
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.255.5.228:8080/plaintext
----------------------------------------------------------
-
-Running 15s test @ http://10.255.5.228:8080/plaintext
-  8 threads and 4096 connections
-  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.09s     4.74s   10.35s    59.28%
-    Req/Sec    19.97k    16.44k  146.00k    71.52%
-  2371974 requests in 15.02s, 230.73MB read
-  Socket errors: connect 0, read 883, write 0, timeout 14698
-Requests/sec: 157940.98
+    Latency   471.55ms  592.81ms   1.85s    86.78%
+    Req/Sec    20.33k    11.14k   87.00k    68.60%
+  2368830 requests in 15.00s, 230.43MB read
+  Socket errors: connect 0, read 106, write 0, timeout 691
+Requests/sec: 157892.41
 Transfer/sec:     15.36MB
 
 ---------------------------------------------------------
- Concurrency: 16384 for undertow
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.255.5.228:8080/plaintext
+ Concurrency: 4096 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.253.67.217:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/plaintext
+Running 15s test @ http://10.253.67.217:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.96s     4.69s   10.38s    60.85%
+    Req/Sec    20.42k    16.24k  119.00k    69.45%
+  2436487 requests in 15.02s, 237.01MB read
+  Socket errors: connect 0, read 552, write 0, timeout 13060
+Requests/sec: 162240.60
+Transfer/sec:     15.78MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.253.67.217:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.37s     5.13s   11.49s    60.57%
-    Req/Sec    19.75k    18.64k  211.00k    76.49%
-  2399770 requests in 15.05s, 233.44MB read
-  Socket errors: connect 8203, read 1303, write 0, timeout 90843
-Requests/sec: 159497.70
-Transfer/sec:     15.52MB
+    Latency     4.21s     4.91s   10.77s    60.97%
+    Req/Sec    20.63k    18.20k  148.00k    74.08%
+  2462948 requests in 15.04s, 239.58MB read
+  Socket errors: connect 8203, read 294, write 0, timeout 91718
+Requests/sec: 163714.29
+Transfer/sec:     15.93MB
