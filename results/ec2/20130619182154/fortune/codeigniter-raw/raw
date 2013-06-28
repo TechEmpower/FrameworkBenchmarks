@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 21:41:00 UTC 2013
+  System information as of Fri Jun 28 03:49:09 UTC 2013
 
-  System load:  0.65               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.68               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2555 requests in 5.01s, 5.22MB read
-Requests/sec:    510.20
-Transfer/sec:      1.04MB
+    Latency    22.07ms    9.79ms  36.19ms   51.39%
+    Req/Sec    68.68     55.34   300.00     60.30%
+  2619 requests in 5.00s, 5.35MB read
+Requests/sec:    523.28
+Transfer/sec:      1.07MB
 
 ---------------------------------------------------------
  Running Warmup codeigniter-raw
@@ -43,10 +43,10 @@ Transfer/sec:      1.04MB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6893 requests in 15.03s, 14.09MB read
-Requests/sec:    458.69
+    Latency   790.85ms  260.13ms   1.42s    72.56%
+    Req/Sec    61.62     83.94   555.00     87.68%
+  6934 requests in 15.03s, 14.17MB read
+Requests/sec:    461.43
 Transfer/sec:      0.94MB
 
 ---------------------------------------------------------
@@ -57,11 +57,11 @@ Transfer/sec:      0.94MB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7772 requests in 15.01s, 15.88MB read
-Requests/sec:    517.92
-Transfer/sec:      1.06MB
+    Latency    31.35ms   21.53ms  65.96ms   68.09%
+    Req/Sec    68.72     55.36   222.00     60.37%
+  7839 requests in 15.01s, 16.02MB read
+Requests/sec:    522.30
+Transfer/sec:      1.07MB
 
 ---------------------------------------------------------
  Concurrency: 16 for codeigniter-raw
@@ -71,11 +71,11 @@ Transfer/sec:      1.06MB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7807 requests in 15.01s, 15.96MB read
-Requests/sec:    520.14
-Transfer/sec:      1.06MB
+    Latency    56.13ms   30.41ms 104.24ms   56.33%
+    Req/Sec    69.31     69.51   333.00     89.15%
+  7911 requests in 15.01s, 16.17MB read
+Requests/sec:    526.98
+Transfer/sec:      1.08MB
 
 ---------------------------------------------------------
  Concurrency: 32 for codeigniter-raw
@@ -85,11 +85,11 @@ Transfer/sec:      1.06MB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7463 requests in 15.01s, 15.25MB read
-Requests/sec:    497.24
-Transfer/sec:      1.02MB
+    Latency    97.46ms   36.59ms 137.69ms   55.39%
+    Req/Sec    67.18     79.29   444.00     86.65%
+  7648 requests in 15.02s, 15.63MB read
+Requests/sec:    509.14
+Transfer/sec:      1.04MB
 
 ---------------------------------------------------------
  Concurrency: 64 for codeigniter-raw
@@ -99,10 +99,10 @@ Transfer/sec:      1.02MB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7269 requests in 15.03s, 14.86MB read
-Requests/sec:    483.66
+    Latency   196.53ms   64.64ms 261.95ms   70.00%
+    Req/Sec    63.97     81.65   500.00     86.97%
+  7284 requests in 15.01s, 14.89MB read
+Requests/sec:    485.14
 Transfer/sec:      0.99MB
 
 ---------------------------------------------------------
@@ -113,11 +113,11 @@ Transfer/sec:      0.99MB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7015 requests in 15.04s, 14.34MB read
-Requests/sec:    466.44
-Transfer/sec:      0.95MB
+    Latency   392.06ms  125.68ms 541.93ms   56.09%
+    Req/Sec    63.89     83.58   555.00     87.02%
+  7252 requests in 15.08s, 14.82MB read
+Requests/sec:    480.74
+Transfer/sec:      0.98MB
 
 ---------------------------------------------------------
  Concurrency: 256 for codeigniter-raw
@@ -127,8 +127,9 @@ Transfer/sec:      0.95MB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6891 requests in 15.01s, 14.08MB read
-Requests/sec:    459.01
-Transfer/sec:      0.94MB
+    Latency     1.05s     1.19s    5.28s    92.78%
+    Req/Sec    62.14     83.04   500.00     87.24%
+  6997 requests in 15.03s, 14.30MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:    465.60
+Transfer/sec:      0.95MB

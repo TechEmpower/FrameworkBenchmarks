@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 20:11:40 UTC 2013
+  System information as of Fri Jun 28 02:19:46 UTC 2013
 
-  System load:  0.03               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.3                Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:9000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11813 requests in 5.01s, 1.52MB read
-Requests/sec:   2358.86
-Transfer/sec:    310.98KB
+    Latency     7.31ms   11.12ms  48.99ms   89.82%
+    Req/Sec   321.35    195.92     1.11k    63.41%
+  11718 requests in 5.00s, 1.51MB read
+Requests/sec:   2343.61
+Transfer/sec:    308.97KB
 
 ---------------------------------------------------------
  Running Warmup unfiltered
@@ -43,11 +43,11 @@ Transfer/sec:    310.98KB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.49ms    5.73ms  67.73ms   81.69%
-    Req/Sec     4.08k     0.93k    7.00k    73.19%
-  505735 requests in 15.00s, 65.11MB read
-Requests/sec:  33723.45
-Transfer/sec:      4.34MB
+    Latency     7.54ms    5.71ms  71.13ms   80.68%
+    Req/Sec     4.52k     0.87k    7.67k    71.88%
+  505028 requests in 15.00s, 65.02MB read
+Requests/sec:  33668.59
+Transfer/sec:      4.33MB
 
 ---------------------------------------------------------
  Concurrency: 8 for unfiltered
@@ -57,11 +57,11 @@ Transfer/sec:      4.34MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   623.94us    1.26ms  32.84ms   99.30%
-    Req/Sec     1.19k   414.88     2.00k    79.24%
-  202473 requests in 15.00s, 26.07MB read
-Requests/sec:  13499.33
-Transfer/sec:      1.74MB
+    Latency   731.97us    2.95ms  53.08ms   99.59%
+    Req/Sec     1.81k   231.56     2.67k    82.02%
+  205236 requests in 15.00s, 26.42MB read
+Requests/sec:  13683.31
+Transfer/sec:      1.76MB
 
 ---------------------------------------------------------
  Concurrency: 16 for unfiltered
@@ -71,11 +71,11 @@ Transfer/sec:      1.74MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   813.13us  553.11us  20.13ms   93.71%
-    Req/Sec     2.21k   525.08     3.00k    68.10%
-  296000 requests in 15.00s, 38.11MB read
-Requests/sec:  19735.47
-Transfer/sec:      2.54MB
+    Latency     9.79ms   41.45ms 202.35ms   95.54%
+    Req/Sec     2.48k   703.84     4.00k    79.44%
+  281020 requests in 15.00s, 36.18MB read
+Requests/sec:  18736.23
+Transfer/sec:      2.41MB
 
 ---------------------------------------------------------
  Concurrency: 32 for unfiltered
@@ -85,11 +85,11 @@ Transfer/sec:      2.54MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.42ms    1.46ms  30.83ms   92.39%
-    Req/Sec     2.64k   661.01     6.00k    90.40%
-  349959 requests in 15.00s, 45.06MB read
-Requests/sec:  23333.45
-Transfer/sec:      3.00MB
+    Latency    18.79ms   58.49ms 216.67ms   91.89%
+    Req/Sec     2.81k     0.97k    6.11k    83.04%
+  319818 requests in 15.00s, 41.18MB read
+Requests/sec:  21323.30
+Transfer/sec:      2.75MB
 
 ---------------------------------------------------------
  Concurrency: 64 for unfiltered
@@ -99,10 +99,10 @@ Transfer/sec:      3.00MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    12.47ms   44.73ms 212.23ms   95.17%
-    Req/Sec     2.93k     0.97k    7.00k    70.48%
-  379316 requests in 15.03s, 48.84MB read
-Requests/sec:  25234.29
+    Latency    17.81ms   55.30ms 217.09ms   92.80%
+    Req/Sec     3.33k     1.14k    6.67k    82.33%
+  379060 requests in 15.00s, 48.80MB read
+Requests/sec:  25274.35
 Transfer/sec:      3.25MB
 
 ---------------------------------------------------------
@@ -113,11 +113,11 @@ Transfer/sec:      3.25MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.68ms    7.95ms  92.92ms   94.74%
-    Req/Sec     3.63k   834.73     7.00k    83.24%
-  463083 requests in 15.00s, 59.62MB read
-Requests/sec:  30877.15
-Transfer/sec:      3.98MB
+    Latency     7.49ms   25.54ms 202.83ms   98.26%
+    Req/Sec     4.02k     0.92k    7.89k    78.73%
+  457610 requests in 15.00s, 58.92MB read
+Requests/sec:  30510.23
+Transfer/sec:      3.93MB
 
 ---------------------------------------------------------
  Concurrency: 256 for unfiltered
@@ -127,8 +127,8 @@ Transfer/sec:      3.98MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.55ms    6.14ms  70.39ms   87.47%
-    Req/Sec     4.10k     0.94k    7.00k    73.51%
-  513622 requests in 15.00s, 66.13MB read
-Requests/sec:  34240.18
-Transfer/sec:      4.41MB
+    Latency     7.42ms    5.38ms  54.18ms   78.20%
+    Req/Sec     4.56k   778.97     7.44k    72.34%
+  516337 requests in 15.00s, 66.48MB read
+Requests/sec:  34428.43
+Transfer/sec:      4.43MB

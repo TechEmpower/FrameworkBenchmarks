@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 16:04:39 UTC 2013
+  System information as of Fri Jun 28 08:24:56 UTC 2013
 
-  System load:  0.26               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  0.42               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/bench/raw/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8187 requests in 5.00s, 2.11MB read
-Requests/sec:   1637.03
-Transfer/sec:    432.46KB
+    Latency    12.36ms   24.43ms 102.34ms   91.53%
+    Req/Sec   216.08    102.54   444.00     57.83%
+  8224 requests in 5.00s, 2.12MB read
+Requests/sec:   1644.49
+Transfer/sec:    434.43KB
 
 ---------------------------------------------------------
  Running Warmup yaf-raw
@@ -43,11 +43,12 @@ Transfer/sec:    432.46KB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  23912 requests in 15.01s, 6.17MB read
-Requests/sec:   1593.59
-Transfer/sec:    421.04KB
+    Latency   493.14ms  815.98ms   2.80s    85.06%
+    Req/Sec   206.74    149.45     1.00k    70.99%
+  23386 requests in 15.01s, 6.03MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:   1558.04
+Transfer/sec:    411.64KB
 
 ---------------------------------------------------------
  Queries: 1 for yaf-raw
@@ -57,11 +58,11 @@ Transfer/sec:    421.04KB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  25229 requests in 15.00s, 5.65MB read
-Requests/sec:   1681.71
-Transfer/sec:    385.55KB
+    Latency   329.20ms  478.02ms   1.87s    86.63%
+    Req/Sec   222.20    164.00     2.56k    70.24%
+  25168 requests in 15.00s, 5.63MB read
+Requests/sec:   1678.12
+Transfer/sec:    384.72KB
 
 ---------------------------------------------------------
  Queries: 5 for yaf-raw
@@ -71,12 +72,12 @@ Transfer/sec:    385.55KB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  19146 requests in 15.00s, 6.90MB read
-  Socket errors: connect 0, read 0, write 0, timeout 74
-Requests/sec:   1276.13
-Transfer/sec:    470.96KB
+    Latency     1.01s     1.69s    5.08s    79.42%
+    Req/Sec   175.25    138.81     1.11k    64.49%
+  19773 requests in 15.00s, 7.13MB read
+  Socket errors: connect 0, read 0, write 0, timeout 169
+Requests/sec:   1318.11
+Transfer/sec:    486.38KB
 
 ---------------------------------------------------------
  Queries: 10 for yaf-raw
@@ -86,11 +87,12 @@ Transfer/sec:    470.96KB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14792 requests in 15.00s, 7.87MB read
-Requests/sec:    985.89
-Transfer/sec:    537.08KB
+    Latency     1.74s     2.24s    5.28s    68.88%
+    Req/Sec   130.48    131.75     2.22k    86.60%
+  14726 requests in 15.02s, 7.83MB read
+  Socket errors: connect 0, read 0, write 0, timeout 64
+Requests/sec:    980.69
+Transfer/sec:    534.21KB
 
 ---------------------------------------------------------
  Queries: 15 for yaf-raw
@@ -100,11 +102,12 @@ Transfer/sec:    537.08KB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10480 requests in 15.01s, 7.36MB read
-Requests/sec:    698.30
-Transfer/sec:    502.42KB
+    Latency   975.58ms  915.12ms   2.22s    56.57%
+    Req/Sec   107.64    106.57   777.00     47.86%
+  12073 requests in 15.01s, 8.48MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    804.45
+Transfer/sec:    578.73KB
 
 ---------------------------------------------------------
  Queries: 20 for yaf-raw
@@ -114,8 +117,8 @@ Transfer/sec:    502.42KB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8132 requests in 15.03s, 7.10MB read
-Requests/sec:    541.16
-Transfer/sec:    483.94KB
+    Latency   846.77ms  546.85ms   1.54s    55.68%
+    Req/Sec    85.85     98.57     1.67k    80.44%
+  9583 requests in 15.03s, 8.37MB read
+Requests/sec:    637.48
+Transfer/sec:    569.99KB

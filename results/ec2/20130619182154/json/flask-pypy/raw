@@ -10,8 +10,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7188 requests in 5.00s, 0.90MB read
-Requests/sec:   1437.18
-Transfer/sec:    185.26KB
+    Latency    43.51ms   79.75ms 219.28ms   81.80%
+    Req/Sec   238.46    205.00     1.00k    66.36%
+  8737 requests in 5.00s, 1.10MB read
+Requests/sec:   1747.28
+Transfer/sec:    225.23KB
 
 ---------------------------------------------------------
  Running Warmup flask-pypy
@@ -36,11 +36,11 @@ Transfer/sec:    185.26KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28740 requests in 15.03s, 3.62MB read
-Requests/sec:   1912.15
-Transfer/sec:    246.49KB
+    Latency   615.18ms  735.30ms   1.90s    70.85%
+    Req/Sec   266.04    298.79     1.78k    85.46%
+  29956 requests in 15.01s, 3.77MB read
+Requests/sec:   1996.17
+Transfer/sec:    257.32KB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask-pypy
@@ -50,11 +50,11 @@ Transfer/sec:    246.49KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  67216 requests in 15.00s, 8.46MB read
-Requests/sec:   4481.05
-Transfer/sec:    577.64KB
+    Latency     9.75ms   28.40ms 121.48ms   93.54%
+    Req/Sec   561.75    318.17     1.89k    72.18%
+  62791 requests in 15.00s, 7.90MB read
+Requests/sec:   4186.17
+Transfer/sec:    539.62KB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask-pypy
@@ -64,11 +64,11 @@ Transfer/sec:    577.64KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  68179 requests in 15.00s, 8.58MB read
-Requests/sec:   4544.78
-Transfer/sec:    585.85KB
+    Latency     7.28ms   14.90ms  84.52ms   95.98%
+    Req/Sec   611.94    428.67     2.20k    80.16%
+  69085 requests in 15.00s, 8.70MB read
+Requests/sec:   4604.88
+Transfer/sec:    593.60KB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask-pypy
@@ -78,11 +78,11 @@ Transfer/sec:    585.85KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.89ms    4.44ms  44.95ms   85.42%
-    Req/Sec     1.18k   568.90     3.00k    64.89%
-  65956 requests in 15.00s, 8.30MB read
-Requests/sec:   4396.27
-Transfer/sec:    566.71KB
+    Latency    16.88ms   42.18ms 211.14ms   95.07%
+    Req/Sec   565.77    250.78     1.33k    70.77%
+  63801 requests in 15.00s, 8.03MB read
+Requests/sec:   4252.91
+Transfer/sec:    548.23KB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask-pypy
@@ -92,11 +92,11 @@ Transfer/sec:    566.71KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.49ms   16.22ms 246.95ms   91.56%
-    Req/Sec     0.87k   458.90     2.00k    77.25%
-  67933 requests in 15.00s, 8.55MB read
-Requests/sec:   4527.83
-Transfer/sec:    583.67KB
+    Latency    33.19ms   56.42ms 238.68ms   92.44%
+    Req/Sec   569.57    443.36     2.22k    66.57%
+  64302 requests in 15.00s, 8.09MB read
+Requests/sec:   4285.46
+Transfer/sec:    552.42KB
 
 ---------------------------------------------------------
  Concurrency: 128 for flask-pypy
@@ -106,11 +106,11 @@ Transfer/sec:    583.67KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    34.44ms   61.75ms 240.70ms   91.97%
-    Req/Sec   638.06    627.02     2.00k    47.61%
-  66614 requests in 15.00s, 8.39MB read
-Requests/sec:   4440.80
-Transfer/sec:    572.45KB
+    Latency    78.91ms  115.16ms 363.92ms   84.31%
+    Req/Sec   577.60    439.20     3.00k    64.49%
+  65619 requests in 15.00s, 8.26MB read
+Requests/sec:   4374.29
+Transfer/sec:    563.87KB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask-pypy
@@ -120,8 +120,8 @@ Transfer/sec:    572.45KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  66163 requests in 15.01s, 8.33MB read
-Requests/sec:   4408.31
-Transfer/sec:    568.26KB
+    Latency   110.59ms  120.56ms 345.41ms   81.01%
+    Req/Sec   574.13    517.17     4.11k    64.26%
+  65138 requests in 15.04s, 8.20MB read
+Requests/sec:   4331.09
+Transfer/sec:    558.30KB

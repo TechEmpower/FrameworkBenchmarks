@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:9000/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10676 requests in 5.00s, 1.78MB read
-Requests/sec:   2134.78
-Transfer/sec:    363.92KB
+    Latency     4.04ms    2.31ms  22.00ms   94.57%
+    Req/Sec   281.21     70.17   444.00     77.25%
+  10538 requests in 5.00s, 1.75MB read
+Requests/sec:   2106.10
+Transfer/sec:    359.03KB
 
 ---------------------------------------------------------
  Running Warmup unfiltered
@@ -36,11 +36,11 @@ Transfer/sec:    363.92KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41570 requests in 15.00s, 6.92MB read
-Requests/sec:   2770.98
-Transfer/sec:    472.38KB
+    Latency    95.28ms   12.60ms 159.99ms   91.28%
+    Req/Sec   361.16    181.94     1.33k    69.91%
+  41018 requests in 15.00s, 6.83MB read
+Requests/sec:   2733.99
+Transfer/sec:    466.06KB
 
 ---------------------------------------------------------
  Queries: 1 for unfiltered
@@ -50,11 +50,11 @@ Transfer/sec:    472.38KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    55.87ms   19.25ms 199.45ms   97.78%
-    Req/Sec   124.22    329.95     1.00k    87.58%
-  71142 requests in 15.00s, 9.69MB read
-Requests/sec:   4742.87
-Transfer/sec:    661.32KB
+    Latency    54.73ms   12.42ms 145.22ms   96.88%
+    Req/Sec   631.87    236.91     1.89k    70.26%
+  71749 requests in 15.00s, 9.77MB read
+Requests/sec:   4783.52
+Transfer/sec:    666.98KB
 
 ---------------------------------------------------------
  Queries: 5 for unfiltered
@@ -64,11 +64,11 @@ Transfer/sec:    661.32KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  18844 requests in 15.01s, 4.87MB read
-Requests/sec:   1255.54
-Transfer/sec:    332.16KB
+    Latency   236.92ms   60.57ms 435.87ms   80.70%
+    Req/Sec   161.08    121.32     1.00k    61.80%
+  18323 requests in 15.01s, 4.73MB read
+Requests/sec:   1220.59
+Transfer/sec:    322.89KB
 
 ---------------------------------------------------------
  Queries: 10 for unfiltered
@@ -78,11 +78,11 @@ Transfer/sec:    332.16KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9866 requests in 15.02s, 4.04MB read
-Requests/sec:    656.86
-Transfer/sec:    275.70KB
+    Latency   475.08ms   98.57ms 605.50ms   60.44%
+    Req/Sec    86.24     93.53     0.90k    80.26%
+  9812 requests in 15.02s, 4.02MB read
+Requests/sec:    653.21
+Transfer/sec:    274.15KB
 
 ---------------------------------------------------------
  Queries: 15 for unfiltered
@@ -92,11 +92,11 @@ Transfer/sec:    275.70KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6592 requests in 15.09s, 3.70MB read
-Requests/sec:    436.79
-Transfer/sec:    251.13KB
+    Latency   687.71ms   97.19ms 814.08ms   44.43%
+    Req/Sec    58.43     86.19   700.00     87.92%
+  6690 requests in 15.04s, 3.76MB read
+Requests/sec:    444.75
+Transfer/sec:    255.68KB
 
 ---------------------------------------------------------
  Queries: 20 for unfiltered
@@ -106,8 +106,8 @@ Transfer/sec:    251.13KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4982 requests in 15.08s, 3.55MB read
-Requests/sec:    330.28
-Transfer/sec:    241.15KB
+    Latency   899.51ms  101.19ms   1.04s    64.21%
+    Req/Sec    43.82     76.39   700.00     91.50%
+  5025 requests in 15.05s, 3.58MB read
+Requests/sec:    333.86
+Transfer/sec:    243.74KB

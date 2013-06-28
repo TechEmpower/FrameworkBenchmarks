@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 18:12:17 UTC 2013
+  System information as of Fri Jun 28 09:22:31 UTC 2013
 
-  System load:  0.14               Processes:           75
-  Usage of /:   25.6% of 19.69GB   Users logged in:     1
-  Memory usage: 10%                IP address for eth0: 10.253.41.249
+  System load:  0.15               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,119 +17,118 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-42 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
-*** System restart required ***
 
 ---------------------------------------------------------
  Running Primer tornado-pypy-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 5s test @ http://10.255.5.228:8080/db
+Running 5s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5220 requests in 5.02s, 0.93MB read
-Requests/sec:   1040.45
-Transfer/sec:    190.80KB
+    Latency    57.34ms   88.58ms 253.51ms   77.83%
+    Req/Sec   157.78    136.53   666.00     58.79%
+  5705 requests in 5.02s, 1.02MB read
+Requests/sec:   1135.91
+Transfer/sec:    208.29KB
 
 ---------------------------------------------------------
  Running Warmup tornado-pypy-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  44691 requests in 15.02s, 8.00MB read
-Requests/sec:   2975.63
-Transfer/sec:    545.66KB
+    Latency   132.65ms  109.93ms 379.39ms   77.81%
+    Req/Sec   432.36    408.87     2.56k    62.48%
+  48021 requests in 15.00s, 8.60MB read
+Requests/sec:   3200.89
+Transfer/sec:    586.98KB
 
 ---------------------------------------------------------
  Concurrency: 8 for tornado-pypy-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  57519 requests in 15.00s, 10.30MB read
-Requests/sec:   3834.72
-Transfer/sec:    703.19KB
+    Latency    26.54ms  101.34ms 445.10ms   94.41%
+    Req/Sec   534.03    155.91   777.00     87.64%
+  60606 requests in 15.00s, 10.85MB read
+Requests/sec:   4040.55
+Transfer/sec:    740.96KB
 
 ---------------------------------------------------------
  Concurrency: 16 for tornado-pypy-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  61966 requests in 15.00s, 11.10MB read
-Requests/sec:   4131.06
-Transfer/sec:    757.54KB
+    Latency    17.36ms   50.46ms 207.43ms   93.15%
+    Req/Sec   547.36    212.02     0.90k    68.24%
+  62514 requests in 15.00s, 11.20MB read
+Requests/sec:   4167.32
+Transfer/sec:    764.20KB
 
 ---------------------------------------------------------
  Concurrency: 32 for tornado-pypy-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    14.28ms   44.69ms 214.38ms   95.22%
-    Req/Sec   571.33    495.06     1.00k    57.13%
-  62575 requests in 15.00s, 11.21MB read
-Requests/sec:   4171.23
-Transfer/sec:    764.91KB
+    Latency    10.56ms   24.12ms 187.18ms   98.01%
+    Req/Sec   593.50    182.23     1.11k    59.94%
+  67547 requests in 15.00s, 12.10MB read
+Requests/sec:   4503.06
+Transfer/sec:    825.76KB
 
 ---------------------------------------------------------
  Concurrency: 64 for tornado-pypy-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  62272 requests in 15.00s, 11.15MB read
-Requests/sec:   4151.85
-Transfer/sec:    761.35KB
+    Latency    16.19ms   16.77ms 168.49ms   97.88%
+    Req/Sec   548.01    204.57     1.20k    62.52%
+  62275 requests in 15.00s, 11.15MB read
+Requests/sec:   4151.31
+Transfer/sec:    761.26KB
 
 ---------------------------------------------------------
  Concurrency: 128 for tornado-pypy-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  55972 requests in 15.00s, 10.02MB read
-Requests/sec:   3731.57
-Transfer/sec:    684.28KB
+    Latency    71.95ms   74.73ms 212.26ms   77.28%
+    Req/Sec   548.54    458.14     2.33k    62.62%
+  62104 requests in 15.01s, 11.12MB read
+Requests/sec:   4138.57
+Transfer/sec:    758.93KB
 
 ---------------------------------------------------------
  Concurrency: 256 for tornado-pypy-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.255.5.228:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
 ---------------------------------------------------------
 
-Running 15s test @ http://10.255.5.228:8080/db
+Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  51065 requests in 15.02s, 9.14MB read
-Requests/sec:   3400.22
-Transfer/sec:    623.52KB
+    Latency    79.33ms   57.04ms 235.67ms   86.29%
+    Req/Sec   495.26    371.60     2.22k    64.14%
+  55874 requests in 15.00s, 10.01MB read
+Requests/sec:   3724.77
+Transfer/sec:    683.05KB

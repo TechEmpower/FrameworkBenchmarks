@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 23:29:38 UTC 2013
+  System information as of Fri Jun 28 05:37:30 UTC 2013
 
-  System load:  0.1                Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.0                Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  839 requests in 5.02s, 235.55KB read
-Requests/sec:    167.14
-Transfer/sec:     46.92KB
+    Latency   100.03ms   29.90ms 134.53ms   72.07%
+    Req/Sec    22.06     42.81   111.00     78.96%
+  840 requests in 5.02s, 235.83KB read
+Requests/sec:    167.31
+Transfer/sec:     46.97KB
 
 ---------------------------------------------------------
  Running Warmup silex
@@ -43,12 +43,12 @@ Transfer/sec:     46.92KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2222 requests in 15.08s, 623.98KB read
-  Socket errors: connect 0, read 0, write 0, timeout 33
-Requests/sec:    147.32
-Transfer/sec:     41.37KB
+    Latency     3.28s     1.12s    4.52s    72.96%
+    Req/Sec    20.89     49.14   444.00     82.72%
+  2237 requests in 15.06s, 628.21KB read
+  Socket errors: connect 0, read 0, write 0, timeout 22
+Requests/sec:    148.53
+Transfer/sec:     41.71KB
 
 ---------------------------------------------------------
  Queries: 1 for silex
@@ -58,12 +58,12 @@ Transfer/sec:     41.37KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2267 requests in 15.25s, 566.27KB read
-  Socket errors: connect 0, read 0, write 0, timeout 23
-Requests/sec:    148.63
-Transfer/sec:     37.13KB
+    Latency     3.24s     1.10s    4.99s    63.42%
+    Req/Sec    20.98     50.78   444.00     83.02%
+  2225 requests in 15.06s, 555.78KB read
+  Socket errors: connect 0, read 0, write 0, timeout 17
+Requests/sec:    147.70
+Transfer/sec:     36.89KB
 
 ---------------------------------------------------------
  Queries: 5 for silex
@@ -73,12 +73,12 @@ Transfer/sec:     37.13KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1950 requests in 15.09s, 729.20KB read
-  Socket errors: connect 0, read 0, write 0, timeout 136
-Requests/sec:    129.26
-Transfer/sec:     48.34KB
+    Latency     3.15s   933.25ms   5.21s    65.78%
+    Req/Sec    18.48     45.04   400.00     84.14%
+  1959 requests in 15.09s, 732.50KB read
+  Socket errors: connect 0, read 0, write 0, timeout 122
+Requests/sec:    129.86
+Transfer/sec:     48.56KB
 
 ---------------------------------------------------------
  Queries: 10 for silex
@@ -88,12 +88,12 @@ Transfer/sec:     48.34KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1727 requests in 15.19s, 0.89MB read
-  Socket errors: connect 0, read 0, write 0, timeout 131
-Requests/sec:    113.69
-Transfer/sec:     60.27KB
+    Latency     3.31s   793.63ms   5.09s    76.37%
+    Req/Sec    17.00     43.26   444.00     85.38%
+  1755 requests in 15.12s, 0.91MB read
+  Socket errors: connect 0, read 0, write 0, timeout 177
+Requests/sec:    116.08
+Transfer/sec:     61.52KB
 
 ---------------------------------------------------------
  Queries: 15 for silex
@@ -103,12 +103,12 @@ Transfer/sec:     60.27KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1508 requests in 15.17s, 1.01MB read
-  Socket errors: connect 0, read 0, write 0, timeout 197
-Requests/sec:     99.39
-Transfer/sec:     68.11KB
+    Latency     3.31s   561.10ms   4.42s    77.42%
+    Req/Sec    15.21     41.26   555.00     86.81%
+  1565 requests in 15.16s, 1.05MB read
+  Socket errors: connect 0, read 0, write 0, timeout 252
+Requests/sec:    103.26
+Transfer/sec:     70.75KB
 
 ---------------------------------------------------------
  Queries: 20 for silex
@@ -118,9 +118,9 @@ Transfer/sec:     68.11KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1364 requests in 15.21s, 1.12MB read
-  Socket errors: connect 0, read 0, write 0, timeout 377
-Requests/sec:     89.65
-Transfer/sec:     75.35KB
+    Latency     3.88s   898.41ms   5.67s    67.57%
+    Req/Sec    13.85     39.11   400.00     87.91%
+  1386 requests in 15.06s, 1.14MB read
+  Socket errors: connect 0, read 0, write 0, timeout 371
+Requests/sec:     92.06
+Transfer/sec:     77.37KB

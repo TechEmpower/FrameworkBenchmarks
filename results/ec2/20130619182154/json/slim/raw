@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 22:09:37 UTC 2013
+  System information as of Fri Jun 28 04:17:46 UTC 2013
 
-  System load:  0.04               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.01               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2680 requests in 5.00s, 586.14KB read
-Requests/sec:    535.51
-Transfer/sec:    117.12KB
+    Latency    70.11ms   59.15ms 188.53ms   54.78%
+    Req/Sec    74.86     89.38   444.00     83.30%
+  2639 requests in 5.00s, 577.16KB read
+Requests/sec:    527.49
+Transfer/sec:    115.37KB
 
 ---------------------------------------------------------
  Running Warmup slim
@@ -43,12 +43,12 @@ Transfer/sec:    117.12KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9747 requests in 15.01s, 2.08MB read
+    Latency     1.13s   892.36ms   2.35s    40.86%
+    Req/Sec    86.90     94.91   600.00     80.34%
+  9790 requests in 15.01s, 2.09MB read
   Socket errors: connect 0, read 0, write 0, timeout 2
-Requests/sec:    649.21
-Transfer/sec:    142.02KB
+Requests/sec:    652.15
+Transfer/sec:    142.66KB
 
 ---------------------------------------------------------
  Concurrency: 8 for slim
@@ -58,11 +58,11 @@ Transfer/sec:    142.02KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10514 requests in 15.00s, 2.25MB read
-Requests/sec:    700.71
-Transfer/sec:    153.25KB
+    Latency   295.72ms  304.61ms 905.65ms   79.94%
+    Req/Sec    92.19    118.12   444.00     81.72%
+  10449 requests in 15.01s, 2.23MB read
+Requests/sec:    696.37
+Transfer/sec:    152.30KB
 
 ---------------------------------------------------------
  Concurrency: 16 for slim
@@ -72,11 +72,11 @@ Transfer/sec:    153.25KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10445 requests in 15.01s, 2.23MB read
-Requests/sec:    696.09
-Transfer/sec:    152.24KB
+    Latency   407.90ms  367.19ms 905.73ms   33.82%
+    Req/Sec    91.56    120.27   777.00     82.28%
+  10387 requests in 15.00s, 2.22MB read
+Requests/sec:    692.31
+Transfer/sec:    151.41KB
 
 ---------------------------------------------------------
  Concurrency: 32 for slim
@@ -86,11 +86,11 @@ Transfer/sec:    152.24KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10227 requests in 15.01s, 2.18MB read
-Requests/sec:    681.54
-Transfer/sec:    149.06KB
+    Latency   879.66ms  941.64ms   3.13s    86.74%
+    Req/Sec    90.44    116.62   777.00     83.95%
+  10274 requests in 15.00s, 2.19MB read
+Requests/sec:    684.73
+Transfer/sec:    149.76KB
 
 ---------------------------------------------------------
  Concurrency: 64 for slim
@@ -100,11 +100,11 @@ Transfer/sec:    149.06KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9997 requests in 15.01s, 2.14MB read
-Requests/sec:    665.95
-Transfer/sec:    145.66KB
+    Latency   701.22ms  641.01ms   1.55s    49.07%
+    Req/Sec    88.94    108.10   777.00     77.90%
+  10088 requests in 15.01s, 2.15MB read
+Requests/sec:    671.87
+Transfer/sec:    146.95KB
 
 ---------------------------------------------------------
  Concurrency: 128 for slim
@@ -114,11 +114,11 @@ Transfer/sec:    145.66KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9765 requests in 15.01s, 2.09MB read
-Requests/sec:    650.49
-Transfer/sec:    142.30KB
+    Latency   503.93ms  390.21ms   1.49s    67.58%
+    Req/Sec    86.70    101.30   777.00     79.12%
+  9804 requests in 15.02s, 2.09MB read
+Requests/sec:    652.88
+Transfer/sec:    142.82KB
 
 ---------------------------------------------------------
  Concurrency: 256 for slim
@@ -128,9 +128,9 @@ Transfer/sec:    142.30KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9710 requests in 15.03s, 2.07MB read
-  Socket errors: connect 0, read 0, write 0, timeout 2
-Requests/sec:    645.84
-Transfer/sec:    141.28KB
+    Latency     1.13s   887.34ms   2.68s    59.32%
+    Req/Sec    86.73     94.43   700.00     79.92%
+  9750 requests in 15.00s, 2.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    649.87
+Transfer/sec:    142.16KB

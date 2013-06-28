@@ -2,14 +2,7 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 00:29:31 UTC 2013
-
-  System load:  0.55               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
-  Swap usage:   0%
-
-  Graph this data and manage this system at https://landscape.canonical.com/
+ System information disabled due to load higher than 2.0
 
   Get cloud support with Ubuntu Advantage Cloud Guest:
     http://www.ubuntu.com/business/services/cloud
@@ -29,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  18714 requests in 5.00s, 2.52MB read
-Requests/sec:   3743.02
-Transfer/sec:    515.40KB
+    Latency     8.16ms    1.88ms  17.30ms   73.92%
+    Req/Sec   131.97     49.22   222.00     71.83%
+  4975 requests in 5.00s, 0.92MB read
+Requests/sec:    994.22
+Transfer/sec:    188.91KB
 
 ---------------------------------------------------------
  Running Warmup servlet-postgres-raw
@@ -43,12 +36,11 @@ Transfer/sec:    515.40KB
 Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  63670 requests in 15.00s, 9.30MB read
-  Socket errors: connect 0, read 237, write 0, timeout 431
-Requests/sec:   4244.78
-Transfer/sec:    634.56KB
+    Latency   239.00ms  159.03ms 634.84ms   78.87%
+    Req/Sec   189.28    157.96     1.78k    66.92%
+  22218 requests in 15.01s, 4.12MB read
+Requests/sec:   1480.28
+Transfer/sec:    281.25KB
 
 ---------------------------------------------------------
  Queries: 1 for servlet-postgres-raw
@@ -58,12 +50,11 @@ Transfer/sec:    634.56KB
 Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   194.92ms  485.87ms   1.74s    91.12%
-    Req/Sec   125.61    339.80     2.00k    87.72%
-  62168 requests in 15.00s, 8.78MB read
-  Socket errors: connect 0, read 286, write 0, timeout 376
-Requests/sec:   4144.54
-Transfer/sec:    599.63KB
+    Latency   138.47ms  137.60ms 530.27ms   85.90%
+    Req/Sec   363.91    313.90     2.89k    71.19%
+  42504 requests in 15.00s, 6.60MB read
+Requests/sec:   2833.88
+Transfer/sec:    450.49KB
 
 ---------------------------------------------------------
  Queries: 5 for servlet-postgres-raw
@@ -73,12 +64,11 @@ Transfer/sec:    599.63KB
 Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  55954 requests in 16.01s, 9.08MB read
-  Socket errors: connect 0, read 361, write 0, timeout 897
-Requests/sec:   3495.14
-Transfer/sec:    580.79KB
+    Latency   599.05ms  220.48ms 908.21ms   49.25%
+    Req/Sec    76.23     84.78   700.00     83.12%
+  8974 requests in 15.03s, 2.49MB read
+Requests/sec:    597.05
+Transfer/sec:    169.60KB
 
 ---------------------------------------------------------
  Queries: 10 for servlet-postgres-raw
@@ -88,12 +78,11 @@ Transfer/sec:    580.79KB
 Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  61924 requests in 15.00s, 11.35MB read
-  Socket errors: connect 0, read 223, write 0, timeout 364
-Requests/sec:   4126.95
-Transfer/sec:    774.39KB
+    Latency     1.07s   239.65ms   1.41s    66.91%
+    Req/Sec    41.42     63.03   500.00     87.34%
+  4725 requests in 15.04s, 2.03MB read
+Requests/sec:    314.27
+Transfer/sec:    138.05KB
 
 ---------------------------------------------------------
  Queries: 15 for servlet-postgres-raw
@@ -103,12 +92,11 @@ Transfer/sec:    774.39KB
 Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  58898 requests in 15.00s, 12.33MB read
-  Socket errors: connect 0, read 331, write 0, timeout 504
-Requests/sec:   3926.25
-Transfer/sec:    841.85KB
+    Latency     1.53s   238.46ms   1.74s    78.76%
+    Req/Sec    28.43     53.53   400.00     78.18%
+  3165 requests in 15.05s, 1.84MB read
+Requests/sec:    210.35
+Transfer/sec:    125.03KB
 
 ---------------------------------------------------------
  Queries: 20 for servlet-postgres-raw
@@ -118,9 +106,8 @@ Transfer/sec:    841.85KB
 Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  58837 requests in 15.00s, 13.75MB read
-  Socket errors: connect 0, read 316, write 0, timeout 500
-Requests/sec:   3922.14
-Transfer/sec:      0.92MB
+    Latency     1.85s   215.59ms   2.09s    72.23%
+    Req/Sec    22.29     48.14   444.00     81.29%
+  2436 requests in 15.05s, 1.78MB read
+Requests/sec:    161.90
+Transfer/sec:    121.36KB

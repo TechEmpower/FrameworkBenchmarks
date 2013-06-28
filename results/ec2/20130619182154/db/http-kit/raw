@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 18:42:21 UTC 2013
+  System information as of Fri Jun 28 00:55:44 UTC 2013
 
-  System load:  0.32               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.37               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/http-kit/db/1
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  12547 requests in 5.01s, 1.96MB read
-Requests/sec:   2506.32
-Transfer/sec:    401.13KB
+    Latency     3.66ms    2.58ms  19.41ms   88.92%
+    Req/Sec   346.41    139.48   700.00     57.63%
+  12795 requests in 5.00s, 2.00MB read
+Requests/sec:   2558.80
+Transfer/sec:    409.54KB
 
 ---------------------------------------------------------
  Running Warmup http-kit
@@ -43,11 +43,11 @@ Transfer/sec:    401.13KB
 Running 15s test @ http://10.253.67.217:8080/http-kit/db/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    43.57ms    8.71ms 103.21ms   93.94%
-    Req/Sec   380.67    486.56     2.00k    61.98%
-  88706 requests in 15.00s, 13.86MB read
-Requests/sec:   5913.00
-Transfer/sec:      0.92MB
+    Latency    75.91ms   82.16ms 293.12ms   87.36%
+    Req/Sec   701.07    525.21     3.00k    68.05%
+  79913 requests in 15.00s, 12.49MB read
+Requests/sec:   5327.72
+Transfer/sec:    852.68KB
 
 ---------------------------------------------------------
  Concurrency: 8 for http-kit
@@ -57,11 +57,11 @@ Transfer/sec:      0.92MB
 Running 15s test @ http://10.253.67.217:8080/http-kit/db/1
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  86437 requests in 15.00s, 13.51MB read
-Requests/sec:   5762.61
-Transfer/sec:      0.90MB
+    Latency    19.78ms   59.97ms 215.58ms   91.34%
+    Req/Sec   734.81    247.66     1.00k    85.95%
+  84133 requests in 15.03s, 13.15MB read
+Requests/sec:   5596.27
+Transfer/sec:      0.87MB
 
 ---------------------------------------------------------
  Concurrency: 16 for http-kit
@@ -71,11 +71,11 @@ Transfer/sec:      0.90MB
 Running 15s test @ http://10.253.67.217:8080/http-kit/db/1
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  89109 requests in 15.00s, 13.93MB read
-Requests/sec:   5940.47
-Transfer/sec:      0.93MB
+    Latency     4.64ms   20.18ms 203.63ms   98.94%
+    Req/Sec   807.07    121.11     1.11k    90.79%
+  91457 requests in 15.00s, 14.29MB read
+Requests/sec:   6097.17
+Transfer/sec:      0.95MB
 
 ---------------------------------------------------------
  Concurrency: 32 for http-kit
@@ -85,11 +85,11 @@ Transfer/sec:      0.93MB
 Running 15s test @ http://10.253.67.217:8080/http-kit/db/1
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  90594 requests in 15.00s, 14.16MB read
-Requests/sec:   6039.94
-Transfer/sec:      0.94MB
+    Latency     5.24ms    1.12ms  27.05ms   95.77%
+    Req/Sec   801.82     90.06     1.11k    81.38%
+  92053 requests in 15.00s, 14.39MB read
+Requests/sec:   6136.42
+Transfer/sec:      0.96MB
 
 ---------------------------------------------------------
  Concurrency: 64 for http-kit
@@ -99,10 +99,10 @@ Transfer/sec:      0.94MB
 Running 15s test @ http://10.253.67.217:8080/http-kit/db/1
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  91648 requests in 15.00s, 14.32MB read
-Requests/sec:   6109.69
+    Latency    10.91ms    3.99ms  42.07ms   97.31%
+    Req/Sec   792.19    119.85     1.11k    92.81%
+  91030 requests in 15.00s, 14.23MB read
+Requests/sec:   6068.33
 Transfer/sec:      0.95MB
 
 ---------------------------------------------------------
@@ -113,11 +113,11 @@ Transfer/sec:      0.95MB
 Running 15s test @ http://10.253.67.217:8080/http-kit/db/1
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    20.82ms    1.62ms  28.04ms   85.76%
-    Req/Sec   287.03    452.41     1.00k    71.30%
-  91474 requests in 15.00s, 14.30MB read
-Requests/sec:   6098.99
-Transfer/sec:      0.95MB
+    Latency    20.63ms    2.03ms  44.26ms   91.47%
+    Req/Sec   815.82    306.38     1.67k    68.81%
+  92615 requests in 15.00s, 14.48MB read
+Requests/sec:   6174.22
+Transfer/sec:      0.97MB
 
 ---------------------------------------------------------
  Concurrency: 256 for http-kit
@@ -127,8 +127,8 @@ Transfer/sec:      0.95MB
 Running 15s test @ http://10.253.67.217:8080/http-kit/db/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    47.86ms   21.70ms 130.37ms   93.59%
-    Req/Sec   382.22    486.01     1.00k    61.78%
-  89660 requests in 15.00s, 14.01MB read
-Requests/sec:   5976.89
-Transfer/sec:      0.93MB
+    Latency    41.77ms    3.31ms  53.39ms   90.41%
+    Req/Sec   797.55    349.54     2.11k    63.56%
+  90750 requests in 15.00s, 14.18MB read
+Requests/sec:   6050.08
+Transfer/sec:      0.95MB

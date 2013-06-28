@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 15:50:25 UTC 2013
+  System information as of Fri Jun 28 08:10:45 UTC 2013
 
-  System load:  0.11               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  0.11               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/mysql-orm/
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8190 requests in 5.00s, 1.71MB read
-Requests/sec:   1637.67
-Transfer/sec:    349.88KB
+    Latency     6.76ms    7.82ms  40.79ms   92.47%
+    Req/Sec   239.09    125.26   666.00     62.38%
+  8905 requests in 5.00s, 1.86MB read
+Requests/sec:   1780.12
+Transfer/sec:    380.32KB
 
 ---------------------------------------------------------
  Running Warmup hapi-mysql
@@ -43,11 +43,11 @@ Transfer/sec:    349.88KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm/
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28977 requests in 15.00s, 6.05MB read
-Requests/sec:   1932.08
-Transfer/sec:    412.79KB
+    Latency   178.86ms   79.08ms 330.31ms   60.56%
+    Req/Sec   256.95    340.67     2.78k    85.56%
+  29161 requests in 15.01s, 6.08MB read
+Requests/sec:   1942.19
+Transfer/sec:    414.94KB
 
 ---------------------------------------------------------
  Concurrency: 8 for hapi-mysql
@@ -57,11 +57,11 @@ Transfer/sec:    412.79KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm/
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27673 requests in 15.00s, 5.77MB read
-Requests/sec:   1844.74
-Transfer/sec:    394.13KB
+    Latency     8.42ms    9.68ms  53.99ms   92.37%
+    Req/Sec   217.20    166.47     0.89k    82.96%
+  24824 requests in 15.00s, 5.18MB read
+Requests/sec:   1654.75
+Transfer/sec:    353.53KB
 
 ---------------------------------------------------------
  Concurrency: 16 for hapi-mysql
@@ -71,11 +71,11 @@ Transfer/sec:    394.13KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm/
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28584 requests in 15.00s, 5.96MB read
-Requests/sec:   1904.98
-Transfer/sec:    407.01KB
+    Latency    15.56ms   13.76ms  54.56ms   80.56%
+    Req/Sec   234.63    184.81     1.00k    78.00%
+  26519 requests in 15.01s, 5.53MB read
+Requests/sec:   1766.97
+Transfer/sec:    377.50KB
 
 ---------------------------------------------------------
  Concurrency: 32 for hapi-mysql
@@ -85,11 +85,11 @@ Transfer/sec:    407.01KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm/
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27071 requests in 15.01s, 5.65MB read
-Requests/sec:   1803.35
-Transfer/sec:    385.30KB
+    Latency    19.49ms   12.43ms  66.18ms   90.82%
+    Req/Sec   254.62    121.55   444.00     57.62%
+  29008 requests in 15.01s, 6.05MB read
+Requests/sec:   1932.88
+Transfer/sec:    412.95KB
 
 ---------------------------------------------------------
  Concurrency: 64 for hapi-mysql
@@ -99,11 +99,11 @@ Transfer/sec:    385.30KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm/
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  29069 requests in 15.01s, 6.06MB read
-Requests/sec:   1936.04
-Transfer/sec:    413.63KB
+    Latency    40.03ms   20.11ms  92.44ms   74.96%
+    Req/Sec   255.52    172.33     0.89k    70.51%
+  28957 requests in 15.00s, 6.04MB read
+Requests/sec:   1929.89
+Transfer/sec:    412.31KB
 
 ---------------------------------------------------------
  Concurrency: 128 for hapi-mysql
@@ -113,11 +113,11 @@ Transfer/sec:    413.63KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm/
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28841 requests in 15.00s, 6.02MB read
-Requests/sec:   1922.23
-Transfer/sec:    410.68KB
+    Latency   151.44ms  171.56ms 495.06ms   77.74%
+    Req/Sec   243.24    216.64     1.33k    63.48%
+  27820 requests in 15.01s, 5.80MB read
+Requests/sec:   1853.88
+Transfer/sec:    396.07KB
 
 ---------------------------------------------------------
  Concurrency: 256 for hapi-mysql
@@ -127,8 +127,8 @@ Transfer/sec:    410.68KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm/
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28919 requests in 15.01s, 6.03MB read
-Requests/sec:   1926.10
-Transfer/sec:    411.52KB
+    Latency   178.02ms   60.19ms 280.84ms   51.86%
+    Req/Sec   251.43    341.44     2.44k    86.14%
+  28544 requests in 15.00s, 5.96MB read
+Requests/sec:   1902.63
+Transfer/sec:    406.49KB

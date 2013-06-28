@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2106 requests in 5.01s, 658.12KB read
-Requests/sec:    419.94
-Transfer/sec:    131.23KB
+    Latency    42.81ms   24.46ms  79.06ms   65.13%
+    Req/Sec    58.20     65.89   333.00     93.15%
+  2135 requests in 5.01s, 667.19KB read
+Requests/sec:    425.84
+Transfer/sec:    133.08KB
 
 ---------------------------------------------------------
  Running Warmup lift-stateless
@@ -36,11 +36,11 @@ Transfer/sec:    131.23KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  24096 requests in 15.01s, 7.35MB read
-Requests/sec:   1605.18
-Transfer/sec:    501.62KB
+    Latency   235.17ms  216.04ms 884.08ms   83.29%
+    Req/Sec   218.28    151.83     1.10k    70.01%
+  24217 requests in 15.01s, 7.39MB read
+Requests/sec:   1613.26
+Transfer/sec:    504.14KB
 
 ---------------------------------------------------------
  Concurrency: 8 for lift-stateless
@@ -50,11 +50,11 @@ Transfer/sec:    501.62KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  55123 requests in 15.00s, 16.82MB read
-Requests/sec:   3674.83
-Transfer/sec:      1.12MB
+    Latency     2.70ms    2.95ms  35.43ms   95.18%
+    Req/Sec   465.71    133.73     1.20k    72.55%
+  52955 requests in 15.00s, 16.16MB read
+Requests/sec:   3530.20
+Transfer/sec:      1.08MB
 
 ---------------------------------------------------------
  Concurrency: 16 for lift-stateless
@@ -64,11 +64,11 @@ Transfer/sec:      1.12MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  59790 requests in 15.00s, 18.25MB read
-Requests/sec:   3985.51
-Transfer/sec:      1.22MB
+    Latency     4.38ms    3.41ms  48.36ms   94.28%
+    Req/Sec   520.05    140.91     1.11k    68.10%
+  59250 requests in 15.00s, 18.08MB read
+Requests/sec:   3949.86
+Transfer/sec:      1.21MB
 
 ---------------------------------------------------------
  Concurrency: 32 for lift-stateless
@@ -78,11 +78,11 @@ Transfer/sec:      1.22MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  70286 requests in 15.00s, 21.45MB read
-Requests/sec:   4685.53
-Transfer/sec:      1.43MB
+    Latency     8.20ms   10.74ms 152.02ms   96.74%
+    Req/Sec   600.45    178.20     1.33k    71.92%
+  68363 requests in 15.00s, 20.86MB read
+Requests/sec:   4557.22
+Transfer/sec:      1.39MB
 
 ---------------------------------------------------------
  Concurrency: 64 for lift-stateless
@@ -92,11 +92,11 @@ Transfer/sec:      1.43MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  74181 requests in 15.00s, 22.64MB read
-Requests/sec:   4944.91
-Transfer/sec:      1.51MB
+    Latency    15.85ms   25.71ms 272.94ms   96.43%
+    Req/Sec   657.83    194.27     1.89k    72.55%
+  74773 requests in 15.00s, 22.82MB read
+Requests/sec:   4984.44
+Transfer/sec:      1.52MB
 
 ---------------------------------------------------------
  Concurrency: 128 for lift-stateless
@@ -106,11 +106,11 @@ Transfer/sec:      1.51MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    26.08ms   29.92ms 295.71ms   96.60%
-    Req/Sec   133.06    339.75     1.00k    86.69%
-  77099 requests in 15.00s, 23.53MB read
-Requests/sec:   5140.21
-Transfer/sec:      1.57MB
+    Latency    28.58ms   36.58ms 380.33ms   95.94%
+    Req/Sec   683.79    216.00     2.00k    71.79%
+  77818 requests in 15.00s, 23.75MB read
+Requests/sec:   5188.78
+Transfer/sec:      1.58MB
 
 ---------------------------------------------------------
  Concurrency: 256 for lift-stateless
@@ -120,8 +120,9 @@ Transfer/sec:      1.57MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    52.22ms   37.42ms 372.34ms   92.65%
-    Req/Sec   153.26    362.28     2.00k    84.74%
-  77142 requests in 15.00s, 23.54MB read
-Requests/sec:   5142.64
+    Latency    52.98ms   49.25ms 476.43ms   94.98%
+    Req/Sec   723.92    303.71     2.89k    74.57%
+  77322 requests in 15.00s, 23.60MB read
+  Socket errors: connect 0, read 0, write 0, timeout 68
+Requests/sec:   5154.46
 Transfer/sec:      1.57MB

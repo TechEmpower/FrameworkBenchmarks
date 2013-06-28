@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 16:24:21 UTC 2013
+  System information as of Thu Jun 27 22:33:34 UTC 2013
 
-  System load:  0.54               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.99               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:9000/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1842 requests in 5.01s, 213.61KB read
-Requests/sec:    367.77
-Transfer/sec:     42.65KB
+    Latency    55.52ms   40.27ms 112.29ms   48.15%
+    Req/Sec    56.30     55.08   222.00     51.12%
+  1984 requests in 5.01s, 230.08KB read
+Requests/sec:    396.20
+Transfer/sec:     45.95KB
 
 ---------------------------------------------------------
  Running Warmup play
@@ -43,12 +43,12 @@ Transfer/sec:     42.65KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13327 requests in 15.06s, 1.51MB read
-  Socket errors: connect 0, read 0, write 0, timeout 8
-Requests/sec:    884.65
-Transfer/sec:    102.58KB
+    Latency   587.13ms  189.14ms 932.35ms   72.41%
+    Req/Sec   115.72    368.40     3.56k    92.48%
+  12782 requests in 15.13s, 1.45MB read
+  Socket errors: connect 0, read 0, write 0, timeout 21
+Requests/sec:    845.03
+Transfer/sec:     97.99KB
 
 ---------------------------------------------------------
  Concurrency: 8 for play
@@ -58,11 +58,11 @@ Transfer/sec:    102.58KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17234 requests in 15.00s, 1.95MB read
-Requests/sec:   1148.96
-Transfer/sec:    133.22KB
+    Latency     8.64ms    6.12ms  35.84ms   91.73%
+    Req/Sec   148.40     63.05   333.00     75.10%
+  16907 requests in 15.00s, 1.91MB read
+Requests/sec:   1126.84
+Transfer/sec:    130.66KB
 
 ---------------------------------------------------------
  Concurrency: 16 for play
@@ -72,11 +72,11 @@ Transfer/sec:    133.22KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  19937 requests in 15.00s, 2.26MB read
-Requests/sec:   1328.83
-Transfer/sec:    154.09KB
+    Latency    14.59ms   10.10ms  58.27ms   90.91%
+    Req/Sec   174.60     72.03   444.00     74.79%
+  19836 requests in 15.00s, 2.25MB read
+Requests/sec:   1322.20
+Transfer/sec:    153.32KB
 
 ---------------------------------------------------------
  Concurrency: 32 for play
@@ -86,11 +86,11 @@ Transfer/sec:    154.09KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21334 requests in 15.00s, 2.42MB read
-Requests/sec:   1422.16
-Transfer/sec:    164.90KB
+    Latency    38.15ms   24.57ms  88.76ms   66.77%
+    Req/Sec   188.30    164.42   666.00     46.25%
+  21429 requests in 15.01s, 2.43MB read
+Requests/sec:   1427.48
+Transfer/sec:    165.53KB
 
 ---------------------------------------------------------
  Concurrency: 64 for play
@@ -100,11 +100,11 @@ Transfer/sec:    164.90KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21801 requests in 15.01s, 2.47MB read
-Requests/sec:   1452.30
-Transfer/sec:    168.41KB
+    Latency   138.90ms   92.45ms 264.63ms   62.16%
+    Req/Sec   188.58    274.07     0.90k    81.44%
+  21446 requests in 15.02s, 2.43MB read
+Requests/sec:   1427.80
+Transfer/sec:    165.57KB
 
 ---------------------------------------------------------
  Concurrency: 128 for play
@@ -114,11 +114,11 @@ Transfer/sec:    168.41KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  22419 requests in 15.04s, 2.54MB read
-Requests/sec:   1490.81
-Transfer/sec:    172.86KB
+    Latency   152.00ms   55.59ms 212.06ms   65.90%
+    Req/Sec   196.52    393.46     1.78k    87.12%
+  22112 requests in 15.04s, 2.50MB read
+Requests/sec:   1470.57
+Transfer/sec:    170.53KB
 
 ---------------------------------------------------------
  Concurrency: 256 for play
@@ -128,8 +128,9 @@ Transfer/sec:    172.86KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  22465 requests in 15.00s, 2.54MB read
-Requests/sec:   1497.21
-Transfer/sec:    173.61KB
+    Latency   326.87ms  128.83ms 514.72ms   58.86%
+    Req/Sec   195.56    461.17     3.56k    89.87%
+  22089 requests in 15.06s, 2.50MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:   1466.74
+Transfer/sec:    170.07KB

@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 20:21:26 UTC 2013
+  System information as of Fri Jun 28 02:29:32 UTC 2013
 
-  System load:  0.24               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.28               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,12 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4332 requests in 5.00s, 1.73MB read
-Requests/sec:    866.04
-Transfer/sec:    355.17KB
+    Latency   401.37ms  516.97ms   1.12s    65.60%
+    Req/Sec    56.71     74.56   444.00     89.81%
+  2341 requests in 6.00s, 0.94MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    390.14
+Transfer/sec:    160.00KB
 
 ---------------------------------------------------------
  Running Warmup phreeze
@@ -43,12 +44,12 @@ Transfer/sec:    355.17KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13622 requests in 15.11s, 5.46MB read
-  Socket errors: connect 0, read 0, write 0, timeout 23
-Requests/sec:    901.36
-Transfer/sec:    369.70KB
+    Latency     1.03s     1.40s    5.16s    87.01%
+    Req/Sec   119.54    117.32     0.90k    55.16%
+  13684 requests in 15.20s, 5.48MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:    900.41
+Transfer/sec:    369.31KB
 
 ---------------------------------------------------------
  Concurrency: 8 for phreeze
@@ -58,11 +59,11 @@ Transfer/sec:    369.70KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13457 requests in 15.15s, 5.39MB read
-Requests/sec:    888.46
-Transfer/sec:    364.37KB
+    Latency   329.74ms  429.53ms   1.37s    83.08%
+    Req/Sec   115.90    128.25   555.00     85.66%
+  13485 requests in 15.52s, 5.40MB read
+Requests/sec:    869.06
+Transfer/sec:    356.41KB
 
 ---------------------------------------------------------
  Concurrency: 16 for phreeze
@@ -72,12 +73,12 @@ Transfer/sec:    364.37KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13412 requests in 15.03s, 5.37MB read
+    Latency     1.62s     2.15s    5.17s    70.69%
+    Req/Sec   116.27    138.70     0.90k    84.05%
+  13288 requests in 15.01s, 5.32MB read
   Socket errors: connect 0, read 0, write 0, timeout 12
-Requests/sec:    892.40
-Transfer/sec:    365.98KB
+Requests/sec:    885.17
+Transfer/sec:    363.02KB
 
 ---------------------------------------------------------
  Concurrency: 32 for phreeze
@@ -87,12 +88,12 @@ Transfer/sec:    365.98KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13339 requests in 15.43s, 5.34MB read
-  Socket errors: connect 0, read 0, write 0, timeout 48
-Requests/sec:    864.26
-Transfer/sec:    354.44KB
+    Latency     1.05s     2.85s   11.70s    93.38%
+    Req/Sec   119.98    140.68     0.90k    83.76%
+  13616 requests in 15.00s, 5.45MB read
+  Socket errors: connect 0, read 0, write 0, timeout 24
+Requests/sec:    907.55
+Transfer/sec:    372.20KB
 
 ---------------------------------------------------------
  Concurrency: 64 for phreeze
@@ -102,12 +103,12 @@ Transfer/sec:    354.44KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13641 requests in 15.15s, 5.46MB read
-  Socket errors: connect 0, read 0, write 0, timeout 16
-Requests/sec:    900.38
-Transfer/sec:    369.26KB
+    Latency   417.37ms  439.57ms   1.10s    69.88%
+    Req/Sec   118.14    129.33     0.89k    86.48%
+  13563 requests in 15.19s, 5.43MB read
+  Socket errors: connect 0, read 0, write 0, timeout 25
+Requests/sec:    892.78
+Transfer/sec:    366.15KB
 
 ---------------------------------------------------------
  Concurrency: 128 for phreeze
@@ -117,12 +118,12 @@ Transfer/sec:    369.26KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13010 requests in 15.01s, 5.21MB read
-  Socket errors: connect 0, read 0, write 0, timeout 35
-Requests/sec:    866.92
-Transfer/sec:    355.54KB
+    Latency   433.81ms  400.92ms 978.72ms   45.17%
+    Req/Sec   115.96    121.76     0.90k    88.08%
+  13182 requests in 15.01s, 5.28MB read
+  Socket errors: connect 0, read 0, write 0, timeout 29
+Requests/sec:    878.49
+Transfer/sec:    360.29KB
 
 ---------------------------------------------------------
  Concurrency: 256 for phreeze
@@ -132,9 +133,9 @@ Transfer/sec:    355.54KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13563 requests in 15.06s, 5.43MB read
-  Socket errors: connect 0, read 0, write 0, timeout 17
-Requests/sec:    900.63
-Transfer/sec:    369.40KB
+    Latency   689.86ms  616.16ms   2.04s    71.87%
+    Req/Sec   117.11    121.51     1.30k    89.45%
+  13278 requests in 15.02s, 5.32MB read
+  Socket errors: connect 0, read 0, write 0, timeout 53
+Requests/sec:    883.92
+Transfer/sec:    362.54KB

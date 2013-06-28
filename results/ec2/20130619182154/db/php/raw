@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 16:05:00 UTC 2013
+  System information as of Thu Jun 27 22:14:17 UTC 2013
 
-  System load:  0.03               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.1                Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/dborm.php
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2847 requests in 5.01s, 658.18KB read
-Requests/sec:    568.73
-Transfer/sec:    131.48KB
+    Latency    73.79ms   94.23ms 226.16ms   70.62%
+    Req/Sec    78.00     53.99   222.00     67.11%
+  2961 requests in 5.01s, 684.58KB read
+Requests/sec:    591.48
+Transfer/sec:    136.75KB
 
 ---------------------------------------------------------
  Running Warmup php
@@ -43,12 +43,12 @@ Transfer/sec:    131.48KB
 Running 15s test @ http://10.253.67.217:8080/dborm.php
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7925 requests in 15.22s, 1.79MB read
-  Socket errors: connect 0, read 0, write 0, timeout 462
-Requests/sec:    520.80
-Transfer/sec:    120.42KB
+    Latency     3.13s     4.86s   13.88s    82.98%
+    Req/Sec    69.22     97.54     1.89k    85.15%
+  7505 requests in 15.18s, 1.69MB read
+  Socket errors: connect 0, read 0, write 0, timeout 136
+Requests/sec:    494.26
+Transfer/sec:    114.29KB
 
 ---------------------------------------------------------
  Concurrency: 8 for php
@@ -58,11 +58,11 @@ Transfer/sec:    120.42KB
 Running 15s test @ http://10.253.67.217:8080/dborm.php
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9297 requests in 15.01s, 2.10MB read
-Requests/sec:    619.58
-Transfer/sec:    143.24KB
+    Latency    64.34ms   85.30ms 211.09ms   73.32%
+    Req/Sec    81.70     54.01   222.00     68.77%
+  9294 requests in 15.01s, 2.10MB read
+Requests/sec:    619.26
+Transfer/sec:    143.16KB
 
 ---------------------------------------------------------
  Concurrency: 16 for php
@@ -72,11 +72,11 @@ Transfer/sec:    143.24KB
 Running 15s test @ http://10.253.67.217:8080/dborm.php
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9594 requests in 15.01s, 2.17MB read
-Requests/sec:    639.03
-Transfer/sec:    147.73KB
+    Latency    38.60ms   19.54ms  72.05ms   56.90%
+    Req/Sec    83.72     72.72   333.00     48.49%
+  9512 requests in 15.01s, 2.15MB read
+Requests/sec:    633.72
+Transfer/sec:    146.51KB
 
 ---------------------------------------------------------
  Concurrency: 32 for php
@@ -86,11 +86,11 @@ Transfer/sec:    147.73KB
 Running 15s test @ http://10.253.67.217:8080/dborm.php
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9227 requests in 15.02s, 2.08MB read
-Requests/sec:    614.22
-Transfer/sec:    142.00KB
+    Latency    78.71ms   33.77ms 120.89ms   51.50%
+    Req/Sec    81.73     84.94   444.00     82.14%
+  9284 requests in 15.02s, 2.10MB read
+Requests/sec:    618.27
+Transfer/sec:    142.94KB
 
 ---------------------------------------------------------
  Concurrency: 64 for php
@@ -100,11 +100,11 @@ Transfer/sec:    142.00KB
 Running 15s test @ http://10.253.67.217:8080/dborm.php
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8761 requests in 15.01s, 1.98MB read
-Requests/sec:    583.60
-Transfer/sec:    134.92KB
+    Latency   153.99ms   50.57ms 237.77ms   70.23%
+    Req/Sec    76.04     86.14   600.00     83.56%
+  8620 requests in 15.02s, 1.95MB read
+Requests/sec:    573.74
+Transfer/sec:    132.65KB
 
 ---------------------------------------------------------
  Concurrency: 128 for php
@@ -114,11 +114,11 @@ Transfer/sec:    134.92KB
 Running 15s test @ http://10.253.67.217:8080/dborm.php
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8424 requests in 15.03s, 1.90MB read
-Requests/sec:    560.34
-Transfer/sec:    129.56KB
+    Latency   315.61ms   85.21ms 445.71ms   72.71%
+    Req/Sec    71.03     86.91   666.00     85.29%
+  8039 requests in 15.03s, 1.82MB read
+Requests/sec:    534.71
+Transfer/sec:    123.64KB
 
 ---------------------------------------------------------
  Concurrency: 256 for php
@@ -128,9 +128,9 @@ Transfer/sec:    129.56KB
 Running 15s test @ http://10.253.67.217:8080/dborm.php
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8002 requests in 15.04s, 1.81MB read
-  Socket errors: connect 0, read 0, write 0, timeout 258
-Requests/sec:    531.99
-Transfer/sec:    123.01KB
+    Latency     3.90s     5.46s   14.37s    72.40%
+    Req/Sec    70.51     87.64   555.00     85.11%
+  7935 requests in 15.02s, 1.79MB read
+  Socket errors: connect 0, read 0, write 0, timeout 119
+Requests/sec:    528.19
+Transfer/sec:    122.14KB

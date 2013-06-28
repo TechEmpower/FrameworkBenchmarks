@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/update-mongodb?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6692 requests in 5.00s, 1.89MB read
-Requests/sec:   1337.58
-Transfer/sec:    387.40KB
+    Latency     7.55ms    4.78ms  36.59ms   90.65%
+    Req/Sec   171.20     98.02   666.00     85.92%
+  6492 requests in 5.00s, 1.84MB read
+Requests/sec:   1297.98
+Transfer/sec:    375.93KB
 
 ---------------------------------------------------------
  Running Warmup nodejs-mongodb-raw
@@ -36,11 +36,11 @@ Transfer/sec:    387.40KB
 Running 15s test @ http://10.253.67.217:8080/update-mongodb?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20088 requests in 15.01s, 5.68MB read
-Requests/sec:   1338.53
-Transfer/sec:    387.65KB
+    Latency   243.90ms  110.90ms 460.86ms   71.66%
+    Req/Sec   173.19    137.86     1.11k    65.15%
+  19663 requests in 15.01s, 5.56MB read
+Requests/sec:   1309.80
+Transfer/sec:    379.33KB
 
 ---------------------------------------------------------
  Queries: 1 for nodejs-mongodb-raw
@@ -50,11 +50,11 @@ Transfer/sec:    387.65KB
 Running 15s test @ http://10.253.67.217:8080/update-mongodb?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  38864 requests in 15.01s, 8.59MB read
-Requests/sec:   2589.46
-Transfer/sec:    586.12KB
+    Latency   109.64ms   55.52ms 313.19ms   79.87%
+    Req/Sec   332.07    184.92     1.55k    69.89%
+  37725 requests in 15.00s, 8.34MB read
+Requests/sec:   2514.35
+Transfer/sec:    569.11KB
 
 ---------------------------------------------------------
  Queries: 5 for nodejs-mongodb-raw
@@ -64,11 +64,11 @@ Transfer/sec:    586.12KB
 Running 15s test @ http://10.253.67.217:8080/update-mongodb?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8446 requests in 15.30s, 3.96MB read
-Requests/sec:    551.99
-Transfer/sec:    265.15KB
+    Latency   590.47ms  126.75ms 667.78ms   81.99%
+    Req/Sec    72.24    115.20     1.10k    78.96%
+  8228 requests in 15.16s, 3.86MB read
+Requests/sec:    542.64
+Transfer/sec:    260.67KB
 
 ---------------------------------------------------------
  Queries: 10 for nodejs-mongodb-raw
@@ -78,11 +78,11 @@ Transfer/sec:    265.15KB
 Running 15s test @ http://10.253.67.217:8080/update-mongodb?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4234 requests in 15.61s, 3.29MB read
-Requests/sec:    271.18
-Transfer/sec:    216.04KB
+    Latency     1.33s   393.32ms   1.51s    85.49%
+    Req/Sec    36.99     71.95     1.67k    84.46%
+  4174 requests in 15.47s, 3.25MB read
+Requests/sec:    269.82
+Transfer/sec:    214.95KB
 
 ---------------------------------------------------------
  Queries: 15 for nodejs-mongodb-raw
@@ -92,11 +92,11 @@ Transfer/sec:    216.04KB
 Running 15s test @ http://10.253.67.217:8080/update-mongodb?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2810 requests in 15.33s, 3.05MB read
-Requests/sec:    183.26
-Transfer/sec:    203.95KB
+    Latency     1.75s   279.15ms   1.88s    88.81%
+    Req/Sec    24.39     53.35     1.30k    79.00%
+  2782 requests in 15.75s, 3.02MB read
+Requests/sec:    176.64
+Transfer/sec:    196.60KB
 
 ---------------------------------------------------------
  Queries: 20 for nodejs-mongodb-raw
@@ -106,9 +106,9 @@ Transfer/sec:    203.95KB
 Running 15s test @ http://10.253.67.217:8080/update-mongodb?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2129 requests in 16.01s, 2.97MB read
-  Socket errors: connect 0, read 0, write 0, timeout 162
-Requests/sec:    133.01
-Transfer/sec:    190.11KB
+    Latency     2.61s   515.91ms   2.81s    91.03%
+    Req/Sec    18.48     46.00     1.00k    83.72%
+  2087 requests in 15.32s, 2.91MB read
+  Socket errors: connect 0, read 0, write 0, timeout 314
+Requests/sec:    136.19
+Transfer/sec:    194.65KB

@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 18:30:13 UTC 2013
+  System information as of Fri Jun 28 00:37:10 UTC 2013
 
-  System load:  1.47               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.84               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:9000/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6123 requests in 5.00s, 13.79MB read
-Requests/sec:   1223.99
-Transfer/sec:      2.76MB
+    Latency     8.43ms    7.24ms  48.87ms   92.24%
+    Req/Sec   163.60     74.81   444.00     87.01%
+  6008 requests in 5.00s, 13.53MB read
+Requests/sec:   1201.22
+Transfer/sec:      2.71MB
 
 ---------------------------------------------------------
  Running Warmup play-scala
@@ -43,12 +43,12 @@ Transfer/sec:      2.76MB
 Running 15s test @ http://10.253.67.217:9000/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  32630 requests in 15.01s, 73.50MB read
-  Socket errors: connect 0, read 0, write 0, timeout 6
-Requests/sec:   2173.71
-Transfer/sec:      4.90MB
+    Latency   252.81ms  220.45ms 865.98ms   90.28%
+    Req/Sec   289.75    352.08     3.44k    84.58%
+  32407 requests in 15.00s, 73.00MB read
+  Socket errors: connect 0, read 0, write 0, timeout 17
+Requests/sec:   2160.89
+Transfer/sec:      4.87MB
 
 ---------------------------------------------------------
  Concurrency: 8 for play-scala
@@ -58,11 +58,11 @@ Transfer/sec:      4.90MB
 Running 15s test @ http://10.253.67.217:9000/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  29223 requests in 15.00s, 65.83MB read
-Requests/sec:   1947.99
-Transfer/sec:      4.39MB
+    Latency     4.16ms    1.94ms  23.77ms   94.19%
+    Req/Sec   264.51     62.75   444.00     53.24%
+  30142 requests in 15.00s, 67.90MB read
+Requests/sec:   2009.22
+Transfer/sec:      4.53MB
 
 ---------------------------------------------------------
  Concurrency: 16 for play-scala
@@ -72,11 +72,11 @@ Transfer/sec:      4.39MB
 Running 15s test @ http://10.253.67.217:9000/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  31472 requests in 15.00s, 70.89MB read
-Requests/sec:   2098.18
-Transfer/sec:      4.73MB
+    Latency     7.61ms    2.79ms  28.20ms   83.97%
+    Req/Sec   285.88     88.80   555.00     76.43%
+  32506 requests in 15.00s, 73.22MB read
+Requests/sec:   2166.75
+Transfer/sec:      4.88MB
 
 ---------------------------------------------------------
  Concurrency: 32 for play-scala
@@ -86,11 +86,11 @@ Transfer/sec:      4.73MB
 Running 15s test @ http://10.253.67.217:9000/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  35435 requests in 15.00s, 79.82MB read
-Requests/sec:   2361.77
-Transfer/sec:      5.32MB
+    Latency    25.05ms   43.00ms 192.84ms   93.84%
+    Req/Sec   297.68    135.41   800.00     66.61%
+  33832 requests in 15.00s, 76.21MB read
+Requests/sec:   2254.97
+Transfer/sec:      5.08MB
 
 ---------------------------------------------------------
  Concurrency: 64 for play-scala
@@ -100,11 +100,11 @@ Transfer/sec:      5.32MB
 Running 15s test @ http://10.253.67.217:9000/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  37154 requests in 15.01s, 83.69MB read
-Requests/sec:   2475.11
-Transfer/sec:      5.58MB
+    Latency    59.87ms   71.93ms 215.26ms   82.11%
+    Req/Sec   319.60    244.20     1.10k    64.83%
+  36404 requests in 15.00s, 82.00MB read
+Requests/sec:   2426.56
+Transfer/sec:      5.47MB
 
 ---------------------------------------------------------
  Concurrency: 128 for play-scala
@@ -114,11 +114,11 @@ Transfer/sec:      5.58MB
 Running 15s test @ http://10.253.67.217:9000/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  37841 requests in 15.00s, 85.24MB read
-Requests/sec:   2523.00
-Transfer/sec:      5.68MB
+    Latency    78.30ms   48.85ms 165.15ms   65.17%
+    Req/Sec   338.20    336.19     1.78k    55.70%
+  38171 requests in 15.00s, 85.98MB read
+Requests/sec:   2544.92
+Transfer/sec:      5.73MB
 
 ---------------------------------------------------------
  Concurrency: 256 for play-scala
@@ -128,8 +128,9 @@ Transfer/sec:      5.68MB
 Running 15s test @ http://10.253.67.217:9000/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   151.15ms   82.10ms 259.14ms   51.49%
-    Req/Sec   100.07    322.53     3.00k    90.62%
-  37883 requests in 15.01s, 85.33MB read
-Requests/sec:   2524.55
-Transfer/sec:      5.69MB
+    Latency   228.09ms  221.95ms 830.24ms   91.23%
+    Req/Sec   341.83    400.48     3.00k    84.87%
+  38183 requests in 15.00s, 86.01MB read
+  Socket errors: connect 0, read 0, write 0, timeout 8
+Requests/sec:   2545.04
+Transfer/sec:      5.73MB

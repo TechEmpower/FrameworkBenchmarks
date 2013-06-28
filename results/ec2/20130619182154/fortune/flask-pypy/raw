@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 14:43:10 UTC 2013
+  System information as of Fri Jun 28 07:03:40 UTC 2013
 
-  System load:  0.46               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  0.33               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1376 requests in 5.01s, 1.82MB read
-Requests/sec:    274.63
-Transfer/sec:    372.26KB
+    Latency   493.82ms  531.49ms   1.28s    74.38%
+    Req/Sec    64.63     84.74   555.00     90.43%
+  2299 requests in 5.01s, 3.04MB read
+Requests/sec:    458.73
+Transfer/sec:    621.79KB
 
 ---------------------------------------------------------
  Running Warmup flask-pypy
@@ -43,12 +43,12 @@ Transfer/sec:    372.26KB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10163 requests in 15.02s, 13.45MB read
-  Socket errors: connect 0, read 0, write 0, timeout 30
-Requests/sec:    676.54
-Transfer/sec:      0.90MB
+    Latency     2.44s     1.88s    4.29s    65.59%
+    Req/Sec    75.67    100.04   777.00     82.21%
+  8486 requests in 15.09s, 11.23MB read
+  Socket errors: connect 0, read 0, write 0, timeout 163
+Requests/sec:    562.28
+Transfer/sec:    762.16KB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask-pypy
@@ -58,11 +58,11 @@ Transfer/sec:      0.90MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  16215 requests in 15.01s, 21.46MB read
-Requests/sec:   1080.55
-Transfer/sec:      1.43MB
+    Latency    48.48ms  110.54ms 407.14ms   88.53%
+    Req/Sec   148.90    104.99   600.00     71.19%
+  16809 requests in 15.00s, 22.25MB read
+Requests/sec:   1120.27
+Transfer/sec:      1.48MB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask-pypy
@@ -72,11 +72,11 @@ Transfer/sec:      1.43MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17453 requests in 15.01s, 23.10MB read
-Requests/sec:   1162.99
-Transfer/sec:      1.54MB
+    Latency    96.26ms  113.29ms 259.58ms   66.58%
+    Req/Sec   142.24    137.42   666.00     51.19%
+  16087 requests in 15.02s, 21.29MB read
+Requests/sec:   1071.24
+Transfer/sec:      1.42MB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask-pypy
@@ -86,11 +86,11 @@ Transfer/sec:      1.54MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14805 requests in 15.12s, 19.60MB read
-Requests/sec:    978.85
-Transfer/sec:      1.30MB
+    Latency   107.43ms   98.52ms 237.20ms   63.31%
+    Req/Sec   129.14    126.02   444.00     48.26%
+  14621 requests in 15.02s, 19.35MB read
+Requests/sec:    973.20
+Transfer/sec:      1.29MB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask-pypy
@@ -100,11 +100,11 @@ Transfer/sec:      1.30MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  18492 requests in 15.02s, 24.48MB read
-Requests/sec:   1231.13
-Transfer/sec:      1.63MB
+    Latency   167.12ms  138.51ms 342.30ms   41.54%
+    Req/Sec   170.29    201.46     0.90k    85.12%
+  19402 requests in 15.03s, 25.68MB read
+Requests/sec:   1290.97
+Transfer/sec:      1.71MB
 
 ---------------------------------------------------------
  Concurrency: 128 for flask-pypy
@@ -114,11 +114,11 @@ Transfer/sec:      1.63MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  19903 requests in 15.01s, 26.35MB read
-Requests/sec:   1325.54
-Transfer/sec:      1.75MB
+    Latency   260.44ms  302.56ms 797.68ms   74.57%
+    Req/Sec   177.82    152.18     0.90k    55.78%
+  20209 requests in 15.02s, 26.75MB read
+Requests/sec:   1345.58
+Transfer/sec:      1.78MB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask-pypy
@@ -128,8 +128,8 @@ Transfer/sec:      1.75MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  19783 requests in 15.03s, 26.19MB read
-Requests/sec:   1316.40
-Transfer/sec:      1.74MB
+    Latency   484.30ms  516.22ms   1.61s    80.68%
+    Req/Sec   161.66    136.18     0.89k    54.82%
+  18339 requests in 15.03s, 24.28MB read
+Requests/sec:   1220.38
+Transfer/sec:      1.62MB

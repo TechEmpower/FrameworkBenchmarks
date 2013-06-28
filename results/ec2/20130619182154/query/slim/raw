@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 22:14:02 UTC 2013
+  System information as of Fri Jun 28 04:22:11 UTC 2013
 
-  System load:  0.51               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.32               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2346 requests in 5.01s, 624.42KB read
-Requests/sec:    468.61
-Transfer/sec:    124.73KB
+    Latency    49.61ms   39.66ms 117.18ms   60.84%
+    Req/Sec    62.75     57.11   222.00     54.38%
+  2383 requests in 5.01s, 634.20KB read
+Requests/sec:    475.73
+Transfer/sec:    126.61KB
 
 ---------------------------------------------------------
  Running Warmup slim
@@ -43,12 +43,12 @@ Transfer/sec:    124.73KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6514 requests in 15.05s, 1.69MB read
-  Socket errors: connect 0, read 0, write 0, timeout 6
-Requests/sec:    432.86
-Transfer/sec:    115.21KB
+    Latency     1.83s     1.08s    3.21s    50.10%
+    Req/Sec    59.16     86.34     1.22k    87.90%
+  6581 requests in 15.08s, 1.71MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    436.40
+Transfer/sec:    116.16KB
 
 ---------------------------------------------------------
  Queries: 1 for slim
@@ -58,12 +58,12 @@ Transfer/sec:    115.21KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7080 requests in 15.05s, 1.59MB read
-  Socket errors: connect 0, read 0, write 0, timeout 7
-Requests/sec:    470.37
-Transfer/sec:    108.31KB
+    Latency     1.05s   673.18ms   2.43s    74.46%
+    Req/Sec    64.14     83.02   600.00     87.36%
+  7147 requests in 15.02s, 1.61MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    475.92
+Transfer/sec:    109.58KB
 
 ---------------------------------------------------------
  Queries: 5 for slim
@@ -73,12 +73,12 @@ Transfer/sec:    108.31KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5282 requests in 15.04s, 1.93MB read
+    Latency     1.50s   696.42ms   2.58s    49.75%
+    Req/Sec    47.97     72.65   700.00     92.29%
+  5331 requests in 15.01s, 1.95MB read
   Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    351.25
-Transfer/sec:    131.34KB
+Requests/sec:    355.05
+Transfer/sec:    132.76KB
 
 ---------------------------------------------------------
  Queries: 10 for slim
@@ -88,11 +88,12 @@ Transfer/sec:    131.34KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4156 requests in 15.17s, 2.25MB read
-Requests/sec:    274.02
-Transfer/sec:    151.95KB
+    Latency     1.87s   711.71ms   2.68s    66.26%
+    Req/Sec    37.48     65.55   666.00     83.97%
+  4097 requests in 15.03s, 2.22MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    272.59
+Transfer/sec:    151.15KB
 
 ---------------------------------------------------------
  Queries: 15 for slim
@@ -102,11 +103,11 @@ Transfer/sec:    151.95KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3287 requests in 15.09s, 2.36MB read
-Requests/sec:    217.81
-Transfer/sec:    159.89KB
+    Latency     1.61s   314.99ms   1.95s    71.75%
+    Req/Sec    30.12     55.07   600.00     74.35%
+  3264 requests in 15.05s, 2.34MB read
+Requests/sec:    216.83
+Transfer/sec:    159.17KB
 
 ---------------------------------------------------------
  Queries: 20 for slim
@@ -116,9 +117,9 @@ Transfer/sec:    159.89KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2757 requests in 15.07s, 2.46MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    182.92
-Transfer/sec:    167.13KB
+    Latency     2.26s   513.94ms   2.82s    72.45%
+    Req/Sec    25.11     52.15   555.00     78.82%
+  2725 requests in 15.07s, 2.43MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:    180.80
+Transfer/sec:    165.18KB

@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17620 requests in 5.00s, 3.86MB read
-Requests/sec:   3523.73
-Transfer/sec:    791.46KB
+    Latency     3.04ms    2.92ms  30.12ms   93.93%
+    Req/Sec   463.52    213.89     0.90k    56.77%
+  17500 requests in 5.00s, 3.84MB read
+Requests/sec:   3500.03
+Transfer/sec:    786.14KB
 
 ---------------------------------------------------------
  Running Warmup vertx
@@ -36,10 +36,10 @@ Transfer/sec:    791.46KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    64.52ms   52.88ms 244.97ms   67.63%
-    Req/Sec   126.78    342.05     2.00k    87.63%
-  62577 requests in 15.00s, 13.73MB read
-Requests/sec:   4172.12
+    Latency    71.66ms   75.01ms 373.89ms   83.62%
+    Req/Sec   556.60    331.78     2.60k    67.26%
+  62662 requests in 15.00s, 13.74MB read
+Requests/sec:   4177.13
 Transfer/sec:      0.92MB
 
 ---------------------------------------------------------
@@ -50,11 +50,12 @@ Transfer/sec:      0.92MB
 Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    46.41ms   64.64ms 255.90ms   84.83%
-    Req/Sec   474.84    582.79     3.00k    96.01%
-  101546 requests in 15.00s, 15.30MB read
-Requests/sec:   6770.55
-Transfer/sec:      1.02MB
+    Latency    38.33ms   44.28ms 295.58ms   85.80%
+    Req/Sec     0.94k   472.28     3.78k    68.99%
+  106859 requests in 15.00s, 16.10MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:   7122.69
+Transfer/sec:      1.07MB
 
 ---------------------------------------------------------
  Queries: 5 for vertx
@@ -64,11 +65,11 @@ Transfer/sec:      1.02MB
 Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28503 requests in 15.01s, 12.04MB read
-Requests/sec:   1899.48
-Transfer/sec:    821.75KB
+    Latency   156.86ms   79.65ms 414.93ms   82.33%
+    Req/Sec   250.86    168.73     1.22k    74.26%
+  28531 requests in 15.01s, 12.05MB read
+Requests/sec:   1901.14
+Transfer/sec:    822.47KB
 
 ---------------------------------------------------------
  Queries: 10 for vertx
@@ -78,11 +79,12 @@ Transfer/sec:    821.75KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14842 requests in 15.09s, 11.30MB read
-Requests/sec:    983.81
-Transfer/sec:    766.68KB
+    Latency   331.26ms   93.59ms 428.20ms   59.16%
+    Req/Sec   140.39    218.59     1.44k    85.26%
+  15896 requests in 15.03s, 12.10MB read
+  Socket errors: connect 0, read 0, write 0, timeout 16
+Requests/sec:   1057.60
+Transfer/sec:    824.18KB
 
 ---------------------------------------------------------
  Queries: 15 for vertx
@@ -92,11 +94,11 @@ Transfer/sec:    766.68KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10148 requests in 15.09s, 11.17MB read
-Requests/sec:    672.66
-Transfer/sec:    758.06KB
+    Latency   502.28ms  137.53ms 617.08ms   64.25%
+    Req/Sec    93.68    138.76   800.00     87.41%
+  10632 requests in 15.04s, 11.70MB read
+Requests/sec:    706.85
+Transfer/sec:    796.58KB
 
 ---------------------------------------------------------
  Queries: 20 for vertx
@@ -106,8 +108,8 @@ Transfer/sec:    758.06KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8068 requests in 15.17s, 11.61MB read
-Requests/sec:    531.78
-Transfer/sec:    783.65KB
+    Latency   616.29ms  113.51ms 703.47ms   70.60%
+    Req/Sec    68.87    115.80   777.00     82.18%
+  7818 requests in 15.09s, 11.25MB read
+Requests/sec:    518.00
+Transfer/sec:    763.34KB

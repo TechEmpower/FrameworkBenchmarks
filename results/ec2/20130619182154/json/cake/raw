@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 14:53:15 UTC 2013
+  System information as of Thu Jun 27 20:54:28 UTC 2013
 
-  System load:  1.76               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 2%                 IP address for eth0: 10.254.111.115
+  System load:  1.48               Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json.json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  976 requests in 5.00s, 210.60KB read
-Requests/sec:    195.01
-Transfer/sec:     42.08KB
+    Latency   128.89ms   62.48ms 211.55ms   61.58%
+    Req/Sec    26.55     48.42   222.00     75.81%
+  963 requests in 5.01s, 207.80KB read
+Requests/sec:    192.13
+Transfer/sec:     41.46KB
 
 ---------------------------------------------------------
  Running Warmup cake
@@ -43,12 +43,12 @@ Transfer/sec:     42.08KB
 Running 15s test @ http://10.253.67.217:8080/json.json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3791 requests in 15.04s, 818.17KB read
-  Socket errors: connect 0, read 0, write 0, timeout 12
-Requests/sec:    252.09
-Transfer/sec:     54.41KB
+    Latency     2.44s   922.48ms   3.51s    64.30%
+    Req/Sec    34.33     62.87   800.00     73.10%
+  3792 requests in 15.10s, 818.39KB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:    251.20
+Transfer/sec:     54.21KB
 
 ---------------------------------------------------------
  Concurrency: 8 for cake
@@ -58,11 +58,11 @@ Transfer/sec:     54.41KB
 Running 15s test @ http://10.253.67.217:8080/json.json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4119 requests in 15.00s, 0.87MB read
-Requests/sec:    274.52
-Transfer/sec:     59.23KB
+    Latency   242.60ms  158.49ms 468.04ms   59.30%
+    Req/Sec    35.94     52.64   222.00     66.98%
+  4097 requests in 15.01s, 0.86MB read
+Requests/sec:    272.96
+Transfer/sec:     58.90KB
 
 ---------------------------------------------------------
  Concurrency: 16 for cake
@@ -72,11 +72,11 @@ Transfer/sec:     59.23KB
 Running 15s test @ http://10.253.67.217:8080/json.json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4154 requests in 15.01s, 0.88MB read
-Requests/sec:    276.73
-Transfer/sec:     59.71KB
+    Latency   363.86ms  208.54ms 583.67ms   63.02%
+    Req/Sec    35.77     58.43   333.00     70.09%
+  4070 requests in 15.03s, 0.86MB read
+Requests/sec:    270.78
+Transfer/sec:     58.43KB
 
 ---------------------------------------------------------
  Concurrency: 32 for cake
@@ -86,11 +86,11 @@ Transfer/sec:     59.71KB
 Running 15s test @ http://10.253.67.217:8080/json.json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4054 requests in 15.01s, 0.85MB read
-Requests/sec:    270.03
-Transfer/sec:     58.27KB
+    Latency   917.85ms  519.26ms   1.36s    72.46%
+    Req/Sec    35.34     60.98   444.00     71.56%
+  4006 requests in 15.01s, 864.42KB read
+Requests/sec:    266.87
+Transfer/sec:     57.59KB
 
 ---------------------------------------------------------
  Concurrency: 64 for cake
@@ -100,12 +100,11 @@ Transfer/sec:     58.27KB
 Running 15s test @ http://10.253.67.217:8080/json.json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4001 requests in 15.02s, 863.50KB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    266.40
-Transfer/sec:     57.49KB
+    Latency     1.44s   782.17ms   2.14s    73.79%
+    Req/Sec    34.82     61.20   500.00     72.13%
+  3932 requests in 15.03s, 848.61KB read
+Requests/sec:    261.67
+Transfer/sec:     56.47KB
 
 ---------------------------------------------------------
  Concurrency: 128 for cake
@@ -115,11 +114,11 @@ Transfer/sec:     57.49KB
 Running 15s test @ http://10.253.67.217:8080/json.json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3889 requests in 15.03s, 839.33KB read
-Requests/sec:    258.70
-Transfer/sec:     55.83KB
+    Latency     1.56s   718.84ms   2.39s    67.53%
+    Req/Sec    34.07     59.01   444.00     71.94%
+  3799 requests in 15.02s, 819.90KB read
+Requests/sec:    252.91
+Transfer/sec:     54.58KB
 
 ---------------------------------------------------------
  Concurrency: 256 for cake
@@ -129,9 +128,9 @@ Transfer/sec:     55.83KB
 Running 15s test @ http://10.253.67.217:8080/json.json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3799 requests in 15.10s, 819.90KB read
-  Socket errors: connect 0, read 0, write 0, timeout 10
-Requests/sec:    251.51
-Transfer/sec:     54.28KB
+    Latency     2.62s     1.03s    3.59s    73.01%
+    Req/Sec    34.04     61.74   666.00     72.84%
+  3730 requests in 15.09s, 805.01KB read
+  Socket errors: connect 0, read 0, write 0, timeout 14
+Requests/sec:    247.22
+Transfer/sec:     53.36KB

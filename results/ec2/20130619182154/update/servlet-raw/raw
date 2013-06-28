@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/servlet/update?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2542 requests in 5.01s, 482.99KB read
-Requests/sec:    507.27
-Transfer/sec:     96.38KB
+    Latency    19.20ms    6.45ms  34.78ms   59.47%
+    Req/Sec    69.99     49.36   111.00     66.97%
+  2673 requests in 5.01s, 507.92KB read
+Requests/sec:    533.51
+Transfer/sec:    101.38KB
 
 ---------------------------------------------------------
  Running Warmup servlet-raw
@@ -36,12 +36,11 @@ Transfer/sec:     96.38KB
 Running 15s test @ http://10.253.67.217:8080/servlet/update?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28337 requests in 15.01s, 5.61MB read
-  Socket errors: connect 0, read 3, write 0, timeout 17
-Requests/sec:   1888.06
-Transfer/sec:    382.46KB
+    Latency   401.94ms  489.09ms   1.67s    75.12%
+    Req/Sec   256.87    223.92     1.55k    58.00%
+  29141 requests in 15.00s, 5.41MB read
+Requests/sec:   1943.24
+Transfer/sec:    369.21KB
 
 ---------------------------------------------------------
  Queries: 1 for servlet-raw
@@ -51,12 +50,11 @@ Transfer/sec:    382.46KB
 Running 15s test @ http://10.253.67.217:8080/servlet/update?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  48732 requests in 15.00s, 8.01MB read
-  Socket errors: connect 0, read 10, write 0, timeout 53
-Requests/sec:   3248.93
-Transfer/sec:    546.67KB
+    Latency   173.37ms  234.56ms 969.90ms   82.32%
+    Req/Sec   484.38    368.84     2.33k    58.12%
+  55105 requests in 15.00s, 8.55MB read
+Requests/sec:   3674.26
+Transfer/sec:    584.07KB
 
 ---------------------------------------------------------
  Queries: 5 for servlet-raw
@@ -66,12 +64,11 @@ Transfer/sec:    546.67KB
 Running 15s test @ http://10.253.67.217:8080/servlet/update?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11401 requests in 15.01s, 3.35MB read
-  Socket errors: connect 0, read 2, write 0, timeout 12
-Requests/sec:    759.73
-Transfer/sec:    228.26KB
+    Latency   931.14ms  707.63ms   2.35s    73.51%
+    Req/Sec   101.95    121.48     0.90k    89.17%
+  11639 requests in 15.06s, 3.23MB read
+Requests/sec:    772.71
+Transfer/sec:    219.51KB
 
 ---------------------------------------------------------
  Queries: 10 for servlet-raw
@@ -81,12 +78,11 @@ Transfer/sec:    228.26KB
 Running 15s test @ http://10.253.67.217:8080/servlet/update?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6411 requests in 15.02s, 2.86MB read
-  Socket errors: connect 0, read 9, write 0, timeout 15
-Requests/sec:    426.74
-Transfer/sec:    194.89KB
+    Latency     1.46s   684.77ms   2.30s    47.79%
+    Req/Sec    53.84     82.31   600.00     88.54%
+  6103 requests in 15.04s, 2.62MB read
+Requests/sec:    405.84
+Transfer/sec:    178.25KB
 
 ---------------------------------------------------------
  Queries: 15 for servlet-raw
@@ -96,12 +92,12 @@ Transfer/sec:    194.89KB
 Running 15s test @ http://10.253.67.217:8080/servlet/update?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4202 requests in 15.09s, 2.51MB read
-  Socket errors: connect 0, read 8, write 0, timeout 30
-Requests/sec:    278.52
-Transfer/sec:    170.37KB
+    Latency     1.86s   637.42ms   2.54s    67.14%
+    Req/Sec    36.53     68.17   700.00     84.72%
+  4147 requests in 15.49s, 2.41MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    267.75
+Transfer/sec:    159.16KB
 
 ---------------------------------------------------------
  Queries: 20 for servlet-raw
@@ -111,9 +107,9 @@ Transfer/sec:    170.37KB
 Running 15s test @ http://10.253.67.217:8080/servlet/update?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3124 requests in 15.05s, 2.34MB read
-  Socket errors: connect 0, read 7, write 0, timeout 29
-Requests/sec:    207.64
-Transfer/sec:    159.17KB
+    Latency     2.29s   618.35ms   2.79s    79.52%
+    Req/Sec    28.50     59.17   666.00     77.78%
+  3124 requests in 15.27s, 2.29MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:    204.64
+Transfer/sec:    153.39KB

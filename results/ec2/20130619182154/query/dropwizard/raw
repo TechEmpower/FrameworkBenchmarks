@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:9000/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11584 requests in 5.00s, 2.12MB read
-Requests/sec:   2316.39
-Transfer/sec:    433.32KB
+    Latency     3.85ms    2.09ms  24.62ms   92.84%
+    Req/Sec   302.51     84.59   555.00     64.14%
+  11490 requests in 5.00s, 2.10MB read
+Requests/sec:   2297.89
+Transfer/sec:    429.90KB
 
 ---------------------------------------------------------
  Running Warmup dropwizard
@@ -36,12 +36,12 @@ Transfer/sec:    433.32KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   102.43ms   98.39ms 552.39ms   94.93%
-    Req/Sec    34.75    183.20     1.00k    96.53%
-  44222 requests in 15.01s, 8.08MB read
-  Socket errors: connect 0, read 0, write 0, timeout 6
-Requests/sec:   2946.84
-Transfer/sec:    551.25KB
+    Latency   129.14ms  158.78ms   1.20s    91.18%
+    Req/Sec   379.60    234.08     3.00k    71.32%
+  42816 requests in 15.00s, 7.82MB read
+  Socket errors: connect 0, read 0, write 0, timeout 23
+Requests/sec:   2855.25
+Transfer/sec:    534.08KB
 
 ---------------------------------------------------------
  Queries: 1 for dropwizard
@@ -51,12 +51,12 @@ Transfer/sec:    551.25KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    80.95ms   73.14ms 511.37ms   94.80%
-    Req/Sec    52.39    224.41     2.00k    94.80%
-  54582 requests in 15.01s, 8.32MB read
-  Socket errors: connect 0, read 0, write 0, timeout 69
-Requests/sec:   3636.46
-Transfer/sec:    567.37KB
+    Latency    89.83ms  127.56ms   1.12s    95.47%
+    Req/Sec   489.02    267.74     3.67k    73.10%
+  54382 requests in 15.00s, 8.29MB read
+  Socket errors: connect 0, read 0, write 0, timeout 26
+Requests/sec:   3625.47
+Transfer/sec:    565.69KB
 
 ---------------------------------------------------------
  Queries: 5 for dropwizard
@@ -66,11 +66,12 @@ Transfer/sec:    567.37KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27067 requests in 15.01s, 7.41MB read
-Requests/sec:   1803.82
-Transfer/sec:    505.36KB
+    Latency   220.13ms  212.02ms 764.19ms   80.34%
+    Req/Sec   234.52    177.56     1.50k    70.08%
+  26676 requests in 15.00s, 7.30MB read
+  Socket errors: connect 0, read 0, write 0, timeout 31
+Requests/sec:   1777.99
+Transfer/sec:    498.13KB
 
 ---------------------------------------------------------
  Queries: 10 for dropwizard
@@ -80,11 +81,11 @@ Transfer/sec:    505.36KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  16867 requests in 15.02s, 7.19MB read
-Requests/sec:   1123.33
-Transfer/sec:    490.13KB
+    Latency   462.52ms  384.04ms   1.07s    63.58%
+    Req/Sec   145.41    135.34     1.55k    53.38%
+  16434 requests in 15.02s, 7.00MB read
+Requests/sec:   1094.39
+Transfer/sec:    477.40KB
 
 ---------------------------------------------------------
  Queries: 15 for dropwizard
@@ -94,11 +95,12 @@ Transfer/sec:    490.13KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11864 requests in 15.01s, 6.85MB read
-Requests/sec:    790.27
-Transfer/sec:    467.48KB
+    Latency   561.53ms  334.42ms   1.01s    48.04%
+    Req/Sec   105.46    112.70     1.22k    83.13%
+  11963 requests in 15.02s, 6.91MB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+Requests/sec:    796.32
+Transfer/sec:    470.97KB
 
 ---------------------------------------------------------
  Queries: 20 for dropwizard
@@ -108,8 +110,8 @@ Transfer/sec:    467.48KB
 Running 15s test @ http://10.253.67.217:9000/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9181 requests in 15.02s, 6.69MB read
-Requests/sec:    611.37
-Transfer/sec:    456.48KB
+    Latency   821.62ms  463.43ms   1.45s    63.24%
+    Req/Sec    81.66     96.61     0.90k    80.90%
+  9224 requests in 15.02s, 6.73MB read
+Requests/sec:    614.15
+Transfer/sec:    458.56KB

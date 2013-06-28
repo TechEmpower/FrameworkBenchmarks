@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 18:52:59 UTC 2013
+  System information as of Fri Jun 28 01:06:16 UTC 2013
 
-  System load:  1.02               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.59               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8000/dbs/2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8512 requests in 5.01s, 1.57MB read
-Requests/sec:   1700.42
-Transfer/sec:    321.42KB
+    Latency     5.98ms    3.11ms  20.88ms   83.79%
+    Req/Sec   211.61     96.22   444.00     50.91%
+  7943 requests in 5.00s, 1.47MB read
+Requests/sec:   1587.43
+Transfer/sec:    300.03KB
 
 ---------------------------------------------------------
  Running Warmup yesod
@@ -43,11 +43,11 @@ Transfer/sec:    321.42KB
 Running 15s test @ http://10.253.67.217:8000/dbs/2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  29781 requests in 15.00s, 5.50MB read
-Requests/sec:   1985.03
-Transfer/sec:    375.22KB
+    Latency   183.28ms  145.74ms 579.40ms   75.19%
+    Req/Sec   257.94    185.63     1.22k    70.15%
+  29267 requests in 15.01s, 5.40MB read
+Requests/sec:   1949.96
+Transfer/sec:    368.57KB
 
 ---------------------------------------------------------
  Queries: 1 for yesod
@@ -57,11 +57,11 @@ Transfer/sec:    375.22KB
 Running 15s test @ http://10.253.67.217:8000/dbs/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  49447 requests in 15.00s, 7.63MB read
-Requests/sec:   3295.87
-Transfer/sec:    520.71KB
+    Latency    84.35ms   52.49ms 357.19ms   77.77%
+    Req/Sec   419.34    201.47     1.44k    69.26%
+  47656 requests in 15.01s, 7.35MB read
+Requests/sec:   3175.84
+Transfer/sec:    501.73KB
 
 ---------------------------------------------------------
  Queries: 5 for yesod
@@ -71,11 +71,11 @@ Transfer/sec:    520.71KB
 Running 15s test @ http://10.253.67.217:8000/dbs/5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13171 requests in 15.01s, 3.63MB read
-Requests/sec:    877.64
-Transfer/sec:    247.61KB
+    Latency   477.39ms  293.14ms 950.76ms   51.09%
+    Req/Sec   117.74    114.05   777.00     55.38%
+  13291 requests in 15.01s, 3.66MB read
+Requests/sec:    885.57
+Transfer/sec:    249.83KB
 
 ---------------------------------------------------------
  Queries: 10 for yesod
@@ -85,11 +85,11 @@ Transfer/sec:    247.61KB
 Running 15s test @ http://10.253.67.217:8000/dbs/10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6950 requests in 15.01s, 2.97MB read
-Requests/sec:    462.94
-Transfer/sec:    202.44KB
+    Latency     1.28s   682.77ms   2.15s    56.78%
+    Req/Sec    61.68     81.96   500.00     87.63%
+  6921 requests in 15.02s, 2.96MB read
+Requests/sec:    460.65
+Transfer/sec:    201.45KB
 
 ---------------------------------------------------------
  Queries: 15 for yesod
@@ -99,12 +99,11 @@ Transfer/sec:    202.44KB
 Running 15s test @ http://10.253.67.217:8000/dbs/15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4523 requests in 15.12s, 2.62MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    299.19
-Transfer/sec:    177.27KB
+    Latency     1.87s   812.75ms   2.67s    76.32%
+    Req/Sec    41.33     65.70   500.00     82.65%
+  4620 requests in 15.22s, 2.67MB read
+Requests/sec:    303.56
+Transfer/sec:    179.85KB
 
 ---------------------------------------------------------
  Queries: 20 for yesod
@@ -114,9 +113,9 @@ Transfer/sec:    177.27KB
 Running 15s test @ http://10.253.67.217:8000/dbs/20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3385 requests in 15.13s, 2.47MB read
-  Socket errors: connect 0, read 0, write 0, timeout 18
-Requests/sec:    223.79
-Transfer/sec:    167.32KB
+    Latency     2.07s   643.01ms   2.62s    81.00%
+    Req/Sec    31.02     58.08   444.00     74.79%
+  3447 requests in 15.12s, 2.52MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+Requests/sec:    227.95
+Transfer/sec:    170.42KB
