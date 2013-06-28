@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 12:07:52 PDT 2013
+  System information as of Thu Jun 27 11:49:10 PDT 2013
 
-  System load:  5.01                Processes:           135
-  Usage of /:   10.5% of 129.62GB   Users logged in:     1
-  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  System load:  4.71                Processes:           130
+  Usage of /:   11.5% of 129.62GB   Users logged in:     1
+  Memory usage: 4%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  32069 requests in 5.00s, 43.21MB read
-Requests/sec:   6413.09
-Transfer/sec:      8.64MB
+    Latency     1.25ms  414.59us   4.12ms   95.48%
+    Req/Sec   845.86    114.89     1.22k    64.79%
+  32108 requests in 5.00s, 43.27MB read
+Requests/sec:   6421.25
+Transfer/sec:      8.65MB
 
 ---------------------------------------------------------
  Running Warmup revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    11.89ms    9.07ms  85.81ms   61.70%
-    Req/Sec     2.44k   722.00     5.00k    86.90%
-  327432 requests in 15.00s, 441.23MB read
-Requests/sec:  21829.61
-Transfer/sec:     29.42MB
+    Latency    11.93ms    9.49ms  92.43ms   65.35%
+    Req/Sec     2.89k   673.05     5.78k    68.80%
+  328288 requests in 15.00s, 442.38MB read
+Requests/sec:  21885.17
+Transfer/sec:     29.49MB
 
 ---------------------------------------------------------
  Concurrency: 8 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  95011 requests in 15.00s, 128.03MB read
-Requests/sec:   6334.02
-Transfer/sec:      8.54MB
+    Latency     1.26ms  420.49us   5.33ms   95.93%
+    Req/Sec   840.46    114.97     1.22k    64.88%
+  95881 requests in 15.00s, 129.20MB read
+Requests/sec:   6391.89
+Transfer/sec:      8.61MB
 
 ---------------------------------------------------------
  Concurrency: 16 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.00ms  348.55us   5.00ms   92.75%
-    Req/Sec     1.76k   426.37     2.00k    76.12%
-  238942 requests in 15.00s, 321.98MB read
-Requests/sec:  15929.63
+    Latency     1.00ms  347.50us   5.05ms   92.58%
+    Req/Sec     2.10k   192.30     2.67k    54.97%
+  238966 requests in 15.00s, 322.02MB read
+Requests/sec:  15931.21
 Transfer/sec:     21.47MB
 
 ---------------------------------------------------------
  Concurrency: 32 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.47ms  609.32us   8.84ms   83.59%
-    Req/Sec     2.35k   480.23     3.00k    64.69%
-  325072 requests in 15.00s, 438.05MB read
-Requests/sec:  21672.31
-Transfer/sec:     29.20MB
+    Latency     1.48ms  629.49us  10.69ms   84.34%
+    Req/Sec     2.86k   289.60     3.89k    71.09%
+  324647 requests in 15.00s, 437.48MB read
+Requests/sec:  21643.88
+Transfer/sec:     29.17MB
 
 ---------------------------------------------------------
  Concurrency: 64 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.93ms    1.27ms  14.98ms   71.46%
-    Req/Sec     2.43k   503.14     4.00k    56.20%
-  330752 requests in 15.00s, 445.70MB read
-Requests/sec:  22047.55
-Transfer/sec:     29.71MB
+    Latency     2.90ms    1.26ms  18.68ms   71.50%
+    Req/Sec     2.91k   356.24     4.22k    70.05%
+  330776 requests in 15.00s, 445.73MB read
+Requests/sec:  22052.07
+Transfer/sec:     29.72MB
 
 ---------------------------------------------------------
  Concurrency: 128 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.87ms    3.54ms  35.93ms   64.71%
-    Req/Sec     2.44k   562.75     4.00k    96.61%
-  329292 requests in 15.00s, 443.73MB read
-Requests/sec:  21952.85
-Transfer/sec:     29.58MB
+    Latency     5.88ms    3.61ms  34.29ms   65.53%
+    Req/Sec     2.90k   484.57     5.22k    67.11%
+  329819 requests in 15.00s, 444.44MB read
+Requests/sec:  21986.27
+Transfer/sec:     29.63MB
 
 ---------------------------------------------------------
  Concurrency: 256 for revel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    11.67ms    9.05ms 101.15ms   63.01%
-    Req/Sec     2.45k   727.12     5.00k    86.58%
-  328785 requests in 15.00s, 443.05MB read
-Requests/sec:  21918.17
-Transfer/sec:     29.54MB
+    Latency    11.87ms    9.20ms  85.23ms   62.76%
+    Req/Sec     2.89k   670.46     5.44k    67.25%
+  329059 requests in 15.00s, 443.42MB read
+Requests/sec:  21937.34
+Transfer/sec:     29.56MB

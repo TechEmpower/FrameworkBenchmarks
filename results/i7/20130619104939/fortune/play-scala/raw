@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 10:50:02 PDT 2013
+
+  System load:  1.81                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.25ms  371.22us   7.23ms   89.33%
+    Req/Sec     0.86k   140.86     1.22k    54.54%
+  31710 requests in 5.00s, 71.43MB read
+Requests/sec:   6341.75
+Transfer/sec:     14.29MB
+
+---------------------------------------------------------
+ Running Warmup play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.29ms   48.56ms 667.50ms   97.96%
+    Req/Sec     1.81k   748.64     4.55k    72.12%
+  204370 requests in 15.01s, 460.36MB read
+Requests/sec:  13617.59
+Transfer/sec:     30.67MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.16ms  448.08us  19.99ms   96.76%
+    Req/Sec     0.92k   133.10     1.22k    70.15%
+  105005 requests in 15.00s, 236.53MB read
+Requests/sec:   7000.17
+Transfer/sec:     15.77MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.47ms  846.60us  22.28ms   97.08%
+    Req/Sec     1.47k   192.34     2.00k    73.73%
+  167373 requests in 15.00s, 377.02MB read
+Requests/sec:  11158.14
+Transfer/sec:     25.13MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.56ms    1.81ms  54.41ms   94.94%
+    Req/Sec     1.71k   280.78     2.56k    72.16%
+  194295 requests in 15.00s, 437.66MB read
+Requests/sec:  12952.79
+Transfer/sec:     29.18MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.96ms    3.31ms  88.71ms   92.61%
+    Req/Sec     1.77k   343.05     2.89k    79.32%
+  200555 requests in 15.00s, 451.77MB read
+Requests/sec:  13369.30
+Transfer/sec:     30.12MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.21ms   16.56ms 641.32ms   98.88%
+    Req/Sec     1.79k   471.40     3.33k    73.74%
+  202794 requests in 15.00s, 456.81MB read
+Requests/sec:  13518.68
+Transfer/sec:     30.45MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.17ms  100.36ms   1.51s    97.85%
+    Req/Sec     1.80k   762.04     5.11k    70.34%
+  204829 requests in 15.00s, 461.39MB read
+Requests/sec:  13655.83
+Transfer/sec:     30.76MB

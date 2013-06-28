@@ -2,129 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 12:55:36 PDT 2013
+  System information as of Wed Jun 26 08:49:22 PDT 2013
 
-  System load:  0.43                Processes:           131
-  Usage of /:   10.1% of 129.62GB   Users logged in:     1
-  Memory usage: 7%                  IP address for eth1: 172.16.98.98
+  System load:  0.36                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/rails/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/rails/fortune
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/rails/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8078 requests in 5.00s, 12.55MB read
-Requests/sec:   1614.95
-Transfer/sec:      2.51MB
+    Latency     5.10ms    2.70ms  22.34ms   90.47%
+    Req/Sec   230.31     76.83   444.00     69.19%
+  7990 requests in 5.00s, 12.41MB read
+Requests/sec:   1597.17
+Transfer/sec:      2.48MB
 
 ---------------------------------------------------------
  Running Warmup rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  24854 requests in 15.01s, 39.05MB read
-  Socket errors: connect 0, read 73, write 0, timeout 49
-Requests/sec:   1655.48
-Transfer/sec:      2.60MB
+    Latency   205.21ms  141.25ms 575.40ms   78.33%
+    Req/Sec   217.63    151.47     0.90k    71.08%
+  24582 requests in 15.01s, 38.19MB read
+Requests/sec:   1637.86
+Transfer/sec:      2.54MB
 
 ---------------------------------------------------------
  Concurrency: 8 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/rails/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/rails/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  31925 requests in 15.00s, 49.60MB read
-Requests/sec:   2127.99
-Transfer/sec:      3.31MB
+    Latency     4.07ms    2.53ms  25.21ms   95.41%
+    Req/Sec   284.09     73.52   555.00     74.42%
+  32340 requests in 15.00s, 50.24MB read
+Requests/sec:   2155.78
+Transfer/sec:      3.35MB
 
 ---------------------------------------------------------
  Concurrency: 16 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/rails/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/rails/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/fortune
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  33702 requests in 15.00s, 52.36MB read
-Requests/sec:   2246.52
-Transfer/sec:      3.49MB
+    Latency     7.44ms    3.79ms  28.08ms   83.22%
+    Req/Sec   305.08     97.59   666.00     69.38%
+  34725 requests in 15.00s, 53.95MB read
+Requests/sec:   2314.64
+Transfer/sec:      3.60MB
 
 ---------------------------------------------------------
  Concurrency: 32 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/rails/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/rails/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/fortune
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  33884 requests in 15.00s, 52.64MB read
-Requests/sec:   2258.31
-Transfer/sec:      3.51MB
+    Latency    72.98ms  205.23ms 802.49ms   92.36%
+    Req/Sec   290.16    144.12   777.00     65.12%
+  33107 requests in 15.00s, 51.43MB read
+Requests/sec:   2206.59
+Transfer/sec:      3.43MB
 
 ---------------------------------------------------------
  Concurrency: 64 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/rails/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/rails/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/fortune
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  32597 requests in 15.01s, 50.64MB read
-Requests/sec:   2172.40
-Transfer/sec:      3.37MB
+    Latency    31.48ms   18.75ms 103.68ms   71.65%
+    Req/Sec   293.17    152.73     0.89k    68.97%
+  33364 requests in 15.00s, 51.83MB read
+Requests/sec:   2223.85
+Transfer/sec:      3.45MB
 
 ---------------------------------------------------------
  Concurrency: 128 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/rails/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/rails/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/fortune
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  30460 requests in 15.00s, 47.32MB read
-Requests/sec:   2030.23
-Transfer/sec:      3.15MB
+    Latency    70.26ms   40.33ms 175.57ms   74.29%
+    Req/Sec   269.85    159.96     1.22k    65.76%
+  30694 requests in 15.01s, 47.68MB read
+Requests/sec:   2045.41
+Transfer/sec:      3.18MB
 
 ---------------------------------------------------------
  Concurrency: 256 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  26266 requests in 15.00s, 41.24MB read
-  Socket errors: connect 0, read 96, write 0, timeout 54
-Requests/sec:   1750.49
-Transfer/sec:      2.75MB
+    Latency   167.46ms   84.86ms 356.82ms   70.65%
+    Req/Sec   231.70    154.36     1.11k    70.33%
+  26274 requests in 15.01s, 40.82MB read
+Requests/sec:   1750.67
+Transfer/sec:      2.72MB

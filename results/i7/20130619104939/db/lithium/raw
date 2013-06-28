@@ -2,128 +2,128 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 07:21:46 PDT 2013
+  System information as of Wed Jun 26 13:23:52 PDT 2013
 
-  System load:  0.15                Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
-  Memory usage: 8%                  IP address for eth1: 172.16.98.98
+  System load:  0.03                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5665 requests in 5.00s, 1.35MB read
-Requests/sec:   1132.27
-Transfer/sec:    276.12KB
+    Latency     6.88ms    1.35ms  17.15ms   79.45%
+    Req/Sec   155.97     53.58   300.00     50.64%
+  5734 requests in 5.00s, 1.37MB read
+Requests/sec:   1145.94
+Transfer/sec:    279.46KB
 
 ---------------------------------------------------------
  Running Warmup lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21043 requests in 15.01s, 5.01MB read
-Requests/sec:   1402.11
-Transfer/sec:    342.00KB
+    Latency   380.26ms  481.44ms   1.55s    83.74%
+    Req/Sec   186.14    134.43     0.90k    67.48%
+  21045 requests in 15.01s, 5.01MB read
+Requests/sec:   1401.78
+Transfer/sec:    341.92KB
 
 ---------------------------------------------------------
  Concurrency: 8 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17787 requests in 15.00s, 4.24MB read
-Requests/sec:   1185.52
-Transfer/sec:    289.11KB
+    Latency     6.92ms    2.07ms  33.44ms   93.85%
+    Req/Sec   156.65     53.82   222.00     51.72%
+  17823 requests in 15.00s, 4.24MB read
+Requests/sec:   1187.81
+Transfer/sec:    289.67KB
 
 ---------------------------------------------------------
  Concurrency: 16 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20419 requests in 15.00s, 4.86MB read
-Requests/sec:   1360.94
-Transfer/sec:    331.89KB
+    Latency    14.16ms   12.17ms  86.19ms   93.82%
+    Req/Sec   179.49     75.72   444.00     68.75%
+  20432 requests in 15.00s, 4.87MB read
+Requests/sec:   1361.82
+Transfer/sec:    332.12KB
 
 ---------------------------------------------------------
  Concurrency: 32 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21115 requests in 15.00s, 5.03MB read
-Requests/sec:   1407.45
-Transfer/sec:    343.25KB
+    Latency    42.96ms   65.03ms 311.88ms   89.91%
+    Req/Sec   185.55    105.90   555.00     67.15%
+  21102 requests in 15.01s, 5.03MB read
+Requests/sec:   1406.25
+Transfer/sec:    342.95KB
 
 ---------------------------------------------------------
  Concurrency: 64 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21152 requests in 15.00s, 5.04MB read
-Requests/sec:   1409.68
-Transfer/sec:    343.78KB
+    Latency   151.13ms  280.77ms   1.14s    86.17%
+    Req/Sec   185.93    124.43   777.00     70.54%
+  21131 requests in 15.01s, 5.03MB read
+Requests/sec:   1407.97
+Transfer/sec:    343.37KB
 
 ---------------------------------------------------------
  Concurrency: 128 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21086 requests in 15.00s, 5.02MB read
-Requests/sec:   1405.27
-Transfer/sec:    342.74KB
+    Latency   459.68ms  913.62ms   3.31s    86.36%
+    Req/Sec   186.48    134.98     1.67k    68.02%
+  21158 requests in 15.01s, 5.04MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+Requests/sec:   1409.48
+Transfer/sec:    343.76KB
 
 ---------------------------------------------------------
  Concurrency: 256 for lithium
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20988 requests in 15.01s, 5.00MB read
-  Socket errors: connect 0, read 0, write 0, timeout 14
-Requests/sec:   1398.08
-Transfer/sec:    341.01KB
+    Latency   374.08ms  469.45ms   1.71s    83.71%
+    Req/Sec   186.36    134.28     1.11k    67.28%
+  21039 requests in 15.00s, 5.01MB read
+Requests/sec:   1402.19
+Transfer/sec:    342.03KB

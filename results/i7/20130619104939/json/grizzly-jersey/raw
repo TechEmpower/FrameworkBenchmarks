@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Tue Jun 25 13:15:28 PDT 2013
+  System information as of Wed Jun 26 11:29:36 PDT 2013
 
-  System load:  0.0                 Processes:           131
-  Usage of /:   10.9% of 129.62GB   Users logged in:     1
-  Memory usage: 4%                  IP address for eth1: 172.16.98.98
+  System load:  0.96                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   405.64us  116.68us   2.35ms   79.96%
-    Req/Sec     2.15k   454.32     3.00k    77.09%
-  84712 requests in 5.00s, 13.42MB read
-Requests/sec:  16943.68
-Transfer/sec:      2.68MB
+    Latency   490.63us  287.31us   7.51ms   91.82%
+    Req/Sec     2.32k   637.88     4.33k    65.66%
+  82120 requests in 5.00s, 13.01MB read
+Requests/sec:  16424.29
+Transfer/sec:      2.60MB
 
 ---------------------------------------------------------
  Running Warmup grizzly-jersey
@@ -37,11 +37,11 @@ Transfer/sec:      2.68MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.07ms    3.37ms 173.82ms   93.04%
-    Req/Sec    16.04k     2.42k   31.00k    74.80%
-  1865501 requests in 15.00s, 295.46MB read
-Requests/sec: 124372.28
-Transfer/sec:     19.70MB
+    Latency     2.08ms    3.73ms 252.94ms   93.82%
+    Req/Sec    16.43k     2.39k   30.33k    74.23%
+  1860701 requests in 15.00s, 294.70MB read
+Requests/sec: 124051.43
+Transfer/sec:     19.65MB
 
 ---------------------------------------------------------
  Concurrency: 8 for grizzly-jersey
@@ -51,11 +51,11 @@ Transfer/sec:     19.70MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   378.80us  506.56us  30.50ms   99.85%
-    Req/Sec     2.22k   421.66     3.00k    77.67%
-  319671 requests in 15.00s, 50.63MB read
-Requests/sec:  21311.80
-Transfer/sec:      3.38MB
+    Latency   372.54us  207.44us  12.72ms   99.68%
+    Req/Sec     2.80k   189.08     3.89k    64.28%
+  318637 requests in 15.00s, 50.47MB read
+Requests/sec:  21243.01
+Transfer/sec:      3.36MB
 
 ---------------------------------------------------------
  Concurrency: 16 for grizzly-jersey
@@ -65,11 +65,11 @@ Transfer/sec:      3.38MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   328.56us  274.46us  16.26ms   99.54%
-    Req/Sec     5.92k   708.22     8.00k    65.89%
-  724888 requests in 15.00s, 114.81MB read
-Requests/sec:  48327.31
-Transfer/sec:      7.65MB
+    Latency   330.93us  327.39us  15.71ms   99.59%
+    Req/Sec     6.39k   656.03     8.44k    79.20%
+  725930 requests in 15.00s, 114.97MB read
+Requests/sec:  48396.70
+Transfer/sec:      7.67MB
 
 ---------------------------------------------------------
  Concurrency: 32 for grizzly-jersey
@@ -79,11 +79,11 @@ Transfer/sec:      7.65MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.01ms    8.38ms 104.20ms   99.29%
-    Req/Sec    12.31k     1.64k   15.00k    80.06%
-  1448279 requests in 15.00s, 229.38MB read
-Requests/sec:  96558.47
-Transfer/sec:     15.29MB
+    Latency   795.23us    6.25ms  83.73ms   99.37%
+    Req/Sec    12.81k     1.62k   15.33k    90.71%
+  1454325 requests in 15.00s, 230.34MB read
+Requests/sec:  96958.38
+Transfer/sec:     15.36MB
 
 ---------------------------------------------------------
  Concurrency: 64 for grizzly-jersey
@@ -93,11 +93,11 @@ Transfer/sec:     15.29MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.97ms    6.20ms  84.76ms   99.42%
-    Req/Sec    15.90k     2.25k   22.00k    84.53%
-  1856221 requests in 15.00s, 293.99MB read
-Requests/sec: 123751.87
-Transfer/sec:     19.60MB
+    Latency   825.59us    4.87ms  75.79ms   99.48%
+    Req/Sec    16.46k     2.20k   22.44k    78.04%
+  1866422 requests in 15.00s, 295.60MB read
+Requests/sec: 124434.49
+Transfer/sec:     19.71MB
 
 ---------------------------------------------------------
  Concurrency: 128 for grizzly-jersey
@@ -107,11 +107,11 @@ Transfer/sec:     19.60MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.85ms    9.76ms 129.60ms   98.97%
-    Req/Sec    15.93k     2.67k   26.00k    75.16%
-  1857548 requests in 15.00s, 294.20MB read
-Requests/sec: 123840.22
-Transfer/sec:     19.61MB
+    Latency     1.71ms    8.49ms 104.81ms   98.90%
+    Req/Sec    16.39k     2.62k   25.56k    78.28%
+  1858243 requests in 15.00s, 294.31MB read
+Requests/sec: 123887.28
+Transfer/sec:     19.62MB
 
 ---------------------------------------------------------
  Concurrency: 256 for grizzly-jersey
@@ -121,8 +121,8 @@ Transfer/sec:     19.61MB
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.04ms    2.33ms  48.83ms   92.29%
-    Req/Sec    16.31k     2.16k   29.00k    72.30%
-  1901300 requests in 15.00s, 301.13MB read
-Requests/sec: 126776.08
-Transfer/sec:     20.08MB
+    Latency     2.04ms    2.56ms  76.43ms   92.31%
+    Req/Sec    16.80k     2.25k   26.11k    74.68%
+  1906039 requests in 15.00s, 301.88MB read
+Requests/sec: 127072.83
+Transfer/sec:     20.13MB

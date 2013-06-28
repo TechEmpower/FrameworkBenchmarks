@@ -4,119 +4,118 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  System information disabled due to load higher than 8.0
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer ringojs-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17183 requests in 5.00s, 23.61MB read
-Requests/sec:   3435.95
-Transfer/sec:      4.72MB
+    Latency     2.47ms    1.55ms  15.90ms   91.54%
+    Req/Sec   473.76    125.96   777.00     69.04%
+  16623 requests in 5.00s, 22.84MB read
+Requests/sec:   3324.33
+Transfer/sec:      4.57MB
 
 ---------------------------------------------------------
  Running Warmup ringojs-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  82595 requests in 15.00s, 113.51MB read
-Requests/sec:   5505.47
-Transfer/sec:      7.57MB
+    Latency    51.65ms   78.19ms 803.24ms   90.88%
+    Req/Sec   715.65    273.22     2.00k    67.34%
+  80651 requests in 15.00s, 110.83MB read
+Requests/sec:   5375.24
+Transfer/sec:      7.39MB
 
 ---------------------------------------------------------
  Concurrency: 8 for ringojs-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  59997 requests in 15.00s, 82.45MB read
-Requests/sec:   3999.53
-Transfer/sec:      5.50MB
+    Latency     2.14ms    1.23ms  17.80ms   95.79%
+    Req/Sec   515.91     96.86   777.00     76.56%
+  58719 requests in 15.00s, 80.69MB read
+Requests/sec:   3914.34
+Transfer/sec:      5.38MB
 
 ---------------------------------------------------------
  Concurrency: 16 for ringojs-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  76151 requests in 15.00s, 104.65MB read
-Requests/sec:   5076.29
-Transfer/sec:      6.98MB
+    Latency     3.43ms    2.54ms  38.55ms   92.92%
+    Req/Sec   656.75    155.19     1.11k    72.60%
+  74679 requests in 15.00s, 102.63MB read
+Requests/sec:   4978.13
+Transfer/sec:      6.84MB
 
 ---------------------------------------------------------
  Concurrency: 32 for ringojs-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  82103 requests in 15.00s, 112.83MB read
-Requests/sec:   5472.88
-Transfer/sec:      7.52MB
+    Latency     7.26ms   12.88ms 233.48ms   95.50%
+    Req/Sec   707.72    237.56     1.67k    70.19%
+  80476 requests in 15.00s, 110.59MB read
+Requests/sec:   5363.66
+Transfer/sec:      7.37MB
 
 ---------------------------------------------------------
  Concurrency: 64 for ringojs-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  82716 requests in 15.00s, 113.67MB read
-Requests/sec:   5513.85
-Transfer/sec:      7.58MB
+    Latency    15.27ms   32.81ms 359.19ms   95.60%
+    Req/Sec   714.24    274.70     1.89k    66.60%
+  81300 requests in 15.00s, 111.73MB read
+Requests/sec:   5419.92
+Transfer/sec:      7.45MB
 
 ---------------------------------------------------------
  Concurrency: 128 for ringojs-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  83274 requests in 15.00s, 114.44MB read
-Requests/sec:   5550.99
-Transfer/sec:      7.63MB
+    Latency    30.22ms   62.36ms 712.61ms   95.21%
+    Req/Sec   717.67    296.82     2.11k    72.19%
+  81597 requests in 15.00s, 112.13MB read
+Requests/sec:   5439.16
+Transfer/sec:      7.47MB
 
 ---------------------------------------------------------
  Concurrency: 256 for ringojs-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    50.10ms   66.20ms 438.63ms   90.23%
-    Req/Sec   206.51    404.94     1.00k    79.35%
-  83300 requests in 15.00s, 114.47MB read
-  Socket errors: connect 0, read 0, write 0, timeout 4
-Requests/sec:   5551.56
-Transfer/sec:      7.63MB
+    Latency    58.83ms  102.75ms 799.67ms   94.09%
+    Req/Sec   716.84    281.64     1.90k    66.55%
+  81578 requests in 15.00s, 112.11MB read
+Requests/sec:   5437.71
+Transfer/sec:      7.47MB

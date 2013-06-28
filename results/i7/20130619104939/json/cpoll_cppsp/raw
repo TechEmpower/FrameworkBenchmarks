@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 12:28:56 PDT 2013
+  System information as of Thu Jun 27 12:07:25 PDT 2013
 
-  System load:  0.25                Processes:           135
-  Usage of /:   10.5% of 129.62GB   Users logged in:     1
-  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  System load:  0.48                Processes:           130
+  Usage of /:   11.5% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer cpoll_cppsp
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:16969/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:16969/json
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:16969/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   261.46us   28.90us 387.00us   73.02%
-    Req/Sec     3.48k   499.77     4.00k    51.74%
-  148914 requests in 5.00s, 20.45MB read
-Requests/sec:  29784.63
-Transfer/sec:      4.09MB
+    Latency   262.83us   31.33us 377.00us   73.43%
+    Req/Sec     3.92k   234.54     5.44k    72.71%
+  148050 requests in 5.00s, 20.33MB read
+Requests/sec:  29610.47
+Transfer/sec:      4.07MB
 
 ---------------------------------------------------------
  Running Warmup cpoll_cppsp
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:16969/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.21ms  135.33us   3.03ms   75.61%
-    Req/Sec    27.36k     1.98k   32.00k    64.66%
-  3149807 requests in 15.00s, 432.56MB read
-Requests/sec: 209999.37
-Transfer/sec:     28.84MB
+    Latency     1.23ms  137.77us   3.56ms   75.41%
+    Req/Sec    27.38k     1.95k   31.56k    64.32%
+  3103491 requests in 15.00s, 426.20MB read
+Requests/sec: 206907.84
+Transfer/sec:     28.41MB
 
 ---------------------------------------------------------
  Concurrency: 8 for cpoll_cppsp
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:16969/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:16969/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:16969/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   260.78us   28.65us 385.00us   73.33%
-    Req/Sec     3.51k   499.91     4.00k    51.05%
-  449243 requests in 15.00s, 61.69MB read
-Requests/sec:  29950.32
-Transfer/sec:      4.11MB
+    Latency   263.43us   33.77us 475.00us   72.71%
+    Req/Sec     3.91k   239.07     6.22k    72.98%
+  444566 requests in 15.00s, 61.05MB read
+Requests/sec:  29638.63
+Transfer/sec:      4.07MB
 
 ---------------------------------------------------------
  Concurrency: 16 for cpoll_cppsp
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:16969/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:16969/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:16969/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   200.83us   62.30us 552.00us   67.41%
-    Req/Sec     9.77k     1.14k   13.00k    60.18%
-  1156278 requests in 15.00s, 158.79MB read
-Requests/sec:  77088.19
-Transfer/sec:     10.59MB
+    Latency   207.93us   64.10us 504.00us   64.99%
+    Req/Sec     9.85k     1.01k   13.22k    65.89%
+  1114634 requests in 15.00s, 153.07MB read
+Requests/sec:  74310.55
+Transfer/sec:     10.21MB
 
 ---------------------------------------------------------
  Concurrency: 32 for cpoll_cppsp
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:16969/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:16969/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:16969/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   211.99us   76.32us   2.45ms   71.38%
-    Req/Sec    18.98k     2.28k   27.00k    70.87%
-  2205103 requests in 15.00s, 302.82MB read
-Requests/sec: 147012.89
-Transfer/sec:     20.19MB
+    Latency   218.50us   74.60us 731.00us   67.57%
+    Req/Sec    18.86k     1.95k   26.00k    66.04%
+  2137831 requests in 15.00s, 293.59MB read
+Requests/sec: 142530.50
+Transfer/sec:     19.57MB
 
 ---------------------------------------------------------
  Concurrency: 64 for cpoll_cppsp
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:16969/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:16969/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:16969/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   336.23us  115.77us   2.84ms   81.14%
-    Req/Sec    24.26k     2.33k   32.00k    72.13%
-  2801844 requests in 15.00s, 384.77MB read
-Requests/sec: 186801.82
-Transfer/sec:     25.65MB
+    Latency   320.95us  103.89us   2.74ms   81.72%
+    Req/Sec    26.02k     2.28k   33.22k    65.89%
+  2948176 requests in 15.00s, 404.87MB read
+Requests/sec: 196557.67
+Transfer/sec:     26.99MB
 
 ---------------------------------------------------------
  Concurrency: 128 for cpoll_cppsp
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:16969/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:16969/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:16969/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   625.34us  115.27us   1.91ms   76.73%
-    Req/Sec    26.42k     2.13k   32.00k    61.72%
-  3044836 requests in 15.00s, 418.14MB read
-Requests/sec: 202995.77
-Transfer/sec:     27.88MB
+    Latency   630.74us  114.39us   3.24ms   77.89%
+    Req/Sec    26.67k     2.05k   31.89k    63.65%
+  3019927 requests in 15.00s, 414.72MB read
+Requests/sec: 201346.01
+Transfer/sec:     27.65MB
 
 ---------------------------------------------------------
  Concurrency: 256 for cpoll_cppsp
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:16969/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:16969/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:16969/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.22ms  140.22us   3.42ms   75.97%
-    Req/Sec    27.23k     2.02k   32.00k    63.65%
-  3140148 requests in 15.00s, 431.23MB read
-Requests/sec: 209354.64
-Transfer/sec:     28.75MB
+    Latency     1.23ms  136.68us   5.09ms   77.50%
+    Req/Sec    27.56k     1.93k   32.22k    63.96%
+  3122301 requests in 15.00s, 428.78MB read
+Requests/sec: 208162.10
+Transfer/sec:     28.59MB

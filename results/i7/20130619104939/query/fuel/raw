@@ -2,115 +2,114 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 08:17:27 PDT 2013
+  System information as of Wed Jun 26 14:26:19 PDT 2013
 
-  System load:  0.76                Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
+  System load:  0.41                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
   Memory usage: 9%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5490 requests in 5.01s, 1.42MB read
-Requests/sec:   1096.79
-Transfer/sec:    289.72KB
+    Latency     8.22ms    5.50ms  46.53ms   97.54%
+    Req/Sec   143.29     54.91   222.00     59.88%
+  5424 requests in 5.01s, 1.40MB read
+Requests/sec:   1083.64
+Transfer/sec:    286.27KB
 
 ---------------------------------------------------------
  Running Warmup fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  19587 requests in 15.01s, 5.05MB read
-Requests/sec:   1305.13
-Transfer/sec:    344.82KB
+    Latency   350.05ms  357.78ms   1.31s    81.45%
+    Req/Sec   172.50    129.52   777.00     68.39%
+  19499 requests in 15.01s, 5.03MB read
+Requests/sec:   1299.12
+Transfer/sec:    343.23KB
 
 ---------------------------------------------------------
  Queries: 1 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20950 requests in 15.01s, 4.69MB read
-Requests/sec:   1395.68
-Transfer/sec:    319.99KB
+    Latency   415.87ms  554.46ms   1.62s    82.07%
+    Req/Sec   185.09    138.95     1.33k    65.96%
+  20908 requests in 15.01s, 4.68MB read
+Requests/sec:   1392.98
+Transfer/sec:    319.36KB
 
 ---------------------------------------------------------
  Queries: 5 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  16410 requests in 15.01s, 5.91MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:   1093.14
-Transfer/sec:    403.39KB
+    Latency   478.26ms  465.96ms   1.55s    76.13%
+    Req/Sec   144.11    117.09   700.00     61.25%
+  16287 requests in 15.01s, 5.87MB read
+Requests/sec:   1085.38
+Transfer/sec:    400.53KB
 
 ---------------------------------------------------------
  Queries: 10 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  12886 requests in 15.01s, 6.85MB read
-Requests/sec:    858.48
-Transfer/sec:    467.59KB
+    Latency   815.58ms  783.74ms   2.10s    65.31%
+    Req/Sec   114.20    106.77   800.00     48.76%
+  12868 requests in 15.02s, 6.84MB read
+Requests/sec:    857.00
+Transfer/sec:    466.80KB
 
 ---------------------------------------------------------
  Queries: 15 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10762 requests in 15.03s, 7.56MB read
-Requests/sec:    716.08
-Transfer/sec:    515.11KB
+    Latency     1.44s     1.41s    4.35s    78.92%
+    Req/Sec    94.91     97.59   666.00     76.75%
+  10701 requests in 15.02s, 7.52MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:    712.36
+Transfer/sec:    512.45KB
 
 ---------------------------------------------------------
  Queries: 20 for fuel
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9145 requests in 15.01s, 7.98MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    609.23
-Transfer/sec:    544.70KB
+    Latency     1.44s     1.20s    3.18s    52.84%
+    Req/Sec    81.80     91.13   600.00     81.76%
+  9175 requests in 15.02s, 8.01MB read
+Requests/sec:    610.91
+Transfer/sec:    546.18KB

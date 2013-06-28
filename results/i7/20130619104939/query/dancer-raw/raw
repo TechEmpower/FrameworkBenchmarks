@@ -2,113 +2,113 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 09:22:46 PDT 2013
+  System information as of Thu Jun 27 08:06:54 PDT 2013
 
-  System load:  0.13                Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
-  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  System load:  0.04                Processes:           138
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer dancer-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20217 requests in 5.00s, 3.62MB read
-Requests/sec:   4042.61
-Transfer/sec:    742.00KB
+    Latency     1.96ms  544.72us   6.77ms   74.78%
+    Req/Sec   542.48     84.99     0.89k    67.33%
+  20562 requests in 5.00s, 3.69MB read
+Requests/sec:   4111.87
+Transfer/sec:    754.72KB
 
 ---------------------------------------------------------
  Running Warmup dancer-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  65986 requests in 15.00s, 11.83MB read
-Requests/sec:   4397.62
-Transfer/sec:    807.21KB
+    Latency    58.58ms    2.77ms  81.36ms   78.60%
+    Req/Sec   578.27    272.07     2.33k    68.98%
+  65778 requests in 15.00s, 11.79MB read
+Requests/sec:   4384.19
+Transfer/sec:    804.74KB
 
 ---------------------------------------------------------
  Queries: 1 for dancer-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  72833 requests in 15.00s, 13.06MB read
-Requests/sec:   4854.75
+    Latency    54.69ms   12.92ms 135.85ms   97.12%
+    Req/Sec   639.07    306.61     3.56k    74.68%
+  72675 requests in 15.01s, 13.03MB read
+Requests/sec:   4842.42
 Transfer/sec:      0.87MB
 
 ---------------------------------------------------------
  Queries: 5 for dancer-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  49901 requests in 15.01s, 8.95MB read
-Requests/sec:   3325.56
-Transfer/sec:    610.47KB
+    Latency    78.06ms   10.29ms 116.06ms   89.26%
+    Req/Sec   447.28    288.94     2.89k    75.12%
+  50946 requests in 15.01s, 9.13MB read
+Requests/sec:   3395.16
+Transfer/sec:    623.24KB
 
 ---------------------------------------------------------
  Queries: 10 for dancer-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  25653 requests in 15.01s, 4.60MB read
-Requests/sec:   1709.53
-Transfer/sec:    313.78KB
+    Latency   225.32ms  136.14ms 486.80ms   78.18%
+    Req/Sec   214.93    190.13     2.11k    66.61%
+  24769 requests in 15.01s, 4.44MB read
+Requests/sec:   1650.41
+Transfer/sec:    303.01KB
 
 ---------------------------------------------------------
  Queries: 15 for dancer-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  16678 requests in 15.01s, 2.99MB read
-Requests/sec:   1111.13
-Transfer/sec:    204.00KB
+    Latency   249.08ms   27.82ms 292.43ms   58.18%
+    Req/Sec   145.98    152.67     1.90k    82.05%
+  16856 requests in 15.03s, 3.02MB read
+Requests/sec:   1121.12
+Transfer/sec:    205.83KB
 
 ---------------------------------------------------------
  Queries: 20 for dancer-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  12425 requests in 15.07s, 2.23MB read
-Requests/sec:    824.39
-Transfer/sec:    151.35KB
+    Latency   317.17ms   18.67ms 341.30ms   43.58%
+    Req/Sec   110.69    115.30     1.11k    90.76%
+  12759 requests in 15.05s, 2.29MB read
+Requests/sec:    848.01
+Transfer/sec:    155.69KB

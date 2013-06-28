@@ -2,127 +2,128 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 10:17:22 PDT 2013
+  System information as of Thu Jun 27 09:24:33 PDT 2013
 
-  System load:  0.34                Processes:           135
-  Usage of /:   10.4% of 129.62GB   Users logged in:     1
-  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  System load:  0.65                Processes:           136
+  Usage of /:   11.4% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer phalcon-micro
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  33529 requests in 5.00s, 7.28MB read
-Requests/sec:   6705.15
-Transfer/sec:      1.46MB
+    Latency     1.16ms  166.53us   2.11ms   72.69%
+    Req/Sec     0.91k    92.89     1.33k    69.25%
+  34223 requests in 5.00s, 7.43MB read
+Requests/sec:   6844.05
+Transfer/sec:      1.49MB
 
 ---------------------------------------------------------
  Running Warmup phalcon-micro
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    16.39ms   29.55ms   2.33s    94.16%
-    Req/Sec     1.65k   607.13     5.00k    52.87%
-  238118 requests in 15.00s, 51.72MB read
-Requests/sec:  15874.45
-Transfer/sec:      3.45MB
+    Latency    17.74ms   31.46ms 612.59ms   98.25%
+    Req/Sec     2.13k   585.97     7.44k    83.17%
+  241804 requests in 15.00s, 52.52MB read
+Requests/sec:  16120.11
+Transfer/sec:      3.50MB
 
 ---------------------------------------------------------
  Concurrency: 8 for phalcon-micro
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  99832 requests in 15.00s, 21.68MB read
-Requests/sec:   6655.24
+    Latency     3.75ms   22.21ms 195.81ms   98.68%
+    Req/Sec     0.88k   138.65     1.44k    90.68%
+  100178 requests in 15.00s, 21.76MB read
+Requests/sec:   6678.36
 Transfer/sec:      1.45MB
 
 ---------------------------------------------------------
  Concurrency: 16 for phalcon-micro
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.99ms  214.02us   2.57ms   73.91%
-    Req/Sec     1.89k   318.40     2.00k    88.55%
-  240534 requests in 15.00s, 52.24MB read
-Requests/sec:  16035.52
-Transfer/sec:      3.48MB
+    Latency     1.00ms  217.37us   4.95ms   73.89%
+    Req/Sec     2.10k   142.62     2.56k    76.01%
+  238519 requests in 15.00s, 51.80MB read
+Requests/sec:  15902.20
+Transfer/sec:      3.45MB
 
 ---------------------------------------------------------
  Concurrency: 32 for phalcon-micro
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.20ms   44.57ms 315.80ms   97.92%
-    Req/Sec     2.00k   469.55     3.00k    84.27%
-  277126 requests in 15.00s, 60.19MB read
-Requests/sec:  18475.75
+    Latency     5.67ms   30.75ms 247.72ms   98.38%
+    Req/Sec     2.44k   448.47     3.67k    84.73%
+  277226 requests in 15.00s, 60.21MB read
+Requests/sec:  18481.99
 Transfer/sec:      4.01MB
 
 ---------------------------------------------------------
  Concurrency: 64 for phalcon-micro
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.57ms    2.59ms  35.70ms   91.53%
-    Req/Sec     1.97k   421.15     3.00k    82.15%
-  272734 requests in 15.00s, 59.23MB read
-Requests/sec:  18181.61
-Transfer/sec:      3.95MB
+    Latency     3.61ms    2.63ms  55.84ms   91.04%
+    Req/Sec     2.38k   390.68     4.11k    69.35%
+  270771 requests in 15.00s, 58.81MB read
+Requests/sec:  18051.91
+Transfer/sec:      3.92MB
 
 ---------------------------------------------------------
  Concurrency: 128 for phalcon-micro
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    16.68ms   58.43ms 408.85ms   97.51%
-    Req/Sec     1.76k   621.65     5.00k    63.97%
-  246879 requests in 15.00s, 53.62MB read
-Requests/sec:  16458.77
-Transfer/sec:      3.57MB
+    Latency    28.48ms  105.05ms 576.97ms   96.26%
+    Req/Sec     2.12k   631.88     5.22k    79.77%
+  240645 requests in 15.00s, 52.27MB read
+Requests/sec:  16042.98
+Transfer/sec:      3.48MB
 
 ---------------------------------------------------------
  Concurrency: 256 for phalcon-micro
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    16.88ms   45.92ms   2.33s    97.81%
-    Req/Sec     1.65k   637.58     8.00k    52.18%
-  238502 requests in 15.00s, 51.80MB read
-Requests/sec:  15899.34
-Transfer/sec:      3.45MB
+    Latency    17.08ms   57.21ms   2.85s    98.94%
+    Req/Sec     2.07k   506.40     7.20k    71.05%
+  235746 requests in 15.00s, 51.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:  15716.30
+Transfer/sec:      3.41MB

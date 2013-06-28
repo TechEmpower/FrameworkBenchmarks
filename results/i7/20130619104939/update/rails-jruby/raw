@@ -2,119 +2,113 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 12:57:49 PDT 2013
+  System information as of Wed Jun 26 08:51:34 PDT 2013
 
-  System load:  0.28                Processes:           131
-  Usage of /:   10.1% of 129.62GB   Users logged in:     1
-  Memory usage: 7%                  IP address for eth1: 172.16.98.98
+  System load:  0.33                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/rails/update?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/rails/update?queries=2
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/rails/update?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5218 requests in 5.00s, 2.03MB read
-Requests/sec:   1042.57
-Transfer/sec:    414.97KB
+    Latency     7.44ms    2.34ms  22.18ms   91.45%
+    Req/Sec   148.52     55.23   222.00     80.12%
+  5308 requests in 5.00s, 2.06MB read
+Requests/sec:   1060.54
+Transfer/sec:    422.11KB
 
 ---------------------------------------------------------
  Running Warmup rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=2
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/update?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17585 requests in 15.01s, 7.13MB read
-  Socket errors: connect 0, read 91, write 0, timeout 57
-Requests/sec:   1171.66
-Transfer/sec:    486.53KB
+    Latency   264.96ms  111.60ms 480.42ms   61.84%
+    Req/Sec   155.25    126.48   800.00     57.90%
+  17599 requests in 15.01s, 6.84MB read
+Requests/sec:   1172.59
+Transfer/sec:    466.69KB
 
 ---------------------------------------------------------
  Queries: 1 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=1
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/update?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  23608 requests in 15.01s, 8.86MB read
-  Socket errors: connect 0, read 61, write 0, timeout 50
-Requests/sec:   1573.27
-Transfer/sec:    604.36KB
+    Latency   188.98ms   81.98ms 366.46ms   71.96%
+    Req/Sec   207.19    144.44     1.00k    72.89%
+  23392 requests in 15.01s, 8.38MB read
+Requests/sec:   1558.48
+Transfer/sec:    571.92KB
 
 ---------------------------------------------------------
  Queries: 5 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=5
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/update?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10639 requests in 15.01s, 5.29MB read
-  Socket errors: connect 0, read 73, write 0, timeout 51
-Requests/sec:    708.59
-Transfer/sec:    360.79KB
+    Latency   472.55ms  162.23ms 690.44ms   51.08%
+    Req/Sec    94.29     97.89   666.00     77.42%
+  10656 requests in 15.02s, 5.12MB read
+Requests/sec:    709.33
+Transfer/sec:    349.05KB
 
 ---------------------------------------------------------
  Queries: 10 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=10
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/update?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6431 requests in 15.06s, 4.17MB read
-  Socket errors: connect 0, read 41, write 0, timeout 41
-Requests/sec:    427.00
-Transfer/sec:    283.58KB
+    Latency   773.73ms  178.31ms 948.53ms   76.44%
+    Req/Sec    57.02     76.58   600.00     89.92%
+  6411 requests in 15.04s, 4.05MB read
+Requests/sec:    426.27
+Transfer/sec:    275.91KB
 
 ---------------------------------------------------------
  Queries: 15 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=15
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/update?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4611 requests in 15.07s, 3.69MB read
-  Socket errors: connect 0, read 38, write 0, timeout 51
-Requests/sec:    305.89
-Transfer/sec:    250.57KB
+    Latency     1.08s   193.60ms   1.26s    77.26%
+    Req/Sec    41.10     65.84   500.00     82.03%
+  4554 requests in 15.12s, 3.57MB read
+Requests/sec:    301.18
+Transfer/sec:    241.68KB
 
 ---------------------------------------------------------
  Queries: 20 for rails-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/update?queries=20
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/rails/update?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3595 requests in 15.06s, 3.42MB read
-  Socket errors: connect 0, read 45, write 0, timeout 47
-Requests/sec:    238.78
-Transfer/sec:    232.57KB
+    Latency     1.63s   353.04ms   1.96s    77.28%
+    Req/Sec    31.65     58.39   444.00     74.19%
+  3450 requests in 15.05s, 3.23MB read
+Requests/sec:    229.19
+Transfer/sec:    219.48KB

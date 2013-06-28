@@ -2,128 +2,139 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
- System information disabled due to load higher than 8.0
+  System information as of Thu Jun 27 13:34:57 PDT 2013
 
-24 packages can be updated.
+  System load:  0.61                Processes:           133
+  Usage of /:   11.6% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer dart
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  25365 requests in 5.00s, 46.23MB read
-Requests/sec:   5072.30
-Transfer/sec:      9.24MB
+    Latency   348.77us  110.58us   0.98ms   71.17%
+    Req/Sec     3.01k   401.34     4.55k    70.71%
+  111513 requests in 5.00s, 34.88MB read
+  Non-2xx or 3xx responses: 111513
+Requests/sec:  22303.99
+Transfer/sec:      6.98MB
 
 ---------------------------------------------------------
  Running Warmup dart
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    27.02ms   79.07ms   2.19s    97.00%
-    Req/Sec   714.78    506.39     3.00k    66.25%
-  130802 requests in 15.00s, 238.31MB read
-  Socket errors: connect 0, read 7796, write 0, timeout 136
-  Non-2xx or 3xx responses: 42
-Requests/sec:   8720.40
-Transfer/sec:     15.89MB
+    Latency     4.80ms    2.67ms  26.93ms   77.95%
+    Req/Sec     7.08k     0.86k   12.89k    69.96%
+  799674 requests in 15.00s, 250.10MB read
+  Socket errors: connect 0, read 431, write 0, timeout 0
+  Non-2xx or 3xx responses: 799674
+Requests/sec:  53313.21
+Transfer/sec:     16.67MB
 
 ---------------------------------------------------------
  Concurrency: 8 for dart
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  77787 requests in 15.00s, 141.76MB read
-Requests/sec:   5185.00
-Transfer/sec:      9.45MB
+    Latency   346.03us  110.31us   1.30ms   71.50%
+    Req/Sec     3.03k   399.21     4.67k    70.53%
+  343318 requests in 15.00s, 107.38MB read
+  Non-2xx or 3xx responses: 343318
+Requests/sec:  22888.46
+Transfer/sec:      7.16MB
 
 ---------------------------------------------------------
  Concurrency: 16 for dart
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  101358 requests in 15.00s, 184.72MB read
-Requests/sec:   6756.79
-Transfer/sec:     12.31MB
+    Latency   378.45us  174.34us   8.30ms   80.01%
+    Req/Sec     5.60k   848.14     8.33k    72.10%
+  629815 requests in 15.00s, 196.98MB read
+  Non-2xx or 3xx responses: 629815
+Requests/sec:  41989.06
+Transfer/sec:     13.13MB
 
 ---------------------------------------------------------
  Concurrency: 32 for dart
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  109287 requests in 15.00s, 199.17MB read
-Requests/sec:   7285.86
-Transfer/sec:     13.28MB
+    Latency   579.86us  465.58us  11.00ms   95.08%
+    Req/Sec     7.37k     1.23k   12.56k    68.97%
+  821490 requests in 15.00s, 256.93MB read
+  Non-2xx or 3xx responses: 821490
+Requests/sec:  54767.97
+Transfer/sec:     17.13MB
 
 ---------------------------------------------------------
  Concurrency: 64 for dart
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.98ms    7.84ms  95.78ms   86.95%
-    Req/Sec   695.98    472.60     2.00k    68.43%
-  119593 requests in 15.00s, 217.95MB read
-  Socket errors: connect 0, read 2604, write 0, timeout 18
-  Non-2xx or 3xx responses: 2
-Requests/sec:   7972.08
-Transfer/sec:     14.53MB
+    Latency     1.12ms    0.90ms  16.13ms   93.37%
+    Req/Sec     7.67k     1.21k   12.67k    69.73%
+  849046 requests in 15.00s, 265.55MB read
+  Socket errors: connect 0, read 404, write 0, timeout 0
+  Non-2xx or 3xx responses: 849046
+Requests/sec:  56605.52
+Transfer/sec:     17.70MB
 
 ---------------------------------------------------------
  Concurrency: 128 for dart
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    13.68ms   15.82ms 213.09ms   91.79%
-    Req/Sec   726.23    479.33     2.00k    69.53%
-  124757 requests in 15.00s, 227.36MB read
-  Socket errors: connect 0, read 9096, write 0, timeout 90
-  Non-2xx or 3xx responses: 2
-Requests/sec:   8317.01
-Transfer/sec:     15.16MB
+    Latency     2.32ms    1.53ms  18.60ms   84.02%
+    Req/Sec     7.37k     1.06k   11.56k    69.76%
+  816298 requests in 15.00s, 255.30MB read
+  Socket errors: connect 0, read 710, write 0, timeout 0
+  Non-2xx or 3xx responses: 816298
+Requests/sec:  54422.49
+Transfer/sec:     17.02MB
 
 ---------------------------------------------------------
  Concurrency: 256 for dart
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    29.91ms   79.40ms   1.32s    96.44%
-    Req/Sec   732.60    489.57     2.00k    68.88%
-  130566 requests in 15.01s, 237.60MB read
-  Socket errors: connect 0, read 49157, write 0, timeout 9
-  Non-2xx or 3xx responses: 231
-Requests/sec:   8701.43
-Transfer/sec:     15.83MB
+    Latency     4.82ms    2.77ms  93.38ms   81.48%
+    Req/Sec     7.06k   845.88    10.89k    70.15%
+  781419 requests in 15.00s, 244.40MB read
+  Socket errors: connect 0, read 3215, write 0, timeout 0
+  Non-2xx or 3xx responses: 781419
+Requests/sec:  52103.68
+Transfer/sec:     16.30MB

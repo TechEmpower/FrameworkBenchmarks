@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 09:32:39 PDT 2013
+
+  System load:  4.82                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/spring/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14ms  649.38us  11.79ms   93.09%
+    Req/Sec     1.00k   257.66     1.67k    69.22%
+  35244 requests in 5.00s, 55.22MB read
+Requests/sec:   7049.06
+Transfer/sec:     11.05MB
+
+---------------------------------------------------------
+ Running Warmup spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.89ms   53.01ms 344.05ms   95.12%
+    Req/Sec     3.18k     1.16k    9.20k    74.95%
+  360499 requests in 15.00s, 564.86MB read
+Requests/sec:  24033.47
+Transfer/sec:     37.66MB
+
+---------------------------------------------------------
+ Concurrency: 8 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   827.14us  539.45us  12.05ms   99.37%
+    Req/Sec     1.30k   159.73     1.78k    84.51%
+  148270 requests in 15.00s, 232.32MB read
+Requests/sec:   9884.91
+Transfer/sec:     15.49MB
+
+---------------------------------------------------------
+ Concurrency: 16 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.86ms    0.89ms  18.92ms   98.70%
+    Req/Sec     2.61k   371.62     3.33k    83.32%
+  296342 requests in 15.00s, 464.33MB read
+Requests/sec:  19756.17
+Transfer/sec:     30.96MB
+
+---------------------------------------------------------
+ Concurrency: 32 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.46ms    2.08ms  20.07ms   90.58%
+    Req/Sec     2.48k     1.28k    5.00k    50.09%
+  285116 requests in 15.00s, 446.74MB read
+Requests/sec:  19006.68
+Transfer/sec:     29.78MB
+
+---------------------------------------------------------
+ Concurrency: 64 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.55ms    2.80ms  47.06ms   94.67%
+    Req/Sec     2.87k     1.04k    5.55k    58.40%
+  321027 requests in 15.00s, 503.01MB read
+Requests/sec:  21401.97
+Transfer/sec:     33.53MB
+
+---------------------------------------------------------
+ Concurrency: 128 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.94ms    6.91ms  59.04ms   93.35%
+    Req/Sec     3.30k   826.58     6.78k    84.57%
+  374046 requests in 15.00s, 586.09MB read
+Requests/sec:  24936.62
+Transfer/sec:     39.07MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.42ms   31.29ms 228.23ms   94.63%
+    Req/Sec     3.22k     1.07k    9.11k    75.97%
+  365766 requests in 15.00s, 573.12MB read
+Requests/sec:  24384.43
+Transfer/sec:     38.21MB

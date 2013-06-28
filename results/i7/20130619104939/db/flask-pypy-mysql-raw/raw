@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 11:53:22 PDT 2013
+  System information as of Thu Jun 27 11:34:04 PDT 2013
 
-  System load:  0.21                Processes:           135
-  Usage of /:   10.5% of 129.62GB   Users logged in:     1
-  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  System load:  0.12                Processes:           130
+  Usage of /:   11.5% of 129.62GB   Users logged in:     1
+  Memory usage: 4%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer flask-pypy-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/dbsraw
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/dbsraw
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10549 requests in 5.03s, 1.80MB read
-Requests/sec:   2098.89
-Transfer/sec:    366.43KB
+    Latency    12.04ms   21.25ms  84.19ms   88.28%
+    Req/Sec   264.85    151.11   666.00     58.99%
+  9991 requests in 5.01s, 1.70MB read
+Requests/sec:   1992.34
+Transfer/sec:    347.84KB
 
 ---------------------------------------------------------
  Running Warmup flask-pypy-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/dbsraw
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/dbsraw
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  71296 requests in 15.00s, 12.16MB read
-Requests/sec:   4752.58
-Transfer/sec:    829.74KB
+    Latency    65.15ms   68.33ms 413.16ms   87.78%
+    Req/Sec   628.62    328.87     2.11k    71.56%
+  70492 requests in 15.00s, 12.02MB read
+Requests/sec:   4699.36
+Transfer/sec:    820.45KB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask-pypy-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/dbsraw
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/dbsraw
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  98444 requests in 15.00s, 16.78MB read
-Requests/sec:   6561.32
-Transfer/sec:      1.12MB
+    Latency     2.76ms    9.21ms  96.13ms   98.34%
+    Req/Sec   745.14    310.53     1.44k    59.92%
+  84627 requests in 15.00s, 14.43MB read
+Requests/sec:   5641.03
+Transfer/sec:      0.96MB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask-pypy-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/dbsraw
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/dbsraw
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.74ms    2.06ms  78.35ms   99.10%
-    Req/Sec     0.93k   250.21     1.00k    93.29%
-  106698 requests in 15.00s, 18.19MB read
-Requests/sec:   7112.78
-Transfer/sec:      1.21MB
+    Latency     1.99ms    2.38ms 121.11ms   98.96%
+    Req/Sec     1.07k   249.77     2.00k    73.00%
+  122134 requests in 15.00s, 20.82MB read
+Requests/sec:   8141.70
+Transfer/sec:      1.39MB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask-pypy-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/dbsraw
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/dbsraw
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.24ms    1.78ms  21.64ms   68.00%
-    Req/Sec     0.93k   292.81     2.00k    91.01%
-  122773 requests in 15.00s, 20.93MB read
-Requests/sec:   8184.44
-Transfer/sec:      1.40MB
+    Latency     4.12ms    3.57ms 143.33ms   96.91%
+    Req/Sec     1.06k   445.00     2.44k    72.50%
+  119946 requests in 15.00s, 20.45MB read
+Requests/sec:   7995.74
+Transfer/sec:      1.36MB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask-pypy-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/dbsraw
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/dbsraw
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.73ms    5.98ms 124.23ms   86.25%
-    Req/Sec     0.94k   233.65     1.00k    94.21%
-  122707 requests in 15.00s, 20.92MB read
-Requests/sec:   8179.90
+    Latency     7.82ms    5.48ms 132.89ms   75.44%
+    Req/Sec     1.07k   262.78     2.00k    66.80%
+  122102 requests in 15.00s, 20.82MB read
+Requests/sec:   8139.83
 Transfer/sec:      1.39MB
 
 ---------------------------------------------------------
  Concurrency: 128 for flask-pypy-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/dbsraw
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/dbsraw
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    13.17ms   10.69ms 137.29ms   81.43%
-    Req/Sec     0.89k   350.58     2.00k    86.57%
-  123274 requests in 15.00s, 21.02MB read
-Requests/sec:   8218.04
-Transfer/sec:      1.40MB
+    Latency    15.27ms   10.15ms 126.36ms   67.68%
+    Req/Sec     1.08k   314.68     2.11k    66.49%
+  122518 requests in 15.00s, 20.89MB read
+Requests/sec:   8167.22
+Transfer/sec:      1.39MB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask-pypy-mysql-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/dbsraw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/dbsraw
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/dbsraw
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    30.06ms   14.71ms 162.90ms   72.14%
-    Req/Sec   733.95    458.02     2.00k    71.95%
-  123142 requests in 15.00s, 21.00MB read
-Requests/sec:   8208.68
-Transfer/sec:      1.40MB
+    Latency    30.87ms   15.85ms 174.70ms   72.88%
+    Req/Sec     1.08k   325.17     2.89k    72.59%
+  122303 requests in 15.00s, 20.85MB read
+Requests/sec:   8153.17
+Transfer/sec:      1.39MB

@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Tue Jun 25 10:34:50 PDT 2013
+  System information as of Thu Jun 27 07:47:34 PDT 2013
 
-  System load:  0.0                 Processes:           131
-  Usage of /:   10.9% of 129.62GB   Users logged in:     1
-  Memory usage: 4%                  IP address for eth1: 172.16.98.98
+  System load:  5.06                Processes:           138
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,113 +17,112 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
 ---------------------------------------------------------
  Running Primer ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   612.94us  384.58us   4.07ms   91.45%
-    Req/Sec     1.36k   532.56     2.00k    58.67%
-  43736 requests in 5.00s, 7.55MB read
-Requests/sec:   8747.25
-Transfer/sec:      1.51MB
+    Latency     1.03ms    1.07ms  17.36ms   95.32%
+    Req/Sec     1.26k   512.97     2.78k    64.61%
+  44375 requests in 5.00s, 7.66MB read
+Requests/sec:   8875.32
+Transfer/sec:      1.53MB
 
 ---------------------------------------------------------
  Running Warmup ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    62.56ms  385.94ms   2.88s    97.93%
-    Req/Sec     3.97k     1.70k   10.00k    64.50%
-  487929 requests in 15.00s, 84.22MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:  32529.22
-Transfer/sec:      5.62MB
+    Latency    56.46ms  349.01ms   2.77s    97.94%
+    Req/Sec     4.44k     1.66k   11.22k    70.88%
+  495264 requests in 15.00s, 85.49MB read
+Requests/sec:  33018.59
+Transfer/sec:      5.70MB
 
 ---------------------------------------------------------
  Concurrency: 8 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   596.86us  378.71us  11.56ms   91.86%
-    Req/Sec     1.37k   495.25     2.00k    61.91%
-  207597 requests in 15.00s, 35.83MB read
-Requests/sec:  13839.86
-Transfer/sec:      2.39MB
+    Latency   601.40us  339.17us   7.18ms   90.83%
+    Req/Sec     1.80k   346.42     2.78k    66.31%
+  204787 requests in 15.00s, 35.35MB read
+Requests/sec:  13652.72
+Transfer/sec:      2.36MB
 
 ---------------------------------------------------------
  Concurrency: 16 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   827.25us    2.02ms  31.11ms   97.60%
-    Req/Sec     2.58k   804.76     4.00k    81.97%
-  343577 requests in 15.00s, 59.31MB read
-Requests/sec:  22905.54
-Transfer/sec:      3.95MB
+    Latency   768.57us    1.49ms  53.69ms   97.02%
+    Req/Sec     2.96k   720.41     4.89k    66.97%
+  336533 requests in 15.00s, 58.09MB read
+Requests/sec:  22435.97
+Transfer/sec:      3.87MB
 
 ---------------------------------------------------------
  Concurrency: 32 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.16ms    3.23ms  71.10ms   97.61%
-    Req/Sec     3.55k     0.99k    8.00k    73.65%
-  454069 requests in 15.00s, 78.38MB read
-Requests/sec:  30271.85
-Transfer/sec:      5.23MB
+    Latency     1.23ms    3.89ms  68.14ms   98.05%
+    Req/Sec     3.96k     1.00k    8.33k    74.16%
+  450549 requests in 15.00s, 77.77MB read
+Requests/sec:  30037.57
+Transfer/sec:      5.18MB
 
 ---------------------------------------------------------
  Concurrency: 64 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.97ms    4.21ms  85.68ms   94.92%
-    Req/Sec     4.02k     1.11k    9.00k    84.57%
-  508188 requests in 15.00s, 87.72MB read
-Requests/sec:  33880.96
-Transfer/sec:      5.85MB
+    Latency     1.95ms    4.57ms 114.87ms   97.25%
+    Req/Sec     4.58k     0.96k    8.67k    70.73%
+  520025 requests in 15.00s, 89.76MB read
+Requests/sec:  34668.62
+Transfer/sec:      5.98MB
 
 ---------------------------------------------------------
  Concurrency: 128 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.72ms    8.30ms 121.08ms   92.95%
-    Req/Sec     4.23k     1.30k   10.00k    76.77%
-  532150 requests in 15.00s, 91.86MB read
-Requests/sec:  35479.09
-Transfer/sec:      6.12MB
+    Latency     3.60ms    7.04ms  95.31ms   93.19%
+    Req/Sec     4.79k     1.19k   10.11k    71.67%
+  544257 requests in 15.00s, 93.95MB read
+Requests/sec:  36285.23
+Transfer/sec:      6.26MB
 
 ---------------------------------------------------------
  Concurrency: 256 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.37ms   20.47ms 625.94ms   92.28%
-    Req/Sec     4.35k     1.48k   11.00k    69.54%
-  542766 requests in 15.00s, 93.69MB read
-Requests/sec:  36185.33
-Transfer/sec:      6.25MB
+    Latency     7.83ms   33.27ms   1.49s    92.29%
+    Req/Sec     4.74k     1.49k   11.22k    69.36%
+  538663 requests in 15.00s, 92.98MB read
+Requests/sec:  35911.92
+Transfer/sec:      6.20MB

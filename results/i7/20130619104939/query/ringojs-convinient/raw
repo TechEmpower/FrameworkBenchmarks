@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Tue Jun 25 10:39:15 PDT 2013
+  System information as of Thu Jun 27 07:51:59 PDT 2013
 
-  System load:  0.54                Processes:           131
-  Usage of /:   10.9% of 129.62GB   Users logged in:     1
-  Memory usage: 4%                  IP address for eth1: 172.16.98.98
+  System load:  0.36                Processes:           138
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -17,100 +17,99 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
 ---------------------------------------------------------
  Running Primer ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db/2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db/2
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/db/2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8926 requests in 5.00s, 1.89MB read
-Requests/sec:   1784.25
-Transfer/sec:    386.05KB
+    Latency     4.59ms    1.43ms  16.14ms   90.24%
+    Req/Sec   236.49     60.56   400.00     61.43%
+  8964 requests in 5.00s, 1.89MB read
+Requests/sec:   1791.77
+Transfer/sec:    387.69KB
 
 ---------------------------------------------------------
  Running Warmup ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/2
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db/2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  33224 requests in 15.01s, 7.02MB read
-Requests/sec:   2213.97
-Transfer/sec:    479.02KB
+    Latency   196.70ms  315.83ms   1.26s    90.30%
+    Req/Sec   296.23    184.01     1.30k    60.02%
+  33641 requests in 15.01s, 7.11MB read
+Requests/sec:   2241.56
+Transfer/sec:    485.03KB
 
 ---------------------------------------------------------
  Queries: 1 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/1
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  62729 requests in 15.00s, 11.29MB read
-Requests/sec:   4181.26
-Transfer/sec:    770.84KB
+    Latency    82.68ms  146.96ms 894.27ms   91.35%
+    Req/Sec   551.62    277.52     3.11k    74.36%
+  62703 requests in 15.01s, 11.29MB read
+Requests/sec:   4178.54
+Transfer/sec:    770.36KB
 
 ---------------------------------------------------------
  Queries: 5 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/5
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db/5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14057 requests in 15.02s, 4.30MB read
-Requests/sec:    936.06
-Transfer/sec:    293.34KB
+    Latency   594.85ms  513.56ms   1.49s    55.73%
+    Req/Sec   125.62    117.57   777.00     56.50%
+  14181 requests in 15.03s, 4.34MB read
+Requests/sec:    943.78
+Transfer/sec:    295.78KB
 
 ---------------------------------------------------------
  Queries: 10 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/10
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db/10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7102 requests in 15.04s, 3.28MB read
-  Socket errors: connect 0, read 0, write 0, timeout 8
-Requests/sec:    472.32
-Transfer/sec:    223.62KB
+    Latency     1.10s   566.20ms   1.91s    60.50%
+    Req/Sec    63.48     83.19   666.00     87.40%
+  7154 requests in 15.05s, 3.31MB read
+Requests/sec:    475.46
+Transfer/sec:    225.13KB
 
 ---------------------------------------------------------
  Queries: 15 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/15
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db/15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4690 requests in 15.04s, 2.90MB read
-Requests/sec:    311.77
-Transfer/sec:    197.50KB
+    Latency     1.49s   552.71ms   2.33s    66.08%
+    Req/Sec    42.10     66.50   444.00     81.80%
+  4730 requests in 15.08s, 2.93MB read
+Requests/sec:    313.72
+Transfer/sec:    198.76KB
 
 ---------------------------------------------------------
  Queries: 20 for ringojs-convinient
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db/20
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db/20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3509 requests in 15.07s, 2.72MB read
+    Latency     1.94s   559.93ms   2.52s    67.67%
+    Req/Sec    31.97     58.47   400.00     73.96%
+  3519 requests in 15.07s, 2.73MB read
   Socket errors: connect 0, read 0, write 0, timeout 1
-Requests/sec:    232.81
-Transfer/sec:    184.75KB
+Requests/sec:    233.58
+Transfer/sec:    185.39KB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 09:28:31 PDT 2013
+
+  System load:  0.86                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   784.20us  468.16us   8.63ms   95.91%
+    Req/Sec     1.41k   277.38     2.00k    72.14%
+  50881 requests in 5.00s, 8.92MB read
+Requests/sec:  10176.05
+Transfer/sec:      1.78MB
+
+---------------------------------------------------------
+ Running Warmup spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.34ms   48.78ms 603.42ms   97.08%
+    Req/Sec     4.32k     1.46k   11.67k    74.54%
+  485092 requests in 15.00s, 85.02MB read
+Requests/sec:  32340.53
+Transfer/sec:      5.67MB
+
+---------------------------------------------------------
+ Concurrency: 8 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   672.86us  297.26us   9.71ms   98.28%
+    Req/Sec     1.57k   171.53     2.11k    81.40%
+  178749 requests in 15.00s, 31.33MB read
+Requests/sec:  11916.77
+Transfer/sec:      2.09MB
+
+---------------------------------------------------------
+ Concurrency: 16 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   601.56us  435.68us  15.18ms   96.33%
+    Req/Sec     3.57k   439.84     4.67k    81.37%
+  406301 requests in 15.00s, 71.21MB read
+Requests/sec:  27087.18
+Transfer/sec:      4.75MB
+
+---------------------------------------------------------
+ Concurrency: 32 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.92ms  837.85us  18.96ms   91.60%
+    Req/Sec     4.84k     0.97k    7.67k    72.29%
+  549645 requests in 15.00s, 96.33MB read
+Requests/sec:  36643.72
+Transfer/sec:      6.42MB
+
+---------------------------------------------------------
+ Concurrency: 64 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.87ms    1.88ms  26.39ms   92.07%
+    Req/Sec     4.78k     0.91k    7.89k    79.86%
+  543281 requests in 15.00s, 95.22MB read
+Requests/sec:  36219.74
+Transfer/sec:      6.35MB
+
+---------------------------------------------------------
+ Concurrency: 128 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.81ms    4.49ms  88.31ms   92.83%
+    Req/Sec     4.61k     0.93k    9.44k    81.49%
+  524459 requests in 15.00s, 91.92MB read
+Requests/sec:  34964.78
+Transfer/sec:      6.13MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.88ms   18.01ms 201.01ms   95.33%
+    Req/Sec     4.46k     1.25k   12.90k    78.67%
+  506342 requests in 15.00s, 88.74MB read
+Requests/sec:  33757.96
+Transfer/sec:      5.92MB

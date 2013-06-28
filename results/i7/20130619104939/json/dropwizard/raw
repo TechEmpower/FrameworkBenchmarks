@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 14:39:47 PDT 2013
+
+  System load:  0.49                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   382.74us  582.47us  12.14ms   93.38%
+    Req/Sec     4.17k     1.95k    7.11k    62.03%
+  127757 requests in 6.00s, 18.76MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:  21287.30
+Transfer/sec:      3.13MB
+
+---------------------------------------------------------
+ Running Warmup dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.28ms   39.08ms   2.01s    98.52%
+    Req/Sec    11.47k     3.68k   39.11k    72.90%
+  1284394 requests in 15.00s, 188.63MB read
+  Socket errors: connect 0, read 0, write 0, timeout 75
+Requests/sec:  85607.76
+Transfer/sec:     12.57MB
+
+---------------------------------------------------------
+ Concurrency: 8 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   178.73us  172.00us  16.10ms   99.51%
+    Req/Sec     5.77k   511.11     7.33k    74.40%
+  655813 requests in 15.00s, 96.32MB read
+Requests/sec:  43722.84
+Transfer/sec:      6.42MB
+
+---------------------------------------------------------
+ Concurrency: 16 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   216.51us  199.52us   6.57ms   93.18%
+    Req/Sec     9.77k     1.67k   14.44k    69.42%
+  1108773 requests in 15.00s, 162.84MB read
+Requests/sec:  73919.94
+Transfer/sec:     10.86MB
+
+---------------------------------------------------------
+ Concurrency: 32 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   392.53us  681.07us  18.37ms   93.47%
+    Req/Sec    12.15k     3.69k   24.78k    67.79%
+  1379532 requests in 15.00s, 202.61MB read
+Requests/sec:  91974.04
+Transfer/sec:     13.51MB
+
+---------------------------------------------------------
+ Concurrency: 64 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   681.08us  816.76us  24.26ms   94.46%
+    Req/Sec    12.75k     2.27k   19.78k    72.12%
+  1444390 requests in 15.00s, 212.13MB read
+Requests/sec:  96295.84
+Transfer/sec:     14.14MB
+
+---------------------------------------------------------
+ Concurrency: 128 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.39ms    1.95ms  59.96ms   93.49%
+    Req/Sec    12.40k     2.28k   26.22k    78.36%
+  1404466 requests in 15.00s, 206.27MB read
+Requests/sec:  93633.79
+Transfer/sec:     13.75MB
+
+---------------------------------------------------------
+ Concurrency: 256 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.64ms   22.71ms 637.96ms   97.52%
+    Req/Sec    11.85k     3.57k   32.89k    74.93%
+  1344917 requests in 15.00s, 197.52MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:  89664.52
+Transfer/sec:     13.17MB
