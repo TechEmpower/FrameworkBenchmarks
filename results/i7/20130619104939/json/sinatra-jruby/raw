@@ -2,130 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 13:26:59 PDT 2013
+  System information as of Wed Jun 26 09:18:24 PDT 2013
 
-  System load:  0.1                 Processes:           132
-  Usage of /:   10.1% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  0.22                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer sinatra-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/sinatra/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/sinatra/json
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/sinatra/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4283 requests in 5.00s, 853.25KB read
-Requests/sec:    855.87
-Transfer/sec:    170.50KB
+    Latency     8.63ms    9.24ms  45.20ms   91.73%
+    Req/Sec   190.02     96.97   444.00     70.74%
+  6665 requests in 5.00s, 1.30MB read
+Requests/sec:   1332.14
+Transfer/sec:    265.39KB
 
 ---------------------------------------------------------
  Running Warmup sinatra-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/sinatra/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/sinatra/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/sinatra/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  33228 requests in 15.00s, 6.67MB read
-  Socket errors: connect 0, read 128, write 0, timeout 111
-Requests/sec:   2214.86
-Transfer/sec:    455.20KB
+    Latency   169.99ms  292.12ms   1.40s    93.24%
+    Req/Sec   378.49    240.56     1.44k    65.90%
+  42657 requests in 15.00s, 8.30MB read
+Requests/sec:   2843.29
+Transfer/sec:    566.44KB
 
 ---------------------------------------------------------
  Concurrency: 8 for sinatra-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/sinatra/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/sinatra/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/sinatra/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  39642 requests in 15.00s, 7.71MB read
-Requests/sec:   2642.42
-Transfer/sec:    526.42KB
+    Latency     2.69ms    1.12ms  17.16ms   87.27%
+    Req/Sec   410.44     91.67   777.00     73.99%
+  46639 requests in 15.00s, 9.07MB read
+Requests/sec:   3109.13
+Transfer/sec:    619.40KB
 
 ---------------------------------------------------------
  Concurrency: 16 for sinatra-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/sinatra/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/sinatra/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/sinatra/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41570 requests in 15.00s, 8.09MB read
-  Socket errors: connect 0, read 0, write 0, timeout 7
-Requests/sec:   2770.73
-Transfer/sec:    551.98KB
+    Latency     5.17ms    2.70ms  26.53ms   68.78%
+    Req/Sec   430.35    122.08     0.89k    60.59%
+  48973 requests in 15.00s, 9.53MB read
+Requests/sec:   3264.37
+Transfer/sec:    650.32KB
 
 ---------------------------------------------------------
  Concurrency: 32 for sinatra-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/sinatra/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/sinatra/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/sinatra/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41537 requests in 15.00s, 8.08MB read
-Requests/sec:   2768.54
-Transfer/sec:    551.54KB
+    Latency    10.51ms    6.99ms  51.40ms   62.91%
+    Req/Sec   433.46    167.56     1.11k    73.66%
+  49314 requests in 15.00s, 9.59MB read
+Requests/sec:   3286.75
+Transfer/sec:    654.78KB
 
 ---------------------------------------------------------
  Concurrency: 64 for sinatra-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/sinatra/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/sinatra/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/sinatra/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41523 requests in 15.01s, 8.08MB read
-Requests/sec:   2766.81
-Transfer/sec:    551.20KB
+    Latency    20.92ms   14.44ms  61.18ms   53.48%
+    Req/Sec   436.52    216.99     1.44k    66.68%
+  49645 requests in 15.00s, 9.66MB read
+Requests/sec:   3308.80
+Transfer/sec:    659.17KB
 
 ---------------------------------------------------------
  Concurrency: 128 for sinatra-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/sinatra/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/sinatra/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/sinatra/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41426 requests in 15.00s, 8.06MB read
-Requests/sec:   2761.44
-Transfer/sec:    550.13KB
+    Latency    43.36ms   30.86ms 111.90ms   52.14%
+    Req/Sec   432.77    241.14     1.89k    73.33%
+  49180 requests in 15.00s, 9.57MB read
+Requests/sec:   3278.23
+Transfer/sec:    653.09KB
 
 ---------------------------------------------------------
  Concurrency: 256 for sinatra-jruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/sinatra/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/sinatra/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/sinatra/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  40665 requests in 15.00s, 7.97MB read
-  Socket errors: connect 0, read 2, write 0, timeout 30
-Requests/sec:   2710.54
-Transfer/sec:    543.70KB
+    Latency    90.37ms   64.01ms 206.69ms   50.67%
+    Req/Sec   417.83    246.08     1.78k    67.23%
+  47412 requests in 15.00s, 9.22MB read
+Requests/sec:   3159.75
+Transfer/sec:    629.48KB

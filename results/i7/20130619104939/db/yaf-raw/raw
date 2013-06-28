@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 13:17:58 PDT 2013
+  System information as of Thu Jun 27 12:56:34 PDT 2013
 
-  System load:  0.52                Processes:           135
-  Usage of /:   10.5% of 129.62GB   Users logged in:     1
-  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  System load:  0.3                 Processes:           131
+  Usage of /:   11.5% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer yaf-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/bench/raw/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/bench/raw/db
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/bench/raw/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28375 requests in 5.00s, 6.35MB read
-Requests/sec:   5674.66
-Transfer/sec:      1.27MB
+    Latency    40.77ms  123.51ms 427.57ms   90.71%
+    Req/Sec   765.31    270.54     1.22k    85.52%
+  29052 requests in 5.00s, 6.50MB read
+Requests/sec:   5810.07
+Transfer/sec:      1.30MB
 
 ---------------------------------------------------------
  Running Warmup yaf-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/raw/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/raw/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/bench/raw/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    18.00ms   45.05ms   1.31s    95.44%
-    Req/Sec     1.43k   566.89     3.00k    55.48%
-  213083 requests in 15.00s, 47.70MB read
-Requests/sec:  14205.67
-Transfer/sec:      3.18MB
+    Latency    18.06ms   48.79ms   1.63s    95.76%
+    Req/Sec     1.89k   469.09     4.11k    68.71%
+  213799 requests in 15.00s, 47.86MB read
+Requests/sec:  14253.75
+Transfer/sec:      3.19MB
 
 ---------------------------------------------------------
  Concurrency: 8 for yaf-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/bench/raw/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/bench/raw/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/bench/raw/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  95648 requests in 15.00s, 21.41MB read
-Requests/sec:   6376.50
-Transfer/sec:      1.43MB
+    Latency     2.28ms   11.45ms 128.22ms   99.17%
+    Req/Sec     0.85k   138.58     1.22k    63.24%
+  96754 requests in 15.00s, 21.66MB read
+Requests/sec:   6450.10
+Transfer/sec:      1.44MB
 
 ---------------------------------------------------------
  Concurrency: 16 for yaf-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/bench/raw/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/bench/raw/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/bench/raw/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.28ms  295.63us   4.21ms   75.19%
-    Req/Sec     1.01k    99.17     2.00k    99.01%
-  187171 requests in 15.00s, 41.90MB read
-Requests/sec:  12477.82
-Transfer/sec:      2.79MB
+    Latency     1.28ms  462.22us  17.75ms   92.39%
+    Req/Sec     1.64k   145.18     2.11k    79.70%
+  186497 requests in 15.00s, 41.75MB read
+Requests/sec:  12432.91
+Transfer/sec:      2.78MB
 
 ---------------------------------------------------------
  Concurrency: 32 for yaf-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/bench/raw/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/bench/raw/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/bench/raw/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.45ms   26.59ms 231.14ms   98.53%
-    Req/Sec     1.46k   531.60     2.00k    50.22%
-  214243 requests in 15.00s, 47.96MB read
-Requests/sec:  14282.83
-Transfer/sec:      3.20MB
+    Latency     7.12ms   34.28ms 305.67ms   97.88%
+    Req/Sec     1.88k   393.70     2.89k    82.06%
+  213077 requests in 15.00s, 47.70MB read
+Requests/sec:  14205.27
+Transfer/sec:      3.18MB
 
 ---------------------------------------------------------
  Concurrency: 64 for yaf-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/bench/raw/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/bench/raw/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/bench/raw/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.48ms   11.72ms 829.58ms   98.56%
-    Req/Sec     1.48k   516.10     3.00k    51.15%
-  217187 requests in 15.00s, 48.62MB read
-Requests/sec:  14479.60
-Transfer/sec:      3.24MB
+    Latency     4.58ms   11.15ms 776.26ms   98.34%
+    Req/Sec     1.92k   381.55     3.33k    69.02%
+  215825 requests in 15.00s, 48.31MB read
+Requests/sec:  14388.69
+Transfer/sec:      3.22MB
 
 ---------------------------------------------------------
  Concurrency: 128 for yaf-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/bench/raw/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/bench/raw/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/bench/raw/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    36.34ms  184.03ms   1.48s    97.54%
-    Req/Sec     1.39k   603.82     4.00k    52.94%
-  205900 requests in 15.00s, 46.09MB read
-Requests/sec:  13726.39
+    Latency    33.45ms  189.51ms   1.81s    98.13%
+    Req/Sec     1.83k   539.78     4.22k    73.40%
+  205955 requests in 15.00s, 46.10MB read
+Requests/sec:  13730.08
 Transfer/sec:      3.07MB
 
 ---------------------------------------------------------
  Concurrency: 256 for yaf-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/raw/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/raw/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/bench/raw/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    17.50ms   51.89ms   2.14s    96.71%
-    Req/Sec     1.46k   577.51     5.00k    96.16%
-  215865 requests in 15.00s, 48.32MB read
-Requests/sec:  14390.91
-Transfer/sec:      3.22MB
+    Latency    18.28ms   36.75ms   1.34s    94.95%
+    Req/Sec     1.90k   479.71     5.67k    70.01%
+  213782 requests in 15.00s, 47.86MB read
+Requests/sec:  14252.23
+Transfer/sec:      3.19MB

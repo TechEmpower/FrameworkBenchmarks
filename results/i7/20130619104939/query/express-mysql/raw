@@ -2,113 +2,113 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 11:42:44 PDT 2013
+  System information as of Wed Jun 26 07:19:42 PDT 2013
 
-  System load:  1.64                Processes:           133
-  Usage of /:   10.0% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  2.0                 Processes:           134
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer express-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mysql-orm?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mysql-orm?queries=2
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/mysql-orm?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  31986 requests in 5.00s, 7.16MB read
-Requests/sec:   6396.78
-Transfer/sec:      1.43MB
+    Latency     1.24ms  215.14us   4.13ms   79.17%
+    Req/Sec     0.85k   102.56     1.11k    70.32%
+  32154 requests in 5.00s, 7.19MB read
+Requests/sec:   6430.13
+Transfer/sec:      1.44MB
 
 ---------------------------------------------------------
  Running Warmup express-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=2
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    19.14ms    8.60ms  74.39ms   69.21%
-    Req/Sec     1.28k   473.48     3.00k    70.04%
-  199267 requests in 15.00s, 44.57MB read
-Requests/sec:  13284.01
-Transfer/sec:      2.97MB
+    Latency    19.03ms   11.92ms  88.22ms   74.47%
+    Req/Sec     1.75k   404.77     3.33k    65.93%
+  198352 requests in 15.00s, 44.37MB read
+Requests/sec:  13222.22
+Transfer/sec:      2.96MB
 
 ---------------------------------------------------------
  Queries: 1 for express-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=1
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    11.63ms   11.82ms 735.48ms   86.04%
-    Req/Sec     2.44k   552.10     4.00k    54.37%
-  327455 requests in 15.00s, 63.33MB read
-Requests/sec:  21830.20
-Transfer/sec:      4.22MB
+    Latency    11.70ms   10.83ms 872.35ms   97.78%
+    Req/Sec     2.89k   346.85     4.33k    71.42%
+  328445 requests in 15.00s, 63.52MB read
+Requests/sec:  21897.12
+Transfer/sec:      4.23MB
 
 ---------------------------------------------------------
  Queries: 5 for express-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=5
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    44.87ms   25.51ms 100.97ms   52.25%
-    Req/Sec   223.15    416.50     1.00k    77.69%
-  79956 requests in 15.00s, 25.23MB read
-Requests/sec:   5330.33
-Transfer/sec:      1.68MB
+    Latency    47.43ms   18.34ms 136.80ms   72.41%
+    Req/Sec   708.09    292.25     2.00k    70.28%
+  80383 requests in 15.00s, 25.37MB read
+Requests/sec:   5358.02
+Transfer/sec:      1.69MB
 
 ---------------------------------------------------------
  Queries: 10 for express-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=10
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  37374 requests in 15.00s, 17.46MB read
-Requests/sec:   2490.81
+    Latency   119.27ms   62.34ms 285.67ms   73.58%
+    Req/Sec   328.96    237.66     1.44k    74.67%
+  37242 requests in 15.00s, 17.40MB read
+Requests/sec:   2482.24
 Transfer/sec:      1.16MB
 
 ---------------------------------------------------------
  Queries: 15 for express-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=15
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  23007 requests in 15.02s, 14.23MB read
-Requests/sec:   1531.33
-Transfer/sec:      0.95MB
+    Latency   215.31ms  114.41ms 446.52ms   68.47%
+    Req/Sec   214.50    199.15     1.44k    61.20%
+  24253 requests in 15.02s, 15.00MB read
+Requests/sec:   1614.46
+Transfer/sec:      1.00MB
 
 ---------------------------------------------------------
  Queries: 20 for express-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=20
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17309 requests in 15.02s, 13.33MB read
-Requests/sec:   1152.39
-Transfer/sec:      0.89MB
+    Latency   355.01ms  198.49ms 655.60ms   55.28%
+    Req/Sec   155.09    178.34     1.33k    87.66%
+  17535 requests in 15.01s, 13.51MB read
+Requests/sec:   1168.05
+Transfer/sec:      0.90MB

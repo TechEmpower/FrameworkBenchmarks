@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 12:38:55 PDT 2013
+  System information as of Wed Jun 26 08:32:41 PDT 2013
 
-  System load:  0.22                Processes:           133
-  Usage of /:   10.1% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  0.26                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer rails-ruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/hello_world/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/hello_world/db
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/hello_world/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13151 requests in 5.00s, 5.20MB read
-Requests/sec:   2629.63
-Transfer/sec:      1.04MB
+    Latency    10.76ms   25.78ms 101.50ms   91.14%
+    Req/Sec   355.77    131.43   600.00     78.29%
+  13472 requests in 5.02s, 5.33MB read
+Requests/sec:   2684.23
+Transfer/sec:      1.06MB
 
 ---------------------------------------------------------
  Running Warmup rails-ruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/hello_world/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/hello_world/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/hello_world/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41524 requests in 15.01s, 16.42MB read
-Requests/sec:   2766.86
-Transfer/sec:      1.09MB
+    Latency    93.74ms   15.36ms 156.15ms   86.10%
+    Req/Sec   372.60    227.61     2.11k    71.77%
+  42320 requests in 15.01s, 16.74MB read
+Requests/sec:   2820.31
+Transfer/sec:      1.12MB
 
 ---------------------------------------------------------
  Concurrency: 8 for rails-ruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/hello_world/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/hello_world/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/hello_world/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  40195 requests in 15.00s, 15.90MB read
-Requests/sec:   2679.42
-Transfer/sec:      1.06MB
+    Latency     6.52ms   12.97ms  55.74ms   92.01%
+    Req/Sec   359.79    123.18   600.00     80.29%
+  40943 requests in 15.02s, 16.19MB read
+Requests/sec:   2725.47
+Transfer/sec:      1.08MB
 
 ---------------------------------------------------------
  Concurrency: 16 for rails-ruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/hello_world/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/hello_world/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/hello_world/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41760 requests in 15.00s, 16.52MB read
-Requests/sec:   2783.44
-Transfer/sec:      1.10MB
+    Latency     5.78ms    3.55ms  66.44ms   97.90%
+    Req/Sec   374.45     95.55   666.00     78.19%
+  42609 requests in 15.00s, 16.85MB read
+Requests/sec:   2840.20
+Transfer/sec:      1.12MB
 
 ---------------------------------------------------------
  Concurrency: 32 for rails-ruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/hello_world/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/hello_world/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/hello_world/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41716 requests in 15.00s, 16.50MB read
-Requests/sec:   2780.51
-Transfer/sec:      1.10MB
+    Latency    11.77ms    5.60ms  73.03ms   98.02%
+    Req/Sec   372.36     91.15   666.00     82.21%
+  42401 requests in 15.00s, 16.77MB read
+Requests/sec:   2826.20
+Transfer/sec:      1.12MB
 
 ---------------------------------------------------------
  Concurrency: 64 for rails-ruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/hello_world/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/hello_world/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/hello_world/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41748 requests in 15.01s, 16.51MB read
-Requests/sec:   2782.08
-Transfer/sec:      1.10MB
+    Latency    23.44ms    6.87ms  83.18ms   96.41%
+    Req/Sec   373.38    155.84     0.89k    66.57%
+  42517 requests in 15.01s, 16.82MB read
+Requests/sec:   2833.43
+Transfer/sec:      1.12MB
 
 ---------------------------------------------------------
  Concurrency: 128 for rails-ruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/hello_world/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/hello_world/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/hello_world/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41545 requests in 15.00s, 16.43MB read
-Requests/sec:   2768.76
-Transfer/sec:      1.09MB
+    Latency    47.69ms   13.97ms 125.06ms   95.43%
+    Req/Sec   371.88    191.02     2.00k    74.39%
+  42284 requests in 15.00s, 16.72MB read
+Requests/sec:   2818.29
+Transfer/sec:      1.11MB
 
 ---------------------------------------------------------
  Concurrency: 256 for rails-ruby
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/hello_world/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/hello_world/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/hello_world/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  41502 requests in 15.00s, 16.41MB read
-Requests/sec:   2766.08
-Transfer/sec:      1.09MB
+    Latency    93.75ms   15.31ms 152.11ms   88.47%
+    Req/Sec   371.42    236.37     2.40k    68.08%
+  42264 requests in 15.01s, 16.72MB read
+Requests/sec:   2815.08
+Transfer/sec:      1.11MB

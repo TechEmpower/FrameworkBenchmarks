@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 15:10:52 PDT 2013
+  System information as of Wed Jun 26 11:55:59 PDT 2013
 
-  System load:  0.8                 Processes:           134
-  Usage of /:   10.1% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  0.76                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer snap
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8000/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8000/json
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   354.88us  111.80us   4.35ms   84.02%
-    Req/Sec     2.49k   507.70     4.00k    50.38%
-  111469 requests in 5.00s, 19.13MB read
-Requests/sec:  22294.78
-Transfer/sec:      3.83MB
+    Latency   343.30us   79.86us   1.13ms   75.38%
+    Req/Sec     3.03k   293.97     4.44k    71.11%
+  114461 requests in 5.00s, 19.65MB read
+Requests/sec:  22893.54
+Transfer/sec:      3.93MB
 
 ---------------------------------------------------------
  Running Warmup snap
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8000/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8000/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    19.48ms    3.61ms  34.28ms   81.08%
-    Req/Sec     1.33k   625.89     4.00k    68.52%
-  206484 requests in 15.00s, 35.45MB read
-Requests/sec:  13765.28
-Transfer/sec:      2.36MB
+    Latency    12.19ms    2.11ms  25.99ms   79.33%
+    Req/Sec     2.81k   471.58     4.22k    67.93%
+  319433 requests in 15.00s, 54.83MB read
+Requests/sec:  21296.33
+Transfer/sec:      3.66MB
 
 ---------------------------------------------------------
  Concurrency: 8 for snap
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8000/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8000/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   382.01us  122.96us  10.70ms   87.51%
-    Req/Sec     2.21k   459.78     3.00k    74.42%
-  312109 requests in 15.00s, 53.58MB read
-Requests/sec:  20807.88
-Transfer/sec:      3.57MB
+    Latency   340.38us   81.66us   1.21ms   78.74%
+    Req/Sec     3.03k   265.14     4.22k    77.81%
+  345216 requests in 15.00s, 59.26MB read
+Requests/sec:  23014.86
+Transfer/sec:      3.95MB
 
 ---------------------------------------------------------
  Concurrency: 16 for snap
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8000/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8000/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8000/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   612.27us  197.06us   5.63ms   80.32%
-    Req/Sec     2.97k   380.31     4.00k    87.97%
-  390418 requests in 15.00s, 67.02MB read
-Requests/sec:  26027.85
-Transfer/sec:      4.47MB
+    Latency   658.92us  235.35us   8.33ms   81.03%
+    Req/Sec     3.21k   473.63     4.67k    72.76%
+  364555 requests in 15.00s, 62.58MB read
+Requests/sec:  24304.00
+Transfer/sec:      4.17MB
 
 ---------------------------------------------------------
  Concurrency: 32 for snap
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8000/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8000/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8000/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.28ms  495.96us   5.56ms   80.07%
-    Req/Sec     2.94k   644.82     4.00k    71.80%
-  387394 requests in 15.00s, 66.50MB read
-Requests/sec:  25826.98
-Transfer/sec:      4.43MB
+    Latency     1.77ms  447.54us  11.20ms   75.69%
+    Req/Sec     2.44k   555.99     6.00k    91.42%
+  277146 requests in 15.00s, 47.58MB read
+Requests/sec:  18477.38
+Transfer/sec:      3.17MB
 
 ---------------------------------------------------------
  Concurrency: 64 for snap
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8000/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8000/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8000/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.46ms    1.77ms  35.62ms   85.92%
-    Req/Sec     1.47k   664.77     5.00k    93.21%
-  229468 requests in 15.00s, 39.39MB read
-Requests/sec:  15298.44
-Transfer/sec:      2.63MB
+    Latency     2.59ms  357.52us   5.31ms   73.47%
+    Req/Sec     3.25k   237.33     4.11k    65.20%
+  370184 requests in 15.00s, 63.55MB read
+Requests/sec:  24680.37
+Transfer/sec:      4.24MB
 
 ---------------------------------------------------------
  Concurrency: 128 for snap
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8000/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8000/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8000/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.47ms    2.24ms  22.89ms   78.14%
-    Req/Sec     1.61k   516.92     3.00k    60.16%
-  231413 requests in 15.00s, 39.72MB read
-Requests/sec:  15425.80
-Transfer/sec:      2.65MB
+    Latency     7.75ms    1.45ms  19.24ms   75.28%
+    Req/Sec     2.20k   417.22     6.00k    75.70%
+  250186 requests in 15.00s, 42.95MB read
+Requests/sec:  16677.14
+Transfer/sec:      2.86MB
 
 ---------------------------------------------------------
  Concurrency: 256 for snap
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8000/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8000/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    18.41ms    4.60ms  38.03ms   76.02%
-    Req/Sec     1.46k   614.98     3.00k    93.51%
-  214834 requests in 15.00s, 36.88MB read
-Requests/sec:  14321.53
-Transfer/sec:      2.46MB
+    Latency    14.46ms    4.37ms  29.72ms   59.88%
+    Req/Sec     2.52k   789.92     5.80k    62.06%
+  285471 requests in 15.00s, 49.00MB read
+Requests/sec:  19027.85
+Transfer/sec:      3.27MB

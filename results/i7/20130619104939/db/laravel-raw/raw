@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 07:48:19 PDT 2013
+  System information as of Wed Jun 26 13:50:09 PDT 2013
 
-  System load:  0.31                Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
+  System load:  0.3                 Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
   Memory usage: 9%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer laravel-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6803 requests in 5.00s, 6.10MB read
-Requests/sec:   1359.97
-Transfer/sec:      1.22MB
+    Latency     5.99ms    1.90ms  20.77ms   89.38%
+    Req/Sec   182.59     54.13   333.00     69.79%
+  6761 requests in 5.00s, 6.06MB read
+Requests/sec:   1351.33
+Transfer/sec:      1.21MB
 
 ---------------------------------------------------------
  Running Warmup laravel-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  23398 requests in 15.01s, 20.98MB read
-Requests/sec:   1559.08
+    Latency   265.75ms  273.57ms   1.25s    85.14%
+    Req/Sec   206.32    149.36     0.90k    71.39%
+  23383 requests in 15.01s, 20.96MB read
+Requests/sec:   1557.56
 Transfer/sec:      1.40MB
 
 ---------------------------------------------------------
  Concurrency: 8 for laravel-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20880 requests in 15.00s, 18.72MB read
-Requests/sec:   1391.68
-Transfer/sec:      1.25MB
+    Latency     6.09ms    2.33ms  29.34ms   92.84%
+    Req/Sec   181.24     53.40   333.00     68.96%
+  20638 requests in 15.00s, 18.50MB read
+Requests/sec:   1375.53
+Transfer/sec:      1.23MB
 
 ---------------------------------------------------------
  Concurrency: 16 for laravel-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  23923 requests in 15.00s, 21.45MB read
-Requests/sec:   1594.55
-Transfer/sec:      1.43MB
+    Latency    13.27ms   14.72ms  93.48ms   93.37%
+    Req/Sec   207.56     93.47   444.00     58.28%
+  23629 requests in 15.00s, 21.18MB read
+Requests/sec:   1574.75
+Transfer/sec:      1.41MB
 
 ---------------------------------------------------------
  Concurrency: 32 for laravel-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  24707 requests in 15.01s, 22.15MB read
-Requests/sec:   1646.56
-Transfer/sec:      1.48MB
+    Latency    38.14ms   67.17ms 336.55ms   91.70%
+    Req/Sec   215.52    119.94   666.00     82.04%
+  24536 requests in 15.00s, 22.00MB read
+Requests/sec:   1635.34
+Transfer/sec:      1.47MB
 
 ---------------------------------------------------------
  Concurrency: 64 for laravel-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  24792 requests in 15.01s, 22.23MB read
-Requests/sec:   1652.03
-Transfer/sec:      1.48MB
+    Latency   103.32ms  209.21ms   1.25s    89.67%
+    Req/Sec   216.35    135.52     0.89k    76.80%
+  24596 requests in 15.00s, 22.05MB read
+Requests/sec:   1639.34
+Transfer/sec:      1.47MB
 
 ---------------------------------------------------------
  Concurrency: 128 for laravel-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  24474 requests in 15.01s, 21.94MB read
-Requests/sec:   1631.03
-Transfer/sec:      1.46MB
+    Latency   242.65ms  472.75ms   1.96s    88.08%
+    Req/Sec   214.12    140.96     0.90k    74.62%
+  24291 requests in 15.01s, 21.78MB read
+Requests/sec:   1618.77
+Transfer/sec:      1.45MB
 
 ---------------------------------------------------------
  Concurrency: 256 for laravel-raw
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  23468 requests in 15.01s, 21.04MB read
-Requests/sec:   1563.18
-Transfer/sec:      1.40MB
+    Latency   233.58ms  179.38ms 699.27ms   81.62%
+    Req/Sec   205.39    150.55     1.20k    71.07%
+  23293 requests in 15.02s, 20.88MB read
+Requests/sec:   1551.26
+Transfer/sec:      1.39MB

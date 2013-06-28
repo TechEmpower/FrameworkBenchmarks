@@ -2,128 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 09:46:06 PDT 2013
+  System information as of Thu Jun 27 08:38:20 PDT 2013
 
-  System load:  0.0                 Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
-  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  System load:  0.11                Processes:           138
+  Usage of /:   11.4% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer play-scala-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:9000/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:9000/db
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:9000/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20831 requests in 5.00s, 2.40MB read
-Requests/sec:   4165.91
-Transfer/sec:    491.38KB
+    Latency     2.19ms    2.04ms  19.59ms   93.42%
+    Req/Sec   632.90    274.46     1.30k    64.29%
+  22304 requests in 5.00s, 2.57MB read
+Requests/sec:   4460.80
+Transfer/sec:    526.15KB
 
 ---------------------------------------------------------
  Running Warmup play-scala-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:9000/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    14.69ms   35.87ms   1.47s    99.91%
-    Req/Sec     1.97k   726.55     5.00k    53.58%
-  268846 requests in 15.00s, 30.97MB read
-  Socket errors: connect 0, read 6, write 0, timeout 30
-Requests/sec:  17923.25
-Transfer/sec:      2.06MB
+    Latency    14.73ms   19.37ms 642.67ms   99.87%
+    Req/Sec     2.36k   627.96     4.33k    65.25%
+  265913 requests in 15.00s, 30.63MB read
+Requests/sec:  17726.06
+Transfer/sec:      2.04MB
 
 ---------------------------------------------------------
  Concurrency: 8 for play-scala-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:9000/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:9000/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:9000/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  95518 requests in 15.00s, 11.00MB read
-Requests/sec:   6367.62
-Transfer/sec:    751.08KB
+    Latency     1.22ms  596.65us  20.12ms   98.96%
+    Req/Sec     0.89k   177.92     1.33k    60.78%
+  101532 requests in 15.00s, 11.69MB read
+Requests/sec:   6768.63
+Transfer/sec:    798.35KB
 
 ---------------------------------------------------------
  Concurrency: 16 for play-scala-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:9000/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:9000/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:9000/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.13ms  627.63us  11.42ms   98.32%
-    Req/Sec     1.52k   523.07     2.00k    98.81%
-  217788 requests in 15.00s, 25.09MB read
-Requests/sec:  14519.40
+    Latency     1.13ms  728.30us  15.58ms   98.38%
+    Req/Sec     1.91k   260.87     2.56k    81.74%
+  217792 requests in 15.00s, 25.09MB read
+Requests/sec:  14519.24
 Transfer/sec:      1.67MB
 
 ---------------------------------------------------------
  Concurrency: 32 for play-scala-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:9000/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:9000/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:9000/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.83ms  725.35us  16.08ms   94.34%
-    Req/Sec     1.94k   272.22     3.00k    93.93%
-  265774 requests in 15.00s, 30.61MB read
-Requests/sec:  17718.40
-Transfer/sec:      2.04MB
+    Latency     1.86ms    0.90ms  16.66ms   96.47%
+    Req/Sec     2.32k   295.09     3.11k    80.44%
+  264199 requests in 15.00s, 30.43MB read
+Requests/sec:  17613.30
+Transfer/sec:      2.03MB
 
 ---------------------------------------------------------
  Concurrency: 64 for play-scala-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:9000/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:9000/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:9000/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.67ms    0.87ms  20.78ms   91.42%
-    Req/Sec     1.93k   279.79     3.00k    92.72%
-  263366 requests in 15.00s, 30.34MB read
-Requests/sec:  17558.04
+    Latency     3.69ms    0.93ms  19.87ms   92.99%
+    Req/Sec     2.31k   279.57     3.44k    78.50%
+  262743 requests in 15.00s, 30.26MB read
+Requests/sec:  17516.86
 Transfer/sec:      2.02MB
 
 ---------------------------------------------------------
  Concurrency: 128 for play-scala-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:9000/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:9000/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:9000/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.28ms    1.30ms  22.56ms   86.59%
-    Req/Sec     1.92k   469.98     3.00k    78.78%
-  263788 requests in 15.00s, 30.38MB read
-Requests/sec:  17586.29
-Transfer/sec:      2.03MB
+    Latency     7.40ms    3.81ms 627.09ms   98.23%
+    Req/Sec     2.31k   400.58     3.56k    72.09%
+  262168 requests in 15.00s, 30.20MB read
+Requests/sec:  17477.30
+Transfer/sec:      2.01MB
 
 ---------------------------------------------------------
  Concurrency: 256 for play-scala-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:9000/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:9000/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:9000/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    14.91ms   22.31ms 638.73ms   99.83%
-    Req/Sec     1.94k   720.31     4.00k    53.61%
-  269011 requests in 15.00s, 30.99MB read
-Requests/sec:  17933.85
+    Latency    14.75ms   30.13ms   1.47s    99.82%
+    Req/Sec     2.37k   664.11     4.67k    65.61%
+  269249 requests in 15.00s, 31.01MB read
+Requests/sec:  17949.27
 Transfer/sec:      2.07MB

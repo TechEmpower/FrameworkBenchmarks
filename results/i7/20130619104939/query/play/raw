@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 08:16:19 PDT 2013
+
+  System load:  1.1                 Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:9000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.94ms  529.55us  14.17ms   94.95%
+    Req/Sec   549.32     74.53   700.00     75.87%
+  20606 requests in 5.00s, 2.96MB read
+Requests/sec:   4119.19
+Transfer/sec:    605.40KB
+
+---------------------------------------------------------
+ Running Warmup play
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   312.05ms  579.37ms   1.56s    81.67%
+    Req/Sec     0.89k     0.85k    3.89k    66.92%
+  100775 requests in 15.00s, 14.46MB read
+Requests/sec:   6718.51
+Transfer/sec:      0.96MB
+
+---------------------------------------------------------
+ Queries: 1 for play
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   111.35ms  216.19ms 714.23ms   88.06%
+    Req/Sec     1.04k   839.04     3.78k    63.09%
+  118104 requests in 15.02s, 13.37MB read
+Requests/sec:   7862.89
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Queries: 5 for play
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   198.83ms  266.07ms 733.96ms   78.74%
+    Req/Sec   647.42    779.85     3.89k    83.80%
+  73550 requests in 15.01s, 17.31MB read
+Requests/sec:   4898.49
+Transfer/sec:      1.15MB
+
+---------------------------------------------------------
+ Queries: 10 for play
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   307.46ms  293.44ms 697.62ms   63.70%
+    Req/Sec   454.10    687.46     3.56k    85.75%
+  51546 requests in 15.01s, 19.93MB read
+Requests/sec:   3435.14
+Transfer/sec:      1.33MB
+
+---------------------------------------------------------
+ Queries: 15 for play
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   370.90ms  292.67ms 742.89ms   45.11%
+    Req/Sec   352.14    627.86     3.56k    86.30%
+  39723 requests in 15.00s, 21.37MB read
+Requests/sec:   2647.32
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Queries: 20 for play
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   705.64ms  603.23ms   1.66s    60.67%
+    Req/Sec   286.93    579.62     3.78k    87.89%
+  32466 requests in 15.00s, 22.38MB read
+Requests/sec:   2163.89
+Transfer/sec:      1.49MB

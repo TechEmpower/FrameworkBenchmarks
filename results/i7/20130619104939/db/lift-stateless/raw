@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 12:27:46 PDT 2013
+
+  System load:  1.8                 Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.25ms    5.66ms  39.87ms   90.66%
+    Req/Sec   191.68     88.83   444.00     56.91%
+  6754 requests in 5.00s, 2.09MB read
+  Non-2xx or 3xx responses: 2
+Requests/sec:   1350.33
+Transfer/sec:    428.32KB
+
+---------------------------------------------------------
+ Running Warmup lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.66ms   97.34ms 742.45ms   96.81%
+    Req/Sec   409.41    197.53     1.30k    70.27%
+  46304 requests in 15.00s, 14.34MB read
+  Non-2xx or 3xx responses: 1
+Requests/sec:   3085.98
+Transfer/sec:      0.96MB
+
+---------------------------------------------------------
+ Concurrency: 8 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.40ms    1.14ms  14.32ms   86.21%
+    Req/Sec   318.39     71.35   555.00     59.25%
+  36250 requests in 15.00s, 11.23MB read
+  Non-2xx or 3xx responses: 2
+Requests/sec:   2416.39
+Transfer/sec:    766.40KB
+
+---------------------------------------------------------
+ Concurrency: 16 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.88ms   14.26ms 145.79ms   98.72%
+    Req/Sec   402.62    118.11   777.00     74.83%
+  45547 requests in 15.00s, 14.11MB read
+  Non-2xx or 3xx responses: 5
+Requests/sec:   3035.87
+Transfer/sec:      0.94MB
+
+---------------------------------------------------------
+ Concurrency: 32 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.36ms   15.36ms 148.99ms   97.65%
+    Req/Sec   434.76    132.41     0.89k    69.42%
+  49477 requests in 15.00s, 15.32MB read
+  Non-2xx or 3xx responses: 4
+Requests/sec:   3297.51
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 64 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.82ms   19.84ms 181.05ms   97.67%
+    Req/Sec   432.32    156.16     0.89k    69.98%
+  49231 requests in 15.00s, 15.25MB read
+  Non-2xx or 3xx responses: 4
+Requests/sec:   3281.05
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 128 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.50ms   10.67ms 178.58ms   95.02%
+    Req/Sec   436.71    185.33     1.22k    68.28%
+  49677 requests in 15.01s, 15.39MB read
+  Non-2xx or 3xx responses: 4
+Requests/sec:   3310.70
+Transfer/sec:      1.03MB
+
+---------------------------------------------------------
+ Concurrency: 256 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.11ms   31.81ms 257.31ms   96.69%
+    Req/Sec   430.00    205.40     2.00k    62.62%
+  48902 requests in 15.01s, 15.15MB read
+  Non-2xx or 3xx responses: 7
+Requests/sec:   3258.96
+Transfer/sec:      1.01MB

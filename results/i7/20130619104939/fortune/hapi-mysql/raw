@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 13:10:14 PDT 2013
+  System information as of Thu Jun 27 12:48:50 PDT 2013
 
-  System load:  1.23                Processes:           135
-  Usage of /:   10.5% of 129.62GB   Users logged in:     1
-  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  System load:  1.44                Processes:           131
+  Usage of /:   11.5% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer hapi-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  31538 requests in 5.00s, 48.24MB read
-Requests/sec:   6307.45
-Transfer/sec:      9.65MB
+    Latency     1.39ms    1.23ms  14.03ms   97.68%
+    Req/Sec   835.52    203.55     1.33k    76.72%
+  31594 requests in 5.00s, 48.33MB read
+Requests/sec:   6318.00
+Transfer/sec:      9.66MB
 
 ---------------------------------------------------------
  Running Warmup hapi-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    24.03ms   10.34ms  74.40ms   70.37%
-    Req/Sec     0.97k   379.90     2.00k    85.46%
-  159782 requests in 15.00s, 244.42MB read
-Requests/sec:  10651.95
-Transfer/sec:     16.29MB
+    Latency    24.38ms    9.95ms  88.79ms   84.84%
+    Req/Sec     1.40k   332.24     2.56k    69.27%
+  159158 requests in 15.00s, 243.46MB read
+Requests/sec:  10609.96
+Transfer/sec:     16.23MB
 
 ---------------------------------------------------------
  Concurrency: 8 for hapi-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  94479 requests in 15.00s, 144.52MB read
-Requests/sec:   6297.64
-Transfer/sec:      9.63MB
+    Latency     1.40ms    1.25ms  14.77ms   97.82%
+    Req/Sec   833.38    202.83     1.33k    76.93%
+  94842 requests in 15.01s, 145.08MB read
+Requests/sec:   6318.99
+Transfer/sec:      9.67MB
 
 ---------------------------------------------------------
  Concurrency: 16 for hapi-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.80ms    1.34ms  19.45ms   96.57%
-    Req/Sec   834.48    380.54     2.00k    82.78%
-  138657 requests in 15.00s, 212.10MB read
-Requests/sec:   9243.37
-Transfer/sec:     14.14MB
+    Latency     1.92ms    1.37ms  17.55ms   96.37%
+    Req/Sec     1.15k   294.66     2.11k    66.74%
+  130494 requests in 15.00s, 199.62MB read
+Requests/sec:   8699.70
+Transfer/sec:     13.31MB
 
 ---------------------------------------------------------
  Concurrency: 32 for hapi-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.48ms    2.15ms  23.61ms   90.09%
-    Req/Sec     0.87k   412.71     2.00k    81.35%
-  143970 requests in 15.00s, 220.23MB read
-Requests/sec:   9597.80
-Transfer/sec:     14.68MB
+    Latency     3.50ms    2.58ms  30.46ms   90.57%
+    Req/Sec     1.28k   340.48     2.56k    66.81%
+  145197 requests in 15.00s, 222.11MB read
+Requests/sec:   9679.36
+Transfer/sec:     14.81MB
 
 ---------------------------------------------------------
  Concurrency: 64 for hapi-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.77ms    3.94ms  38.60ms   80.60%
-    Req/Sec     0.94k   411.82     2.00k    82.68%
-  146545 requests in 15.00s, 224.17MB read
-Requests/sec:   9769.40
-Transfer/sec:     14.94MB
+    Latency     6.61ms    3.62ms  25.45ms   72.65%
+    Req/Sec     1.30k   367.40     2.67k    70.11%
+  148261 requests in 15.00s, 226.80MB read
+Requests/sec:   9883.11
+Transfer/sec:     15.12MB
 
 ---------------------------------------------------------
  Concurrency: 128 for hapi-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    12.35ms    4.29ms  32.60ms   80.60%
-    Req/Sec     0.95k   233.90     2.00k    94.28%
-  156515 requests in 15.00s, 239.42MB read
-Requests/sec:  10434.43
-Transfer/sec:     15.96MB
+    Latency    12.45ms    6.47ms  40.86ms   70.37%
+    Req/Sec     1.36k   280.28     2.33k    69.97%
+  154203 requests in 15.00s, 235.88MB read
+Requests/sec:  10279.74
+Transfer/sec:     15.72MB
 
 ---------------------------------------------------------
  Concurrency: 256 for hapi-mysql
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    24.01ms    7.47ms  56.14ms   70.66%
-    Req/Sec     0.98k   365.54     2.00k    86.58%
-  159706 requests in 15.00s, 244.30MB read
-Requests/sec:  10645.70
-Transfer/sec:     16.28MB
+    Latency    24.03ms    8.79ms  72.89ms   69.42%
+    Req/Sec     1.40k   336.40     2.67k    68.88%
+  159320 requests in 15.00s, 243.71MB read
+Requests/sec:  10620.77
+Transfer/sec:     16.25MB

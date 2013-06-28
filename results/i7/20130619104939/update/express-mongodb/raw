@@ -2,113 +2,113 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 11:37:12 PDT 2013
+  System information as of Wed Jun 26 07:14:10 PDT 2013
 
-  System load:  2.1                 Processes:           133
-  Usage of /:   10.0% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  2.09                Processes:           134
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer express-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongoose-update?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongoose-update?queries=2
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/mongoose-update?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  18419 requests in 5.00s, 5.30MB read
-Requests/sec:   3683.28
-Transfer/sec:      1.06MB
+    Latency     2.63ms    2.23ms  21.95ms   92.24%
+    Req/Sec   486.81    166.38     0.89k    62.45%
+  18310 requests in 5.00s, 5.27MB read
+Requests/sec:   3660.31
+Transfer/sec:      1.05MB
 
 ---------------------------------------------------------
  Running Warmup express-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=2
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mongoose-update?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  80922 requests in 15.00s, 23.27MB read
-Requests/sec:   5394.25
+    Latency    46.95ms   26.75ms 183.58ms   74.63%
+    Req/Sec   712.68    298.45     1.89k    69.64%
+  80995 requests in 15.00s, 23.29MB read
+Requests/sec:   5398.76
 Transfer/sec:      1.55MB
 
 ---------------------------------------------------------
  Queries: 1 for express-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=1
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mongoose-update?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    26.44ms   15.41ms 125.17ms   70.63%
-    Req/Sec   842.77    510.37     3.00k    71.53%
-  132222 requests in 15.00s, 29.73MB read
-Requests/sec:   8812.05
+    Latency    29.10ms   16.73ms 125.77ms   71.28%
+    Req/Sec     1.16k   405.95     2.78k    69.70%
+  131826 requests in 15.00s, 29.64MB read
+Requests/sec:   8787.65
 Transfer/sec:      1.98MB
 
 ---------------------------------------------------------
  Queries: 5 for express-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=5
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mongoose-update?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  40051 requests in 15.01s, 18.94MB read
-Requests/sec:   2668.00
-Transfer/sec:      1.26MB
+    Latency   136.81ms  127.29ms 389.48ms   77.22%
+    Req/Sec   347.93    343.73     3.10k    64.24%
+  39487 requests in 15.02s, 18.67MB read
+Requests/sec:   2629.15
+Transfer/sec:      1.24MB
 
 ---------------------------------------------------------
  Queries: 10 for express-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=10
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mongoose-update?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21134 requests in 15.01s, 16.52MB read
-Requests/sec:   1407.93
+    Latency   419.15ms  342.31ms 926.24ms   71.65%
+    Req/Sec   187.64    230.57     2.00k    85.44%
+  21262 requests in 15.05s, 16.62MB read
+Requests/sec:   1412.56
 Transfer/sec:      1.10MB
 
 ---------------------------------------------------------
  Queries: 15 for express-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=15
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mongoose-update?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14215 requests in 15.03s, 15.50MB read
-Requests/sec:    945.81
-Transfer/sec:      1.03MB
+    Latency   466.70ms  235.30ms 666.94ms   76.41%
+    Req/Sec   127.70    186.83     1.44k    84.58%
+  14412 requests in 15.04s, 15.72MB read
+Requests/sec:    958.19
+Transfer/sec:      1.05MB
 
 ---------------------------------------------------------
  Queries: 20 for express-mongodb
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose-update?queries=20
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/mongoose-update?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11022 requests in 15.05s, 15.65MB read
-Requests/sec:    732.33
-Transfer/sec:      1.04MB
+    Latency   573.95ms  235.77ms 884.19ms   71.74%
+    Req/Sec    96.31    148.87     1.44k    87.15%
+  10894 requests in 15.07s, 15.47MB read
+Requests/sec:    723.06
+Transfer/sec:      1.03MB

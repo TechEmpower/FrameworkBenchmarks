@@ -2,116 +2,116 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 19 11:25:55 PDT 2013
+  System information as of Wed Jun 26 07:02:52 PDT 2013
 
-  System load:  0.69                Processes:           157
-  Usage of /:   10.0% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  0.94                Processes:           158
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer django
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/update?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/update?queries=2
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/update?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6148 requests in 5.00s, 1.46MB read
-Requests/sec:   1228.43
-Transfer/sec:    298.19KB
+    Latency     6.81ms    1.15ms  26.55ms   91.25%
+    Req/Sec   155.84     52.92   222.00     52.50%
+  5907 requests in 5.01s, 1.40MB read
+Requests/sec:   1180.06
+Transfer/sec:    286.45KB
 
 ---------------------------------------------------------
  Running Warmup django
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=2
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/update?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  25377 requests in 15.00s, 6.02MB read
-Requests/sec:   1691.32
-Transfer/sec:    410.54KB
+    Latency   183.11ms  108.39ms 538.47ms   84.28%
+    Req/Sec   220.84    139.56     1.00k    75.16%
+  25136 requests in 15.02s, 5.96MB read
+Requests/sec:   1673.38
+Transfer/sec:    406.20KB
 
 ---------------------------------------------------------
  Queries: 1 for django
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=1
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=1
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/update?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  39640 requests in 15.01s, 7.89MB read
-Requests/sec:   2641.02
-Transfer/sec:    538.47KB
+    Latency   104.18ms   55.11ms 379.46ms   87.03%
+    Req/Sec   346.57    177.84     1.44k    70.43%
+  39424 requests in 15.02s, 7.85MB read
+Requests/sec:   2624.51
+Transfer/sec:    535.11KB
 
 ---------------------------------------------------------
  Queries: 5 for django
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=5
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=5
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/update?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  12341 requests in 15.02s, 4.33MB read
-Requests/sec:    821.59
-Transfer/sec:    295.18KB
+    Latency   537.62ms  351.37ms   1.18s    61.13%
+    Req/Sec   108.07    101.36   777.00     50.53%
+  12326 requests in 15.02s, 4.32MB read
+Requests/sec:    820.65
+Transfer/sec:    294.83KB
 
 ---------------------------------------------------------
  Queries: 10 for django
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=10
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=10
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/update?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6653 requests in 15.03s, 3.61MB read
-  Socket errors: connect 0, read 25, write 0, timeout 3
-Requests/sec:    442.67
-Transfer/sec:    245.86KB
+    Latency     1.07s   488.50ms   1.79s    57.85%
+    Req/Sec    58.13     76.04   500.00     89.94%
+  6616 requests in 15.04s, 3.59MB read
+  Socket errors: connect 0, read 21, write 0, timeout 2
+Requests/sec:    439.78
+Transfer/sec:    244.17KB
 
 ---------------------------------------------------------
  Queries: 15 for django
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=15
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=15
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/update?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4514 requests in 15.08s, 3.33MB read
-  Socket errors: connect 0, read 42, write 0, timeout 22
-Requests/sec:    299.26
-Transfer/sec:    226.20KB
+    Latency     1.48s   496.92ms   2.19s    62.59%
+    Req/Sec    39.17     63.79   500.00     83.98%
+  4480 requests in 15.07s, 3.32MB read
+  Socket errors: connect 0, read 61, write 0, timeout 36
+Requests/sec:    297.24
+Transfer/sec:    225.71KB
 
 ---------------------------------------------------------
  Queries: 20 for django
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=20
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=20
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/update?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3435 requests in 15.09s, 3.21MB read
-  Socket errors: connect 0, read 139, write 0, timeout 69
-Requests/sec:    227.70
-Transfer/sec:    217.80KB
+    Latency     1.95s   547.54ms   2.56s    66.63%
+    Req/Sec    29.88     55.36   500.00     74.89%
+  3416 requests in 15.13s, 3.18MB read
+  Socket errors: connect 0, read 47, write 0, timeout 23
+Requests/sec:    225.74
+Transfer/sec:    215.13KB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 07:31:50 PDT 2013
+
+  System load:  1.89                Processes:           134
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer grails
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/grails/hello/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.37ms  399.61us   7.74ms   96.31%
+    Req/Sec   772.96     80.20     1.00k    82.29%
+  29137 requests in 5.00s, 7.63MB read
+Requests/sec:   5826.79
+Transfer/sec:      1.53MB
+
+---------------------------------------------------------
+ Running Warmup grails
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/grails/hello/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    93.23ms  268.69ms   1.12s    93.00%
+    Req/Sec     1.62k   700.14     6.44k    74.33%
+  185301 requests in 15.00s, 48.52MB read
+Requests/sec:  12353.46
+Transfer/sec:      3.23MB
+
+---------------------------------------------------------
+ Queries: 1 for grails
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/grails/hello/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.09ms  170.47ms 590.73ms   89.87%
+    Req/Sec     1.95k     0.91k    6.00k    73.91%
+  222090 requests in 15.00s, 46.76MB read
+Requests/sec:  14805.71
+Transfer/sec:      3.12MB
+
+---------------------------------------------------------
+ Queries: 5 for grails
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/grails/hello/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.26ms  117.49ms 553.44ms   94.16%
+    Req/Sec     1.05k   431.86     4.00k    72.77%
+  119483 requests in 15.00s, 49.68MB read
+Requests/sec:   7965.08
+Transfer/sec:      3.31MB
+
+---------------------------------------------------------
+ Queries: 10 for grails
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/grails/hello/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    52.46ms   29.31ms 234.04ms   83.61%
+    Req/Sec   678.02    279.57     1.78k    71.41%
+  77156 requests in 15.00s, 51.86MB read
+Requests/sec:   5142.92
+Transfer/sec:      3.46MB
+
+---------------------------------------------------------
+ Queries: 15 for grails
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/grails/hello/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.46ms   34.82ms 255.43ms   84.96%
+    Req/Sec   491.58    236.20     1.44k    68.83%
+  55882 requests in 15.01s, 51.89MB read
+Requests/sec:   3724.11
+Transfer/sec:      3.46MB
+
+---------------------------------------------------------
+ Queries: 20 for grails
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/grails/hello/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/grails/hello/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    94.58ms   45.14ms 295.19ms   87.21%
+    Req/Sec   386.14    202.09     1.40k    70.40%
+  43879 requests in 15.01s, 51.99MB read
+Requests/sec:   2923.83
+Transfer/sec:      3.46MB

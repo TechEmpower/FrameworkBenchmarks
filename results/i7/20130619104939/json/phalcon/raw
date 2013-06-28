@@ -2,128 +2,128 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 08:38:27 PDT 2013
+  System information as of Thu Jun 27 07:22:35 PDT 2013
 
-  System load:  1.88                Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
-  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  System load:  0.22                Processes:           138
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer phalcon
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   709.62us  186.13us   1.78ms   76.06%
-    Req/Sec     1.00k    91.37     2.00k    99.16%
-  56308 requests in 5.00s, 12.03MB read
-Requests/sec:  11261.63
-Transfer/sec:      2.41MB
+    Latency   729.07us  218.36us   3.32ms   77.46%
+    Req/Sec     1.47k   241.61     2.00k    69.05%
+  55337 requests in 5.00s, 11.82MB read
+Requests/sec:  11068.74
+Transfer/sec:      2.36MB
 
 ---------------------------------------------------------
  Running Warmup phalcon
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    15.91ms   68.22ms   2.90s    99.70%
-    Req/Sec     1.73k   593.90     5.00k    59.42%
-  246691 requests in 15.00s, 52.69MB read
-  Socket errors: connect 0, read 0, write 0, timeout 16
-Requests/sec:  16446.36
-Transfer/sec:      3.51MB
+    Latency    16.42ms   71.89ms   2.80s    99.76%
+    Req/Sec     2.14k   510.78     5.90k    70.12%
+  243509 requests in 15.00s, 52.01MB read
+  Socket errors: connect 0, read 0, write 0, timeout 11
+Requests/sec:  16233.94
+Transfer/sec:      3.47MB
 
 ---------------------------------------------------------
  Concurrency: 8 for phalcon
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.39ms   23.02ms 201.60ms   98.66%
-    Req/Sec     0.98k   158.15     2.00k    97.46%
-  167393 requests in 15.00s, 35.75MB read
-Requests/sec:  11159.44
-Transfer/sec:      2.38MB
+    Latency     3.34ms   22.56ms 203.95ms   98.63%
+    Req/Sec     1.47k   274.93     2.11k    78.76%
+  166657 requests in 15.00s, 35.59MB read
+Requests/sec:  11110.16
+Transfer/sec:      2.37MB
 
 ---------------------------------------------------------
  Concurrency: 16 for phalcon
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.91ms  279.27us   3.59ms   69.96%
-    Req/Sec     1.95k   248.03     3.00k    93.59%
-  261906 requests in 15.00s, 55.94MB read
-Requests/sec:  17460.65
-Transfer/sec:      3.73MB
+    Latency     0.92ms  294.84us   9.24ms   71.54%
+    Req/Sec     2.30k   241.90     3.44k    68.37%
+  260463 requests in 15.00s, 55.63MB read
+Requests/sec:  17364.07
+Transfer/sec:      3.71MB
 
 ---------------------------------------------------------
  Concurrency: 32 for phalcon
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.44ms   40.52ms 300.34ms   98.05%
-    Req/Sec     2.00k   549.13     4.00k    76.71%
-  277393 requests in 15.00s, 59.24MB read
-Requests/sec:  18493.13
-Transfer/sec:      3.95MB
+    Latency     1.74ms    0.85ms  34.04ms   80.03%
+    Req/Sec     2.47k   402.64     4.67k    70.59%
+  280677 requests in 15.00s, 59.95MB read
+Requests/sec:  18712.00
+Transfer/sec:      4.00MB
 
 ---------------------------------------------------------
  Concurrency: 64 for phalcon
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.61ms    2.84ms 110.30ms   89.37%
-    Req/Sec     1.96k   416.19     4.00k    82.90%
-  271487 requests in 15.00s, 57.98MB read
-Requests/sec:  18099.95
-Transfer/sec:      3.87MB
+    Latency     3.84ms    4.56ms 138.67ms   92.08%
+    Req/Sec     2.30k   561.89     5.30k    69.54%
+  261361 requests in 15.00s, 55.82MB read
+Requests/sec:  17423.85
+Transfer/sec:      3.72MB
 
 ---------------------------------------------------------
  Concurrency: 128 for phalcon
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.56ms    5.99ms 132.46ms   83.17%
-    Req/Sec     1.85k   502.82     5.00k    73.84%
-  259137 requests in 15.00s, 55.35MB read
-Requests/sec:  17275.73
-Transfer/sec:      3.69MB
+    Latency     7.30ms    4.64ms 238.62ms   84.81%
+    Req/Sec     2.33k   420.01     7.11k    75.36%
+  263768 requests in 15.00s, 56.33MB read
+Requests/sec:  17583.86
+Transfer/sec:      3.76MB
 
 ---------------------------------------------------------
  Concurrency: 256 for phalcon
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    16.25ms   16.12ms 504.36ms   91.38%
-    Req/Sec     1.71k   630.61     7.00k    57.33%
-  245911 requests in 15.00s, 52.52MB read
-Requests/sec:  16394.10
-Transfer/sec:      3.50MB
+    Latency    18.33ms   39.83ms 745.66ms   98.54%
+    Req/Sec     2.13k   533.82     9.44k    74.58%
+  241874 requests in 15.00s, 51.66MB read
+Requests/sec:  16124.94
+Transfer/sec:      3.44MB

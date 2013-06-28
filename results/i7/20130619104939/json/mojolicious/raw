@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 09:35:14 PDT 2013
+  System information as of Thu Jun 27 08:19:22 PDT 2013
 
-  System load:  0.04                Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
-  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  System load:  0.02                Processes:           138
+  Usage of /:   11.4% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer mojolicious
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  23579 requests in 5.00s, 4.05MB read
-Requests/sec:   4714.82
-Transfer/sec:    828.55KB
+    Latency     1.73ms  531.75us   7.35ms   83.97%
+    Req/Sec   616.68     95.95     1.00k    71.87%
+  23479 requests in 5.00s, 4.03MB read
+Requests/sec:   4694.81
+Transfer/sec:    825.03KB
 
 ---------------------------------------------------------
  Running Warmup mojolicious
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  86078 requests in 15.00s, 14.77MB read
-Requests/sec:   5737.83
-Transfer/sec:      0.98MB
+    Latency    44.54ms    2.33ms  66.83ms   88.83%
+    Req/Sec   760.10    365.08     2.78k    74.48%
+  86350 requests in 15.00s, 14.82MB read
+Requests/sec:   5756.23
+Transfer/sec:      0.99MB
 
 ---------------------------------------------------------
  Concurrency: 8 for mojolicious
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  70281 requests in 15.00s, 12.06MB read
-Requests/sec:   4684.95
-Transfer/sec:    823.30KB
+    Latency     2.10ms    5.37ms  78.47ms   99.48%
+    Req/Sec   613.49    104.84     0.90k    71.67%
+  69875 requests in 15.00s, 11.99MB read
+Requests/sec:   4658.07
+Transfer/sec:    818.58KB
 
 ---------------------------------------------------------
  Concurrency: 16 for mojolicious
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  85961 requests in 15.00s, 14.75MB read
-Requests/sec:   5730.07
-Transfer/sec:      0.98MB
+    Latency     2.79ms  587.96us  16.29ms   91.94%
+    Req/Sec   757.57     92.25     1.00k    73.57%
+  86248 requests in 15.00s, 14.80MB read
+Requests/sec:   5749.51
+Transfer/sec:      0.99MB
 
 ---------------------------------------------------------
  Concurrency: 32 for mojolicious
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  86121 requests in 15.00s, 14.78MB read
-Requests/sec:   5740.54
-Transfer/sec:      0.99MB
+    Latency     6.32ms    8.61ms 110.63ms   99.18%
+    Req/Sec   751.17    114.57     1.11k    69.42%
+  85504 requests in 15.00s, 14.67MB read
+Requests/sec:   5699.88
+Transfer/sec:      0.98MB
 
 ---------------------------------------------------------
  Concurrency: 64 for mojolicious
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  86426 requests in 15.00s, 14.83MB read
-Requests/sec:   5761.03
-Transfer/sec:      0.99MB
+    Latency    11.17ms    0.88ms  25.38ms   87.77%
+    Req/Sec   757.67    101.54     1.22k    68.17%
+  86060 requests in 15.00s, 14.77MB read
+Requests/sec:   5737.10
+Transfer/sec:      0.98MB
 
 ---------------------------------------------------------
  Concurrency: 128 for mojolicious
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  86682 requests in 15.00s, 14.88MB read
-Requests/sec:   5777.95
-Transfer/sec:      0.99MB
+    Latency    23.19ms   10.04ms 137.66ms   99.06%
+    Req/Sec   751.85    227.29     2.22k    65.45%
+  85620 requests in 15.00s, 14.69MB read
+Requests/sec:   5707.82
+Transfer/sec:      0.98MB
 
 ---------------------------------------------------------
  Concurrency: 256 for mojolicious
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  85826 requests in 15.00s, 14.73MB read
-Requests/sec:   5721.16
-Transfer/sec:      0.98MB
+    Latency    44.97ms    4.42ms  72.19ms   96.67%
+    Req/Sec   761.46    351.98     3.33k    76.42%
+  86606 requests in 15.00s, 14.86MB read
+Requests/sec:   5773.49
+Transfer/sec:      0.99MB

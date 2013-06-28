@@ -2,127 +2,127 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 11:49:46 PDT 2013
+  System information as of Thu Jun 27 11:30:27 PDT 2013
 
-  System load:  0.74                Processes:           135
-  Usage of /:   10.5% of 129.62GB   Users logged in:     1
-  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  System load:  0.82                Processes:           130
+  Usage of /:   11.5% of 129.62GB   Users logged in:     1
+  Memory usage: 4%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8410 requests in 5.00s, 11.13MB read
-Requests/sec:   1680.92
-Transfer/sec:      2.23MB
+    Latency    58.84ms  120.49ms 405.26ms   82.79%
+    Req/Sec   238.80    170.91   666.00     64.06%
+  8382 requests in 5.00s, 11.10MB read
+Requests/sec:   1675.18
+Transfer/sec:      2.22MB
 
 ---------------------------------------------------------
  Running Warmup flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  52835 requests in 15.01s, 69.94MB read
-Requests/sec:   3521.07
-Transfer/sec:      4.66MB
+    Latency    87.79ms  101.10ms 607.70ms   95.12%
+    Req/Sec   481.05    254.66     2.11k    64.45%
+  54239 requests in 15.01s, 71.80MB read
+Requests/sec:   3614.31
+Transfer/sec:      4.78MB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  49175 requests in 15.00s, 65.09MB read
-Requests/sec:   3277.99
-Transfer/sec:      4.34MB
+    Latency     7.52ms   30.16ms 244.13ms   97.41%
+    Req/Sec   430.90    157.29   777.00     68.71%
+  49240 requests in 15.14s, 65.18MB read
+Requests/sec:   3251.48
+Transfer/sec:      4.30MB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  58770 requests in 15.00s, 77.79MB read
-Requests/sec:   3917.31
-Transfer/sec:      5.19MB
+    Latency     4.35ms    7.35ms 304.86ms   99.42%
+    Req/Sec   520.27    146.24     1.00k    73.24%
+  59210 requests in 15.00s, 78.38MB read
+Requests/sec:   3946.86
+Transfer/sec:      5.22MB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  59457 requests in 15.00s, 78.70MB read
-Requests/sec:   3962.88
-Transfer/sec:      5.25MB
+    Latency     8.49ms   10.40ms 342.30ms   99.24%
+    Req/Sec   529.21    166.64     1.22k    77.17%
+  60280 requests in 15.00s, 79.79MB read
+Requests/sec:   4018.19
+Transfer/sec:      5.32MB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  55365 requests in 15.00s, 73.29MB read
-Requests/sec:   3690.41
-Transfer/sec:      4.88MB
+    Latency    17.42ms   20.08ms 311.75ms   98.66%
+    Req/Sec   532.29    198.36     1.11k    62.86%
+  60494 requests in 15.00s, 80.08MB read
+Requests/sec:   4031.67
+Transfer/sec:      5.34MB
 
 ---------------------------------------------------------
  Concurrency: 128 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  60358 requests in 15.00s, 79.90MB read
-Requests/sec:   4022.70
-Transfer/sec:      5.32MB
+    Latency    37.10ms   49.21ms 338.30ms   97.19%
+    Req/Sec   532.88    228.18     1.44k    64.49%
+  60708 requests in 15.01s, 80.36MB read
+Requests/sec:   4045.48
+Transfer/sec:      5.35MB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask-pypy
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  60345 requests in 15.00s, 79.88MB read
-Requests/sec:   4022.13
-Transfer/sec:      5.32MB
+    Latency    74.75ms   80.71ms 413.94ms   92.28%
+    Req/Sec   533.12    243.98     1.67k    72.51%
+  60754 requests in 15.00s, 80.42MB read
+Requests/sec:   4049.17
+Transfer/sec:      5.36MB

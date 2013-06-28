@@ -2,129 +2,128 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 20 08:25:11 PDT 2013
+  System information as of Wed Jun 26 14:34:04 PDT 2013
 
-  System load:  0.1                 Processes:           135
-  Usage of /:   10.3% of 129.62GB   Users logged in:     1
+  System load:  0.06                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
   Memory usage: 9%                  IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-24 packages can be updated.
+29 packages can be updated.
 13 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer slim
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 5s test @ http://172.16.98.122:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13101 requests in 5.00s, 2.95MB read
-Requests/sec:   2619.38
-Transfer/sec:    602.98KB
+    Latency     4.43ms    7.42ms  73.92ms   98.60%
+    Req/Sec   298.03     74.70   444.00     60.78%
+  11270 requests in 5.00s, 2.53MB read
+Requests/sec:   2253.47
+Transfer/sec:    518.75KB
 
 ---------------------------------------------------------
  Running Warmup slim
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  51923 requests in 15.00s, 11.67MB read
-  Socket errors: connect 0, read 0, write 0, timeout 99
-Requests/sec:   3460.89
-Transfer/sec:    796.74KB
+    Latency   201.21ms  878.23ms   6.63s    97.50%
+    Req/Sec   410.48    210.53     1.44k    74.42%
+  46555 requests in 15.00s, 10.47MB read
+  Socket errors: connect 0, read 0, write 0, timeout 144
+Requests/sec:   3103.31
+Transfer/sec:    714.42KB
 
 ---------------------------------------------------------
  Concurrency: 8 for slim
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  39105 requests in 15.00s, 8.79MB read
-Requests/sec:   2606.60
-Transfer/sec:    600.05KB
+    Latency     3.68ms    2.50ms  46.71ms   97.43%
+    Req/Sec   301.84     67.96   444.00     62.63%
+  34376 requests in 15.00s, 7.73MB read
+Requests/sec:   2291.51
+Transfer/sec:    527.51KB
 
 ---------------------------------------------------------
  Concurrency: 16 for slim
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  47626 requests in 15.00s, 10.71MB read
-Requests/sec:   3174.81
-Transfer/sec:    730.86KB
+    Latency     6.26ms    5.62ms  94.12ms   93.12%
+    Req/Sec   369.43    122.36   777.00     62.03%
+  42025 requests in 15.00s, 9.45MB read
+Requests/sec:   2801.33
+Transfer/sec:    644.87KB
 
 ---------------------------------------------------------
  Concurrency: 32 for slim
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  49951 requests in 15.00s, 11.23MB read
-Requests/sec:   3329.52
-Transfer/sec:    766.47KB
+    Latency    19.60ms   59.18ms 530.95ms   96.94%
+    Req/Sec   393.62    175.11     1.11k    69.49%
+  44825 requests in 15.00s, 10.08MB read
+Requests/sec:   2988.04
+Transfer/sec:    687.85KB
 
 ---------------------------------------------------------
  Concurrency: 64 for slim
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  51268 requests in 15.00s, 11.53MB read
-Requests/sec:   3417.57
-Transfer/sec:    786.73KB
+    Latency    35.94ms  116.79ms 941.25ms   96.98%
+    Req/Sec   406.13    192.37     1.33k    65.20%
+  46170 requests in 15.00s, 10.38MB read
+Requests/sec:   3077.48
+Transfer/sec:    708.44KB
 
 ---------------------------------------------------------
  Concurrency: 128 for slim
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  51381 requests in 15.00s, 11.55MB read
-Requests/sec:   3424.60
-Transfer/sec:    788.36KB
+    Latency    75.04ms  232.22ms   1.93s    95.95%
+    Req/Sec   410.00    204.96     1.78k    68.65%
+  46587 requests in 15.00s, 10.47MB read
+Requests/sec:   3105.32
+Transfer/sec:    714.86KB
 
 ---------------------------------------------------------
  Concurrency: 256 for slim
- wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
 ---------------------------------------------------------
 
 Running 15s test @ http://172.16.98.122:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  51411 requests in 15.00s, 11.56MB read
-  Socket errors: connect 0, read 0, write 0, timeout 42
-Requests/sec:   3426.65
-Transfer/sec:    788.84KB
+    Latency   114.04ms  246.05ms   1.79s    95.25%
+    Req/Sec   411.36    204.28     1.33k    68.35%
+  46681 requests in 15.00s, 10.49MB read
+Requests/sec:   3111.46
+Transfer/sec:    716.30KB
