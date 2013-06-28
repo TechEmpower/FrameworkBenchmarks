@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 15:45:05 UTC 2013
+  System information as of Fri Jun 28 08:05:27 UTC 2013
 
-  System load:  0.36               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  0.1                Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/mongoose/2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5929 requests in 5.00s, 1.80MB read
-Requests/sec:   1185.14
-Transfer/sec:    367.52KB
+    Latency     8.18ms    5.20ms  28.05ms   91.40%
+    Req/Sec   156.62     66.89   333.00     92.30%
+  5921 requests in 5.00s, 1.79MB read
+Requests/sec:   1183.52
+Transfer/sec:    367.02KB
 
 ---------------------------------------------------------
  Running Warmup hapi-mongodb
@@ -43,11 +43,11 @@ Transfer/sec:    367.52KB
 Running 15s test @ http://10.253.67.217:8080/mongoose/2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20060 requests in 15.02s, 6.07MB read
-Requests/sec:   1335.29
-Transfer/sec:    414.09KB
+    Latency   289.72ms  119.73ms 399.96ms   73.19%
+    Req/Sec   179.09    252.31     1.55k    83.46%
+  20293 requests in 15.01s, 6.15MB read
+Requests/sec:   1352.11
+Transfer/sec:    419.30KB
 
 ---------------------------------------------------------
  Queries: 1 for hapi-mongodb
@@ -57,11 +57,11 @@ Transfer/sec:    414.09KB
 Running 15s test @ http://10.253.67.217:8080/mongoose/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  26863 requests in 15.01s, 6.45MB read
-Requests/sec:   1789.66
-Transfer/sec:    440.03KB
+    Latency   194.70ms   85.38ms 313.08ms   48.70%
+    Req/Sec   237.32    244.98     2.00k    82.73%
+  27043 requests in 15.05s, 6.49MB read
+Requests/sec:   1796.61
+Transfer/sec:    441.75KB
 
 ---------------------------------------------------------
  Queries: 5 for hapi-mongodb
@@ -71,11 +71,11 @@ Transfer/sec:    440.03KB
 Running 15s test @ http://10.253.67.217:8080/mongoose/5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10712 requests in 15.13s, 5.23MB read
-Requests/sec:    707.98
-Transfer/sec:    353.91KB
+    Latency   511.17ms   90.84ms 541.67ms   90.41%
+    Req/Sec    98.02    326.81     3.20k    91.26%
+  11152 requests in 15.07s, 5.44MB read
+Requests/sec:    740.03
+Transfer/sec:    369.95KB
 
 ---------------------------------------------------------
  Queries: 10 for hapi-mongodb
@@ -85,11 +85,11 @@ Transfer/sec:    353.91KB
 Running 15s test @ http://10.253.67.217:8080/mongoose/10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5893 requests in 15.22s, 4.70MB read
-Requests/sec:    387.23
-Transfer/sec:    316.06KB
+    Latency   821.83ms   70.52ms 838.09ms   95.77%
+    Req/Sec    54.13    271.53     3.22k    95.49%
+  6117 requests in 15.20s, 4.88MB read
+Requests/sec:    402.35
+Transfer/sec:    328.41KB
 
 ---------------------------------------------------------
  Queries: 15 for hapi-mongodb
@@ -99,11 +99,11 @@ Transfer/sec:    316.06KB
 Running 15s test @ http://10.253.67.217:8080/mongoose/15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4251 requests in 15.66s, 4.70MB read
-Requests/sec:    271.48
-Transfer/sec:    307.46KB
+    Latency     1.20s    90.48ms   1.21s    96.34%
+    Req/Sec    37.55    214.80     2.70k    96.43%
+  4176 requests in 15.11s, 4.62MB read
+Requests/sec:    276.31
+Transfer/sec:    312.93KB
 
 ---------------------------------------------------------
  Queries: 20 for hapi-mongodb
@@ -113,9 +113,8 @@ Transfer/sec:    307.46KB
 Running 15s test @ http://10.253.67.217:8080/mongoose/20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3362 requests in 16.00s, 4.76MB read
-  Socket errors: connect 0, read 0, write 0, timeout 37
-Requests/sec:    210.07
-Transfer/sec:    304.55KB
+    Latency     1.56s   131.93ms   1.59s    98.18%
+    Req/Sec    28.78    205.95     3.44k    97.33%
+  3271 requests in 15.43s, 4.63MB read
+Requests/sec:    211.99
+Transfer/sec:    307.35KB

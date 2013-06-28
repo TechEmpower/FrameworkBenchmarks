@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 16:14:25 UTC 2013
+  System information as of Thu Jun 27 22:23:42 UTC 2013
 
-  System load:  1.77               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.48               Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/dbraw.php?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  15006 requests in 5.00s, 3.77MB read
-Requests/sec:   3001.32
-Transfer/sec:    772.29KB
+    Latency    20.82ms   66.72ms 274.90ms   93.17%
+    Req/Sec   367.23    124.97   666.00     77.82%
+  13961 requests in 5.00s, 3.51MB read
+Requests/sec:   2792.13
+Transfer/sec:    718.54KB
 
 ---------------------------------------------------------
  Running Warmup php-raw
@@ -43,11 +43,12 @@ Transfer/sec:    772.29KB
 Running 15s test @ http://10.253.67.217:8080/dbraw.php?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  40419 requests in 15.00s, 10.16MB read
-Requests/sec:   2694.08
-Transfer/sec:    693.31KB
+    Latency   225.04ms  810.16ms   7.49s    96.58%
+    Req/Sec   375.46    210.53     1.44k    68.75%
+  42598 requests in 15.00s, 10.71MB read
+  Socket errors: connect 0, read 0, write 0, timeout 18
+Requests/sec:   2839.06
+Transfer/sec:    730.66KB
 
 ---------------------------------------------------------
  Queries: 1 for php-raw
@@ -57,11 +58,11 @@ Transfer/sec:    693.31KB
 Running 15s test @ http://10.253.67.217:8080/dbraw.php?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  46887 requests in 15.00s, 10.18MB read
-Requests/sec:   3125.10
-Transfer/sec:    695.05KB
+    Latency    88.32ms   64.69ms 573.33ms   85.13%
+    Req/Sec   429.66    227.91     2.56k    66.54%
+  48754 requests in 15.00s, 10.59MB read
+Requests/sec:   3249.84
+Transfer/sec:    722.79KB
 
 ---------------------------------------------------------
  Queries: 5 for php-raw
@@ -71,12 +72,11 @@ Transfer/sec:    695.05KB
 Running 15s test @ http://10.253.67.217:8080/dbraw.php?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  31074 requests in 15.00s, 10.99MB read
-  Socket errors: connect 0, read 0, write 0, timeout 12
-Requests/sec:   2071.29
-Transfer/sec:    750.07KB
+    Latency   191.23ms  255.09ms   2.04s    89.71%
+    Req/Sec   265.44    175.16     1.10k    72.10%
+  30125 requests in 15.01s, 10.66MB read
+Requests/sec:   2007.37
+Transfer/sec:    727.04KB
 
 ---------------------------------------------------------
  Queries: 10 for php-raw
@@ -86,11 +86,11 @@ Transfer/sec:    750.07KB
 Running 15s test @ http://10.253.67.217:8080/dbraw.php?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  18729 requests in 15.01s, 9.84MB read
-Requests/sec:   1248.04
-Transfer/sec:    671.21KB
+    Latency   353.87ms  281.04ms 863.15ms   69.62%
+    Req/Sec   160.78    140.61     2.00k    64.36%
+  18186 requests in 15.02s, 9.55MB read
+Requests/sec:   1211.16
+Transfer/sec:    651.53KB
 
 ---------------------------------------------------------
  Queries: 15 for php-raw
@@ -100,11 +100,11 @@ Transfer/sec:    671.21KB
 Running 15s test @ http://10.253.67.217:8080/dbraw.php?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  12960 requests in 15.03s, 9.02MB read
-Requests/sec:    862.43
-Transfer/sec:    614.47KB
+    Latency   607.91ms  423.82ms   1.24s    57.24%
+    Req/Sec   109.09    107.96   700.00     46.69%
+  12298 requests in 15.01s, 8.56MB read
+Requests/sec:    819.51
+Transfer/sec:    584.02KB
 
 ---------------------------------------------------------
  Queries: 20 for php-raw
@@ -114,8 +114,8 @@ Transfer/sec:    614.47KB
 Running 15s test @ http://10.253.67.217:8080/dbraw.php?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9831 requests in 15.01s, 8.52MB read
-Requests/sec:    654.87
-Transfer/sec:    581.04KB
+    Latency   648.93ms  286.30ms 978.01ms   49.73%
+    Req/Sec    83.80     94.29   777.00     80.42%
+  9452 requests in 15.01s, 8.19MB read
+Requests/sec:    629.68
+Transfer/sec:    558.75KB

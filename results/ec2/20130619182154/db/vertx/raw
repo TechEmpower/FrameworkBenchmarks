@@ -2,14 +2,7 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 17:24:43 UTC 2013
-
-  System load:  1.41               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
-  Swap usage:   0%
-
-  Graph this data and manage this system at https://landscape.canonical.com/
+ System information disabled due to load higher than 2.0
 
   Get cloud support with Ubuntu Advantage Cloud Guest:
     http://www.ubuntu.com/business/services/cloud
@@ -29,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8549 requests in 5.00s, 1.29MB read
-Requests/sec:   1709.37
-Transfer/sec:    263.75KB
+    Latency     5.89ms    5.16ms  27.60ms   89.17%
+    Req/Sec   249.47    132.84   777.00     55.47%
+  8889 requests in 5.01s, 1.34MB read
+Requests/sec:   1775.97
+Transfer/sec:    274.03KB
 
 ---------------------------------------------------------
  Running Warmup vertx
@@ -43,11 +36,11 @@ Transfer/sec:    263.75KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  90033 requests in 15.00s, 13.57MB read
-Requests/sec:   6002.36
-Transfer/sec:      0.90MB
+    Latency    56.14ms   78.27ms 384.02ms   91.02%
+    Req/Sec     0.87k   458.35     3.33k    68.51%
+  97166 requests in 15.00s, 14.64MB read
+Requests/sec:   6477.27
+Transfer/sec:      0.98MB
 
 ---------------------------------------------------------
  Concurrency: 8 for vertx
@@ -57,11 +50,11 @@ Transfer/sec:      0.90MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  80297 requests in 15.00s, 12.10MB read
-Requests/sec:   5353.14
-Transfer/sec:    825.97KB
+    Latency     1.60ms    1.08ms  19.62ms   95.20%
+    Req/Sec   711.06    188.13     1.11k    62.69%
+  81003 requests in 15.00s, 12.21MB read
+Requests/sec:   5400.19
+Transfer/sec:    833.23KB
 
 ---------------------------------------------------------
  Concurrency: 16 for vertx
@@ -71,11 +64,11 @@ Transfer/sec:    825.97KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.15ms    2.86ms  19.62ms   71.69%
-    Req/Sec   403.19    490.71     1.00k    59.68%
-  95268 requests in 15.00s, 14.36MB read
-Requests/sec:   6351.38
-Transfer/sec:      0.96MB
+    Latency     2.94ms    2.51ms  20.50ms   82.92%
+    Req/Sec   828.95    275.97     1.78k    74.23%
+  94229 requests in 15.00s, 14.20MB read
+Requests/sec:   6282.12
+Transfer/sec:      0.95MB
 
 ---------------------------------------------------------
  Concurrency: 32 for vertx
@@ -85,11 +78,11 @@ Transfer/sec:      0.96MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  103661 requests in 15.00s, 15.62MB read
-Requests/sec:   6910.88
-Transfer/sec:      1.04MB
+    Latency     5.36ms    5.52ms  43.13ms   84.46%
+    Req/Sec     0.89k   321.05     2.67k    68.58%
+  101125 requests in 15.00s, 15.24MB read
+Requests/sec:   6742.08
+Transfer/sec:      1.02MB
 
 ---------------------------------------------------------
  Concurrency: 64 for vertx
@@ -99,10 +92,10 @@ Transfer/sec:      1.04MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    10.84ms   13.80ms  70.64ms   83.04%
-    Req/Sec   509.17    537.61     2.00k    98.05%
-  103666 requests in 15.00s, 15.62MB read
-Requests/sec:   6911.48
+    Latency    11.25ms   14.44ms  79.86ms   84.61%
+    Req/Sec     0.91k   423.20     3.00k    68.04%
+  103314 requests in 15.00s, 15.57MB read
+Requests/sec:   6887.31
 Transfer/sec:      1.04MB
 
 ---------------------------------------------------------
@@ -113,11 +106,11 @@ Transfer/sec:      1.04MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    21.51ms   29.42ms 146.27ms   85.11%
-    Req/Sec   482.49    554.04     3.00k    97.17%
-  104709 requests in 15.00s, 15.78MB read
-Requests/sec:   6982.32
-Transfer/sec:      1.05MB
+    Latency    24.51ms   34.65ms 158.50ms   86.11%
+    Req/Sec     0.91k   487.90     3.30k    67.29%
+  103383 requests in 15.00s, 15.58MB read
+Requests/sec:   6892.81
+Transfer/sec:      1.04MB
 
 ---------------------------------------------------------
  Concurrency: 256 for vertx
@@ -127,8 +120,8 @@ Transfer/sec:      1.05MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    37.64ms   48.62ms 267.82ms   83.82%
-    Req/Sec   506.24    558.04     3.00k    97.07%
-  106890 requests in 15.00s, 16.11MB read
-Requests/sec:   7126.48
-Transfer/sec:      1.07MB
+    Latency    39.55ms   48.31ms 354.30ms   88.52%
+    Req/Sec     0.97k   489.03     6.11k    76.57%
+  107760 requests in 15.00s, 16.24MB read
+Requests/sec:   7185.55
+Transfer/sec:      1.08MB

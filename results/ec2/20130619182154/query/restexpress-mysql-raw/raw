@@ -10,8 +10,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/restexpress/mysql?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2754 requests in 5.01s, 404.91KB read
-Requests/sec:    549.95
-Transfer/sec:     80.86KB
+    Latency   109.33ms  123.06ms 313.72ms   66.97%
+    Req/Sec    66.21     52.30   222.00     61.68%
+  2631 requests in 5.19s, 386.78KB read
+Requests/sec:    506.66
+Transfer/sec:     74.48KB
 
 ---------------------------------------------------------
  Running Warmup restexpress-mysql-raw
@@ -36,11 +36,12 @@ Transfer/sec:     80.86KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mysql?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8974 requests in 15.02s, 1.29MB read
-Requests/sec:    597.62
-Transfer/sec:     87.86KB
+    Latency   994.90ms  551.65ms   1.50s    61.05%
+    Req/Sec    77.51    125.72     1.67k    88.75%
+  8880 requests in 15.03s, 1.28MB read
+  Socket errors: connect 0, read 0, write 0, timeout 20
+Requests/sec:    590.77
+Transfer/sec:     86.86KB
 
 ---------------------------------------------------------
  Queries: 1 for restexpress-mysql-raw
@@ -50,12 +51,12 @@ Transfer/sec:     87.86KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mysql?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9125 requests in 15.56s, 1.03MB read
-  Socket errors: connect 0, read 0, write 0, timeout 58
-Requests/sec:    586.46
-Transfer/sec:     68.02KB
+    Latency   955.07ms  554.03ms   1.46s    59.06%
+    Req/Sec    81.10    125.83     1.89k    87.81%
+  9280 requests in 15.02s, 1.05MB read
+  Socket errors: connect 0, read 0, write 0, timeout 61
+Requests/sec:    618.00
+Transfer/sec:     71.69KB
 
 ---------------------------------------------------------
  Queries: 5 for restexpress-mysql-raw
@@ -65,11 +66,11 @@ Transfer/sec:     68.02KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mysql?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8004 requests in 15.34s, 1.88MB read
-Requests/sec:    521.63
-Transfer/sec:    125.77KB
+    Latency     1.14s   580.47ms   1.66s    64.72%
+    Req/Sec    67.67    115.39     2.00k    84.80%
+  7744 requests in 15.03s, 1.82MB read
+Requests/sec:    515.34
+Transfer/sec:    124.25KB
 
 ---------------------------------------------------------
  Queries: 10 for restexpress-mysql-raw
@@ -79,12 +80,12 @@ Transfer/sec:    125.77KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mysql?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6874 requests in 15.05s, 2.66MB read
-  Socket errors: connect 0, read 0, write 0, timeout 4
-Requests/sec:    456.77
-Transfer/sec:    181.00KB
+    Latency     1.38s   657.37ms   1.92s    67.12%
+    Req/Sec    57.62     97.93     1.11k    88.03%
+  6422 requests in 15.03s, 2.49MB read
+  Socket errors: connect 0, read 0, write 0, timeout 27
+Requests/sec:    427.31
+Transfer/sec:    169.33KB
 
 ---------------------------------------------------------
  Queries: 15 for restexpress-mysql-raw
@@ -94,12 +95,12 @@ Transfer/sec:    181.00KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mysql?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5691 requests in 15.05s, 3.06MB read
-  Socket errors: connect 0, read 0, write 0, timeout 5
-Requests/sec:    378.25
-Transfer/sec:    208.58KB
+    Latency     1.16s   416.16ms   1.46s    70.45%
+    Req/Sec    51.37     90.79     1.11k    89.92%
+  5849 requests in 15.05s, 3.15MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    388.54
+Transfer/sec:    214.25KB
 
 ---------------------------------------------------------
  Queries: 20 for restexpress-mysql-raw
@@ -109,8 +110,9 @@ Transfer/sec:    208.58KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mysql?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5074 requests in 15.09s, 3.50MB read
-Requests/sec:    336.36
-Transfer/sec:    237.65KB
+    Latency     1.80s   696.55ms   2.25s    74.77%
+    Req/Sec    41.23     83.68     1.33k    92.25%
+  4622 requests in 15.21s, 3.19MB read
+  Socket errors: connect 0, read 0, write 0, timeout 40
+Requests/sec:    303.85
+Transfer/sec:    214.70KB

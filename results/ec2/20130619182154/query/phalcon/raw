@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 22:42:22 UTC 2013
+  System information as of Fri Jun 28 04:50:15 UTC 2013
 
-  System load:  1.37               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.9                Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4312 requests in 5.00s, 1.11MB read
-Requests/sec:    861.61
-Transfer/sec:    227.62KB
+    Latency     9.35ms    3.55ms  21.83ms   74.14%
+    Req/Sec   124.74     56.18   333.00     68.53%
+  4734 requests in 5.00s, 1.22MB read
+Requests/sec:    946.37
+Transfer/sec:    250.00KB
 
 ---------------------------------------------------------
  Running Warmup phalcon
@@ -43,11 +43,12 @@ Transfer/sec:    227.62KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  12427 requests in 15.01s, 3.21MB read
-Requests/sec:    828.06
-Transfer/sec:    218.80KB
+    Latency   767.60ms    1.30s    6.33s    94.97%
+    Req/Sec   109.11    111.24   800.00     82.42%
+  12262 requests in 15.03s, 3.16MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:    816.07
+Transfer/sec:    215.61KB
 
 ---------------------------------------------------------
  Queries: 1 for phalcon
@@ -57,11 +58,11 @@ Transfer/sec:    218.80KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14563 requests in 15.02s, 3.26MB read
-Requests/sec:    969.89
-Transfer/sec:    222.37KB
+    Latency   424.70ms  291.98ms   1.18s    81.07%
+    Req/Sec   131.10    119.65     1.22k    57.07%
+  14749 requests in 15.02s, 3.30MB read
+Requests/sec:    982.26
+Transfer/sec:    225.21KB
 
 ---------------------------------------------------------
  Queries: 5 for phalcon
@@ -71,11 +72,11 @@ Transfer/sec:    222.37KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8518 requests in 15.01s, 3.07MB read
-Requests/sec:    567.31
-Transfer/sec:    209.37KB
+    Latency   663.15ms  224.88ms   1.07s    61.40%
+    Req/Sec    73.53     93.34     0.89k    82.99%
+  8300 requests in 15.01s, 2.99MB read
+Requests/sec:    552.94
+Transfer/sec:    204.06KB
 
 ---------------------------------------------------------
  Queries: 10 for phalcon
@@ -85,11 +86,11 @@ Transfer/sec:    209.37KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5413 requests in 15.04s, 2.88MB read
-Requests/sec:    359.85
-Transfer/sec:    196.02KB
+    Latency   941.96ms  210.55ms   1.30s    63.62%
+    Req/Sec    47.70     71.20   555.00     92.38%
+  5368 requests in 15.05s, 2.86MB read
+Requests/sec:    356.58
+Transfer/sec:    194.22KB
 
 ---------------------------------------------------------
  Queries: 15 for phalcon
@@ -99,11 +100,11 @@ Transfer/sec:    196.02KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4063 requests in 15.03s, 2.85MB read
-Requests/sec:    270.27
-Transfer/sec:    194.46KB
+    Latency     1.20s   189.21ms   1.43s    64.41%
+    Req/Sec    35.65     61.54   444.00     71.30%
+  3919 requests in 15.09s, 2.75MB read
+Requests/sec:    259.67
+Transfer/sec:    186.81KB
 
 ---------------------------------------------------------
  Queries: 20 for phalcon
@@ -113,8 +114,8 @@ Transfer/sec:    194.46KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3126 requests in 15.13s, 2.73MB read
-Requests/sec:    206.64
-Transfer/sec:    184.77KB
+    Latency     1.51s   190.32ms   1.70s    72.62%
+    Req/Sec    28.33     54.38   444.00     76.27%
+  3102 requests in 15.05s, 2.71MB read
+Requests/sec:    206.07
+Transfer/sec:    184.25KB

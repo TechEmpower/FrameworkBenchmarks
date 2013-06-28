@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 15:30:13 UTC 2013
+  System information as of Thu Jun 27 21:39:39 UTC 2013
 
-  System load:  0.22               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 2%                 IP address for eth0: 10.254.111.115
+  System load:  0.44               Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/mysql-orm?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10380 requests in 5.01s, 2.32MB read
-Requests/sec:   2072.11
-Transfer/sec:    474.65KB
+    Latency     3.97ms    0.97ms  12.79ms   71.97%
+    Req/Sec   275.65     72.80   555.00     63.29%
+  10426 requests in 5.00s, 2.33MB read
+Requests/sec:   2084.73
+Transfer/sec:    477.50KB
 
 ---------------------------------------------------------
  Running Warmup express-mysql
@@ -43,11 +43,11 @@ Transfer/sec:    474.65KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  33496 requests in 15.00s, 7.49MB read
-Requests/sec:   2233.12
-Transfer/sec:    511.52KB
+    Latency   177.47ms  156.27ms 712.74ms   82.94%
+    Req/Sec   296.71    253.18     2.00k    65.98%
+  33603 requests in 15.01s, 7.52MB read
+Requests/sec:   2238.53
+Transfer/sec:    512.74KB
 
 ---------------------------------------------------------
  Queries: 1 for express-mysql
@@ -57,11 +57,11 @@ Transfer/sec:    511.52KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  50391 requests in 15.00s, 9.74MB read
-Requests/sec:   3358.47
-Transfer/sec:    665.07KB
+    Latency   180.71ms  259.80ms 953.24ms   89.07%
+    Req/Sec   450.05    406.06     3.22k    63.77%
+  51015 requests in 15.00s, 9.87MB read
+Requests/sec:   3401.28
+Transfer/sec:    673.52KB
 
 ---------------------------------------------------------
  Queries: 5 for express-mysql
@@ -71,11 +71,11 @@ Transfer/sec:    665.07KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14799 requests in 15.04s, 4.67MB read
-Requests/sec:    984.27
-Transfer/sec:    318.08KB
+    Latency   369.33ms  155.47ms 741.98ms   80.27%
+    Req/Sec   130.01    147.39     1.60k    85.36%
+  14628 requests in 15.01s, 4.62MB read
+Requests/sec:    974.39
+Transfer/sec:    314.84KB
 
 ---------------------------------------------------------
  Queries: 10 for express-mysql
@@ -85,11 +85,11 @@ Transfer/sec:    318.08KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7197 requests in 15.07s, 3.36MB read
-Requests/sec:    477.70
-Transfer/sec:    228.49KB
+    Latency     1.06s   396.92ms   1.62s    63.00%
+    Req/Sec    57.60    131.47     1.78k    87.93%
+  6429 requests in 15.08s, 3.00MB read
+Requests/sec:    426.23
+Transfer/sec:    203.87KB
 
 ---------------------------------------------------------
  Queries: 15 for express-mysql
@@ -99,11 +99,11 @@ Transfer/sec:    228.49KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4707 requests in 15.14s, 2.91MB read
-Requests/sec:    310.82
-Transfer/sec:    196.90KB
+    Latency     1.41s   466.22ms   2.06s    64.97%
+    Req/Sec    43.73    109.93     1.70k    90.49%
+  4818 requests in 15.06s, 2.98MB read
+Requests/sec:    319.88
+Transfer/sec:    202.62KB
 
 ---------------------------------------------------------
  Queries: 20 for express-mysql
@@ -113,8 +113,9 @@ Transfer/sec:    196.90KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3619 requests in 15.22s, 2.79MB read
-Requests/sec:    237.76
-Transfer/sec:    187.51KB
+    Latency     1.99s   593.63ms   2.87s    67.75%
+    Req/Sec    31.07     94.38     1.20k    93.18%
+  3400 requests in 15.26s, 2.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    222.82
+Transfer/sec:    175.70KB

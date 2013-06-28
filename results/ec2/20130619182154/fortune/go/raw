@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20141 requests in 5.00s, 27.12MB read
-Requests/sec:   4029.19
-Transfer/sec:      5.43MB
+    Latency     2.06ms    0.93ms  13.16ms   90.44%
+    Req/Sec   524.19    103.19   777.00     68.69%
+  19874 requests in 5.00s, 26.76MB read
+Requests/sec:   3974.52
+Transfer/sec:      5.35MB
 
 ---------------------------------------------------------
  Running Warmup go
@@ -36,11 +36,11 @@ Transfer/sec:      5.43MB
 Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  61286 requests in 15.00s, 82.53MB read
-Requests/sec:   4085.87
-Transfer/sec:      5.50MB
+    Latency    69.24ms   45.18ms 335.11ms   83.30%
+    Req/Sec   528.26    236.13     1.44k    68.98%
+  60011 requests in 15.00s, 80.81MB read
+Requests/sec:   4001.55
+Transfer/sec:      5.39MB
 
 ---------------------------------------------------------
  Concurrency: 8 for go
@@ -50,11 +50,11 @@ Transfer/sec:      5.50MB
 Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  60241 requests in 15.00s, 81.12MB read
-Requests/sec:   4016.04
-Transfer/sec:      5.41MB
+    Latency     6.08ms   28.50ms 213.48ms   97.97%
+    Req/Sec   522.83    128.37     0.89k    74.68%
+  59561 requests in 15.00s, 80.20MB read
+Requests/sec:   3970.66
+Transfer/sec:      5.35MB
 
 ---------------------------------------------------------
  Concurrency: 16 for go
@@ -64,11 +64,11 @@ Transfer/sec:      5.41MB
 Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  63942 requests in 15.00s, 86.10MB read
-Requests/sec:   4262.48
-Transfer/sec:      5.74MB
+    Latency     3.83ms    1.40ms  14.82ms   74.44%
+    Req/Sec   563.02    117.79     1.00k    66.33%
+  64001 requests in 15.00s, 86.18MB read
+Requests/sec:   4266.86
+Transfer/sec:      5.75MB
 
 ---------------------------------------------------------
  Concurrency: 32 for go
@@ -78,11 +78,11 @@ Transfer/sec:      5.74MB
 Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  64245 requests in 15.00s, 86.51MB read
-Requests/sec:   4283.07
-Transfer/sec:      5.77MB
+    Latency     7.86ms    2.88ms  24.96ms   71.33%
+    Req/Sec   546.80    139.86     1.30k    65.56%
+  62242 requests in 15.00s, 83.81MB read
+Requests/sec:   4149.04
+Transfer/sec:      5.59MB
 
 ---------------------------------------------------------
  Concurrency: 64 for go
@@ -92,11 +92,11 @@ Transfer/sec:      5.77MB
 Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  62110 requests in 15.00s, 83.64MB read
-Requests/sec:   4140.79
-Transfer/sec:      5.58MB
+    Latency    15.82ms    9.65ms 111.61ms   94.49%
+    Req/Sec   556.94    162.24     1.22k    76.26%
+  63394 requests in 15.00s, 85.37MB read
+Requests/sec:   4226.18
+Transfer/sec:      5.69MB
 
 ---------------------------------------------------------
  Concurrency: 128 for go
@@ -106,11 +106,11 @@ Transfer/sec:      5.58MB
 Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  62134 requests in 15.00s, 83.67MB read
-Requests/sec:   4142.13
-Transfer/sec:      5.58MB
+    Latency    32.40ms   18.56ms 162.37ms   89.35%
+    Req/Sec   548.06    215.96     1.33k    67.05%
+  62336 requests in 15.00s, 83.94MB read
+Requests/sec:   4154.71
+Transfer/sec:      5.59MB
 
 ---------------------------------------------------------
  Concurrency: 256 for go
@@ -120,8 +120,8 @@ Transfer/sec:      5.58MB
 Running 15s test @ http://10.253.67.217:8080/fortune
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  60666 requests in 15.00s, 81.69MB read
-Requests/sec:   4045.16
-Transfer/sec:      5.45MB
+    Latency    65.36ms   34.08ms 313.83ms   77.28%
+    Req/Sec   538.48    233.92     1.55k    62.40%
+  61175 requests in 15.00s, 82.38MB read
+Requests/sec:   4078.29
+Transfer/sec:      5.49MB

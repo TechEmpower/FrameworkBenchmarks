@@ -2,14 +2,7 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 19:11:04 UTC 2013
-
-  System load:  1.39               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 9%                 IP address for eth0: 10.254.111.115
-  Swap usage:   0%
-
-  Graph this data and manage this system at https://landscape.canonical.com/
+ System information disabled due to load higher than 2.0
 
   Get cloud support with Ubuntu Advantage Cloud Guest:
     http://www.ubuntu.com/business/services/cloud
@@ -29,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10235 requests in 5.01s, 1.56MB read
-Requests/sec:   2043.35
-Transfer/sec:    318.38KB
+    Latency     3.86ms    0.96ms  13.48ms   95.85%
+    Req/Sec   276.47     56.65   444.00     79.97%
+  10485 requests in 5.01s, 1.60MB read
+Requests/sec:   2093.12
+Transfer/sec:    326.15KB
 
 ---------------------------------------------------------
  Running Warmup elli
@@ -43,11 +36,11 @@ Transfer/sec:    318.38KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  34678 requests in 15.00s, 5.28MB read
-Requests/sec:   2311.33
-Transfer/sec:    360.17KB
+    Latency   114.49ms   24.15ms 181.26ms   78.86%
+    Req/Sec   313.17    227.56     2.00k    72.71%
+  35466 requests in 15.01s, 5.40MB read
+Requests/sec:   2362.67
+Transfer/sec:    368.14KB
 
 ---------------------------------------------------------
  Queries: 1 for elli
@@ -57,11 +50,11 @@ Transfer/sec:    360.17KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  61701 requests in 15.00s, 7.52MB read
-Requests/sec:   4112.37
-Transfer/sec:    513.18KB
+    Latency    65.06ms   18.27ms 138.62ms   81.40%
+    Req/Sec   539.08    315.58     2.11k    63.45%
+  61150 requests in 15.00s, 7.45MB read
+Requests/sec:   4075.54
+Transfer/sec:    508.56KB
 
 ---------------------------------------------------------
  Queries: 5 for elli
@@ -71,11 +64,11 @@ Transfer/sec:    513.18KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  15765 requests in 15.03s, 3.85MB read
-Requests/sec:   1049.25
-Transfer/sec:    262.22KB
+    Latency   274.14ms   58.34ms 358.47ms   48.07%
+    Req/Sec   141.25    144.05     1.33k    82.54%
+  15913 requests in 15.02s, 3.88MB read
+Requests/sec:   1059.62
+Transfer/sec:    264.78KB
 
 ---------------------------------------------------------
  Queries: 10 for elli
@@ -85,11 +78,11 @@ Transfer/sec:    262.22KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8229 requests in 15.01s, 3.26MB read
-Requests/sec:    548.23
-Transfer/sec:    222.09KB
+    Latency   520.58ms   62.46ms 584.14ms   66.75%
+    Req/Sec    73.65     99.30     1.22k    83.05%
+  8276 requests in 15.02s, 3.27MB read
+Requests/sec:    550.95
+Transfer/sec:    223.17KB
 
 ---------------------------------------------------------
  Queries: 15 for elli
@@ -99,11 +92,11 @@ Transfer/sec:    222.09KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5447 requests in 15.04s, 2.98MB read
-Requests/sec:    362.10
-Transfer/sec:    202.86KB
+    Latency   807.73ms   98.16ms 897.81ms   77.43%
+    Req/Sec    49.54     81.14     0.89k    90.82%
+  5480 requests in 15.05s, 3.00MB read
+Requests/sec:    364.16
+Transfer/sec:    204.02KB
 
 ---------------------------------------------------------
  Queries: 20 for elli
@@ -113,8 +106,8 @@ Transfer/sec:    202.86KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4072 requests in 15.07s, 2.85MB read
-Requests/sec:    270.23
-Transfer/sec:    193.34KB
+    Latency     1.06s    99.93ms   1.15s    81.77%
+    Req/Sec    37.07     76.29     0.90k    93.25%
+  4088 requests in 15.05s, 2.86MB read
+Requests/sec:    271.67
+Transfer/sec:    194.34KB

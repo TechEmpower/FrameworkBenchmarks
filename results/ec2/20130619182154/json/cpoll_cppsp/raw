@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 15:19:42 UTC 2013
+  System information as of Fri Jun 28 07:40:08 UTC 2013
 
-  System load:  0.33               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  0.52               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:16969/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    59.23ms   95.97ms 215.80ms   72.64%
-    Req/Sec     1.84k     1.24k    3.00k    71.79%
-  87246 requests in 5.20s, 11.98MB read
-Requests/sec:  16781.89
-Transfer/sec:      2.30MB
+    Latency    20.59ms   60.18ms 200.77ms   89.95%
+    Req/Sec     2.43k     1.00k    3.56k    86.00%
+  93889 requests in 5.00s, 12.89MB read
+Requests/sec:  18782.69
+Transfer/sec:      2.58MB
 
 ---------------------------------------------------------
  Running Warmup cpoll_cppsp
@@ -43,11 +43,11 @@ Transfer/sec:      2.30MB
 Running 15s test @ http://10.253.67.217:16969/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.86ms    3.09ms  49.56ms   85.11%
-    Req/Sec     6.79k     2.79k   33.00k    71.72%
-  800519 requests in 15.00s, 109.93MB read
-Requests/sec:  53367.98
-Transfer/sec:      7.33MB
+    Latency     4.28ms    1.37ms  19.60ms   69.59%
+    Req/Sec     7.76k     1.54k   22.67k    74.27%
+  881190 requests in 15.00s, 121.01MB read
+Requests/sec:  58751.38
+Transfer/sec:      8.07MB
 
 ---------------------------------------------------------
  Concurrency: 8 for cpoll_cppsp
@@ -57,11 +57,11 @@ Transfer/sec:      7.33MB
 Running 15s test @ http://10.253.67.217:16969/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    24.61ms   68.09ms 216.03ms   88.76%
-    Req/Sec     2.29k     0.96k    3.00k    87.86%
-  302419 requests in 15.00s, 41.53MB read
-Requests/sec:  20163.23
-Transfer/sec:      2.77MB
+    Latency    33.69ms   77.99ms 216.48ms   84.56%
+    Req/Sec     2.58k     1.14k    3.44k    83.37%
+  294159 requests in 15.04s, 40.40MB read
+Requests/sec:  19555.47
+Transfer/sec:      2.69MB
 
 ---------------------------------------------------------
  Concurrency: 16 for cpoll_cppsp
@@ -71,11 +71,11 @@ Transfer/sec:      2.77MB
 Running 15s test @ http://10.253.67.217:16969/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   536.96us    2.18ms  38.73ms   99.62%
-    Req/Sec     4.34k   656.67     6.00k    58.56%
-  547333 requests in 15.00s, 75.16MB read
-Requests/sec:  36492.48
-Transfer/sec:      5.01MB
+    Latency    14.28ms   52.58ms 214.06ms   93.49%
+    Req/Sec     4.74k     1.39k    6.44k    91.45%
+  540016 requests in 15.00s, 74.16MB read
+Requests/sec:  36004.22
+Transfer/sec:      4.94MB
 
 ---------------------------------------------------------
  Concurrency: 32 for cpoll_cppsp
@@ -85,11 +85,11 @@ Transfer/sec:      5.01MB
 Running 15s test @ http://10.253.67.217:16969/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   622.22us  235.02us   5.68ms   73.07%
-    Req/Sec     6.03k     1.27k   11.00k    79.80%
-  735483 requests in 15.00s, 101.00MB read
-Requests/sec:  49038.40
-Transfer/sec:      6.73MB
+    Latency    11.09ms   45.99ms 214.13ms   95.10%
+    Req/Sec     6.03k     2.01k   11.56k    75.93%
+  682336 requests in 15.00s, 93.70MB read
+Requests/sec:  45494.83
+Transfer/sec:      6.25MB
 
 ---------------------------------------------------------
  Concurrency: 64 for cpoll_cppsp
@@ -99,11 +99,11 @@ Transfer/sec:      6.73MB
 Running 15s test @ http://10.253.67.217:16969/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.26ms    0.92ms  19.18ms   87.97%
-    Req/Sec     6.66k     3.52k   21.00k    69.74%
-  798873 requests in 15.00s, 109.71MB read
-Requests/sec:  53268.31
-Transfer/sec:      7.32MB
+    Latency     2.21ms   10.79ms 114.39ms   99.06%
+    Req/Sec     7.30k     2.42k   18.89k    71.66%
+  827734 requests in 15.00s, 113.67MB read
+Requests/sec:  55191.51
+Transfer/sec:      7.58MB
 
 ---------------------------------------------------------
  Concurrency: 128 for cpoll_cppsp
@@ -113,11 +113,11 @@ Transfer/sec:      7.32MB
 Running 15s test @ http://10.253.67.217:16969/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.47ms    2.33ms  45.84ms   91.07%
-    Req/Sec     7.60k     4.27k   37.00k    67.87%
-  880704 requests in 15.00s, 120.95MB read
-Requests/sec:  58728.03
-Transfer/sec:      8.07MB
+    Latency     2.20ms    1.20ms  23.74ms   76.27%
+    Req/Sec     7.79k     2.59k   27.56k    73.34%
+  878131 requests in 15.00s, 120.59MB read
+Requests/sec:  58546.06
+Transfer/sec:      8.04MB
 
 ---------------------------------------------------------
  Concurrency: 256 for cpoll_cppsp
@@ -127,8 +127,8 @@ Transfer/sec:      8.07MB
 Running 15s test @ http://10.253.67.217:16969/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.50ms    3.78ms  36.84ms   85.48%
-    Req/Sec     7.81k     4.47k   37.00k    73.64%
-  901559 requests in 14.99s, 123.81MB read
-Requests/sec:  60131.28
-Transfer/sec:      8.26MB
+    Latency     4.16ms    2.54ms  37.81ms   79.37%
+    Req/Sec     8.46k     3.35k   38.91k    76.77%
+  936023 requests in 15.00s, 128.54MB read
+Requests/sec:  62405.56
+Transfer/sec:      8.57MB

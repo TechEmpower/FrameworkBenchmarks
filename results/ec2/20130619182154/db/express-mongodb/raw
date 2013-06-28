@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 15:20:29 UTC 2013
+  System information as of Thu Jun 27 21:29:54 UTC 2013
 
-  System load:  0.02               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 2%                 IP address for eth0: 10.254.111.115
+  System load:  0.03               Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/mongoose
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9325 requests in 5.00s, 2.10MB read
-Requests/sec:   1864.45
-Transfer/sec:    429.29KB
+    Latency     5.24ms    2.53ms  23.06ms   74.38%
+    Req/Sec   257.34    177.98     0.89k    87.30%
+  9422 requests in 5.00s, 2.12MB read
+Requests/sec:   1883.50
+Transfer/sec:    433.69KB
 
 ---------------------------------------------------------
  Running Warmup express-mongodb
@@ -43,11 +43,11 @@ Transfer/sec:    429.29KB
 Running 15s test @ http://10.253.67.217:8080/mongoose
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  37505 requests in 15.02s, 8.43MB read
-Requests/sec:   2497.56
-Transfer/sec:    575.07KB
+    Latency   187.38ms  106.45ms 374.68ms   57.18%
+    Req/Sec   327.08    385.18     3.56k    84.63%
+  36990 requests in 15.04s, 8.32MB read
+Requests/sec:   2459.54
+Transfer/sec:    566.32KB
 
 ---------------------------------------------------------
  Concurrency: 8 for express-mongodb
@@ -57,11 +57,11 @@ Transfer/sec:    575.07KB
 Running 15s test @ http://10.253.67.217:8080/mongoose
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  36324 requests in 15.00s, 8.17MB read
-Requests/sec:   2421.44
-Transfer/sec:    557.54KB
+    Latency     3.76ms    1.77ms  21.44ms   88.93%
+    Req/Sec   315.13    114.44   600.00     56.92%
+  35833 requests in 15.00s, 8.06MB read
+Requests/sec:   2388.40
+Transfer/sec:    549.93KB
 
 ---------------------------------------------------------
  Concurrency: 16 for express-mongodb
@@ -71,11 +71,11 @@ Transfer/sec:    557.54KB
 Running 15s test @ http://10.253.67.217:8080/mongoose
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  37008 requests in 15.00s, 8.32MB read
-Requests/sec:   2466.55
-Transfer/sec:    567.92KB
+    Latency    17.83ms   42.37ms 204.98ms   95.12%
+    Req/Sec   315.22    186.53   800.00     65.62%
+  35565 requests in 15.00s, 8.00MB read
+Requests/sec:   2370.73
+Transfer/sec:    545.88KB
 
 ---------------------------------------------------------
  Concurrency: 32 for express-mongodb
@@ -85,11 +85,11 @@ Transfer/sec:    567.92KB
 Running 15s test @ http://10.253.67.217:8080/mongoose
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  38800 requests in 15.01s, 8.72MB read
-Requests/sec:   2585.09
-Transfer/sec:    595.22KB
+    Latency    24.24ms   45.57ms 213.97ms   94.34%
+    Req/Sec   316.74    140.83   777.00     76.27%
+  36185 requests in 15.00s, 8.14MB read
+Requests/sec:   2411.71
+Transfer/sec:    555.29KB
 
 ---------------------------------------------------------
  Concurrency: 64 for express-mongodb
@@ -99,11 +99,11 @@ Transfer/sec:    595.22KB
 Running 15s test @ http://10.253.67.217:8080/mongoose
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  37995 requests in 15.01s, 8.54MB read
-Requests/sec:   2530.63
-Transfer/sec:    582.68KB
+    Latency    41.53ms   55.78ms 223.67ms   91.29%
+    Req/Sec   336.39    200.25     0.89k    60.35%
+  38347 requests in 15.00s, 8.62MB read
+Requests/sec:   2556.61
+Transfer/sec:    588.66KB
 
 ---------------------------------------------------------
  Concurrency: 128 for express-mongodb
@@ -113,11 +113,11 @@ Transfer/sec:    582.68KB
 Running 15s test @ http://10.253.67.217:8080/mongoose
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  39085 requests in 15.00s, 8.79MB read
-Requests/sec:   2605.80
-Transfer/sec:    600.00KB
+    Latency    70.79ms   42.87ms 132.57ms   47.66%
+    Req/Sec   346.29    359.41     1.67k    83.45%
+  39368 requests in 15.04s, 8.85MB read
+Requests/sec:   2618.13
+Transfer/sec:    602.82KB
 
 ---------------------------------------------------------
  Concurrency: 256 for express-mongodb
@@ -127,8 +127,8 @@ Transfer/sec:    600.00KB
 Running 15s test @ http://10.253.67.217:8080/mongoose
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  38162 requests in 15.00s, 8.58MB read
-Requests/sec:   2544.37
-Transfer/sec:    585.85KB
+    Latency   123.76ms   49.83ms 217.62ms   69.99%
+    Req/Sec   345.48    304.71     1.78k    58.67%
+  39099 requests in 15.00s, 8.79MB read
+Requests/sec:   2606.73
+Transfer/sec:    600.20KB

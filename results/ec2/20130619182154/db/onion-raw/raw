@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 19:34:09 UTC 2013
+  System information as of Fri Jun 28 01:47:27 UTC 2013
 
-  System load:  0.57               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.59               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,10 +29,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.93ms  275.34us   4.50ms   85.95%
-    Req/Sec     0.91k   281.85     1.00k    91.30%
-  41989 requests in 5.00s, 6.00MB read
-Requests/sec:   8398.81
+    Latency     0.94ms  262.37us   3.58ms   84.91%
+    Req/Sec     1.10k   113.64     1.44k    70.07%
+  41799 requests in 5.00s, 5.97MB read
+Requests/sec:   8360.22
 Transfer/sec:      1.20MB
 
 ---------------------------------------------------------
@@ -43,11 +43,11 @@ Transfer/sec:      1.20MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    18.96ms   14.88ms 657.14ms   99.14%
-    Req/Sec     1.16k   733.13     4.00k    58.66%
-  106196 requests in 15.00s, 15.18MB read
-  Socket errors: connect 0, read 109, write 0, timeout 671
-Requests/sec:   7079.95
+    Latency    49.17ms  284.69ms   6.61s    98.25%
+    Req/Sec     0.99k   689.68     4.67k    63.82%
+  106151 requests in 14.99s, 15.17MB read
+  Socket errors: connect 0, read 109, write 0, timeout 486
+Requests/sec:   7079.43
 Transfer/sec:      1.01MB
 
 ---------------------------------------------------------
@@ -58,11 +58,11 @@ Transfer/sec:      1.01MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.93ms  240.78us   3.20ms   84.76%
-    Req/Sec     0.94k   243.87     1.00k    93.65%
-  126427 requests in 15.00s, 18.07MB read
-Requests/sec:   8429.08
-Transfer/sec:      1.20MB
+    Latency     2.54ms   11.04ms  80.39ms   97.90%
+    Req/Sec     1.08k   200.16     1.44k    90.02%
+  123054 requests in 15.00s, 17.59MB read
+Requests/sec:   8203.99
+Transfer/sec:      1.17MB
 
 ---------------------------------------------------------
  Concurrency: 16 for onion-raw
@@ -72,11 +72,11 @@ Transfer/sec:      1.20MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.47ms    3.23ms  67.32ms   97.56%
-    Req/Sec   474.79    500.79     2.00k    52.59%
-  107455 requests in 15.00s, 15.36MB read
-Requests/sec:   7163.52
-Transfer/sec:      1.02MB
+    Latency     4.10ms   15.95ms 152.57ms   98.57%
+    Req/Sec     0.95k   240.84     2.00k    68.15%
+  108209 requests in 15.00s, 15.47MB read
+Requests/sec:   7213.84
+Transfer/sec:      1.03MB
 
 ---------------------------------------------------------
  Concurrency: 32 for onion-raw
@@ -86,11 +86,11 @@ Transfer/sec:      1.02MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.77ms   28.72ms 229.48ms   98.03%
-    Req/Sec   405.41    495.93     2.00k    59.70%
-  100928 requests in 15.00s, 14.43MB read
-Requests/sec:   6728.56
-Transfer/sec:      0.96MB
+    Latency     5.12ms   12.38ms 637.16ms   99.28%
+    Req/Sec     0.93k   265.24     2.89k    71.05%
+  106031 requests in 15.00s, 15.16MB read
+Requests/sec:   7068.88
+Transfer/sec:      1.01MB
 
 ---------------------------------------------------------
  Concurrency: 64 for onion-raw
@@ -100,12 +100,12 @@ Transfer/sec:      0.96MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.85ms    4.12ms 139.88ms   72.20%
-    Req/Sec   486.12    513.11     2.00k    52.06%
-  103834 requests in 15.00s, 14.84MB read
-  Socket errors: connect 0, read 2, write 0, timeout 6
-Requests/sec:   6922.92
-Transfer/sec:      0.99MB
+    Latency    10.20ms   40.56ms   1.51s    99.76%
+    Req/Sec     0.93k   279.74     3.56k    78.75%
+  104828 requests in 15.00s, 14.98MB read
+  Socket errors: connect 0, read 8, write 0, timeout 8
+Requests/sec:   6988.87
+Transfer/sec:      1.00MB
 
 ---------------------------------------------------------
  Concurrency: 128 for onion-raw
@@ -115,12 +115,12 @@ Transfer/sec:      0.99MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    16.66ms   11.97ms 657.24ms   98.61%
-    Req/Sec   578.58    526.44     2.00k    54.53%
-  104575 requests in 15.00s, 14.95MB read
-  Socket errors: connect 0, read 12, write 0, timeout 51
-Requests/sec:   6972.22
-Transfer/sec:      1.00MB
+    Latency    17.24ms   56.66ms   1.57s    99.72%
+    Req/Sec     1.00k   422.16     4.22k    75.94%
+  109388 requests in 15.00s, 15.64MB read
+  Socket errors: connect 0, read 26, write 0, timeout 104
+Requests/sec:   7293.15
+Transfer/sec:      1.04MB
 
 ---------------------------------------------------------
  Concurrency: 256 for onion-raw
@@ -130,9 +130,9 @@ Transfer/sec:      1.00MB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    31.07ms  264.73ms   6.82s    99.56%
-    Req/Sec     1.28k   629.21     4.00k    72.36%
-  106402 requests in 15.00s, 15.21MB read
-  Socket errors: connect 0, read 144, write 0, timeout 685
-Requests/sec:   7093.15
-Transfer/sec:      1.01MB
+    Latency    41.58ms  252.76ms   6.91s    99.42%
+    Req/Sec     1.00k   585.24     3.78k    68.44%
+  108970 requests in 15.00s, 15.58MB read
+  Socket errors: connect 0, read 102, write 0, timeout 412
+Requests/sec:   7264.12
+Transfer/sec:      1.04MB

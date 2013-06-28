@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 21:33:14 UTC 2013
+  System information as of Fri Jun 28 03:41:23 UTC 2013
 
-  System load:  0.51               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.78               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1150 requests in 5.02s, 2.88MB read
-Requests/sec:    229.22
-Transfer/sec:    587.67KB
+    Latency    79.21ms   34.88ms 133.61ms   59.50%
+    Req/Sec    30.10     47.42   111.00     71.19%
+  1143 requests in 5.01s, 2.86MB read
+Requests/sec:    228.11
+Transfer/sec:    584.85KB
 
 ---------------------------------------------------------
  Running Warmup laravel-raw
@@ -43,12 +43,12 @@ Transfer/sec:    587.67KB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3067 requests in 15.05s, 7.68MB read
-  Socket errors: connect 0, read 0, write 0, timeout 12
-Requests/sec:    203.78
-Transfer/sec:    522.48KB
+    Latency     2.32s   913.58ms   3.77s    62.74%
+    Req/Sec    28.33     57.11   800.00     77.10%
+  3113 requests in 15.13s, 7.79MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:    205.74
+Transfer/sec:    527.48KB
 
 ---------------------------------------------------------
  Concurrency: 8 for laravel-raw
@@ -58,11 +58,11 @@ Transfer/sec:    522.48KB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3421 requests in 15.01s, 8.56MB read
-Requests/sec:    227.91
-Transfer/sec:    584.31KB
+    Latency   103.49ms   46.69ms 156.66ms   56.02%
+    Req/Sec    30.21     47.49   111.00     71.11%
+  3450 requests in 15.01s, 8.64MB read
+Requests/sec:    229.78
+Transfer/sec:    589.09KB
 
 ---------------------------------------------------------
  Concurrency: 16 for laravel-raw
@@ -72,11 +72,11 @@ Transfer/sec:    584.31KB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3394 requests in 15.01s, 8.50MB read
-Requests/sec:    226.10
-Transfer/sec:    579.69KB
+    Latency   265.18ms  122.10ms 363.09ms   75.32%
+    Req/Sec    29.76     52.11   222.00     73.69%
+  3404 requests in 15.02s, 8.52MB read
+Requests/sec:    226.69
+Transfer/sec:    581.17KB
 
 ---------------------------------------------------------
  Concurrency: 32 for laravel-raw
@@ -86,11 +86,11 @@ Transfer/sec:    579.69KB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3367 requests in 15.02s, 8.43MB read
-Requests/sec:    224.22
-Transfer/sec:    574.84KB
+    Latency   740.59ms  369.59ms   1.14s    66.86%
+    Req/Sec    29.66     55.62   333.00     75.25%
+  3368 requests in 15.02s, 8.43MB read
+Requests/sec:    224.18
+Transfer/sec:    574.74KB
 
 ---------------------------------------------------------
  Concurrency: 64 for laravel-raw
@@ -100,11 +100,11 @@ Transfer/sec:    574.84KB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3313 requests in 15.01s, 8.30MB read
-Requests/sec:    220.66
-Transfer/sec:    565.74KB
+    Latency     1.21s   561.14ms   1.97s    68.86%
+    Req/Sec    29.45     59.33   444.00     76.93%
+  3321 requests in 15.04s, 8.32MB read
+Requests/sec:    220.85
+Transfer/sec:    566.24KB
 
 ---------------------------------------------------------
  Concurrency: 128 for laravel-raw
@@ -114,11 +114,12 @@ Transfer/sec:    565.74KB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3215 requests in 15.05s, 8.05MB read
-Requests/sec:    213.60
-Transfer/sec:    547.61KB
+    Latency     1.70s   646.63ms   2.24s    79.94%
+    Req/Sec    28.38     56.04   500.00     76.79%
+  3192 requests in 15.04s, 7.99MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    212.22
+Transfer/sec:    544.09KB
 
 ---------------------------------------------------------
  Concurrency: 256 for laravel-raw
@@ -128,9 +129,9 @@ Transfer/sec:    547.61KB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3096 requests in 15.06s, 7.75MB read
-  Socket errors: connect 0, read 0, write 0, timeout 10
-Requests/sec:    205.60
-Transfer/sec:    527.11KB
+    Latency     2.79s   891.39ms   3.69s    67.66%
+    Req/Sec    28.31     56.97   444.00     77.27%
+  3084 requests in 15.09s, 7.72MB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+Requests/sec:    204.31
+Transfer/sec:    523.79KB

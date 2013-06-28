@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 22:34:13 UTC 2013
+  System information as of Fri Jun 28 04:42:09 UTC 2013
 
-  System load:  0.23               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.26               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/spark/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  26326 requests in 5.00s, 3.89MB read
-Requests/sec:   5266.06
-Transfer/sec:    797.11KB
+    Latency     4.69ms   20.08ms 129.83ms   97.13%
+    Req/Sec     1.00k   494.82     3.11k    74.35%
+  36007 requests in 5.00s, 5.32MB read
+Requests/sec:   7203.07
+Transfer/sec:      1.06MB
 
 ---------------------------------------------------------
  Running Warmup spark
@@ -43,12 +43,12 @@ Transfer/sec:    797.11KB
 Running 15s test @ http://10.253.67.217:8080/spark/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   343.24ms  795.85ms   4.48s    83.55%
-    Req/Sec     1.62k     1.44k   10.00k    69.15%
-  144399 requests in 16.01s, 21.52MB read
-  Socket errors: connect 0, read 1508, write 0, timeout 632
-Requests/sec:   9020.85
-Transfer/sec:      1.34MB
+    Latency    64.39ms  708.14ms  14.95s    99.16%
+    Req/Sec     3.43k     2.01k   13.89k    65.30%
+  312270 requests in 15.00s, 46.16MB read
+  Socket errors: connect 0, read 0, write 0, timeout 598
+Requests/sec:  20817.31
+Transfer/sec:      3.08MB
 
 ---------------------------------------------------------
  Concurrency: 8 for spark
@@ -58,11 +58,11 @@ Transfer/sec:      1.34MB
 Running 15s test @ http://10.253.67.217:8080/spark/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   549.53us    2.20ms  36.87ms   99.62%
-    Req/Sec     2.01k   406.78     3.00k    85.07%
-  278453 requests in 15.00s, 41.16MB read
-Requests/sec:  18565.03
-Transfer/sec:      2.74MB
+    Latency     4.01ms   19.06ms 104.00ms   96.44%
+    Req/Sec     2.74k   601.44     3.56k    94.82%
+  311920 requests in 15.00s, 46.11MB read
+Requests/sec:  20796.60
+Transfer/sec:      3.07MB
 
 ---------------------------------------------------------
  Concurrency: 16 for spark
@@ -72,11 +72,11 @@ Transfer/sec:      2.74MB
 Running 15s test @ http://10.253.67.217:8080/spark/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     9.23ms   41.28ms 210.81ms   95.93%
-    Req/Sec     2.45k   760.97     5.00k    92.22%
-  324913 requests in 15.19s, 48.03MB read
-Requests/sec:  21384.22
-Transfer/sec:      3.16MB
+    Latency   619.70us  404.22us  16.26ms   96.25%
+    Req/Sec     3.41k   620.71     6.00k    66.14%
+  387548 requests in 15.00s, 57.29MB read
+Requests/sec:  25838.39
+Transfer/sec:      3.82MB
 
 ---------------------------------------------------------
  Concurrency: 32 for spark
@@ -86,11 +86,11 @@ Transfer/sec:      3.16MB
 Running 15s test @ http://10.253.67.217:8080/spark/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.80ms    5.63ms  83.32ms   99.45%
-    Req/Sec     2.54k   574.19     5.00k    97.06%
-  338075 requests in 15.00s, 49.97MB read
-Requests/sec:  22541.08
-Transfer/sec:      3.33MB
+    Latency     1.24ms  574.96us  21.60ms   90.91%
+    Req/Sec     3.42k   498.89     9.00k    72.68%
+  389044 requests in 15.00s, 57.51MB read
+Requests/sec:  25939.78
+Transfer/sec:      3.83MB
 
 ---------------------------------------------------------
  Concurrency: 64 for spark
@@ -100,11 +100,11 @@ Transfer/sec:      3.33MB
 Running 15s test @ http://10.253.67.217:8080/spark/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.78ms    0.89ms  16.68ms   79.70%
-    Req/Sec     2.61k   508.53     4.00k    60.06%
-  344717 requests in 15.00s, 50.96MB read
-Requests/sec:  22985.74
-Transfer/sec:      3.40MB
+    Latency     2.58ms    1.07ms  27.10ms   87.26%
+    Req/Sec     3.31k   456.56     9.70k    73.70%
+  375836 requests in 15.00s, 55.56MB read
+Requests/sec:  25061.72
+Transfer/sec:      3.70MB
 
 ---------------------------------------------------------
  Concurrency: 128 for spark
@@ -114,11 +114,11 @@ Transfer/sec:      3.40MB
 Running 15s test @ http://10.253.67.217:8080/spark/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.01ms    9.68ms 285.52ms   99.51%
-    Req/Sec     2.58k   579.98     9.00k    97.56%
-  341784 requests in 15.00s, 50.52MB read
-Requests/sec:  22790.74
-Transfer/sec:      3.37MB
+    Latency     5.03ms    1.91ms  42.30ms   79.76%
+    Req/Sec     3.36k   451.11     7.55k    76.85%
+  381181 requests in 15.00s, 56.35MB read
+Requests/sec:  25416.25
+Transfer/sec:      3.76MB
 
 ---------------------------------------------------------
  Concurrency: 256 for spark
@@ -128,9 +128,9 @@ Transfer/sec:      3.37MB
 Running 15s test @ http://10.253.67.217:8080/spark/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   107.64ms  242.90ms 799.96ms   83.81%
-    Req/Sec     1.20k     1.04k    8.00k    56.60%
-  186896 requests in 16.01s, 28.86MB read
-  Socket errors: connect 0, read 490, write 0, timeout 1336
-Requests/sec:  11674.00
-Transfer/sec:      1.80MB
+    Latency    19.49ms  196.23ms   6.21s    99.72%
+    Req/Sec     3.31k   808.98    13.11k    85.03%
+  375916 requests in 14.99s, 55.57MB read
+  Socket errors: connect 0, read 0, write 0, timeout 69
+Requests/sec:  25077.13
+Transfer/sec:      3.71MB

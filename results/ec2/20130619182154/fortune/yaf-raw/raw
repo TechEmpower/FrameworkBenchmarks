@@ -10,8 +10,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/bench/raw/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7484 requests in 5.00s, 12.78MB read
-Requests/sec:   1496.39
-Transfer/sec:      2.56MB
+    Latency    11.22ms   15.76ms  89.68ms   89.12%
+    Req/Sec   182.51    101.63   444.00     68.28%
+  6838 requests in 5.00s, 11.68MB read
+Requests/sec:   1367.29
+Transfer/sec:      2.34MB
 
 ---------------------------------------------------------
  Running Warmup yaf-raw
@@ -36,12 +36,11 @@ Transfer/sec:      2.56MB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21259 requests in 15.02s, 36.31MB read
-  Socket errors: connect 0, read 0, write 0, timeout 49
-Requests/sec:   1415.75
-Transfer/sec:      2.42MB
+    Latency   520.39ms  656.90ms   2.04s    77.99%
+    Req/Sec   180.03    162.78     3.11k    67.63%
+  20416 requests in 15.03s, 34.87MB read
+Requests/sec:   1358.55
+Transfer/sec:      2.32MB
 
 ---------------------------------------------------------
  Concurrency: 8 for yaf-raw
@@ -51,11 +50,11 @@ Transfer/sec:      2.42MB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  22656 requests in 15.00s, 38.70MB read
-Requests/sec:   1510.18
-Transfer/sec:      2.58MB
+    Latency    30.74ms   62.17ms 190.71ms   86.40%
+    Req/Sec   196.54    114.65   500.00     70.73%
+  22410 requests in 15.00s, 38.28MB read
+Requests/sec:   1493.84
+Transfer/sec:      2.55MB
 
 ---------------------------------------------------------
  Concurrency: 16 for yaf-raw
@@ -65,11 +64,11 @@ Transfer/sec:      2.58MB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  23096 requests in 15.00s, 39.45MB read
-Requests/sec:   1539.58
-Transfer/sec:      2.63MB
+    Latency    81.33ms  134.33ms 424.40ms   78.39%
+    Req/Sec   197.39    152.50     0.89k    65.05%
+  22482 requests in 15.00s, 38.40MB read
+Requests/sec:   1498.63
+Transfer/sec:      2.56MB
 
 ---------------------------------------------------------
  Concurrency: 32 for yaf-raw
@@ -79,11 +78,11 @@ Transfer/sec:      2.63MB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  22908 requests in 15.00s, 39.13MB read
-Requests/sec:   1526.93
-Transfer/sec:      2.61MB
+    Latency   283.88ms  506.20ms   1.62s    82.57%
+    Req/Sec   198.34    164.71     1.00k    62.11%
+  22588 requests in 15.01s, 38.58MB read
+Requests/sec:   1505.25
+Transfer/sec:      2.57MB
 
 ---------------------------------------------------------
  Concurrency: 64 for yaf-raw
@@ -93,10 +92,10 @@ Transfer/sec:      2.61MB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  22440 requests in 15.01s, 38.33MB read
-Requests/sec:   1495.33
+    Latency   220.24ms  338.74ms   1.01s    78.09%
+    Req/Sec   196.68    162.92     1.00k    63.79%
+  22373 requests in 15.00s, 38.21MB read
+Requests/sec:   1491.29
 Transfer/sec:      2.55MB
 
 ---------------------------------------------------------
@@ -107,12 +106,11 @@ Transfer/sec:      2.55MB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21672 requests in 15.00s, 37.02MB read
-  Socket errors: connect 0, read 0, write 0, timeout 13
-Requests/sec:   1444.41
-Transfer/sec:      2.47MB
+    Latency   255.09ms  351.38ms   1.04s    81.26%
+    Req/Sec   185.68    143.48     1.11k    63.60%
+  21111 requests in 15.00s, 36.06MB read
+Requests/sec:   1407.01
+Transfer/sec:      2.40MB
 
 ---------------------------------------------------------
  Concurrency: 256 for yaf-raw
@@ -122,8 +120,8 @@ Transfer/sec:      2.47MB
 Running 15s test @ http://10.253.67.217:8080/bench/raw/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20975 requests in 15.02s, 35.83MB read
-Requests/sec:   1396.62
-Transfer/sec:      2.39MB
+    Latency   437.38ms  513.56ms   1.67s    79.04%
+    Req/Sec   184.25    150.95     1.00k    67.32%
+  20888 requests in 15.01s, 35.68MB read
+Requests/sec:   1391.51
+Transfer/sec:      2.38MB

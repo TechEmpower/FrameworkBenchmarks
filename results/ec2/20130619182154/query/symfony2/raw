@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 20:37:24 UTC 2013
+  System information as of Fri Jun 28 02:45:32 UTC 2013
 
-  System load:  0.33               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.37               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  683 requests in 5.02s, 191.80KB read
-Requests/sec:    136.19
-Transfer/sec:     38.24KB
+    Latency   109.60ms   25.41ms 131.96ms   85.11%
+    Req/Sec    17.89     39.57   111.00     82.97%
+  683 requests in 5.03s, 191.77KB read
+Requests/sec:    135.78
+Transfer/sec:     38.12KB
 
 ---------------------------------------------------------
  Running Warmup symfony2
@@ -43,12 +43,12 @@ Transfer/sec:     38.24KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1863 requests in 15.18s, 523.20KB read
-  Socket errors: connect 0, read 0, write 0, timeout 145
-Requests/sec:    122.70
-Transfer/sec:     34.46KB
+    Latency     4.71s     1.66s    6.27s    75.19%
+    Req/Sec    17.44     46.08   444.00     85.63%
+  1845 requests in 15.08s, 518.11KB read
+  Socket errors: connect 0, read 0, write 0, timeout 168
+Requests/sec:    122.34
+Transfer/sec:     34.36KB
 
 ---------------------------------------------------------
  Queries: 1 for symfony2
@@ -58,12 +58,12 @@ Transfer/sec:     34.46KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1916 requests in 15.09s, 478.57KB read
-  Socket errors: connect 0, read 0, write 0, timeout 154
-Requests/sec:    126.94
-Transfer/sec:     31.71KB
+    Latency     4.42s     1.51s    6.00s    63.66%
+    Req/Sec    17.96     45.32   333.00     84.85%
+  1886 requests in 15.12s, 471.09KB read
+  Socket errors: connect 0, read 0, write 0, timeout 167
+Requests/sec:    124.70
+Transfer/sec:     31.15KB
 
 ---------------------------------------------------------
  Queries: 5 for symfony2
@@ -73,12 +73,12 @@ Transfer/sec:     31.71KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1714 requests in 15.13s, 640.93KB read
-  Socket errors: connect 0, read 0, write 0, timeout 213
-Requests/sec:    113.28
-Transfer/sec:     42.36KB
+    Latency     3.95s     1.51s    6.64s    56.88%
+    Req/Sec    16.18     44.64   500.00     86.65%
+  1683 requests in 15.13s, 629.37KB read
+  Socket errors: connect 0, read 0, write 0, timeout 189
+Requests/sec:    111.21
+Transfer/sec:     41.59KB
 
 ---------------------------------------------------------
  Queries: 10 for symfony2
@@ -88,12 +88,12 @@ Transfer/sec:     42.36KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1501 requests in 15.21s, 795.64KB read
-  Socket errors: connect 0, read 0, write 0, timeout 253
-Requests/sec:     98.68
-Transfer/sec:     52.31KB
+    Latency     4.24s     1.72s    6.79s    59.40%
+    Req/Sec    14.61     42.52   555.00     87.87%
+  1497 requests in 15.18s, 793.42KB read
+  Socket errors: connect 0, read 0, write 0, timeout 239
+Requests/sec:     98.65
+Transfer/sec:     52.28KB
 
 ---------------------------------------------------------
  Queries: 15 for symfony2
@@ -103,12 +103,12 @@ Transfer/sec:     52.31KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1356 requests in 15.11s, 0.91MB read
-  Socket errors: connect 0, read 0, write 0, timeout 366
-Requests/sec:     89.72
-Transfer/sec:     61.49KB
+    Latency     4.64s     1.52s    7.60s    68.11%
+    Req/Sec    13.45     40.71   600.00     88.64%
+  1350 requests in 15.19s, 0.90MB read
+  Socket errors: connect 0, read 0, write 0, timeout 343
+Requests/sec:     88.88
+Transfer/sec:     60.89KB
 
 ---------------------------------------------------------
  Queries: 20 for symfony2
@@ -118,9 +118,9 @@ Transfer/sec:     61.49KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1245 requests in 15.28s, 1.02MB read
-  Socket errors: connect 0, read 0, write 0, timeout 520
-Requests/sec:     81.46
-Transfer/sec:     68.46KB
+    Latency     4.29s     1.25s    7.67s    82.91%
+    Req/Sec    11.54     35.37   333.00     89.72%
+  1180 requests in 15.25s, 0.97MB read
+  Socket errors: connect 0, read 0, write 0, timeout 472
+Requests/sec:     77.40
+Transfer/sec:     65.04KB

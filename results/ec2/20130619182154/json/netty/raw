@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 18:07:33 UTC 2013
+  System information as of Fri Jun 28 00:15:19 UTC 2013
 
-  System load:  0.03               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.03               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,10 +29,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  29535 requests in 5.00s, 5.07MB read
-Requests/sec:   5908.22
+    Latency     6.26ms   13.94ms  57.03ms   89.30%
+    Req/Sec   832.66    497.40     2.67k    65.49%
+  29538 requests in 5.01s, 5.07MB read
+Requests/sec:   5901.26
 Transfer/sec:      1.01MB
 
 ---------------------------------------------------------
@@ -43,11 +43,11 @@ Transfer/sec:      1.01MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.53ms    6.04ms  57.91ms   86.92%
-    Req/Sec     4.79k     0.96k    8.00k    73.70%
-  584888 requests in 15.00s, 100.40MB read
-Requests/sec:  38999.91
-Transfer/sec:      6.69MB
+    Latency     6.86ms    6.16ms  62.29ms   86.29%
+    Req/Sec     5.02k     0.94k   12.67k    76.71%
+  560808 requests in 15.00s, 96.27MB read
+Requests/sec:  37397.19
+Transfer/sec:      6.42MB
 
 ---------------------------------------------------------
  Concurrency: 8 for netty
@@ -57,11 +57,11 @@ Transfer/sec:      6.69MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   344.48us  168.33us   5.49ms   99.07%
-    Req/Sec     2.40k   528.04     3.00k    55.77%
-  326552 requests in 15.00s, 56.06MB read
-Requests/sec:  21771.78
-Transfer/sec:      3.74MB
+    Latency     3.02ms   23.03ms 202.07ms   98.68%
+    Req/Sec     2.80k   431.13     3.44k    93.86%
+  317012 requests in 15.00s, 54.42MB read
+Requests/sec:  21135.91
+Transfer/sec:      3.63MB
 
 ---------------------------------------------------------
  Concurrency: 16 for netty
@@ -71,11 +71,11 @@ Transfer/sec:      3.74MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   497.54us  335.61us   8.41ms   96.54%
-    Req/Sec     3.76k   748.14     6.00k    55.17%
-  470954 requests in 15.00s, 80.84MB read
-Requests/sec:  31399.06
-Transfer/sec:      5.39MB
+    Latency   509.04us  349.39us   7.34ms   96.50%
+    Req/Sec     4.06k   705.67     5.89k    68.46%
+  460095 requests in 15.00s, 78.98MB read
+Requests/sec:  30676.09
+Transfer/sec:      5.27MB
 
 ---------------------------------------------------------
  Concurrency: 32 for netty
@@ -85,11 +85,11 @@ Transfer/sec:      5.39MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.95ms    1.89ms  32.79ms   96.05%
-    Req/Sec     4.17k     0.97k    7.00k    78.58%
-  524575 requests in 15.00s, 90.05MB read
-Requests/sec:  34973.71
-Transfer/sec:      6.00MB
+    Latency     0.98ms    1.99ms  40.35ms   95.62%
+    Req/Sec     4.46k     0.99k    8.67k    74.74%
+  505663 requests in 15.00s, 86.80MB read
+Requests/sec:  33714.67
+Transfer/sec:      5.79MB
 
 ---------------------------------------------------------
  Concurrency: 64 for netty
@@ -99,11 +99,11 @@ Transfer/sec:      6.00MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.88ms    3.46ms  33.09ms   89.30%
-    Req/Sec     4.37k     1.32k   10.00k    61.13%
-  547451 requests in 15.00s, 93.98MB read
-Requests/sec:  36499.86
-Transfer/sec:      6.27MB
+    Latency     1.76ms    3.39ms  40.55ms   91.37%
+    Req/Sec     4.91k     1.20k    9.89k    69.89%
+  556767 requests in 15.00s, 95.58MB read
+Requests/sec:  37123.31
+Transfer/sec:      6.37MB
 
 ---------------------------------------------------------
  Concurrency: 128 for netty
@@ -113,11 +113,11 @@ Transfer/sec:      6.27MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.34ms    4.69ms  88.75ms   84.21%
-    Req/Sec     4.73k     1.10k    8.00k    68.74%
-  581157 requests in 15.00s, 99.76MB read
-Requests/sec:  38754.59
-Transfer/sec:      6.65MB
+    Latency     3.40ms    4.65ms  39.05ms   84.67%
+    Req/Sec     4.97k     0.93k   17.89k    74.91%
+  562753 requests in 15.00s, 96.60MB read
+Requests/sec:  37520.59
+Transfer/sec:      6.44MB
 
 ---------------------------------------------------------
  Concurrency: 256 for netty
@@ -127,8 +127,8 @@ Transfer/sec:      6.65MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.42ms    5.94ms  45.35ms   86.80%
-    Req/Sec     4.83k     0.89k    8.00k    77.23%
-  596048 requests in 15.00s, 102.32MB read
-Requests/sec:  39742.88
-Transfer/sec:      6.82MB
+    Latency     8.92ms   21.27ms 202.62ms   98.51%
+    Req/Sec     5.01k     0.93k   18.22k    86.08%
+  566331 requests in 15.00s, 97.22MB read
+Requests/sec:  37759.21
+Transfer/sec:      6.48MB

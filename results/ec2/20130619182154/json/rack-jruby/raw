@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/rack/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2076 requests in 5.01s, 358.84KB read
-Requests/sec:    414.38
-Transfer/sec:     71.63KB
+    Latency   119.18ms  108.14ms 335.09ms   75.54%
+    Req/Sec    57.32     60.56   333.00     96.06%
+  2032 requests in 5.01s, 351.23KB read
+Requests/sec:    405.37
+Transfer/sec:     70.07KB
 
 ---------------------------------------------------------
  Running Warmup rack-jruby
@@ -36,12 +36,12 @@ Transfer/sec:     71.63KB
 Running 15s test @ http://10.253.67.217:8080/rack/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  15640 requests in 16.01s, 2.81MB read
-  Socket errors: connect 0, read 566, write 0, timeout 1211
-Requests/sec:    976.84
-Transfer/sec:    180.00KB
+    Latency   828.58ms    1.41s    5.95s    83.57%
+    Req/Sec   198.88    166.06     1.89k    64.95%
+  21432 requests in 15.03s, 3.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 16
+Requests/sec:   1425.83
+Transfer/sec:    246.46KB
 
 ---------------------------------------------------------
  Concurrency: 8 for rack-jruby
@@ -51,11 +51,11 @@ Transfer/sec:    180.00KB
 Running 15s test @ http://10.253.67.217:8080/rack/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  61606 requests in 15.00s, 10.40MB read
-Requests/sec:   4107.03
-Transfer/sec:    709.91KB
+    Latency     2.80ms    6.16ms  55.72ms   96.91%
+    Req/Sec   633.45    243.68     1.55k    68.60%
+  71658 requests in 15.00s, 12.10MB read
+Requests/sec:   4776.70
+Transfer/sec:    825.66KB
 
 ---------------------------------------------------------
  Concurrency: 16 for rack-jruby
@@ -65,11 +65,11 @@ Transfer/sec:    709.91KB
 Running 15s test @ http://10.253.67.217:8080/rack/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  63141 requests in 15.00s, 10.66MB read
-Requests/sec:   4209.21
-Transfer/sec:    727.57KB
+    Latency     4.78ms    8.83ms  83.95ms   96.66%
+    Req/Sec   634.38    165.12     2.56k    80.15%
+  72542 requests in 15.00s, 12.25MB read
+Requests/sec:   4835.96
+Transfer/sec:    835.90KB
 
 ---------------------------------------------------------
  Concurrency: 32 for rack-jruby
@@ -79,11 +79,11 @@ Transfer/sec:    727.57KB
 Running 15s test @ http://10.253.67.217:8080/rack/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  64658 requests in 15.00s, 10.91MB read
-Requests/sec:   4310.56
-Transfer/sec:    745.09KB
+    Latency     8.91ms   13.42ms 128.22ms   95.56%
+    Req/Sec   633.33    183.54     2.30k    84.25%
+  72182 requests in 15.00s, 12.18MB read
+Requests/sec:   4812.10
+Transfer/sec:    831.78KB
 
 ---------------------------------------------------------
  Concurrency: 64 for rack-jruby
@@ -93,11 +93,11 @@ Transfer/sec:    745.09KB
 Running 15s test @ http://10.253.67.217:8080/rack/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  66720 requests in 15.00s, 11.26MB read
-Requests/sec:   4447.50
-Transfer/sec:    768.76KB
+    Latency    18.50ms   31.30ms 278.02ms   95.55%
+    Req/Sec   634.84    213.23     2.33k    80.39%
+  72345 requests in 15.00s, 12.21MB read
+Requests/sec:   4822.65
+Transfer/sec:    833.60KB
 
 ---------------------------------------------------------
  Concurrency: 128 for rack-jruby
@@ -107,11 +107,11 @@ Transfer/sec:    768.76KB
 Running 15s test @ http://10.253.67.217:8080/rack/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  65909 requests in 15.00s, 11.13MB read
-Requests/sec:   4393.90
-Transfer/sec:    759.49KB
+    Latency    39.56ms   65.96ms 482.71ms   94.16%
+    Req/Sec   619.24    304.40     2.78k    75.45%
+  70255 requests in 15.00s, 11.86MB read
+Requests/sec:   4683.62
+Transfer/sec:    809.57KB
 
 ---------------------------------------------------------
  Concurrency: 256 for rack-jruby
@@ -121,9 +121,8 @@ Transfer/sec:    759.49KB
 Running 15s test @ http://10.253.67.217:8080/rack/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  35495 requests in 16.01s, 6.41MB read
-  Socket errors: connect 0, read 647, write 0, timeout 1276
-Requests/sec:   2216.90
-Transfer/sec:    410.00KB
+    Latency    96.83ms  191.52ms   1.25s    94.26%
+    Req/Sec   594.57    319.04     4.44k    76.13%
+  67423 requests in 15.00s, 11.38MB read
+Requests/sec:   4494.89
+Transfer/sec:    776.95KB

@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  24021 requests in 5.03s, 4.03MB read
-Requests/sec:   4772.14
-Transfer/sec:    819.19KB
+    Latency     1.57ms  560.23us   9.12ms   87.03%
+    Req/Sec   673.79     99.70     1.00k    59.51%
+  25565 requests in 5.00s, 4.29MB read
+Requests/sec:   5112.93
+Transfer/sec:      0.86MB
 
 ---------------------------------------------------------
  Running Warmup onion-raw
@@ -36,12 +36,12 @@ Transfer/sec:    819.19KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.86ms  162.99ms   3.27s    99.33%
-    Req/Sec   726.86    534.77     3.00k    64.26%
-  71728 requests in 15.00s, 12.02MB read
-  Socket errors: connect 0, read 122, write 0, timeout 555
-Requests/sec:   4781.45
-Transfer/sec:    820.80KB
+    Latency   149.18ms  595.82ms   3.52s    96.55%
+    Req/Sec   750.62    452.28     2.56k    70.14%
+  71592 requests in 15.00s, 12.00MB read
+  Socket errors: connect 0, read 99, write 0, timeout 432
+Requests/sec:   4773.53
+Transfer/sec:    819.41KB
 
 ---------------------------------------------------------
  Queries: 1 for onion-raw
@@ -51,12 +51,12 @@ Transfer/sec:    820.80KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    36.87ms  291.83ms   7.36s    99.47%
-    Req/Sec     0.88k   593.86     3.00k    64.64%
-  107102 requests in 15.00s, 15.31MB read
-  Socket errors: connect 0, read 88, write 0, timeout 568
-Requests/sec:   7140.17
-Transfer/sec:      1.02MB
+    Latency    65.20ms  504.88ms   7.51s    99.13%
+    Req/Sec     1.07k   678.29     4.67k    71.66%
+  106424 requests in 15.00s, 15.21MB read
+  Socket errors: connect 0, read 50, write 0, timeout 516
+Requests/sec:   7097.00
+Transfer/sec:      1.01MB
 
 ---------------------------------------------------------
  Queries: 5 for onion-raw
@@ -66,12 +66,12 @@ Transfer/sec:      1.02MB
 Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  34203 requests in 15.00s, 8.30MB read
-  Socket errors: connect 0, read 113, write 0, timeout 548
-Requests/sec:   2279.45
-Transfer/sec:    566.43KB
+    Latency   328.07ms  910.22ms   4.00s    91.82%
+    Req/Sec   406.22    277.07     1.55k    63.02%
+  34661 requests in 14.99s, 8.41MB read
+  Socket errors: connect 0, read 106, write 0, timeout 635
+Requests/sec:   2311.72
+Transfer/sec:    574.41KB
 
 ---------------------------------------------------------
  Queries: 10 for onion-raw
@@ -81,12 +81,12 @@ Transfer/sec:    566.43KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  19070 requests in 15.91s, 6.98MB read
-  Socket errors: connect 0, read 87, write 0, timeout 823
-Requests/sec:   1198.85
-Transfer/sec:    449.47KB
+    Latency   630.08ms    1.44s    7.74s    90.74%
+    Req/Sec   243.28    192.21     1.22k    65.03%
+  18512 requests in 15.41s, 6.78MB read
+  Socket errors: connect 0, read 120, write 0, timeout 738
+Requests/sec:   1200.95
+Transfer/sec:    450.24KB
 
 ---------------------------------------------------------
  Queries: 15 for onion-raw
@@ -96,12 +96,12 @@ Transfer/sec:    449.47KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13066 requests in 15.01s, 6.40MB read
-  Socket errors: connect 0, read 95, write 0, timeout 771
-Requests/sec:    870.44
-Transfer/sec:    436.38KB
+    Latency     1.29s     2.02s    7.94s    81.50%
+    Req/Sec   154.52    150.13     0.90k    55.30%
+  13018 requests in 15.06s, 6.37MB read
+  Socket errors: connect 0, read 140, write 0, timeout 698
+Requests/sec:    864.57
+Transfer/sec:    433.41KB
 
 ---------------------------------------------------------
  Queries: 20 for onion-raw
@@ -111,9 +111,9 @@ Transfer/sec:    436.38KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9685 requests in 16.01s, 5.94MB read
-  Socket errors: connect 0, read 100, write 0, timeout 857
-Requests/sec:    604.89
-Transfer/sec:    379.72KB
+    Latency     1.75s     2.44s    8.12s    79.00%
+    Req/Sec   125.55    138.45   777.00     82.91%
+  9964 requests in 16.01s, 6.11MB read
+  Socket errors: connect 0, read 150, write 0, timeout 828
+Requests/sec:    622.42
+Transfer/sec:    390.70KB

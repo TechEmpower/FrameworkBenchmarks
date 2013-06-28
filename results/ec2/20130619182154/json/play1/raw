@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 21:50:13 UTC 2013
+  System information as of Fri Jun 28 03:58:22 UTC 2013
 
-  System load:  0.08               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.04               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2574 requests in 5.01s, 0.95MB read
-Requests/sec:    513.81
-Transfer/sec:    193.68KB
+    Latency    25.73ms   14.28ms  47.47ms   54.67%
+    Req/Sec    67.78     51.12   222.00     63.93%
+  2494 requests in 5.01s, 0.92MB read
+Requests/sec:    497.99
+Transfer/sec:    187.72KB
 
 ---------------------------------------------------------
  Running Warmup play1
@@ -43,12 +43,11 @@ Transfer/sec:    193.68KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14008 requests in 15.10s, 5.16MB read
-  Socket errors: connect 0, read 0, write 0, timeout 94
-Requests/sec:    927.76
-Transfer/sec:    349.72KB
+    Latency   470.07ms  286.54ms   1.07s    81.83%
+    Req/Sec   125.05    167.83     1.22k    81.48%
+  13844 requests in 15.11s, 5.10MB read
+Requests/sec:    916.46
+Transfer/sec:    345.46KB
 
 ---------------------------------------------------------
  Concurrency: 8 for play1
@@ -58,11 +57,11 @@ Transfer/sec:    349.72KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27823 requests in 15.00s, 10.24MB read
-Requests/sec:   1854.58
-Transfer/sec:    699.09KB
+    Latency     7.01ms   21.82ms 187.39ms   98.54%
+    Req/Sec   241.31     63.47   444.00     80.85%
+  27368 requests in 15.00s, 10.07MB read
+Requests/sec:   1824.33
+Transfer/sec:    687.69KB
 
 ---------------------------------------------------------
  Concurrency: 16 for play1
@@ -72,11 +71,11 @@ Transfer/sec:    699.09KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27865 requests in 15.00s, 10.26MB read
-Requests/sec:   1857.19
-Transfer/sec:    700.07KB
+    Latency     8.35ms    1.14ms  18.24ms   95.00%
+    Req/Sec   254.01     66.07   444.00     78.53%
+  28875 requests in 15.00s, 10.63MB read
+Requests/sec:   1924.57
+Transfer/sec:    725.47KB
 
 ---------------------------------------------------------
  Concurrency: 32 for play1
@@ -86,11 +85,11 @@ Transfer/sec:    700.07KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28455 requests in 15.00s, 10.47MB read
-Requests/sec:   1896.72
-Transfer/sec:    714.98KB
+    Latency    16.80ms    1.71ms  24.79ms   91.30%
+    Req/Sec   253.86    102.20   444.00     69.87%
+  28869 requests in 15.01s, 10.63MB read
+Requests/sec:   1923.88
+Transfer/sec:    725.21KB
 
 ---------------------------------------------------------
  Concurrency: 64 for play1
@@ -100,11 +99,11 @@ Transfer/sec:    714.98KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28187 requests in 15.00s, 10.38MB read
-Requests/sec:   1878.90
-Transfer/sec:    708.26KB
+    Latency    44.93ms   29.57ms 120.83ms   86.63%
+    Req/Sec   250.81    166.38     0.89k    72.09%
+  28479 requests in 15.00s, 10.48MB read
+Requests/sec:   1898.11
+Transfer/sec:    715.50KB
 
 ---------------------------------------------------------
  Concurrency: 128 for play1
@@ -114,11 +113,11 @@ Transfer/sec:    708.26KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  28092 requests in 15.02s, 10.34MB read
-Requests/sec:   1870.13
-Transfer/sec:    704.95KB
+    Latency    78.34ms   13.67ms  95.91ms   60.16%
+    Req/Sec   243.79    276.27     1.33k    82.08%
+  27741 requests in 15.02s, 10.21MB read
+Requests/sec:   1846.96
+Transfer/sec:    696.22KB
 
 ---------------------------------------------------------
  Concurrency: 256 for play1
@@ -128,8 +127,8 @@ Transfer/sec:    704.95KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  26811 requests in 15.05s, 9.87MB read
-Requests/sec:   1781.27
-Transfer/sec:    671.45KB
+    Latency   177.44ms   80.55ms 354.79ms   78.29%
+    Req/Sec   247.99    286.78     1.55k    84.31%
+  28143 requests in 15.03s, 10.36MB read
+Requests/sec:   1872.39
+Transfer/sec:    705.80KB

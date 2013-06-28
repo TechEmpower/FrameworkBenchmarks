@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 15:08:31 UTC 2013
+  System information as of Fri Jun 28 07:28:57 UTC 2013
 
-  System load:  1.35               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  1.64               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:9000/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  724 requests in 5.02s, 83.99KB read
-Requests/sec:    144.13
-Transfer/sec:     16.72KB
+    Latency   137.80ms   41.83ms 169.76ms   83.72%
+    Req/Sec    18.84     40.20   111.00     81.94%
+  688 requests in 5.02s, 79.81KB read
+Requests/sec:    137.15
+Transfer/sec:     15.91KB
 
 ---------------------------------------------------------
  Running Warmup play-jpa
@@ -43,11 +43,11 @@ Transfer/sec:     16.72KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6655 requests in 15.01s, 771.91KB read
-Requests/sec:    443.45
-Transfer/sec:     51.43KB
+    Latency     1.01s   341.07ms   1.58s    62.24%
+    Req/Sec    60.55    129.86     1.67k    85.80%
+  6518 requests in 15.08s, 756.06KB read
+Requests/sec:    432.29
+Transfer/sec:     50.14KB
 
 ---------------------------------------------------------
  Concurrency: 8 for play-jpa
@@ -57,11 +57,11 @@ Transfer/sec:     51.43KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11969 requests in 15.00s, 1.36MB read
-Requests/sec:    797.81
-Transfer/sec:     92.54KB
+    Latency    16.30ms   14.05ms  54.99ms   84.67%
+    Req/Sec   100.42     53.08   222.00     74.49%
+  11440 requests in 15.00s, 1.30MB read
+Requests/sec:    762.57
+Transfer/sec:     88.44KB
 
 ---------------------------------------------------------
  Concurrency: 16 for play-jpa
@@ -71,11 +71,11 @@ Transfer/sec:     92.54KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  19836 requests in 15.00s, 2.25MB read
-Requests/sec:   1322.06
-Transfer/sec:    153.35KB
+    Latency    25.81ms   22.13ms  81.19ms   79.97%
+    Req/Sec   137.30     84.31   444.00     58.45%
+  15568 requests in 15.00s, 1.76MB read
+Requests/sec:   1037.64
+Transfer/sec:    120.36KB
 
 ---------------------------------------------------------
  Concurrency: 32 for play-jpa
@@ -85,11 +85,11 @@ Transfer/sec:    153.35KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21477 requests in 15.01s, 2.43MB read
-Requests/sec:   1431.29
-Transfer/sec:    166.02KB
+    Latency    40.52ms   26.40ms  91.69ms   65.44%
+    Req/Sec   181.23    163.08   666.00     46.70%
+  20621 requests in 15.00s, 2.34MB read
+Requests/sec:   1374.69
+Transfer/sec:    159.44KB
 
 ---------------------------------------------------------
  Concurrency: 64 for play-jpa
@@ -99,11 +99,11 @@ Transfer/sec:    166.02KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21689 requests in 15.00s, 2.46MB read
-Requests/sec:   1446.13
-Transfer/sec:    167.74KB
+    Latency    81.47ms   37.40ms 135.71ms   55.07%
+    Req/Sec   188.01    273.11     1.00k    81.11%
+  21308 requests in 15.00s, 2.41MB read
+Requests/sec:   1420.27
+Transfer/sec:    164.73KB
 
 ---------------------------------------------------------
  Concurrency: 128 for play-jpa
@@ -113,11 +113,11 @@ Transfer/sec:    167.74KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21902 requests in 15.01s, 2.48MB read
-Requests/sec:   1459.50
-Transfer/sec:    169.29KB
+    Latency   244.58ms  124.67ms 359.78ms   66.78%
+    Req/Sec   192.90    390.75     1.78k    87.64%
+  21592 requests in 15.00s, 2.45MB read
+Requests/sec:   1439.58
+Transfer/sec:    166.97KB
 
 ---------------------------------------------------------
  Concurrency: 256 for play-jpa
@@ -127,8 +127,9 @@ Transfer/sec:    169.29KB
 Running 15s test @ http://10.253.67.217:9000/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  22257 requests in 15.02s, 2.52MB read
-Requests/sec:   1481.85
-Transfer/sec:    171.89KB
+    Latency   805.38ms  411.74ms   1.07s    71.65%
+    Req/Sec   181.47    476.84     3.56k    90.70%
+  20407 requests in 15.00s, 2.31MB read
+  Socket errors: connect 0, read 0, write 0, timeout 51
+Requests/sec:   1360.69
+Transfer/sec:    157.82KB
