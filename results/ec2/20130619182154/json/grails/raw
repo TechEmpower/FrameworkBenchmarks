@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 15:38:46 UTC 2013
+  System information as of Thu Jun 27 21:48:03 UTC 2013
 
-  System load:  0.18               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.18               Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/grails/hello/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2791 requests in 5.01s, 523.31KB read
-Requests/sec:    556.97
-Transfer/sec:    104.43KB
+    Latency    77.54ms   96.02ms 227.75ms   68.77%
+    Req/Sec    78.65     58.41   333.00     63.16%
+  2922 requests in 5.01s, 547.88KB read
+Requests/sec:    583.56
+Transfer/sec:    109.42KB
 
 ---------------------------------------------------------
  Running Warmup grails
@@ -43,12 +43,12 @@ Transfer/sec:    104.43KB
 Running 15s test @ http://10.253.67.217:8080/grails/hello/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17032 requests in 15.03s, 3.12MB read
-  Socket errors: connect 0, read 0, write 0, timeout 846
-Requests/sec:   1133.51
-Transfer/sec:    212.63KB
+    Latency     3.29s     5.44s   14.58s    82.02%
+    Req/Sec   189.54    185.82     1.44k    56.26%
+  16767 requests in 15.16s, 3.07MB read
+  Socket errors: connect 0, read 0, write 0, timeout 685
+Requests/sec:   1105.83
+Transfer/sec:    207.37KB
 
 ---------------------------------------------------------
  Concurrency: 8 for grails
@@ -58,11 +58,11 @@ Transfer/sec:    212.63KB
 Running 15s test @ http://10.253.67.217:8080/grails/hello/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  31833 requests in 15.00s, 5.83MB read
-Requests/sec:   2122.00
-Transfer/sec:    397.88KB
+    Latency     3.43ms    3.47ms  39.24ms   92.72%
+    Req/Sec   390.85    181.69     1.40k    72.77%
+  44074 requests in 15.00s, 8.07MB read
+Requests/sec:   2938.29
+Transfer/sec:    550.93KB
 
 ---------------------------------------------------------
  Concurrency: 16 for grails
@@ -72,11 +72,11 @@ Transfer/sec:    397.88KB
 Running 15s test @ http://10.253.67.217:8080/grails/hello/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  62235 requests in 15.00s, 11.40MB read
-Requests/sec:   4148.65
-Transfer/sec:    777.88KB
+    Latency     3.74ms    1.96ms  51.58ms   96.47%
+    Req/Sec   590.27    121.37     1.89k    80.38%
+  67020 requests in 15.00s, 12.27MB read
+Requests/sec:   4467.79
+Transfer/sec:    837.71KB
 
 ---------------------------------------------------------
  Concurrency: 32 for grails
@@ -86,11 +86,11 @@ Transfer/sec:    777.88KB
 Running 15s test @ http://10.253.67.217:8080/grails/hello/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  64999 requests in 15.00s, 11.90MB read
-Requests/sec:   4333.23
-Transfer/sec:    812.48KB
+    Latency    11.94ms   30.37ms 207.21ms   97.47%
+    Req/Sec   593.26    172.27     3.11k    80.24%
+  67586 requests in 15.00s, 12.38MB read
+Requests/sec:   4505.26
+Transfer/sec:    844.75KB
 
 ---------------------------------------------------------
  Concurrency: 64 for grails
@@ -100,11 +100,11 @@ Transfer/sec:    812.48KB
 Running 15s test @ http://10.253.67.217:8080/grails/hello/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  67077 requests in 15.00s, 12.28MB read
-Requests/sec:   4471.42
-Transfer/sec:    838.39KB
+    Latency    14.30ms    6.79ms 113.01ms   94.97%
+    Req/Sec   607.75    162.72     2.89k    68.63%
+  69184 requests in 15.00s, 12.67MB read
+Requests/sec:   4611.32
+Transfer/sec:    864.64KB
 
 ---------------------------------------------------------
  Concurrency: 128 for grails
@@ -114,11 +114,11 @@ Transfer/sec:    838.39KB
 Running 15s test @ http://10.253.67.217:8080/grails/hello/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  66966 requests in 15.00s, 12.26MB read
-Requests/sec:   4464.05
-Transfer/sec:    837.01KB
+    Latency    29.32ms   15.57ms 224.32ms   93.99%
+    Req/Sec   592.27    204.67     2.20k    71.35%
+  67276 requests in 15.00s, 12.32MB read
+Requests/sec:   4484.85
+Transfer/sec:    840.92KB
 
 ---------------------------------------------------------
  Concurrency: 256 for grails
@@ -128,9 +128,9 @@ Transfer/sec:    837.01KB
 Running 15s test @ http://10.253.67.217:8080/grails/hello/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   385.63ms  358.36ms 759.88ms   32.77%
-    Req/Sec    39.58    195.04     1.00k    96.04%
-  45528 requests in 16.01s, 8.77MB read
-  Socket errors: connect 0, read 1048, write 0, timeout 1051
-Requests/sec:   2844.43
-Transfer/sec:    560.93KB
+    Latency   103.71ms  429.94ms   4.88s    98.35%
+    Req/Sec   575.52    247.35     2.10k    72.35%
+  65483 requests in 15.01s, 11.99MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:   4363.80
+Transfer/sec:    818.21KB

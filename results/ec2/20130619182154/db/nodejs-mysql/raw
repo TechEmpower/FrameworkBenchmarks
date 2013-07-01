@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 15:57:14 UTC 2013
+  System information as of Thu Jun 27 22:06:31 UTC 2013
 
-  System load:  0.11               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.22               Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/mysql-orm
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14206 requests in 5.00s, 2.49MB read
-Requests/sec:   2841.43
-Transfer/sec:    509.92KB
+    Latency     3.04ms  827.39us  10.13ms   82.45%
+    Req/Sec   390.95    194.72     1.11k    87.85%
+  14426 requests in 5.00s, 2.53MB read
+Requests/sec:   2885.36
+Transfer/sec:    517.86KB
 
 ---------------------------------------------------------
  Running Warmup nodejs-mysql
@@ -43,11 +43,11 @@ Transfer/sec:    509.92KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  56878 requests in 15.01s, 9.97MB read
-Requests/sec:   3790.50
-Transfer/sec:    680.27KB
+    Latency    98.28ms  121.82ms 726.52ms   91.57%
+    Req/Sec   495.16    377.72     3.00k    64.43%
+  55959 requests in 15.01s, 9.81MB read
+Requests/sec:   3727.40
+Transfer/sec:    668.98KB
 
 ---------------------------------------------------------
  Concurrency: 8 for nodejs-mysql
@@ -57,11 +57,11 @@ Transfer/sec:    680.27KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  51959 requests in 15.00s, 9.11MB read
-Requests/sec:   3463.90
-Transfer/sec:    621.66KB
+    Latency     2.53ms    1.10ms  17.72ms   88.42%
+    Req/Sec   465.34    156.94   777.00     56.27%
+  52806 requests in 15.00s, 9.26MB read
+Requests/sec:   3520.51
+Transfer/sec:    631.85KB
 
 ---------------------------------------------------------
  Concurrency: 16 for nodejs-mysql
@@ -71,11 +71,11 @@ Transfer/sec:    621.66KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  55268 requests in 15.00s, 9.69MB read
-Requests/sec:   3684.34
-Transfer/sec:    661.21KB
+    Latency    10.42ms   27.95ms 211.68ms   97.75%
+    Req/Sec   452.51    303.33     1.11k    65.23%
+  51415 requests in 15.00s, 9.01MB read
+Requests/sec:   3427.41
+Transfer/sec:    615.15KB
 
 ---------------------------------------------------------
  Concurrency: 32 for nodejs-mysql
@@ -85,11 +85,11 @@ Transfer/sec:    661.21KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  58143 requests in 15.00s, 10.19MB read
-Requests/sec:   3875.95
-Transfer/sec:    695.59KB
+    Latency    26.12ms   45.56ms 215.22ms   92.13%
+    Req/Sec   469.09    355.78     1.22k    55.85%
+  53093 requests in 15.00s, 9.31MB read
+Requests/sec:   3539.07
+Transfer/sec:    635.19KB
 
 ---------------------------------------------------------
  Concurrency: 64 for nodejs-mysql
@@ -99,11 +99,11 @@ Transfer/sec:    695.59KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  58365 requests in 15.00s, 10.23MB read
-Requests/sec:   3890.76
-Transfer/sec:    698.26KB
+    Latency    27.18ms   43.14ms 270.09ms   95.93%
+    Req/Sec   514.92    377.39     2.22k    75.46%
+  58502 requests in 15.01s, 10.25MB read
+Requests/sec:   3898.52
+Transfer/sec:    699.70KB
 
 ---------------------------------------------------------
  Concurrency: 128 for nodejs-mysql
@@ -113,11 +113,11 @@ Transfer/sec:    698.26KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  58251 requests in 15.01s, 10.21MB read
-Requests/sec:   3881.80
-Transfer/sec:    696.65KB
+    Latency    31.63ms   28.04ms 368.09ms   95.92%
+    Req/Sec   519.52    265.49     1.67k    67.46%
+  59070 requests in 15.00s, 10.35MB read
+Requests/sec:   3939.13
+Transfer/sec:    706.98KB
 
 ---------------------------------------------------------
  Concurrency: 256 for nodejs-mysql
@@ -127,8 +127,8 @@ Transfer/sec:    696.65KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  57194 requests in 15.00s, 10.02MB read
-Requests/sec:   3811.76
-Transfer/sec:    684.08KB
+    Latency    69.88ms   72.25ms 389.57ms   93.20%
+    Req/Sec   517.80    410.93     3.00k    75.99%
+  58662 requests in 15.00s, 10.28MB read
+Requests/sec:   3911.10
+Transfer/sec:    701.95KB

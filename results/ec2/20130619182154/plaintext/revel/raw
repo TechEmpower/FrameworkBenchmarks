@@ -10,8 +10,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.71ms   18.09ms 104.17ms   96.84%
-    Req/Sec     1.81k   524.95     3.00k    80.01%
-  89501 requests in 5.00s, 9.82MB read
-Requests/sec:  17904.56
-Transfer/sec:      1.96MB
+    Latency   439.83us  466.88us   8.79ms   98.58%
+    Req/Sec     2.40k   415.29     3.00k    79.37%
+  90974 requests in 5.00s, 9.98MB read
+Requests/sec:  18197.62
+Transfer/sec:      2.00MB
 
 ---------------------------------------------------------
  Running Warmup revel
@@ -36,11 +36,11 @@ Transfer/sec:      1.96MB
 Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    12.94ms    7.50ms  89.21ms   88.01%
-    Req/Sec     2.28k   780.42     6.00k    88.29%
-  309285 requests in 15.00s, 33.92MB read
-Requests/sec:  20620.01
-Transfer/sec:      2.26MB
+    Latency    17.90ms   33.90ms 217.66ms   97.19%
+    Req/Sec     2.74k   801.30     7.11k    81.26%
+  310990 requests in 15.00s, 34.11MB read
+Requests/sec:  20733.73
+Transfer/sec:      2.27MB
 
 ---------------------------------------------------------
  Concurrency: 256 for revel
@@ -50,11 +50,11 @@ Transfer/sec:      2.26MB
 Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   985.33ms  996.73ms   2.63s    74.67%
-    Req/Sec     2.76k     2.10k   12.00k    66.43%
-  361312 requests in 15.00s, 39.63MB read
-Requests/sec:  24083.87
-Transfer/sec:      2.64MB
+    Latency   991.91ms  813.25ms   1.99s    40.86%
+    Req/Sec     3.45k     2.28k   14.22k    70.98%
+  392021 requests in 15.00s, 42.99MB read
+Requests/sec:  26129.56
+Transfer/sec:      2.87MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for revel
@@ -64,11 +64,11 @@ Transfer/sec:      2.64MB
 Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   878.47ms  236.27ms   1.19s    58.81%
-    Req/Sec     2.76k     2.66k   23.00k    63.00%
-  355665 requests in 15.00s, 39.01MB read
-Requests/sec:  23712.94
-Transfer/sec:      2.60MB
+    Latency   876.09ms  247.98ms   1.25s    65.24%
+    Req/Sec     3.38k     2.92k   28.89k    64.96%
+  382423 requests in 15.02s, 41.94MB read
+Requests/sec:  25464.20
+Transfer/sec:      2.79MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for revel
@@ -78,12 +78,12 @@ Transfer/sec:      2.60MB
 Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.18s   673.05ms   3.84s    92.53%
-    Req/Sec     2.88k     4.21k   29.00k    85.61%
-  351613 requests in 15.07s, 38.56MB read
-  Socket errors: connect 0, read 0, write 0, timeout 6639
-Requests/sec:  23327.94
-Transfer/sec:      2.56MB
+    Latency     3.69s     1.11s    4.73s    78.45%
+    Req/Sec     3.29k     4.67k   31.00k    84.38%
+  366557 requests in 15.15s, 40.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6028
+Requests/sec:  24195.27
+Transfer/sec:      2.65MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for revel
@@ -93,9 +93,9 @@ Transfer/sec:      2.56MB
 Running 15s test @ http://10.253.67.217:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.31s     1.12s    5.96s    89.74%
-    Req/Sec     2.85k     4.24k   31.00k    85.46%
-  341614 requests in 15.10s, 37.47MB read
-  Socket errors: connect 8203, read 0, write 0, timeout 88513
-Requests/sec:  22619.92
-Transfer/sec:      2.48MB
+    Latency     6.71s     1.87s    8.30s    87.40%
+    Req/Sec     3.15k     5.08k   31.22k    84.78%
+  351984 requests in 15.32s, 38.60MB read
+  Socket errors: connect 8203, read 0, write 0, timeout 88501
+Requests/sec:  22970.24
+Transfer/sec:      2.52MB

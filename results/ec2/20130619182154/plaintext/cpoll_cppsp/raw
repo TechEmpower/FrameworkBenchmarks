@@ -10,8 +10,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:16969/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    13.74ms   51.68ms 213.12ms   93.69%
-    Req/Sec     2.54k   807.99     3.00k    93.10%
-  108650 requests in 5.00s, 12.74MB read
-Requests/sec:  21736.11
-Transfer/sec:      2.55MB
+    Latency    68.75ms  100.27ms 216.02ms   68.29%
+    Req/Sec     2.06k     1.45k    3.56k    67.91%
+  81589 requests in 5.00s, 9.57MB read
+Requests/sec:  16321.56
+Transfer/sec:      1.91MB
 
 ---------------------------------------------------------
  Running Warmup cpoll_cppsp
@@ -36,11 +36,11 @@ Transfer/sec:      2.55MB
 Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.27ms    1.07ms  28.92ms   85.70%
-    Req/Sec     7.37k     1.68k   24.00k    84.27%
-  883517 requests in 15.00s, 103.64MB read
-Requests/sec:  58911.43
-Transfer/sec:      6.91MB
+    Latency     3.96ms    2.00ms  31.48ms   74.46%
+    Req/Sec     8.50k     2.78k   34.78k    76.14%
+  956443 requests in 15.00s, 112.19MB read
+Requests/sec:  63765.06
+Transfer/sec:      7.48MB
 
 ---------------------------------------------------------
  Concurrency: 256 for cpoll_cppsp
@@ -50,12 +50,12 @@ Transfer/sec:      6.91MB
 Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1152 requests in 16.02s, 138.38KB read
-  Socket errors: connect 0, read 0, write 0, timeout 1804
-Requests/sec:     71.91
-Transfer/sec:      8.64KB
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  337 requests in 16.01s, 40.48KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1821
+Requests/sec:     21.05
+Transfer/sec:      2.53KB
 
 ---------------------------------------------------------
  Concurrency: 1024 for cpoll_cppsp
@@ -65,12 +65,12 @@ Transfer/sec:      8.64KB
 Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3526 requests in 16.08s, 423.53KB read
-  Socket errors: connect 0, read 0, write 0, timeout 7180
-Requests/sec:    219.32
-Transfer/sec:     26.34KB
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.47     40.36     4.20k    99.98%
+  1484 requests in 16.04s, 178.25KB read
+  Socket errors: connect 0, read 0, write 0, timeout 7223
+Requests/sec:     92.51
+Transfer/sec:     11.11KB
 
 ---------------------------------------------------------
  Concurrency: 4096 for cpoll_cppsp
@@ -81,11 +81,11 @@ Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us  100.00%
-    Req/Sec     5.22    194.10    13.00k    99.89%
-  13299 requests in 16.12s, 1.56MB read
-  Socket errors: connect 0, read 0, write 0, timeout 28690
-Requests/sec:    825.01
-Transfer/sec:     99.10KB
+    Req/Sec     6.17    203.92    12.40k    99.85%
+  7240 requests in 16.11s, 869.65KB read
+  Socket errors: connect 0, read 0, write 0, timeout 28672
+Requests/sec:    449.45
+Transfer/sec:     53.99KB
 
 ---------------------------------------------------------
  Concurrency: 16384 for cpoll_cppsp
@@ -96,8 +96,8 @@ Running 15s test @ http://10.253.67.217:16969/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     0.00us    0.00us   0.00us  100.00%
-    Req/Sec    64.91    679.74    27.00k    98.66%
-  26100 requests in 16.36s, 3.06MB read
+    Req/Sec    33.40    517.93    18.00k    99.32%
+  14264 requests in 16.25s, 1.67MB read
   Socket errors: connect 8203, read 0, write 0, timeout 122891
-Requests/sec:   1595.22
-Transfer/sec:    191.61KB
+Requests/sec:    877.85
+Transfer/sec:    105.44KB

@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 17:36:32 UTC 2013
+  System information as of Thu Jun 27 23:44:43 UTC 2013
 
-  System load:  0.38               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.49               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/wicket/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7379 requests in 5.00s, 2.29MB read
-Requests/sec:   1475.27
-Transfer/sec:    467.90KB
+    Latency     5.62ms    2.81ms  28.73ms   80.87%
+    Req/Sec   209.94     89.43   777.00     57.80%
+  7669 requests in 5.00s, 2.38MB read
+Requests/sec:   1533.37
+Transfer/sec:    486.32KB
 
 ---------------------------------------------------------
  Running Warmup wicket
@@ -43,12 +43,11 @@ Transfer/sec:    467.90KB
 Running 15s test @ http://10.253.67.217:8080/wicket/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  33903 requests in 15.00s, 10.97MB read
-  Socket errors: connect 0, read 31, write 0, timeout 157
-Requests/sec:   2260.48
-Transfer/sec:    749.12KB
+    Latency   258.07ms  554.31ms   2.44s    91.66%
+    Req/Sec   337.42    216.44     1.44k    61.37%
+  38219 requests in 15.00s, 11.88MB read
+Requests/sec:   2547.88
+Transfer/sec:    810.66KB
 
 ---------------------------------------------------------
  Concurrency: 8 for wicket
@@ -58,11 +57,11 @@ Transfer/sec:    749.12KB
 Running 15s test @ http://10.253.67.217:8080/wicket/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  71888 requests in 15.00s, 22.27MB read
-Requests/sec:   4792.48
-Transfer/sec:      1.48MB
+    Latency     1.63ms    1.52ms  37.17ms   99.16%
+    Req/Sec   705.32    170.96     1.22k    60.50%
+  79837 requests in 15.00s, 24.73MB read
+Requests/sec:   5322.61
+Transfer/sec:      1.65MB
 
 ---------------------------------------------------------
  Concurrency: 16 for wicket
@@ -72,11 +71,11 @@ Transfer/sec:      1.48MB
 Running 15s test @ http://10.253.67.217:8080/wicket/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  77883 requests in 15.00s, 24.12MB read
-Requests/sec:   5193.00
-Transfer/sec:      1.61MB
+    Latency     3.13ms    2.28ms  37.23ms   98.44%
+    Req/Sec   727.79    165.80     1.55k    71.46%
+  82584 requests in 15.00s, 25.58MB read
+Requests/sec:   5505.62
+Transfer/sec:      1.71MB
 
 ---------------------------------------------------------
  Concurrency: 32 for wicket
@@ -86,11 +85,11 @@ Transfer/sec:      1.61MB
 Running 15s test @ http://10.253.67.217:8080/wicket/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  79624 requests in 15.00s, 24.67MB read
-Requests/sec:   5307.71
-Transfer/sec:      1.64MB
+    Latency     6.17ms    4.68ms  99.25ms   98.70%
+    Req/Sec   722.71    135.01     2.10k    73.37%
+  82153 requests in 15.00s, 25.45MB read
+Requests/sec:   5477.33
+Transfer/sec:      1.70MB
 
 ---------------------------------------------------------
  Concurrency: 64 for wicket
@@ -100,11 +99,11 @@ Transfer/sec:      1.64MB
 Running 15s test @ http://10.253.67.217:8080/wicket/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  80417 requests in 15.00s, 24.92MB read
-Requests/sec:   5360.89
-Transfer/sec:      1.66MB
+    Latency    11.91ms    6.64ms 124.83ms   97.18%
+    Req/Sec   730.98    142.63     2.20k    68.85%
+  83070 requests in 15.00s, 25.74MB read
+Requests/sec:   5538.62
+Transfer/sec:      1.72MB
 
 ---------------------------------------------------------
  Concurrency: 128 for wicket
@@ -114,11 +113,11 @@ Transfer/sec:      1.66MB
 Running 15s test @ http://10.253.67.217:8080/wicket/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    24.23ms   14.56ms 159.64ms   95.85%
-    Req/Sec   223.86    416.88     1.00k    77.61%
-  79619 requests in 15.00s, 24.68MB read
-Requests/sec:   5307.01
-Transfer/sec:      1.65MB
+    Latency    24.02ms   15.11ms 296.53ms   97.84%
+    Req/Sec   726.10    222.61     1.89k    65.77%
+  82330 requests in 15.00s, 25.52MB read
+Requests/sec:   5489.15
+Transfer/sec:      1.70MB
 
 ---------------------------------------------------------
  Concurrency: 256 for wicket
@@ -128,9 +127,8 @@ Transfer/sec:      1.65MB
 Running 15s test @ http://10.253.67.217:8080/wicket/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    65.30ms  100.61ms   1.24s    98.06%
-    Req/Sec    99.72    299.68     1.00k    90.03%
-  69051 requests in 15.00s, 21.93MB read
-  Socket errors: connect 0, read 1, write 0, timeout 6
-Requests/sec:   4602.51
-Transfer/sec:      1.46MB
+    Latency    52.77ms   55.48ms 738.69ms   98.27%
+    Req/Sec   695.88    269.53     3.10k    68.41%
+  79132 requests in 15.00s, 24.54MB read
+Requests/sec:   5275.85
+Transfer/sec:      1.64MB

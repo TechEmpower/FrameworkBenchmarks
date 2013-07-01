@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 16:44:52 UTC 2013
+  System information as of Thu Jun 27 22:53:54 UTC 2013
 
-  System load:  0.18               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.13               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/servlet/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11856 requests in 5.00s, 1.84MB read
-Requests/sec:   2370.96
-Transfer/sec:    376.80KB
+    Latency     6.46ms   17.43ms 102.67ms   96.75%
+    Req/Sec   358.40    170.57     1.22k    80.38%
+  13076 requests in 5.00s, 2.03MB read
+Requests/sec:   2615.07
+Transfer/sec:    415.61KB
 
 ---------------------------------------------------------
  Running Warmup servlet-raw
@@ -43,12 +43,12 @@ Transfer/sec:    376.80KB
 Running 15s test @ http://10.253.67.217:8080/servlet/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   421.16ms    1.23s    5.79s    91.08%
-    Req/Sec   147.26    368.08     2.00k    85.77%
-  58259 requests in 15.00s, 9.18MB read
-  Socket errors: connect 0, read 152, write 0, timeout 419
-Requests/sec:   3882.90
-Transfer/sec:    626.29KB
+    Latency   565.16ms    1.82s   10.11s    92.21%
+    Req/Sec   681.91    440.57     3.89k    72.96%
+  66204 requests in 15.00s, 10.27MB read
+  Socket errors: connect 0, read 0, write 0, timeout 417
+Requests/sec:   4412.90
+Transfer/sec:    701.30KB
 
 ---------------------------------------------------------
  Concurrency: 8 for servlet-raw
@@ -58,11 +58,11 @@ Transfer/sec:    626.29KB
 Running 15s test @ http://10.253.67.217:8080/servlet/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  101936 requests in 15.00s, 15.82MB read
-Requests/sec:   6795.87
-Transfer/sec:      1.05MB
+    Latency     1.71ms    6.25ms  64.26ms   98.96%
+    Req/Sec     0.98k   187.40     1.33k    82.73%
+  111060 requests in 15.00s, 17.24MB read
+Requests/sec:   7404.45
+Transfer/sec:      1.15MB
 
 ---------------------------------------------------------
  Concurrency: 16 for servlet-raw
@@ -72,11 +72,11 @@ Transfer/sec:      1.05MB
 Running 15s test @ http://10.253.67.217:8080/servlet/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.17ms   22.58ms 132.70ms   96.47%
-    Req/Sec   723.49    448.49     2.00k    72.24%
-  121477 requests in 15.00s, 18.85MB read
-Requests/sec:   8099.13
-Transfer/sec:      1.26MB
+    Latency     5.20ms   18.24ms 138.03ms   96.11%
+    Req/Sec     1.14k   457.20     2.33k    66.88%
+  129606 requests in 15.00s, 20.11MB read
+Requests/sec:   8641.46
+Transfer/sec:      1.34MB
 
 ---------------------------------------------------------
  Concurrency: 32 for servlet-raw
@@ -86,11 +86,11 @@ Transfer/sec:      1.26MB
 Running 15s test @ http://10.253.67.217:8080/servlet/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.07ms   11.98ms 159.25ms   96.23%
-    Req/Sec   723.34    530.07     3.00k    64.44%
-  127225 requests in 15.00s, 19.74MB read
-Requests/sec:   8483.48
-Transfer/sec:      1.32MB
+    Latency    13.34ms   43.04ms 238.41ms   94.62%
+    Req/Sec     1.16k   593.74     3.67k    67.97%
+  131880 requests in 15.00s, 20.47MB read
+Requests/sec:   8794.88
+Transfer/sec:      1.36MB
 
 ---------------------------------------------------------
  Concurrency: 64 for servlet-raw
@@ -100,11 +100,11 @@ Transfer/sec:      1.32MB
 Running 15s test @ http://10.253.67.217:8080/servlet/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    13.46ms   37.14ms 256.02ms   96.07%
-    Req/Sec   719.43    574.34     3.00k    59.74%
-  130070 requests in 15.00s, 20.19MB read
-Requests/sec:   8672.45
-Transfer/sec:      1.35MB
+    Latency    18.54ms   56.67ms 384.77ms   94.90%
+    Req/Sec     1.17k   607.88     4.33k    67.46%
+  132838 requests in 15.00s, 20.62MB read
+Requests/sec:   8855.58
+Transfer/sec:      1.37MB
 
 ---------------------------------------------------------
  Concurrency: 128 for servlet-raw
@@ -114,11 +114,11 @@ Transfer/sec:      1.35MB
 Running 15s test @ http://10.253.67.217:8080/servlet/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    19.05ms   73.10ms   1.71s    98.42%
-    Req/Sec   741.31    506.04     3.00k    67.97%
-  129741 requests in 15.00s, 20.14MB read
-Requests/sec:   8651.74
-Transfer/sec:      1.34MB
+    Latency    17.19ms   34.67ms 717.21ms   96.29%
+    Req/Sec     1.15k   421.46     3.60k    70.38%
+  130928 requests in 15.00s, 20.32MB read
+Requests/sec:   8730.52
+Transfer/sec:      1.35MB
 
 ---------------------------------------------------------
  Concurrency: 256 for servlet-raw
@@ -128,9 +128,8 @@ Transfer/sec:      1.34MB
 Running 15s test @ http://10.253.67.217:8080/servlet/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    45.52ms  135.67ms   1.64s    97.69%
-    Req/Sec   456.05    513.27     3.00k    55.15%
-  105694 requests in 15.00s, 17.02MB read
-  Socket errors: connect 0, read 85, write 0, timeout 219
-Requests/sec:   7047.23
-Transfer/sec:      1.13MB
+    Latency    46.04ms  159.09ms   1.96s    97.75%
+    Req/Sec     1.11k   434.06     3.67k    68.97%
+  126523 requests in 15.00s, 19.64MB read
+Requests/sec:   8435.42
+Transfer/sec:      1.31MB

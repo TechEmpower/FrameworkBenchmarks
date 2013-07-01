@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 15:34:22 UTC 2013
+  System information as of Thu Jun 27 21:43:48 UTC 2013
 
-  System load:  0.12               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 2%                 IP address for eth0: 10.254.111.115
+  System load:  0.4                Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/mysql-orm-update?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  964 requests in 5.05s, 220.83KB read
-Requests/sec:    190.94
-Transfer/sec:     43.74KB
+    Latency   334.82ms  186.33ms 602.14ms   68.38%
+    Req/Sec    20.65     42.33   222.00     80.49%
+  792 requests in 5.04s, 181.41KB read
+Requests/sec:    157.09
+Transfer/sec:     35.98KB
 
 ---------------------------------------------------------
  Running Warmup express-mysql
@@ -43,12 +43,12 @@ Transfer/sec:     43.74KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm-update?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2410 requests in 15.33s, 552.05KB read
-  Socket errors: connect 0, read 0, write 0, timeout 169
-Requests/sec:    157.19
-Transfer/sec:     36.01KB
+    Latency     3.46s     1.24s    6.00s    75.79%
+    Req/Sec    20.43     44.45   333.00     81.58%
+  2316 requests in 15.23s, 530.46KB read
+  Socket errors: connect 0, read 0, write 0, timeout 156
+Requests/sec:    152.07
+Transfer/sec:     34.83KB
 
 ---------------------------------------------------------
  Queries: 1 for express-mysql
@@ -58,12 +58,12 @@ Transfer/sec:     36.01KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm-update?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4601 requests in 15.17s, 0.89MB read
-  Socket errors: connect 0, read 0, write 0, timeout 14
-Requests/sec:    303.25
-Transfer/sec:     60.05KB
+    Latency     2.25s     1.07s    3.87s    58.87%
+    Req/Sec    40.10     70.10   444.00     82.19%
+  4585 requests in 15.10s, 0.89MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:    303.62
+Transfer/sec:     60.12KB
 
 ---------------------------------------------------------
  Queries: 5 for express-mysql
@@ -73,12 +73,12 @@ Transfer/sec:     60.05KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm-update?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1048 requests in 15.59s, 338.64KB read
-  Socket errors: connect 0, read 0, write 0, timeout 767
-Requests/sec:     67.24
-Transfer/sec:     21.73KB
+    Latency     6.34s     2.11s   10.71s    82.26%
+    Req/Sec     9.37     30.08   222.00     91.07%
+  1047 requests in 16.01s, 338.29KB read
+  Socket errors: connect 0, read 0, write 0, timeout 735
+Requests/sec:     65.40
+Transfer/sec:     21.13KB
 
 ---------------------------------------------------------
  Queries: 10 for express-mysql
@@ -88,12 +88,12 @@ Transfer/sec:     21.73KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm-update?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  509 requests in 15.71s, 243.51KB read
-  Socket errors: connect 0, read 0, write 0, timeout 1167
-Requests/sec:     32.40
-Transfer/sec:     15.50KB
+    Latency     9.53s     1.19s   11.03s    83.08%
+    Req/Sec     4.79     22.08   222.00     95.45%
+  499 requests in 16.01s, 238.64KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1246
+Requests/sec:     31.17
+Transfer/sec:     14.90KB
 
 ---------------------------------------------------------
  Queries: 15 for express-mysql
@@ -103,12 +103,12 @@ Transfer/sec:     15.50KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm-update?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  262 requests in 16.01s, 165.98KB read
-  Socket errors: connect 0, read 0, write 0, timeout 1560
-Requests/sec:     16.36
-Transfer/sec:     10.37KB
+    Latency    12.95s     3.14s   15.56s    77.96%
+    Req/Sec     2.45     15.80   111.00     97.65%
+  250 requests in 16.00s, 158.36KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1519
+Requests/sec:     15.62
+Transfer/sec:      9.90KB
 
 ---------------------------------------------------------
  Queries: 20 for express-mysql
@@ -118,9 +118,9 @@ Transfer/sec:     10.37KB
 Running 15s test @ http://10.253.67.217:8080/mysql-orm-update?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  139 requests in 16.00s, 109.66KB read
-  Socket errors: connect 0, read 0, write 0, timeout 1589
-Requests/sec:      8.68
-Transfer/sec:      6.85KB
+    Latency    13.62s     2.62s   15.71s    81.32%
+    Req/Sec     2.16     15.16   222.00     97.96%
+  141 requests in 16.01s, 111.20KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1649
+Requests/sec:      8.81
+Transfer/sec:      6.95KB

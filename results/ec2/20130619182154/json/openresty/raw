@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 20:25:04 UTC 2013
+  System information as of Fri Jun 28 02:33:11 UTC 2013
 
-  System load:  0.03               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.03               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    26.37ms   68.58ms 207.71ms   87.46%
-    Req/Sec     1.85k   803.93     3.00k    72.80%
-  88437 requests in 5.05s, 17.62MB read
-Requests/sec:  17529.32
-Transfer/sec:      3.49MB
+    Latency    87.67ms  107.54ms 220.65ms   60.42%
+    Req/Sec     1.44k     1.24k    3.44k    38.03%
+  53144 requests in 5.00s, 10.59MB read
+Requests/sec:  10631.04
+Transfer/sec:      2.12MB
 
 ---------------------------------------------------------
  Running Warmup openresty
@@ -43,11 +43,11 @@ Transfer/sec:      3.49MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.92ms    9.48ms  98.13ms   96.26%
-    Req/Sec     4.01k     0.91k   11.00k    48.57%
-  505663 requests in 15.00s, 100.76MB read
-Requests/sec:  33721.56
-Transfer/sec:      6.72MB
+    Latency   182.40ms  486.88ms   1.55s    88.57%
+    Req/Sec     4.18k     1.86k   18.78k    80.11%
+  475320 requests in 14.99s, 94.72MB read
+Requests/sec:  31699.41
+Transfer/sec:      6.32MB
 
 ---------------------------------------------------------
  Concurrency: 8 for openresty
@@ -57,11 +57,11 @@ Transfer/sec:      6.72MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    15.00ms   52.26ms 202.42ms   92.74%
-    Req/Sec     1.93k   662.74     3.00k    79.60%
-  280523 requests in 15.00s, 55.90MB read
-Requests/sec:  18703.25
-Transfer/sec:      3.73MB
+    Latency     3.16ms   23.51ms 202.12ms   98.62%
+    Req/Sec     2.65k   434.55     3.44k    89.72%
+  297462 requests in 15.00s, 59.28MB read
+Requests/sec:  19832.25
+Transfer/sec:      3.95MB
 
 ---------------------------------------------------------
  Concurrency: 16 for openresty
@@ -71,11 +71,11 @@ Transfer/sec:      3.73MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.71ms   17.89ms 154.05ms   98.61%
-    Req/Sec     3.11k     0.92k    6.00k    76.46%
-  402904 requests in 15.00s, 80.29MB read
-Requests/sec:  26855.29
-Transfer/sec:      5.35MB
+    Latency   757.39us    2.65ms  35.53ms   98.88%
+    Req/Sec     3.75k   783.42     6.33k    74.50%
+  423394 requests in 15.00s, 84.37MB read
+Requests/sec:  28229.30
+Transfer/sec:      5.63MB
 
 ---------------------------------------------------------
  Concurrency: 32 for openresty
@@ -85,11 +85,11 @@ Transfer/sec:      5.35MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.09ms    2.04ms  30.28ms   93.27%
-    Req/Sec     3.59k     1.02k    9.00k    72.00%
-  457866 requests in 15.00s, 91.24MB read
-Requests/sec:  30527.08
-Transfer/sec:      6.08MB
+    Latency     1.04ms    1.75ms  27.22ms   93.32%
+    Req/Sec     4.21k     0.93k    8.33k    72.32%
+  477455 requests in 15.00s, 95.14MB read
+Requests/sec:  31834.26
+Transfer/sec:      6.34MB
 
 ---------------------------------------------------------
  Concurrency: 64 for openresty
@@ -99,11 +99,11 @@ Transfer/sec:      6.08MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.96ms    3.81ms  33.55ms   89.27%
-    Req/Sec     3.90k     1.13k   10.00k    83.49%
-  487017 requests in 15.00s, 97.05MB read
-Requests/sec:  32471.51
-Transfer/sec:      6.47MB
+    Latency     1.90ms    3.43ms  31.80ms   89.55%
+    Req/Sec     4.53k     1.06k   11.30k    70.86%
+  513133 requests in 15.00s, 102.25MB read
+Requests/sec:  34215.23
+Transfer/sec:      6.82MB
 
 ---------------------------------------------------------
  Concurrency: 128 for openresty
@@ -113,11 +113,11 @@ Transfer/sec:      6.47MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    66.59ms  236.06ms 954.27ms   93.39%
-    Req/Sec     3.76k     1.41k   13.00k    83.45%
-  466314 requests in 15.00s, 92.92MB read
-Requests/sec:  31088.68
-Transfer/sec:      6.20MB
+    Latency     3.68ms    5.17ms  30.42ms   80.17%
+    Req/Sec     4.63k     0.94k   11.22k    70.58%
+  517124 requests in 15.00s, 103.05MB read
+Requests/sec:  34480.26
+Transfer/sec:      6.87MB
 
 ---------------------------------------------------------
  Concurrency: 256 for openresty
@@ -127,8 +127,8 @@ Transfer/sec:      6.20MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    48.87ms  137.47ms 526.86ms   92.42%
-    Req/Sec     3.86k     2.12k   17.00k    77.84%
-  481250 requests in 15.00s, 95.90MB read
-Requests/sec:  32089.77
-Transfer/sec:      6.39MB
+    Latency     7.77ms   10.57ms 562.34ms   96.93%
+    Req/Sec     4.79k     1.22k   21.50k    82.72%
+  534035 requests in 15.00s, 106.42MB read
+Requests/sec:  35612.96
+Transfer/sec:      7.10MB

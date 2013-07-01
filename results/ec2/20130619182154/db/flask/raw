@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 18:15:03 UTC 2013
+  System information as of Fri Jun 28 00:22:49 UTC 2013
 
-  System load:  0.16               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.21               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/dbs
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3529 requests in 5.00s, 805.63KB read
-Requests/sec:    705.29
-Transfer/sec:    161.01KB
+    Latency    16.13ms   14.05ms  83.33ms   84.71%
+    Req/Sec    98.51     51.24   222.00     75.92%
+  3669 requests in 5.00s, 837.60KB read
+Requests/sec:    733.35
+Transfer/sec:    167.42KB
 
 ---------------------------------------------------------
  Running Warmup flask
@@ -43,11 +43,11 @@ Transfer/sec:    161.01KB
 Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9516 requests in 15.07s, 2.12MB read
-Requests/sec:    631.50
-Transfer/sec:    144.17KB
+    Latency   697.35ms  408.93ms   1.79s    74.48%
+    Req/Sec    84.63     94.17   666.00     80.73%
+  9590 requests in 15.06s, 2.14MB read
+Requests/sec:    636.88
+Transfer/sec:    145.40KB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask
@@ -57,11 +57,11 @@ Transfer/sec:    144.17KB
 Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11257 requests in 15.00s, 2.51MB read
-Requests/sec:    750.30
-Transfer/sec:    171.29KB
+    Latency    29.99ms   45.28ms 141.88ms   84.91%
+    Req/Sec    97.74     50.45   222.00     76.63%
+  11100 requests in 15.00s, 2.47MB read
+Requests/sec:    739.92
+Transfer/sec:    168.92KB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask
@@ -71,11 +71,11 @@ Transfer/sec:    171.29KB
 Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11326 requests in 15.01s, 2.53MB read
-Requests/sec:    754.62
-Transfer/sec:    172.28KB
+    Latency    48.47ms   44.84ms 164.18ms   83.71%
+    Req/Sec    91.25     71.32   222.00     52.30%
+  10360 requests in 15.01s, 2.31MB read
+Requests/sec:    690.29
+Transfer/sec:    157.59KB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask
@@ -85,11 +85,11 @@ Transfer/sec:    172.28KB
 Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10264 requests in 15.02s, 2.29MB read
-Requests/sec:    683.44
-Transfer/sec:    156.03KB
+    Latency   118.73ms   84.60ms 242.72ms   51.18%
+    Req/Sec    81.84     82.10   444.00     82.82%
+  9314 requests in 15.01s, 2.08MB read
+Requests/sec:    620.46
+Transfer/sec:    141.65KB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask
@@ -99,10 +99,10 @@ Transfer/sec:    156.03KB
 Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9644 requests in 15.03s, 2.15MB read
-Requests/sec:    641.75
+    Latency   243.18ms  202.45ms 650.50ms   75.73%
+    Req/Sec    84.61     88.60   555.00     81.55%
+  9638 requests in 15.02s, 2.15MB read
+Requests/sec:    641.73
 Transfer/sec:    146.51KB
 
 ---------------------------------------------------------
@@ -113,11 +113,11 @@ Transfer/sec:    146.51KB
 Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9647 requests in 15.03s, 2.15MB read
-Requests/sec:    641.96
-Transfer/sec:    146.56KB
+    Latency   327.56ms  166.65ms 691.78ms   71.22%
+    Req/Sec    83.49     91.17   555.00     80.77%
+  9510 requests in 15.02s, 2.12MB read
+Requests/sec:    633.18
+Transfer/sec:    144.55KB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask
@@ -127,8 +127,8 @@ Transfer/sec:    146.56KB
 Running 15s test @ http://10.253.67.217:8080/dbs
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9509 requests in 15.01s, 2.12MB read
-Requests/sec:    633.45
-Transfer/sec:    144.63KB
+    Latency   623.64ms  286.46ms   1.31s    67.37%
+    Req/Sec    83.42     92.34   666.00     80.85%
+  9497 requests in 15.03s, 2.12MB read
+Requests/sec:    631.89
+Transfer/sec:    144.25KB

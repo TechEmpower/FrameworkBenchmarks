@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 18:23:51 UTC 2013
+  System information as of Fri Jun 28 00:30:48 UTC 2013
 
-  System load:  0.01               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 4%                 IP address for eth0: 10.254.111.115
+  System load:  0.01               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:9000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5883 requests in 5.01s, 643.45KB read
-Requests/sec:   1175.28
-Transfer/sec:    128.55KB
+    Latency    10.33ms   11.35ms  58.25ms   92.56%
+    Req/Sec   158.84     81.92   400.00     82.69%
+  5668 requests in 5.00s, 619.94KB read
+Requests/sec:   1133.26
+Transfer/sec:    123.95KB
 
 ---------------------------------------------------------
  Running Warmup play-scala
@@ -43,12 +43,12 @@ Transfer/sec:    128.55KB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    49.02ms   31.76ms 131.35ms   73.35%
-    Req/Sec   560.03    703.69     3.00k    89.24%
-  106904 requests in 15.00s, 11.42MB read
-  Socket errors: connect 0, read 0, write 0, timeout 14
-Requests/sec:   7127.19
-Transfer/sec:    779.54KB
+    Latency    47.66ms   51.74ms 340.48ms   93.60%
+    Req/Sec     1.05k   757.09     3.90k    66.64%
+  116622 requests in 15.00s, 12.46MB read
+  Socket errors: connect 0, read 0, write 0, timeout 38
+Requests/sec:   7777.23
+Transfer/sec:    850.64KB
 
 ---------------------------------------------------------
  Concurrency: 8 for play-scala
@@ -58,11 +58,11 @@ Transfer/sec:    779.54KB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  102222 requests in 15.00s, 10.92MB read
-Requests/sec:   6814.76
-Transfer/sec:    745.36KB
+    Latency     1.18ms  639.25us  20.53ms   97.37%
+    Req/Sec     0.91k   127.93     1.44k    79.03%
+  102158 requests in 15.00s, 10.91MB read
+Requests/sec:   6810.99
+Transfer/sec:    744.95KB
 
 ---------------------------------------------------------
  Concurrency: 16 for play-scala
@@ -72,11 +72,11 @@ Transfer/sec:    745.36KB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.18ms    4.21ms  59.07ms   98.57%
-    Req/Sec     0.91k   285.87     1.00k    91.02%
-  128041 requests in 15.00s, 13.68MB read
-Requests/sec:   8536.21
-Transfer/sec:      0.91MB
+    Latency     2.00ms    2.29ms  42.92ms   98.88%
+    Req/Sec     1.13k   174.59     1.80k    77.82%
+  128752 requests in 15.00s, 13.75MB read
+Requests/sec:   8584.23
+Transfer/sec:      0.92MB
 
 ---------------------------------------------------------
  Concurrency: 32 for play-scala
@@ -86,11 +86,11 @@ Transfer/sec:      0.91MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.79ms    5.03ms  67.71ms   97.78%
-    Req/Sec     0.93k   265.26     2.00k    92.47%
-  145563 requests in 15.00s, 15.55MB read
-Requests/sec:   9704.10
-Transfer/sec:      1.04MB
+    Latency     3.56ms    2.74ms  46.82ms   96.51%
+    Req/Sec     1.26k   227.17     2.11k    73.69%
+  142871 requests in 15.00s, 15.26MB read
+Requests/sec:   9525.21
+Transfer/sec:      1.02MB
 
 ---------------------------------------------------------
  Concurrency: 64 for play-scala
@@ -100,11 +100,11 @@ Transfer/sec:      1.04MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.59ms    5.41ms  64.19ms   96.20%
-    Req/Sec     0.96k   265.48     2.00k    92.76%
-  157394 requests in 15.00s, 16.81MB read
-Requests/sec:  10493.98
-Transfer/sec:      1.12MB
+    Latency     6.68ms    4.82ms  57.24ms   94.95%
+    Req/Sec     1.36k   284.52     2.50k    75.61%
+  154609 requests in 15.00s, 16.51MB read
+Requests/sec:  10307.64
+Transfer/sec:      1.10MB
 
 ---------------------------------------------------------
  Concurrency: 128 for play-scala
@@ -114,11 +114,11 @@ Transfer/sec:      1.12MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    11.80ms    5.65ms  62.71ms   83.87%
-    Req/Sec     1.02k   424.67     2.00k    81.94%
-  166797 requests in 15.00s, 17.82MB read
-Requests/sec:  11119.44
-Transfer/sec:      1.19MB
+    Latency    17.00ms   31.98ms 208.87ms   97.20%
+    Req/Sec     1.42k   450.08     3.22k    74.11%
+  161770 requests in 15.00s, 17.28MB read
+Requests/sec:  10785.57
+Transfer/sec:      1.15MB
 
 ---------------------------------------------------------
  Concurrency: 256 for play-scala
@@ -128,8 +128,8 @@ Transfer/sec:      1.19MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    23.36ms   10.73ms  90.30ms   82.01%
-    Req/Sec     1.08k   780.99     4.00k    48.43%
-  166176 requests in 15.00s, 17.75MB read
-Requests/sec:  11078.75
-Transfer/sec:      1.18MB
+    Latency    38.64ms   71.53ms 659.19ms   93.60%
+    Req/Sec     1.45k   774.66     4.44k    67.44%
+  164846 requests in 15.00s, 17.61MB read
+Requests/sec:  10991.97
+Transfer/sec:      1.17MB

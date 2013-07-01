@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 20:56:26 UTC 2013
+  System information as of Fri Jun 28 03:04:36 UTC 2013
 
-  System load:  0.02               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.02               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/scalatra/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4762 requests in 5.00s, 0.91MB read
-Requests/sec:    951.75
-Transfer/sec:    186.82KB
+    Latency     9.60ms   11.94ms  64.77ms   94.74%
+    Req/Sec   160.63     79.52   555.00     86.58%
+  5888 requests in 5.03s, 1.13MB read
+Requests/sec:   1171.72
+Transfer/sec:    230.00KB
 
 ---------------------------------------------------------
  Running Warmup scalatra
@@ -43,12 +43,12 @@ Transfer/sec:    186.82KB
 Running 15s test @ http://10.253.67.217:8080/scalatra/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   219.16ms    1.11s    7.36s    97.64%
-    Req/Sec   265.42    455.62     2.00k    74.08%
-  40071 requests in 15.00s, 7.68MB read
-  Socket errors: connect 0, read 0, write 0, timeout 717
-Requests/sec:   2670.98
-Transfer/sec:    524.28KB
+    Latency   459.85ms    2.10s   14.94s    94.91%
+    Req/Sec   805.96    485.25     4.00k    70.52%
+  60387 requests in 15.01s, 11.58MB read
+  Socket errors: connect 0, read 0, write 0, timeout 701
+Requests/sec:   4024.43
+Transfer/sec:    789.95KB
 
 ---------------------------------------------------------
  Concurrency: 8 for scalatra
@@ -58,11 +58,11 @@ Transfer/sec:    524.28KB
 Running 15s test @ http://10.253.67.217:8080/scalatra/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.49ms   33.37ms 204.67ms   97.15%
-    Req/Sec     0.95k   367.66     2.00k    86.23%
-  147000 requests in 15.00s, 28.18MB read
-Requests/sec:   9800.59
-Transfer/sec:      1.88MB
+    Latency     8.05ms   37.72ms 201.45ms   96.31%
+    Req/Sec     1.56k   528.38     2.89k    72.22%
+  177445 requests in 15.00s, 34.01MB read
+Requests/sec:  11830.56
+Transfer/sec:      2.27MB
 
 ---------------------------------------------------------
  Concurrency: 16 for scalatra
@@ -72,11 +72,11 @@ Transfer/sec:      1.88MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.25ms   22.71ms 209.08ms   98.64%
-    Req/Sec     0.95k   279.60     3.00k    91.99%
-  152901 requests in 15.00s, 29.31MB read
-Requests/sec:  10193.84
-Transfer/sec:      1.95MB
+    Latency     1.38ms    0.91ms  20.02ms   97.53%
+    Req/Sec     1.60k   335.43     4.11k    71.95%
+  181559 requests in 15.00s, 34.80MB read
+Requests/sec:  12104.77
+Transfer/sec:      2.32MB
 
 ---------------------------------------------------------
  Concurrency: 32 for scalatra
@@ -86,11 +86,11 @@ Transfer/sec:      1.95MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.02ms    1.50ms  32.60ms   93.20%
-    Req/Sec     0.99k   153.12     2.00k    97.63%
-  162161 requests in 15.00s, 31.08MB read
-Requests/sec:  10811.83
-Transfer/sec:      2.07MB
+    Latency     2.66ms    1.18ms  36.12ms   94.54%
+    Req/Sec     1.61k   246.15     3.50k    74.85%
+  183532 requests in 15.00s, 35.18MB read
+Requests/sec:  12236.28
+Transfer/sec:      2.35MB
 
 ---------------------------------------------------------
  Concurrency: 64 for scalatra
@@ -100,11 +100,11 @@ Transfer/sec:      2.07MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    17.48ms   67.33ms 406.36ms   97.07%
-    Req/Sec     0.97k   225.31     5.00k    95.05%
-  161440 requests in 15.00s, 30.95MB read
-Requests/sec:  10763.00
-Transfer/sec:      2.06MB
+    Latency    12.78ms   37.63ms 203.19ms   96.18%
+    Req/Sec     1.55k   385.41     3.70k    88.71%
+  176073 requests in 15.00s, 33.75MB read
+Requests/sec:  11739.13
+Transfer/sec:      2.25MB
 
 ---------------------------------------------------------
  Concurrency: 128 for scalatra
@@ -114,11 +114,11 @@ Transfer/sec:      2.06MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    33.42ms   66.88ms 240.62ms   90.07%
-    Req/Sec     0.91k   371.96     4.00k    85.98%
-  154909 requests in 15.00s, 29.69MB read
-Requests/sec:  10327.89
-Transfer/sec:      1.98MB
+    Latency    11.82ms   13.88ms 339.85ms   98.27%
+    Req/Sec     1.55k   317.67     5.89k    80.89%
+  175457 requests in 15.00s, 33.63MB read
+Requests/sec:  11698.45
+Transfer/sec:      2.24MB
 
 ---------------------------------------------------------
  Concurrency: 256 for scalatra
@@ -128,9 +128,9 @@ Transfer/sec:      1.98MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   150.04ms  242.75ms 775.78ms   77.06%
-    Req/Sec   699.17    746.63     6.00k    85.72%
-  109391 requests in 15.06s, 21.16MB read
-  Socket errors: connect 0, read 649, write 0, timeout 1025
-Requests/sec:   7264.93
-Transfer/sec:      1.41MB
+    Latency   133.93ms  508.61ms   5.27s    94.99%
+    Req/Sec     1.53k   695.00     8.40k    85.17%
+  172491 requests in 15.00s, 33.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 16
+Requests/sec:  11499.64
+Transfer/sec:      2.20MB

@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 14:41:14 UTC 2013
+  System information as of Fri Jun 28 07:01:43 UTC 2013
 
-  System load:  0.42               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  0.33               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2560 requests in 5.01s, 598.87KB read
-Requests/sec:    510.87
-Transfer/sec:    119.51KB
+    Latency    75.86ms  106.15ms 420.78ms   70.13%
+    Req/Sec   108.41     92.58   444.00     55.45%
+  4047 requests in 5.01s, 0.92MB read
+Requests/sec:    807.22
+Transfer/sec:    188.85KB
 
 ---------------------------------------------------------
  Running Warmup flask-pypy
@@ -43,11 +43,11 @@ Transfer/sec:    119.51KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  12189 requests in 15.10s, 2.78MB read
-Requests/sec:    807.29
-Transfer/sec:    188.85KB
+    Latency   581.04ms  373.84ms   1.13s    46.26%
+    Req/Sec   115.60    128.21   777.00     87.65%
+  13089 requests in 15.04s, 2.99MB read
+Requests/sec:    870.06
+Transfer/sec:    203.54KB
 
 ---------------------------------------------------------
  Queries: 1 for flask-pypy
@@ -57,11 +57,11 @@ Transfer/sec:    188.85KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21218 requests in 15.06s, 3.62MB read
-Requests/sec:   1409.23
-Transfer/sec:    246.03KB
+    Latency   327.77ms  279.49ms 858.31ms   56.59%
+    Req/Sec   188.68    158.76     1.00k    63.68%
+  21289 requests in 15.01s, 3.63MB read
+Requests/sec:   1418.51
+Transfer/sec:    247.65KB
 
 ---------------------------------------------------------
  Queries: 5 for flask-pypy
@@ -71,12 +71,11 @@ Transfer/sec:    246.03KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8295 requests in 15.03s, 3.31MB read
-  Socket errors: connect 0, read 0, write 0, timeout 27
-Requests/sec:    551.85
-Transfer/sec:    225.74KB
+    Latency   762.90ms  572.27ms   1.74s    60.99%
+    Req/Sec    87.77     85.84   500.00     41.14%
+  9968 requests in 15.02s, 3.98MB read
+Requests/sec:    663.49
+Transfer/sec:    271.41KB
 
 ---------------------------------------------------------
  Queries: 10 for flask-pypy
@@ -86,12 +85,11 @@ Transfer/sec:    225.74KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5504 requests in 15.30s, 3.77MB read
-  Socket errors: connect 0, read 0, write 0, timeout 62
-Requests/sec:    359.75
-Transfer/sec:    252.17KB
+    Latency     1.42s   714.90ms   2.32s    73.64%
+    Req/Sec    49.71     67.59   444.00     93.07%
+  5637 requests in 15.08s, 3.86MB read
+Requests/sec:    373.69
+Transfer/sec:    261.95KB
 
 ---------------------------------------------------------
  Queries: 15 for flask-pypy
@@ -101,12 +99,12 @@ Transfer/sec:    252.17KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4073 requests in 15.06s, 3.95MB read
-  Socket errors: connect 0, read 0, write 0, timeout 3
-Requests/sec:    270.38
-Transfer/sec:    268.44KB
+    Latency     2.79s     1.42s    5.35s    68.09%
+    Req/Sec    35.53     59.04   400.00     70.43%
+  4050 requests in 15.16s, 3.93MB read
+  Socket errors: connect 0, read 0, write 0, timeout 205
+Requests/sec:    267.23
+Transfer/sec:    265.32KB
 
 ---------------------------------------------------------
  Queries: 20 for flask-pypy
@@ -116,9 +114,8 @@ Transfer/sec:    268.44KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3088 requests in 15.25s, 3.88MB read
-  Socket errors: connect 0, read 0, write 0, timeout 210
-Requests/sec:    202.45
-Transfer/sec:    260.28KB
+    Latency     1.82s   517.13ms   2.85s    76.23%
+    Req/Sec    28.57     53.09   444.00     75.45%
+  3284 requests in 15.46s, 4.12MB read
+Requests/sec:    212.43
+Transfer/sec:    273.11KB

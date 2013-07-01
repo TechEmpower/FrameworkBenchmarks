@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 18:48:33 UTC 2013
+  System information as of Fri Jun 28 01:01:51 UTC 2013
 
-  System load:  0.09               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.17               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     7.66ms   34.89ms 180.85ms   96.10%
-    Req/Sec     1.24k   577.43     2.00k    60.80%
-  40151 requests in 5.00s, 5.97MB read
-Requests/sec:   8031.60
-Transfer/sec:      1.19MB
+    Latency     4.37ms   20.07ms 126.67ms   97.37%
+    Req/Sec     1.08k   499.41     2.67k    70.08%
+  41433 requests in 5.05s, 6.16MB read
+Requests/sec:   8208.89
+Transfer/sec:      1.22MB
 
 ---------------------------------------------------------
  Running Warmup yesod
@@ -43,11 +43,11 @@ Transfer/sec:      1.19MB
 Running 15s test @ http://10.253.67.217:8000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    27.29ms   27.04ms 205.69ms   86.49%
-    Req/Sec     0.89k   708.34     4.00k    53.86%
-  146247 requests in 15.00s, 21.76MB read
-Requests/sec:   9751.02
-Transfer/sec:      1.45MB
+    Latency    28.93ms   31.41ms 288.91ms   87.51%
+    Req/Sec     1.28k   729.21     6.44k    69.77%
+  145402 requests in 15.00s, 21.63MB read
+Requests/sec:   9696.64
+Transfer/sec:      1.44MB
 
 ---------------------------------------------------------
  Concurrency: 8 for yesod
@@ -57,10 +57,10 @@ Transfer/sec:      1.45MB
 Running 15s test @ http://10.253.67.217:8000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   648.98us  408.65us   7.31ms   95.08%
-    Req/Sec     1.17k   436.72     2.00k    78.09%
-  127407 requests in 15.00s, 18.95MB read
-Requests/sec:   8493.49
+    Latency     3.82ms   23.35ms 202.18ms   98.62%
+    Req/Sec     1.11k   464.79     2.56k    61.67%
+  126587 requests in 15.00s, 18.83MB read
+Requests/sec:   8439.59
 Transfer/sec:      1.26MB
 
 ---------------------------------------------------------
@@ -71,11 +71,11 @@ Transfer/sec:      1.26MB
 Running 15s test @ http://10.253.67.217:8000/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.10ms    7.50ms  97.44ms   98.77%
-    Req/Sec     1.10k   564.82     3.00k    69.22%
-  131918 requests in 15.00s, 19.63MB read
-Requests/sec:   8795.08
-Transfer/sec:      1.31MB
+    Latency     2.02ms    1.61ms  21.35ms   87.09%
+    Req/Sec     1.15k   433.30     3.30k    66.26%
+  131244 requests in 15.00s, 19.53MB read
+Requests/sec:   8750.33
+Transfer/sec:      1.30MB
 
 ---------------------------------------------------------
  Concurrency: 32 for yesod
@@ -85,11 +85,11 @@ Transfer/sec:      1.31MB
 Running 15s test @ http://10.253.67.217:8000/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.45ms    3.40ms  53.66ms   86.08%
-    Req/Sec     0.98k     0.89k    4.00k    41.42%
-  136926 requests in 15.00s, 20.37MB read
-Requests/sec:   9128.75
-Transfer/sec:      1.36MB
+    Latency     4.36ms    6.36ms  55.14ms   91.47%
+    Req/Sec     1.20k   558.21     4.90k    66.80%
+  136448 requests in 15.00s, 20.30MB read
+Requests/sec:   9097.09
+Transfer/sec:      1.35MB
 
 ---------------------------------------------------------
  Concurrency: 64 for yesod
@@ -99,11 +99,11 @@ Transfer/sec:      1.36MB
 Running 15s test @ http://10.253.67.217:8000/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    11.29ms   28.76ms 206.56ms   97.72%
-    Req/Sec     0.89k   609.45     4.00k    63.51%
-  149231 requests in 15.00s, 22.20MB read
-Requests/sec:   9950.40
-Transfer/sec:      1.48MB
+    Latency     7.05ms    8.05ms  88.80ms   89.59%
+    Req/Sec     1.25k   571.01     4.00k    69.45%
+  142129 requests in 15.00s, 21.14MB read
+Requests/sec:   9475.63
+Transfer/sec:      1.41MB
 
 ---------------------------------------------------------
  Concurrency: 128 for yesod
@@ -113,11 +113,11 @@ Transfer/sec:      1.48MB
 Running 15s test @ http://10.253.67.217:8000/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    14.33ms   14.89ms 116.32ms   87.84%
-    Req/Sec     0.90k   688.61     6.00k    57.11%
-  144803 requests in 15.00s, 21.54MB read
-Requests/sec:   9654.12
-Transfer/sec:      1.44MB
+    Latency    13.78ms   14.47ms 125.46ms   87.00%
+    Req/Sec     1.30k   618.18     5.89k    72.68%
+  147636 requests in 15.00s, 21.96MB read
+Requests/sec:   9843.43
+Transfer/sec:      1.46MB
 
 ---------------------------------------------------------
  Concurrency: 256 for yesod
@@ -127,8 +127,8 @@ Transfer/sec:      1.44MB
 Running 15s test @ http://10.253.67.217:8000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    24.83ms   26.54ms 202.73ms   86.97%
-    Req/Sec     1.04k     1.02k    6.00k    59.49%
-  144857 requests in 15.00s, 21.55MB read
-Requests/sec:   9656.78
-Transfer/sec:      1.44MB
+    Latency    29.19ms   31.59ms 216.73ms   88.99%
+    Req/Sec     1.27k   719.98     6.67k    70.92%
+  144437 requests in 15.00s, 21.49MB read
+Requests/sec:   9629.18
+Transfer/sec:      1.43MB

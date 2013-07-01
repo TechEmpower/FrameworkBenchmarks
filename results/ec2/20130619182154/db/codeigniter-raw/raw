@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 21:36:51 UTC 2013
+  System information as of Fri Jun 28 03:45:00 UTC 2013
 
-  System load:  0.07               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.05               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/index.php/bench/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2859 requests in 5.01s, 655.41KB read
-Requests/sec:    570.95
-Transfer/sec:    130.89KB
+    Latency    21.27ms   10.37ms  37.84ms   61.24%
+    Req/Sec    73.20     55.83   222.00     62.61%
+  2769 requests in 5.01s, 634.75KB read
+Requests/sec:    553.08
+Transfer/sec:    126.78KB
 
 ---------------------------------------------------------
  Running Warmup codeigniter-raw
@@ -43,11 +43,12 @@ Transfer/sec:    130.89KB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6795 requests in 15.05s, 1.52MB read
-Requests/sec:    451.47
-Transfer/sec:    103.51KB
+    Latency     1.33s     1.10s    4.94s    92.56%
+    Req/Sec    65.06     86.77   600.00     86.31%
+  7021 requests in 15.02s, 1.57MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:    467.48
+Transfer/sec:    107.19KB
 
 ---------------------------------------------------------
  Concurrency: 8 for codeigniter-raw
@@ -57,11 +58,11 @@ Transfer/sec:    103.51KB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8368 requests in 15.00s, 1.87MB read
-Requests/sec:    557.73
-Transfer/sec:    127.84KB
+    Latency    25.86ms   16.83ms  53.05ms   56.80%
+    Req/Sec    73.82     55.36   333.00     63.51%
+  8408 requests in 15.01s, 1.88MB read
+Requests/sec:    560.30
+Transfer/sec:    128.44KB
 
 ---------------------------------------------------------
  Concurrency: 16 for codeigniter-raw
@@ -71,11 +72,11 @@ Transfer/sec:    127.84KB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8550 requests in 15.01s, 1.91MB read
-Requests/sec:    569.55
-Transfer/sec:    130.56KB
+    Latency    53.18ms   32.82ms 131.49ms   66.53%
+    Req/Sec    75.43     71.92   333.00     45.74%
+  8573 requests in 15.01s, 1.92MB read
+Requests/sec:    571.21
+Transfer/sec:    130.94KB
 
 ---------------------------------------------------------
  Concurrency: 32 for codeigniter-raw
@@ -85,11 +86,11 @@ Transfer/sec:    130.56KB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8033 requests in 15.03s, 1.80MB read
-Requests/sec:    534.63
-Transfer/sec:    122.56KB
+    Latency   151.42ms   97.07ms 307.30ms   64.74%
+    Req/Sec    71.68     82.28   444.00     85.17%
+  8132 requests in 15.01s, 1.82MB read
+Requests/sec:    541.76
+Transfer/sec:    124.19KB
 
 ---------------------------------------------------------
  Concurrency: 64 for codeigniter-raw
@@ -99,11 +100,11 @@ Transfer/sec:    122.56KB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7737 requests in 15.04s, 1.73MB read
-Requests/sec:    514.49
-Transfer/sec:    117.95KB
+    Latency   391.64ms  242.03ms 629.17ms   64.76%
+    Req/Sec    65.48     84.96   500.00     86.11%
+  7465 requests in 15.03s, 1.67MB read
+Requests/sec:    496.71
+Transfer/sec:    113.86KB
 
 ---------------------------------------------------------
  Concurrency: 128 for codeigniter-raw
@@ -113,11 +114,11 @@ Transfer/sec:    117.95KB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7557 requests in 15.04s, 1.69MB read
-Requests/sec:    502.51
-Transfer/sec:    115.21KB
+    Latency   436.47ms  173.98ms 659.88ms   60.19%
+    Req/Sec    67.11     89.99   666.00     85.22%
+  7610 requests in 15.01s, 1.70MB read
+Requests/sec:    506.84
+Transfer/sec:    116.21KB
 
 ---------------------------------------------------------
  Concurrency: 256 for codeigniter-raw
@@ -127,9 +128,9 @@ Transfer/sec:    115.21KB
 Running 15s test @ http://10.253.67.217:8080/index.php/bench/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7306 requests in 15.01s, 1.64MB read
-  Socket errors: connect 0, read 0, write 0, timeout 284
-Requests/sec:    486.71
-Transfer/sec:    111.59KB
+    Latency     3.85s     5.57s   14.71s    74.39%
+    Req/Sec    65.36     94.97   700.00     85.27%
+  7357 requests in 15.05s, 1.65MB read
+  Socket errors: connect 0, read 0, write 0, timeout 235
+Requests/sec:    488.88
+Transfer/sec:    112.09KB

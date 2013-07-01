@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 15:33:59 UTC 2013
+  System information as of Fri Jun 28 07:54:20 UTC 2013
 
-  System load:  0.01               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  0.0                Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  31131 requests in 5.00s, 3.59MB read
-Requests/sec:   6221.58
-Transfer/sec:    735.17KB
+    Latency     2.42ms    5.30ms  29.48ms   87.81%
+    Req/Sec     0.90k   499.82     2.89k    65.04%
+  32202 requests in 5.01s, 3.72MB read
+Requests/sec:   6433.44
+Transfer/sec:    760.20KB
 
 ---------------------------------------------------------
  Running Warmup undertow
@@ -43,11 +43,11 @@ Transfer/sec:    735.17KB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.44ms    2.36ms  41.88ms   77.22%
-    Req/Sec     5.71k     0.96k   11.00k    74.91%
-  685795 requests in 15.00s, 79.14MB read
-Requests/sec:  45725.51
-Transfer/sec:      5.28MB
+    Latency     5.19ms    2.48ms 219.67ms   77.31%
+    Req/Sec     6.38k     1.01k   12.44k    79.95%
+  712350 requests in 15.00s, 82.20MB read
+Requests/sec:  47505.45
+Transfer/sec:      5.48MB
 
 ---------------------------------------------------------
  Concurrency: 8 for undertow
@@ -57,11 +57,11 @@ Transfer/sec:      5.28MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    12.45ms   49.33ms 213.94ms   94.30%
-    Req/Sec     2.33k   766.81     3.00k    93.66%
-  314383 requests in 15.00s, 36.28MB read
-Requests/sec:  20960.45
-Transfer/sec:      2.42MB
+    Latency     4.66ms   29.18ms 201.98ms   97.85%
+    Req/Sec     2.90k   489.64     3.44k    95.57%
+  328444 requests in 15.00s, 37.90MB read
+Requests/sec:  21897.90
+Transfer/sec:      2.53MB
 
 ---------------------------------------------------------
  Concurrency: 16 for undertow
@@ -71,11 +71,11 @@ Transfer/sec:      2.42MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   519.91us  453.82us  11.19ms   97.51%
-    Req/Sec     3.49k   801.23     6.00k    83.81%
-  447462 requests in 15.00s, 51.63MB read
-Requests/sec:  29832.23
-Transfer/sec:      3.44MB
+    Latency   491.16us  311.31us  12.33ms   95.36%
+    Req/Sec     4.10k   798.87     6.33k    66.55%
+  465629 requests in 15.00s, 53.73MB read
+Requests/sec:  31044.09
+Transfer/sec:      3.58MB
 
 ---------------------------------------------------------
  Concurrency: 32 for undertow
@@ -85,11 +85,11 @@ Transfer/sec:      3.44MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   811.87us    0.99ms  17.31ms   95.60%
-    Req/Sec     4.80k     1.25k    9.00k    78.41%
-  593372 requests in 15.00s, 68.47MB read
-Requests/sec:  39560.43
-Transfer/sec:      4.57MB
+    Latency   790.77us  693.30us  13.17ms   91.05%
+    Req/Sec     5.39k     1.36k    9.78k    66.30%
+  612711 requests in 15.00s, 70.70MB read
+Requests/sec:  40853.32
+Transfer/sec:      4.71MB
 
 ---------------------------------------------------------
  Concurrency: 64 for undertow
@@ -99,11 +99,11 @@ Transfer/sec:      4.57MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.49ms    1.34ms  18.00ms   93.76%
-    Req/Sec     5.35k     1.26k   13.00k    67.57%
-  659473 requests in 15.00s, 76.10MB read
-Requests/sec:  43971.33
-Transfer/sec:      5.07MB
+    Latency    48.19ms  190.83ms 830.00ms   94.36%
+    Req/Sec     5.35k     1.83k   11.33k    75.49%
+  608257 requests in 15.00s, 70.19MB read
+Requests/sec:  40555.60
+Transfer/sec:      4.68MB
 
 ---------------------------------------------------------
  Concurrency: 128 for undertow
@@ -113,11 +113,11 @@ Transfer/sec:      5.07MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.83ms    2.57ms  45.64ms   94.86%
-    Req/Sec     5.72k     1.09k   22.00k    68.47%
-  700678 requests in 15.00s, 80.85MB read
-Requests/sec:  46720.24
-Transfer/sec:      5.39MB
+    Latency     2.79ms    1.50ms  21.16ms   83.70%
+    Req/Sec     6.12k     1.31k   16.56k    69.07%
+  693763 requests in 15.00s, 80.06MB read
+Requests/sec:  46258.20
+Transfer/sec:      5.34MB
 
 ---------------------------------------------------------
  Concurrency: 256 for undertow
@@ -127,8 +127,8 @@ Transfer/sec:      5.39MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.35ms    3.20ms 274.54ms   90.33%
-    Req/Sec     5.78k     1.03k   13.00k    74.12%
-  707748 requests in 15.00s, 81.67MB read
-Requests/sec:  47197.99
-Transfer/sec:      5.45MB
+    Latency     5.46ms    3.40ms 624.40ms   89.70%
+    Req/Sec     6.15k     0.88k   12.44k    77.99%
+  698091 requests in 15.00s, 80.56MB read
+Requests/sec:  46544.14
+Transfer/sec:      5.37MB

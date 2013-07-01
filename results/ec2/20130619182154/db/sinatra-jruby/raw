@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 16:57:52 UTC 2013
+  System information as of Thu Jun 27 23:06:51 UTC 2013
 
-  System load:  0.29               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.43               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/sinatra/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  851 requests in 5.03s, 229.18KB read
-Requests/sec:    169.15
-Transfer/sec:     45.55KB
+    Latency   195.28ms   84.91ms 298.56ms   69.30%
+    Req/Sec    22.15     42.85   111.00     78.84%
+  788 requests in 5.02s, 212.23KB read
+Requests/sec:    156.89
+Transfer/sec:     42.25KB
 
 ---------------------------------------------------------
  Running Warmup sinatra-jruby
@@ -43,12 +43,12 @@ Transfer/sec:     45.55KB
 Running 15s test @ http://10.253.67.217:8080/sinatra/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2445 requests in 15.20s, 699.13KB read
-  Socket errors: connect 0, read 107, write 0, timeout 449
-Requests/sec:    160.88
-Transfer/sec:     46.00KB
+    Latency     5.34s     1.87s    6.44s    83.85%
+    Req/Sec    27.06     67.81   700.00     82.44%
+  2396 requests in 15.22s, 645.27KB read
+  Socket errors: connect 0, read 0, write 0, timeout 300
+Requests/sec:    157.40
+Transfer/sec:     42.39KB
 
 ---------------------------------------------------------
  Concurrency: 8 for sinatra-jruby
@@ -58,11 +58,11 @@ Transfer/sec:     46.00KB
 Running 15s test @ http://10.253.67.217:8080/sinatra/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4441 requests in 15.01s, 1.17MB read
-Requests/sec:    295.82
-Transfer/sec:     79.67KB
+    Latency   227.76ms  200.56ms 518.38ms   47.80%
+    Req/Sec    37.88     51.40   222.00     64.29%
+  4245 requests in 15.01s, 1.12MB read
+Requests/sec:    282.84
+Transfer/sec:     76.17KB
 
 ---------------------------------------------------------
  Concurrency: 16 for sinatra-jruby
@@ -72,11 +72,11 @@ Transfer/sec:     79.67KB
 Running 15s test @ http://10.253.67.217:8080/sinatra/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4776 requests in 15.01s, 1.26MB read
-Requests/sec:    318.11
-Transfer/sec:     85.67KB
+    Latency   119.55ms   51.36ms 192.79ms   66.36%
+    Req/Sec    39.38     59.02   333.00     66.55%
+  4488 requests in 15.03s, 1.18MB read
+Requests/sec:    298.67
+Transfer/sec:     80.43KB
 
 ---------------------------------------------------------
  Concurrency: 32 for sinatra-jruby
@@ -86,11 +86,11 @@ Transfer/sec:     85.67KB
 Running 15s test @ http://10.253.67.217:8080/sinatra/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5448 requests in 15.02s, 1.43MB read
-Requests/sec:    362.61
-Transfer/sec:     97.66KB
+    Latency   308.50ms  161.49ms 465.38ms   68.31%
+    Req/Sec    44.05     65.57   400.00     80.66%
+  4990 requests in 15.03s, 1.31MB read
+Requests/sec:    332.06
+Transfer/sec:     89.43KB
 
 ---------------------------------------------------------
  Concurrency: 64 for sinatra-jruby
@@ -100,11 +100,11 @@ Transfer/sec:     97.66KB
 Running 15s test @ http://10.253.67.217:8080/sinatra/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5661 requests in 15.03s, 1.49MB read
-Requests/sec:    376.58
-Transfer/sec:    101.42KB
+    Latency   337.24ms  134.81ms 525.96ms   67.40%
+    Req/Sec    47.85     69.54   500.00     92.74%
+  5350 requests in 15.03s, 1.41MB read
+Requests/sec:    355.90
+Transfer/sec:     95.85KB
 
 ---------------------------------------------------------
  Concurrency: 128 for sinatra-jruby
@@ -114,11 +114,11 @@ Transfer/sec:    101.42KB
 Running 15s test @ http://10.253.67.217:8080/sinatra/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5687 requests in 15.07s, 1.50MB read
-Requests/sec:    377.44
-Transfer/sec:    101.65KB
+    Latency   665.55ms  244.38ms 890.72ms   75.32%
+    Req/Sec    49.31     81.22   555.00     89.40%
+  5451 requests in 15.04s, 1.43MB read
+Requests/sec:    362.38
+Transfer/sec:     97.59KB
 
 ---------------------------------------------------------
  Concurrency: 256 for sinatra-jruby
@@ -128,9 +128,9 @@ Transfer/sec:    101.65KB
 Running 15s test @ http://10.253.67.217:8080/sinatra/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5272 requests in 15.11s, 1.48MB read
-  Socket errors: connect 0, read 37, write 0, timeout 42
-Requests/sec:    348.98
-Transfer/sec:    100.13KB
+    Latency     1.71s   601.85ms   2.28s    76.24%
+    Req/Sec    46.44     95.84   666.00     88.76%
+  4840 requests in 15.21s, 1.27MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    318.22
+Transfer/sec:     85.70KB
