@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 17:06:09 UTC 2013
+  System information as of Thu Jun 27 23:14:59 UTC 2013
 
-  System load:  0.21               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.07               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/spring/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7013 requests in 5.01s, 1.23MB read
-Requests/sec:   1400.32
-Transfer/sec:    251.31KB
+    Latency     6.45ms    3.93ms  36.53ms   86.53%
+    Req/Sec   188.71     83.15   555.00     66.04%
+  6946 requests in 5.00s, 1.22MB read
+Requests/sec:   1388.62
+Transfer/sec:    249.22KB
 
 ---------------------------------------------------------
  Running Warmup spring
@@ -43,12 +43,11 @@ Transfer/sec:    251.31KB
 Running 15s test @ http://10.253.67.217:8080/spring/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  29383 requests in 15.02s, 5.47MB read
-  Socket errors: connect 0, read 27, write 0, timeout 108
-Requests/sec:   1956.64
-Transfer/sec:    372.82KB
+    Latency   415.13ms  810.20ms   3.61s    87.37%
+    Req/Sec   272.88    198.17     1.55k    72.68%
+  30884 requests in 15.00s, 5.41MB read
+Requests/sec:   2058.73
+Transfer/sec:    369.48KB
 
 ---------------------------------------------------------
  Concurrency: 8 for spring
@@ -58,11 +57,11 @@ Transfer/sec:    372.82KB
 Running 15s test @ http://10.253.67.217:8080/spring/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  58103 requests in 15.00s, 10.18MB read
-Requests/sec:   3873.57
-Transfer/sec:    695.20KB
+    Latency     2.05ms    2.02ms  32.22ms   98.61%
+    Req/Sec   582.65    164.38     1.00k    64.98%
+  66232 requests in 15.00s, 11.61MB read
+Requests/sec:   4415.53
+Transfer/sec:    792.42KB
 
 ---------------------------------------------------------
  Concurrency: 16 for spring
@@ -72,11 +71,11 @@ Transfer/sec:    695.20KB
 Running 15s test @ http://10.253.67.217:8080/spring/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  60062 requests in 15.00s, 10.53MB read
-Requests/sec:   4003.74
-Transfer/sec:    718.56KB
+    Latency     9.58ms   33.64ms 202.57ms   97.01%
+    Req/Sec   572.88    155.31     1.55k    78.47%
+  65213 requests in 15.00s, 11.43MB read
+Requests/sec:   4347.77
+Transfer/sec:    780.28KB
 
 ---------------------------------------------------------
  Concurrency: 32 for spring
@@ -86,11 +85,11 @@ Transfer/sec:    718.56KB
 Running 15s test @ http://10.253.67.217:8080/spring/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  61458 requests in 15.00s, 10.77MB read
-Requests/sec:   4096.67
-Transfer/sec:    735.24KB
+    Latency     7.40ms    3.03ms  73.57ms   96.06%
+    Req/Sec   586.49    120.77     1.55k    75.79%
+  66669 requests in 15.00s, 11.68MB read
+Requests/sec:   4444.08
+Transfer/sec:    797.56KB
 
 ---------------------------------------------------------
  Concurrency: 64 for spring
@@ -100,11 +99,11 @@ Transfer/sec:    735.24KB
 Running 15s test @ http://10.253.67.217:8080/spring/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  54338 requests in 15.02s, 9.52MB read
-Requests/sec:   3618.72
-Transfer/sec:    649.46KB
+    Latency    14.83ms    5.37ms  68.54ms   91.23%
+    Req/Sec   577.75    168.87     1.40k    65.57%
+  65734 requests in 15.00s, 11.52MB read
+Requests/sec:   4382.10
+Transfer/sec:    786.43KB
 
 ---------------------------------------------------------
  Concurrency: 128 for spring
@@ -114,11 +113,11 @@ Transfer/sec:    649.46KB
 Running 15s test @ http://10.253.67.217:8080/spring/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  61505 requests in 15.00s, 10.78MB read
-Requests/sec:   4099.96
-Transfer/sec:    735.83KB
+    Latency    30.97ms   16.06ms 171.33ms   94.93%
+    Req/Sec   574.05    250.89     1.60k    69.35%
+  65290 requests in 15.00s, 11.44MB read
+Requests/sec:   4352.21
+Transfer/sec:    781.06KB
 
 ---------------------------------------------------------
  Concurrency: 256 for spring
@@ -128,9 +127,8 @@ Transfer/sec:    735.83KB
 Running 15s test @ http://10.253.67.217:8080/spring/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  55732 requests in 15.00s, 10.21MB read
-  Socket errors: connect 0, read 6, write 0, timeout 33
-Requests/sec:   3715.28
-Transfer/sec:    697.07KB
+    Latency    75.28ms  105.30ms 985.26ms   97.36%
+    Req/Sec   544.54    247.41     1.90k    72.47%
+  61839 requests in 15.01s, 10.84MB read
+Requests/sec:   4120.91
+Transfer/sec:    739.55KB

@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 16:14:59 UTC 2013
+  System information as of Fri Jun 28 08:35:15 UTC 2013
 
-  System load:  0.58               Processes:           71
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  System load:  0.39               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/luminus/db/2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9920 requests in 5.00s, 1.98MB read
-Requests/sec:   1983.66
-Transfer/sec:    405.99KB
+    Latency     4.50ms    3.91ms  36.33ms   96.81%
+    Req/Sec   267.35     77.34   600.00     89.22%
+  9951 requests in 5.00s, 1.99MB read
+Requests/sec:   1990.13
+Transfer/sec:    407.29KB
 
 ---------------------------------------------------------
  Running Warmup luminus
@@ -43,12 +43,12 @@ Transfer/sec:    405.99KB
 Running 15s test @ http://10.253.67.217:8080/luminus/db/2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  32282 requests in 15.01s, 6.85MB read
-  Socket errors: connect 0, read 5, write 0, timeout 9
-Requests/sec:   2150.61
-Transfer/sec:    467.27KB
+    Latency   401.97ms  854.53ms   3.46s    88.38%
+    Req/Sec   316.94    266.85     2.44k    76.39%
+  33024 requests in 15.01s, 6.60MB read
+  Socket errors: connect 0, read 0, write 0, timeout 39
+Requests/sec:   2200.54
+Transfer/sec:    450.33KB
 
 ---------------------------------------------------------
  Queries: 1 for luminus
@@ -58,12 +58,11 @@ Transfer/sec:    467.27KB
 Running 15s test @ http://10.253.67.217:8080/luminus/db/1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  48888 requests in 15.00s, 8.73MB read
-  Socket errors: connect 0, read 3, write 0, timeout 18
-Requests/sec:   3259.12
-Transfer/sec:    595.98KB
+    Latency   102.98ms  132.48ms 685.27ms   92.83%
+    Req/Sec   461.30    283.40     2.67k    69.57%
+  52241 requests in 15.00s, 8.86MB read
+Requests/sec:   3482.74
+Transfer/sec:    604.65KB
 
 ---------------------------------------------------------
  Queries: 5 for luminus
@@ -73,12 +72,12 @@ Transfer/sec:    595.98KB
 Running 15s test @ http://10.253.67.217:8080/luminus/db/5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  16484 requests in 15.01s, 5.07MB read
-  Socket errors: connect 0, read 31, write 0, timeout 82
-Requests/sec:   1097.96
-Transfer/sec:    345.71KB
+    Latency   828.07ms    1.05s    3.28s    76.64%
+    Req/Sec   144.02    127.01     1.00k    56.68%
+  16229 requests in 15.01s, 4.73MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:   1081.57
+Transfer/sec:    323.09KB
 
 ---------------------------------------------------------
  Queries: 10 for luminus
@@ -88,12 +87,12 @@ Transfer/sec:    345.71KB
 Running 15s test @ http://10.253.67.217:8080/luminus/db/10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  9175 requests in 15.04s, 4.22MB read
-  Socket errors: connect 0, read 35, write 0, timeout 30
-Requests/sec:    610.19
-Transfer/sec:    287.16KB
+    Latency     1.43s     1.11s    3.09s    49.97%
+    Req/Sec    78.87     93.20     1.44k    82.34%
+  8881 requests in 15.02s, 3.94MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    591.30
+Transfer/sec:    268.39KB
 
 ---------------------------------------------------------
  Queries: 15 for luminus
@@ -103,12 +102,12 @@ Transfer/sec:    287.16KB
 Running 15s test @ http://10.253.67.217:8080/luminus/db/15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6219 requests in 15.02s, 3.80MB read
-  Socket errors: connect 0, read 62, write 0, timeout 29
-Requests/sec:    414.04
-Transfer/sec:    259.29KB
+    Latency     2.01s     1.20s    3.42s    54.32%
+    Req/Sec    54.28     74.78   600.00     90.33%
+  6093 requests in 15.03s, 3.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 11
+Requests/sec:    405.31
+Transfer/sec:    246.87KB
 
 ---------------------------------------------------------
  Queries: 20 for luminus
@@ -118,9 +117,9 @@ Transfer/sec:    259.29KB
 Running 15s test @ http://10.253.67.217:8080/luminus/db/20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4816 requests in 15.03s, 3.68MB read
-  Socket errors: connect 0, read 166, write 0, timeout 89
-Requests/sec:    320.39
-Transfer/sec:    250.47KB
+    Latency     2.24s     1.04s    3.31s    64.12%
+    Req/Sec    40.78     64.77   600.00     82.58%
+  4581 requests in 15.04s, 3.42MB read
+  Socket errors: connect 0, read 0, write 0, timeout 16
+Requests/sec:    304.51
+Transfer/sec:    232.70KB

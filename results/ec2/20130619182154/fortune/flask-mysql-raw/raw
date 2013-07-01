@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 23:42:57 UTC 2013
+  System information as of Fri Jun 28 05:50:49 UTC 2013
 
-  System load:  0.31               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.29               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/fortunesraw
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3775 requests in 5.00s, 5.20MB read
-Requests/sec:    754.43
-Transfer/sec:      1.04MB
+    Latency    11.15ms    3.02ms  17.63ms   62.76%
+    Req/Sec   103.37     48.68   222.00     78.85%
+  3891 requests in 5.01s, 5.36MB read
+Requests/sec:    777.39
+Transfer/sec:      1.07MB
 
 ---------------------------------------------------------
  Running Warmup flask-mysql-raw
@@ -43,11 +43,11 @@ Transfer/sec:      1.04MB
 Running 15s test @ http://10.253.67.217:8080/fortunesraw
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11298 requests in 15.04s, 15.56MB read
-Requests/sec:    751.25
-Transfer/sec:      1.03MB
+    Latency   473.55ms  211.21ms   1.04s    75.23%
+    Req/Sec    97.02    100.20   555.00     76.58%
+  11007 requests in 15.02s, 15.16MB read
+Requests/sec:    732.74
+Transfer/sec:      1.01MB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask-mysql-raw
@@ -57,11 +57,11 @@ Transfer/sec:      1.03MB
 Running 15s test @ http://10.253.67.217:8080/fortunesraw
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11840 requests in 15.00s, 16.30MB read
-Requests/sec:    789.09
-Transfer/sec:      1.09MB
+    Latency    11.59ms    3.47ms  19.55ms   62.96%
+    Req/Sec   101.55     49.90   300.00     77.57%
+  11586 requests in 15.01s, 15.96MB read
+Requests/sec:    772.10
+Transfer/sec:      1.06MB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask-mysql-raw
@@ -71,11 +71,11 @@ Transfer/sec:      1.09MB
 Running 15s test @ http://10.253.67.217:8080/fortunesraw
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11748 requests in 15.01s, 16.18MB read
-Requests/sec:    782.72
-Transfer/sec:      1.08MB
+    Latency    76.92ms   90.13ms 240.62ms   71.95%
+    Req/Sec   100.21     75.61   333.00     48.68%
+  11412 requests in 15.01s, 15.72MB read
+Requests/sec:    760.26
+Transfer/sec:      1.05MB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask-mysql-raw
@@ -85,11 +85,11 @@ Transfer/sec:      1.08MB
 Running 15s test @ http://10.253.67.217:8080/fortunesraw
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11369 requests in 15.01s, 15.66MB read
-Requests/sec:    757.40
-Transfer/sec:      1.04MB
+    Latency    68.03ms   48.99ms 180.83ms   77.52%
+    Req/Sec   102.36     90.19   444.00     41.23%
+  11635 requests in 15.01s, 16.02MB read
+Requests/sec:    775.05
+Transfer/sec:      1.07MB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask-mysql-raw
@@ -99,10 +99,10 @@ Transfer/sec:      1.04MB
 Running 15s test @ http://10.253.67.217:8080/fortunesraw
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11519 requests in 15.02s, 15.86MB read
-Requests/sec:    766.80
+    Latency   159.93ms  122.22ms 398.86ms   68.66%
+    Req/Sec   101.44     97.68   555.00     38.54%
+  11548 requests in 15.02s, 15.90MB read
+Requests/sec:    769.08
 Transfer/sec:      1.06MB
 
 ---------------------------------------------------------
@@ -113,11 +113,11 @@ Transfer/sec:      1.06MB
 Running 15s test @ http://10.253.67.217:8080/fortunesraw
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11553 requests in 15.03s, 15.91MB read
-Requests/sec:    768.92
-Transfer/sec:      1.06MB
+    Latency   272.02ms  167.95ms 620.79ms   69.19%
+    Req/Sec   100.82    104.75   700.00     84.99%
+  11475 requests in 15.03s, 15.80MB read
+Requests/sec:    763.68
+Transfer/sec:      1.05MB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask-mysql-raw
@@ -127,8 +127,8 @@ Transfer/sec:      1.06MB
 Running 15s test @ http://10.253.67.217:8080/fortunesraw
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11089 requests in 15.03s, 15.27MB read
-Requests/sec:    738.00
-Transfer/sec:      1.02MB
+    Latency   477.16ms  247.90ms   1.17s    79.12%
+    Req/Sec   101.67    105.28   777.00     84.66%
+  11545 requests in 15.02s, 15.90MB read
+Requests/sec:    768.68
+Transfer/sec:      1.06MB

@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 14:54:46 UTC 2013
+  System information as of Fri Jun 28 07:15:12 UTC 2013
 
-  System load:  0.06               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  0.06               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   733.81us    3.41ms  41.35ms   99.11%
-    Req/Sec     1.89k   367.87     3.00k    89.59%
-  88041 requests in 5.00s, 11.25MB read
-Requests/sec:  17611.15
-Transfer/sec:      2.25MB
+    Latency     1.06ms    5.82ms  53.42ms   98.77%
+    Req/Sec     2.39k   394.92     3.00k    91.84%
+  90646 requests in 5.00s, 11.58MB read
+Requests/sec:  18134.38
+Transfer/sec:      2.32MB
 
 ---------------------------------------------------------
  Running Warmup revel
@@ -43,10 +43,10 @@ Transfer/sec:      2.25MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    13.96ms    9.27ms  94.97ms   92.88%
-    Req/Sec     2.07k   650.93     6.00k    63.46%
-  288631 requests in 15.00s, 36.88MB read
-Requests/sec:  19242.78
+    Latency    14.02ms    8.92ms  74.78ms   91.86%
+    Req/Sec     2.55k   636.02     6.33k    76.22%
+  289080 requests in 15.00s, 36.94MB read
+Requests/sec:  19277.64
 Transfer/sec:      2.46MB
 
 ---------------------------------------------------------
@@ -57,11 +57,11 @@ Transfer/sec:      2.46MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   446.61us  434.78us  14.41ms   97.70%
-    Req/Sec     1.87k   369.06     3.00k    87.97%
-  262949 requests in 15.00s, 33.60MB read
-Requests/sec:  17530.84
-Transfer/sec:      2.24MB
+    Latency     8.45ms   39.52ms 204.90ms   96.05%
+    Req/Sec     2.19k   577.94     3.00k    85.92%
+  248901 requests in 15.03s, 31.81MB read
+Requests/sec:  16563.53
+Transfer/sec:      2.12MB
 
 ---------------------------------------------------------
  Concurrency: 16 for revel
@@ -71,11 +71,11 @@ Transfer/sec:      2.24MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   829.75us  460.54us  14.23ms   88.95%
-    Req/Sec     2.05k   431.48     3.00k    81.20%
-  288143 requests in 15.00s, 36.82MB read
-Requests/sec:  19211.71
-Transfer/sec:      2.46MB
+    Latency    10.05ms   43.60ms 216.65ms   95.72%
+    Req/Sec     2.39k   619.00     4.78k    89.26%
+  271995 requests in 15.00s, 34.76MB read
+Requests/sec:  18134.79
+Transfer/sec:      2.32MB
 
 ---------------------------------------------------------
  Concurrency: 32 for revel
@@ -85,11 +85,11 @@ Transfer/sec:      2.46MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.67ms    0.87ms   9.53ms   75.41%
-    Req/Sec     2.09k   499.86     4.00k    74.33%
-  289898 requests in 15.00s, 37.05MB read
-Requests/sec:  19328.81
-Transfer/sec:      2.47MB
+    Latency     1.70ms    0.88ms   9.96ms   74.03%
+    Req/Sec     2.51k   405.72     3.78k    67.98%
+  285469 requests in 15.00s, 36.48MB read
+Requests/sec:  19033.45
+Transfer/sec:      2.43MB
 
 ---------------------------------------------------------
  Concurrency: 64 for revel
@@ -99,11 +99,11 @@ Transfer/sec:      2.47MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.29ms    1.73ms  13.52ms   67.84%
-    Req/Sec     2.10k   522.87     8.00k    72.36%
-  294057 requests in 15.00s, 37.58MB read
-Requests/sec:  19605.35
-Transfer/sec:      2.51MB
+    Latency    52.82ms   91.34ms 222.54ms   77.45%
+    Req/Sec     1.98k     1.13k    4.00k    73.41%
+  227366 requests in 15.00s, 29.06MB read
+Requests/sec:  15158.91
+Transfer/sec:      1.94MB
 
 ---------------------------------------------------------
  Concurrency: 128 for revel
@@ -113,11 +113,11 @@ Transfer/sec:      2.51MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.52ms    3.41ms  21.99ms   64.38%
-    Req/Sec     2.11k   562.85     4.00k    67.42%
-  296215 requests in 15.00s, 37.85MB read
-Requests/sec:  19750.78
-Transfer/sec:      2.52MB
+    Latency     6.69ms    3.70ms  38.82ms   68.19%
+    Req/Sec     2.57k   479.42     5.40k    74.27%
+  291765 requests in 15.00s, 37.29MB read
+Requests/sec:  19454.86
+Transfer/sec:      2.49MB
 
 ---------------------------------------------------------
  Concurrency: 256 for revel
@@ -127,8 +127,8 @@ Transfer/sec:      2.52MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    13.42ms    5.18ms  40.74ms   71.39%
-    Req/Sec     2.04k   611.20     5.00k    66.98%
-  287178 requests in 15.00s, 36.70MB read
-Requests/sec:  19146.63
-Transfer/sec:      2.45MB
+    Latency    16.22ms   25.14ms 223.62ms   98.57%
+    Req/Sec     2.52k   612.30     4.60k    78.35%
+  286425 requests in 15.00s, 36.60MB read
+Requests/sec:  19096.36
+Transfer/sec:      2.44MB

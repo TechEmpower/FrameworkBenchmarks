@@ -2,14 +2,7 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 14:39:37 UTC 2013
-
-  System load:  0.07               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 1%                 IP address for eth0: 10.254.111.115
-  Swap usage:   0%
-
-  Graph this data and manage this system at https://landscape.canonical.com/
+ System information disabled due to load higher than 2.0
 
   Get cloud support with Ubuntu Advantage Cloud Guest:
     http://www.ubuntu.com/business/services/cloud
@@ -29,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  36038 requests in 5.00s, 5.95MB read
-Requests/sec:   7206.37
-Transfer/sec:      1.19MB
+    Latency     4.75ms   20.40ms 124.03ms   97.12%
+    Req/Sec     0.96k   474.81     2.89k    79.31%
+  34516 requests in 5.00s, 5.69MB read
+Requests/sec:   6904.26
+Transfer/sec:      1.14MB
 
 ---------------------------------------------------------
  Running Warmup gemini
@@ -43,12 +36,12 @@ Transfer/sec:      1.19MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   340.61ms    1.72s   11.70s    96.05%
-    Req/Sec     3.33k     1.62k   11.00k    74.88%
-  266594 requests in 15.00s, 43.98MB read
-  Socket errors: connect 0, read 0, write 0, timeout 574
-Requests/sec:  17774.34
-Transfer/sec:      2.93MB
+    Latency    68.80ms  719.46ms  14.96s    99.13%
+    Req/Sec     3.07k     1.96k   13.89k    68.62%
+  287777 requests in 15.00s, 47.48MB read
+  Socket errors: connect 0, read 0, write 0, timeout 685
+Requests/sec:  19190.13
+Transfer/sec:      3.17MB
 
 ---------------------------------------------------------
  Concurrency: 8 for gemini
@@ -58,11 +51,11 @@ Transfer/sec:      2.93MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   508.84us    2.42ms  35.52ms   99.51%
-    Req/Sec     2.43k   535.54     3.00k    54.33%
-  329382 requests in 15.00s, 54.34MB read
-Requests/sec:  21960.03
-Transfer/sec:      3.62MB
+    Latency    34.51ms   78.84ms 216.84ms   84.21%
+    Req/Sec     2.29k     1.03k    3.33k    83.15%
+  260852 requests in 15.00s, 43.04MB read
+Requests/sec:  17391.63
+Transfer/sec:      2.87MB
 
 ---------------------------------------------------------
  Concurrency: 16 for gemini
@@ -72,11 +65,11 @@ Transfer/sec:      3.62MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   808.86us    3.48ms  61.03ms   99.60%
-    Req/Sec     2.96k   689.89     5.00k    59.40%
-  392324 requests in 15.00s, 64.73MB read
-Requests/sec:  26157.65
-Transfer/sec:      4.32MB
+    Latency     0.88ms    4.30ms  66.36ms   99.49%
+    Req/Sec     3.51k   616.83     5.33k    69.10%
+  396601 requests in 15.00s, 65.43MB read
+Requests/sec:  26443.89
+Transfer/sec:      4.36MB
 
 ---------------------------------------------------------
  Concurrency: 32 for gemini
@@ -86,11 +79,11 @@ Transfer/sec:      4.32MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.23ms  504.92us  19.25ms   87.69%
-    Req/Sec     3.00k   545.17     6.00k    72.73%
-  390650 requests in 15.00s, 64.45MB read
-Requests/sec:  26045.96
-Transfer/sec:      4.30MB
+    Latency     1.26ms    1.11ms  21.60ms   98.58%
+    Req/Sec     3.46k   512.47     6.90k    73.74%
+  393434 requests in 15.00s, 64.91MB read
+Requests/sec:  26232.67
+Transfer/sec:      4.33MB
 
 ---------------------------------------------------------
  Concurrency: 64 for gemini
@@ -100,11 +93,11 @@ Transfer/sec:      4.30MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.51ms    1.08ms  52.11ms   89.74%
-    Req/Sec     2.94k   442.55     6.00k    82.97%
-  382371 requests in 15.00s, 63.09MB read
-Requests/sec:  25494.52
-Transfer/sec:      4.21MB
+    Latency     2.50ms    2.66ms 119.36ms   99.05%
+    Req/Sec     3.49k   447.98     7.33k    78.42%
+  395449 requests in 15.00s, 65.24MB read
+Requests/sec:  26367.30
+Transfer/sec:      4.35MB
 
 ---------------------------------------------------------
  Concurrency: 128 for gemini
@@ -114,11 +107,11 @@ Transfer/sec:      4.21MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    22.70ms   58.48ms 226.28ms   91.72%
-    Req/Sec     2.67k     0.98k    6.00k    81.35%
-  348512 requests in 15.00s, 57.50MB read
-Requests/sec:  23237.88
-Transfer/sec:      3.83MB
+    Latency     5.21ms    7.85ms 214.64ms   99.30%
+    Req/Sec     3.45k   438.02     9.44k    77.25%
+  390938 requests in 15.00s, 64.50MB read
+Requests/sec:  26068.43
+Transfer/sec:      4.30MB
 
 ---------------------------------------------------------
  Concurrency: 256 for gemini
@@ -128,8 +121,8 @@ Transfer/sec:      3.83MB
 Running 15s test @ http://10.253.67.217:8080/
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    12.09ms   34.39ms 892.12ms   99.50%
-    Req/Sec     2.90k   582.61    13.00k    82.06%
-  375998 requests in 15.00s, 62.03MB read
-Requests/sec:  25067.50
-Transfer/sec:      4.14MB
+    Latency    11.43ms   34.50ms   2.33s    99.49%
+    Req/Sec     3.42k   574.50    13.00k    83.74%
+  389652 requests in 15.00s, 64.29MB read
+Requests/sec:  25981.40
+Transfer/sec:      4.29MB

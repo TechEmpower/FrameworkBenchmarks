@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 19:56:11 UTC 2013
+  System information as of Fri Jun 28 02:06:09 UTC 2013
 
-  System load:  0.47               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  1.43               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  539 requests in 5.05s, 170.94KB read
-Requests/sec:    106.79
-Transfer/sec:     33.87KB
+    Latency   155.05ms   39.98ms 192.97ms   86.73%
+    Req/Sec    15.14     37.13   111.00     85.70%
+  541 requests in 5.04s, 171.58KB read
+Requests/sec:    107.41
+Transfer/sec:     34.06KB
 
 ---------------------------------------------------------
  Running Warmup lift-stateless
@@ -43,13 +43,11 @@ Transfer/sec:     33.87KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3448 requests in 15.10s, 1.07MB read
-  Socket errors: connect 0, read 0, write 0, timeout 4
-  Non-2xx or 3xx responses: 2
-Requests/sec:    228.41
-Transfer/sec:     72.45KB
+    Latency     1.18s   172.77ms   1.45s    70.61%
+    Req/Sec    35.05     69.93   777.00     85.54%
+  3905 requests in 15.06s, 1.21MB read
+Requests/sec:    259.35
+Transfer/sec:     82.26KB
 
 ---------------------------------------------------------
  Concurrency: 8 for lift-stateless
@@ -59,12 +57,12 @@ Transfer/sec:     72.45KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  6617 requests in 15.01s, 2.05MB read
+    Latency   130.41ms  113.32ms 353.82ms   57.10%
+    Req/Sec    54.20     58.57   222.00     96.89%
+  6182 requests in 15.02s, 1.91MB read
   Non-2xx or 3xx responses: 1
-Requests/sec:    440.90
-Transfer/sec:    139.85KB
+Requests/sec:    411.55
+Transfer/sec:    130.54KB
 
 ---------------------------------------------------------
  Concurrency: 16 for lift-stateless
@@ -74,11 +72,11 @@ Transfer/sec:    139.85KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7463 requests in 15.02s, 2.31MB read
-Requests/sec:    496.81
-Transfer/sec:    157.57KB
+    Latency   177.92ms  142.27ms 352.62ms   37.72%
+    Req/Sec    63.88     75.25   444.00     87.31%
+  7247 requests in 15.01s, 2.24MB read
+Requests/sec:    482.83
+Transfer/sec:    153.13KB
 
 ---------------------------------------------------------
  Concurrency: 32 for lift-stateless
@@ -88,12 +86,11 @@ Transfer/sec:    157.57KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7960 requests in 15.03s, 2.47MB read
-  Non-2xx or 3xx responses: 3
-Requests/sec:    529.75
-Transfer/sec:    168.03KB
+    Latency   267.79ms  216.06ms 562.68ms   47.21%
+    Req/Sec    70.33     81.56   444.00     85.49%
+  7987 requests in 15.02s, 2.47MB read
+Requests/sec:    531.80
+Transfer/sec:    168.67KB
 
 ---------------------------------------------------------
  Concurrency: 64 for lift-stateless
@@ -103,11 +100,11 @@ Transfer/sec:    168.03KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8033 requests in 15.04s, 2.49MB read
-Requests/sec:    534.25
-Transfer/sec:    169.45KB
+    Latency   312.82ms  199.78ms 569.98ms   49.42%
+    Req/Sec    70.52     84.17   555.00     85.67%
+  8009 requests in 15.03s, 2.48MB read
+Requests/sec:    532.76
+Transfer/sec:    168.97KB
 
 ---------------------------------------------------------
  Concurrency: 128 for lift-stateless
@@ -117,12 +114,12 @@ Transfer/sec:    169.45KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7949 requests in 15.05s, 2.46MB read
+    Latency   620.91ms  380.72ms   1.13s    53.78%
+    Req/Sec    70.12     86.97   666.00     85.16%
+  7941 requests in 15.04s, 2.46MB read
   Non-2xx or 3xx responses: 1
-Requests/sec:    528.13
-Transfer/sec:    167.51KB
+Requests/sec:    528.07
+Transfer/sec:    167.49KB
 
 ---------------------------------------------------------
  Concurrency: 256 for lift-stateless
@@ -132,10 +129,9 @@ Transfer/sec:    167.51KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8288 requests in 15.03s, 2.57MB read
-  Socket errors: connect 0, read 0, write 0, timeout 19
-  Non-2xx or 3xx responses: 1
-Requests/sec:    551.58
-Transfer/sec:    174.95KB
+    Latency   704.79ms  307.02ms   1.39s    81.66%
+    Req/Sec    73.49     95.05   777.00     83.54%
+  8178 requests in 15.03s, 2.53MB read
+  Non-2xx or 3xx responses: 2
+Requests/sec:    544.14
+Transfer/sec:    172.59KB

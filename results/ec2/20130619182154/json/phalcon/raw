@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 22:37:56 UTC 2013
+  System information as of Fri Jun 28 04:45:49 UTC 2013
 
-  System load:  0.08               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.19               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13449 requests in 5.00s, 2.87MB read
-Requests/sec:   2689.43
-Transfer/sec:    588.19KB
+    Latency     3.32ms    2.28ms  21.81ms   77.17%
+    Req/Sec   360.95    149.79     1.10k    73.56%
+  13655 requests in 5.00s, 2.92MB read
+Requests/sec:   2730.95
+Transfer/sec:    597.27KB
 
 ---------------------------------------------------------
  Running Warmup phalcon
@@ -43,12 +43,12 @@ Transfer/sec:    588.19KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  33100 requests in 15.00s, 7.07MB read
-  Socket errors: connect 0, read 0, write 0, timeout 37
-Requests/sec:   2206.13
-Transfer/sec:    482.51KB
+    Latency   483.79ms    1.80s   10.77s    96.87%
+    Req/Sec   298.65    184.50     1.40k    61.22%
+  33151 requests in 15.00s, 7.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 39
+Requests/sec:   2209.54
+Transfer/sec:    483.26KB
 
 ---------------------------------------------------------
  Concurrency: 8 for phalcon
@@ -58,11 +58,11 @@ Transfer/sec:    482.51KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  38561 requests in 15.00s, 8.24MB read
-Requests/sec:   2570.67
-Transfer/sec:    562.21KB
+    Latency     5.12ms   14.47ms 124.09ms   98.44%
+    Req/Sec   358.19    159.84     1.22k    80.84%
+  40810 requests in 15.00s, 8.72MB read
+Requests/sec:   2720.55
+Transfer/sec:    594.99KB
 
 ---------------------------------------------------------
  Concurrency: 16 for phalcon
@@ -72,11 +72,11 @@ Transfer/sec:    562.21KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  39942 requests in 15.00s, 8.53MB read
-Requests/sec:   2662.62
-Transfer/sec:    582.32KB
+    Latency    13.52ms   35.84ms 203.57ms   96.29%
+    Req/Sec   355.25    177.47     2.00k    78.69%
+  40512 requests in 15.00s, 8.65MB read
+Requests/sec:   2700.55
+Transfer/sec:    590.62KB
 
 ---------------------------------------------------------
  Concurrency: 32 for phalcon
@@ -86,11 +86,11 @@ Transfer/sec:    582.32KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  40639 requests in 15.00s, 8.68MB read
-Requests/sec:   2709.06
-Transfer/sec:    592.48KB
+    Latency    14.30ms   13.04ms  91.47ms   88.77%
+    Req/Sec   353.30    175.59     1.55k    77.51%
+  40231 requests in 15.00s, 8.59MB read
+Requests/sec:   2681.86
+Transfer/sec:    586.53KB
 
 ---------------------------------------------------------
  Concurrency: 64 for phalcon
@@ -100,11 +100,11 @@ Transfer/sec:    592.48KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  39663 requests in 15.00s, 8.47MB read
-Requests/sec:   2643.69
-Transfer/sec:    578.19KB
+    Latency    32.38ms   38.35ms 239.81ms   95.70%
+    Req/Sec   341.75    189.30     1.60k    72.30%
+  39329 requests in 15.18s, 8.40MB read
+Requests/sec:   2591.57
+Transfer/sec:    566.79KB
 
 ---------------------------------------------------------
  Concurrency: 128 for phalcon
@@ -114,11 +114,11 @@ Transfer/sec:    578.19KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  35524 requests in 15.00s, 7.59MB read
-Requests/sec:   2368.47
-Transfer/sec:    518.02KB
+    Latency    69.13ms   72.31ms 449.29ms   94.39%
+    Req/Sec   313.01    181.93     1.78k    65.23%
+  35515 requests in 15.01s, 7.59MB read
+Requests/sec:   2366.83
+Transfer/sec:    517.65KB
 
 ---------------------------------------------------------
  Concurrency: 256 for phalcon
@@ -128,9 +128,9 @@ Transfer/sec:    518.02KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  34268 requests in 15.00s, 7.32MB read
-  Socket errors: connect 0, read 0, write 0, timeout 212
-Requests/sec:   2283.87
-Transfer/sec:    499.53KB
+    Latency   890.97ms    3.02s   13.75s    93.12%
+    Req/Sec   303.68    189.67     1.33k    59.63%
+  34568 requests in 15.02s, 7.38MB read
+  Socket errors: connect 0, read 0, write 0, timeout 330
+Requests/sec:   2302.02
+Transfer/sec:    503.50KB

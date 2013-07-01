@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  3379 requests in 5.01s, 597.26KB read
-Requests/sec:    674.29
-Transfer/sec:    119.19KB
+    Latency    69.32ms  156.03ms 691.49ms   94.24%
+    Req/Sec    98.29    102.54   555.00     84.83%
+  3308 requests in 5.01s, 584.71KB read
+Requests/sec:    660.86
+Transfer/sec:    116.81KB
 
 ---------------------------------------------------------
  Running Warmup ringojs-convinient
@@ -36,12 +36,12 @@ Transfer/sec:    119.19KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  18493 requests in 15.01s, 3.19MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1158
-Requests/sec:   1231.92
-Transfer/sec:    217.75KB
+    Latency     2.67s     4.40s   11.83s    77.07%
+    Req/Sec   176.26    162.12     1.33k    60.71%
+  19967 requests in 15.00s, 3.45MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1180
+Requests/sec:   1330.71
+Transfer/sec:    235.21KB
 
 ---------------------------------------------------------
  Concurrency: 8 for ringojs-convinient
@@ -51,11 +51,11 @@ Transfer/sec:    217.75KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  44834 requests in 15.00s, 7.74MB read
-Requests/sec:   2988.62
-Transfer/sec:    528.26KB
+    Latency   417.37ms  691.39ms   1.61s    73.63%
+    Req/Sec   390.66    341.31     1.70k    56.55%
+  44374 requests in 15.00s, 7.66MB read
+Requests/sec:   2957.78
+Transfer/sec:    522.81KB
 
 ---------------------------------------------------------
  Concurrency: 16 for ringojs-convinient
@@ -65,11 +65,11 @@ Transfer/sec:    528.26KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  65349 requests in 15.00s, 11.28MB read
-Requests/sec:   4356.40
-Transfer/sec:    770.03KB
+    Latency    16.77ms   40.26ms 144.55ms   90.18%
+    Req/Sec   585.46    352.00     2.44k    65.97%
+  66755 requests in 15.00s, 11.52MB read
+Requests/sec:   4450.08
+Transfer/sec:    786.59KB
 
 ---------------------------------------------------------
  Concurrency: 32 for ringojs-convinient
@@ -79,11 +79,11 @@ Transfer/sec:    770.03KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  75122 requests in 15.00s, 12.97MB read
-Requests/sec:   5008.09
-Transfer/sec:      0.86MB
+    Latency    16.76ms   38.87ms 204.67ms   91.65%
+    Req/Sec   652.03    358.11     2.78k    76.09%
+  73971 requests in 15.00s, 12.77MB read
+Requests/sec:   4930.64
+Transfer/sec:      0.85MB
 
 ---------------------------------------------------------
  Concurrency: 64 for ringojs-convinient
@@ -93,10 +93,10 @@ Transfer/sec:      0.86MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  81189 requests in 15.00s, 14.01MB read
-Requests/sec:   5412.93
+    Latency    14.22ms   26.29ms 295.08ms   90.94%
+    Req/Sec   713.33    285.34     2.00k    67.87%
+  81112 requests in 15.00s, 14.00MB read
+Requests/sec:   5407.85
 Transfer/sec:      0.93MB
 
 ---------------------------------------------------------
@@ -107,11 +107,11 @@ Transfer/sec:      0.93MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  83561 requests in 15.00s, 14.42MB read
-Requests/sec:   5570.71
-Transfer/sec:      0.96MB
+    Latency    27.59ms   49.11ms 513.40ms   89.36%
+    Req/Sec   723.88    264.67     2.11k    66.04%
+  82353 requests in 15.00s, 14.22MB read
+Requests/sec:   5491.57
+Transfer/sec:      0.95MB
 
 ---------------------------------------------------------
  Concurrency: 256 for ringojs-convinient
@@ -121,8 +121,8 @@ Transfer/sec:      0.96MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  85064 requests in 15.00s, 14.68MB read
-Requests/sec:   5670.80
-Transfer/sec:      0.98MB
+    Latency    54.66ms   93.56ms 764.88ms   89.56%
+    Req/Sec   722.27    269.42     3.67k    67.00%
+  82042 requests in 15.00s, 14.16MB read
+Requests/sec:   5470.82
+Transfer/sec:      0.94MB

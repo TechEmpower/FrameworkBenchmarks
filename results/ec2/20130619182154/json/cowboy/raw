@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   604.08us  143.33us   3.47ms   79.26%
-    Req/Sec     1.04k   220.06     2.00k    94.99%
-  64078 requests in 5.00s, 10.69MB read
-Requests/sec:  12819.23
-Transfer/sec:      2.14MB
+    Latency   600.96us  131.27us   4.67ms   77.79%
+    Req/Sec     1.69k   151.73     2.33k    68.08%
+  63877 requests in 5.00s, 10.66MB read
+Requests/sec:  12777.73
+Transfer/sec:      2.13MB
 
 ---------------------------------------------------------
  Running Warmup cowboy
@@ -36,11 +36,11 @@ Transfer/sec:      2.14MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    21.74ms   22.95ms 226.85ms   97.82%
-    Req/Sec     1.24k   501.36     5.00k    70.85%
-  195218 requests in 15.00s, 32.57MB read
-Requests/sec:  13015.47
-Transfer/sec:      2.17MB
+    Latency    19.55ms    6.30ms 105.89ms   73.69%
+    Req/Sec     1.73k   365.88     4.20k    67.69%
+  196795 requests in 15.00s, 32.83MB read
+Requests/sec:  13123.37
+Transfer/sec:      2.19MB
 
 ---------------------------------------------------------
  Concurrency: 8 for cowboy
@@ -50,11 +50,11 @@ Transfer/sec:      2.17MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.92ms   13.41ms 140.50ms   99.07%
-    Req/Sec     1.02k   229.84     2.00k    94.66%
-  187797 requests in 15.00s, 31.33MB read
-Requests/sec:  12520.68
-Transfer/sec:      2.09MB
+    Latency   775.88us    2.63ms  41.22ms   99.49%
+    Req/Sec     1.69k   203.00     2.44k    86.03%
+  192465 requests in 15.00s, 32.11MB read
+Requests/sec:  12831.64
+Transfer/sec:      2.14MB
 
 ---------------------------------------------------------
  Concurrency: 16 for cowboy
@@ -64,11 +64,11 @@ Transfer/sec:      2.09MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.23ms  475.88us   9.99ms   77.38%
-    Req/Sec     1.24k   433.97     2.00k    75.62%
-  196665 requests in 15.00s, 32.81MB read
-Requests/sec:  13111.98
-Transfer/sec:      2.19MB
+    Latency     1.21ms  377.80us   7.84ms   63.79%
+    Req/Sec     1.76k   309.90     3.11k    63.20%
+  200082 requests in 15.00s, 33.38MB read
+Requests/sec:  13339.91
+Transfer/sec:      2.23MB
 
 ---------------------------------------------------------
  Concurrency: 32 for cowboy
@@ -78,11 +78,11 @@ Transfer/sec:      2.19MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    25.63ms   63.89ms 203.37ms   88.43%
-    Req/Sec     1.06k   560.51     3.00k    68.25%
-  175056 requests in 15.00s, 29.21MB read
-Requests/sec:  11671.24
-Transfer/sec:      1.95MB
+    Latency     2.43ms  825.40us   9.62ms   63.80%
+    Req/Sec     1.76k   294.44     3.33k    70.66%
+  200696 requests in 15.00s, 33.49MB read
+Requests/sec:  13380.90
+Transfer/sec:      2.23MB
 
 ---------------------------------------------------------
  Concurrency: 64 for cowboy
@@ -92,11 +92,11 @@ Transfer/sec:      1.95MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    35.28ms   72.51ms 211.32ms   85.29%
-    Req/Sec     1.01k   579.31     3.00k    67.06%
-  167734 requests in 15.00s, 27.99MB read
-Requests/sec:  11182.81
-Transfer/sec:      1.87MB
+    Latency     4.91ms    2.05ms  26.49ms   71.70%
+    Req/Sec     1.76k   316.07     4.11k    74.52%
+  200249 requests in 15.00s, 33.41MB read
+Requests/sec:  13350.06
+Transfer/sec:      2.23MB
 
 ---------------------------------------------------------
  Concurrency: 128 for cowboy
@@ -106,11 +106,11 @@ Transfer/sec:      1.87MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    10.53ms    7.39ms  97.27ms   91.36%
-    Req/Sec     1.17k   423.93     3.00k    79.78%
-  194294 requests in 15.00s, 32.42MB read
-Requests/sec:  12955.21
-Transfer/sec:      2.16MB
+    Latency    41.30ms   75.19ms 229.12ms   85.01%
+    Req/Sec     1.50k   665.03     4.00k    80.87%
+  170830 requests in 15.00s, 28.50MB read
+Requests/sec:  11389.04
+Transfer/sec:      1.90MB
 
 ---------------------------------------------------------
  Concurrency: 256 for cowboy
@@ -120,8 +120,8 @@ Transfer/sec:      2.16MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    20.27ms   11.82ms 141.79ms   84.79%
-    Req/Sec     1.23k   498.59     5.00k    71.56%
-  193198 requests in 15.00s, 32.23MB read
-Requests/sec:  12880.27
-Transfer/sec:      2.15MB
+    Latency    35.20ms   55.06ms 238.90ms   92.33%
+    Req/Sec     1.64k   648.79     7.22k    80.88%
+  183890 requests in 14.99s, 30.68MB read
+Requests/sec:  12264.24
+Transfer/sec:      2.05MB

@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 17:30:17 UTC 2013
+  System information as of Thu Jun 27 23:38:38 UTC 2013
 
-  System load:  0.48               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.58               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   540.12us  202.37us   2.74ms   92.85%
-    Req/Sec     1.35k   478.55     2.00k    64.64%
-  71188 requests in 5.00s, 10.73MB read
-Requests/sec:  14239.90
-Transfer/sec:      2.15MB
+    Latency    44.57ms   86.54ms 214.94ms   79.47%
+    Req/Sec     1.44k   759.72     2.33k    77.60%
+  52140 requests in 5.08s, 7.86MB read
+Requests/sec:  10271.71
+Transfer/sec:      1.55MB
 
 ---------------------------------------------------------
  Running Warmup webgo
@@ -43,11 +43,11 @@ Transfer/sec:      2.15MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    18.14ms    6.97ms 107.59ms   72.00%
-    Req/Sec     1.41k   558.06     3.00k    52.11%
-  210383 requests in 15.00s, 31.70MB read
-Requests/sec:  14027.45
-Transfer/sec:      2.11MB
+    Latency    37.91ms   62.84ms 241.43ms   91.04%
+    Req/Sec     1.68k   674.43     6.78k    79.10%
+  188617 requests in 15.00s, 28.42MB read
+Requests/sec:  12574.16
+Transfer/sec:      1.89MB
 
 ---------------------------------------------------------
  Concurrency: 8 for webgo
@@ -57,10 +57,10 @@ Transfer/sec:      2.11MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     9.29ms   55.10ms 367.71ms   97.54%
-    Req/Sec     1.36k   530.02     2.00k    58.97%
-  207861 requests in 15.00s, 31.32MB read
-Requests/sec:  13858.90
+    Latency    12.08ms   67.69ms 421.97ms   97.17%
+    Req/Sec     1.83k   370.70     2.44k    90.83%
+  207817 requests in 15.00s, 31.31MB read
+Requests/sec:  13854.84
 Transfer/sec:      2.09MB
 
 ---------------------------------------------------------
@@ -71,11 +71,11 @@ Transfer/sec:      2.09MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.56ms   21.47ms 192.62ms   98.72%
-    Req/Sec     1.40k   516.96     2.00k    56.88%
-  213249 requests in 15.00s, 32.13MB read
-Requests/sec:  14216.43
-Transfer/sec:      2.14MB
+    Latency     1.12ms  552.70us  12.16ms   77.32%
+    Req/Sec     1.88k   267.78     3.44k    68.30%
+  214378 requests in 15.00s, 32.30MB read
+Requests/sec:  14293.23
+Transfer/sec:      2.15MB
 
 ---------------------------------------------------------
  Concurrency: 32 for webgo
@@ -85,11 +85,11 @@ Transfer/sec:      2.14MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.25ms    1.10ms  11.94ms   68.74%
-    Req/Sec     1.43k   497.46     2.00k    56.91%
-  214745 requests in 15.00s, 32.36MB read
-Requests/sec:  14317.90
-Transfer/sec:      2.16MB
+    Latency     6.62ms   28.55ms 197.59ms   97.78%
+    Req/Sec     1.79k   388.79     3.11k    80.92%
+  203327 requests in 15.00s, 30.64MB read
+Requests/sec:  13556.39
+Transfer/sec:      2.04MB
 
 ---------------------------------------------------------
  Concurrency: 64 for webgo
@@ -99,11 +99,11 @@ Transfer/sec:      2.16MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.61ms    2.47ms  27.25ms   69.50%
-    Req/Sec     1.39k   499.49     2.00k    59.91%
-  210493 requests in 15.00s, 31.72MB read
-Requests/sec:  14034.46
-Transfer/sec:      2.11MB
+    Latency     7.30ms   22.90ms 206.02ms   98.69%
+    Req/Sec     1.80k   359.41     2.78k    77.21%
+  204027 requests in 15.00s, 30.74MB read
+Requests/sec:  13602.37
+Transfer/sec:      2.05MB
 
 ---------------------------------------------------------
  Concurrency: 128 for webgo
@@ -113,11 +113,11 @@ Transfer/sec:      2.11MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     9.21ms    4.92ms  44.51ms   66.85%
-    Req/Sec     1.38k   514.61     3.00k    59.16%
-  208658 requests in 15.00s, 31.44MB read
-Requests/sec:  13913.45
-Transfer/sec:      2.10MB
+    Latency    11.52ms   21.23ms 205.92ms   98.80%
+    Req/Sec     1.80k   400.45     3.11k    72.72%
+  204887 requests in 15.00s, 30.87MB read
+Requests/sec:  13661.90
+Transfer/sec:      2.06MB
 
 ---------------------------------------------------------
  Concurrency: 256 for webgo
@@ -127,8 +127,8 @@ Transfer/sec:      2.10MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    18.22ms    6.77ms  61.66ms   71.79%
-    Req/Sec     1.43k   563.54     4.00k    50.78%
-  211069 requests in 15.00s, 31.80MB read
-Requests/sec:  14072.17
-Transfer/sec:      2.12MB
+    Latency    27.14ms   41.55ms 220.37ms   95.53%
+    Req/Sec     1.78k   590.88     5.78k    80.25%
+  201958 requests in 15.00s, 30.43MB read
+Requests/sec:  13464.41
+Transfer/sec:      2.03MB

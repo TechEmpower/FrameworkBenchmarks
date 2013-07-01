@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  547 requests in 5.03s, 136.63KB read
-Requests/sec:    108.84
-Transfer/sec:     27.19KB
+    Latency   155.62ms   37.31ms 189.35ms   87.65%
+    Req/Sec    14.47     36.14   111.00     86.15%
+  544 requests in 5.03s, 135.89KB read
+Requests/sec:    108.11
+Transfer/sec:     27.01KB
 
 ---------------------------------------------------------
  Running Warmup symfony2
@@ -36,12 +36,12 @@ Transfer/sec:     27.19KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1964 requests in 15.08s, 490.59KB read
-  Socket errors: connect 0, read 0, write 0, timeout 120
-Requests/sec:    130.26
-Transfer/sec:     32.54KB
+    Latency     3.54s     1.26s    5.50s    64.22%
+    Req/Sec    18.88     47.84   500.00     84.43%
+  2009 requests in 15.16s, 501.82KB read
+  Socket errors: connect 0, read 0, write 0, timeout 72
+Requests/sec:    132.49
+Transfer/sec:     33.10KB
 
 ---------------------------------------------------------
  Concurrency: 8 for symfony2
@@ -51,11 +51,11 @@ Transfer/sec:     32.54KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2165 requests in 15.01s, 540.69KB read
-Requests/sec:    144.21
-Transfer/sec:     36.01KB
+    Latency   142.29ms   58.94ms 278.23ms   73.28%
+    Req/Sec    19.05     40.57   111.00     81.88%
+  2162 requests in 15.02s, 539.98KB read
+Requests/sec:    143.94
+Transfer/sec:     35.95KB
 
 ---------------------------------------------------------
  Concurrency: 16 for symfony2
@@ -65,11 +65,11 @@ Transfer/sec:     36.01KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2122 requests in 15.02s, 529.96KB read
-Requests/sec:    141.29
-Transfer/sec:     35.29KB
+    Latency   287.65ms   89.34ms 405.39ms   73.30%
+    Req/Sec    18.88     42.37   222.00     82.72%
+  2147 requests in 15.04s, 536.23KB read
+Requests/sec:    142.79
+Transfer/sec:     35.66KB
 
 ---------------------------------------------------------
  Concurrency: 32 for symfony2
@@ -79,11 +79,11 @@ Transfer/sec:     35.29KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2115 requests in 15.08s, 528.28KB read
-Requests/sec:    140.25
-Transfer/sec:     35.03KB
+    Latency   597.48ms  184.20ms 770.71ms   85.11%
+    Req/Sec    18.74     45.30   444.00     83.90%
+  2122 requests in 15.07s, 530.03KB read
+Requests/sec:    140.86
+Transfer/sec:     35.18KB
 
 ---------------------------------------------------------
  Concurrency: 64 for symfony2
@@ -93,11 +93,11 @@ Transfer/sec:     35.03KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2111 requests in 15.15s, 527.29KB read
-Requests/sec:    139.30
-Transfer/sec:     34.79KB
+    Latency     1.32s   410.55ms   1.84s    74.57%
+    Req/Sec    18.52     45.34   444.00     84.18%
+  2101 requests in 15.13s, 524.77KB read
+Requests/sec:    138.91
+Transfer/sec:     34.69KB
 
 ---------------------------------------------------------
  Concurrency: 128 for symfony2
@@ -107,11 +107,12 @@ Transfer/sec:     34.79KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2027 requests in 15.13s, 506.29KB read
-Requests/sec:    133.97
-Transfer/sec:     33.46KB
+    Latency     2.24s   662.33ms   3.09s    75.26%
+    Req/Sec    18.25     44.54   333.00     84.28%
+  2012 requests in 15.12s, 502.54KB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    133.10
+Transfer/sec:     33.24KB
 
 ---------------------------------------------------------
  Concurrency: 256 for symfony2
@@ -121,9 +122,9 @@ Transfer/sec:     33.46KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1922 requests in 15.05s, 480.11KB read
-  Socket errors: connect 0, read 0, write 0, timeout 101
-Requests/sec:    127.70
-Transfer/sec:     31.90KB
+    Latency     5.10s     1.37s    6.26s    85.87%
+    Req/Sec    17.70     47.26   500.00     85.70%
+  1898 requests in 15.25s, 474.09KB read
+  Socket errors: connect 0, read 0, write 0, timeout 98
+Requests/sec:    124.49
+Transfer/sec:     31.09KB

@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 15:07:47 UTC 2013
+  System information as of Thu Jun 27 21:08:55 UTC 2013
 
-  System load:  0.81               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 2%                 IP address for eth0: 10.254.111.115
+  System load:  0.6                Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  12066 requests in 5.00s, 15.35MB read
-Requests/sec:   2412.94
-Transfer/sec:      3.07MB
+    Latency     3.74ms    4.27ms  34.57ms   93.28%
+    Req/Sec   358.44    121.07     0.89k    71.44%
+  13003 requests in 5.00s, 16.54MB read
+Requests/sec:   2600.26
+Transfer/sec:      3.31MB
 
 ---------------------------------------------------------
  Running Warmup compojure
@@ -43,12 +43,11 @@ Transfer/sec:      3.07MB
 Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  43033 requests in 15.00s, 55.20MB read
-  Socket errors: connect 0, read 1, write 0, timeout 6
-Requests/sec:   2868.99
-Transfer/sec:      3.68MB
+    Latency   120.26ms  182.75ms   1.13s    93.39%
+    Req/Sec   424.99    253.93     3.44k    71.22%
+  48309 requests in 15.00s, 61.46MB read
+Requests/sec:   3221.02
+Transfer/sec:      4.10MB
 
 ---------------------------------------------------------
  Concurrency: 8 for compojure
@@ -58,11 +57,11 @@ Transfer/sec:      3.68MB
 Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  43227 requests in 15.00s, 54.99MB read
-Requests/sec:   2881.67
-Transfer/sec:      3.67MB
+    Latency     2.72ms    1.94ms  23.66ms   97.69%
+    Req/Sec   417.18     91.03     0.90k    76.72%
+  47380 requests in 15.00s, 60.28MB read
+Requests/sec:   3158.51
+Transfer/sec:      4.02MB
 
 ---------------------------------------------------------
  Concurrency: 16 for compojure
@@ -72,11 +71,11 @@ Transfer/sec:      3.67MB
 Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  45372 requests in 15.00s, 57.72MB read
-Requests/sec:   3024.65
-Transfer/sec:      3.85MB
+    Latency     5.11ms    2.93ms  41.71ms   89.47%
+    Req/Sec   435.42    103.41     1.33k    71.46%
+  49493 requests in 15.00s, 62.97MB read
+Requests/sec:   3299.21
+Transfer/sec:      4.20MB
 
 ---------------------------------------------------------
  Concurrency: 32 for compojure
@@ -86,11 +85,11 @@ Transfer/sec:      3.85MB
 Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  47304 requests in 15.00s, 60.18MB read
-Requests/sec:   3153.13
-Transfer/sec:      4.01MB
+    Latency     9.82ms    2.94ms  57.24ms   90.10%
+    Req/Sec   436.99     96.02     0.90k    70.68%
+  49648 requests in 15.00s, 63.16MB read
+Requests/sec:   3309.05
+Transfer/sec:      4.21MB
 
 ---------------------------------------------------------
  Concurrency: 64 for compojure
@@ -100,11 +99,11 @@ Transfer/sec:      4.01MB
 Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  49258 requests in 15.00s, 62.67MB read
-Requests/sec:   3283.13
-Transfer/sec:      4.18MB
+    Latency    20.46ms   14.05ms 181.99ms   94.38%
+    Req/Sec   448.75    189.10     1.67k    66.13%
+  50984 requests in 15.00s, 64.86MB read
+Requests/sec:   3398.84
+Transfer/sec:      4.32MB
 
 ---------------------------------------------------------
  Concurrency: 128 for compojure
@@ -114,10 +113,10 @@ Transfer/sec:      4.18MB
 Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  49524 requests in 15.01s, 63.00MB read
-Requests/sec:   3300.30
+    Latency    44.74ms   44.32ms 378.81ms   95.57%
+    Req/Sec   436.08    207.81     1.44k    62.51%
+  49493 requests in 15.00s, 62.97MB read
+Requests/sec:   3298.65
 Transfer/sec:      4.20MB
 
 ---------------------------------------------------------
@@ -128,9 +127,8 @@ Transfer/sec:      4.20MB
 Running 15s test @ http://10.253.67.217:8080/compojure/fortune-hiccup
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  43709 requests in 15.00s, 56.04MB read
-  Socket errors: connect 0, read 5, write 0, timeout 27
-Requests/sec:   2914.28
-Transfer/sec:      3.74MB
+    Latency   142.53ms  227.60ms   1.01s    92.34%
+    Req/Sec   415.55    253.41     1.80k    69.64%
+  47150 requests in 15.00s, 59.98MB read
+Requests/sec:   3143.71
+Transfer/sec:      4.00MB

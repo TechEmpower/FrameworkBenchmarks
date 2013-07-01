@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 19:02:57 UTC 2013
+  System information as of Fri Jun 28 01:16:15 UTC 2013
 
-  System load:  0.74               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.88               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4947 requests in 5.02s, 6.81MB read
-Requests/sec:    986.38
-Transfer/sec:      1.36MB
+    Latency     9.73ms    5.53ms  26.70ms   85.88%
+    Req/Sec   133.41     63.17   300.00     55.66%
+  4827 requests in 5.00s, 6.64MB read
+Requests/sec:    964.79
+Transfer/sec:      1.33MB
 
 ---------------------------------------------------------
  Running Warmup grizzly-jersey
@@ -43,11 +43,11 @@ Transfer/sec:      1.36MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  22764 requests in 15.09s, 31.33MB read
-Requests/sec:   1509.01
-Transfer/sec:      2.08MB
+    Latency   295.22ms  119.97ms 408.61ms   69.57%
+    Req/Sec   197.44    325.66     1.89k    87.26%
+  22201 requests in 15.08s, 30.55MB read
+Requests/sec:   1472.56
+Transfer/sec:      2.03MB
 
 ---------------------------------------------------------
  Concurrency: 8 for grizzly-jersey
@@ -57,11 +57,11 @@ Transfer/sec:      2.08MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27988 requests in 15.00s, 38.52MB read
-Requests/sec:   1865.64
-Transfer/sec:      2.57MB
+    Latency     4.39ms    0.91ms  22.30ms   96.75%
+    Req/Sec   241.73     52.07   333.00     64.96%
+  27468 requests in 15.00s, 37.80MB read
+Requests/sec:   1830.95
+Transfer/sec:      2.52MB
 
 ---------------------------------------------------------
  Concurrency: 16 for grizzly-jersey
@@ -71,11 +71,11 @@ Transfer/sec:      2.57MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27933 requests in 15.00s, 38.44MB read
-Requests/sec:   1861.70
-Transfer/sec:      2.56MB
+    Latency    34.48ms   68.39ms 219.45ms   87.80%
+    Req/Sec   210.55     91.54   444.00     77.45%
+  24044 requests in 15.00s, 33.09MB read
+Requests/sec:   1602.44
+Transfer/sec:      2.21MB
 
 ---------------------------------------------------------
  Concurrency: 32 for grizzly-jersey
@@ -85,11 +85,11 @@ Transfer/sec:      2.56MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27167 requests in 15.01s, 37.39MB read
-Requests/sec:   1810.47
-Transfer/sec:      2.49MB
+    Latency    42.92ms   66.74ms 223.05ms   87.84%
+    Req/Sec   217.43    119.49   444.00     78.99%
+  24496 requests in 15.00s, 33.71MB read
+Requests/sec:   1632.69
+Transfer/sec:      2.25MB
 
 ---------------------------------------------------------
  Concurrency: 64 for grizzly-jersey
@@ -99,11 +99,11 @@ Transfer/sec:      2.49MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27723 requests in 15.01s, 38.15MB read
-Requests/sec:   1847.42
-Transfer/sec:      2.54MB
+    Latency    53.26ms   37.50ms 135.43ms   82.38%
+    Req/Sec   232.61    182.89     0.89k    67.44%
+  26531 requests in 15.01s, 36.51MB read
+Requests/sec:   1767.48
+Transfer/sec:      2.43MB
 
 ---------------------------------------------------------
  Concurrency: 128 for grizzly-jersey
@@ -113,11 +113,11 @@ Transfer/sec:      2.54MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  27217 requests in 15.03s, 37.45MB read
-Requests/sec:   1811.39
-Transfer/sec:      2.49MB
+    Latency    76.79ms    8.34ms  89.30ms   64.15%
+    Req/Sec   235.66    267.85     1.55k    86.20%
+  26801 requests in 15.03s, 36.88MB read
+Requests/sec:   1783.48
+Transfer/sec:      2.45MB
 
 ---------------------------------------------------------
  Concurrency: 256 for grizzly-jersey
@@ -127,8 +127,8 @@ Transfer/sec:      2.49MB
 Running 15s test @ http://10.253.67.217:8080/fortunes
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  26850 requests in 15.04s, 36.95MB read
-Requests/sec:   1784.77
-Transfer/sec:      2.46MB
+    Latency   259.43ms  125.05ms 393.31ms   53.32%
+    Req/Sec   232.30    347.11     1.67k    85.07%
+  26429 requests in 15.05s, 36.37MB read
+Requests/sec:   1755.98
+Transfer/sec:      2.42MB

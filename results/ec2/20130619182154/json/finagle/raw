@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 19:44:00 UTC 2013
+  System information as of Fri Jun 28 01:55:22 UTC 2013
 
-  System load:  0.07               Processes:           66
-  Usage of /:   25.7% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.38               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10674 requests in 5.00s, 1.14MB read
-Requests/sec:   2134.77
-Transfer/sec:    233.49KB
+    Latency     5.69ms    8.42ms  61.42ms   94.69%
+    Req/Sec   293.35    147.89     1.00k    64.25%
+  10597 requests in 5.00s, 1.13MB read
+Requests/sec:   2119.09
+Transfer/sec:    231.78KB
 
 ---------------------------------------------------------
  Running Warmup finagle
@@ -43,12 +43,12 @@ Transfer/sec:    233.49KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    11.38ms   16.32ms   1.47s    98.13%
-    Req/Sec     2.66k     0.92k    9.00k    78.70%
-  331177 requests in 15.00s, 35.37MB read
-  Socket errors: connect 0, read 0, write 0, timeout 7
-Requests/sec:  22077.91
-Transfer/sec:      2.36MB
+    Latency    11.68ms   23.13ms 663.88ms   99.10%
+    Req/Sec     3.17k   816.71     7.22k    73.09%
+  346977 requests in 15.00s, 37.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:  23132.05
+Transfer/sec:      2.47MB
 
 ---------------------------------------------------------
  Concurrency: 8 for finagle
@@ -58,11 +58,11 @@ Transfer/sec:      2.36MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   633.07us  524.69us  18.26ms   98.76%
-    Req/Sec     1.09k   319.14     2.00k    88.95%
-  190193 requests in 15.00s, 20.31MB read
-Requests/sec:  12680.57
-Transfer/sec:      1.35MB
+    Latency   616.04us  361.43us  10.69ms   97.14%
+    Req/Sec     1.71k   238.15     2.56k    76.67%
+  193543 requests in 15.00s, 20.67MB read
+Requests/sec:  12903.79
+Transfer/sec:      1.38MB
 
 ---------------------------------------------------------
  Concurrency: 16 for finagle
@@ -72,11 +72,11 @@ Transfer/sec:      1.35MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.97ms  525.96us  15.80ms   93.13%
-    Req/Sec     1.76k   443.75     3.00k    76.31%
-  247013 requests in 15.00s, 26.38MB read
-Requests/sec:  16468.14
-Transfer/sec:      1.76MB
+    Latency    18.20ms   58.01ms 214.37ms   91.90%
+    Req/Sec     2.00k   684.93     3.22k    84.05%
+  227874 requests in 15.00s, 24.34MB read
+Requests/sec:  15192.61
+Transfer/sec:      1.62MB
 
 ---------------------------------------------------------
  Concurrency: 32 for finagle
@@ -86,11 +86,11 @@ Transfer/sec:      1.76MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.86ms    2.61ms  34.96ms   94.80%
-    Req/Sec     1.91k   535.33     4.00k    74.78%
-  271226 requests in 15.00s, 28.97MB read
-Requests/sec:  18082.89
-Transfer/sec:      1.93MB
+    Latency    14.45ms   50.14ms 213.46ms   93.96%
+    Req/Sec     2.28k   749.54     4.11k    82.65%
+  260375 requests in 15.00s, 27.81MB read
+Requests/sec:  17359.84
+Transfer/sec:      1.85MB
 
 ---------------------------------------------------------
  Concurrency: 64 for finagle
@@ -100,11 +100,11 @@ Transfer/sec:      1.93MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.02ms    2.44ms  29.35ms   90.37%
-    Req/Sec     2.38k   600.96     4.00k    52.30%
-  320169 requests in 15.00s, 34.20MB read
-Requests/sec:  21345.95
-Transfer/sec:      2.28MB
+    Latency     4.13ms   10.69ms 108.82ms   98.11%
+    Req/Sec     2.77k   609.58     5.44k    76.95%
+  313950 requests in 15.00s, 33.53MB read
+Requests/sec:  20933.28
+Transfer/sec:      2.24MB
 
 ---------------------------------------------------------
  Concurrency: 128 for finagle
@@ -114,11 +114,11 @@ Transfer/sec:      2.28MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.30ms    2.93ms  37.17ms   76.86%
-    Req/Sec     2.76k   559.68     4.00k    70.00%
-  361386 requests in 15.00s, 38.60MB read
-Requests/sec:  24093.70
-Transfer/sec:      2.57MB
+    Latency     5.58ms    3.39ms  35.40ms   76.08%
+    Req/Sec     3.04k   594.65     5.50k    72.70%
+  342740 requests in 15.00s, 36.61MB read
+Requests/sec:  22850.70
+Transfer/sec:      2.44MB
 
 ---------------------------------------------------------
  Concurrency: 256 for finagle
@@ -128,8 +128,8 @@ Transfer/sec:      2.57MB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    10.07ms    4.84ms  67.01ms   72.27%
-    Req/Sec     2.88k   732.00     6.00k    57.35%
-  376346 requests in 15.00s, 40.20MB read
-Requests/sec:  25091.46
-Transfer/sec:      2.68MB
+    Latency    10.58ms    8.02ms 647.57ms   89.43%
+    Req/Sec     3.15k     0.85k    8.33k    74.31%
+  356998 requests in 15.00s, 38.13MB read
+Requests/sec:  23802.69
+Transfer/sec:      2.54MB

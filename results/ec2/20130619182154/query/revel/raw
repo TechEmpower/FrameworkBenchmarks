@@ -10,8 +10,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21451 requests in 5.00s, 3.53MB read
-Requests/sec:   4290.15
-Transfer/sec:    722.93KB
+    Latency     1.73ms    1.01ms  15.70ms   97.26%
+    Req/Sec   629.59    122.86     0.89k    66.31%
+  23924 requests in 5.00s, 3.94MB read
+Requests/sec:   4785.46
+Transfer/sec:    806.40KB
 
 ---------------------------------------------------------
  Running Warmup revel
@@ -36,10 +36,10 @@ Transfer/sec:    722.93KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  81443 requests in 15.00s, 13.40MB read
-Requests/sec:   5429.35
+    Latency    54.65ms   61.19ms 470.72ms   93.29%
+    Req/Sec   714.73    339.62     2.22k    68.75%
+  81038 requests in 15.00s, 13.34MB read
+Requests/sec:   5402.37
 Transfer/sec:      0.89MB
 
 ---------------------------------------------------------
@@ -50,11 +50,11 @@ Transfer/sec:      0.89MB
 Running 15s test @ http://10.253.67.217:8080/db?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    31.00ms   32.83ms 268.09ms   90.79%
-    Req/Sec   764.32    508.78     3.00k    68.61%
-  134545 requests in 15.00s, 17.81MB read
-Requests/sec:   8970.60
-Transfer/sec:      1.19MB
+    Latency    32.15ms   33.37ms 231.70ms   91.90%
+    Req/Sec     1.18k   454.22     3.56k    68.75%
+  133921 requests in 15.00s, 17.72MB read
+Requests/sec:   8928.15
+Transfer/sec:      1.18MB
 
 ---------------------------------------------------------
  Queries: 5 for revel
@@ -64,11 +64,11 @@ Transfer/sec:      1.19MB
 Running 15s test @ http://10.253.67.217:8080/db?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  37771 requests in 15.00s, 9.69MB read
-Requests/sec:   2517.96
-Transfer/sec:    661.16KB
+    Latency   123.87ms   96.61ms 455.11ms   88.78%
+    Req/Sec   336.51    215.02     1.33k    60.39%
+  38167 requests in 15.01s, 9.79MB read
+Requests/sec:   2543.10
+Transfer/sec:    667.79KB
 
 ---------------------------------------------------------
  Queries: 10 for revel
@@ -78,11 +78,11 @@ Transfer/sec:    661.16KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  20418 requests in 15.01s, 8.33MB read
-Requests/sec:   1360.31
-Transfer/sec:    568.27KB
+    Latency   260.53ms  149.34ms 598.46ms   72.85%
+    Req/Sec   180.77    152.22     0.90k    60.50%
+  20464 requests in 15.01s, 8.35MB read
+Requests/sec:   1363.52
+Transfer/sec:    569.58KB
 
 ---------------------------------------------------------
  Queries: 15 for revel
@@ -92,11 +92,11 @@ Transfer/sec:    568.27KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14160 requests in 15.04s, 7.92MB read
-Requests/sec:    941.59
-Transfer/sec:    539.41KB
+    Latency   391.84ms  179.54ms 719.68ms   64.38%
+    Req/Sec   123.25    120.76   700.00     53.91%
+  13922 requests in 15.01s, 7.79MB read
+Requests/sec:    927.42
+Transfer/sec:    531.33KB
 
 ---------------------------------------------------------
  Queries: 20 for revel
@@ -106,8 +106,8 @@ Transfer/sec:    539.41KB
 Running 15s test @ http://10.253.67.217:8080/db?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  10791 requests in 15.02s, 7.67MB read
-Requests/sec:    718.53
-Transfer/sec:    523.16KB
+    Latency   518.71ms  198.55ms 801.36ms   55.74%
+    Req/Sec    94.38    105.52   777.00     76.96%
+  10638 requests in 15.01s, 7.56MB read
+Requests/sec:    708.60
+Transfer/sec:    515.93KB

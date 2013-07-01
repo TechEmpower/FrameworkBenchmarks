@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4244 requests in 5.00s, 0.95MB read
-Requests/sec:    848.44
-Transfer/sec:    194.48KB
+    Latency    14.60ms   15.46ms  64.30ms   85.04%
+    Req/Sec   127.37     71.76   333.00     51.29%
+  4727 requests in 5.00s, 1.06MB read
+Requests/sec:    944.59
+Transfer/sec:    216.53KB
 
 ---------------------------------------------------------
  Running Warmup micromvc
@@ -36,11 +36,11 @@ Transfer/sec:    194.48KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13689 requests in 15.01s, 3.07MB read
-Requests/sec:    911.87
-Transfer/sec:    209.08KB
+    Latency   722.38ms  605.19ms   1.77s    68.31%
+    Req/Sec   122.75    133.01     1.00k    85.75%
+  13909 requests in 15.04s, 3.11MB read
+Requests/sec:    925.01
+Transfer/sec:    212.08KB
 
 ---------------------------------------------------------
  Concurrency: 8 for micromvc
@@ -50,11 +50,11 @@ Transfer/sec:    209.08KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13910 requests in 15.00s, 3.11MB read
-Requests/sec:    927.13
-Transfer/sec:    212.53KB
+    Latency    17.30ms   21.48ms  80.11ms   85.23%
+    Req/Sec   127.02     72.16   333.00     51.24%
+  14450 requests in 15.00s, 3.23MB read
+Requests/sec:    963.19
+Transfer/sec:    220.79KB
 
 ---------------------------------------------------------
  Concurrency: 16 for micromvc
@@ -64,11 +64,11 @@ Transfer/sec:    212.53KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  15047 requests in 15.00s, 3.37MB read
-Requests/sec:   1002.82
-Transfer/sec:    229.89KB
+    Latency    72.29ms  110.14ms 437.15ms   77.31%
+    Req/Sec   132.94    100.30   555.00     67.25%
+  15130 requests in 15.00s, 3.39MB read
+Requests/sec:   1008.50
+Transfer/sec:    231.18KB
 
 ---------------------------------------------------------
  Concurrency: 32 for micromvc
@@ -78,11 +78,11 @@ Transfer/sec:    229.89KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14994 requests in 15.00s, 3.36MB read
-Requests/sec:    999.33
-Transfer/sec:    229.08KB
+    Latency   230.78ms  334.50ms   1.09s    75.48%
+    Req/Sec   132.07    113.44   666.00     59.32%
+  15025 requests in 15.01s, 3.36MB read
+Requests/sec:   1001.06
+Transfer/sec:    229.47KB
 
 ---------------------------------------------------------
  Concurrency: 64 for micromvc
@@ -92,11 +92,12 @@ Transfer/sec:    229.08KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14847 requests in 15.01s, 3.32MB read
-Requests/sec:    989.22
-Transfer/sec:    226.77KB
+    Latency   646.07ms  961.57ms   3.06s    77.34%
+    Req/Sec   131.25    119.04   777.00     56.42%
+  14902 requests in 15.00s, 3.34MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    993.21
+Transfer/sec:    227.68KB
 
 ---------------------------------------------------------
  Concurrency: 128 for micromvc
@@ -106,11 +107,11 @@ Transfer/sec:    226.77KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14435 requests in 15.02s, 3.23MB read
-Requests/sec:    960.90
-Transfer/sec:    220.28KB
+    Latency   495.13ms  526.55ms   1.35s    70.68%
+    Req/Sec   128.35    128.36     0.89k    85.64%
+  14529 requests in 15.01s, 3.25MB read
+Requests/sec:    968.06
+Transfer/sec:    221.92KB
 
 ---------------------------------------------------------
  Concurrency: 256 for micromvc
@@ -120,8 +121,8 @@ Transfer/sec:    220.28KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  13659 requests in 15.05s, 3.06MB read
-Requests/sec:    907.66
-Transfer/sec:    208.10KB
+    Latency   690.31ms  565.33ms   1.86s    72.32%
+    Req/Sec   124.54    137.02     0.89k    85.17%
+  14044 requests in 15.03s, 3.14MB read
+Requests/sec:    934.69
+Transfer/sec:    214.30KB

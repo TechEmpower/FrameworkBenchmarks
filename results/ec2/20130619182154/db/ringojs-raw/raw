@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 22:53:07 UTC 2013
+  System information as of Fri Jun 28 05:01:00 UTC 2013
 
-  System load:  0.17               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.14               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2849 requests in 5.01s, 516.90KB read
-Requests/sec:    569.09
-Transfer/sec:    103.25KB
+    Latency    35.67ms   32.09ms 121.05ms   75.90%
+    Req/Sec    79.43     68.03   333.00     54.04%
+  2798 requests in 5.01s, 507.67KB read
+Requests/sec:    558.78
+Transfer/sec:    101.39KB
 
 ---------------------------------------------------------
  Running Warmup ringojs-raw
@@ -43,12 +43,12 @@ Transfer/sec:    103.25KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  12456 requests in 15.01s, 2.21MB read
-  Socket errors: connect 0, read 0, write 0, timeout 638
-Requests/sec:    829.87
-Transfer/sec:    150.56KB
+    Latency     4.03s     5.24s   12.99s    73.55%
+    Req/Sec   124.25    123.30     1.00k    51.65%
+  13799 requests in 15.01s, 2.44MB read
+  Socket errors: connect 0, read 0, write 0, timeout 375
+Requests/sec:    919.22
+Transfer/sec:    166.78KB
 
 ---------------------------------------------------------
  Concurrency: 8 for ringojs-raw
@@ -58,11 +58,11 @@ Transfer/sec:    150.56KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  38456 requests in 15.00s, 6.81MB read
-Requests/sec:   2563.85
-Transfer/sec:    465.16KB
+    Latency   101.54ms  270.26ms 846.90ms   88.27%
+    Req/Sec   421.33    220.04     0.90k    64.11%
+  47755 requests in 15.00s, 8.46MB read
+Requests/sec:   3183.43
+Transfer/sec:    577.59KB
 
 ---------------------------------------------------------
  Concurrency: 16 for ringojs-raw
@@ -72,11 +72,11 @@ Transfer/sec:    465.16KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  56657 requests in 15.00s, 10.04MB read
-Requests/sec:   3776.96
-Transfer/sec:    685.24KB
+    Latency    16.86ms   45.91ms 238.13ms   93.13%
+    Req/Sec   502.33    270.47     1.60k    63.05%
+  56963 requests in 15.00s, 10.09MB read
+Requests/sec:   3797.30
+Transfer/sec:    688.96KB
 
 ---------------------------------------------------------
  Concurrency: 32 for ringojs-raw
@@ -86,11 +86,11 @@ Transfer/sec:    685.24KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  58871 requests in 15.00s, 10.43MB read
-Requests/sec:   3924.31
-Transfer/sec:    711.98KB
+    Latency    17.00ms   43.48ms 259.38ms   94.61%
+    Req/Sec   517.29    252.25     1.70k    67.91%
+  58689 requests in 15.00s, 10.40MB read
+Requests/sec:   3912.55
+Transfer/sec:    709.87KB
 
 ---------------------------------------------------------
  Concurrency: 64 for ringojs-raw
@@ -100,11 +100,11 @@ Transfer/sec:    711.98KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  59083 requests in 15.00s, 10.47MB read
-Requests/sec:   3939.17
-Transfer/sec:    714.67KB
+    Latency    19.80ms   37.87ms 401.81ms   94.86%
+    Req/Sec   523.83    204.53     1.89k    71.62%
+  59553 requests in 15.00s, 10.55MB read
+Requests/sec:   3970.10
+Transfer/sec:    720.31KB
 
 ---------------------------------------------------------
  Concurrency: 128 for ringojs-raw
@@ -114,11 +114,11 @@ Transfer/sec:    714.67KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    32.01ms   28.87ms 284.17ms   90.56%
-    Req/Sec    11.81    108.05     1.00k    98.82%
-  60003 requests in 15.00s, 10.63MB read
-Requests/sec:   4000.06
-Transfer/sec:    725.73KB
+    Latency    30.28ms   21.93ms 244.00ms   84.05%
+    Req/Sec   559.87    193.24     1.55k    67.34%
+  63069 requests in 15.00s, 11.17MB read
+Requests/sec:   4204.77
+Transfer/sec:    762.89KB
 
 ---------------------------------------------------------
  Concurrency: 256 for ringojs-raw
@@ -128,8 +128,9 @@ Transfer/sec:    725.73KB
 Running 15s test @ http://10.253.67.217:8080/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  59414 requests in 15.00s, 10.53MB read
-Requests/sec:   3961.65
-Transfer/sec:    718.75KB
+    Latency    66.40ms   58.70ms 505.32ms   92.34%
+    Req/Sec   547.42    217.47     1.50k    67.83%
+  61847 requests in 15.00s, 10.96MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:   4122.60
+Transfer/sec:    747.99KB

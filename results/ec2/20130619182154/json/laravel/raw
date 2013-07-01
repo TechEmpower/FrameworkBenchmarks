@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  1328 requests in 5.01s, 1.18MB read
-Requests/sec:    265.15
-Transfer/sec:    241.69KB
+    Latency   301.74ms  220.53ms 668.52ms   51.08%
+    Req/Sec    37.34     59.01   300.00     68.70%
+  1340 requests in 5.01s, 1.19MB read
+Requests/sec:    267.62
+Transfer/sec:    243.92KB
 
 ---------------------------------------------------------
  Running Warmup laravel
@@ -36,12 +36,12 @@ Transfer/sec:    241.69KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5066 requests in 15.02s, 4.51MB read
+    Latency     1.89s   832.70ms   2.86s    59.04%
+    Req/Sec    45.82     77.08     1.00k    91.69%
+  5100 requests in 15.03s, 4.54MB read
   Socket errors: connect 0, read 0, write 0, timeout 5
-Requests/sec:    337.23
-Transfer/sec:    307.38KB
+Requests/sec:    339.28
+Transfer/sec:    309.24KB
 
 ---------------------------------------------------------
  Concurrency: 8 for laravel
@@ -51,11 +51,11 @@ Transfer/sec:    307.38KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5520 requests in 15.01s, 4.91MB read
-Requests/sec:    367.77
-Transfer/sec:    335.16KB
+    Latency   439.28ms  328.27ms 866.07ms   56.30%
+    Req/Sec    48.72     69.04   300.00     90.87%
+  5539 requests in 15.01s, 4.93MB read
+Requests/sec:    368.95
+Transfer/sec:    336.26KB
 
 ---------------------------------------------------------
  Concurrency: 16 for laravel
@@ -65,11 +65,11 @@ Transfer/sec:    335.16KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5454 requests in 15.01s, 4.85MB read
-Requests/sec:    363.35
-Transfer/sec:    331.15KB
+    Latency   527.98ms  371.28ms 887.79ms   65.79%
+    Req/Sec    48.39     70.86   400.00     90.90%
+  5510 requests in 15.01s, 4.90MB read
+Requests/sec:    367.16
+Transfer/sec:    334.63KB
 
 ---------------------------------------------------------
  Concurrency: 32 for laravel
@@ -79,11 +79,11 @@ Transfer/sec:    331.15KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5420 requests in 15.02s, 4.82MB read
-Requests/sec:    360.75
-Transfer/sec:    328.73KB
+    Latency   729.42ms  504.08ms   1.33s    51.63%
+    Req/Sec    48.39     73.33   444.00     90.85%
+  5492 requests in 15.02s, 4.89MB read
+Requests/sec:    365.69
+Transfer/sec:    333.29KB
 
 ---------------------------------------------------------
  Concurrency: 64 for laravel
@@ -93,11 +93,11 @@ Transfer/sec:    328.73KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5296 requests in 15.02s, 4.71MB read
-Requests/sec:    352.60
-Transfer/sec:    321.37KB
+    Latency   877.14ms  524.06ms   1.42s    62.75%
+    Req/Sec    47.58     75.49   666.00     90.82%
+  5385 requests in 15.02s, 4.79MB read
+Requests/sec:    358.41
+Transfer/sec:    326.64KB
 
 ---------------------------------------------------------
  Concurrency: 128 for laravel
@@ -107,11 +107,11 @@ Transfer/sec:    321.37KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  5117 requests in 15.06s, 4.55MB read
-Requests/sec:    339.86
-Transfer/sec:    309.79KB
+    Latency     1.06s   537.16ms   1.64s    64.96%
+    Req/Sec    46.67     75.46     1.11k    91.97%
+  5247 requests in 15.04s, 4.67MB read
+Requests/sec:    348.98
+Transfer/sec:    318.02KB
 
 ---------------------------------------------------------
  Concurrency: 256 for laravel
@@ -121,9 +121,9 @@ Transfer/sec:    309.79KB
 Running 15s test @ http://10.253.67.217:8080/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  4942 requests in 15.02s, 4.40MB read
+    Latency     1.84s   795.46ms   2.57s    66.95%
+    Req/Sec    45.27     72.32   600.00     92.33%
+  5051 requests in 15.03s, 4.49MB read
   Socket errors: connect 0, read 0, write 0, timeout 7
-Requests/sec:    328.98
-Transfer/sec:    299.85KB
+Requests/sec:    336.08
+Transfer/sec:    306.24KB

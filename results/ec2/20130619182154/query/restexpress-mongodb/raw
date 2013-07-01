@@ -10,8 +10,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -22,11 +22,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/restexpress/mongodb?queries=2
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  16506 requests in 5.00s, 2.37MB read
-Requests/sec:   3300.33
-Transfer/sec:    485.28KB
+    Latency     2.96ms    3.24ms  43.54ms   95.10%
+    Req/Sec   423.62    120.92   666.00     63.62%
+  15959 requests in 5.00s, 2.29MB read
+Requests/sec:   3191.76
+Transfer/sec:    469.29KB
 
 ---------------------------------------------------------
  Running Warmup restexpress-mongodb
@@ -36,11 +36,11 @@ Transfer/sec:    485.28KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mongodb?queries=2
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   193.70ms  261.79ms 710.65ms   76.62%
-    Req/Sec   308.70    530.92     3.00k    72.41%
-  71049 requests in 15.09s, 10.20MB read
-Requests/sec:   4709.60
-Transfer/sec:    692.44KB
+    Latency   237.71ms  420.79ms   1.71s    91.12%
+    Req/Sec   628.63    591.68     3.78k    61.81%
+  70227 requests in 15.05s, 10.08MB read
+Requests/sec:   4664.82
+Transfer/sec:    685.87KB
 
 ---------------------------------------------------------
  Queries: 1 for restexpress-mongodb
@@ -50,11 +50,11 @@ Transfer/sec:    692.44KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mongodb?queries=1
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   114.39ms  202.56ms 650.04ms   86.30%
-    Req/Sec   621.09    698.84     3.00k    88.98%
-  109844 requests in 15.00s, 12.44MB read
-Requests/sec:   7320.92
-Transfer/sec:    849.17KB
+    Latency   126.09ms  206.89ms 623.67ms   84.37%
+    Req/Sec     0.90k   693.37     4.00k    61.20%
+  102126 requests in 15.00s, 11.57MB read
+Requests/sec:   6807.22
+Transfer/sec:    789.60KB
 
 ---------------------------------------------------------
  Queries: 5 for restexpress-mongodb
@@ -64,12 +64,12 @@ Transfer/sec:    849.17KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mongodb?queries=5
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  32625 requests in 15.02s, 7.68MB read
-  Socket errors: connect 0, read 0, write 0, timeout 17
-Requests/sec:   2172.06
-Transfer/sec:    523.69KB
+    Latency   404.42ms  444.64ms   1.09s    68.15%
+    Req/Sec   286.13    352.38     3.00k    87.40%
+  32371 requests in 15.01s, 7.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 46
+Requests/sec:   2157.34
+Transfer/sec:    520.15KB
 
 ---------------------------------------------------------
  Queries: 10 for restexpress-mongodb
@@ -79,12 +79,12 @@ Transfer/sec:    523.69KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mongodb?queries=10
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17470 requests in 15.02s, 6.76MB read
-  Socket errors: connect 0, read 0, write 0, timeout 23
-Requests/sec:   1163.02
-Transfer/sec:    460.88KB
+    Latency   538.60ms  437.28ms   1.13s    53.82%
+    Req/Sec   150.36    180.85     2.11k    85.54%
+  16971 requests in 15.01s, 6.57MB read
+  Socket errors: connect 0, read 0, write 0, timeout 66
+Requests/sec:   1130.42
+Transfer/sec:    447.99KB
 
 ---------------------------------------------------------
  Queries: 15 for restexpress-mongodb
@@ -94,12 +94,12 @@ Transfer/sec:    460.88KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mongodb?queries=15
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  11676 requests in 15.02s, 6.29MB read
-  Socket errors: connect 0, read 0, write 0, timeout 31
-Requests/sec:    777.14
-Transfer/sec:    428.52KB
+    Latency   673.27ms  397.67ms   1.18s    59.50%
+    Req/Sec   102.09    137.54     1.44k    89.36%
+  11566 requests in 15.03s, 6.23MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    769.74
+Transfer/sec:    424.46KB
 
 ---------------------------------------------------------
  Queries: 20 for restexpress-mongodb
@@ -109,9 +109,9 @@ Transfer/sec:    428.52KB
 Running 15s test @ http://10.253.67.217:8080/restexpress/mongodb?queries=20
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8902 requests in 14.99s, 6.14MB read
-  Socket errors: connect 0, read 0, write 0, timeout 52
-Requests/sec:    593.74
-Transfer/sec:    419.50KB
+    Latency   980.36ms  537.62ms   1.61s    60.39%
+    Req/Sec    77.57    113.35     1.00k    82.34%
+  8586 requests in 15.05s, 5.92MB read
+  Socket errors: connect 0, read 0, write 0, timeout 58
+Requests/sec:    570.66
+Transfer/sec:    403.25KB

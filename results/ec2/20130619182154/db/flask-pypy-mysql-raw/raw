@@ -2,10 +2,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 14:46:48 UTC 2013
+  System information as of Fri Jun 28 07:07:17 UTC 2013
 
-  System load:  0.09               Processes:           74
-  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  System load:  0.06               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
   Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
@@ -17,8 +17,8 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2554 requests in 5.03s, 445.93KB read
-Requests/sec:    508.03
-Transfer/sec:     88.70KB
+    Latency    97.81ms  104.70ms 233.22ms   61.28%
+    Req/Sec    69.61     59.64   222.00     56.46%
+  2614 requests in 5.01s, 456.37KB read
+Requests/sec:    521.75
+Transfer/sec:     91.09KB
 
 ---------------------------------------------------------
  Running Warmup flask-pypy-mysql-raw
@@ -43,11 +43,11 @@ Transfer/sec:     88.70KB
 Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  8915 requests in 15.05s, 1.52MB read
-Requests/sec:    592.39
-Transfer/sec:    103.42KB
+    Latency     1.28s   956.23ms   2.27s    26.26%
+    Req/Sec    80.09     91.43   555.00     81.66%
+  9086 requests in 15.13s, 1.55MB read
+Requests/sec:    600.67
+Transfer/sec:    104.87KB
 
 ---------------------------------------------------------
  Concurrency: 8 for flask-pypy-mysql-raw
@@ -57,11 +57,11 @@ Transfer/sec:    103.42KB
 Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  14051 requests in 15.01s, 2.40MB read
-Requests/sec:    936.31
-Transfer/sec:    163.47KB
+    Latency    44.15ms   76.36ms 222.98ms   83.06%
+    Req/Sec   147.74    126.55   777.00     65.95%
+  16655 requests in 15.00s, 2.84MB read
+Requests/sec:   1110.03
+Transfer/sec:    193.80KB
 
 ---------------------------------------------------------
  Concurrency: 16 for flask-pypy-mysql-raw
@@ -71,11 +71,11 @@ Transfer/sec:    163.47KB
 Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  17216 requests in 15.01s, 2.94MB read
-Requests/sec:   1146.95
-Transfer/sec:    200.24KB
+    Latency    28.28ms   33.78ms 130.90ms   83.46%
+    Req/Sec   150.44     88.48   333.00     76.99%
+  16864 requests in 15.01s, 2.88MB read
+Requests/sec:   1123.53
+Transfer/sec:    196.14KB
 
 ---------------------------------------------------------
  Concurrency: 32 for flask-pypy-mysql-raw
@@ -85,11 +85,11 @@ Transfer/sec:    200.24KB
 Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  19653 requests in 15.01s, 3.35MB read
-Requests/sec:   1309.43
-Transfer/sec:    228.61KB
+    Latency    43.28ms   45.63ms 135.66ms   80.41%
+    Req/Sec   237.24    212.01     1.00k    69.80%
+  26794 requests in 15.01s, 4.57MB read
+Requests/sec:   1785.09
+Transfer/sec:    311.66KB
 
 ---------------------------------------------------------
  Concurrency: 64 for flask-pypy-mysql-raw
@@ -99,11 +99,11 @@ Transfer/sec:    228.61KB
 Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  23775 requests in 15.01s, 4.05MB read
-Requests/sec:   1584.12
-Transfer/sec:    276.57KB
+    Latency    76.60ms   62.13ms 203.90ms   64.85%
+    Req/Sec   177.39    142.54     0.89k    62.67%
+  19936 requests in 15.02s, 3.40MB read
+Requests/sec:   1327.54
+Transfer/sec:    231.78KB
 
 ---------------------------------------------------------
  Concurrency: 128 for flask-pypy-mysql-raw
@@ -113,11 +113,11 @@ Transfer/sec:    276.57KB
 Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  31614 requests in 15.01s, 5.39MB read
-Requests/sec:   2106.89
-Transfer/sec:    367.83KB
+    Latency   139.42ms  184.05ms 570.43ms   84.14%
+    Req/Sec   287.72    227.77     1.67k    69.53%
+  32637 requests in 15.00s, 5.56MB read
+Requests/sec:   2175.60
+Transfer/sec:    379.82KB
 
 ---------------------------------------------------------
  Concurrency: 256 for flask-pypy-mysql-raw
@@ -127,8 +127,8 @@ Transfer/sec:    367.83KB
 Running 15s test @ http://10.253.67.217:8080/dbsraw
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  33543 requests in 15.02s, 5.72MB read
-Requests/sec:   2233.28
-Transfer/sec:    389.90KB
+    Latency   164.11ms  161.34ms 620.90ms   88.94%
+    Req/Sec   321.83    237.57     1.33k    72.05%
+  36454 requests in 15.03s, 6.22MB read
+Requests/sec:   2424.77
+Transfer/sec:    423.32KB

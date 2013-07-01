@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 21:08:28 UTC 2013
+  System information as of Fri Jun 28 03:16:37 UTC 2013
 
-  System load:  0.04               Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.05               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,11 +29,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  2783 requests in 5.01s, 605.47KB read
-Requests/sec:    555.92
-Transfer/sec:    120.95KB
+    Latency    13.46ms    7.07ms  35.67ms   74.53%
+    Req/Sec    99.46     54.99   333.00     72.38%
+  3620 requests in 5.01s, 787.55KB read
+Requests/sec:    721.99
+Transfer/sec:    157.07KB
 
 ---------------------------------------------------------
  Running Warmup scalatra-raw
@@ -43,12 +43,12 @@ Transfer/sec:    120.95KB
 Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  21423 requests in 15.00s, 4.84MB read
-  Socket errors: connect 0, read 207, write 0, timeout 245
-Requests/sec:   1427.94
-Transfer/sec:    330.08KB
+    Latency     1.37s     2.32s    6.07s    77.23%
+    Req/Sec   240.73    219.76     1.70k    63.77%
+  25319 requests in 15.00s, 5.38MB read
+  Socket errors: connect 0, read 0, write 0, timeout 323
+Requests/sec:   1687.80
+Transfer/sec:    367.19KB
 
 ---------------------------------------------------------
  Concurrency: 8 for scalatra-raw
@@ -58,11 +58,11 @@ Transfer/sec:    330.08KB
 Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  66309 requests in 15.00s, 14.09MB read
-Requests/sec:   4420.72
-Transfer/sec:      0.94MB
+    Latency     4.16ms   13.53ms  93.59ms   97.14%
+    Req/Sec   621.25    238.56     1.22k    64.97%
+  69834 requests in 15.00s, 14.84MB read
+Requests/sec:   4655.67
+Transfer/sec:      0.99MB
 
 ---------------------------------------------------------
  Concurrency: 16 for scalatra-raw
@@ -72,11 +72,11 @@ Transfer/sec:      0.94MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  79905 requests in 15.00s, 16.98MB read
-Requests/sec:   5326.83
-Transfer/sec:      1.13MB
+    Latency     3.04ms    2.94ms  36.99ms   98.36%
+    Req/Sec   772.86    178.28     1.55k    75.58%
+  88179 requests in 15.00s, 18.73MB read
+Requests/sec:   5878.72
+Transfer/sec:      1.25MB
 
 ---------------------------------------------------------
  Concurrency: 32 for scalatra-raw
@@ -86,11 +86,11 @@ Transfer/sec:      1.13MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  82222 requests in 15.00s, 17.47MB read
-Requests/sec:   5481.70
-Transfer/sec:      1.16MB
+    Latency     6.95ms   10.79ms  90.58ms   97.65%
+    Req/Sec   765.31    173.26     2.11k    82.46%
+  87158 requests in 15.00s, 18.52MB read
+Requests/sec:   5810.17
+Transfer/sec:      1.23MB
 
 ---------------------------------------------------------
  Concurrency: 64 for scalatra-raw
@@ -100,11 +100,11 @@ Transfer/sec:      1.16MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  84449 requests in 15.00s, 17.94MB read
-Requests/sec:   5630.23
-Transfer/sec:      1.20MB
+    Latency    11.55ms    8.30ms 139.50ms   96.44%
+    Req/Sec   771.10    155.29     2.33k    78.02%
+  87613 requests in 15.00s, 18.61MB read
+Requests/sec:   5841.12
+Transfer/sec:      1.24MB
 
 ---------------------------------------------------------
  Concurrency: 128 for scalatra-raw
@@ -114,11 +114,11 @@ Transfer/sec:      1.20MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  85848 requests in 15.00s, 18.24MB read
-Requests/sec:   5723.68
-Transfer/sec:      1.22MB
+    Latency    22.92ms   16.71ms 307.98ms   97.35%
+    Req/Sec   769.19    220.10     1.55k    65.95%
+  87378 requests in 15.00s, 18.56MB read
+Requests/sec:   5825.42
+Transfer/sec:      1.24MB
 
 ---------------------------------------------------------
  Concurrency: 256 for scalatra-raw
@@ -128,9 +128,8 @@ Transfer/sec:      1.22MB
 Running 15s test @ http://10.253.67.217:8080/scalatra/db
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    51.66ms   50.77ms 408.67ms   95.35%
-    Req/Sec   111.81    315.24     1.00k    88.82%
-  72381 requests in 15.00s, 15.81MB read
-  Socket errors: connect 0, read 133, write 0, timeout 145
-Requests/sec:   4825.88
-Transfer/sec:      1.05MB
+    Latency    51.49ms   62.96ms 677.42ms   97.44%
+    Req/Sec   741.22    266.77     2.60k    74.40%
+  84289 requests in 15.00s, 17.91MB read
+Requests/sec:   5619.39
+Transfer/sec:      1.19MB

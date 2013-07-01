@@ -2,11 +2,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 22:17:52 UTC 2013
+  System information as of Fri Jun 28 04:25:52 UTC 2013
 
-  System load:  0.1                Processes:           66
-  Usage of /:   25.8% of 19.69GB   Users logged in:     0
-  Memory usage: 3%                 IP address for eth0: 10.254.111.115
+  System load:  0.13               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
@@ -29,12 +29,12 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 Running 5s test @ http://10.253.67.217:9000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us    -nan%
-    Req/Sec     0.00      0.00     0.00      -nan%
-  7758 requests in 6.00s, 1.14MB read
-  Socket errors: connect 0, read 0, write 0, timeout 3
-Requests/sec:   1292.56
-Transfer/sec:    194.39KB
+    Latency     5.06ms    4.37ms  39.56ms   94.12%
+    Req/Sec   251.14    111.95   777.00     70.83%
+  7970 requests in 6.00s, 1.17MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:   1328.15
+Transfer/sec:    199.74KB
 
 ---------------------------------------------------------
  Running Warmup dropwizard
@@ -44,12 +44,12 @@ Transfer/sec:    194.39KB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   247.48ms  946.18ms   5.46s    96.79%
-    Req/Sec   163.78    373.94     2.00k    83.76%
-  63108 requests in 15.00s, 9.27MB read
-  Socket errors: connect 0, read 18, write 0, timeout 174
-Requests/sec:   4206.25
-Transfer/sec:    632.58KB
+    Latency   345.46ms    1.30s    8.62s    94.65%
+    Req/Sec   625.54    364.70     3.44k    69.28%
+  67383 requests in 15.00s, 9.90MB read
+  Socket errors: connect 0, read 2, write 0, timeout 161
+Requests/sec:   4491.80
+Transfer/sec:    675.53KB
 
 ---------------------------------------------------------
  Concurrency: 8 for dropwizard
@@ -59,11 +59,11 @@ Transfer/sec:    632.58KB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.32ms    7.82ms  98.27ms   99.31%
-    Req/Sec     1.29k   495.82     2.00k    66.92%
-  182877 requests in 15.00s, 26.86MB read
-Requests/sec:  12192.44
-Transfer/sec:      1.79MB
+    Latency     2.42ms   14.55ms 125.68ms   98.58%
+    Req/Sec     1.60k   518.04     2.78k    75.80%
+  179903 requests in 15.00s, 26.42MB read
+Requests/sec:  11994.31
+Transfer/sec:      1.76MB
 
 ---------------------------------------------------------
  Concurrency: 16 for dropwizard
@@ -73,11 +73,11 @@ Transfer/sec:      1.79MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 16 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     9.81ms   46.17ms 263.82ms   96.77%
-    Req/Sec     1.07k   448.25     4.00k    80.36%
-  177740 requests in 15.00s, 26.10MB read
-Requests/sec:  11850.31
-Transfer/sec:      1.74MB
+    Latency     1.34ms  629.20us  13.71ms   91.95%
+    Req/Sec     1.64k   367.40     4.22k    72.62%
+  185262 requests in 15.00s, 27.21MB read
+Requests/sec:  12352.13
+Transfer/sec:      1.81MB
 
 ---------------------------------------------------------
  Concurrency: 32 for dropwizard
@@ -87,11 +87,11 @@ Transfer/sec:      1.74MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 32 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.95ms    2.24ms  53.28ms   91.54%
-    Req/Sec     1.02k   437.87     5.00k    84.44%
-  176926 requests in 15.00s, 25.98MB read
-Requests/sec:  11795.60
-Transfer/sec:      1.73MB
+    Latency     2.77ms    1.44ms  30.21ms   87.92%
+    Req/Sec     1.58k   367.78     5.67k    82.40%
+  179745 requests in 15.00s, 26.40MB read
+Requests/sec:  11983.92
+Transfer/sec:      1.76MB
 
 ---------------------------------------------------------
  Concurrency: 64 for dropwizard
@@ -101,11 +101,11 @@ Transfer/sec:      1.73MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 64 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.69ms    3.16ms  50.50ms   86.41%
-    Req/Sec     1.01k   378.23     4.00k    88.07%
-  176266 requests in 15.00s, 25.89MB read
-Requests/sec:  11751.32
-Transfer/sec:      1.73MB
+    Latency     5.64ms    3.05ms  60.49ms   88.03%
+    Req/Sec     1.55k   332.92     4.67k    80.71%
+  175867 requests in 15.00s, 25.83MB read
+Requests/sec:  11725.45
+Transfer/sec:      1.72MB
 
 ---------------------------------------------------------
  Concurrency: 128 for dropwizard
@@ -115,10 +115,10 @@ Transfer/sec:      1.73MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 128 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    12.31ms   16.32ms 195.92ms   97.45%
-    Req/Sec     1.02k   366.01     4.00k    88.69%
-  175078 requests in 15.00s, 25.71MB read
-Requests/sec:  11672.81
+    Latency    13.28ms   26.09ms 311.04ms   98.09%
+    Req/Sec     1.54k   424.28     8.00k    84.53%
+  174828 requests in 15.00s, 25.68MB read
+Requests/sec:  11655.89
 Transfer/sec:      1.71MB
 
 ---------------------------------------------------------
@@ -129,8 +129,8 @@ Transfer/sec:      1.71MB
 Running 15s test @ http://10.253.67.217:9000/json
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    36.41ms   94.64ms   1.07s    96.39%
-    Req/Sec     1.06k   628.39    10.00k    76.71%
-  166650 requests in 15.00s, 24.48MB read
-Requests/sec:  11109.99
-Transfer/sec:      1.63MB
+    Latency    35.06ms   77.40ms   1.39s    95.82%
+    Req/Sec     1.55k   655.63     8.11k    88.20%
+  172156 requests in 15.00s, 25.28MB read
+Requests/sec:  11478.13
+Transfer/sec:      1.69MB
