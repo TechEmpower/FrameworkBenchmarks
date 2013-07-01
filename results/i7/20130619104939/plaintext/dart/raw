@@ -2,17 +2,17 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 13:39:05 PDT 2013
+  System information as of Mon Jul  1 09:54:30 PDT 2013
 
-  System load:  0.57                Processes:           133
-  Usage of /:   11.6% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  0.24                Processes:           391
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 15%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-29 packages can be updated.
-13 updates are security updates.
+31 packages can be updated.
+14 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -23,12 +23,12 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   348.00us  103.72us   1.00ms   70.07%
-    Req/Sec     3.01k   374.93     4.44k    72.03%
-  111802 requests in 5.00s, 34.97MB read
-  Non-2xx or 3xx responses: 111802
-Requests/sec:  22362.73
-Transfer/sec:      6.99MB
+    Latency   109.38ms  311.58ms 999.99ms   89.09%
+    Req/Sec     2.64k     1.00k    4.33k    83.97%
+  93271 requests in 5.00s, 29.03MB read
+  Non-2xx or 3xx responses: 92015
+Requests/sec:  18655.66
+Transfer/sec:      5.81MB
 
 ---------------------------------------------------------
  Running Warmup dart
@@ -38,13 +38,13 @@ Transfer/sec:      6.99MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.78ms    2.64ms  24.91ms   77.07%
-    Req/Sec     7.11k     0.86k   12.11k    69.69%
-  797511 requests in 15.00s, 249.43MB read
-  Socket errors: connect 0, read 836, write 0, timeout 0
-  Non-2xx or 3xx responses: 797511
-Requests/sec:  53179.72
-Transfer/sec:     16.63MB
+    Latency     4.82ms    2.61ms  28.05ms   77.86%
+    Req/Sec     6.99k   707.28    13.64k    68.65%
+  794700 requests in 15.00s, 248.55MB read
+  Socket errors: connect 0, read 1494, write 0, timeout 0
+  Non-2xx or 3xx responses: 794700
+Requests/sec:  52980.75
+Transfer/sec:     16.57MB
 
 ---------------------------------------------------------
  Concurrency: 256 for dart
@@ -54,13 +54,13 @@ Transfer/sec:     16.63MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    87.97ms   40.88ms 217.88ms   87.81%
-    Req/Sec     7.06k     0.85k   14.10k    69.92%
-  781357 requests in 15.00s, 244.38MB read
-  Socket errors: connect 0, read 743, write 0, timeout 0
-  Non-2xx or 3xx responses: 781357
-Requests/sec:  52102.00
-Transfer/sec:     16.30MB
+    Latency    77.53ms   17.99ms 205.03ms   72.00%
+    Req/Sec     6.61k   339.03     7.52k    81.94%
+  770473 requests in 15.00s, 240.97MB read
+  Socket errors: connect 0, read 3207, write 0, timeout 0
+  Non-2xx or 3xx responses: 770473
+Requests/sec:  51366.01
+Transfer/sec:     16.07MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for dart
@@ -70,13 +70,13 @@ Transfer/sec:     16.30MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   265.66ms  171.74ms 847.64ms   85.92%
-    Req/Sec     5.89k     0.89k   10.33k    68.38%
-  647909 requests in 15.00s, 202.64MB read
-  Socket errors: connect 0, read 74679, write 0, timeout 1
-  Non-2xx or 3xx responses: 647909
-Requests/sec:  43193.39
-Transfer/sec:     13.51MB
+    Latency   199.38ms   53.70ms 938.76ms   77.36%
+    Req/Sec     5.51k   705.57     7.68k    84.00%
+  643603 requests in 15.00s, 201.29MB read
+  Socket errors: connect 0, read 74189, write 0, timeout 0
+  Non-2xx or 3xx responses: 643603
+Requests/sec:  42906.62
+Transfer/sec:     13.42MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for dart
@@ -86,13 +86,13 @@ Transfer/sec:     13.51MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.55s     6.02s   13.63s    67.10%
-    Req/Sec     5.84k     0.98k   12.22k    71.44%
-  663860 requests in 15.00s, 207.63MB read
-  Socket errors: connect 0, read 78315, write 0, timeout 13626
-  Non-2xx or 3xx responses: 663860
-Requests/sec:  44246.07
-Transfer/sec:     13.84MB
+    Latency   426.88ms    1.59s   14.17s    97.52%
+    Req/Sec     5.53k   694.63     7.58k    67.46%
+  661542 requests in 15.01s, 206.90MB read
+  Socket errors: connect 0, read 78683, write 0, timeout 13023
+  Non-2xx or 3xx responses: 661542
+Requests/sec:  44087.14
+Transfer/sec:     13.79MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for dart
@@ -102,10 +102,10 @@ Transfer/sec:     13.84MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.58s     6.68s   14.09s    54.46%
-    Req/Sec     5.80k     1.23k   15.78k    74.01%
-  658056 requests in 15.01s, 205.82MB read
-  Socket errors: connect 0, read 83640, write 0, timeout 79729
-  Non-2xx or 3xx responses: 658056
-Requests/sec:  43831.46
-Transfer/sec:     13.71MB
+    Latency     8.88s     6.34s   14.94s    68.59%
+    Req/Sec     5.47k   703.89     8.78k    73.36%
+  651240 requests in 15.02s, 203.69MB read
+  Socket errors: connect 0, read 80808, write 0, timeout 81625
+  Non-2xx or 3xx responses: 651240
+Requests/sec:  43370.56
+Transfer/sec:     13.56MB

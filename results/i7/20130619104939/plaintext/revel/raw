@@ -2,10 +2,17 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
- System information disabled due to load higher than 8.0
+  System information as of Mon Jul  1 09:41:51 PDT 2013
 
-29 packages can be updated.
-13 updates are security updates.
+  System load:  0.14                Processes:           135
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+31 packages can be updated.
+14 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -16,10 +23,10 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   368.52us  212.96us   3.04ms   99.31%
-    Req/Sec     2.81k   279.32     3.33k    71.25%
-  107229 requests in 5.00s, 11.76MB read
-Requests/sec:  21447.54
+    Latency   367.01us  153.66us   1.66ms   97.42%
+    Req/Sec     2.82k   210.31     3.44k    62.53%
+  107337 requests in 5.00s, 11.77MB read
+Requests/sec:  21468.62
 Transfer/sec:      2.35MB
 
 ---------------------------------------------------------
@@ -30,11 +37,11 @@ Transfer/sec:      2.35MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.63ms    0.88ms  15.35ms   84.10%
-    Req/Sec    20.85k     2.72k   29.56k    66.66%
-  2366048 requests in 15.00s, 259.49MB read
-Requests/sec: 157750.46
-Transfer/sec:     17.30MB
+    Latency     1.59ms  737.47us  13.20ms   80.86%
+    Req/Sec    21.16k     1.50k   26.56k    67.14%
+  2396878 requests in 15.00s, 262.87MB read
+Requests/sec: 159804.78
+Transfer/sec:     17.53MB
 
 ---------------------------------------------------------
  Concurrency: 256 for revel
@@ -44,11 +51,11 @@ Transfer/sec:     17.30MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    87.94ms   87.05ms 255.20ms   67.68%
-    Req/Sec    23.68k     5.24k   45.67k    67.42%
-  2688131 requests in 15.00s, 294.81MB read
-Requests/sec: 179195.39
-Transfer/sec:     19.65MB
+    Latency    21.26ms   55.09ms 813.40ms   94.89%
+    Req/Sec    23.39k     3.77k   34.44k    67.94%
+  2778731 requests in 15.00s, 304.75MB read
+Requests/sec: 185263.47
+Transfer/sec:     20.32MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for revel
@@ -58,11 +65,11 @@ Transfer/sec:     19.65MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   146.18ms   76.59ms 279.18ms   59.58%
-    Req/Sec    23.87k     7.58k   51.60k    66.59%
-  2706911 requests in 15.00s, 296.87MB read
-Requests/sec: 180447.72
-Transfer/sec:     19.79MB
+    Latency    89.22ms   16.57ms 277.48ms   82.63%
+    Req/Sec    22.92k   478.89    25.65k    70.83%
+  2740166 requests in 15.00s, 300.52MB read
+Requests/sec: 182673.60
+Transfer/sec:     20.03MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for revel
@@ -72,12 +79,12 @@ Transfer/sec:     19.79MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   489.93ms  220.41ms 786.30ms   50.06%
-    Req/Sec    23.50k    10.57k  105.22k    71.78%
-  2659286 requests in 15.00s, 291.65MB read
-  Socket errors: connect 0, read 0, write 0, timeout 2843
-Requests/sec: 177249.43
-Transfer/sec:     19.44MB
+    Latency   344.60ms   63.00ms 769.32ms   87.04%
+    Req/Sec    22.42k     0.96k   26.68k    82.10%
+  2683170 requests in 15.00s, 294.27MB read
+  Socket errors: connect 0, read 0, write 0, timeout 756
+Requests/sec: 178825.94
+Transfer/sec:     19.61MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for revel
@@ -87,9 +94,9 @@ Transfer/sec:     19.44MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.09s     1.14s    4.09s    71.57%
-    Req/Sec    23.07k    17.16k  229.22k    70.27%
-  2605611 requests in 15.01s, 285.76MB read
-  Socket errors: connect 0, read 0, write 0, timeout 18504
-Requests/sec: 173627.20
-Transfer/sec:     19.04MB
+    Latency     1.12s   382.96ms   4.50s    80.36%
+    Req/Sec    21.97k     2.66k   33.50k    70.97%
+  2626211 requests in 15.01s, 288.02MB read
+  Socket errors: connect 0, read 0, write 0, timeout 21325
+Requests/sec: 174968.05
+Transfer/sec:     19.19MB
