@@ -2,17 +2,17 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 06:51:13 PDT 2013
+  System information as of Mon Jul  1 09:06:32 PDT 2013
 
-  System load:  4.29                Processes:           134
-  Usage of /:   11.1% of 129.62GB   Users logged in:     1
-  Memory usage: 8%                  IP address for eth1: 172.16.98.98
+  System load:  0.27                Processes:           135
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 11%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-29 packages can be updated.
-13 updates are security updates.
+31 packages can be updated.
+14 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/compojure/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   315.81us  172.28us   8.25ms   98.25%
-    Req/Sec     3.32k   332.23     4.44k    78.99%
-  125957 requests in 5.00s, 18.26MB read
-Requests/sec:  25192.94
-Transfer/sec:      3.65MB
+    Latency   390.97us    1.12ms  16.53ms   99.26%
+    Req/Sec     3.36k   515.23     5.30k    82.56%
+  122396 requests in 5.00s, 17.74MB read
+Requests/sec:  24480.21
+Transfer/sec:      3.55MB
 
 ---------------------------------------------------------
  Running Warmup compojure
@@ -37,11 +37,11 @@ Transfer/sec:      3.65MB
 Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.80ms    9.26ms 173.85ms   97.49%
-    Req/Sec    14.81k     3.49k   33.22k    78.23%
-  1683434 requests in 15.00s, 244.03MB read
-Requests/sec: 112233.97
-Transfer/sec:     16.27MB
+    Latency     8.15ms  105.81ms   1.99s    99.67%
+    Req/Sec    15.25k     3.94k   38.07k    77.36%
+  1708455 requests in 15.00s, 247.66MB read
+Requests/sec: 113902.19
+Transfer/sec:     16.51MB
 
 ---------------------------------------------------------
  Concurrency: 256 for compojure
@@ -51,11 +51,11 @@ Transfer/sec:     16.27MB
 Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   384.97ms  427.33ms   1.13s    65.15%
-    Req/Sec    17.89k     9.78k   71.78k    68.76%
-  2028619 requests in 15.01s, 294.07MB read
-Requests/sec: 135191.16
-Transfer/sec:     19.60MB
+    Latency    30.06ms   79.70ms 661.58ms   90.56%
+    Req/Sec    17.78k     4.26k   32.42k    67.81%
+  2120128 requests in 15.00s, 307.33MB read
+Requests/sec: 141347.63
+Transfer/sec:     20.49MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for compojure
@@ -65,12 +65,12 @@ Transfer/sec:     19.60MB
 Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.28s     6.11s   13.94s    78.22%
-    Req/Sec    17.01k     9.59k   65.44k    68.97%
-  1923421 requests in 15.00s, 278.82MB read
-  Socket errors: connect 0, read 0, write 0, timeout 1597
-Requests/sec: 128221.57
-Transfer/sec:     18.59MB
+    Latency   297.76ms    1.43s   12.22s    97.62%
+    Req/Sec    16.32k     5.35k   35.51k    73.25%
+  1980641 requests in 15.00s, 287.11MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1547
+Requests/sec: 132043.41
+Transfer/sec:     19.14MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for compojure
@@ -80,12 +80,12 @@ Transfer/sec:     18.59MB
 Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.11s     7.07s   14.96s    61.41%
-    Req/Sec    16.79k     9.66k   65.33k    66.71%
-  1903251 requests in 15.00s, 275.89MB read
-  Socket errors: connect 0, read 0, write 0, timeout 16804
-Requests/sec: 126854.00
-Transfer/sec:     18.39MB
+    Latency   385.76ms    1.53s   14.21s    96.66%
+    Req/Sec    17.64k     4.72k   25.46k    81.07%
+  2025845 requests in 15.00s, 293.66MB read
+  Socket errors: connect 0, read 0, write 0, timeout 18352
+Requests/sec: 135043.32
+Transfer/sec:     19.58MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for compojure
@@ -95,9 +95,9 @@ Transfer/sec:     18.39MB
 Running 15s test @ http://172.16.98.122:8080/compojure/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.96s     6.02s   14.88s    77.29%
-    Req/Sec    16.80k    10.68k  106.00k    69.28%
-  1898570 requests in 15.01s, 275.21MB read
-  Socket errors: connect 0, read 745, write 0, timeout 99966
-Requests/sec: 126485.71
-Transfer/sec:     18.34MB
+    Latency    10.18s     6.27s   14.94s    74.05%
+    Req/Sec    14.26k     6.21k   31.07k    64.99%
+  1940863 requests in 15.01s, 281.34MB read
+  Socket errors: connect 0, read 1184, write 0, timeout 95513
+Requests/sec: 129288.77
+Transfer/sec:     18.74MB

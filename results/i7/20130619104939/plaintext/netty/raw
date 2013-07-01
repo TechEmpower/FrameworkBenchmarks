@@ -2,17 +2,17 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Wed Jun 26 10:30:21 PDT 2013
+  System information as of Mon Jul  1 09:28:31 PDT 2013
 
-  System load:  1.27                Processes:           135
-  Usage of /:   11.1% of 129.62GB   Users logged in:     1
-  Memory usage: 8%                  IP address for eth1: 172.16.98.98
+  System load:  0.23                Processes:           135
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-29 packages can be updated.
-13 updates are security updates.
+31 packages can be updated.
+14 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   289.16us   45.65us   1.53ms   74.17%
-    Req/Sec     3.56k   198.98     4.44k    72.28%
-  135278 requests in 5.00s, 21.54MB read
-Requests/sec:  27058.72
-Transfer/sec:      4.31MB
+    Latency   292.42us  120.00us   4.81ms   96.92%
+    Req/Sec     3.54k   277.27     4.55k    85.75%
+  129407 requests in 5.00s, 20.61MB read
+Requests/sec:  25883.33
+Transfer/sec:      4.12MB
 
 ---------------------------------------------------------
  Running Warmup netty
@@ -37,11 +37,11 @@ Transfer/sec:      4.31MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.22ms  483.42us  18.26ms   95.74%
-    Req/Sec    27.99k     2.31k   37.44k    90.47%
-  3164644 requests in 15.00s, 504.01MB read
-Requests/sec: 210985.56
-Transfer/sec:     33.60MB
+    Latency     1.20ms  432.67us  12.38ms   94.54%
+    Req/Sec    28.36k     2.31k   37.33k    93.75%
+  3194744 requests in 15.00s, 508.81MB read
+Requests/sec: 213005.09
+Transfer/sec:     33.92MB
 
 ---------------------------------------------------------
  Concurrency: 256 for netty
@@ -51,11 +51,11 @@ Transfer/sec:     33.60MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    16.39ms   13.33ms  36.77ms   64.74%
-    Req/Sec    81.04k     5.84k  112.00k    64.89%
-  9194170 requests in 15.00s, 1.43GB read
-Requests/sec: 612814.95
-Transfer/sec:     97.60MB
+    Latency     6.65ms    1.15ms  34.12ms   93.65%
+    Req/Sec    79.27k     3.38k  116.00k    70.73%
+  9205288 requests in 15.00s, 1.43GB read
+Requests/sec: 613807.24
+Transfer/sec:     97.76MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for netty
@@ -65,12 +65,12 @@ Transfer/sec:     97.60MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   494.68ms  686.99ms   1.70s    71.16%
-    Req/Sec    81.97k    10.41k  126.22k    67.79%
-  9282760 requests in 15.00s, 1.44GB read
-  Socket errors: connect 0, read 0, write 0, timeout 682
-Requests/sec: 618725.23
-Transfer/sec:     98.54MB
+    Latency    24.58ms   79.86ms   1.41s    96.01%
+    Req/Sec    79.00k     8.58k  107.95k    67.25%
+  9303448 requests in 15.00s, 1.45GB read
+  Socket errors: connect 0, read 0, write 0, timeout 562
+Requests/sec: 620208.28
+Transfer/sec:     98.78MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for netty
@@ -80,12 +80,12 @@ Transfer/sec:     98.54MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.97s     4.48s   11.07s    70.18%
-    Req/Sec    81.79k    14.38k  127.11k    70.17%
-  9246602 requests in 15.01s, 1.44GB read
-  Socket errors: connect 0, read 0, write 0, timeout 9568
-Requests/sec: 616191.03
-Transfer/sec:     98.15MB
+    Latency    67.80ms  282.84ms   7.27s    95.38%
+    Req/Sec    75.91k    23.68k  158.82k    70.86%
+  9298340 requests in 15.00s, 1.45GB read
+  Socket errors: connect 0, read 0, write 0, timeout 10968
+Requests/sec: 619759.06
+Transfer/sec:     98.72MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for netty
@@ -95,9 +95,9 @@ Transfer/sec:     98.15MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.56s     6.13s   13.24s    65.98%
-    Req/Sec    80.83k    15.01k  161.78k    73.35%
-  9149586 requests in 15.02s, 1.42GB read
-  Socket errors: connect 0, read 1, write 0, timeout 74000
-Requests/sec: 609268.86
-Transfer/sec:     97.09MB
+    Latency   221.03ms  843.14ms  12.61s    94.47%
+    Req/Sec    78.32k    15.33k  152.79k    83.41%
+  9100054 requests in 15.02s, 1.42GB read
+  Socket errors: connect 0, read 0, write 0, timeout 66731
+Requests/sec: 606039.58
+Transfer/sec:     96.58MB
