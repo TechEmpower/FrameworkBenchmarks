@@ -1,0 +1,112 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 18:14:18 UTC 2013
+
+  System load:  0.37               Processes:           71
+  Usage of /:   25.6% of 19.69GB   Users logged in:     0
+  Memory usage: 8%                 IP address for eth0: 10.254.22.217
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.252.47.47:8080/plaintext.php
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.47.47:8080/plaintext.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  12207 requests in 5.02s, 2.22MB read
+Requests/sec:   2431.36
+Transfer/sec:    453.51KB
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/plaintext.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  30579 requests in 15.00s, 5.59MB read
+  Non-2xx or 3xx responses: 18
+Requests/sec:   2038.43
+Transfer/sec:    381.61KB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.252.47.47:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/plaintext.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   456.06ms  172.03ms 675.91ms   54.95%
+    Req/Sec     1.37k     0.88k    4.00k    73.12%
+  150821 requests in 15.01s, 186.04MB read
+  Non-2xx or 3xx responses: 139841
+Requests/sec:  10044.82
+Transfer/sec:     12.39MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.252.47.47:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/plaintext.php
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.66s   662.78ms   3.19s    74.70%
+    Req/Sec     0.89k     1.05k   15.00k    87.48%
+  147222 requests in 15.08s, 185.29MB read
+  Socket errors: connect 0, read 0, write 0, timeout 185
+  Non-2xx or 3xx responses: 145968
+Requests/sec:   9762.64
+Transfer/sec:     12.29MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.252.47.47:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/plaintext.php
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  95828 requests in 15.01s, 35.29MB read
+  Socket errors: connect 0, read 1, write 0, timeout 8662
+  Non-2xx or 3xx responses: 83685
+Requests/sec:   6383.36
+Transfer/sec:      2.35MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.252.47.47:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/plaintext.php
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.41s     1.72s   13.81s    96.73%
+    Req/Sec   797.54      1.31k   18.00k    93.11%
+  124181 requests in 15.03s, 42.51MB read
+  Socket errors: connect 8203, read 52, write 0, timeout 78698
+  Non-2xx or 3xx responses: 120694
+Requests/sec:   8260.11
+Transfer/sec:      2.83MB
