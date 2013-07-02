@@ -62,8 +62,9 @@ getConnInfo _ = defaultConnectInfo
 
 site :: Pool Connection -> Snap ()
 site pool = route
-    [ ("json", jsonHandler)
-    , ("db",   dbHandler pool)
+    [ ("json",      jsonHandler)
+    , ("db",        dbHandler pool)
+    , ("plaintext", writeBS "Hello, World!")
     ]
 
 jsonHandler :: Snap ()
