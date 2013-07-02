@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 21:46:42 UTC 2013
+
+  System load:  0.0                Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 10%                IP address for eth0: 10.254.22.217
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.252.47.47:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.47.47:8080/json/jsonnet
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  14484 requests in 5.00s, 3.83MB read
+Requests/sec:   2896.87
+Transfer/sec:    783.63KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/json/jsonnet
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  42222 requests in 15.04s, 11.15MB read
+Requests/sec:   2807.75
+Transfer/sec:    759.52KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.252.47.47:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/json/jsonnet
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  45190 requests in 15.03s, 11.94MB read
+Requests/sec:   3006.78
+Transfer/sec:    813.36KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.252.47.47:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/json/jsonnet
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  45363 requests in 15.00s, 11.98MB read
+Requests/sec:   3024.13
+Transfer/sec:    818.05KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.252.47.47:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/json/jsonnet
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  46380 requests in 15.00s, 12.25MB read
+Requests/sec:   3091.86
+Transfer/sec:    836.37KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.252.47.47:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/json/jsonnet
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  43140 requests in 15.01s, 11.40MB read
+Requests/sec:   2874.23
+Transfer/sec:    777.50KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.252.47.47:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/json/jsonnet
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  44605 requests in 15.01s, 11.78MB read
+Requests/sec:   2972.52
+Transfer/sec:    804.09KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.252.47.47:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/json/jsonnet
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  45991 requests in 15.00s, 12.15MB read
+Requests/sec:   3065.45
+Transfer/sec:    829.23KB

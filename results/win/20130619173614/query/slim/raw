@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 20:12:56 UTC 2013
+
+  System load:  0.02               Processes:           71
+  Usage of /:   25.6% of 19.69GB   Users logged in:     0
+  Memory usage: 9%                 IP address for eth0: 10.254.22.217
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer slim
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.252.47.47:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.47.47:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  760 requests in 5.07s, 191.93KB read
+Requests/sec:    149.78
+Transfer/sec:     37.83KB
+
+---------------------------------------------------------
+ Running Warmup slim
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2440 requests in 15.09s, 616.11KB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+Requests/sec:    161.68
+Transfer/sec:     40.82KB
+
+---------------------------------------------------------
+ Queries: 1 for slim
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2577 requests in 15.00s, 560.43KB read
+  Socket errors: connect 0, read 0, write 0, timeout 100
+  Non-2xx or 3xx responses: 2
+Requests/sec:    171.81
+Transfer/sec:     37.36KB
+
+---------------------------------------------------------
+ Queries: 5 for slim
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2029 requests in 15.00s, 737.85KB read
+  Socket errors: connect 0, read 0, write 0, timeout 196
+  Non-2xx or 3xx responses: 5
+Requests/sec:    135.27
+Transfer/sec:     49.19KB
+
+---------------------------------------------------------
+ Queries: 10 for slim
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1874 requests in 15.75s, 0.99MB read
+  Socket errors: connect 0, read 0, write 0, timeout 161
+  Non-2xx or 3xx responses: 6
+Requests/sec:    118.95
+Transfer/sec:     64.63KB
+
+---------------------------------------------------------
+ Queries: 15 for slim
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1533 requests in 15.00s, 1.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 327
+  Non-2xx or 3xx responses: 2
+Requests/sec:    102.19
+Transfer/sec:     73.71KB
+
+---------------------------------------------------------
+ Queries: 20 for slim
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1441 requests in 15.44s, 1.27MB read
+  Socket errors: connect 0, read 0, write 0, timeout 399
+  Non-2xx or 3xx responses: 1
+Requests/sec:     93.31
+Transfer/sec:     83.99KB
