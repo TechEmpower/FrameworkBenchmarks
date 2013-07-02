@@ -2,17 +2,17 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 10:13:03 PDT 2013
+  System information as of Mon Jul  1 09:38:07 PDT 2013
 
-  System load:  0.33                Processes:           130
-  Usage of /:   11.4% of 129.62GB   Users logged in:     1
-  Memory usage: 3%                  IP address for eth1: 172.16.98.98
+  System load:  0.14                Processes:           135
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-29 packages can be updated.
-13 updates are security updates.
+31 packages can be updated.
+14 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    41.43ms   46.93ms 111.79ms   63.41%
-    Req/Sec   195.94    169.61   555.00     44.42%
-  7602 requests in 5.05s, 8.46MB read
-Requests/sec:   1504.43
-Transfer/sec:      1.68MB
+    Latency    75.73ms  199.42ms 742.52ms   91.61%
+    Req/Sec   229.04    143.79   600.00     65.53%
+  7672 requests in 5.00s, 2.33MB read
+Requests/sec:   1533.72
+Transfer/sec:    476.22KB
 
 ---------------------------------------------------------
  Running Warmup aspnet-mono
@@ -37,11 +37,11 @@ Transfer/sec:      1.68MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   606.06ms  601.77ms   1.52s    58.65%
-    Req/Sec   201.13    216.75     1.44k    83.74%
-  22775 requests in 15.01s, 25.54MB read
-Requests/sec:   1517.82
-Transfer/sec:      1.70MB
+    Latency   163.24ms  274.92ms   1.65s    85.02%
+    Req/Sec   197.57     61.57   395.00     67.82%
+  24065 requests in 15.00s, 7.30MB read
+Requests/sec:   1604.00
+Transfer/sec:    498.09KB
 
 ---------------------------------------------------------
  Concurrency: 256 for aspnet-mono
@@ -51,12 +51,12 @@ Transfer/sec:      1.70MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.83s   819.55ms   5.48s    90.32%
-    Req/Sec   197.24    214.34     1.50k    84.58%
-  22546 requests in 15.01s, 25.20MB read
-  Socket errors: connect 0, read 0, write 0, timeout 498
-Requests/sec:   1501.85
-Transfer/sec:      1.68MB
+    Latency     2.21s   949.64ms   5.57s    73.57%
+    Req/Sec   225.52     29.27   285.00     62.50%
+  27429 requests in 15.00s, 8.32MB read
+  Socket errors: connect 0, read 0, write 0, timeout 370
+Requests/sec:   1828.88
+Transfer/sec:    567.90KB
 
 ---------------------------------------------------------
  Concurrency: 1024 for aspnet-mono
@@ -66,13 +66,13 @@ Transfer/sec:      1.68MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    14.71s   930.41ms  14.96s    94.52%
-    Req/Sec   163.79    188.33     1.40k    86.05%
-  18673 requests in 15.08s, 21.59MB read
-  Socket errors: connect 0, read 0, write 0, timeout 5544
-  Non-2xx or 3xx responses: 40
-Requests/sec:   1238.35
-Transfer/sec:      1.43MB
+    Latency     4.93s   823.39ms   5.44s    93.08%
+    Req/Sec    34.30     23.64    62.00     50.00%
+  7161 requests in 16.02s, 2.17MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7264
+  Non-2xx or 3xx responses: 10
+Requests/sec:    447.09
+Transfer/sec:    138.86KB
 
 ---------------------------------------------------------
  Concurrency: 4096 for aspnet-mono
@@ -82,13 +82,13 @@ Transfer/sec:      1.43MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us  100.00%
-    Req/Sec   178.85    209.28     4.00k    83.88%
-  20728 requests in 15.04s, 25.65MB read
-  Socket errors: connect 0, read 138, write 0, timeout 24667
-  Non-2xx or 3xx responses: 682
-Requests/sec:   1378.56
-Transfer/sec:      1.71MB
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  45876 requests in 16.01s, 14.68MB read
+  Socket errors: connect 0, read 215, write 0, timeout 24960
+  Non-2xx or 3xx responses: 22969
+Requests/sec:   2864.73
+Transfer/sec:      0.92MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for aspnet-mono
@@ -98,10 +98,10 @@ Transfer/sec:      1.71MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     0.00us    0.00us   0.00us  100.00%
-    Req/Sec     1.06k     0.85k   14.56k    70.60%
-  119875 requests in 15.02s, 53.45MB read
-  Socket errors: connect 0, read 1530, write 0, timeout 94188
-  Non-2xx or 3xx responses: 106671
-Requests/sec:   7983.01
-Transfer/sec:      3.56MB
+    Latency    14.58s   304.38ms  14.82s    61.91%
+    Req/Sec   279.18    292.36     1.43k    85.80%
+  58252 requests in 15.06s, 19.03MB read
+  Socket errors: connect 0, read 1354, write 0, timeout 97301
+  Non-2xx or 3xx responses: 40987
+Requests/sec:   3868.67
+Transfer/sec:      1.26MB
