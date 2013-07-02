@@ -2,17 +2,17 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 12:30:21 PDT 2013
+  System information as of Mon Jul  1 09:51:19 PDT 2013
 
-  System load:  1.14                Processes:           130
-  Usage of /:   11.5% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  0.04                Processes:           135
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-29 packages can be updated.
-13 updates are security updates.
+31 packages can be updated.
+14 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   279.99us   39.77us   1.23ms   77.96%
-    Req/Sec     3.68k   234.02     5.00k    65.75%
-  139624 requests in 5.00s, 13.58MB read
-Requests/sec:  27926.60
-Transfer/sec:      2.72MB
+    Latency   279.11us   93.78us   4.07ms   97.37%
+    Req/Sec     3.71k   292.19     5.11k    72.06%
+  137521 requests in 5.00s, 13.38MB read
+Requests/sec:  27505.26
+Transfer/sec:      2.68MB
 
 ---------------------------------------------------------
  Running Warmup undertow
@@ -37,11 +37,11 @@ Transfer/sec:      2.72MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.16ms    3.91ms 623.90ms   99.87%
-    Req/Sec    29.65k     2.96k   47.44k    92.21%
-  3357583 requests in 15.00s, 326.61MB read
-Requests/sec: 223883.61
-Transfer/sec:     21.78MB
+    Latency     1.12ms    0.96ms 208.93ms   99.71%
+    Req/Sec    29.73k     2.72k   45.44k    90.66%
+  3353151 requests in 15.00s, 326.18MB read
+Requests/sec: 223564.09
+Transfer/sec:     21.75MB
 
 ---------------------------------------------------------
  Concurrency: 256 for undertow
@@ -51,12 +51,12 @@ Transfer/sec:     21.78MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    97.50ms  221.16ms 627.88ms   85.17%
-    Req/Sec   102.42k     6.90k  160.00k    79.30%
-  11412912 requests in 15.00s, 1.08GB read
-  Socket errors: connect 0, read 19, write 0, timeout 0
-Requests/sec: 760848.78
-Transfer/sec:     74.01MB
+    Latency     5.31ms    5.18ms 630.97ms   99.94%
+    Req/Sec   100.56k     6.25k  166.15k    85.56%
+  11419232 requests in 15.00s, 1.08GB read
+  Socket errors: connect 0, read 25, write 0, timeout 0
+Requests/sec: 761335.22
+Transfer/sec:     74.06MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for undertow
@@ -66,12 +66,12 @@ Transfer/sec:     74.01MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   417.13ms  559.01ms   2.05s    85.77%
-    Req/Sec   102.19k    16.67k  194.00k    72.52%
-  11586558 requests in 15.00s, 1.10GB read
-  Socket errors: connect 0, read 26, write 0, timeout 1200
-Requests/sec: 772211.10
-Transfer/sec:     75.12MB
+    Latency    17.89ms   60.25ms   2.73s    96.90%
+    Req/Sec    99.80k    14.06k  194.00k    73.58%
+  11596582 requests in 15.00s, 1.10GB read
+  Socket errors: connect 0, read 21, write 0, timeout 1052
+Requests/sec: 773098.20
+Transfer/sec:     75.20MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for undertow
@@ -81,12 +81,12 @@ Transfer/sec:     75.12MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.94s     3.69s    8.88s    61.94%
-    Req/Sec   102.18k    20.99k  294.67k    79.26%
-  11575712 requests in 15.01s, 1.10GB read
-  Socket errors: connect 0, read 39, write 0, timeout 8745
-Requests/sec: 771355.81
-Transfer/sec:     75.04MB
+    Latency    83.71ms  512.70ms   8.48s    97.15%
+    Req/Sec    99.23k    17.64k  210.27k    76.33%
+  11583828 requests in 15.00s, 1.10GB read
+  Socket errors: connect 0, read 80, write 0, timeout 8314
+Requests/sec: 772116.84
+Transfer/sec:     75.11MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for undertow
@@ -96,9 +96,9 @@ Transfer/sec:     75.04MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.35s     7.28s   14.82s    57.47%
-    Req/Sec    99.31k    52.50k  634.67k    84.63%
-  11240250 requests in 15.02s, 1.07GB read
-  Socket errors: connect 0, read 170, write 0, timeout 66861
-Requests/sec: 748498.36
-Transfer/sec:     72.81MB
+    Latency     7.57s     6.67s   14.64s    41.33%
+    Req/Sec    97.71k    43.58k  416.44k    84.62%
+  11284204 requests in 15.02s, 1.07GB read
+  Socket errors: connect 0, read 75, write 0, timeout 76679
+Requests/sec: 751223.20
+Transfer/sec:     73.08MB

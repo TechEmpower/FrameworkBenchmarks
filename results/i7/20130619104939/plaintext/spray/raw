@@ -2,17 +2,17 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
-  System information as of Thu Jun 27 12:04:23 PDT 2013
+  System information as of Mon Jul  1 09:45:06 PDT 2013
 
-  System load:  1.93                Processes:           130
-  Usage of /:   11.5% of 129.62GB   Users logged in:     1
-  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  System load:  0.35                Processes:           135
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
   Swap usage:   0%
 
   Graph this data and manage this system at https://landscape.canonical.com/
 
-29 packages can be updated.
-13 updates are security updates.
+31 packages can be updated.
+14 updates are security updates.
 
 
 ---------------------------------------------------------
@@ -23,11 +23,11 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
 Running 5s test @ http://172.16.98.122:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   316.76us   41.97us   1.85ms   84.30%
-    Req/Sec     3.25k   210.71     3.78k    59.99%
-  123225 requests in 5.00s, 17.27MB read
-Requests/sec:  24645.96
-Transfer/sec:      3.46MB
+    Latency   342.05us  415.05us  13.85ms   99.85%
+    Req/Sec     3.12k   307.07     3.67k    87.56%
+  113709 requests in 5.00s, 15.94MB read
+Requests/sec:  22742.07
+Transfer/sec:      3.19MB
 
 ---------------------------------------------------------
  Running Warmup spray
@@ -37,10 +37,10 @@ Transfer/sec:      3.46MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.18ms    1.68ms 639.75ms   99.47%
-    Req/Sec    29.00k     2.88k   39.44k    95.22%
-  3277694 requests in 15.00s, 459.50MB read
-Requests/sec: 218523.61
+    Latency     1.17ms    2.97ms 631.21ms   99.73%
+    Req/Sec    29.30k     2.42k   40.89k    94.54%
+  3276780 requests in 15.00s, 459.37MB read
+Requests/sec: 218459.72
 Transfer/sec:     30.63MB
 
 ---------------------------------------------------------
@@ -51,11 +51,12 @@ Transfer/sec:     30.63MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   185.90ms  307.49ms 876.38ms   75.10%
-    Req/Sec    42.32k     5.78k   61.67k    72.35%
-  4765987 requests in 15.00s, 668.15MB read
-Requests/sec: 317721.47
-Transfer/sec:     44.54MB
+    Latency    12.89ms   29.37ms 646.60ms   98.01%
+    Req/Sec    40.97k     4.30k   55.56k    69.38%
+  4747842 requests in 15.00s, 665.60MB read
+  Socket errors: connect 0, read 11, write 0, timeout 0
+Requests/sec: 316543.67
+Transfer/sec:     44.38MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for spray
@@ -65,12 +66,12 @@ Transfer/sec:     44.54MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   396.40ms  769.79ms   2.92s    83.02%
-    Req/Sec    54.27k    10.44k   90.67k    72.49%
-  6111460 requests in 15.00s, 856.79MB read
-  Socket errors: connect 0, read 67, write 0, timeout 617
-Requests/sec: 407407.61
-Transfer/sec:     57.12MB
+    Latency    57.52ms  174.74ms   2.62s    90.77%
+    Req/Sec    52.80k    12.14k   86.95k    82.25%
+  6128144 requests in 15.00s, 859.12MB read
+  Socket errors: connect 0, read 144, write 0, timeout 541
+Requests/sec: 408529.67
+Transfer/sec:     57.27MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for spray
@@ -80,12 +81,12 @@ Transfer/sec:     57.12MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     1.07s     1.79s    6.42s    76.19%
-    Req/Sec    60.27k    13.48k  135.55k    71.41%
-  6763387 requests in 15.01s, 0.93GB read
-  Socket errors: connect 0, read 288, write 0, timeout 7888
-Requests/sec: 450741.89
-Transfer/sec:     63.20MB
+    Latency   651.64ms    2.05s   10.81s    92.83%
+    Req/Sec    58.31k    11.58k  157.67k    76.73%
+  6784831 requests in 15.00s, 0.93GB read
+  Socket errors: connect 0, read 239, write 0, timeout 8069
+Requests/sec: 452212.00
+Transfer/sec:     63.40MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for spray
@@ -95,9 +96,9 @@ Transfer/sec:     63.20MB
 Running 15s test @ http://172.16.98.122:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.54s     5.65s   13.80s    74.67%
-    Req/Sec    58.68k    14.53k  132.22k    72.61%
-  6592000 requests in 15.02s, 0.90GB read
-  Socket errors: connect 0, read 887, write 0, timeout 62425
-Requests/sec: 439017.76
-Transfer/sec:     61.58MB
+    Latency    10.98s     5.90s   14.91s    77.12%
+    Req/Sec    56.83k    13.34k  149.76k    77.44%
+  6643585 requests in 15.03s, 0.91GB read
+  Socket errors: connect 0, read 810, write 0, timeout 58480
+Requests/sec: 442004.15
+Transfer/sec:     62.00MB
