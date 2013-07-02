@@ -2,7 +2,14 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
- System information disabled due to load higher than 2.0
+  System information as of Mon Jul  1 22:26:18 UTC 2013
+
+  System load:  0.81               Processes:           331
+  Usage of /:   25.9% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.105.204
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
 
   Get cloud support with Ubuntu Advantage Cloud Guest:
     http://www.ubuntu.com/business/services/cloud
@@ -16,94 +23,94 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
 ---------------------------------------------------------
  Running Primer dart
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 5s test @ http://10.253.67.217:8080/plaintext
+Running 5s test @ http://10.254.59.226:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     3.58ms    2.75ms  28.63ms   81.33%
-    Req/Sec   343.44    136.15     1.00k    66.01%
-  13056 requests in 5.00s, 2.65MB read
-Requests/sec:   2610.66
-Transfer/sec:    542.91KB
+    Latency     6.16ms    9.50ms 105.25ms   90.48%
+    Req/Sec   234.16     95.27   520.00     66.21%
+  8688 requests in 5.00s, 1.76MB read
+Requests/sec:   1737.57
+Transfer/sec:    361.35KB
 
 ---------------------------------------------------------
  Running Warmup dart
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   224.84ms  699.11ms   4.20s    95.51%
-    Req/Sec   363.58    200.07     1.33k    70.82%
-  41389 requests in 15.01s, 8.43MB read
-  Socket errors: connect 0, read 6465, write 0, timeout 28
-  Non-2xx or 3xx responses: 173
-Requests/sec:   2757.62
-Transfer/sec:    575.11KB
+    Latency    92.74ms  225.22ms   3.69s    98.04%
+    Req/Sec   355.12     45.45   517.00     71.24%
+  42179 requests in 15.00s, 8.58MB read
+  Socket errors: connect 0, read 4357, write 0, timeout 77
+  Non-2xx or 3xx responses: 135
+Requests/sec:   2811.74
+Transfer/sec:    586.02KB
 
 ---------------------------------------------------------
  Concurrency: 256 for dart
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     4.21s     1.55s    6.57s    71.08%
-    Req/Sec   389.56    204.90     1.30k    70.58%
-  44224 requests in 15.00s, 9.00MB read
-  Socket errors: connect 0, read 4507, write 0, timeout 100
-  Non-2xx or 3xx responses: 160
-Requests/sec:   2948.46
-Transfer/sec:    614.67KB
+    Latency     1.46s     1.05s    6.76s    90.72%
+    Req/Sec   376.06     38.47   508.00     69.54%
+  44693 requests in 15.00s, 9.11MB read
+  Socket errors: connect 0, read 5526, write 0, timeout 165
+  Non-2xx or 3xx responses: 228
+Requests/sec:   2978.91
+Transfer/sec:    621.62KB
 
 ---------------------------------------------------------
  Concurrency: 1024 for dart
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    10.45s     3.65s   14.04s    86.28%
-    Req/Sec   339.72    225.16     1.55k    64.01%
-  38179 requests in 15.00s, 7.90MB read
-  Socket errors: connect 0, read 165736, write 0, timeout 1137
-  Non-2xx or 3xx responses: 1115
-Requests/sec:   2545.46
-Transfer/sec:    539.67KB
+    Latency     5.19s     4.82s   14.35s    71.61%
+    Req/Sec   282.29     63.39   438.00     73.53%
+  32608 requests in 15.00s, 6.99MB read
+  Socket errors: connect 0, read 191837, write 0, timeout 1284
+  Non-2xx or 3xx responses: 2749
+Requests/sec:   2173.45
+Transfer/sec:    477.25KB
 
 ---------------------------------------------------------
  Concurrency: 4096 for dart
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    10.94s     3.99s   13.42s    86.66%
-    Req/Sec   319.05    245.60     2.11k    74.38%
-  35350 requests in 15.02s, 7.31MB read
-  Socket errors: connect 0, read 197420, write 0, timeout 3527
-  Non-2xx or 3xx responses: 935
-Requests/sec:   2354.25
-Transfer/sec:    498.21KB
+    Latency     6.14s     4.17s   11.82s    43.14%
+    Req/Sec   375.32     52.48   482.00     70.27%
+  43573 requests in 15.00s, 8.95MB read
+  Socket errors: connect 0, read 147675, write 0, timeout 4058
+  Non-2xx or 3xx responses: 760
+Requests/sec:   2904.39
+Transfer/sec:    611.10KB
 
 ---------------------------------------------------------
  Concurrency: 16384 for dart
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.34s     2.99s   11.79s    73.73%
-    Req/Sec   379.14    258.20     3.33k    65.29%
-  41652 requests in 15.04s, 8.55MB read
-  Socket errors: connect 8203, read 189450, write 0, timeout 62356
-  Non-2xx or 3xx responses: 658
-Requests/sec:   2769.00
-Transfer/sec:    581.97KB
+    Latency    12.03s     3.81s   14.69s    89.56%
+    Req/Sec   401.86    114.37   656.00     61.22%
+  43667 requests in 15.05s, 8.91MB read
+  Socket errors: connect 8203, read 171977, write 0, timeout 64700
+  Non-2xx or 3xx responses: 286
+Requests/sec:   2902.24
+Transfer/sec:    606.28KB

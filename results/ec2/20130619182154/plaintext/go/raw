@@ -2,7 +2,14 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
 
  * Documentation:  https://help.ubuntu.com/
 
- System information disabled due to load higher than 2.0
+  System information as of Mon Jul  1 22:00:26 UTC 2013
+
+  System load:  0.12               Processes:           75
+  Usage of /:   25.9% of 19.69GB   Users logged in:     1
+  Memory usage: 2%                 IP address for eth0: 10.254.105.204
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
 
   Get cloud support with Ubuntu Advantage Cloud Guest:
     http://www.ubuntu.com/business/services/cloud
@@ -10,92 +17,92 @@ Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
   Use Juju to deploy your cloud instances and workloads:
     https://juju.ubuntu.com/#cloud-precise
 
-47 packages can be updated.
-21 updates are security updates.
+49 packages can be updated.
+22 updates are security updates.
 
 
 ---------------------------------------------------------
  Running Primer go
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 5s test @ http://10.253.67.217:8080/plaintext
+Running 5s test @ http://10.254.59.226:8080/plaintext
   8 threads and 8 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    37.08ms   80.37ms 213.65ms   82.79%
-    Req/Sec     1.98k     1.00k    3.22k    77.65%
-  72594 requests in 5.00s, 7.96MB read
-Requests/sec:  14522.73
-Transfer/sec:      1.59MB
+    Latency   421.62us  390.75us  11.00ms   97.97%
+    Req/Sec     2.47k   349.97     3.11k    75.19%
+  93260 requests in 5.00s, 10.23MB read
+Requests/sec:  18656.94
+Transfer/sec:      2.05MB
 
 ---------------------------------------------------------
  Running Warmup go
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     9.38ms    3.58ms  36.99ms   74.32%
-    Req/Sec     3.65k   693.81     5.44k    83.05%
-  412853 requests in 15.00s, 45.28MB read
-Requests/sec:  27526.16
-Transfer/sec:      3.02MB
+    Latency    10.96ms   18.40ms 170.15ms   98.32%
+    Req/Sec     3.66k   581.48     5.56k    91.52%
+  429575 requests in 15.00s, 47.11MB read
+Requests/sec:  28640.51
+Transfer/sec:      3.14MB
 
 ---------------------------------------------------------
  Concurrency: 256 for go
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 256 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   554.56ms  498.46ms   1.34s    72.61%
-    Req/Sec     4.85k     2.70k   16.89k    64.83%
-  550971 requests in 15.01s, 60.43MB read
-Requests/sec:  36716.44
-Transfer/sec:      4.03MB
+    Latency   101.67ms  101.60ms   1.28s    88.89%
+    Req/Sec     4.87k     0.87k    8.00k    83.38%
+  582997 requests in 15.00s, 63.94MB read
+Requests/sec:  38862.94
+Transfer/sec:      4.26MB
 
 ---------------------------------------------------------
  Concurrency: 1024 for go
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 1024 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   607.38ms  171.37ms 824.17ms   45.49%
-    Req/Sec     4.67k     3.50k   36.50k    73.26%
-  528092 requests in 15.00s, 57.92MB read
-Requests/sec:  35199.81
-Transfer/sec:      3.86MB
+    Latency   422.78ms  126.91ms   1.78s    77.89%
+    Req/Sec     4.87k   791.91     7.38k    75.48%
+  581055 requests in 15.00s, 63.73MB read
+Requests/sec:  38731.28
+Transfer/sec:      4.25MB
 
 ---------------------------------------------------------
  Concurrency: 4096 for go
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 4096 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.70s   738.56ms   3.34s    66.35%
-    Req/Sec     4.59k     5.92k   43.33k    84.07%
-  514484 requests in 15.13s, 56.42MB read
-  Socket errors: connect 0, read 0, write 0, timeout 3
-Requests/sec:  33999.75
-Transfer/sec:      3.73MB
+    Latency     1.67s   365.74ms   3.19s    82.89%
+    Req/Sec     4.72k     0.96k    6.78k    72.06%
+  558340 requests in 15.07s, 61.23MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:  37058.71
+Transfer/sec:      4.06MB
 
 ---------------------------------------------------------
  Concurrency: 16384 for go
- wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.253.67.217:8080/plaintext
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://10.254.59.226:8080/plaintext
 ---------------------------------------------------------
 
-Running 15s test @ http://10.253.67.217:8080/plaintext
+Running 15s test @ http://10.254.59.226:8080/plaintext
   8 threads and 16384 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.02s     1.52s    6.34s    78.45%
-    Req/Sec     4.60k     7.29k   57.00k    85.39%
-  509267 requests in 15.35s, 55.85MB read
-  Socket errors: connect 8203, read 0, write 0, timeout 80065
-Requests/sec:  33183.30
-Transfer/sec:      3.64MB
+    Latency     4.22s     1.53s    6.19s    56.62%
+    Req/Sec     4.82k     2.02k   10.66k    65.25%
+  527127 requests in 15.03s, 57.81MB read
+  Socket errors: connect 8203, read 0, write 0, timeout 78796
+Requests/sec:  35066.23
+Transfer/sec:      3.85MB
