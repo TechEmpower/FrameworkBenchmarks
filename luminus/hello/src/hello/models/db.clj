@@ -69,4 +69,4 @@
   "Fetch the full list of Fortunes from the database, sort them by the fortune
    message text, and then return the results."
   (let [fortunes (conj (get-all-fortunes) {:id 0 :message "Additional fortune added at request time."} )]
-    (sort-by #(:message %) fortunes)))
+    (sort-by :message fortunes)))
