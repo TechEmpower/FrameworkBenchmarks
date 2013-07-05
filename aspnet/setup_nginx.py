@@ -25,7 +25,7 @@ def start(args):
     
     # fastcgi
     for port in range(9001, 9001 + args.max_threads):
-      subprocess.Popen("fastcgi-mono-server4 /applications=/:. /socket=tcp:127.0.0.1:" + str(port) + " &", shell=True, cwd=app)
+      subprocess.Popen("MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 /applications=/:. /socket=tcp:127.0.0.1:" + str(port) + " &", shell=True, cwd=app)
     return 0
   except subprocess.CalledProcessError:
     return 1
