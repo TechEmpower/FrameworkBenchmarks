@@ -35,5 +35,5 @@ def stop():
   
   subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + root + "/nginx.conf -s stop", shell=True)
   subprocess.check_call("rm -f " + root + "/nginx.upstream.conf", shell=True)
-  subprocess.check_call("pkill -9 mono", shell=True)
+  subprocess.check_call("pkill -9 mono-sgen", shell=True)
   return 0
