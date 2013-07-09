@@ -2,6 +2,7 @@
 
 namespace Benchmarks.AspNet.Controllers
 {
+    [SessionState(SessionStateBehavior.Disabled)]
     public class PlaintextController : Controller
     {
         public ActionResult Index()
