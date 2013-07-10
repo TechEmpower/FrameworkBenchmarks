@@ -1,5 +1,5 @@
 This is a heavily stripped-down version of [pdonald](https://github.com/pdonald/)'s aspnet tests.
-Right now this is designed to run on Windows against SQL Server on Windows.
+Right now this is designed to run on Windows.
 
 For CPU-bound tests such as db, json, fortunes, and plaintext, this is approximately twice as fast as the non-stripped aspnet tests. The performance is obtained by using ASP.NET IHttpHandlers, old-style .aspx files (when HTML is output) and removing unnecessary IIS/ASP.NET modules, especially ones related to URL routing and especially ones written in .NET.
 
