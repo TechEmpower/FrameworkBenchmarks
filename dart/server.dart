@@ -1,5 +1,6 @@
 import 'dart:async' show Future;
 import 'dart:io';
+import 'dart:utf';
 import 'dart:json' as json;
 import 'dart:math' show Random;
 import 'package:args/args.dart' show ArgParser;
@@ -83,19 +84,23 @@ _startServer(address, port, dbConnections) {
     })
   ]).then((_) {
     HttpServer.bind(address, port).then((server) {
+      server.serverHeader = 'dart';
       server.listen((request) {
         switch (request.uri.path) {
-          case '/':
+          case '/json':
             _jsonTest(request);
             break;
           case '/db':
             _dbTest(request);
             break;
+          case '/queries':
+            _queriesTest(request);
+            break;
           case '/fortunes':
             _fortunesTest(request);
             break;
-          case '/update':
-            _updateTest(request);
+          case '/updates':
+            _updatesTest(request);
             break;
           case '/plaintext':
             _plaintextTest(request);
@@ -119,7 +124,6 @@ _parseInt(text) =>
 /// [statusCode] and [type].
 _sendResponse(request, statusCode, [ type, response ]) {
   request.response.statusCode = statusCode;
-  request.response.headers.add(HttpHeaders.SERVER, 'dart');
   request.response.headers.date = new DateTime.now();
   //
   // Prevent GZIP encoding, because it is disallowed in the rules for these
@@ -130,7 +134,11 @@ _sendResponse(request, statusCode, [ type, response ]) {
     request.response.headers.contentType = type;
   }
   if (response != null) {
-    request.response.write(response);
+    var data = encodeUtf8(response);
+    request.response.contentLength = data.length;
+    request.response.add(data);
+  } else {
+    request.response.contentLength = 0;
   }
   request.response.close();
 }
@@ -155,41 +163,43 @@ _jsonTest(request) {
   _sendJson(request, { 'message': 'Hello, World!' });
 }
 
-/// Responds with the database query test to the [request].
-_dbTest(request) {
-  var queries = _parseInt(request.uri.queryParameters['queries']).clamp(1, 500);
-  var worlds = new List<World>(queries);
-  Future.wait(new List.generate(queries, (index) {
-    return _connectionPool.connect().then((connection) {
-      return connection.query(
-              'SELECT id, randomNumber FROM world WHERE id = @id;',
-              { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
-          .toList()
-          .then((rows) {
+_queryRandom() {
+  return _connectionPool.connect()
+      .then((connection) {
+        return connection.query(
+            'SELECT id, randomNumber FROM world WHERE id = @id;',
+            { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
             //
             // The benchmark's constraints tell us there is exactly one row.
             //
-            var row = rows[0];
-            worlds[index] = new World(row[0], row[1]);
-          })
-          .whenComplete(() { connection.close(); });
-    });
-  }, growable: false)).then((_) { _sendJson(request, worlds); });
+            .single
+            .then((row) => new World(row[0], row[1]))
+            .whenComplete(() { connection.close(); });
+      });
+}
+
+/// Responds with the database query test to the [request].
+_dbTest(request) {
+  _queryRandom().then((response) => _sendJson(request, response));
+}
+
+/// Responds with the database queries test to the [request].
+_queriesTest(request) {
+  var queries = _parseInt(request.uri.queryParameters['queries']).clamp(1, 500);
+  Future.wait(new List.generate(queries,
+                                (_) => _queryRandom(),
+                                growable: false))
+      .then((response) => _sendJson(request, response));
 }
 
 /// Responds with the fortunes test to the [request].
 _fortunesTest(request) {
-  var fortunes = [];
   _connectionPool.connect().then((connection) {
     return connection.query('SELECT id, message FROM fortune;')
+        .map((row) => new Fortune(row[0], row[1]))
         .toList()
-        .then((rows) {
-          for (var row in rows) {
-            fortunes.add(new Fortune(row[0], row[1]));
-          }
-        })
         .whenComplete(() { connection.close(); });
-  }).then((_) {
+  }).then((fortunes) {
     fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
     _sendHtml(request, _fortunesTemplate.renderString({
@@ -201,36 +211,21 @@ _fortunesTest(request) {
 }
 
 /// Responds with the updates test to the [request].
-_updateTest(request) {
+_updatesTest(request) {
   var queries = _parseInt(request.uri.queryParameters['queries']).clamp(1, 500);
-  var worlds = new List<World>(queries);
-  Future.wait(new List.generate(queries, (index) {
-    return _connectionPool.connect().then((connection) {
-      return connection.query(
-              'SELECT id, randomNumber FROM world WHERE id = @id;',
-              { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
-          .toList()
-          .then((rows) {
-            //
-            // The benchmark's constraints tell us there is exactly one row.
-            //
-            var row = rows[0];
-            worlds[index] = new World(row[0], row[1]);
-          })
-          .whenComplete(() { connection.close(); });
-    });
-  }, growable: false)).then((_) {
-    Future.wait(new List.generate(queries, (int index) {
-      var world = worlds[index];
-      world.randomNumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
-      return _connectionPool.connect().then((connection) {
-        return connection.execute(
+  Future.wait(new List.generate(queries, (_) {
+    return _queryRandom()
+        .then((world) {
+          world.randomNumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
+          return _connectionPool.connect().then((connection) {
+            return connection.execute(
                 'UPDATE world SET randomNumber = @randomNumber WHERE id = @id;',
                 { 'randomNumber': world.randomNumber, 'id': world.id })
-            .whenComplete(() { connection.close(); });
-      });
-    }, growable: false)).then((_) { _sendJson(request, worlds); });
-  });
+                .whenComplete(() { connection.close(); });
+          }).then((_) => world);
+        });
+  }, growable: false))
+      .then((worlds) => _sendJson(request, worlds));
 }
 
 /// Responds with the plaintext test to the [request].
