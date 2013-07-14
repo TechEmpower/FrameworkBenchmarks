@@ -221,6 +221,16 @@ $maven_dir = "C:\Java\maven"
 Move-Item "$workdir\apache-maven-3.0.5" $maven_dir
 $env:Path += ";$maven_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
+# play
+$play_url = "http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip"
+$play_local = "$workdir\play-2.1.2-RC1.zip"
+$play_dir = "C:\Java\play"
+(New-Object System.Net.WebClient).DownloadFile($play_url, $play_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($play_local, $workdir) | Out-Null
+Move-Item "$workdir\play-2.1.2-RC1" $play_dir
+$env:Path += ";$play_dir"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
 #
 # Firewall
 #
