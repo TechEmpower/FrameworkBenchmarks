@@ -22,7 +22,7 @@ def start(args):
     conf.append('worker_processes ' + str(args.max_threads) + ';')
     conf.append('error_log /dev/null crit;')
     conf.append('events {')
-    conf.append('    worker_connections ' + str(4 * args.max_concurrency / args.max_threads) + ';')
+    conf.append('    worker_connections 1024;')
     conf.append('}')
     conf.append('http {')
     conf.append('    access_log off;')
