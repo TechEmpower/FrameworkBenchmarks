@@ -6,6 +6,8 @@
       "json_url": "/json.json",
       "db_url": "/world.json",
       "query_url": "/world.json?queries=",
+      "fortunes_url": "/fortunes",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "sort": 1
     }
