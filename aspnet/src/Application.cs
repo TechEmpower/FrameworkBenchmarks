@@ -18,8 +18,11 @@ namespace Benchmarks.AspNet
             {
                 lock (locker)
                 {
-                    Start();
-                    started = true;
+                    if (!started)
+                    {
+                        Start();
+                        started = true;
+                    }
                 }
             }
         }
