@@ -53,6 +53,16 @@
       "port": 8080,
       "sort": 93
     },
+    "sqlserver-raw": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "db_url": "/ado/sqlserver",
+      "query_url": "/ado/sqlserver?queries=",
+      "fortune_url": "/ado/sqlserver/fortunes",
+      "update_url": "/ado/sqlserver/update?queries=",
+      "port": 8080,
+      "sort": 94
+    },
     "mysql-entityframework": {
       "setup_file": "setup_iis",
       "os": "nt",
@@ -61,7 +71,7 @@
       "fortune_url": "/entityframework/mysql/fortunes",
       "update_url": "/entityframework/mysql/update?queries=",
       "port": 8080,
-      "sort": 94
+      "sort": 95
     },
     "postgresql-entityframework": {
       "setup_file": "setup_iis",
@@ -71,7 +81,17 @@
       "fortune_url": "/entityframework/postgresql/fortunes",
       "update_url": "/entityframework/postgresql/update?queries=",
       "port": 8080,
-      "sort": 95
+      "sort": 96
+    },
+    "sqlserver-entityframework": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "db_url": "/entityframework/sqlserver",
+      "query_url": "/entityframework/sqlserver?queries=",
+      "fortune_url": "/entityframework/sqlserver/fortunes",
+      "update_url": "/entityframework/sqlserver/update?queries=",
+      "port": 8080,
+      "sort": 97
     },
     "mono": {
       "setup_file": "setup_nginx",
