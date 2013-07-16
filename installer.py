@@ -301,6 +301,19 @@ class Installer:
     self.__run_command("play-1.2.5/play1 install siena", send_yes=True)
 
     ##############################
+    # TreeFrog Framework
+    ##############################
+    self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql g++", True)
+    self.__run_command("wget http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.6.tar.gz")
+    self.__run_command("tar xzf treefrog-1.6.tar.gz")
+    self.__run_command("rm treefrog-1.6.tar.gz")
+    self.__run_command("./configure --enable-mongo", cwd="treefrog-1.6")
+    self.__run_command("make", cwd="treefrog-1.6/src")
+    self.__run_command("sudo make install", cwd="treefrog-1.6/src")
+    self.__run_command("make", cwd="treefrog-1.6/tools")
+    self.__run_command("sudo make install", cwd="treefrog-1.6/tools")
+
+    ##############################
     # Vert.x
     ##############################
     self.__run_command("curl http://vert-x.github.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
