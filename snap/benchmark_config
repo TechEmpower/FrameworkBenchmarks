@@ -6,6 +6,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8000,
       "sort": 41
     }
