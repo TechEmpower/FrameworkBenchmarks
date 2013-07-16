@@ -12,7 +12,7 @@ def start(args):
   try:
     subprocess.check_call("rm -rf bin obj", shell=True, cwd="nancy/src")
     subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="nancy/src")
-    subprocess.Popen("xsp4 --nonstop", shell=True, cwd="nancy/src")
+    subprocess.Popen("MONO_OPTIONS=--gc=sgen xsp4 --nonstop", shell=True, cwd="nancy/src")
     return 0
   except subprocess.CalledProcessError:
     return 1
