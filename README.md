@@ -148,6 +148,21 @@ Now you can run tests:
     python run-tests.py -s server-ip -c client-ip -i "C:\Users\Administrator\Desktop\client.key" --max-threads 2 --duration 30 --sleep 5 --name win --test aspnet --type all
 
 
+### SQL Server on Windows Instructions
+
+Server installation scripts for Windows Server 2012 with SQL Server 2012 Standard on Amazon EC2.
+
+Instructions:
+
+* Create an instance from the [Windows Server 2012 RTM English 64-bit SQL 2012 Standard](https://aws.amazon.com/amis/amazon-ebs-backed-windows-server-2012-rtm-english-64-bit-sql-2012-standard) image on Amazon EC2
+* Connect to it via Remote Desktop
+* Run a `Command Prompt` as Administrator
+* Enter `powershell -ExecutionPolicy Bypass -Command "iex (New-Object Net.WebClient).DownloadString('https://raw.github.com/TechEmpower/FrameworkBenchmarks/master/setup-sqlserver-bootstrap.ps1')"`
+* This will configure SQL Server, the Windows Firewall, and populate the database.
+
+Now, when running `python run-tests.py`, just add `-d <ip of SQL Server instance>`. This works for the (Windows Server-based) `aspnet-sqlserver-raw` and `aspnet-sqlserver-entityframework` tests.
+
+
 ## Result Files
 
 After a test run, the directory ~/FrameworkBenchmarks/results/machine-name/timestamp will contains all the result files. In this folder are four files: three CSV files, one for each of the test types (json, db, query), and a single results.json file that contains all the results as well as some additional information. The results.json file is what we use to drive our blog post, and may or may not be useful to you. There are three subdirectories: one for each of the test types (json, db, query), each of these directories contain the raw weighttp results for each framework.

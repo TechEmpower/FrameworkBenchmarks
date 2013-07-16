@@ -37,6 +37,7 @@
 * Npgsql 2.0.12 ([custom build](https://github.com/pdonald/Npgsql2))
 * Entity Framework 6.0.0-alpha3
 * Mongo C# Driver 1.8.1
+* SqlClient Data Provider for SQL Server
 
 **Developer Tools**
 
