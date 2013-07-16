@@ -2,6 +2,19 @@ $basedir = "C:\FrameworkBenchmarks"
 $workdir = "$basedir\installs"
 New-Item -Path $workdir -Type directory -Force | Out-Null
 
+function GetMd5FileHash($fileName) {
+    [Reflection.Assembly]::LoadWithPartialName("System.Security") | out-null
+    $md5 = [System.Security.Cryptography.MD5]::Create()
+
+    $file = [System.IO.File]::OpenRead($fileName)
+    $hash = $md5.ComputeHash($file)
+    $file.Dispose()
+
+    $sb = New-Object System.Text.StringBuilder
+    $hash | % { [Void]$sb.Append($_.ToString("x2")) }
+    $sb.ToString()
+}
+
 #
 # ASP.NET
 #
@@ -54,8 +67,8 @@ Start-Process "msiexec" "/i $webdeploy_local /passive" -Wait
 # node.js
 #
 Write-Host "Installing node.js...`n"
-$node_installer_file = "node-v0.10.10-x64.msi"
-$node_installer_url = "http://nodejs.org/dist/v0.10.10/x64/$node_installer_file"
+$node_installer_file = "node-v0.10.13-x64.msi"
+$node_installer_url = "http://nodejs.org/dist/v0.10.13/x64/$node_installer_file"
 $node_installer_local = "$workdir\$node_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($node_installer_url, $node_installer_local)
 
@@ -80,7 +93,7 @@ $env:Path += ";C:\Python27"; [Environment]::SetEnvironmentVariable("Path", $env:
 Write-Host "Installing PHP...`n"
 
 # Download PHP
-$php_installer_file = "php-5.4.16-nts-Win32-VC9-x86.zip"
+$php_installer_file = "php-5.4.17-nts-Win32-VC9-x86.zip"
 $php_installer_url = "http://windows.php.net/downloads/releases/$php_installer_file"
 $php_installer_local = "$workdir\$php_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($php_installer_url, $php_installer_local)
@@ -158,10 +171,21 @@ Write-Host "Installing Java...`n"
 #$env:JAVA_HOME = $jre_dir; [Environment]::SetEnvironmentVariable("JAVA_HOME", $jre_dir, [System.EnvironmentVariableTarget]::Machine)
 
 # jdk
-$jdk_url = "http://uni-smr.ac.ru/archive/dev/java/SDKs/sun/j2se/7/jdk-7u21-windows-x64.exe"
+$jdk_master_hash = "81bf3218a2eec7963b979187fb4109f3" # http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
+$jdk_url = "http://ghaffarian.net/downloads/Java/JDK/jdk-7u25-windows-x64.exe"
 $jdk_local = "$workdir\jdk-7u21-windows-x64.exe"
 $jdk_dir = "C:\Java\jdk"
 (New-Object System.Net.WebClient).DownloadFile($jdk_url, $jdk_local)
+
+$jdk_local_hash = GetMd5FileHash($jdk_local)
+if ($jdk_master_hash -ne $jdk_local_hash)
+{
+    Write-Host $jdk_master_hash
+    Write-Host $jdk_local_hash
+    Write-Host "JDK file checksum mismatch. Aborting!"
+    Exit 1
+}
+
 Start-Process $jdk_local "/s INSTALLDIR=$jdk_dir" -Wait
 $env:Path += ";$jdk_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 $env:JAVA_HOME = $jdk_dir; [Environment]::SetEnvironmentVariable("JAVA_HOME", $jre_dir, [System.EnvironmentVariableTarget]::Machine)
@@ -196,6 +220,16 @@ $maven_dir = "C:\Java\maven"
 [System.IO.Compression.ZipFile]::ExtractToDirectory($maven_local, $workdir) | Out-Null
 Move-Item "$workdir\apache-maven-3.0.5" $maven_dir
 $env:Path += ";$maven_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+# play
+$play_url = "http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip"
+$play_local = "$workdir\play-2.1.2-RC1.zip"
+$play_dir = "C:\Java\play"
+(New-Object System.Net.WebClient).DownloadFile($play_url, $play_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($play_local, $workdir) | Out-Null
+Move-Item "$workdir\play-2.1.2-RC1" $play_dir
+$env:Path += ";$play_dir"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # Firewall
