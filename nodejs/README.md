@@ -14,7 +14,7 @@ This is the NodeJS portion of a [benchmarking test suite](../) comparing a varie
 The tests were run with:
 * [Node.js v0.10.0](http://nodejs.org/)
 * [Mongoose 3.5.5](http://mongoosejs.com/)
-* [Sequelize 1.6.0-beta4](http://www.sequelizejs.com/)
+* [Mapper 0.2.4-pre](https://github.com/mgutz/mapper)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## Test URLs
@@ -39,7 +39,7 @@ MongoDB:
 http://localhost:8080/mongoose?queries=2
 
 MySQL:
-http://localhost:8080/sequelize?queries=2
+http://localhost:8080/mysql-orm?queries=2
 
 MySQL Raw:
 http://localhost:8080/mysql?queries=2
