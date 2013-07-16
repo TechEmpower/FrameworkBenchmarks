@@ -35,6 +35,9 @@ function _M.handler(ngx)
         end
         ngx.print( encode(worlds) )
         local ok, err = db:set_keepalive(0, 256)
+    elseif ngx.var.uri == '/plaintext' then
+        ngx.header.content_type = 'text/plain'
+        ngx.print('Hello, World!')
     end
 end
 
