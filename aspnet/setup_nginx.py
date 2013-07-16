@@ -25,7 +25,7 @@ def start(args):
     
     # fastcgi
     for port in range(9001, 9001 + args.max_threads):
-      subprocess.Popen("fastcgi-mono-server4 /applications=/:. /socket=tcp:127.0.0.1:" + str(port) + " &", shell=True, cwd=app)
+      subprocess.Popen("MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 /applications=/:. /socket=tcp:127.0.0.1:" + str(port) + " &", shell=True, cwd=app)
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -36,5 +36,5 @@ def stop():
   
   subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + root + "/nginx.conf -s stop", shell=True)
   subprocess.check_call("rm -f " + root + "/nginx.upstream.conf", shell=True)
-  subprocess.check_call("pkill -9 mono", shell=True)
+  subprocess.check_call("pkill -9 mono-sgen", shell=True)
   return 0
