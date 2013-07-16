@@ -1,12 +1,23 @@
 {
   "framework": "silex",
   "tests": [{
-    "raw": {
+    "default": {
       "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
       "sort": 64
+    },
+    "raw": {
+      "setup_file": "setup_raw",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "sort": 144
     }
   }]
 }
