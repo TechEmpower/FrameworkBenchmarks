@@ -11,7 +11,7 @@
     },
     "mysql" : {
       "setup_file": "setup",
-      "db_url": "/db",
+      "db_url": "/db/mysql",
       "query_url": "/db/mysql?queries=",
       "fortune_url": "/fortunes/mysql",
       "update_url": "/updates/mysql?queries=",
@@ -20,7 +20,7 @@
     },
     "postgresql" : {
       "setup_file": "setup",
-      "db_url": "/db",
+      "db_url": "/db/postgresql",
       "query_url": "/db/postgresql?queries=",
       "fortune_url": "/fortunes/postgresql",
       "update_url": "/updates/postgresql?queries=",
@@ -29,7 +29,7 @@
     },
     "mongodb" : {
       "setup_file": "setup",
-      "db_url": "/db",
+      "db_url": "/db/mongodb",
       "query_url": "/db/mongodb?queries=",
       "fortune_url": "/fortunes/mongodb",
       "update_url": "/updates/mongodb?queries=",
