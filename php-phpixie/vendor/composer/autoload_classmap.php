@@ -20,6 +20,7 @@ return array(
     'PHPixie\\DB\\Query' => $vendorDir . '/phpixie/db/classes/PHPixie/DB/Query.php',
     'PHPixie\\DB\\Result' => $vendorDir . '/phpixie/db/classes/PHPixie/DB/Result.php',
     'PHPixie\\Debug' => $vendorDir . '/phpixie/core/classes/PHPixie/Debug.php',
+    'PHPixie\\Exception\\PageNotFound' => $vendorDir . '/phpixie/core/classes/PHPixie/Exception/PageNotFound.php',
     'PHPixie\\ORM' => $vendorDir . '/phpixie/orm/classes/PHPixie/ORM.php',
     'PHPixie\\ORM\\Extension' => $vendorDir . '/phpixie/orm/classes/PHPixie/ORM/Extension.php',
     'PHPixie\\ORM\\Extension\\Nested' => $vendorDir . '/phpixie/orm/classes/PHPixie/ORM/Extension/Nested.php',

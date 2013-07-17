@@ -91,13 +91,15 @@ class Controller
 	 *
 	 * @param string    $action Name of the action to execute.
 	 * @return void
-	 * @throws \Exception If the specified action doesn't exist
+	 * @throws \PHPixie\Exception\PageNotFound If the specified action doesn't exist
 	 */
 	public function run($action)
 	{
 		$action = 'action_'.$action;
+		
 		if (!method_exists($this, $action))
-			throw new \Exception("Method {$action} doesn't exist in ".get_class($this), 404);
+			throw new \PHPixie\Exception\PageNotFound("Method {$action} doesn't exist in ".get_class($this));
+			
 		$this->execute = true;
 		$this->before();
 		if ($this->execute)

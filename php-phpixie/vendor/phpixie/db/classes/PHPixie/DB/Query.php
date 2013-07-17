@@ -418,6 +418,9 @@ abstract class Query
 	{
 		if ($this->_alias === null)
 		{
+			if (is_array($this->_table))
+				return $this->_table[1];
+
 			return $this->_table;
 		}
 		return 'a'.$this->_alias;

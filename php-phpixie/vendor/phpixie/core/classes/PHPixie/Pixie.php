@@ -13,7 +13,7 @@ namespace PHPixie;
  * @property-read \PHPixie\Config $config Configuration handler
  * @property-read \PHPixie\Debug $debug Error handler and logger
  * @property-read \PHPixie\Router $router Router
- * @property-read \PHPixie\Session $config Session handler
+ * @property-read \PHPixie\Session $session Session handler
  */
 
  class Pixie {
@@ -89,10 +89,12 @@ namespace PHPixie;
 	 *
 	 * @param string $class Controller class
 	 * @return \PHPixie\Controller
+	 * @throw  \PHPixie\Exception\PageNotFound If the controller class is not found
 	 */
 	public function controller($class) {
 		if (!class_exists($class))
-			throw new \Exception("Class {$class} doesn't exist", 404);
+			throw new \PHPixie\Exception\PageNotFound("Class {$class} doesn't exist");
+			
 		return new $class($this);
 	}
 	
@@ -170,7 +172,6 @@ namespace PHPixie;
 	 * @param boolean $return_all If 'true' returns all mathced files as array,
 	 *                            otherwise returns the first file found
 	 * @return mixed  Full path to the file or False if it is not found
-	 * @static
 	 */
 	public function find_file($subfolder, $name, $extension = 'php', $return_all = false)
 	{
@@ -207,6 +208,36 @@ namespace PHPixie;
 		$url_parts = parse_url($uri);
 		$route_data = $this->router->match($url_parts['path'], $_SERVER['REQUEST_METHOD']);
 		return $this->request($route_data['route'], $_SERVER['REQUEST_METHOD'], $_POST, $_GET, $route_data['params'], $_SERVER);
+	}
+	
+	/**
+	 * Processes HTTP request, executes it and sends back the response.
+	 *
+	 * @return void
+	 */
+	public function handle_http_request() {
+		try {
+		
+			$request =  $this->http_request();
+			$response = $request->execute();
+			$response->send_headers()->send_body();
+			
+		}catch (\Exception $e) {
+			$this->handle_exception($e);
+		}
+		
+	}
+	
+	/**
+	 * Exception handler. By default displays the error page.
+	 * If you want your exceptions to be handled in a specific way
+	 * you should override this method.
+	 *
+	 * @param \Exception $exception Exception to handle
+	 * @return void
+	 */
+	public function handle_exception($exception) {
+		$this->debug->render_exception_page($exception);
 	}
 	
 	/**

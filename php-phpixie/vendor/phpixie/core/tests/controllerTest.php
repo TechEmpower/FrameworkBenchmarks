@@ -49,7 +49,7 @@ class ControllerTest extends PHPUnit_Framework_TestCase
 		$except = false;
 		try {
 			$this->object->run('bogus');
-		} catch (Exception $e) {
+		} catch (\PHPixie\Exception\PageNotFound $e) {
 			$except = true;
 		}
 		$this->assertEquals($except, true);
