@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /php-fatfree/ "/home/ubuntu/FrameworkBenchmarks/php-fatfree/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/php-fatfree/>
+          Options -Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>

@@ -1,0 +1,206 @@
+CHANGELOG
+
+3.0.9 (12 June 2013)
+*	NEW: Web->whois()
+*	NEW: Template <switch> <case> tags
+*	Improve CACHE consistency
+*	Case-insensitive MIME type detection
+*	Support pre-PHP 5.3.4 in Prefab->instance()
+*	Refactor isdesktop() and ismobile(); Add isbot()
+*	Add support for Markdown strike-through
+*	Work around ODBC's lack of quote() support
+*	Remove useless Prefab destructor
+*	Support multiple cache instances
+*	Bug fix: Underscores in OpenId keys mangled
+*	Refactor format()
+*	Numerous tweaks
+*	Bug fix: MongoId object not preserved
+*	Bug fix: Double-quotes included in lexicon() string (Issue #341)
+*	Bug fix: UTF-8 formatting mangled on Windows (Issue #342)
+*	Bug fix: Cache->load() error when CACHE is FALSE (Issue #344)
+*	Bug fix: send() ternary expression
+*	Bug fix: Country code constants
+
+3.0.8 (17 May 2013)
+*	NEW: Bcrypt lightweight hashing library\
+*	Return total number of records in superset in Cursor->paginate()
+*	ONERROR short-circuit (Enhancement #334)
+*	Apply quotes/backticks on DB identifiers
+*	Allow enabling/disabling of SQL log
+*	Normalize glob() behavior (Issue #330)
+*	Bug fix: mbstring 2-byte text truncation (Issue #325)
+*	Bug fix: Unsupported operand types (Issue #324)
+
+3.0.7 (2 May 2013)
+*	NEW: route() now allows an array of routing patterns as first argument;
+	support array as first argument of map()
+*	NEW: entropy() for calculating password strength (NIST 800-63)
+*	NEW: AGENT variable containing auto-detected HTTP user agent string
+*	NEW: ismobile() and isdesktop() methods
+*	NEW: Prefab class and descendants now accept constructor arguments
+*	Change in behavior: Cache->exists() now returns timestamp and TTL of
+	cache entry or FALSE if not found (Feature request #315)
+*	Preserve timestamp and TTL when updating cache entry (Feature request
+	#316)
+*	Improved currency formatting with C99 compliance
+*	Suppress unnecessary program halt at startup caused by misconfigured
+	server
+*	Add support for dashes in custom attribute names in templates
+*	Bug fix: Routing precedene (Issue #313)
+*	Bug fix: Remove Jig _id element from document property
+*	Bug fix: Web->rss() error when not enough items in the feed (Issue #299)
+*	Bug fix: Web engine fallback (Issue #300)
+*	Bug fix: <strong> and <em> formatting
+*	Bug fix: Text rendering of text with trailing punctuation (Issue #303)
+*	Bug fix: Incorrect regex in SMTP
+
+3.0.6 (31 Mar 2013)
+*	NEW: Image->crop()
+*	Modify documentation blocks for PHPDoc interoperability
+*	Allow user to control whether Base->rerouet() uses a permanent or
+	temporary redirect
+*	Allow JAR elements to be set individually
+*	Refactor DB\SQL\Mapper->insert() to cope with autoincrement fields
+*	Trigger error when captcha() font is missing
+*	Remove unnecessary markdown regex recursion
+*	Check for scalars instead of DB\SQL strings
+*	Implement more comprehensive diacritics table
+*	Add option for disabling 401 errors when basic auth() fails
+*	Add markdown syntax highlighting for Apache configuration
+*	Markdown->render() deprecated to remove dependency on UI variable;
+	Feature replaced by Markdown->convert() to enable translation from
+	markdown string to HTML
+*	Optimize factory() code of all data mappers
+*	Apply backticks on MySQL table names
+*	Bug fix: Routing failure when directory path contains a tilde (Issue #291)
+*	Bug fix: Incorrect markdown parsing of strong/em sequences and inline HTML
+*	Bug fix: Cached page not echoed (Issue #278)
+*	Bug fix: Object properties not escaped when rendering
+*	Bug fix: OpenID error response ignored
+*	Bug fix: memcache_get_extended_stats() timeout
+*	Bug fix: Base->set() doesn't pass TTL to Cache->set()
+*	Bug fix: Base->scrub() ignores pass-thru * argument (Issue #274)
+
+3.0.5 (16 Feb 2013)
+*	NEW: Markdown class with PHP, HTML, and .ini syntax highlighting support
+*	NEW: Options for caching of select() and find() results
+*	NEW: Web->acceptable()
+*	Add send() argument for forcing downloads
+*	Provide read() option for applying Unix LF as standard line ending
+*	Bypass lexicon() call if LANGUAGE is undefined
+*	Load fallback language dictionary if LANGUAGE is undefined
+*	map() now checks existence of class/methods for non-tokenized URLs
+*	Improve error reporting of non-existent Template methods
+*	Address output buffer issues on some servers
+*	Bug fix: Setting DEBUG to 0 won't suppress the stack trace when the
+	content type is application/json (Issue #257)
+*	Bug fix: Image dump/render additional arguments shifted
+*	Bug fix: ob_clean() causes buffer issues with zlib compression
+*	Bug fix: minify() fails when commenting CSS @ rules (Issue #251)
+*	Bug fix: Handling of commas inside quoted strings
+*	Bug fix: Glitch in stringify() handling of closures
+*	Bug fix: dry() in mappers returns TRUE despite being hydrated by
+	factory() (Issue #265)
+*	Bug fix: expect() not handling flags correctly
+*	Bug fix: weather() fails when server is unreachable
+
+3.0.4 (29 Jan 2013)
+*	NEW: Support for ICU/CLDR pluralization
+*	NEW: User-defined FALLBACK language
+*	NEW: minify() now recognizes CSS @import directives
+*	NEW: UTF->bom() returns byte order mark for UTF-8 encoding
+*	Expose SQL\Mapper->schema()
+*	Change in behavior: Send error response as JSON string if AJAX request is
+	detected
+*	Deprecated: afind*() methods
+*	Discard output buffer in favor of debug output
+*	Make _id available to Jig queries
+*	Magic class now implements ArrayAccess
+*	Abort execution on startup errors
+*	Suppress stack trace on DEBUG level 0
+*	Allow single = as equality operator in Jig query expressions
+*	Abort OpenID discovery if Web->request() fails
+*	Mimic PHP *RECURSION* in stringify()
+*	Modify Jig parser to allow wildcard-search using preg_match()
+*	Abort execution after error() execution
+*	Concatenate cached/uncached minify() iterations; Prevent spillover
+	caching of previous minify() result
+*	Work around obscure PHP session id regeneration bug
+*	Revise algorithm for Jig filter involving undefined fields (Issue #230)
+*	Use checkdnsrr() instead of gethostbyname() in DNSBL check
+*	Auto-adjust pagination to cursor boundaries
+*	Add Romanian diacritics
+*	Bug fix: Root namespace reference and sorting with undefined Jig fields
+*	Bug fix: Greedy receive() regex
+*	Bug fix: Default LANGUAGE always 'en'
+*	Bug fix: minify() hammers cache backend
+*	Bug fix: Previous values of primary keys not saved during factory()
+	instantiation
+*	Bug fix: Jig find() fails when search key is not present in all records
+*	Bug fix: Jig SORT_DESC (Issue #233)
+*	Bug fix: Error reporting (Issue #225)
+*	Bug fix: language() return value
+
+3.0.3 (29 Dec 2013)
+*	NEW: [ajax] and [sync] routing pattern modifiers
+*	NEW: Basket class (session-based pseudo-mapper, shopping cart, etc.)
+*	NEW: Test->message() method
+*	NEW: DB profiling via DB->log()
+*	NEW: Matrix->calendar()
+*	NEW: Audit->card() and Audit->mod10() for credit card verification
+*	NEW: Geo->weather()
+*	NEW: Base->relay() accepts comma-separated callbacks; but unlike
+	Base->chain(), result of previous callback becomes argument of the next
+*	Numerous performance tweaks
+*	Interoperability with new MongoClient class
+*	Web->request() now recognizes gzip and deflate encoding
+*	Differences in behavior of Web->request() engines rectified
+*	mutex() now uses an ID as argument (instead of filename to make it clear
+	that specified file is not the target being locked, but a primitive
+	cross-platform semaphore)
+*	DB\SQL\Mapper field _id now returned even in the absence of any
+	auto-increment field
+*	Magic class spinned off as a separate file
+*	ISO 3166-1 alpha-2 table updated
+*	Apache redirect emulation for PHP 5.4 CLI server mode
+*	Framework instance now passed as argument to any user-defined shutdown
+	function
+*	Cache engine now used as storage for Web->minify() output
+*	Flag added for enabling/disabling Image class filter history
+*	Bug fix: Trailing routing token consumes HTTP query
+*	Bug fix: LANGUAGE spills over to LOCALES setting
+*	Bug fix: Inconsistent dry() return value
+*	Bug fix: URL-decoding
+
+3.0.2 (23 Dec 2013)
+*	NEW: Syntax-highlighted stack traces via Base->highlight(); boolean
+	HIGHLIGHT global variable can be used to enable/disable this feature
+*	NEW: Template engine <ignore> tag
+*	NEW: Image->captcha()
+*	NEW: DNSBL-based spammer detection (ported from 2.x)
+*	NEW: paginate(), first(), and last() methods for data mappers
+*	NEW: X-HTTP-Method-Override header now recognized
+*	NEW: Base->chain() method for executing callbacks in succession
+*	NEW: HOST global variable; derived from either $_SERVER['SERVER_NAME'] or
+	gethostname()
+*	NEW: REALM global variable representing full canonical URI
+*	NEW: Auth plug-in
+*	NEW: Pingback plug-in (implements both Pingback 1.0 protocol client and
+	server)
+*	NEW: DEBUG verbosity can now reach up to level 3; Base->stringify() drills
+	down to object properties at this setting
+*	NEW: HTTP PATCH method added to recognized HTTP ReST methods
+*	Web->slug() now trims trailing dashes
+*	Web->request() now allows relative local URLs as argument
+*	Use of PARAMS in route handlers now unnecessary; framework now passes two
+	arguments to route handlers: the framework object instance and an array
+	containing the captured values of tokens in route patterns
+*	Standardized timeout settings among Web->request() backends
+*	Session IDs regenerated for additional security
+*	Automatic HTTP 404 responses by Base->call() now restricted to route
+	handlers
+*	Empty comments in ini-style files now parsed properly
+*	Use file_get_contents() in methods that don't involve high concurrency
+
+3.0.1 (14 Dec 2013)
+*	Major rewrite of much of the framework's core features

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fortunes</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>id</th>
+            <th>message</th>
+        </tr>
+        <repeat group="{{@result}}" key="{{@id}}" value="{{@fortune}}">
+            <tr>
+                <td>{{@id}}</td>
+                <td>{{@fortune}}</td>
+            </tr>
+        </repeat>
+    </table>
+</body>
+</html>
