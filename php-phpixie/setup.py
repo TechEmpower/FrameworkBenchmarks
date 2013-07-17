@@ -12,6 +12,7 @@ def start(args):
   setup_util.replace_text("php-phpixie/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
 
   try:
+    subprocess.check_call("composer.phar install --optimize-autoloader", shell=True, cwd="php-silex")        
     subprocess.check_call("sudo php-fpm --fpm-config config/php-fpm.conf -g " + home + "/FrameworkBenchmarks/php-phpixie/deploy/php-fpm.pid", shell=True)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php-phpixie/deploy/nginx.conf", shell=True)
     return 0
