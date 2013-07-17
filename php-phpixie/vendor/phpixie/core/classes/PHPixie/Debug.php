@@ -37,56 +37,34 @@ class Debug
 	}
 	
 	/**
-	 * Displays the error page. If you have 'silent_errors' enabled in
-	 * core.php config file, a small message will be shown instead.
+	 * Displays the error page. If you set $display_errors to false
+	 * only a small error message will be displayed.
 	 *
 	 * @param \Exception $exception Exception to display
 	 * @return void
 	 */
-	public function render_error($exception)
+	public function render_exception_page($exception)
 	{
 		if (ob_get_length() > 0)
-		{
 			ob_end_clean();
-		}
 
-		if ($exception->getCode() == 404)
-		{
+		$status = '503 Service Temporarily Unavailable';
+		
+		if ($exception instanceof \PHPixie\Exception\PageNotFound)
 			$status = '404 Not Found';
-		}
-		else
-		{
-			$status = '503 Service Temporarily Unavailable';
-		}
-
+			
 		header($_SERVER["SERVER_PROTOCOL"].' '.$status);
 		header("Status: {$status}");
 
-		if (!$this->display_errors)
-		{
+		if (!$this->display_errors) {
 			echo $status;
-			return;
+		}else{
+			$view = $this->pixie->view('debug');
+			$view->exception = $exception;
+			$view->log = $this->logged;
+			echo $view->render();
 		}
-
-		$view = $this->pixie->view('debug');
-		$view->exception = $exception;
-		$view->log = $this->logged;
-		echo $view->render();
-	}
-
-	/**
-	 * Catches errors and exceptions and sends them
-	 * to the configured handler if one is present,
-	 * otherwise render_error() will be called.
-	 *
-	 * @param \Exception $exception Caught exception
-	 * @return void
-	 */
-	public function onError($exception)
-	{
-		set_exception_handler(array($this, 'internalException'));
-		set_error_handler(array($this, 'internalError'), E_ALL);
-		$this->render_error($exception);
+		
 	}
 
 	/**
@@ -99,34 +77,9 @@ class Debug
 	 * @return void
 	 * @throws \ErrorException Throws converted exception to be immediately caught
 	 */
-	public function errorHandler($errno, $errstr, $errfile, $errline)
+	public function error_handler($errno, $errstr, $errfile, $errline)
 	{
 		throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
-	}
-
-	/**
-	 * Handles exceptions that occurred while inside the error handler. Prevents recursion.
-	 *
-	 * @param \Exception  $exception Caught exception
-	 * @return void
-	 */
-	public function internalException($exception)
-	{
-		echo $exception->getMessage().' in '.$exception->getFile().' on line '.$exception->getLine();
-	}
-
-	/**
-	 * Handles errors that occurred while inside the error handler. Prevents recursion.
-	 *
-	 * @param string        $errno   Error number
-	 * @param string        $errstr  Error message
-	 * @param string        $errfile File in which the error occurred
-	 * @param string        $errline Line at which the error occurred
-	 * @return void
-	 */
-	public function internalError($errno, $errstr, $errfile, $errline)
-	{
-		echo $errstr.' in '.$errfile.' on line '.$errline;
 	}
 
 	/**
@@ -136,8 +89,7 @@ class Debug
 	 */
 	public function init()
 	{
-		set_exception_handler(array($this, 'onError'));
-		set_error_handler(array($this, 'errorHandler'), E_ALL);
+		set_error_handler(array($this, 'error_handler'), E_ALL);
 	}
 
 	/**

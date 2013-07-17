@@ -65,9 +65,9 @@ class Router {
 	 * @param string   $uri Request URI
 	 * @param string   $method Request method
 	 * @return array Array containing route and matched parameters
-	 * @throws \Exception If no route matches the URI
-	 * @throws \Exception If route matched but no Controller was defined for it
-	 * @throws \Exception If route matched but no action was defined for it
+	 * @throws \PHPixie\Exception\PageNotFound If no route matches the URI
+	 * @throws \PHPixie\Exception\PageNotFound If route matched but no Controller was defined for it
+	 * @throws \PHPixie\Exception\PageNotFound If route matched but no action was defined for it
 	 */
 	public function match($uri, $method = 'GET')
 	{
@@ -112,14 +112,16 @@ class Router {
 			}
 		}
 		if ($matched == false)
-			throw new \Exception('No route matched your request', 404);
+			throw new \PHPixie\Exception\PageNotFound('No route matched your request');
 			
 		$route = $this->routes[$matched];
 		$params = array_merge($route->defaults, $data);
+		
 		if (!isset($params['controller']))
-			throw new \Exception("Route {$matched} matched, but no controller was defined for this route", 404);
+			throw new \PHPixie\Exception\PageNotFound("Route {$matched} matched, but no controller was defined for this route");
+			
 		if (!isset($params['action']))
-			throw new \Exception("Route {$matched} matched with controller {$params['controller']}, but no action was defined for this route", 404);
+			throw new \PHPixie\Exception\PageNotFound("Route {$matched} matched with controller {$params['controller']}, but no action was defined for this route");
 
 		return array(
 					'route'=>$route, 

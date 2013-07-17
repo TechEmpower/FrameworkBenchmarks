@@ -145,7 +145,7 @@ class Query extends \PHPixie\DB\Query
 		if ($table instanceof \PHPixie\DB\Expression)
 			return "({$table->value}) AS {$alias}";
 
-		throw new \Exception("Parameter type {get_class($table)} cannot be used as a table");
+		throw new \Exception("Parameter type ".get_class($table)." cannot be used as a table");
 	}
 
 	/**
@@ -220,7 +220,8 @@ class Query extends \PHPixie\DB\Query
 						}
 					}
 				}
-				$query .= "FROM {$this->escape_table($this->_table, $params)} ";
+				if(!empty($this->_table))
+					$query .= "FROM {$this->escape_table($this->_table, $params)} ";
 			}
 			if ($this->_type == 'count')
 			{
@@ -265,7 +266,9 @@ class Query extends \PHPixie\DB\Query
 			{
 				$table = $join[0];
 				$table = $this->escape_table($table, $params);
-				$query .= strtoupper($join[1])." JOIN {$table} ON {$this->get_condition_query($join[2], $params, true, true)} ";
+				$query .= strtoupper($join[1])." JOIN {$table} ";
+				if(!empty($join[2]))
+					$query.="ON {$this->get_condition_query($join[2], $params, true, true)} ";
 			}
 
 			if (!empty($this->_conditions))

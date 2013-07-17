@@ -39,7 +39,7 @@ class RoterTest extends PHPUnit_Framework_TestCase
 		$this->object->add(new \PHPixie\Route('a', 'b', array()));
 		try {
 			$this->object->get('c');
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$except = true;
 		}
 		$this->assertEquals(true, $except);
