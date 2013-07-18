@@ -90,16 +90,21 @@ $f3->route(
                       'benchmarkdbuser', 'benchmarkdbpass');
     
     $result = array();
-    $updates = array();
-        for ($i = 0; $i < $params['queries']; ++$i) {
-            $id = mt_rand(1, 10000);
-            $result[] = $db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false);
-            $rnu = mt_rand(1, 1000);
-            $updates[] = $db->exec('UPDATE World SET randomNumber = :ranNum WHERE id = :id',array(':ranNum'=>$rnu,':id'=>$id),0,true);
-        }
+    for ($i = 0; $i < $params['queries']; ++$i) {
+        $id = mt_rand(1, 10000);
+        
+        $row = array(
+        	'id'=>$id,
+        	'randomNumber'=>$db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false)
+        	);
+        $rnu = mt_rand(1, 10000);
+        $row['randomNumber'] = $rnu;
+        $db->exec('UPDATE World SET randomNumber = :ranNum WHERE id = :id', array(':ranNum'=>$rnu,':id'=>$id),0,false);
+        $result[] = $row;
+    }
 
-        header("Content-type: application/json");
-        return $f3->serialize($updates);
+    header("Content-type: application/json");
+    return $f3->serialize($result);
         
 });
 
