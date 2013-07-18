@@ -47,12 +47,13 @@ $f3->route(
         /** @var Base $f3 */
         $params += array('queries' => 1); //default value
         $db = new \DB\SQL('mysql:host=localhost;port=3306;dbname=hello_world',
-            'benchmarkdbuser', 'benchmarkdbpass');
+                          'benchmarkdbuser', 'benchmarkdbpass');
         $mapper = new \DB\SQL\Mapper($db,'World');
         $result = array();
         for ($i = 0; $i < $params['queries']; ++$i) {
             $id = mt_rand(1, 10000);
-            $result[] = $mapper->findone(array('where id = ?',$id))->cast();
+            $mapper->load(array('where id = ?',$id));
+            $result[] = $mapper->cast();
         }
 
         header("Content-type: application/json");
@@ -68,8 +69,13 @@ $f3->route('GET /plaintext', function ($f3) {
 
 $f3->route('GET /fortune', function ($f3) {
     /** @var Base $f3 */
-
-    // to be continued
+    $db = new \DB\SQL('mysql:host=localhost;port=3306;dbname=hello_world',
+                      'benchmarkdbuser', 'benchmarkdbpass');
+    $result = $db->exec('SELECT id, message FROM Fortune');
+    $result[] = 'Additional fortune added at request time.';
+    asort($result);
+    $f3->set('result',$result);
+    echo \Template::instance()->render('fortune.html');
 });
 
 

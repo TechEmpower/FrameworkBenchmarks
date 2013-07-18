@@ -8,7 +8,7 @@
       "db_url": "/db-orm",
       "query_url": "/db-orm/",
       "port": 8080,
-      "sort": 11
+      "sort": 101
     },
     "raw": {
       "setup_file": "setup",
@@ -17,7 +17,7 @@
       "fortune_url": "/fortune",
       "update_url": "/updateraw",
       "port": 8080,
-      "sort": 12
+      "sort": 102
     }
   }]
 }
