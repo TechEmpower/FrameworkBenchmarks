@@ -15,8 +15,7 @@ def start(args):
     import os
     DEVNULL = open(os.devnull, 'wb')
 
-  subprocess.check_call("chmod u+x sbt", shell=True, cwd="unfiltered")
-  subprocess.check_call("./sbt assembly", shell=True, cwd="unfiltered")
+  subprocess.check_call("../sbt/sbt assembly", shell=True, cwd="unfiltered")
   subprocess.Popen("java -jar bench-assembly-1.0.0.jar", stderr=DEVNULL, shell=True, cwd="unfiltered/target/scala-2.10")
 
   return 0
