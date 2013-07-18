@@ -1,22 +1,111 @@
 {
   "framework": "servicestack",
   "tests": [{
-    "default": {
+    "iis-default": {
       "setup_file": "setup_iis",
       "os": "nt",
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/db?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "sort": 127
     },
-    "mono": {
+    "iis-sqlserver": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "db_url": "/sqlserver/db",
+      "query_url": "/sqlserver/queries?queries=",
+      "fortune_url": "/sqlserver/fortunes",
+      "update_url": "/sqlserver/update?queries=",
+      "port": 8080,
+      "sort": 156
+    },
+    "iis-mysql": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "db_url": "/mysql/db",
+      "query_url": "/mysql/queries?queries=",
+      "fortune_url": "/mysql/fortunes",
+      "update_url": "/mysql/update?queries=",
+      "port": 8080,
+      "sort": 157
+    },
+    "iis-postgresql": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "db_url": "/postgresql/db",
+      "query_url": "/postgresql/queries?queries=",
+      "fortune_url": "/postgresql/fortunes",
+      "update_url": "/postgresql/update?queries=",
+      "port": 8080,
+      "sort": 158
+    },
+    "nginx-default": {
       "setup_file": "setup_nginx",
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/db?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "sort": 128
+    },
+    "nginx-sqlserver": {
+      "setup_file": "setup_nginx",
+      "db_url": "/sqlserver/db",
+      "query_url": "/sqlserver/queries?queries=",
+      "fortune_url": "/sqlserver/fortunes",
+      "update_url": "/sqlserver/update?queries=",
+      "port": 8080,
+      "sort": 159
+    },
+    "nginx-mysql": {
+      "setup_file": "setup_nginx",
+      "db_url": "/mysql/db",
+      "query_url": "/mysql/queries?queries=",
+      "fortune_url": "/mysql/fortunes",
+      "update_url": "/mysql/update?queries=",
+      "port": 8080,
+      "sort": 160
+    },
+    "nginx-postgresql": {
+      "setup_file": "setup_nginx",
+      "db_url": "/postgresql/db",
+      "query_url": "/postgresql/queries?queries=",
+      "fortune_url": "/postgresql/fortunes",
+      "update_url": "/postgresql/update?queries=",
+      "port": 8080,
+      "sort": 161
+    },
+    "xsp-default": {
+      "setup_file": "setup_xsp",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "sort": 162
+    }, 
+    "xsp-sqlserver": {
+      "setup_file": "setup_xsp",
+      "db_url": "/sqlserver/db",
+      "query_url": "/sqlserver/queries?queries=",
+      "fortune_url": "/sqlserver/fortunes",
+      "update_url": "/sqlserver/update?queries=",
+      "port": 8080,
+      "sort": 163
+    },
+    "xsp-mysql": {
+      "setup_file": "setup_xsp",
+      "db_url": "/mysql/db",
+      "query_url": "/mysql/queries?queries=",
+      "fortune_url": "/mysql/fortunes",
+      "update_url": "/mysql/update?queries=",
+      "port": 8080,
+      "sort": 164
+    },
+    "xsp-postgresql": {
+      "setup_file": "setup_xsp",
+      "db_url": "/postgresql/db",
+      "query_url": "/postgresql/queries?queries=",
+      "fortune_url": "/postgresql/fortunes",
+      "update_url": "/postgresql/update?queries=",
+      "port": 8080,
+      "sort": 165
     }
   }]
 }
