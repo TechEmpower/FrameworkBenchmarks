@@ -8,8 +8,8 @@ def start(args=None):
 
 
     
-    subprocess.check_call("./sbt update compile", shell=True, cwd="finagle")
-    subprocess.Popen("./sbt -Ddb.host=" + args.database_host + " run", cwd="finagle", shell=True)
+    subprocess.check_call("../sbt/sbt update compile", shell=True, cwd="finagle")
+    subprocess.Popen("../sbt/sbt -Ddb.host=" + args.database_host + " run", cwd="finagle", shell=True)
     time.sleep(5)
     return 0
 
