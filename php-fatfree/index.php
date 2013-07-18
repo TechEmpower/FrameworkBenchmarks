@@ -86,8 +86,21 @@ $f3->route(
     ),function($f3,$params) {
     /** @var Base $f3 */
     $params += array('queries' => 1); //default value
+    $db = new \DB\SQL('mysql:host=localhost;port=3306;dbname=hello_world',
+                      'benchmarkdbuser', 'benchmarkdbpass');
+    
+    $result = array();
+    $updates = array();
+        for ($i = 0; $i < $params['queries']; ++$i) {
+            $id = mt_rand(1, 10000);
+            $result[] = $db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false);
+            $rnu = mt_rand(1, 1000);
+            $updates[] = $db->exec('UPDATE World SET randomNumber = :ranNum WHERE id = :id',array(':ranNum'=>$rnu,':id'=>$id),0,true);
+        }
 
-    // to be continued
+        header("Content-type: application/json");
+        return $f3->serialize($updates);
+        
 });
 
 $f3->run();
