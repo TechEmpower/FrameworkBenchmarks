@@ -86,7 +86,7 @@ def fortune_orm(db):
 def fortune_raw():
   connection = db_engine.connect()
   fortunes=[(f.id, f.message) for f in connection.execute("SELECT * FROM Fortune")]
-  fortunes.append((0L, u'Additional fortune added at request time.'))
+  fortunes.append((0, u'Additional fortune added at request time.'))
   fortunes=sorted(fortunes, key=itemgetter(1))
   connection.close()
   return template('fortune', fortunes=fortunes)
