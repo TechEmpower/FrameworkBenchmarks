@@ -5,8 +5,8 @@ import os
 
 def start(args):
   setup_util.replace_text("bottle/app.py", "DBHOSTNAME", args.database_host)
-  subprocess.Popen("gunicorn app:app --worker-class=\"egg:meinheld#gunicorn_worker\" -b 0.0.0.0:8080 -w " + str((args.max_threads * 2)) + " --preload --log-level=critical", shell=True, cwd="bottle")
-  
+  subprocess.Popen("gunicorn app:app --worker-class=meinheld.gmeinheld.MeinheldWorker -b 0.0.0.0:8080 -w " +
+                   str((args.max_threads * 2)) + " --preload --log-level=critical", shell=True, cwd="bottle")
   return 0
 
 def stop():

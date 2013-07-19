@@ -10,9 +10,10 @@ home = expanduser("~")
 def start(args):
   setup_util.replace_text("django/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
   setup_util.replace_text("django/hello/hello/settings.py", "\/home\/ubuntu",  home)
-  subprocess.Popen("gunicorn hello.wsgi:application --worker-class=\"egg:meinheld#gunicorn_worker\"  -b 0.0.0.0:8080 -w " +
+  subprocess.Popen("gunicorn hello.wsgi:application --worker-class=meinheld.gmeinheld.MeinheldWorker -b 0.0.0.0:8080 -w " +
                    str((multiprocessing.cpu_count() * 3)) + " --log-level=critical", shell=True, cwd="django/hello")
   return 0
+
 def stop():
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
