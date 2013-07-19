@@ -307,7 +307,7 @@ public final class HelloWebServer {
         Headers.CONTENT_TYPE, MediaType.JSON_UTF_8.toString());
     exchange.getResponseSender().send(
         objectMapper.writeValueAsString(
-            Collections.singletonMap("message", "Hello, world")));
+            Collections.singletonMap("message", "Hello, World!")));
   }
 
   /**
@@ -514,7 +514,7 @@ public final class HelloWebServer {
   private void handlePlaintextTest(HttpServerExchange exchange) {
     exchange.getResponseHeaders().put(
         Headers.CONTENT_TYPE, MediaType.PLAIN_TEXT_UTF_8.toString());
-    exchange.getResponseSender().send("Hello, world");
+    exchange.getResponseSender().send("Hello, World!");
   }
 
   /**
