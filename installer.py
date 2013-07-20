@@ -287,9 +287,7 @@ class Installer:
     easy_install('flask==0.10.1', two=True, three=True, pypy=True)
     easy_install('sqlalchemy==0.8.2', two=True, three=True, pypy=True)
     easy_install('Jinja2==2.7', two=True, three=True, pypy=True)
-    # Flask-SQLAlchemy HEAD supports Python 3
-    easy_install('https://github.com/mitsuhiko/flask-sqlalchemy/archive/master.zip',
-                 two=True, three=True, pypy=True)
+    easy_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
 
     ##############################
     # Bottle
