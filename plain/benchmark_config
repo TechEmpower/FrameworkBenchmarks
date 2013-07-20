@@ -8,6 +8,7 @@
             "db_url": "/db",
             "query_url": "/db?queries=",
             "update_url": "/update?queries=",
+            "fortune_url": "/fortunes",
             "port": 9080,
             "sort": 143
             }
