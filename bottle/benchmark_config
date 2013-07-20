@@ -7,6 +7,8 @@
       "db_url": "/dbs",
       "query_url": "/db?queries=",
       "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "sort": 88
     },
@@ -15,6 +17,7 @@
       "db_url": "/dbsraw",
       "query_url": "/dbraw?queries=",
       "fortune_url": "/fortuneraw",
+      "update_url": "/raw-updates?queries=",
       "port": 8080,
       "sort": 89
     }
