@@ -1,5 +1,6 @@
 # create benchmark user
 GRANT ALL ON *.* TO 'benchmarkdbuser'@'%' IDENTIFIED BY 'benchmarkdbpass';
+GRANT ALL ON *.* TO 'benchmarkdbuser'@'localhost' IDENTIFIED BY 'benchmarkdbpass';
 
 # modified from SO answer http://stackoverflow.com/questions/5125096/for-loop-in-mysql
 DROP DATABASE IF EXISTS hello_world;
