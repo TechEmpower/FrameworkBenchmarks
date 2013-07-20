@@ -92,4 +92,4 @@ def fortune_raw():
   return template('fortune', fortunes=fortunes)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=False)
