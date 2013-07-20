@@ -4,9 +4,13 @@ from sqlalchemy import create_engine, Column, Integer, Unicode
 from sqlalchemy.ext.declarative import declarative_base
 from random import randint
 import sys
-import ujson
 from operator import attrgetter, itemgetter
 from functools import partial
+
+try:
+    import ujson as json
+except ImportError:
+    import json
 
 app = Bottle()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world?charset=utf8'
@@ -43,7 +47,7 @@ class Fortune(Base):
 def hello():
     response.content_type = 'application/json'
     resp = {"message": "Hello, World!"}
-    return ujson.dumps(resp)
+    return json.dumps(resp)
 
 @app.route("/db")
 def get_random_world(db):
@@ -53,14 +57,14 @@ def get_random_world(db):
     for i in xrange(num_queries):
         worlds.append(db.query(World).get(rp()).serialize)
     response.content_type = 'application/json'
-    return ujson.dumps(worlds)
+    return json.dumps(worlds)
 
 @app.route("/dbs")
 def get_random_world_single(db):
     wid = randint(1, 10000)
     worlds = [db.query(World).get(wid).serialize]
     response.content_type = 'application/json'
-    return ujson.dumps(worlds)
+    return json.dumps(worlds)
   
 @app.route("/dbraw")
 def get_random_world_raw():
@@ -73,7 +77,7 @@ def get_random_world_raw():
         worlds.append({'id': result[0], 'randomNumber': result[1]})
     connection.close()
     response.content_type = 'application/json'
-    return ujson.dumps(worlds)
+    return json.dumps(worlds)
 
 @app.route("/dbsraw")
 def get_random_world_single_raw():
@@ -83,7 +87,7 @@ def get_random_world_single_raw():
     worlds = [{'id': result[0], 'randomNumber': result[1]}]
     connection.close()
     response.content_type = 'application/json'
-    return ujson.dumps(worlds)
+    return json.dumps(worlds)
 
 @app.route("/fortune")
 def fortune_orm(db):
@@ -117,7 +121,7 @@ def updates(db):
         worlds.append(world.serialize)
 
     response.content_type = 'application/json'
-    return ujson.dumps(worlds)
+    return json.dumps(worlds)
 
 
 @app.route("/raw-updates")
@@ -139,7 +143,7 @@ def raw_updates():
                      (randomNumber, world['id']))
     conn.close()
     response.content_type = 'application/json'
-    return ujson.dumps(worlds)
+    return json.dumps(worlds)
 
 
 @app.route('/plaintext')
