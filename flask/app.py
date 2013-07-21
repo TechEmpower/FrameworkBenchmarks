@@ -59,7 +59,7 @@ def hello():
 def get_random_world():
     num_queries = request.args.get("queries", 1, type=int)
     worlds = [World.query.get(randint(1, 10000)).serialize
-              for _ in xrange(10000)]
+              for _ in xrange(num_queries)]
     return jsonify(worlds=worlds)
 
 

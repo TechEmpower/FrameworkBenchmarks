@@ -293,9 +293,9 @@ class Installer:
 
   def _install_python(self):
     # .profile is not loaded yet. So we should use full path.
-    pypy_bin   = "~/FrameworkBenchmarks/installs/pypy-2.0.2/bin"
-    python_bin = "~/FrameworkBenchmarks/installs/python-2.7.5/bin"
-    python3_bin= "~/FrameworkBenchmarks/installs/python-3.3.2/bin"
+    pypy_bin   = "~/FrameworkBenchmarks/installs/pypy/bin"
+    python_bin = "~/FrameworkBenchmarks/installs/py2/bin"
+    python3_bin= "~/FrameworkBenchmarks/installs/py3/bin"
     def easy_install(pkg, two=True, three=False, pypy=False):
       cmd = "/easy_install -U '" + pkg + "'"
       if two:   self.__run_command(python_bin + cmd)
@@ -303,18 +303,16 @@ class Installer:
       if pypy:  self.__run_command(pypy_bin + cmd)
 
     self.__run_command("curl -L http://bitbucket.org/pypy/pypy/downloads/pypy-2.0.2-linux64.tar.bz2 | tar xj")
+    self.__run_command('ln -s pypy-2.0.2 pypy')
     self.__run_command("curl -L http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz | tar xz")
     self.__run_command("curl -L http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz | tar xJ")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/python-2.7.5 --disable-shared", cwd="Python-2.7.5")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/python-3.3.2 --disable-shared", cwd="Python-3.3.2")
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared", cwd="Python-2.7.5")
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared", cwd="Python-3.3.2")
     self.__run_command("make -j", cwd="Python-2.7.5")
     self.__run_command("make install", cwd="Python-2.7.5")
     self.__run_command("make -j", cwd="Python-3.3.2")
     self.__run_command("make install", cwd="Python-3.3.2")
 
-    self.__run_command('ln -s pypy-2.0.2 pypy')
-    self.__run_command('ln -s pypy-2.7.5 py2')
-    self.__run_command('ln -s pypy-3.3.2 py3')
 
     self.__run_command("wget https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
     self.__run_command(pypy_bin + "/pypy ez_setup.py")
