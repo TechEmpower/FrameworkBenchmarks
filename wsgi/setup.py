@@ -10,9 +10,13 @@ proc = None
 
 
 def start(args):
-    proc = subprocess.Popen(
-        bin_dir + "/gunicorn hello:app -k meinheld.gmeinheld.MeinheldWorker -b 0.0.0.0:8080 -w " +
-        str(NCPU) + " --preload --log-level=critical", shell=True, cwd="wsgi")
+    proc = subprocess.Popen([
+        bin_dir + "/gunicorn", "hello:app",
+        "-k", "meinheld.gmeinheld.MeinheldWorker",
+        "-b", "0.0.0.0:8080",
+        '-w', str(NCPU),
+        "--log-level=critical"],
+        cwd="wsgi")
     return 0
 
 def stop():
@@ -20,5 +24,6 @@ def stop():
     if proc is None:
         return 0
     proc.terminate()
+    proc.wait()
     proc = None
     return 0
