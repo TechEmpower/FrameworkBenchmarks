@@ -7,6 +7,8 @@
       "db_url": "/dbs",
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "sort": 31
     },
@@ -15,6 +17,7 @@
       "db_url": "/dbsraw",
       "query_url": "/dbraw?queries=",
       "fortune_url": "/fortunesraw",
+      "update_url": "/raw-updates?queries=",
       "port": 8080,
       "sort": 84
     },
@@ -24,6 +27,8 @@
       "db_url": "/dbs",
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "sort": 110
     },
@@ -32,6 +37,7 @@
       "db_url": "/dbsraw",
       "query_url": "/dbraw?queries=",
       "fortune_url": "/fortunesraw",
+      "update_url": "/raw-updates?queries=",
       "port": 8080,
       "sort": 111
     }
