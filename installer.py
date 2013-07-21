@@ -312,6 +312,10 @@ class Installer:
     self.__run_command("make -j", cwd="Python-3.3.2")
     self.__run_command("make install", cwd="Python-3.3.2")
 
+    self.__run_command('ln -s pypy-2.0.2 pypy')
+    self.__run_command('ln -s pypy-2.7.5 py2')
+    self.__run_command('ln -s pypy-3.3.2 py3')
+
     self.__run_command("wget https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
     self.__run_command(pypy_bin + "/pypy ez_setup.py")
     self.__run_command(python_bin + "/python ez_setup.py")
