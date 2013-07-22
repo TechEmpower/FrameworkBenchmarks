@@ -9,6 +9,8 @@ import io.undertow.util.Headers;
 
 import java.util.Objects;
 
+import static hello.HelloWebServer.JSON_UTF8;
+
 /**
  * Handles the cache access test.
  */
@@ -30,7 +32,7 @@ final class CacheHandler implements HttpHandler {
       worlds[i] = worldCache.get(Helper.randomWorld());
     }
     exchange.getResponseHeaders().put(
-        Headers.CONTENT_TYPE, MediaType.JSON_UTF_8.toString());
+        Headers.CONTENT_TYPE, JSON_UTF8);
     exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
   }
 }

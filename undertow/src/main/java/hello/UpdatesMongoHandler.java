@@ -11,6 +11,8 @@ import io.undertow.util.Headers;
 
 import java.util.Objects;
 
+import static hello.HelloWebServer.JSON_UTF8;
+
 /**
  * Handles the updates test using MongoDB.
  */
@@ -48,7 +50,7 @@ final class UpdatesMongoHandler implements HttpHandler {
       worlds[i] = new World(id, newRandomNumber);
     }
     exchange.getResponseHeaders().put(
-        Headers.CONTENT_TYPE, MediaType.JSON_UTF_8.toString());
+        Headers.CONTENT_TYPE, JSON_UTF8);
     exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
   }
 }
