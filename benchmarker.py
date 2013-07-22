@@ -396,6 +396,12 @@ class Benchmarker:
     # Aggregate JSON file
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
       f.write(json.dumps(self.results))
+
+    # Run the method to get the commmit count of each framework.
+    self.__count_commits()
+
+    with open(os.path.join(self.full_results_directory(), "commits.json"), "w") as f:
+      f.write(json.dumps(self.commits))
     
     # JSON CSV
     # with open(os.path.join(self.full_results_directory(), "json.csv"), 'wb') as csvfile:
@@ -432,6 +438,118 @@ class Benchmarker:
 
   ############################################################
   # End __parse_results
+  ############################################################
+
+  ############################################################
+  # __count_commits
+  ############################################################
+  def __count_commits(self):
+    all_folders = [
+      "aspnet",
+      "aspnet-stripped",
+      "beego",
+      "bottle",
+      "cake",
+      "compojure",
+      "cowboy",
+      "cpoll_cppsp",
+      "dancer",
+      "dart",
+      "django",
+      "django-stripped",
+      "dropwizard",
+      "elli",
+      "express",
+      "finagle",
+      "flask",
+      "gemini",
+      "go",
+      "grails",
+      "grizzly-bm",
+      "grizzly-jersey",
+      "hapi",
+      "http-kit",
+      "HttpListener",
+      "jester",
+      "kelp",
+      "lapis",
+      "lift-stateless",
+      "luminus",
+      "mojolicious",
+      "nancy",
+      "netty",
+      "nodejs",
+      "onion",
+      "openresty",
+      "php",
+      "php-codeigniter",
+      "php-fuel",
+      "php-kohana",
+      "php-laravel",
+      "php-lithium",
+      "php-micromvc",
+      "php-phalcon",
+      "php-phalcon-micro",
+      "php-silex",
+      "php-silex-orm",
+      "php-silica",
+      "php-slim",
+      "php-symfony2",
+      "php-yaf",
+      "phreeze",
+      "plack",
+      "plain",
+      "play1",
+      "play1siena",
+      "play-java",
+      "play-java-jpa",
+      "play-scala",
+      "play-scala-mongodb",
+      "play-slick",
+      "rack",
+      "rails",
+      "rails-stripped",
+      "restexpress",
+      "revel",
+      "revel-jet",
+      "revel-qbs",
+      "ringojs",
+      "ringojs-convenient",
+      "scalatra",
+      "servicestack",
+      "servlet",
+      "sinatra",
+      "snap",
+      "spark",
+      "spray",
+      "spring",
+      "tapestry",
+      "tornado",
+      "treefrog",
+      "undertow",
+      "unfiltered",
+      "vertx",
+      "wai",
+      "webgo",
+      "web-simple",
+      "wicket",
+      "wsgi",
+      "yesod"
+    ]
+
+    jsonResult = "{"
+
+    for framework in all_folders:
+      command = "echo $(git rev-list --count HEAD -- " + framework + ")"
+      jsonResult = jsonResult + framework + ": " + str(subprocess.check_output(command, shell=True))
+      jsonResult = jsonResult.rstrip() + ",\n"
+
+    jsonResult = jsonResult.rstrip(",\n") + "}"
+    self.commits = jsonResult
+      
+    
+  ############################################################
+  # End __count_commits
   ############################################################
 
   ############################################################
