@@ -6,6 +6,7 @@ import com.github.mustachejava.MustacheFactory;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.net.MediaType;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import io.undertow.Handlers;
@@ -33,6 +34,14 @@ import java.util.Properties;
  * requirements.
  */
 public final class HelloWebServer {
+
+  //MediaType.toString() does non-trivial work and does not cache the result
+  //so we cache it here
+  public static final String JSON_UTF8 = MediaType.JSON_UTF_8.toString();
+
+  public static final String TEXT_PLAIN = MediaType.PLAIN_TEXT_UTF_8.toString();
+
+  public static final String HTML_UTF8 = MediaType.HTML_UTF_8.toString();
 
   public static void main(String[] args) throws Exception {
     new HelloWebServer();
