@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static hello.HelloWebServer.HTML_UTF8;
+
 /**
  * Handles the fortunes test using MongoDB.
  */
@@ -48,7 +50,7 @@ final class FortunesMongoHandler implements HttpHandler {
     StringWriter writer = new StringWriter();
     mustache.execute(writer, fortunes);
     exchange.getResponseHeaders().put(
-        Headers.CONTENT_TYPE, MediaType.HTML_UTF_8.toString());
+        Headers.CONTENT_TYPE, HTML_UTF8);
     exchange.getResponseSender().send(writer.toString());
   }
 }
