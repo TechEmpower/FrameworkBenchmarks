@@ -2,18 +2,38 @@
 
 ## Tests
 
-### JSON
+### JSON Response
 
 * `http://localhost:8080/json`
+
+### Plain Text Response
+
+* `http://localhost:8080/plaintext`
 
 ---
 
 ### ServiceStack - OrmLite (ORM)
 
-**MySQL**
+**(Microsoft SQL Server)[http://www.nuget.org/packages/ServiceStack.OrmLite.SqlServer]**
 
-* `http://localhost:8080/db`
-* `http://localhost:8080/db?queries=10`
+* `http://localhost:8080/sqlserver/db`
+* `http://localhost:8080/sqlserver/queries?queries=10`
+* `http://localhost:8080/sqlserver/fortunes`
+* `http://localhost:8080/sqlserver/updates?queries=25`
+
+**(MySQL)[http://www.nuget.org/packages/ServiceStack.OrmLite.MySql]**
+
+* `http://localhost:8080/mysql/db`
+* `http://localhost:8080/mysql/queries?queries=10`
+* `http://localhost:8080/mysql/fortunes`
+* `http://localhost:8080/mysql/updates?queries=25`
+
+**(PostgreSQL)[http://www.nuget.org/packages/ServiceStack.OrmLite.PostgreSql]**
+
+* `http://localhost:8080/postgresql/db`
+* `http://localhost:8080/postgresql/queries?queries=10`
+* `http://localhost:8080/postgresql/fortunes`
+* `http://localhost:8080/postgresql/updates?queries=25`
 
 ## Mono Installation
 
@@ -49,17 +69,20 @@
 
 **Web Servers**
 
+* Self Hosted (Windows)
 * IIS 8 (Windows)
 * nginx 1.4.0 & XSP FastCGI (Linux)
 
 **Web Stack**
 
 * ASP.NET 4.5
-* ServiceStack
+* (ServiceStack)[https://github.com/servicestack/servicestack/wiki]
 
 **Databases**
 
-* MySQL Connector/Net
+* Microsoft SQL Server 2005+
+* [MySQL 5.x](http://www.nuget.org/packages/mysql.data) 
+* [PostgreSQL 7.x](http://www.nuget.org/packages/Npgsql)
 
 **Developer Tools**
 
