@@ -26,7 +26,7 @@ class Benchmarker:
 
     for test in all_tests:
       print str(test.sort) + ": " + test.name
-    self.__count_commits()
+
     self.__finish()
 
   ############################################################
