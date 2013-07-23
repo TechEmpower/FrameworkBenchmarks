@@ -26,7 +26,7 @@ class Benchmarker:
 
     for test in all_tests:
       print str(test.sort) + ": " + test.name
-
+    self.__count_commits()
     self.__finish()
 
   ############################################################
@@ -537,17 +537,16 @@ class Benchmarker:
       "yesod"
     ]
 
-    jsonResult = "{"
+    jsonResult = {"commitCount":{}}
 
     for framework in all_folders:
-      command = "echo $(git rev-list --count HEAD -- " + framework + ")"
-      jsonResult = jsonResult + framework + ": " + str(subprocess.check_output(command, shell=True))
-      jsonResult = jsonResult.rstrip() + ",\n"
-
-    jsonResult = jsonResult.rstrip(",\n") + "}"
+      try:
+        command = "echo $(git rev-list --count HEAD -- " + framework + ")"
+        commitCount = subprocess.check_output(command, shell=True)
+        jsonResult["commitCount"][framework] = int(commitCount)
+      except:
+        continue
     self.commits = jsonResult
-      
-    
   ############################################################
   # End __count_commits
   ############################################################
