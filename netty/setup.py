@@ -11,10 +11,13 @@ def start(args):
   except subprocess.CalledProcessError:
     return 1
 def stop():
-  p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-  out, err = p.communicate()
-  for line in out.splitlines():
-    if 'netty-example' in line:
-      pid = int(line.split(None, 2)[1])
-      os.kill(pid, 9)
+  if os.name == 'nt':
+    subprocess.check_call("wmic process where \"CommandLine LIKE '%netty-example%'\" call terminate")
+  else:
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'netty-example' in line:
+        pid = int(line.split(None, 2)[1])
+        os.kill(pid, 9)
   return 0
