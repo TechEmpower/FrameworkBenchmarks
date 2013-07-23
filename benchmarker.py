@@ -396,6 +396,8 @@ class Benchmarker:
     # Aggregate JSON file
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
       f.write(json.dumps(self.results))
+    with open(os.path.join(self.full_results_directory(), "slocCount.json"), "w") as f:
+      f.write(json.dumps(self.sloc))
     
     # JSON CSV
     # with open(os.path.join(self.full_results_directory(), "json.csv"), 'wb') as csvfile:
@@ -432,6 +434,126 @@ class Benchmarker:
 
   ############################################################
   # End __parse_results
+  ############################################################
+
+
+  #############################################################
+  # __count_sloc
+  # This is assumed to be run from the benchmark root directory
+  #############################################################
+  def __count_sloc(self):
+    all_folders = [
+      "aspnet",
+      "aspnet-stripped",
+      "beego",
+      "bottle",
+      "cake",
+      "compojure",
+      "cowboy",
+      "cpoll_cppsp",
+      "dancer",
+      "dart",
+      "django",
+      "django-stripped",
+      "dropwizard",
+      "elli",
+      "express",
+      "finagle",
+      "flask",
+      "gemini",
+      "go",
+      "grails",
+      "grizzly-bm",
+      "grizzly-jersey",
+      "hapi",
+      "http-kit",
+      "HttpListener",
+      "jester",
+      "kelp",
+      "lapis",
+      "lift-stateless",
+      "luminus",
+      "mojolicious",
+      "nancy",
+      "netty",
+      "nodejs",
+      "onion",
+      "openresty",
+      "php",
+      "php-codeigniter",
+      "php-fuel",
+      "php-kohana",
+      "php-laravel",
+      "php-lithium",
+      "php-micromvc",
+      "php-phalcon",
+      "php-phalcon-micro",
+      "php-silex",
+      "php-silex-orm",
+      "php-silica",
+      "php-slim",
+      "php-symfony2",
+      "php-yaf",
+      "phreeze",
+      "plack",
+      "plain",
+      "play1",
+      "play1siena",
+      "play-java",
+      "play-java-jpa",
+      "play-scala",
+      "play-scala-mongodb",
+      "play-slick",
+      "rack",
+      "rails",
+      "rails-stripped",
+      "restexpress",
+      "revel",
+      "revel-jet",
+      "revel-qbs",
+      "ringojs",
+      "ringojs-convenient",
+      "scalatra",
+      "servicestack",
+      "servlet",
+      "sinatra",
+      "snap",
+      "spark",
+      "spray",
+      "spring",
+      "tapestry",
+      "tornado",
+      "treefrog",
+      "undertow",
+      "unfiltered",
+      "vertx",
+      "wai",
+      "webgo",
+      "web-simple",
+      "wicket",
+      "wsgi",
+      "yesod"
+    ]
+
+    jsonResult = {"slocCount":{}}
+
+    for framework in all_folders:
+      try:
+        command = "cloc --list-file=./" + framework + "/source_code --yaml"
+        lineCount = subprocess.check_output(command, shell=True)
+        # Find the last instance of the word 'code' in the yaml output. This should
+        # be the line count for the sum of all listed files or just the line count
+        # for the last file in the case where there's only one file listed.
+        lineCount = lineCount[lineCount.rfind('code'):len(lineCount)]
+        lineCount = lineCount.strip('code: ')
+        lineCount = lineCount[0:lineCount.rfind('comment')]
+        jsonResult["slocCount"][framework] = int(lineCount)
+      except:
+        continue
+    print jsonResult
+    self.sloc = jsonResult
+  ############################################################
+  # End __count_sloc
   ############################################################
 
   ############################################################
