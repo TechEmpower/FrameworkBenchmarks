@@ -17,7 +17,7 @@ def start(args):
         "hello.wsgi:application",
         "-k", "meinheld.gmeinheld.MeinheldWorker",
         "-b", "0.0.0.0:8080",
-        '-w', str(NCPU*2),
+        '-w', str(NCPU*3),
         "--log-level=critical"],
         cwd="django/hello")
     return 0
