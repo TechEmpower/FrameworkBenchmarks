@@ -1,5 +1,10 @@
 import subprocess
 import setup_util
+import multiprocessing
+import os
+
+bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/pypy/bin')
+NCPU = multiprocessing.cpu_count()
 
 proc = None
 
@@ -7,10 +12,14 @@ proc = None
 def start(args):
     global proc
     setup_util.replace_text("flask/app.py", "DBHOSTNAME", args.database_host)
-    proc = subprocess.Popen(
-        "~/FrameworkBenchmarks/installs/pypy-2.0.2/bin/gunicorn " +
-        "app:app -k tornado -b 0.0.0.0:8080 -w " +
-        str((args.max_threads * 2)) + " --preload --log-level=critical", shell=True, cwd="flask")
+    proc = subprocess.Popen([
+        bin_dir + "/gunicorn",
+        "app:app",
+        '-k', 'tornado',
+        "-b", "0.0.0.0:8080",
+        '-w', str(NCPU*2),
+        "--log-level=critical"],
+        cwd="flask")
     return 0
 
 def stop():
