@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Objects;
 
+import static hello.HelloWebServer.JSON_UTF8;
+
 /**
  * Handles the single- and multiple-query database tests using a SQL database.
  */
@@ -48,7 +50,7 @@ final class DbSqlHandler implements HttpHandler {
       }
     }
     exchange.getResponseHeaders().put(
-        Headers.CONTENT_TYPE, MediaType.JSON_UTF_8.toString());
+        Headers.CONTENT_TYPE, JSON_UTF8);
     exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
   }
 }
