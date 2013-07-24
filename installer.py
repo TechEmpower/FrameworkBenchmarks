@@ -297,7 +297,7 @@ class Installer:
     python_bin = "~/FrameworkBenchmarks/installs/py2/bin"
     python3_bin= "~/FrameworkBenchmarks/installs/py3/bin"
     def easy_install(pkg, two=True, three=False, pypy=False):
-      cmd = "/easy_install -U '" + pkg + "'"
+      cmd = "/easy_install -ZU '" + pkg + "'"
       if two:   self.__run_command(python_bin + cmd)
       if three: self.__run_command(python3_bin + cmd)
       if pypy:  self.__run_command(pypy_bin + cmd)
