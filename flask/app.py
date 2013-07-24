@@ -116,8 +116,10 @@ def updates():
 
     worlds = []
     rp = partial(randint, 1, 10000)
-    for i in xrange(num_queries):
-        world = World.query.get(rp())
+    ids = [rp() for _ in xrange(num_queries)]
+    ids.sort()  # To avoid deadlock
+    for id in ids:
+        world = World.query.get(id)
         world.randomNumber = rp()
         worlds.append(world.serialize)
     db.session.commit()
