@@ -11,6 +11,8 @@ import io.undertow.util.Headers;
 
 import java.util.Objects;
 
+import static hello.HelloWebServer.JSON_UTF8;
+
 /**
  * Handles the single- and multiple-query database tests using MongoDB.
  */
@@ -43,7 +45,7 @@ final class DbMongoHandler implements HttpHandler {
           ((Number) object.get("randomNumber")).intValue());
     }
     exchange.getResponseHeaders().put(
-        Headers.CONTENT_TYPE, MediaType.JSON_UTF_8.toString());
+        Headers.CONTENT_TYPE, JSON_UTF8);
     exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
   }
 }

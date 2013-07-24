@@ -5,7 +5,11 @@
             "setup_file" : "setup",
             "json_url" : "/json",
             "plaintext_url": "/plaintext",
-            "port": 8080,
+            "db_url": "/db",
+            "query_url": "/db?queries=",
+            "update_url": "/update?queries=",
+            "fortune_url": "/fortunes",
+            "port": 9080,
             "sort": 143
             }
         }
