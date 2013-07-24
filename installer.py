@@ -322,7 +322,7 @@ class Installer:
     easy_install('pip==1.3.1', two=True, three=True, pypy=True)
     easy_install('MySQL-python==1.2.4', two=True, three=False, pypy=True)
     easy_install('https://github.com/clelland/MySQL-for-Python-3/archive/master.zip',
-                 two=False, three=False, pypy=False)
+                 two=False, three=True, pypy=False)
     easy_install('PyMySQL==0.5', pypy=True)
     easy_install('PyMySQL3==0.5', two=False, three=True)
     easy_install('simplejson==3.3.0', two=True, three=True, pypy=False)
