@@ -21,6 +21,17 @@
       "port": 8080,
       "sort": 84
     },
+    "py3": {
+      "setup_file": "setup_py3",
+      "json_url": "/json",
+      "db_url": "/dbs",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "sort": 241
+    },
     "pypy": {
       "setup_file": "setup_pypy",
       "json_url": "/json",
