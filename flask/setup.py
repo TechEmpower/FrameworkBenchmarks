@@ -10,6 +10,7 @@ proc = None
 
 
 def start(args):
+    global proc
     setup_util.replace_text("flask/app.py", "DBHOSTNAME", args.database_host)
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
