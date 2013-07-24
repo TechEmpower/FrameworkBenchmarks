@@ -7,8 +7,12 @@ from world.models import World, Fortune
 from django.shortcuts import render
 from ujson import dumps as uj_dumps
 import random
+import sys
 from operator import attrgetter
 from functools import partial
+
+if sys.version_info[0] == 3:
+  xrange = range
 
 def json(request):
   response = {
@@ -54,7 +58,7 @@ def fortunes(request):
 def update(request):
   queries = int(request.GET.get('queries', 1))
   g = World.objects.get
-  rp = partial(nprnd.randint, 1, 10000)
+  rp = partial(random.randint, 1, 10000)
   
   worlds = []
   for r in [rp() for q in xrange(queries)]:
