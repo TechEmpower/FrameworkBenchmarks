@@ -3,7 +3,7 @@ import setup_util
 import multiprocessing
 import os
 
-bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
+bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py3/bin')
 NCPU = multiprocessing.cpu_count()
 
 proc = None
