@@ -12,6 +12,28 @@
       "port": 8080,
       "sort": 88
     },
+    "py3": {
+      "setup_file": "setup_py3",
+      "json_url": "/json",
+      "db_url": "/dbs",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "sort": 239
+    },
+    "pypy": {
+      "setup_file": "setup_pypy",
+      "json_url": "/json",
+      "db_url": "/dbs",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "sort": 240
+    },
     "mysql-raw": {
       "setup_file": "setup",
       "db_url": "/dbsraw",
