@@ -326,7 +326,7 @@ class Installer:
     easy_install('PyMySQL==0.5', pypy=True)
     easy_install('PyMySQL3==0.5', two=False, three=True)
     easy_install('simplejson==3.3.0', two=True, three=True, pypy=False)
-    easy_install('psycopg2-2.5.1', three=True)
+    easy_install('psycopg2==2.5.1', three=True)
     easy_install('ujson==1.33', three=True)
 
     # Gunicorn
