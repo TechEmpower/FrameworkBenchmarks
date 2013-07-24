@@ -328,6 +328,8 @@ class Installer:
     easy_install('simplejson==3.3.0', two=True, three=True, pypy=False)
     easy_install('psycopg2==2.5.1', three=True)
     easy_install('ujson==1.33', three=True)
+    easy_install('https://github.com/downloads/surfly/gevent/gevent-1.0rc2.tar.gz', three=True)
+    easy_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
 
     # Gunicorn
     easy_install('gunicorn==17.5', two=True, three=True, pypy=True)
