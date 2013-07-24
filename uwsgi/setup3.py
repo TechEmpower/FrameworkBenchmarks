@@ -1,10 +1,9 @@
-
 import subprocess
 import sys
 import setup_util
 import os
 
-uwsgi = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin/uwsgi')
+uwsgi = os.path.expanduser('~/FrameworkBenchmarks/installs/py3/bin/uwsgi')
 
 
 def start(args):
