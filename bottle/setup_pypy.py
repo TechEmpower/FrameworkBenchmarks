@@ -3,7 +3,7 @@ import setup_util
 import multiprocessing
 import os
 
-bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
+bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/pypy/bin')
 NCPU = multiprocessing.cpu_count()
 
 proc = None
@@ -15,7 +15,7 @@ def start(args):
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
         "app:app",
-        "-k", "meinheld.gmeinheld.MeinheldWorker",
+        "-k", "tornado",
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU*2),
         "--log-level=critical"],
@@ -30,3 +30,4 @@ def stop():
     proc.wait()
     proc = None
     return 0
+
