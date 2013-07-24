@@ -10,6 +10,7 @@ proc = None
 
 
 def start(args):
+    global proc
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
         "hello:app",
