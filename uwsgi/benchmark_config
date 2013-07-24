@@ -5,7 +5,13 @@
       "setup_file": "setup",
       "json_url": "/json",
       "port": 8080,
-      "sort": 29
+      "sort": 244
+    },
+    "py3": {
+      "setup_file": "setup3",
+      "json_url": "/json",
+      "port": 8080,
+      "sort": 245
     }
   }]
 }
