@@ -6,7 +6,10 @@
       "json_url": "/json/json",
       "db_url": "/world/random",
       "query_url": "/world/queries/",
-      "port": 8800,
+      "fortune_url": "/fortune/index",
+      "update_url": "/world/updates/",
+      "plaintext_url": "/world/plain",
+      "port": 8080,
       "sort": 117
     }
   }]
