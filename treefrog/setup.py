@@ -18,7 +18,8 @@ def start(args):
   # 4. Start TreeFrog
   try:
     subprocess.check_call("qmake -r CONFIG+=release", shell=True, cwd="treefrog")
-    subprocess.check_call("make", shell=True, cwd="treefrog")
+    subprocess.check_call("make clean", shell=True, cwd="treefrog")
+    subprocess.check_call("make -j8", shell=True, cwd="treefrog")
     subprocess.check_call("rm -f log/*.log", shell=True, cwd="treefrog")
     subprocess.check_call("treefrog -d " + home + "/FrameworkBenchmarks/treefrog", shell=True)
     return 0
