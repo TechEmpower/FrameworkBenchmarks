@@ -1,0 +1,16 @@
+./php-phalcon/app/compiled-templates/
+./php-phalcon/app/compiled-templates/.keepit
+./php-phalcon/app/controllers/
+./php-phalcon/app/controllers/IndexController.php
+./php-phalcon/app/controllers/BenchController.php
+./php-phalcon/app/models/
+./php-phalcon/app/models/Worlds.php
+./php-phalcon/app/models/Fortunes.php
+./php-phalcon/app/views/
+./php-phalcon/app/views/layouts
+./php-phalcon/app/views/layouts/bench.volt
+./php-phalcon/app/views/bench
+./php-phalcon/app/views/bench/fortunes.volt
+./php-phalcon/deploy/php-phalcon
+./php-phalcon/public/
+./php-phalcon/public/index.php

@@ -1,0 +1,6 @@
+./ringojs-convenient/app/
+./ringojs-convenient/app/models.js
+./ringojs-convenient/app/views.js
+./ringojs-convenient/templates/
+./ringojs-convenient/templates/fortunes.reinhardt
+./ringojs-convenient/ringo-main.js

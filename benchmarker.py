@@ -233,6 +233,45 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # Gathers all the frameworks
+  ############################################################
+  def __gather_frameworks(self):
+    frameworks = []
+    # Loop through each directory (we assume we're being run from the benchmarking root)
+    for dirname, dirnames, filenames in os.walk('.'):
+      # Look for the benchmark_config file, this will contain our framework name
+      # It's format looks like this:
+      #
+      # {
+      # "framework": "nodejs",
+      # "tests": [{
+      # "default": {
+      # "setup_file": "setup",
+      # "json_url": "/json"
+      # },
+      # "mysql": {
+      # "setup_file": "setup",
+      # "db_url": "/mysql",
+      # "query_url": "/mysql?queries="
+      # },
+      # ...
+      # }]
+      # }
+      if 'benchmark_config' in filenames:
+        config = None
+        with open(os.path.join(dirname, 'benchmark_config'), 'r') as config_file:
+          # Load json file into config object
+          config = json.load(config_file)
+        if config == None:
+          continue
+        frameworks.append({'name': str(config['framework']), 'directory': dirname})
+
+    return frameworks
+  ############################################################
+  # End __gather_frameworks
+  ############################################################
+
+  ############################################################
   # Makes any necessary changes to the server that should be 
   # made before running the tests. This involves setting kernal
   # settings to allow for more connections, or more file
@@ -392,12 +431,13 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __parse_results(self, tests):
+    # Call the method which counts the sloc for each framework
+    self.__count_sloc()
+
     # Time to create parsed files
     # Aggregate JSON file
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
       f.write(json.dumps(self.results))
-    with open(os.path.join(self.full_results_directory(), "slocCount.json"), "w") as f:
-      f.write(json.dumps(self.sloc))
     
     # JSON CSV
     # with open(os.path.join(self.full_results_directory(), "json.csv"), 'wb') as csvfile:
@@ -442,104 +482,12 @@ class Benchmarker:
   # This is assumed to be run from the benchmark root directory
   #############################################################
   def __count_sloc(self):
-    all_folders = [
-      "aspnet",
-      "aspnet-stripped",
-      "beego",
-      "bottle",
-      "cake",
-      "compojure",
-      "cowboy",
-      "cpoll_cppsp",
-      "dancer",
-      "dart",
-      "django",
-      "django-stripped",
-      "dropwizard",
-      "elli",
-      "express",
-      "finagle",
-      "flask",
-      "gemini",
-      "go",
-      "grails",
-      "grizzly-bm",
-      "grizzly-jersey",
-      "hapi",
-      "http-kit",
-      "HttpListener",
-      "jester",
-      "kelp",
-      "lapis",
-      "lift-stateless",
-      "luminus",
-      "mojolicious",
-      "nancy",
-      "netty",
-      "nodejs",
-      "onion",
-      "openresty",
-      "php",
-      "php-codeigniter",
-      "php-fuel",
-      "php-kohana",
-      "php-laravel",
-      "php-lithium",
-      "php-micromvc",
-      "php-phalcon",
-      "php-phalcon-micro",
-      "php-silex",
-      "php-silex-orm",
-      "php-silica",
-      "php-slim",
-      "php-symfony2",
-      "php-yaf",
-      "phreeze",
-      "plack",
-      "plain",
-      "play1",
-      "play1siena",
-      "play-java",
-      "play-java-jpa",
-      "play-scala",
-      "play-scala-mongodb",
-      "play-slick",
-      "rack",
-      "rails",
-      "rails-stripped",
-      "restexpress",
-      "revel",
-      "revel-jet",
-      "revel-qbs",
-      "ringojs",
-      "ringojs-convenient",
-      "scalatra",
-      "servicestack",
-      "servlet",
-      "sinatra",
-      "snap",
-      "spark",
-      "spray",
-      "spring",
-      "tapestry",
-      "tornado",
-      "treefrog",
-      "undertow",
-      "unfiltered",
-      "vertx",
-      "wai",
-      "webgo",
-      "web-simple",
-      "wicket",
-      "wsgi",
-      "yesod"
-    ]
+    all_frameworks = self.__gather_frameworks()
+    jsonResult = {}
 
-    jsonResult = {"slocCount":{}}
-
-    for framework in all_folders:
+    for framework in all_frameworks:
       try:
-        command = "cloc --list-file=./" + framework + "/source_code --yaml"
+        command = "cloc --list-file=" + framework['directory'] + "/source_code --yaml"
         lineCount = subprocess.check_output(command, shell=True)
         # Find the last instance of the word 'code' in the yaml output. This should
         # be the line count for the sum of all listed files or just the line count
@@ -547,11 +495,10 @@ class Benchmarker:
         lineCount = lineCount[lineCount.rfind('code'):len(lineCount)]
         lineCount = lineCount.strip('code: ')
         lineCount = lineCount[0:lineCount.rfind('comment')]
-        jsonResult["slocCount"][framework] = int(lineCount)
+        jsonResult[framework['name']] = int(lineCount)
       except:
         continue
-    print jsonResult
-    self.sloc = jsonResult
+    self.results['rawData']['slocCounts'] = jsonResult
   ############################################################
   # End __count_sloc
   ############################################################

@@ -1,0 +1,16 @@
+./grizzly-jersey/src/main/
+./grizzly-jersey/src/main/java
+./grizzly-jersey/src/main/java/hello
+./grizzly-jersey/src/main/java/hello/DbResource.java
+./grizzly-jersey/src/main/java/hello/FortunesResource.java
+./grizzly-jersey/src/main/java/hello/SessionFactoryProvider.java
+./grizzly-jersey/src/main/java/hello/JsonMessageBodyWriter.java
+./grizzly-jersey/src/main/java/hello/JerseyWebServer.java
+./grizzly-jersey/src/main/java/hello/ServerResponseFilter.java
+./grizzly-jersey/src/main/java/hello/domain
+./grizzly-jersey/src/main/java/hello/domain/World.java
+./grizzly-jersey/src/main/java/hello/domain/Fortune.java
+./grizzly-jersey/src/main/java/hello/JsonResource.java
+./grizzly-jersey/src/main/resources
+./grizzly-jersey/src/main/resources/hibernate.cfg.xml
+./grizzly-jersey/src/main/resources/fortunes.mustache
