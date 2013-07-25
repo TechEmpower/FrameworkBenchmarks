@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>ServiceStack.OrmLite.MySql</id>
+    <version>3.9.57</version>
+    <title>OrmLite.MySQL - Fast, code-first, config-free Poco ORM</title>
+    <authors>Demis Bellot,  Thomas Grassauer</authors>
+    <owners>Demis Bellot,  Thomas Grassauer</owners>
+    <licenseUrl>https://github.com/ServiceStack/ServiceStack.OrmLite/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/ServiceStack/ServiceStack.OrmLite</projectUrl>
+    <iconUrl>http://www.servicestack.net/logo-100x100.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Light, simple and fast convention-based code-first POCO ORM for MySQL. 
+		Support for Creating and Dropping Table Schemas from POCOs, Complex Property types transparently stored in schemaless text blobs in MySQL.</description>
+    <copyright>ServiceStack 2013 and contributors</copyright>
+    <language>en-US</language>
+    <tags>MySql OrmLite POCO Code-First Orm Schema-less Blobs</tags>
+    <dependencies>
+      <dependency id="MySql.Data" />
+      <dependency id="ServiceStack.Common" />
+    </dependencies>
+  </metadata>
+</package>
