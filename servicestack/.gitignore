@@ -1,4 +1,8 @@
+*.pyc
 *.user
 *.suo
-*/bin/*
-*/obj/*
+*/bin/
+*/obj/
+.nuget/NuGet.exe
+packages/
+!packages/repositories.config
