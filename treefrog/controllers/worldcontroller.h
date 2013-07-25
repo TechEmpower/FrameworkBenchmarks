@@ -15,6 +15,7 @@ public:
 
 public slots:
     void index();
+    void plain();
     void show(const QString &pk);
     void queries(const QString &num);
     void random();
@@ -22,6 +23,7 @@ public slots:
     void create();
     void edit(const QString &pk);
     void save(const QString &pk);
+    void updates(const QString &num);
     void remove(const QString &pk);
 
 private:
