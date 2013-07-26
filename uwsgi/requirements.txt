@@ -1,0 +1,5 @@
+greenlet
+cython
+-e git://github.com/surfly/gevent.git#egg=gevent
+uwsgi
+ujson
