@@ -17,7 +17,7 @@ var store = exports.store = new Store(connectionPool);
 var queryCache = module.singleton("queryCache", function() {
     return new Cache(10000);
 });
-//store.setQueryCache(queryCache);
+store.setQueryCache(queryCache);
 
 // define entities in DB
 exports.World = store.defineEntity('World', {
