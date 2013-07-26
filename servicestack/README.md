@@ -14,21 +14,21 @@
 
 ### ServiceStack - OrmLite (ORM)
 
-**(Microsoft SQL Server)[http://www.nuget.org/packages/ServiceStack.OrmLite.SqlServer]**
+**[Microsoft SQL Server](http://www.nuget.org/packages/ServiceStack.OrmLite.SqlServer)**
 
 * `http://localhost:8080/sqlserver/db`
 * `http://localhost:8080/sqlserver/queries?queries=10`
 * `http://localhost:8080/sqlserver/fortunes`
 * `http://localhost:8080/sqlserver/updates?queries=25`
 
-**(MySQL)[http://www.nuget.org/packages/ServiceStack.OrmLite.MySql]**
+**[MySQL](http://www.nuget.org/packages/ServiceStack.OrmLite.MySql)**
 
 * `http://localhost:8080/mysql/db`
 * `http://localhost:8080/mysql/queries?queries=10`
 * `http://localhost:8080/mysql/fortunes`
 * `http://localhost:8080/mysql/updates?queries=25`
 
-**(PostgreSQL)[http://www.nuget.org/packages/ServiceStack.OrmLite.PostgreSql]**
+**[PostgreSQL](http://www.nuget.org/packages/ServiceStack.OrmLite.PostgreSql)**
 
 * `http://localhost:8080/postgresql/db`
 * `http://localhost:8080/postgresql/queries?queries=10`
@@ -76,7 +76,7 @@
 **Web Stack**
 
 * ASP.NET 4.5
-* (ServiceStack)[https://github.com/servicestack/servicestack/wiki]
+* [ServiceStack](https://github.com/servicestack/servicestack/wiki)
 
 **Databases**
 
