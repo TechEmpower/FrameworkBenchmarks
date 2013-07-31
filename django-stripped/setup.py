@@ -1,23 +1,34 @@
 import subprocess
-import multiprocessing
-import sys
 import setup_util
+import multiprocessing
 import os
 
-def start(args):
-  setup_util.replace_text("django-stripped/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
-  subprocess.Popen("gunicorn hello.wsgi:application --worker-class=\"egg:meinheld#gunicorn_worker\" -b 0.0.0.0:8080 -w " +
-                   str((multiprocessing.cpu_count() * 3)) + " --log-level=critical", shell=True, cwd="django-stripped/hello")
-  return 0
-def stop():
-  p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-  out, err = p.communicate()
-  for line in out.splitlines():
-    if 'gunicorn' in line:
-      try:
-        pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
-      except OSError:
-        pass
+home = os.path.expanduser('~')
+bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
+NCPU = multiprocessing.cpu_count()
 
-  return 0
+proc = None
+
+
+def start(args):
+    global proc
+    setup_util.replace_text("django-stripped/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
+    setup_util.replace_text("django-stripped/hello/hello/settings.py", "\/home\/ubuntu",  home)
+    proc = subprocess.Popen([
+        bin_dir + "/gunicorn",
+        "hello.wsgi:application",
+        "-k", "meinheld.gmeinheld.MeinheldWorker",
+        "-b", "0.0.0.0:8080",
+        '-w', str(NCPU*3),
+        "--log-level=critical"],
+        cwd="django-stripped/hello")
+    return 0
+
+def stop():
+    global proc
+    if proc is None:
+        return 0
+    proc.terminate()
+    proc.wait()
+    proc = None
+    return 0
