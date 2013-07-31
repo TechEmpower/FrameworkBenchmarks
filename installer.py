@@ -38,6 +38,8 @@ class Installer:
     # Languages
     #######################################
 
+    self._install_python()
+
     #
     # Dart
     #
@@ -50,37 +52,6 @@ class Installer:
     self.__run_command("wget -O - http://binaries.erlang-solutions.com/debian/erlang_solutions.asc | sudo apt-key add -")
     self.__run_command("sudo apt-get update")
     self.__run_command("sudo apt-get install esl-erlang", True)
-
-    #
-    # Python
-    #
-    
-    # .profile is not loaded yet. So we should use full path.
-    pypy_bin   = "~/FrameworkBenchmarks/installs/pypy-2.0.2/bin"
-    python_bin = "~/FrameworkBenchmarks/installs/python-2.7.5/bin"
-
-    self.__run_command("curl -L http://bitbucket.org/pypy/pypy/downloads/pypy-2.0.2-linux64.tar.bz2 | tar xj")
-    self.__run_command("curl http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz | tar xz")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/python-2.7.5 --disable-shared", cwd="Python-2.7.5")
-    self.__run_command("make -j", cwd="Python-2.7.5")
-    self.__run_command("make install", cwd="Python-2.7.5")
-
-    self.__run_command("curl -L https://bitbucket.org/pypa/setuptools/downloads/setuptools-0.7.1.tar.gz | tar xz")
-    self.__run_command(pypy_bin + "/pypy setup.py install", cwd="setuptools-0.7.1")
-    self.__run_command(python_bin + "/python setup.py install", cwd="setuptools-0.7.1")
-
-    self.__run_command("curl https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz | tar xz")
-    self.__run_command(pypy_bin + "/pypy setup.py install", cwd="pip-1.3.1")
-    self.__run_command(python_bin + "/python setup.py install", cwd="pip-1.3.1")
-
-    self.__run_command(python_bin + "/pip install MySQL-python==1.2.4")
-    self.__run_command(python_bin + "/pip install simplejson==3.3.0")
-    self.__run_command("curl http://initd.org/psycopg/tarballs/PSYCOPG-2-5/psycopg2-2.5.tar.gz | tar xz")
-    self.__run_command(python_bin + "/python setup.py install", cwd="psycopg2-2.5")
-    self.__run_command(python_bin + "/pip install --upgrade numpy==1.7.1")
-    self.__run_command(pypy_bin + "/pip install PyMySQL==0.5")
-    self.__run_command(python_bin + "/pip install PyMySQL==0.5")
-    self.__run_command(python_bin + "/easy_install -U 'ujson==1.30'")
 
     #
     # nodejs
@@ -224,13 +195,6 @@ class Installer:
     self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
 
     #
-    # Gunicorn
-    #
-
-    self.__run_command(python_bin + "/easy_install -U 'gunicorn==0.17.4'")
-    self.__run_command(python_bin + "/easy_install -U meinheld")
-
-    #
     # Resin
     #
 
@@ -251,36 +215,11 @@ class Installer:
     ##############################################################
 
     ##############################
-    # Tornado
-    ##############################
-    packages = "tornado==3.0.1 motor==0.1 pymongo==2.5"
-    self.__run_command(python_bin + "/pip install " + packages)
-    self.__run_command(pypy_bin   + "/pip install " + packages)
-
-    ##############################
-    # Django
-    ##############################
-    self.__run_command(python_bin + "/pip install -U https://www.djangoproject.com/download/1.6a1/tarball/")
-
-    ##############################
     # Grails
     ##############################
     self.__run_command("wget http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
     self.__run_command("unzip -o grails-2.1.1.zip")
     self.__run_command("rm grails-2.1.1.zip")
-
-
-    ##############################
-    # Flask
-    ##############################
-    packages = "flask==0.9 flask-sqlalchemy==0.16 sqlalchemy==0.8.1 jinja2==2.7 werkzeug==0.8.3"
-    self.__run_command(python_bin + "/pip install " + packages)
-    self.__run_command(pypy_bin + "/pip install " + packages)
-
-    ##############################
-    # Bottle
-    ##############################
-    self.__run_command(python_bin + "/pip install bottle bottle-sqlalchemy")
 
     ##############################
     # Play 2
@@ -351,6 +290,72 @@ class Installer:
   ############################################################
   # End __install_server_software
   ############################################################
+
+  def _install_python(self):
+    # .profile is not loaded yet. So we should use full path.
+    pypy_bin   = "~/FrameworkBenchmarks/installs/pypy/bin"
+    python_bin = "~/FrameworkBenchmarks/installs/py2/bin"
+    python3_bin= "~/FrameworkBenchmarks/installs/py3/bin"
+    def easy_install(pkg, two=True, three=False, pypy=False):
+      cmd = "/easy_install -ZU '" + pkg + "'"
+      if two:   self.__run_command(python_bin + cmd)
+      if three: self.__run_command(python3_bin + cmd)
+      if pypy:  self.__run_command(pypy_bin + cmd)
+
+    self.__run_command("curl -L http://bitbucket.org/pypy/pypy/downloads/pypy-2.0.2-linux64.tar.bz2 | tar xj")
+    self.__run_command('ln -s pypy-2.0.2 pypy')
+    self.__run_command("curl -L http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz | tar xz")
+    self.__run_command("curl -L http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz | tar xJ")
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.5")
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.3.2")
+    self.__run_command("make -j", cwd="Python-2.7.5")
+    self.__run_command("make install", cwd="Python-2.7.5")
+    self.__run_command("make -j", cwd="Python-3.3.2")
+    self.__run_command("make install", cwd="Python-3.3.2")
+
+
+    self.__run_command("wget https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
+    self.__run_command(pypy_bin + "/pypy ez_setup.py")
+    self.__run_command(python_bin + "/python ez_setup.py")
+    self.__run_command(python3_bin + "/python3 ez_setup.py")
+
+    easy_install('pip==1.3.1', two=True, three=True, pypy=True)
+    easy_install('MySQL-python==1.2.4', two=True, three=False, pypy=True)
+    easy_install('https://github.com/clelland/MySQL-for-Python-3/archive/master.zip',
+                 two=False, three=True, pypy=False)
+    easy_install('PyMySQL==0.5', pypy=True)
+    easy_install('PyMySQL3==0.5', two=False, three=True)
+    easy_install('simplejson==3.3.0', two=True, three=True, pypy=False)
+    easy_install('psycopg2==2.5.1', three=True)
+    easy_install('ujson==1.33', three=True)
+    easy_install('https://github.com/downloads/surfly/gevent/gevent-1.0rc2.tar.gz', three=True)
+    easy_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
+
+    # Gunicorn
+    easy_install('gunicorn==17.5', two=True, three=True, pypy=True)
+    # meinheld HEAD supports gunicorn worker on Python 3
+    easy_install('https://github.com/mopemope/meinheld/archive/master.zip',
+                 two=True, three=True, pypy=True)
+
+    # Tornado
+    easy_install('tornado==3.1', two=True, three=True, pypy=True)
+    easy_install('motor==0.1.1', two=True, three=True, pypy=True)
+    easy_install('pymongo==2.5.2', two=True, three=True, pypy=True)
+
+    # Django
+    easy_install("https://www.djangoproject.com/download/1.6b1/tarball/", two=True, three=True, pypy=True)
+
+    # Flask
+    easy_install('Werkzeug==0.9.2', two=True, three=True, pypy=True)
+    easy_install('flask==0.10.1', two=True, three=True, pypy=True)
+    easy_install('sqlalchemy==0.8.2', two=True, three=True, pypy=True)
+    easy_install('Jinja2==2.7', two=True, three=True, pypy=True)
+    easy_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
+
+    # Bottle
+    easy_install('bottle==0.11.6', two=True, three=True, pypy=True)
+    easy_install('bottle-sqlalchemy==0.4', two=True, three=True, pypy=True)
+
 
   ############################################################
   # __install_client_software
@@ -477,3 +482,4 @@ class Installer:
   # End __init__
   ############################################################
 
+# vim: sw=2
