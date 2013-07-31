@@ -4,6 +4,7 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "sort": 52
     },
@@ -19,6 +20,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "sort": 134
     }
