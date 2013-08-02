@@ -3,10 +3,10 @@
   "luminus"
   :dependencies
   [[org.clojure/clojure "1.5.1"]
-   [lib-noir "0.5.5"]
+   [lib-noir "0.6.6"]
    [compojure "1.1.5"]
    [ring-server "0.2.8"]
-   [selmer "0.2.4"]
+   [selmer "0.3.2"]
    [com.taoensso/timbre "1.6.0"]
    [com.postspectacular/rotor "0.1.0"]
    [com.taoensso/tower "1.5.1"]
