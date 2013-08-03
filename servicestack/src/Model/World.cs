@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
+using ServiceStack.CacheAccess;
+using ServiceStack.Common;
 using ServiceStack.DataAnnotations;
 using ServiceStack.OrmLite;
 
@@ -19,56 +22,80 @@ namespace ServiceStackBenchmark.Model
     public static class WorldMethods
     {
 
-        public static World GetRandomWorld(this IDbConnection db, Random randomizer)
+        public static World GetWorld(this IDbConnection db, int id)
         {
-            int id = randomizer.Next(1, 10000);
+            // retrieve the World with passed id
             return db.GetById<World>(id);
         }
 
-        public static List<World> GetRandomWorlds(this IDbConnection db, int count, Random randomizer)
+        public static List<World> GetWorlds(this IDbConnection db)
         {
-            var worlds = new List<World>(count);
+            // retrieve all Worlds
+            return db.Select<World>(w => w);
+        }
 
-            for (int i = 0; i < count; ++i)
+        public static List<World> GetWorlds(this IDbConnection db, IEnumerable<int> ids)
+        {
+            // retrieve the Worlds included passed ids
+            return db.GetByIds<World>(ids);
+        }
+
+        public static List<World> UpdateWorlds(this IDbConnection db, IEnumerable<int> ids)
+        {
+            // get the worlds for the passed ids
+            var worlds = db.GetByIds<World>(ids);
+
+            // concurrently update each world with a new random number
+            Parallel.ForEach(worlds, w =>
             {
-                worlds.Add(GetRandomWorld(db, randomizer));
-            }
+                lock (worlds)
+                {
+                    w.randomNumber = SafeRandom.Instance.Next(1, 10000);
+                }
+            });
 
+            // update the dataase with the above changes
+            db.Update<World>(worlds);
+
+            // return updated collection
             return worlds;
         }
 
-        public static World UpdateRandomWorld(this IDbConnection db, Random randomizer)
+        public static void CacheAllWorlds(this IDbConnection db, ICacheClient cache)
         {
-            var world = db.GetRandomWorld(randomizer);
-            world.randomNumber = randomizer.Next(1, 10000);
-            db.Update<World>(world);
-            return world;
-        }
+            cache.FlushAll();
 
-        public static List<World> UpdateRandomWorlds(this IDbConnection db, int count, Random randomizer)
-        {
-            var worlds = new List<World>(count);
+            // concurrently create a list of world ids
+            var worlds = db.GetWorlds();
 
-            for (int i = 0; i < count; ++i)
+            Parallel.ForEach<World>(worlds, w =>
             {
-                worlds.Add(UpdateRandomWorld(db, randomizer));
-            }
-            return worlds;
+                var cacheKey = UrnId.Create<World>("Id", w.id.ToString());
+
+                cache.Set<World>(cacheKey, w);
+            });
         }
 
         public static void CreateWorldTable(this IDbConnection db)
         {
+            // only create table if it does not already exist
             if (!db.TableExists("World"))
             {
+                // create the database table based on model
                 db.CreateTable<World>();
 
-                // Populate the table
-                var randomizer = new Random();
-                var worlds = new List<World>();
-                for (int i = 1; i < 10000; i++)
-                {
-                    worlds.Add(new World() { id = i, randomNumber = randomizer.Next(1, 10000) });
-                }
+                // populate the table
+                var worlds = new List<World>(10000);
+                Parallel.For(1, 10000, i =>
+                    {
+                        lock (worlds)
+                        {
+                            worlds.Add(new World() { id = i, randomNumber = SafeRandom.Instance.Next(1, 10000) });
+                        }
+
+                    });
+
+                // insert new records into database
                 db.Insert<World>(worlds.ToArray());
             }
         }

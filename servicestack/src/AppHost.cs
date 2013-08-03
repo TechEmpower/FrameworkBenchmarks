@@ -5,8 +5,11 @@ using System.Collections.Generic;
 
 using ServiceStack;
 using ServiceStack.Api.Swagger;
+using ServiceStack.CacheAccess;
+using ServiceStack.CacheAccess.Providers;
 using ServiceStack.Common;
 using ServiceStack.Common.Web;
+using ServiceStack.Redis;
 using ServiceStack.ServiceHost;
 using ServiceStack.WebHost.Endpoints;
 using ServiceStack.WebHost.Endpoints.Formats;
@@ -54,6 +57,12 @@ namespace ServiceStackBenchmark
             // Initialize Databases
             InitDatabases(container);
 
+            // Register Cache Clients
+            container.Register<ICacheClient>(new MemoryCacheClient());
+
+            // Register Redis Client Manager
+            container.Register<IRedisClientsManager>(c =>
+                new PooledRedisClientManager("localhost:6379"));
 		}
 
         private static void InitDatabases(Funq.Container container)
@@ -151,7 +160,6 @@ namespace ServiceStackBenchmark
 
             SetConfig(new EndpointHostConfig
             {
-                DefaultRedirectPath = "/swagger-ui/index.html", // default to the Swagger page
                 DefaultContentType = ContentType.Json,
                 WriteErrorsToResponse = false,
                 EnableFeatures = Feature.All.Remove(GetDisabledFeatures()), // disable features specified in Web.Config (i.e. Soap, Metadata, etc.)
@@ -161,6 +169,12 @@ namespace ServiceStackBenchmark
             // Initialize Databases
             InitDatabases(container);
 
+            // Register Cache Clients
+            container.Register<ICacheClient>(new MemoryCacheClient());
+
+            // Register Redis Client Manager
+            container.Register<IRedisClientsManager>(c =>
+                new PooledRedisClientManager("localhost:6379"));
         }
 
         private static void InitDatabases(Funq.Container container)
