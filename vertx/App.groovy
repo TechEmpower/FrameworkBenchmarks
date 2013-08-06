@@ -3,7 +3,7 @@
 def persistorConf = [
   address: 'hello.persistor',
   db_name: 'hello_world',
-  host: 'localhost'
+  host: '127.0.0.1'
 ]
 
 def permitted =
@@ -24,7 +24,7 @@ def permitted =
 container.with {
 
   // Deploy the busmods
-  deployModule('vertx.mongo-persistor-v1.2.1', persistorConf, 8)
+  // deployModule('vertx.mongo-persistor-v1.2.1', persistorConf, 8)
 
   // Start the web server
 
