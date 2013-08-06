@@ -7,9 +7,8 @@ import os
 def start(args):
   setup_util.replace_text("vertx/App.groovy", "host: '.*'", "host: '" + args.database_host + "'")
 
-  try:
-    subprocess.check_call("vertx run WebServer.java", shell=True, cwd="vertx")
-    #subprocess.Popen("vertx run App.groovy -repo vert-x.github.io", shell=True, cwd="vertx")
+  try:    
+    subprocess.Popen("vertx run WebServer.java", shell=True, cwd="vertx")
     return 0
   except subprocess.CalledProcessError:
     return 1
