@@ -34,14 +34,13 @@
 **Databases**
 
 * MySQL Connector/Net 6.7.2-beta ([custom build](https://github.com/pdonald/mysql-connector-net))
-* Npgsql 2.0.12 ([custom build](https://github.com/pdonald/Npgsql2))
-* Entity Framework 6.0.0-alpha3
-* Mongo C# Driver 1.8.1
-* SqlClient Data Provider for SQL Server
+* Npgsql 2.0.13-beta1
+* Entity Framework 6.0.0-beta1
+* Mongo C# Driver 1.8.2
 
 **Developer Tools**
 
-* Visual Studio 2012 Update 2
+* Visual Studio 2012
 
 ## Mono Installation
 
