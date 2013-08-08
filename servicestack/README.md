@@ -21,6 +21,13 @@
 * `http://localhost:8080/sqlserver/fortunes`
 * `http://localhost:8080/sqlserver/updates?queries=25`
 
+**[SQLite](http://www.nuget.org/packages/ServiceStack.OrmLite.Sqlite.Mono)**
+
+* `http://localhost:8080/sqlite/db`
+* `http://localhost:8080/sqlite/queries?queries=10`
+* `http://localhost:8080/sqlite/fortunes`
+* `http://localhost:8080/sqlite/updates?queries=25`
+
 **[MySQL](http://www.nuget.org/packages/ServiceStack.OrmLite.MySql)**
 
 * `http://localhost:8080/mysql/db`
@@ -69,7 +76,7 @@
 
 **Web Servers**
 
-* Self Hosted (Windows)
+* Self Hosting using HTTPListener (Windows/Linux)
 * IIS 8 (Windows)
 * nginx 1.4.0 & XSP FastCGI (Linux)
 
@@ -83,6 +90,15 @@
 * Microsoft SQL Server 2005+
 * [MySQL 5.x](http://www.nuget.org/packages/mysql.data) 
 * [PostgreSQL 7.x](http://www.nuget.org/packages/Npgsql)
+* [SQLite 1.x 32-bit](http://www.nuget.org/packages/System.Data.SQLite.x86)
+
+**Caching Providers**
+
+* In-Memory
+* Redis NoSQL Db - [redis]()  [ServiceStack package](http://www.nuget.org/packages/ServiceStack.Redis)
+* MemCache - [memcache](http://www.nuget.org/packages/EnyimMemcached)  [ServiceStack package](http://www.nuget.org/packages/ServiceStack.Caching.Memcached)
+* Amazon Web Services In-Memory DynamoDb DataCache - [aws](http://www.nuget.org/packages/AWSSDK)  [ServiceStack package](http://www.nuget.org/packages/ServiceStack.Caching.AwsDynamoDb)
+* Microsoft Azure In-Memory DataCache - [azure](http://www.nuget.org/packages/WindowsAzure.Caching)  [ServiceStack package](http://www.nuget.org/packages/ServiceStack.Caching.Azure)
 
 **Developer Tools**
 

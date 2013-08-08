@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-using ServiceStack.CacheAccess;
 using ServiceStack.Common;
 using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
@@ -13,64 +13,61 @@ using ServiceStackBenchmark.Model;
 namespace ServiceStackBenchmark
 {
 
-    #region PostgreSQL Service Requests
+    #region SQLite Service Requests
 
-    [Api("Test #2 using Service Stack, ORMLite, and PostgreSQL")]
-    public class PostgreSqlDbRequest : IReturn<World>
+    [Api("Test #2 using Service Stack, ORMLite, and SQLite")]
+    public class SQLiteDbRequest : IReturn<World>
     { }
 
-    [Api("Test #3 using Service Stack, ORMLite, and PostgreSQL")]
-    public class PostgreSqlQueriesRequest : IReturn<List<World>>
+    [Api("Test #3 using Service Stack, ORMLite, and SQLite")]
+    public class SQLiteQueriesRequest : IReturn<List<World>>
     {
         [ApiMember(Name = "queries", Description = "Number of Queries to Execute", DataType = "int", IsRequired = true)]
         [ApiAllowableValues("queries", 1, 500)]
         public int queries { get; set; }
     }
 
-    [Api("Test #4 using Service Stack, ORMLite, and PostgreSQL")]
-    public class PostgreSqlFortunesRequest : IReturn<List<Fortune>>
+    [Api("Test #4 using Service Stack, ORMLite, and SQLite")]
+    public class SQLiteFortunesRequest : IReturn<List<Fortune>>
     { }
 
-    [Api("Test #5 using Service Stack, ORMLite, and PostgreSQL")]
-    public class PostgreSqlUpdatesRequest : IReturn<List<World>>
+    [Api("Test #5 using Service Stack, ORMLite, and SQLite")]
+    public class SQLiteUpdatesRequest : IReturn<List<World>>
     {
         [ApiMember(Name = "queries", Description = "Number of Queries to Execute", DataType = "int", IsRequired = true)]
         [ApiAllowableValues("queries", 1, 500)]
         public int queries { get; set; }
     }
 
-    [Api("Test #7 using Service Stack, ORMLite, and PostgreSQL with Caching")]
-    public class PostgreSqlCachedDbRequest : IReturn<World>
+    [Api("Test #7 using Service Stack, ORMLite, and SQLite with Caching")]
+    public class SQLiteCachedDbRequest : IReturn<World>
     { }
 
     #endregion
 
-    /// <summary>Service Stack tests using PostgreSQL provider and ORMLite</summary>
-    public class PostgreSqlService : Service
+    /// <summary>Service Stack tests using SQLite provider and ORMLite</summary>
+    public class SQLiteService : Service
     {
-        private const string dbType = "PgSql";
+        private const string dbType = "SQLite";
 
         #region Public Properties
 
-        public IPostgreSqlOrmLiteConnectionFactory dbFactory { get; set; }
+        public IDbConnection db { get; set; }
 
         #endregion
 
         #region Public Service Methods
 
-        public object Get(PostgreSqlDbRequest request)
+        public object Get(SQLiteDbRequest request)
         {
             // get a random world id
             var id = SafeRandom.Instance.Next(1, 10000);
 
             // retrieve world from database
-            using (var db = dbFactory.OpenDbConnection())
-            {
-                return db.GetWorld(id);
-            }
+            return db.GetWorld(id);
         }
 
-        public object Get(PostgreSqlQueriesRequest request)
+        public object Get(SQLiteQueriesRequest request)
         {
             // limit queries to be between 1 and 500 iterations
             var worldCount = Math.Max(1, Math.Min(500, (int)request.queries));
@@ -86,22 +83,19 @@ namespace ServiceStackBenchmark
             });
 
             // retrieve worlds associated with ids
-            using (var db = dbFactory.OpenDbConnection())
-            {
-                return db.GetWorlds(ids);
-            }
+            return db.GetWorlds(ids);
         }
 
         [AddHeader(ContentType = ServiceStack.Common.Web.ContentType.Html)]
-        public object Get(PostgreSqlFortunesRequest request)
+        public object Get(SQLiteFortunesRequest request)
         {
             var fortunes = new List<Fortune>();
 
             // retrieve fortunes from database
-            using (var db = dbFactory.OpenDbConnection())
-            {
+            //using (var db = dbFactory.OpenDbConnection())
+            //{
                 fortunes = db.GetFortunes();
-            }
+            //}
 
             // add additional fortune record
             fortunes.Add(new Fortune { id = 0, message = "Additional fortune added at request time." });
@@ -113,7 +107,7 @@ namespace ServiceStackBenchmark
             return FortuneMethods.ToHtml(fortunes);
         }
 
-        public object Get(PostgreSqlUpdatesRequest request)
+        public object Get(SQLiteUpdatesRequest request)
         {
             // limit queries to be between 1 and 500 iterations
             var worldCount = Math.Max(1, Math.Min(500, (int)request.queries));
@@ -132,13 +126,10 @@ namespace ServiceStackBenchmark
             Cache.FlushAll();
 
             // update the worlds
-            using (var db = dbFactory.OpenDbConnection())
-            {
-                return db.UpdateWorlds(ids);
-            }
+            return db.UpdateWorlds(ids);
         }
 
-        public object Get(PostgreSqlCachedDbRequest request)
+        public object Get(SQLiteCachedDbRequest request)
         {
             // get a random world id
             var id = SafeRandom.Instance.Next(1, 10000);
@@ -152,11 +143,7 @@ namespace ServiceStackBenchmark
                 return world;
 
             // get all of the worlds form the database
-            List<World> worlds;
-            using (var db = dbFactory.OpenDbConnection())
-            {
-                worlds = db.GetWorlds();
-            }
+            List<World> worlds = db.GetWorlds();
 
             // construct a cache dictionary
             var cacheDict = new Dictionary<string, World>();
