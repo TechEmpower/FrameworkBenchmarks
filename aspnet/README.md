@@ -18,12 +18,12 @@
 **Platforms**
 
 * .NET Framework 4.5 (Windows)
-* Mono 3.0.10 (Linux)
+* Mono 3.2.1 (Linux)
 
 **Web Servers**
 
 * IIS 8 (Windows)
-* XSP 2.11.0.0 (3.0?) (Linux)
+* XSP latest (Linux)
 * nginx 1.4.1 & XSP FastCGI (Linux)
 
 **Web Stack**
@@ -44,11 +44,11 @@
 
 ## Mono Installation
 
-    sudo apt-get install build-essential autoconf automake libtool zlib1g-dev git
+    sudo apt-get install git-core build-essential autoconf automake libtool zlib1g-dev pkg-config
 
     git clone git://github.com/mono/mono
     cd mono
-    git checkout mono-3.0.10
+    git checkout mono-3.2.1
     ./autogen.sh --prefix=/usr/local
     make get-monolite-latest
     make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe
@@ -58,7 +58,6 @@
 
     git clone git://github.com/mono/xsp
     cd xsp
-    git checkout 3.0
     ./autogen.sh --prefix=/usr/local
     make
     sudo make install
