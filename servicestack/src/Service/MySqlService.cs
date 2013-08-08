@@ -15,12 +15,10 @@ namespace ServiceStackBenchmark
     #region MySQL Service Requests
 
     [Api("Test #2 using Service Stack, ORMLite, and MySQL")]
-    [Route("/mysql/db", "GET")]
     public class MySqlDbRequest : IReturn<World>
     { }
 
     [Api("Test #3 using Service Stack, ORMLite, and MySQL")]
-    [Route("/mysql/queries/{queries}", "GET")]
     public class MySqlQueriesRequest : IReturn<List<World>>
     {
         [ApiMember(Name = "queries", Description = "Number of Queries to Execute", DataType = "int", IsRequired = true)]
@@ -29,12 +27,10 @@ namespace ServiceStackBenchmark
     }
 
     [Api("Test #4 using Service Stack, ORMLite, and MySQL")]
-    [Route("/mysql/fortunes", "GET")]
     public class MySqlFortunesRequest : IReturn<List<Fortune>>
     { }
 
     [Api("Test #5 using Service Stack, ORMLite, and MySQL")]
-    [Route("/mysql/updates/{queries}", "GET")]
     public class MySqlUpdatesRequest : IReturn<List<World>>
     {
         [ApiMember(Name = "queries", Description = "Number of Queries to Execute", DataType = "int", IsRequired = true)]
@@ -43,7 +39,6 @@ namespace ServiceStackBenchmark
     }
 
     [Api("Test #7 using Service Stack, ORMLite, and MySQL with Caching")]
-    [Route("/mysql/cached/db", "GET")]
     public class MySqlCachedDbRequest : IReturn<World>
     { }
 
@@ -81,7 +76,7 @@ namespace ServiceStackBenchmark
 
             // concurrently create a list of random world ids to retrieve
             var ids = new List<int>();
-            Parallel.For(1, worldCount, i =>
+            Parallel.For(0, worldCount, i =>
             {
                 lock (ids)
                 {
@@ -124,7 +119,7 @@ namespace ServiceStackBenchmark
 
             // concurrently create a list of random world ids to update
             var ids = new List<int>(worldCount);
-            Parallel.For(1, worldCount, i =>
+            Parallel.For(0, worldCount, i =>
             {
                 lock (ids)
                 {

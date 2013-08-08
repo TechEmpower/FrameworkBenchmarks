@@ -31,7 +31,7 @@ namespace ServiceStackBenchmark.Model
         public static List<World> GetWorlds(this IDbConnection db)
         {
             // retrieve all Worlds
-            return db.Select<World>(w => w);
+            return db.Select<World>();
         }
 
         public static List<World> GetWorlds(this IDbConnection db, IEnumerable<int> ids)
@@ -76,17 +76,20 @@ namespace ServiceStackBenchmark.Model
             });
         }
 
-        public static void CreateWorldTable(this IDbConnection db)
+        public static bool CreateWorldTable(this IDbConnection db)
         {
             // only create table if it does not already exist
-            if (!db.TableExists("World"))
+            if (db.TableExists("World"))
+                return true;
+
+            try
             {
                 // create the database table based on model
                 db.CreateTable<World>();
 
                 // populate the table
                 var worlds = new List<World>(10000);
-                Parallel.For(1, 10000, i =>
+                Parallel.For(0, 10000, i =>
                     {
                         lock (worlds)
                         {
@@ -97,6 +100,12 @@ namespace ServiceStackBenchmark.Model
 
                 // insert new records into database
                 db.Insert<World>(worlds.ToArray());
+
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 

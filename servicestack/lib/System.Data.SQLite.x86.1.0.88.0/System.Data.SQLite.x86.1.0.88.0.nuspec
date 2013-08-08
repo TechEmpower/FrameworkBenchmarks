@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>System.Data.SQLite.x86</id>
+    <version>1.0.88.0</version>
+    <title>System.Data.SQLite.x86</title>
+    <authors>SQLite Development Team</authors>
+    <owners>SQLite Development Team</owners>
+    <licenseUrl>http://www.sqlite.org/copyright.html</licenseUrl>
+    <projectUrl>http://system.data.sqlite.org/</projectUrl>
+    <iconUrl>http://system.data.sqlite.org/images/sqlite32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The official SQLite database engine combined with a complete ADO.NET provider all rolled into a single mixed-mode assembly for x86.</description>
+    <releaseNotes />
+    <copyright>Public Domain</copyright>
+    <language>en-US</language>
+    <tags>sqlite database ado.net provider interop</tags>
+  </metadata>
+</package>
