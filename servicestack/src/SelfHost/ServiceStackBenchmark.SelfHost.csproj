@@ -101,12 +101,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\lib\System.Data.SQLite.x86.1.0.88.0\lib\net45\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq">
-      <HintPath>..\..\lib\System.Data.SQLite.x86.1.0.88.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -129,16 +123,6 @@
       <Project>{80cf41ab-455b-4eb9-bfcc-3f8c4e1d8354}</Project>
       <Name>ServiceStackBenchmark</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="x64\sqlite3.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\sqlite3.def" />
-    <RootContent Include="x86\sqlite3.dll">
-      <CopyToOutputDirectory>RootContent</CopyToOutputDirectory>
-    </RootContent>
-    <Content Include="x86\sqlite3.exe" />
   </ItemGroup>
   <ItemGroup>
     <AvailableItemName Include="RootContent">

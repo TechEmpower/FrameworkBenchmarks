@@ -21,13 +21,6 @@
 * `http://localhost:8080/sqlserver/fortunes`
 * `http://localhost:8080/sqlserver/updates?queries=25`
 
-**[SQLite](http://www.nuget.org/packages/ServiceStack.OrmLite.Sqlite.Mono)**
-
-* `http://localhost:8080/sqlite/db`
-* `http://localhost:8080/sqlite/queries?queries=10`
-* `http://localhost:8080/sqlite/fortunes`
-* `http://localhost:8080/sqlite/updates?queries=25`
-
 **[MySQL](http://www.nuget.org/packages/ServiceStack.OrmLite.MySql)**
 
 * `http://localhost:8080/mysql/db`
@@ -90,7 +83,6 @@
 * Microsoft SQL Server 2005+
 * [MySQL 5.x](http://www.nuget.org/packages/mysql.data) 
 * [PostgreSQL 7.x](http://www.nuget.org/packages/Npgsql)
-* [SQLite 1.x 32-bit](http://www.nuget.org/packages/System.Data.SQLite.x86)
 
 **Caching Providers**
 

@@ -62,31 +62,6 @@ namespace ServiceStackBenchmark
 
         }
 
-        public static bool InitSQLite(this Funq.Container container)
-        {
-            try
-            {
-                // Register the SQLite Database Connection Factory
-                var sqLiteConnectionString = ConfigurationManager.ConnectionStrings["SQLite"];
-                var sqLiteFactory = new SQLiteOrmLiteConnectionFactory(sqLiteConnectionString.ConnectionString);
-                sqLiteFactory.DialectProvider.UseUnicode = true;
-                container.Register<IDbConnection>(c => sqLiteFactory.CreateDbConnection());
-
-                var con = container.Resolve<IDbConnection>();
-                con.Open();
-
-                // Create needed tables in SQLite if they do not exist
-                return con.CreateWorldTable() && con.CreateFortuneTable();
-            }
-            catch (Exception ex)
-            {
-                // Unregister failed database connection
-                container.Register<IDbConnection>(c => null);
-
-                return false;
-            }
-        }
-
         public static bool InitSQLServer(this Funq.Container container)
         {
             try
@@ -131,15 +106,6 @@ namespace ServiceStackBenchmark
                 routes.Add<PostgreSqlFortunesRequest>("/postgresql/fortunes", "GET");
                 routes.Add<PostgreSqlUpdatesRequest>("/postgresql/updates/{queries}", "GET");
                 routes.Add<PostgreSqlCachedDbRequest>("/postgresql/cached/db", "GET");
-            }
-
-            if (container.InitSQLite())
-            {
-                routes.Add<SQLiteDbRequest>("/sqlite/db", "GET");
-                routes.Add<SQLiteQueriesRequest>("/sqlite/queries/{queries}", "GET");
-                routes.Add<SQLiteFortunesRequest>("/sqlite/fortunes", "GET");
-                routes.Add<SQLiteUpdatesRequest>("/sqlite/updates/{queries}", "GET");
-                routes.Add<SQLiteCachedDbRequest>("/sqlite/cached/db", "GET");
             }
 
             if (container.InitSQLServer())
