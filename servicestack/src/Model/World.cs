@@ -55,7 +55,7 @@ namespace ServiceStackBenchmark.Model
             });
 
             // update the dataase with the above changes
-            db.Update<World>(worlds);
+            db.UpdateAll<World>(worlds);
 
             // return updated collection
             return worlds;

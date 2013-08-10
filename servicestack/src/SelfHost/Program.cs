@@ -17,6 +17,8 @@ namespace ServiceStackBenchmark.SelfHost
                 try
                 {
                     appHost.Init();
+
+                    // TODO: switch to Start after the next ServiceStack deployment (added to framework on commit #806)
                     appHost.StartListening(listeningOn);
                 }
                 catch (Exception ex)
