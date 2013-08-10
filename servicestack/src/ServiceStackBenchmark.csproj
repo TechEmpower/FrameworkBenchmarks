@@ -99,9 +99,6 @@
     <Reference Include="Microsoft.WindowsFabric.Data.Common">
       <HintPath>..\lib\WindowsAzure.Caching.1.7.0.0\lib\net35-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Data.Sqlite">
-      <HintPath>..\lib\ServiceStack.OrmLite.Sqlite.Mono.3.9.57\lib\net40\Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Security">
       <HintPath>..\lib\Npgsql.2.0.12.1\lib\net40\Mono.Security.dll</HintPath>
     </Reference>
@@ -142,7 +139,7 @@
     </Reference>
     <Reference Include="ServiceStack.OrmLite, Version=3.9.57.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\ServiceStack.OrmLite.Sqlite.Mono.3.9.57\lib\net40\ServiceStack.OrmLite.dll</HintPath>
+      <HintPath>..\lib\ServiceStack.OrmLite.MySql.3.9.57\lib\ServiceStack.OrmLite.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.OrmLite.MySql, Version=3.9.57.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -151,9 +148,6 @@
     <Reference Include="ServiceStack.OrmLite.PostgreSQL, Version=3.9.57.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\ServiceStack.OrmLite.PostgreSQL.3.9.57\lib\ServiceStack.OrmLite.PostgreSQL.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.OrmLite.Sqlite">
-      <HintPath>..\lib\ServiceStack.OrmLite.Sqlite.Mono.3.9.57\lib\net40\ServiceStack.OrmLite.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.OrmLite.SqlServer, Version=3.9.56.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -176,14 +170,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.SQLite, Version=1.0.88.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\System.Data.SQLite.x86.1.0.88.0\lib\net45\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.88.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\System.Data.SQLite.x86.1.0.88.0\lib\net45\System.Data.SQLite.Linq.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -194,14 +180,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="x64\sqlite3.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\sqlite3.def" />
-    <RootContent Include="x86\sqlite3.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </RootContent>
-    <Content Include="x86\sqlite3.exe" />
     <Content Include="swagger-ui\css\hightlight.default.css" />
     <Content Include="swagger-ui\css\screen.css" />
     <Content Include="swagger-ui\images\logo_small.png" />
@@ -226,12 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppHostConfigHelper.cs" />
-    <Compile Include="DbFactories\SQLiteOrmLiteConnectionFactory.cs" />
-    <Compile Include="DbFactories\ISQLiteOrmLiteConnectionFactory.cs" />
     <Compile Include="Model\Fortune.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SafeRandom.cs" />
-    <Compile Include="Service\SQLiteService.cs" />
     <Compile Include="Service\MySqlService.cs" />
     <Compile Include="Service\PostgreSqlService.cs" />
     <Compile Include="Service\Services.cs" />
