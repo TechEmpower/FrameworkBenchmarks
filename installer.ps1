@@ -241,4 +241,19 @@ $hg_installer_local = "$workdir\$hg_installer_file"
 Start-Process $hg_installer_local '/passive' -Wait
 $env:Path += ";C:\Program Files\Mercurial"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
+#
+# Cygwin (including sftp)
+#
+Write-Host "Installing Cygwin...`n"
+$cygwin_installer_file = "setup-x86_64.exe"
+$cygwin_installer_url = "http://cygwin.com/$cygwin_installer_file"
+$cygwin_installer_dir = $workdir + "\cygwin-installer"
+New-Item -Path $cygwin_installer_dir -Type directory -Force | Out-Null
+$cygwin_installer_local = "$cygwin_installer_dir\$cygwin_installer_file"
+(New-Object System.Net.WebClient).DownloadFile($cygwin_installer_url, $cygwin_installer_local)
+
+$cygwin_install_dir = "C:\Cygwin"
+Start-Process $cygwin_installer_local "-q -n -l $cygwin_installer_dir -s http://mirrors.kernel.org/sourceware/cygwin/ -R $cygwin_install_dir -P openssh" -WorkingDirectory "$cygwin_installer_dir" -Wait -RedirectStandardOutput $cygwin_installer_dir\install.log
+$env:Path += ";$cygwin_install_dir;$cygwin_install_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
 cd $basedir
