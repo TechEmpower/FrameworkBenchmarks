@@ -35,9 +35,12 @@ namespace ServiceStackBenchmark.Model
             return db.Select<Fortune>();
         }
 
-        public static void CreateFortuneTable(this IDbConnection db)
+        public static bool CreateFortuneTable(this IDbConnection db)
         {
-            if (!db.TableExists("Fortune"))
+            if (db.TableExists("Fortune"))
+                return true;
+
+            try
             {
                 db.CreateTable<Fortune>();
 
@@ -56,6 +59,12 @@ namespace ServiceStackBenchmark.Model
                 fortunes.Add(new Fortune() { id = 11, message = "&lt;script&gt;alert(\"This should not be displayed in a browser alert box.\");&lt;/script&gt;" });
                 fortunes.Add(new Fortune() { id = 12, message = "フレームワークのベンチマーク" });
                 db.Insert<Fortune>(fortunes.ToArray());
+
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
