@@ -244,6 +244,7 @@ class Benchmarker:
     try:
       if os.name == 'nt':
         return True
+      subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
       subprocess.check_call("sudo sysctl -w net.core.somaxconn=5000".rsplit(" "))
       subprocess.check_call("sudo -s ulimit -n 16384".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
