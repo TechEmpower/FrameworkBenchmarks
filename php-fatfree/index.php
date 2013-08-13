@@ -9,7 +9,7 @@ $f3->set('UI','ui/');
 $f3->route('GET /json',function($f3) {
     /** @var Base $f3 */
     header("Content-type: application/json");
-    return $f3->serialize(array('message' => 'Hello World!'));
+    return json_encode(array('message' => 'Hello World!'));
 });
 
 
@@ -32,7 +32,7 @@ $f3->route(
         }
 
         header("Content-type: application/json");
-        return $f3->serialize($result);
+        return json_encode($result);
     }
 );
 
@@ -57,7 +57,7 @@ $f3->route(
         }
 
         header("Content-type: application/json");
-        return $f3->serialize($result);
+        return json_encode($result);
     }
 );
 
@@ -104,7 +104,7 @@ $f3->route(
     }
 
     header("Content-type: application/json");
-    return $f3->serialize($result);
+    return json_encode($result);
         
 });
 
