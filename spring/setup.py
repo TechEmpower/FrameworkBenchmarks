@@ -1,4 +1,3 @@
-
 import subprocess
 import sys
 import setup_util
@@ -18,7 +17,7 @@ def start(args):
     else:
       subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
       subprocess.check_call("cp spring/target/spring.war $RESIN_HOME/webapps/spring.war", shell=True)
-      setup_utilbprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
+      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
     return 0
   except subprocess.CalledProcessError:
     return 1
