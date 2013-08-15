@@ -90,13 +90,40 @@ $env:Path += ";C:\Python27"; [Environment]::SetEnvironmentVariable("Path", $env:
 #
 # PHP
 #
-Write-Host "Installing PHP...`n"
+Write-Host "Installing PHP..."
+
+# Locate current PHP 5.4 release
+Write-Host "Looking for current PHP 5.4 release"
+$php_download_page_url = 'http://windows.php.net/download/'
+$php_download_page_file = [IO.Path]::GetTempFileName()
+Write-Host "Downloading from $php_download_page_url into $php_download_page_file"
+Try {
+    (New-Object System.Net.WebClient).DownloadFile($php_download_page_url, $php_download_page_file)
+} Catch {
+    Write-Host "ERROR: Could not download from $php_download_page_url."
+    Write-Host $_.Exception.Message
+    Exit 1
+}
+$file = (cat $php_download_page_file) -join ""
+if ($file -match '(?s)h4 id="php-5.4-nts-VC9-x86".*?href="/downloads/releases/(.*?)">Zip</a>') {
+    $php_installer_file = $matches[1]
+    $php_installer_url = "http://windows.php.net/downloads/releases/$php_installer_file"
+    Write-Host "Current PHP 5.4 release found at $php_current_release"
+}
+else {
+    Write-Host "ERROR: Current PHP release was not found. Aborting."
+    Exit 1
+}
 
 # Download PHP
-$php_installer_file = "php-5.4.17-nts-Win32-VC9-x86.zip"
-$php_installer_url = "http://windows.php.net/downloads/releases/$php_installer_file"
 $php_installer_local = "$workdir\$php_installer_file"
-(New-Object System.Net.WebClient).DownloadFile($php_installer_url, $php_installer_local)
+Try {
+    (New-Object System.Net.WebClient).DownloadFile($php_installer_url, $php_installer_local)
+} Catch {
+    Write-Host "ERROR: Could not download from $php_installer_url. "
+    Write-Host $_.Exception.Message
+    Exit 1
+}
 
 # Install PHP
 $php = "C:\PHP"
@@ -145,6 +172,8 @@ $composer_local = "$workdir\Composer-Setup.exe"
 (New-Object System.Net.WebClient).DownloadFile($composer_url, $composer_local)
 Start-Process $composer_local "/silent" -Wait
 $env:Path += ";C:\ProgramData\Composer\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+Write-Host ""
 
 #
 # Go
