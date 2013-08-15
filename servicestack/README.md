@@ -35,6 +35,13 @@
 * `http://localhost:8080/postgresql/fortunes`
 * `http://localhost:8080/postgresql/updates?queries=25`
 
+**[MongoDB](http://www.nuget.org/packages/mongocsharpdriver)**
+
+* `http://localhost:8080/mongodb/db`
+* `http://localhost:8080/mongodb/queries?queries=10`
+* `http://localhost:8080/mongodb/fortunes`
+* `http://localhost:8080/mongodb/updates?queries=25`
+
 ## Mono Installation
 
     sudo apt-get install build-essential autoconf automake libtool zlib1g-dev git

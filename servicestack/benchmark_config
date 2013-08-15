@@ -39,6 +39,16 @@
       "port": 8080,
       "sort": 158
     },
+    "iis-mongodb": {
+      "setup_file": "setup_iis",
+      "os": "nt",
+      "db_url": "/mongodb/db",
+      "query_url": "/mongodb/queries?queries=",
+      "fortune_url": "/mongodb/fortunes",
+      "update_url": "/mongodb/update?queries=",
+      "port": 8080,
+      "sort": 166
+    },
     "nginx-default": {
       "setup_file": "setup_nginx",
       "json_url": "/json",
@@ -73,6 +83,15 @@
       "port": 8080,
       "sort": 161
     },
+    "nginx-mongodb": {
+      "setup_file": "setup_nginx",
+      "db_url": "/mongodb/db",
+      "query_url": "/mongodb/queries?queries=",
+      "fortune_url": "/mongodb/fortunes",
+      "update_url": "/mongodb/update?queries=",
+      "port": 8080,
+      "sort": 167
+    },
     "xsp-default": {
       "setup_file": "setup_xsp",
       "json_url": "/json",
@@ -106,6 +125,15 @@
       "update_url": "/postgresql/update?queries=",
       "port": 8080,
       "sort": 165
+    },
+    "xsp-mongodb": {
+      "setup_file": "setup_xsp",
+      "db_url": "/mongodb/db",
+      "query_url": "/mongodb/queries?queries=",
+      "fortune_url": "/mongodb/fortunes",
+      "update_url": "/mongodb/update?queries=",
+      "port": 8080,
+      "sort": 168
     }
   }]
 }

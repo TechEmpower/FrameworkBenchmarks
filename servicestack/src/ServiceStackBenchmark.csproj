@@ -99,6 +99,12 @@
     <Reference Include="Microsoft.WindowsFabric.Data.Common">
       <HintPath>..\lib\WindowsAzure.Caching.1.7.0.0\lib\net35-full\Microsoft.WindowsFabric.Data.Common.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\lib\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\lib\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Security">
       <HintPath>..\lib\Npgsql.2.0.12.1\lib\net40\Mono.Security.dll</HintPath>
     </Reference>
@@ -207,6 +213,7 @@
     <Compile Include="Model\Fortune.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SafeRandom.cs" />
+    <Compile Include="Service\MongoDBService.cs" />
     <Compile Include="Service\MySqlService.cs" />
     <Compile Include="Service\PostgreSqlService.cs" />
     <Compile Include="Service\Services.cs" />

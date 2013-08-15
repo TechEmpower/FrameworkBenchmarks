@@ -6,17 +6,43 @@ using System.Collections.Generic;
 using ServiceStack.ServiceHost;
 using ServiceStackBenchmark.Model;
 
+using MongoDB.Driver;
+
 namespace ServiceStackBenchmark
 {
     public static class AppHostConfigHelper
     {
+        public static bool InitMongoDB(this Funq.Container container)
+        {
+            try
+            {
+                // Register the MySql Database Connection Factory
+                var mongoDbConnectionString = ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString;
+                var client = new MongoClient(mongoDbConnectionString);
+                var server = client.GetServer();
+                var database = server.GetDatabase("hello_world");
+                container.Register<MongoDatabase>(c => database);
+
+                // Create needed tables in MySql Server if they do not exist
+                return database.CreateWorldTable() && database.CreateFortuneTable();
+            }
+            catch
+            {
+                // Unregister failed database connection factory
+                container.Register<MongoDatabase>(c => null);
+
+                return false;
+            }
+
+        }
+
         public static bool InitMySQL(this Funq.Container container)
         {
             try
             {
                 // Register the MySql Database Connection Factory
-                var mySqlConnectionString = ConfigurationManager.ConnectionStrings["MySQL"];
-                var mySqlFactory = new MySqlOrmLiteConnectionFactory(mySqlConnectionString.ConnectionString);
+                var mySqlConnectionString = ConfigurationManager.ConnectionStrings["MySQL"].ConnectionString;
+                var mySqlFactory = new MySqlOrmLiteConnectionFactory(mySqlConnectionString);
                 mySqlFactory.DialectProvider.UseUnicode = true;
                 container.Register<IMySqlOrmLiteConnectionFactory>(c => mySqlFactory);
 
@@ -26,7 +52,7 @@ namespace ServiceStackBenchmark
                     return conn.CreateWorldTable() && conn.CreateFortuneTable();
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // Unregister failed database connection factory
                 container.Register<IMySqlOrmLiteConnectionFactory>(c => null);
@@ -41,8 +67,8 @@ namespace ServiceStackBenchmark
             try
             {
                 // Register the PostgreSQL Database Connection Factory
-                var postgreSqlConnectionString = ConfigurationManager.ConnectionStrings["PostgreSQL"];
-                var postgreSqlFactory = new PostgreSqlOrmLiteConnectionFactory(postgreSqlConnectionString.ConnectionString);
+                var postgreSqlConnectionString = ConfigurationManager.ConnectionStrings["PostgreSQL"].ConnectionString;
+                var postgreSqlFactory = new PostgreSqlOrmLiteConnectionFactory(postgreSqlConnectionString);
                 postgreSqlFactory.DialectProvider.UseUnicode = true;
                 container.Register<IPostgreSqlOrmLiteConnectionFactory>(c => postgreSqlFactory);
 
@@ -52,7 +78,7 @@ namespace ServiceStackBenchmark
                     return conn.CreateWorldTable() && conn.CreateFortuneTable();
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // Unregister failed database connection factory
                 container.Register<IPostgreSqlOrmLiteConnectionFactory>(c => null);
@@ -67,8 +93,8 @@ namespace ServiceStackBenchmark
             try
             {
                 // Register the Microsoft Sql Server Database Connection Factory
-                var sqlServerConnectionString = ConfigurationManager.ConnectionStrings["SQLServer"];
-                var sqlServerFactory = new SqlServerOrmLiteConnectionFactory(sqlServerConnectionString.ConnectionString);
+                var sqlServerConnectionString = ConfigurationManager.ConnectionStrings["SQLServer"].ConnectionString;
+                var sqlServerFactory = new SqlServerOrmLiteConnectionFactory(sqlServerConnectionString);
                 sqlServerFactory.DialectProvider.UseUnicode = true;
                 container.Register<ISqlServerOrmLiteConnectionFactory>(c => sqlServerFactory);
 
@@ -78,7 +104,7 @@ namespace ServiceStackBenchmark
                     return conn.CreateWorldTable() && conn.CreateFortuneTable();
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // Unregister failed database connection factory
                 container.Register<ISqlServerOrmLiteConnectionFactory>(c => null);
@@ -90,6 +116,15 @@ namespace ServiceStackBenchmark
 
         public static void InitDatabaseRoutes(this Funq.Container container, IServiceRoutes routes)
         {
+            if (container.InitMongoDB())
+            {
+                routes.Add<MongoDBDbRequest>("/mongodb/db", "GET");
+                routes.Add<MongoDBQueriesRequest>("/mongodb/queries/{queries}", "GET");
+                routes.Add<MongoDBFortunesRequest>("/mongodb/fortunes", "GET");
+                routes.Add<MongoDBUpdatesRequest>("/mongodb/updates/{queries}", "GET");
+                routes.Add<MongoDBCachedDbRequest>("/mongodb/cached/db", "GET");
+            }
+
             if (container.InitMySQL())
             {
                 routes.Add<MySqlDbRequest>("/mysql/db", "GET");
