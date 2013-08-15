@@ -83,9 +83,9 @@ If (-Not (Get-NetFirewallPortFilter | ? LocalPort -Eq "1433")) {
 Write-Host "Creating SQL Server login and populated database..."
 
 # Connect with Windows Authentication, assuming that we have access.
-Invoke-Sqlcmd -InputFile "$basedir\config\create-sqlserver-login-and-database.sql" -OutputSqlErrors $True
+Invoke-Sqlcmd -InputFile "$basedir\config\create-sqlserver-login-and-database.sql" -OutputSqlErrors $True -QueryTimeout 180
 
 # Now that benchmarkdbuser has been created, we can connect with those credentials.
-Invoke-Sqlcmd -Username benchmarkdbuser -Password B3nchmarkDBPass -Database hello_world -InputFile "$basedir\config\create-sqlserver.sql" -OutputSqlErrors $True
+Invoke-Sqlcmd -Username benchmarkdbuser -Password B3nchmarkDBPass -Database hello_world -InputFile "$basedir\config\create-sqlserver.sql" -OutputSqlErrors $True -QueryTimeout 180
 
 Write-Host "Done."
