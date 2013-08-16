@@ -1,6 +1,7 @@
 import subprocess
 import os
 import time
+import sys
 
 class Installer:
 
@@ -72,16 +73,16 @@ class Installer:
 
     self.__run_command("curl -L get.rvm.io | bash -s head")
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0"])
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler"])
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.4"])
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install bundler"])
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.4")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install bundler")
 
     # We need a newer version of jruby-rack
     self.__run_command("git clone git://github.com/jruby/jruby-rack.git")
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do bundle install"])
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"])
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem"])
+    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do bundle install")
+    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true")
+    self.__bash_from_string("cd jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem")
 
     #
     # go
@@ -303,7 +304,7 @@ class Installer:
       if pypy:  self.__run_command(pypy_bin + cmd)
 
     self.__run_command("curl -L http://bitbucket.org/pypy/pypy/downloads/pypy-2.0.2-linux64.tar.bz2 | tar xj")
-    self.__run_command('ln -s pypy-2.0.2 pypy')
+    self.__run_command('ln -sf pypy-2.0.2 pypy')
     self.__run_command("curl -L http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz | tar xz")
     self.__run_command("curl -L http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz | tar xJ")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.5")
@@ -312,7 +313,6 @@ class Installer:
     self.__run_command("make install", cwd="Python-2.7.5")
     self.__run_command("make -j", cwd="Python-3.3.2")
     self.__run_command("make install", cwd="Python-3.3.2")
-
 
     self.__run_command("wget https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
     self.__run_command(pypy_bin + "/pypy ez_setup.py")
@@ -356,12 +356,22 @@ class Installer:
     easy_install('bottle==0.11.6', two=True, three=True, pypy=True)
     easy_install('bottle-sqlalchemy==0.4', two=True, three=True, pypy=True)
 
+  ############################################################
+  # __install_error
+  ############################################################
+  def __install_error(self, message):
+    print("\nINSTALL ERROR: %s\n" % message)
+    if self.benchmarker.install_error_action == 'abort':
+      sys.exit("Installation aborted.")
+  ############################################################
+  # End __install_error
+  ############################################################
 
   ############################################################
   # __install_client_software
   ############################################################
   def __install_client_software(self):
-    subprocess.call(self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), shell=True)
+    self.__run_command(self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), True)
 
     remote_script = """
 
@@ -443,11 +453,15 @@ class Installer:
     sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo start mongodb
     """
+    
+    print "Installing client software"
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)
-
+    returncode = p.returncode
+    if returncode != 0:
+      self.__install_error("Subprocess failed with status code %s." % returncode)
   ############################################################
-  # End __parse_results
+  # End __install_client_software
   ############################################################
 
   ############################################################
@@ -459,12 +473,28 @@ class Installer:
     except AttributeError:
       cwd = self.install_dir
 
+    print("\nRunning '%s' in %s" % (command, cwd))
     if send_yes:
-      subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd).communicate("yes")
+      process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
+      process.communicate("yes")
+      returncode = process.returncode
     else:
-      subprocess.call(command, shell=True, cwd=cwd)
+      returncode = subprocess.call(command, shell=True, cwd=cwd)
+
+    if returncode != 0:
+      self.__install_error("Call to '%s' in directory '%s' returned with status code %s." % (command, cwd, returncode))
   ############################################################
   # End __run_command
+  ############################################################
+
+  ############################################################
+  # __bash_from_string
+  # Runs bash -c "command" in install_dir.
+  ############################################################
+  def __bash_from_string(self, command):
+    self.__run_command('bash -c "%s"' % command)
+  ############################################################
+  # End __bash_from_string
   ############################################################
 
   ############################################################
