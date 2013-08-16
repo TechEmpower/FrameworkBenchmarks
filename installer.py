@@ -473,7 +473,7 @@ class Installer:
     except AttributeError:
       cwd = self.install_dir
 
-    print("\nRunning '%s' in %s" % (command, cwd))
+    print("\nINSTALL: Running '%s' in %s" % (command, cwd))
     if send_yes:
       process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
       process.communicate("yes")
