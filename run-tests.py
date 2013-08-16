@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 import argparse
+import sys
 from benchmarker import Benchmarker
+from unbuffered import Unbuffered
 
 ###################################################################################################
 # Main
 ###################################################################################################
+
+sys.stdout=Unbuffered(sys.stdout)
 
 ##########################################################
 # Set up argument parser
