@@ -20,7 +20,9 @@ func (this *JsonController) Get() {
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	//don't need this set, beego default set it
+	//runtime.GOMAXPROCS(runtime.NumCPU())
+	beego.RunMode = "prod"
 	beego.Router("/json", &JsonController{})
 	beego.Run()
 }
