@@ -14,6 +14,6 @@ if ($action -eq 'start') {
     New-WebSite -Name Benchmarks -Port 8080 -PhysicalPath $wwwroot
     
     # Build the project
-    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe "$source\NancyBenchmark.csproj" /p:Configuration=Release /p:Platform="x64" /t:Clean
-    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe "$source\NancyBenchmark.csproj" /p:Configuration=Release /p:Platform="x64" /p:DeployOnBuild=true /p:PublishProfile=IIS
+    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe "$source\NancyBenchmark.csproj" /p:Configuration=Release /p:Platform="AnyCPU" /t:Clean
+    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe "$source\NancyBenchmark.csproj" /p:Configuration=Release /p:Platform="AnyCPU" /p:DeployOnBuild=true /p:PublishProfile=IIS
 }
