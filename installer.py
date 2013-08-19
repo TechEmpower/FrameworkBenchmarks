@@ -43,7 +43,9 @@ class Installer:
     #
     # Dart
     #
-    self.__run_command("curl https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-64.tar.gz | tar xvz")
+    self.__run_command("sudo add-apt-repository ppa:hachre/dart", True)
+    self.__run_command("sudo apt-get update", True)
+    self.__run_command("sudo apt-get install dartvm dartsdk", True)
 
     #
     # Erlang
