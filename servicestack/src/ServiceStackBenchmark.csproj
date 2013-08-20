@@ -209,6 +209,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\IIS.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="AppHostConfigHelper.cs" />
     <Compile Include="Model\Fortune.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,7 +5,7 @@
 $basedir = "C:\FrameworkBenchmarks"
 $rawRepo = "https://raw.github.com/TechEmpower/FrameworkBenchmarks/master"
 
-$config_url = $basedir + "/config"
+$config_url = $rawRepo + "/config"
 $config_local = $basedir + "\config"
 $setup_sqlserver_url = $rawRepo + "/setup-sqlserver.ps1"
 $setup_sqlserver_local = $basedir + "\setup-sqlserver.ps1"
@@ -14,7 +14,7 @@ $create_sqlserver_login_and_database_local = $config_local + "/create-sqlserver-
 $create_sqlserver_url = $config_url + "/create-sqlserver.sql"
 $create_sqlserver_local = $config_local + "/create-sqlserver.sql"
 
-Write-Host "Creating directory: $config`n"
+Write-Host "Creating directory: $config_local`n"
 New-Item -Path $config_local -Type Directory -Force | Out-Null
 
 Write-Host "Downloading setup files...`n"
