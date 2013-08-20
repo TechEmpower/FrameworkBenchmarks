@@ -10,37 +10,37 @@
 
 * `http://localhost:8080/plaintext`
 
----
+### Database Responses
 
-### ServiceStack - OrmLite (ORM)
-
-**[Microsoft SQL Server](http://www.nuget.org/packages/ServiceStack.OrmLite.SqlServer)**
+**Microsoft SQL Server** using ORMLite
 
 * `http://localhost:8080/sqlserver/db`
-* `http://localhost:8080/sqlserver/queries?queries=10`
+* `http://localhost:8080/sqlserver/queries/10`
 * `http://localhost:8080/sqlserver/fortunes`
-* `http://localhost:8080/sqlserver/updates?queries=25`
+* `http://localhost:8080/sqlserver/updates/25`
 
-**[MySQL](http://www.nuget.org/packages/ServiceStack.OrmLite.MySql)**
+**MySQL** using ORMLite
 
 * `http://localhost:8080/mysql/db`
-* `http://localhost:8080/mysql/queries?queries=10`
+* `http://localhost:8080/mysql/queries/10`
 * `http://localhost:8080/mysql/fortunes`
-* `http://localhost:8080/mysql/updates?queries=25`
+* `http://localhost:8080/mysql/updates/25`
 
-**[PostgreSQL](http://www.nuget.org/packages/ServiceStack.OrmLite.PostgreSql)**
+**PostgreSQL** using ORMLite
 
 * `http://localhost:8080/postgresql/db`
-* `http://localhost:8080/postgresql/queries?queries=10`
+* `http://localhost:8080/postgresql/queries/10`
 * `http://localhost:8080/postgresql/fortunes`
-* `http://localhost:8080/postgresql/updates?queries=25`
+* `http://localhost:8080/postgresql/updates/25`
 
-**[MongoDB](http://www.nuget.org/packages/mongocsharpdriver)**
+**MongoDB**
 
 * `http://localhost:8080/mongodb/db`
-* `http://localhost:8080/mongodb/queries?queries=10`
+* `http://localhost:8080/mongodb/queries/10`
 * `http://localhost:8080/mongodb/fortunes`
-* `http://localhost:8080/mongodb/updates?queries=25`
+* `http://localhost:8080/mongodb/updates/25`
+
+---
 
 ## Mono Installation
 
@@ -77,7 +77,7 @@
 **Web Servers**
 
 * Self Hosting using HTTPListener (Windows/Linux)
-* IIS 8 (Windows)
+* IIS 8 (Windows) - includes [Swagger](http://www.nuget.org/packages/ServiceStack.Api.Swagger/)
 * nginx 1.4.0 & XSP FastCGI (Linux)
 
 **Web Stack**
@@ -85,19 +85,20 @@
 * ASP.NET 4.5
 * [ServiceStack](https://github.com/servicestack/servicestack/wiki)
 
-**Databases**
+**Database Providers**
 
-* Microsoft SQL Server 2005+
-* [MySQL 5.x](http://www.nuget.org/packages/mysql.data) 
-* [PostgreSQL 7.x](http://www.nuget.org/packages/Npgsql)
+* Microsoft SQL Server - [interface](http://www.nuget.org/packages/ServiceStack.OrmLite.SqlServer/)
+* MySQL - [driver](http://www.nuget.org/packages/MySql.Data/) + [interface](http://www.nuget.org/packages/ServiceStack.OrmLite.MySql/)
+* PostgreSQL - [driver](http://www.nuget.org/packages/Npgsql/) + [interface](http://www.nuget.org/packages/ServiceStack.OrmLite.PostgreSQL/)
+* MongoDB - [driver](http://www.nuget.org/packages/mongocsharpdriver/)
 
 **Caching Providers**
 
 * In-Memory
-* Redis NoSQL Db - [redis]()  [ServiceStack package](http://www.nuget.org/packages/ServiceStack.Redis)
-* MemCache - [memcache](http://www.nuget.org/packages/EnyimMemcached)  [ServiceStack package](http://www.nuget.org/packages/ServiceStack.Caching.Memcached)
-* Amazon Web Services In-Memory DynamoDb DataCache - [aws](http://www.nuget.org/packages/AWSSDK)  [ServiceStack package](http://www.nuget.org/packages/ServiceStack.Caching.AwsDynamoDb)
-* Microsoft Azure In-Memory DataCache - [azure](http://www.nuget.org/packages/WindowsAzure.Caching)  [ServiceStack package](http://www.nuget.org/packages/ServiceStack.Caching.Azure)
+* Redis NoSQL Db - [client w/interface](http://www.nuget.org/packages/ServiceStack.Redis)
+* MemCache - [client](http://www.nuget.org/packages/EnyimMemcached) + [interface](http://www.nuget.org/packages/ServiceStack.Caching.Memcached)
+* Amazon Web Services In-Memory DynamoDb DataCache - [client](http://www.nuget.org/packages/AWSSDK) + [interface](http://www.nuget.org/packages/ServiceStack.Caching.AwsDynamoDb)
+* Microsoft Azure In-Memory DataCache - [client](http://www.nuget.org/packages/WindowsAzure.Caching) + [interface](http://www.nuget.org/packages/ServiceStack.Caching.Azure)
 
 **Developer Tools**
 
