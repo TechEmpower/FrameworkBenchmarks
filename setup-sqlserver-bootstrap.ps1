@@ -5,7 +5,7 @@
 $basedir = "C:\FrameworkBenchmarks"
 $rawRepo = "https://raw.github.com/TechEmpower/FrameworkBenchmarks/master"
 
-$config_url = $basedir + "/config"
+$config_url = $rawRepo + "/config"
 $config_local = $basedir + "\config"
 $setup_sqlserver_url = $rawRepo + "/setup-sqlserver.ps1"
 $setup_sqlserver_local = $basedir + "\setup-sqlserver.ps1"
