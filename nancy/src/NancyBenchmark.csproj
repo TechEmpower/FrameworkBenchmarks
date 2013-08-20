@@ -70,6 +70,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\IIS.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="DbModule.cs" />
     <Content Include="Global.asax" />
     <Compile Include="Global.asax.cs">
