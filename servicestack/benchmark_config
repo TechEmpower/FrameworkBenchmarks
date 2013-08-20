@@ -15,7 +15,7 @@
       "db_url": "/sqlserver/db",
       "query_url": "/sqlserver/queries/",
       "fortune_url": "/sqlserver/fortunes",
-      "update_url": "/sqlserver/update/",
+      "update_url": "/sqlserver/updates/",
       "port": 8080,
       "sort": 156
     },
