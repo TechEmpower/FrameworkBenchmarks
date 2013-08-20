@@ -3,6 +3,10 @@
 *.suo
 */bin/
 */obj/
+obj/
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
 .nuget/NuGet.exe
 packages/
 !packages/repositories.config
