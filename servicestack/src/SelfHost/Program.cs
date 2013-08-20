@@ -18,16 +18,15 @@ namespace ServiceStackBenchmark.SelfHost
                 {
                     appHost.Init();
 
-                    // TODO: switch to Start after the next ServiceStack deployment (added to framework on commit #806)
-                    appHost.StartListening(listeningOn);
+                    appHost.Start(listeningOn);
+
+                    Console.WriteLine("AppHost Created at {0}, listening on {1}", DateTime.Now, listeningOn);
+                    Console.WriteLine("Press <Esc> to stop.");
+                    do { } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("ERROR: {0}: {1}", ex.GetType().Name, ex.Message);
-                }
-                finally
-                {
-                    appHost.Stop();
                 }
             }
 
