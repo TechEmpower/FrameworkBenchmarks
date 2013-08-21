@@ -151,7 +151,7 @@ class Installer:
     # Mono
     #
     self.__run_command("git clone git://github.com/mono/mono")
-    self.__run_command("git checkout mono-3.0.10", cwd="mono")
+    self.__run_command("git checkout mono-3.2.1", cwd="mono")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
     self.__run_command("make get-monolite-latest", cwd="mono")
     self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
@@ -160,7 +160,6 @@ class Installer:
     self.__run_command("mozroots --import --sync")
 
     self.__run_command("git clone git://github.com/mono/xsp")
-    self.__run_command("git checkout 3.0", cwd="xsp")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
     self.__run_command("make", cwd="xsp")
     self.__run_command("sudo make install", cwd="xsp")
