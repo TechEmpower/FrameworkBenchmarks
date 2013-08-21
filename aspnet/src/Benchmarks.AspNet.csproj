@@ -45,27 +45,27 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc">
       <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\lib\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Helpers">
       <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor">
       <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
+      <HintPath>..\lib\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages">
       <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Deployment">
       <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor">
       <Private>True</Private>
-      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+      <HintPath>..\lib\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure">
       <Private>True</Private>
@@ -75,15 +75,15 @@
       <HintPath>..\lib\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text">
-      <HintPath>..\lib\ServiceStack.Text.3.9.48\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\lib\ServiceStack.Text.3.9.56\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
       <Private>True</Private>
-      <HintPath>..\lib\EntityFramework.6.0.0-alpha3\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\lib\EntityFramework.6.0.0-beta1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
       <Private>True</Private>
-      <HintPath>..\lib\EntityFramework.6.0.0-alpha3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\lib\EntityFramework.6.0.0-beta1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="MySql">
       <Private>True</Private>
@@ -95,19 +95,19 @@
     </Reference>
     <Reference Include="Npgsql">
       <Private>True</Private>
-      <HintPath>..\lib\Npgsql.EF6.2.0.12-pre4\lib\net45\Npgsql.dll</HintPath>
+      <HintPath>..\lib\Npgsql.2.0.13-beta1\lib\net45\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql">
       <Private>True</Private>
-      <HintPath>..\lib\Npgsql.EF6.2.0.12-pre4\lib\net45\Mono.Security.dll</HintPath>
+      <HintPath>..\lib\Npgsql.2.0.13-beta1\lib\net45\Mono.Security.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB">
       <Private>True</Private>
-      <HintPath>..\lib\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Bson.dll</HintPath>
+      <HintPath>..\lib\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Bson.dll</HintPath>
     </Reference>
     <Reference Include="MongoDB">
       <Private>True</Private>
-      <HintPath>..\lib\mongocsharpdriver.1.8.1\lib\net35\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\lib\mongocsharpdriver.1.8.2\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
