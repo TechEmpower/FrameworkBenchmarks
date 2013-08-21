@@ -276,7 +276,7 @@ class Installer:
     ##############################
     # Vert.x
     ##############################
-    self.__run_command("curl http://vert-x.github.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
+    self.__run_command("curl http://vertx.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
 
     ##############################
     # Yesod
