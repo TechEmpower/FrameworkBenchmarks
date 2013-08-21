@@ -38,9 +38,7 @@ class Installer:
     self.__run_command("sudo sh -c \"echo '*               -    nofile          16384' >> /etc/security/limits.conf\"")
 
     ##############################################################
-    #
     # System Tools
-    #
     ##############################################################
 
     #
@@ -232,28 +230,26 @@ class Installer:
     self.__run_command("cat ../config/resin.xml > resin-4.0.36/conf/resin.xml")
 
     ##############################################################
-    #
     # Frameworks
-    #
     ##############################################################
 
-    ##############################
+    #
     # Grails
-    ##############################
+    #
     self.__run_command("wget http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
     self.__run_command("unzip -o grails-2.1.1.zip")
     self.__run_command("rm grails-2.1.1.zip")
 
-    ##############################
+    #
     # Play 2
-    ##############################
+    #
     self.__run_command("wget http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip")
     self.__run_command("unzip -o play-2.1.2-RC1.zip")
     self.__run_command("rm play-2.1.2-RC1.zip")
 
-    ##############################
+    #
     # Play 1
-    ##############################
+    #
     self.__run_command("wget http://downloads.typesafe.com/releases/play-1.2.5.zip")
     self.__run_command("unzip -o play-1.2.5.zip")
     self.__run_command("rm play-1.2.5.zip")
@@ -262,9 +258,9 @@ class Installer:
     # siena
     self.__run_command("yes | play-1.2.5/play1 install siena")
 
-    ##############################
+    #
     # TreeFrog Framework
-    ##############################
+    #
     self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql g++", True)
     self.__run_command("wget http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.6.tar.gz")
     self.__run_command("tar xzf treefrog-1.6.tar.gz")
@@ -275,20 +271,20 @@ class Installer:
     self.__run_command("make", cwd="treefrog-1.6/tools")
     self.__run_command("sudo make install", cwd="treefrog-1.6/tools")
 
-    ##############################
+    #
     # Vert.x
-    ##############################
+    #
     self.__run_command("curl http://vertx.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
 
-    ##############################
+    #
     # Yesod
-    ##############################
+    #
     self.__run_command("cabal update")
     self.__run_command("cabal install yesod persistent-mysql")
 
-    ##############################
+    #
     # Jester
-    ##############################
+    #
     self.__run_command("git clone git://github.com/dom96/jester.git jester/jester")
 
     print("\nINSTALL: Finished installing server software\n")
