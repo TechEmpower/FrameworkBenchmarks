@@ -372,7 +372,7 @@ class Installer:
   # __install_client_software
   ############################################################
   def __install_client_software(self):
-    self.__run_command(self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), True)
+    self.__run_command("cd .. && " + self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), True)
 
     remote_script = """
 
