@@ -35,6 +35,20 @@ class Installer:
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          16384' >> /etc/security/limits.conf\"")
 
+    ##############################################################
+    #
+    # System Tools
+    #
+    ##############################################################
+
+    #
+    # Leiningen
+    #
+    self.__run_command("mkdir -p bin")
+    self.__run_command("wget https://raw.github.com/technomancy/leiningen/stable/bin/lein")
+    self.__run_command("mv lein bin/lein")
+    self.__run_command("chmod +x bin/lein")
+
     #
     # Maven
     #
@@ -275,19 +289,6 @@ class Installer:
     ##############################
     self.__run_command("git clone git://github.com/dom96/jester.git jester/jester")
 
-    ##############################################################
-    #
-    # System Tools
-    #
-    ##############################################################
-
-    ##############################
-    # Leiningen
-    ##############################
-    self.__run_command("mkdir -p bin")
-    self.__run_command("wget https://raw.github.com/technomancy/leiningen/stable/bin/lein")
-    self.__run_command("mv lein bin/lein")
-    self.__run_command("chmod +x bin/lein")
   ############################################################
   # End __install_server_software
   ############################################################
