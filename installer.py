@@ -22,6 +22,8 @@ class Installer:
   # __install_server_software
   ############################################################
   def __install_server_software(self):
+    print("\nINSTALL: Installing server software\n")
+
     #######################################
     # Prerequisites
     #######################################
@@ -289,6 +291,7 @@ class Installer:
     ##############################
     self.__run_command("git clone git://github.com/dom96/jester.git jester/jester")
 
+    print("\nINSTALL: Finished installing server software\n")
   ############################################################
   # End __install_server_software
   ############################################################
@@ -372,6 +375,8 @@ class Installer:
   # __install_client_software
   ############################################################
   def __install_client_software(self):
+    print("\nINSTALL: Installing client software\n")
+
     self.__run_command("cd .. && " + self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), True)
 
     remote_script = """
@@ -455,12 +460,14 @@ class Installer:
     sudo start mongodb
     """
     
-    print "Installing client software"
+    print("\nINSTALL: %s" % self.benchmarker.ssh_string)
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)
     returncode = p.returncode
     if returncode != 0:
-      self.__install_error("Subprocess failed with status code %s." % returncode)
+      self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.ssh_string))
+
+    print("\nINSTALL: Finished installing client software\n")
   ############################################################
   # End __install_client_software
   ############################################################
@@ -474,7 +481,7 @@ class Installer:
     except AttributeError:
       cwd = self.install_dir
 
-    print("\nINSTALL: Running '%s' in %s" % (command, cwd))
+    print("\nINSTALL: %s (cwd=%s)" % (command, cwd))
     if send_yes:
       process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
       process.communicate("yes")
@@ -483,7 +490,7 @@ class Installer:
       returncode = subprocess.call(command, shell=True, cwd=cwd)
 
     if returncode != 0:
-      self.__install_error("Call to '%s' in directory '%s' returned with status code %s." % (command, cwd, returncode))
+      self.__install_error("status code %s running command '%s' in directory '%s'." % (returncode, command, cwd))
   ############################################################
   # End __run_command
   ############################################################
