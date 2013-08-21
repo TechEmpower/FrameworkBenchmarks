@@ -8,7 +8,7 @@ For raw Servlets there is no broad consensus on JSON encoding so we have selecte
 * [JSON test source](src/main/java/hello/JsonServlet.java)
 
 ### Data-Store/Database Mapping Test
-* [DB test source](src/main/java/hello/DBServlet.java)
+* [DB test source](src/main/java/hello/DbPoolServlet.java)
 
 ## Infrastructure Software Versions
 The tests were run with:
