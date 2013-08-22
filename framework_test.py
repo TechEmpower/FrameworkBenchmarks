@@ -10,9 +10,13 @@ class FrameworkTest:
   ##########################################################################################
   # Class variables
   ##########################################################################################
-  headers = "-H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'"
-  headers_full = "-H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive'"
+  headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
+  headers_full_template = "-H 'Host: localhost' -H '{accept}' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive'"
  
+  accept_json = "Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
+  accept_html = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+  accept_plaintext = "Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
+
   concurrency_template = """
     
     echo ""
@@ -215,7 +219,7 @@ class FrameworkTest:
       if self.json_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "json"):
         sys.stdout.write("BENCHMARKING JSON ... ") 
         sys.stdout.flush()
-        remote_script = self.__generate_concurrency_script(self.json_url, self.port)
+        remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'json'))
         results = self.__parse_test('json')
         self.benchmarker.report_results(framework=self, test="json", results=results['results'])
@@ -229,7 +233,7 @@ class FrameworkTest:
       if self.db_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "db"):
         sys.stdout.write("BENCHMARKING DB ... ") 
         sys.stdout.flush()
-        remote_script = self.__generate_concurrency_script(self.db_url, self.port)
+        remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'db'))
         results = self.__parse_test('db')
         self.benchmarker.report_results(framework=self, test="db", results=results['results'])
@@ -243,7 +247,7 @@ class FrameworkTest:
       if self.query_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "query"):
         sys.stdout.write("BENCHMARKING Query ... ") 
         sys.stdout.flush()
-        remote_script = self.__generate_query_script(self.query_url, self.port)
+        remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'query'))
         results = self.__parse_test('query')
         self.benchmarker.report_results(framework=self, test="query", results=results['results'])
@@ -256,7 +260,7 @@ class FrameworkTest:
       if self.fortune_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "fortune"):
         sys.stdout.write("BENCHMARKING Fortune ... ") 
         sys.stdout.flush()
-        remote_script = self.__generate_concurrency_script(self.fortune_url, self.port)
+        remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'fortune'))
         results = self.__parse_test('fortune')
         self.benchmarker.report_results(framework=self, test="fortune", results=results['results'])
@@ -269,7 +273,7 @@ class FrameworkTest:
       if self.update_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "update"):
         sys.stdout.write("BENCHMARKING Update ... ") 
         sys.stdout.flush()
-        remote_script = self.__generate_query_script(self.update_url, self.port)
+        remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'update'))
         results = self.__parse_test('update')
         self.benchmarker.report_results(framework=self, test="update", results=results['results'])
@@ -282,7 +286,7 @@ class FrameworkTest:
       if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "plaintext"):
         sys.stdout.write("BENCHMARKING Plaintext ... ") 
         sys.stdout.flush()
-        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
+        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'plaintext'))
         results = self.__parse_test('plaintext')
         self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
@@ -449,13 +453,14 @@ class FrameworkTest:
   # specifically works for the variable concurrency tests (JSON
   # and DB)
   ############################################################
-  def __generate_concurrency_script(self, url, port, wrk_command="wrk", intervals=[], pipeline=""):
+  def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk", intervals=[], pipeline=""):
     if len(intervals) == 0:
       intervals = self.benchmarker.concurrency_levels
+    headers = self.__get_request_headers(accept_header)
     return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
       interval=" ".join("{}".format(item) for item in intervals), 
-      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers, wrk=wrk_command,
+      server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command,
       pipeline=pipeline)
   ############################################################
   # End __generate_concurrency_script
@@ -467,13 +472,24 @@ class FrameworkTest:
   # be run on the client to benchmark a single test. This
   # specifically works for the variable query tests (Query)
   ############################################################
-  def __generate_query_script(self, url, port):
+  def __generate_query_script(self, url, port, accept_header):
+    headers = self.__get_request_headers(accept_header)
     return self.query_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
       interval=" ".join("{}".format(item) for item in self.benchmarker.query_intervals), 
-      server_host=self.benchmarker.server_host, port=port, url=url, headers=self.headers)
+      server_host=self.benchmarker.server_host, port=port, url=url, headers=headers)
   ############################################################
   # End __generate_query_script
+  ############################################################
+
+  ############################################################
+  # __get_request_headers(accept_header)
+  # Generates the complete HTTP header string
+  ############################################################
+  def __get_request_headers(self, accept_header):
+    return self.headers_template.format(accept=accept_header)
+  ############################################################
+  # End __format_request_headers
   ############################################################
 
   ##########################################################################################

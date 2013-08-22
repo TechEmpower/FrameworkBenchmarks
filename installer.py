@@ -1,6 +1,7 @@
 import subprocess
 import os
 import time
+import sys
 
 class Installer:
 
@@ -21,6 +22,8 @@ class Installer:
   # __install_server_software
   ############################################################
   def __install_server_software(self):
+    print("\nINSTALL: Installing server software\n")
+
     #######################################
     # Prerequisites
     #######################################
@@ -33,6 +36,24 @@ class Installer:
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          16384' >> /etc/security/limits.conf\"")
+
+    ##############################################################
+    # System Tools
+    ##############################################################
+
+    #
+    # Leiningen
+    #
+    self.__run_command("mkdir -p bin")
+    self.__run_command("wget https://raw.github.com/technomancy/leiningen/stable/bin/lein")
+    self.__run_command("mv lein bin/lein")
+    self.__run_command("chmod +x bin/lein")
+
+    #
+    # Maven
+    #
+    self.__run_command("sudo apt-get install maven -qq")
+    self.__run_command("mvn -version")
 
     #######################################
     # Languages
@@ -72,16 +93,16 @@ class Installer:
 
     self.__run_command("curl -L get.rvm.io | bash -s head")
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0"])
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler"])
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.4"])
-    subprocess.call(["bash", "-c", "source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install bundler"])
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.4")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install bundler")
 
     # We need a newer version of jruby-rack
     self.__run_command("git clone git://github.com/jruby/jruby-rack.git")
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do bundle install"])
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true"])
-    subprocess.call(["bash", "-c", "cd installs/jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem"])
+    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do bundle install")
+    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true")
+    self.__bash_from_string("cd jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem")
 
     #
     # go
@@ -150,7 +171,7 @@ class Installer:
     # Mono
     #
     self.__run_command("git clone git://github.com/mono/mono")
-    self.__run_command("git checkout mono-3.0.10", cwd="mono")
+    self.__run_command("git checkout mono-3.2.1", cwd="mono")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
     self.__run_command("make get-monolite-latest", cwd="mono")
     self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
@@ -159,7 +180,6 @@ class Installer:
     self.__run_command("mozroots --import --sync")
 
     self.__run_command("git clone git://github.com/mono/xsp")
-    self.__run_command("git checkout 3.0", cwd="xsp")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
     self.__run_command("make", cwd="xsp")
     self.__run_command("sudo make install", cwd="xsp")
@@ -209,39 +229,37 @@ class Installer:
     self.__run_command("cat ../config/resin.xml > resin-4.0.36/conf/resin.xml")
 
     ##############################################################
-    #
     # Frameworks
-    #
     ##############################################################
 
-    ##############################
+    #
     # Grails
-    ##############################
+    #
     self.__run_command("wget http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
     self.__run_command("unzip -o grails-2.1.1.zip")
     self.__run_command("rm grails-2.1.1.zip")
 
-    ##############################
+    #
     # Play 2
-    ##############################
+    #
     self.__run_command("wget http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip")
     self.__run_command("unzip -o play-2.1.2-RC1.zip")
     self.__run_command("rm play-2.1.2-RC1.zip")
 
-    ##############################
+    #
     # Play 1
-    ##############################
+    #
     self.__run_command("wget http://downloads.typesafe.com/releases/play-1.2.5.zip")
     self.__run_command("unzip -o play-1.2.5.zip")
     self.__run_command("rm play-1.2.5.zip")
     self.__run_command("mv play-1.2.5/play play-1.2.5/play1")
 
     # siena
-    self.__run_command("play-1.2.5/play1 install siena", send_yes=True)
+    self.__run_command("yes | play-1.2.5/play1 install siena")
 
-    ##############################
+    #
     # TreeFrog Framework
-    ##############################
+    #
     self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql g++", True)
     self.__run_command("wget http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.6.tar.gz")
     self.__run_command("tar xzf treefrog-1.6.tar.gz")
@@ -252,41 +270,23 @@ class Installer:
     self.__run_command("make", cwd="treefrog-1.6/tools")
     self.__run_command("sudo make install", cwd="treefrog-1.6/tools")
 
-    ##############################
+    #
     # Vert.x
-    ##############################
-    self.__run_command("curl http://vert-x.github.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
+    #
+    self.__run_command("curl http://vertx.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
 
-    ##############################
+    #
     # Yesod
-    ##############################
+    #
     self.__run_command("cabal update")
     self.__run_command("cabal install yesod persistent-mysql")
 
-    ##############################
+    #
     # Jester
-    ##############################
+    #
     self.__run_command("git clone git://github.com/dom96/jester.git jester/jester")
 
-    ##############################################################
-    #
-    # System Tools
-    #
-    ##############################################################
-
-    ##############################
-    # Maven
-    ##############################
-    # self.__run_command("sudo apt-get install maven2", send_yes=True)
-    self.__run_command("curl www.us.apache.org/dist/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz | tar xvz")
-
-    ##############################
-    # Leiningen
-    ##############################
-    self.__run_command("mkdir -p bin")
-    self.__run_command("wget https://raw.github.com/technomancy/leiningen/stable/bin/lein")
-    self.__run_command("mv lein bin/lein")
-    self.__run_command("chmod +x bin/lein")
+    print("\nINSTALL: Finished installing server software\n")
   ############################################################
   # End __install_server_software
   ############################################################
@@ -303,7 +303,7 @@ class Installer:
       if pypy:  self.__run_command(pypy_bin + cmd)
 
     self.__run_command("curl -L http://bitbucket.org/pypy/pypy/downloads/pypy-2.1-linux64.tar.bz2 | tar xj")
-    self.__run_command('ln -s pypy-2.1 pypy')
+    self.__run_command('ln -sf pypy-2.1 pypy')
     self.__run_command("curl -L http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz | tar xz")
     self.__run_command("curl -L http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz | tar xJ")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.5")
@@ -312,7 +312,6 @@ class Installer:
     self.__run_command("make install", cwd="Python-2.7.5")
     self.__run_command("make -j", cwd="Python-3.3.2")
     self.__run_command("make install", cwd="Python-3.3.2")
-
 
     self.__run_command("wget https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
     self.__run_command(pypy_bin + "/pypy ez_setup.py")
@@ -355,12 +354,24 @@ class Installer:
     easy_install('bottle==0.11.6', two=True, three=True, pypy=True)
     easy_install('bottle-sqlalchemy==0.4', two=True, three=True, pypy=True)
 
+  ############################################################
+  # __install_error
+  ############################################################
+  def __install_error(self, message):
+    print("\nINSTALL ERROR: %s\n" % message)
+    if self.benchmarker.install_error_action == 'abort':
+      sys.exit("Installation aborted.")
+  ############################################################
+  # End __install_error
+  ############################################################
 
   ############################################################
   # __install_client_software
   ############################################################
   def __install_client_software(self):
-    subprocess.call(self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), shell=True)
+    print("\nINSTALL: Installing client software\n")
+
+    self.__run_command("cd .. && " + self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), True)
 
     remote_script = """
 
@@ -442,11 +453,17 @@ class Installer:
     sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo start mongodb
     """
+    
+    print("\nINSTALL: %s" % self.benchmarker.ssh_string)
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)
+    returncode = p.returncode
+    if returncode != 0:
+      self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.ssh_string))
 
+    print("\nINSTALL: Finished installing client software\n")
   ############################################################
-  # End __parse_results
+  # End __install_client_software
   ############################################################
 
   ############################################################
@@ -458,12 +475,28 @@ class Installer:
     except AttributeError:
       cwd = self.install_dir
 
+    print("\nINSTALL: %s (cwd=%s)" % (command, cwd))
     if send_yes:
-      subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd).communicate("yes")
+      process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
+      process.communicate("yes")
+      returncode = process.returncode
     else:
-      subprocess.call(command, shell=True, cwd=cwd)
+      returncode = subprocess.call(command, shell=True, cwd=cwd)
+
+    if returncode != 0:
+      self.__install_error("status code %s running command '%s' in directory '%s'." % (returncode, command, cwd))
   ############################################################
   # End __run_command
+  ############################################################
+
+  ############################################################
+  # __bash_from_string
+  # Runs bash -c "command" in install_dir.
+  ############################################################
+  def __bash_from_string(self, command):
+    self.__run_command('bash -c "%s"' % command)
+  ############################################################
+  # End __bash_from_string
   ############################################################
 
   ############################################################
