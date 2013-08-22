@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Web.Script.Serialization;
 
@@ -13,50 +15,64 @@ using MongoDB.Driver.Builders;
 
 using Benchmarks.AspNet.Models;
 
+
 namespace HttpListener
 {
-    class Program
+    public class Program
     {
-        private static void RequestCallback(Object state)
+        private static void RequestCallback(object state)
         {
-            HttpListenerContext context = (HttpListenerContext)state;
-            HttpListenerRequest request = context.Request;
-            HttpListenerResponse response = context.Response;
+            var context = (HttpListenerContext)state;
+            var request = context.Request;
+            var response = context.Response;
 
             try
             {
-                string responseString = null;
-                switch (request.Url.LocalPath)
+                var localPath = request.Url.LocalPath;
+
+                switch (localPath)
                 {
+                    case "/":
+                        NotFound(response);
+                        return;
                     case "/plaintext":
-                        responseString = Plaintext(response);
-                        break;
-                    case "/json":
-                        responseString = Json(response);
-                        break;
-                    case "/db":
-                        responseString = Db(request, response);
-                        break;
+                        Plaintext(response);
+                        return;
                     case "/fortunes":
-                        responseString = Fortunes(request, response);
-                        break;
-                    case "/updates":
-                        responseString = Updates(request, response);
-                        break;
-                    case "/mongodbdb":
-                        responseString = MongoDBDb(request, response);
-                        break;
+                        Fortunes(request, response);
+                        return;
                     case "/mongodbfortunes":
-                        responseString = MongoDBFortunes(request, response);
-                        break;
-                    case "/mongodbupdates":
-                        responseString = MongoDBUpdates(request, response);
-                        break;
-                    default:
-                        responseString = NotFound(response);
-                        break;
+                        MongoDBFortunes(request, response);
+                        return;
                 }
-                WriteResponse(response, responseString);
+
+                var serializer = GetSerializer(request);
+
+                switch (localPath)
+                {
+                    case "/json":
+                        Json(response, serializer);
+                        return;
+                    case "/db":
+                        Db(request, response, serializer);
+                        return;
+                    case "/updates":
+                        Updates(request, response, serializer);
+                        return;
+                    case "/mongodbdb":
+                        MongoDBDb(request, response, serializer);
+                        return;
+                    case "/mongodbupdates":
+                        MongoDBUpdates(request, response, serializer);
+                        return;
+                    default:
+                        NotFound(response);
+                        return;
+                }
+            }
+            catch (Exception exception)
+            {
+                Error(response, exception);
             }
             finally
             {
@@ -64,11 +80,65 @@ namespace HttpListener
             }
         }
 
-        private static void WriteResponse(HttpListenerResponse response, String responseString)
+        private static Action<object, HttpListenerResponse> GetSerializer(HttpListenerRequest request)
         {
-            response.ContentType = response.ContentType + "; charset=utf-8";
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+            var serializerName = request.QueryString["serializer"];
+
+            if (serializerName == null)
+            {
+                throw new ApplicationException("Missing serializer querystring argument");
+            }
+
+            Action<object, HttpListenerResponse> serializer = null;
+            switch (serializerName)
+            {
+                case "jsonnet":
+                    serializer = JsonNetSerialiser;
+                    break;
+                case "servicestack":
+                    serializer = ServiceStackSerialiser;
+                    break;
+                case "default":
+                    serializer = DefaultJsonSerialiser;
+                    break;
+            }
+
+            if (serializer == null)
+            {
+                throw new ApplicationException("Valid serializer required (jsonnet|servicestack|default)");
+            }
+
+            return serializer;
+        }
+
+        private static void JsonNetSerialiser(object objectToSerialize, HttpListenerResponse response)
+        {
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(objectToSerialize);
+
+            WriteResponse(response, json, "application/json; charset=utf-8");
+        }
+
+        private static void ServiceStackSerialiser(object objectToSerialize, HttpListenerResponse response)
+        {
+            var json = ServiceStack.Text.JsonSerializer.SerializeToString(objectToSerialize);
+
+            WriteResponse(response, json, "application/json; charset=utf-8");
+        }
+
+        private static void DefaultJsonSerialiser(object objectToSerialize, HttpListenerResponse response)
+        {
+            var json = new JavaScriptSerializer().Serialize(objectToSerialize);
+
+            WriteResponse(response, json, "application/json; charset=utf-8");
+        }
+
+        private static void WriteResponse(HttpListenerResponse response, string responseString, string contentType)
+        {
+           var buffer = Encoding.UTF8.GetBytes(responseString);
+           
+            response.ContentType = contentType;
             response.ContentLength64 = buffer.Length;
+
             try
             {
                 response.OutputStream.Write(buffer, 0, buffer.Length);
@@ -89,20 +159,22 @@ namespace HttpListener
             // http://blogs.msdn.com/b/tmarq/archive/2007/07/21/asp-net-thread-usage-on-iis-7-0-and-6-0.aspx
             // http://blogs.msdn.com/b/perfworld/archive/2010/01/13/how-can-i-improve-the-performance-of-asp-net-by-adjusting-the-clr-thread-throttling-properties.aspx
 
-            int newMinWorkerThreads = Convert.ToInt32(ConfigurationManager.AppSettings["minWorkerThreadsPerLogicalProcessor"]);
-            if (newMinWorkerThreads > 0)
+            var newMinWorkerThreads = Convert.ToInt32(ConfigurationManager.AppSettings["minWorkerThreadsPerLogicalProcessor"]);
+            if (newMinWorkerThreads <= 0)
             {
-                int minWorkerThreads, minCompletionPortThreads;
-                ThreadPool.GetMinThreads(out minWorkerThreads, out minCompletionPortThreads);
-                ThreadPool.SetMinThreads(Environment.ProcessorCount * newMinWorkerThreads, minCompletionPortThreads);
+                return;
             }
+
+            int minWorkerThreads, minCompletionPortThreads;
+            ThreadPool.GetMinThreads(out minWorkerThreads, out minCompletionPortThreads);
+            ThreadPool.SetMinThreads(Environment.ProcessorCount * newMinWorkerThreads, minCompletionPortThreads);
         }
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Threads();
 
-            System.Net.HttpListener listener = new System.Net.HttpListener();
+            var listener = new System.Net.HttpListener();
             // This doesn't seem to ignore all write exceptions, so in WriteResponse(), we still have a catch block.
             listener.IgnoreWriteExceptions = true;
             listener.Prefixes.Add("http://*:8080/");
@@ -118,7 +190,7 @@ namespace HttpListener
                     {
                         context = listener.GetContext();
 
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(RequestCallback), context);
+                        ThreadPool.QueueUserWorkItem(RequestCallback, context);
                         context = null; // ownership has been transferred to RequestCallback
                     }
                     catch (HttpListenerException ex)
@@ -128,7 +200,9 @@ namespace HttpListener
                     finally
                     {
                         if (context != null)
+                        {
                             context.Response.Close();
+                        }
                     }
                 }
             }
@@ -144,24 +218,30 @@ namespace HttpListener
             }
         }
 
-        public static DbConnection CreateConnection(HttpListenerRequest request)
+        private static DbConnection CreateConnection(HttpListenerRequest request)
         {
-            string providerName = request.QueryString["provider"];
+            var providerName = request.QueryString["provider"];
             if (providerName == null)
             {
                 throw new ApplicationException("Missing provider querystring argument");
             }
-            ConnectionStringSettings connectionSettings = ConfigurationManager.ConnectionStrings[providerName];
-            DbProviderFactory factory = DbProviderFactories.GetFactory(connectionSettings.ProviderName);
-            DbConnection connection = factory.CreateConnection();
-            connection.ConnectionString = connectionSettings.ConnectionString;
+
+            var connectionSettings = ConfigurationManager.ConnectionStrings[providerName];
+            var factory = DbProviderFactories.GetFactory(connectionSettings.ProviderName);
+            var connection = factory.CreateConnection();
+
+            if (connection != null)
+            {
+                connection.ConnectionString = connectionSettings.ConnectionString;
+            }
+
             return connection;
         }
 
-        public static int GetQueries(HttpListenerRequest request)
+        private static int GetQueries(HttpListenerRequest request)
         {
-            int queries = 1;
-            string queriesString = request.QueryString["queries"];
+            var queries = 1;
+            var queriesString = request.QueryString["queries"];
             if (queriesString != null)
             {
                 // If this fails to parse, queries will be set to zero.
@@ -171,113 +251,120 @@ namespace HttpListener
             return queries;
         }
 
-        private static string NotFound(HttpListenerResponse response)
+        private static void NotFound(HttpListenerResponse response)
         {
             response.StatusCode = (int)HttpStatusCode.NotFound;
-            response.ContentType = "text/plain";
-            return "not found";
+            WriteResponse(response, "not found", "text/plain; charset=utf-8");
         }
 
-        private static string Plaintext(HttpListenerResponse response)
+        private static void Error(HttpListenerResponse response, Exception exception)
         {
-            response.ContentType = "text/plain";
-            return "Hello, World!";
+            response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            WriteResponse(response, exception.Message, "text/plain; charset=utf-8");
         }
 
-        private static string Json(HttpListenerResponse response)
+        private static void Plaintext(HttpListenerResponse response)
         {
-            response.ContentType = "application/json";
-            return new JavaScriptSerializer().Serialize(new { message = "Hello, World!" });
+            WriteResponse(response, "Hello, World!", "text/plain; charset=utf-8");
         }
 
-        private static string Db(HttpListenerRequest request, HttpListenerResponse response)
+        private static void Json(HttpListenerResponse response, Action<object, HttpListenerResponse> serializer)
         {
-            Random random = new Random();
+            serializer.Invoke(new { message = "Hello, World!" }, response);
+        }
 
-            int queries = GetQueries(request);
-            List<World> worlds = new List<World>(queries);
+        private static void Db(HttpListenerRequest request, HttpListenerResponse response, Action<object, HttpListenerResponse> serializer)
+        {
+            var random = new Random();
 
-            using (DbConnection connection = CreateConnection(request))
+            var queries = GetQueries(request);
+            var worlds = new List<World>(queries);
+
+            using (var connection = CreateConnection(request))
             {
                 connection.Open();
 
-                using (DbCommand command = connection.CreateCommand())
+                using (var command = connection.CreateCommand())
                 {
                     command.CommandText = "SELECT * FROM World WHERE id = @ID";
 
-                    DbParameter parameter = command.CreateParameter();
+                    var parameter = command.CreateParameter();
                     parameter.ParameterName = "@ID";
 
                     command.Parameters.Add(parameter);
 
-                    for (int i = 0; i < worlds.Capacity; i++)
+                    for (var i = 0; i < worlds.Capacity; i++)
                     {
-                        int randomID = random.Next(0, 10000) + 1;
+                        var randomID = random.Next(0, 10000) + 1;
 
                         parameter.Value = randomID;
 
                         // Don't use CommandBehavior.SingleRow because that will make the MySql provider
                         // send two extra commands to limit the result to one row.
-                        using (DbDataReader reader = command.ExecuteReader())
+                        using (var reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                worlds.Add(new World
-                                {
-                                    id = reader.GetInt32(0),
-                                    randomNumber = reader.GetInt32(1)
-                                });
+                                worlds.Add(
+                                    new World
+                                    {
+                                        id = reader.GetInt32(0),
+                                        randomNumber = reader.GetInt32(1)
+                                    });
                             }
                         }
                     }
                 }
             }
 
-            response.ContentType = "application/json";
-            return new JavaScriptSerializer().Serialize(
-                worlds.Count > 1 ? (Object)worlds : (Object)worlds[0]);
+            serializer(
+                worlds.Count > 1
+                    ? worlds
+                    : (Object)worlds[0],
+                response);
         }
 
-        private static string Fortunes(HttpListenerRequest request, HttpListenerResponse response)
+        private static void Fortunes(HttpListenerRequest request, HttpListenerResponse response)
         {
-            List<Fortune> fortunes = new List<Fortune>();
+            var fortunes = new List<Fortune>();
 
-            using (DbConnection connection = CreateConnection(request))
+            using (var connection = CreateConnection(request))
             {
                 connection.Open();
 
-                using (DbCommand command = connection.CreateCommand())
+                using (var command = connection.CreateCommand())
                 {
                     command.CommandText = "SELECT * FROM Fortune";
 
-                    using (DbDataReader reader = command.ExecuteReader(CommandBehavior.SequentialAccess))
+                    using (var reader = command.ExecuteReader(CommandBehavior.SequentialAccess))
                     {
                         while (reader.Read())
                         {
-                            fortunes.Add(new Fortune
-                            {
-                                ID = reader.GetInt32(0),
-                                Message = reader.GetString(1)
-                            });
+                            fortunes.Add(
+                                new Fortune
+                                {
+                                    ID = reader.GetInt32(0),
+                                    Message = reader.GetString(1)
+                                });
                         }
                     }
                 }
             }
 
             fortunes.Add(new Fortune { ID = 0, Message = "Additional fortune added at request time." });
+
             fortunes.Sort();
 
-            response.ContentType = "text/html";
-            var template = new Fortunes { Model = fortunes };
-            return template.TransformText();
+            WriteResponse(response, new Fortunes { Model = fortunes }.TransformText(), "text/html; charset=utf-8");
         }
 
-        private static string Updates(HttpListenerRequest request, HttpListenerResponse response)
+        private static void Updates(HttpListenerRequest request, HttpListenerResponse response, Action<object, HttpListenerResponse> serializer)
         {
-            Random random = new Random();
-            List<World> worlds = new List<World>(GetQueries(request));
+            var random = new Random();
+            var worlds = new List<World>(GetQueries(request));
 
-            using (DbConnection connection = CreateConnection(request))
+            using (var connection = CreateConnection(request))
             {
                 connection.Open();
 
@@ -287,12 +374,12 @@ namespace HttpListener
                     selectCommand.CommandText = "SELECT * FROM World WHERE id = @ID";
                     updateCommand.CommandText = "UPDATE World SET randomNumber = @Number WHERE id = @ID";
 
-                    for (int i = 0; i < worlds.Capacity; i++)
+                    for (var i = 0; i < worlds.Capacity; i++)
                     {
-                        int randomID = random.Next(0, 10000) + 1;
-                        int randomNumber = random.Next(0, 10000) + 1;
+                        var randomID = random.Next(0, 10000) + 1;
+                        var randomNumber = random.Next(0, 10000) + 1;
 
-                        DbParameter idParameter = selectCommand.CreateParameter();
+                        var idParameter = selectCommand.CreateParameter();
                         idParameter.ParameterName = "@ID";
                         idParameter.Value = randomID;
 
@@ -303,23 +390,23 @@ namespace HttpListener
 
                         // Don't use CommandBehavior.SingleRow because that will make the MySql provider
                         // send two extra commands to limit the result to one row.
-                        using (DbDataReader reader = selectCommand.ExecuteReader())
+                        using (var reader = selectCommand.ExecuteReader())
                         {
                             if (reader.Read())
                             {
                                 world = new World
-                                {
-                                    id = reader.GetInt32(0),
-                                    randomNumber = reader.GetInt32(1)
-                                };
+                                        {
+                                            id = reader.GetInt32(0),
+                                            randomNumber = reader.GetInt32(1)
+                                        };
                             }
                         }
 
-                        DbParameter idUpdateParameter = updateCommand.CreateParameter();
+                        var idUpdateParameter = updateCommand.CreateParameter();
                         idUpdateParameter.ParameterName = "@ID";
                         idUpdateParameter.Value = randomID;
 
-                        DbParameter numberParameter = updateCommand.CreateParameter();
+                        var numberParameter = updateCommand.CreateParameter();
                         numberParameter.ParameterName = "@Number";
                         numberParameter.Value = randomNumber;
 
@@ -335,58 +422,61 @@ namespace HttpListener
                 }
             }
 
-            response.ContentType = "application/json";
-            return new JavaScriptSerializer().Serialize(
-                worlds.Count > 1 ? (Object)worlds : (Object)worlds[0]);
+            serializer(
+                worlds.Count > 1
+                    ? worlds
+                    : (Object)worlds[0],
+                response);
         }
 
-        private static string MongoDBDb(HttpListenerRequest request, HttpListenerResponse response)
+        private static void MongoDBDb(HttpListenerRequest request, HttpListenerResponse response, Action<object, HttpListenerResponse> serializer)
         {
-            Random random = new Random();
+            var random = new Random();
 
-            int queries = GetQueries(request);
-            List<World> worlds = new List<World>(queries);
+            var queries = GetQueries(request);
+            var worlds = new List<World>(queries);
 
-            Benchmarks.AspNet.Models.MongoDB db = new Benchmarks.AspNet.Models.MongoDB("MongoDB");
+            var db = new Benchmarks.AspNet.Models.MongoDB("MongoDB");
 
-            for (int i = 0; i < worlds.Capacity; i++)
+            for (var i = 0; i < worlds.Capacity; i++)
             {
-                int randomID = random.Next(0, 10000) + 1;
+                var randomID = random.Next(0, 10000) + 1;
                 worlds.Add(db.Worlds.FindOne(Query<World>.EQ(w => w.id, randomID)));
             }
 
-            response.ContentType = "application/json";
-            return new JavaScriptSerializer().Serialize(
-                worlds.Count > 1 ? (Object)worlds : (Object)worlds[0]);
+            serializer(
+                worlds.Count > 1
+                    ? worlds
+                    : (object)worlds[0],
+                response);
         }
 
-        private static string MongoDBFortunes(HttpListenerRequest request, HttpListenerResponse response)
+        private static void MongoDBFortunes(HttpListenerRequest request, HttpListenerResponse response)
         {
-            Benchmarks.AspNet.Models.MongoDB db = new Benchmarks.AspNet.Models.MongoDB("MongoDB");
+            var db = new Benchmarks.AspNet.Models.MongoDB("MongoDB");
 
-            List<Fortune> fortunes = db.Fortunes.FindAll().ToList();
+            var fortunes = db.Fortunes.FindAll().ToList();
 
             fortunes.Add(new Fortune { ID = 0, Message = "Additional fortune added at request time." });
             fortunes.Sort();
 
-            response.ContentType = "text/html";
             var template = new Fortunes { Model = fortunes };
-            return template.TransformText();
+            WriteResponse(response, template.TransformText(), "text/html; charset=utf-8");
         }
 
-        private static string MongoDBUpdates(HttpListenerRequest request, HttpListenerResponse response)
+        private static void MongoDBUpdates(HttpListenerRequest request, HttpListenerResponse response, Action<object, HttpListenerResponse> serializer)
         {
-            Random random = new Random();
+            var random = new Random();
 
-            Benchmarks.AspNet.Models.MongoDB db = new Benchmarks.AspNet.Models.MongoDB("MongoDB");
+            var db = new Benchmarks.AspNet.Models.MongoDB("MongoDB");
 
-            int queries = GetQueries(request);
-            List<World> worlds = new List<World>(queries);
+            var queries = GetQueries(request);
+            var worlds = new List<World>(queries);
 
-            for (int i = 0; i < worlds.Capacity; i++)
+            for (var i = 0; i < worlds.Capacity; i++)
             {
-                int randomID = random.Next(0, 10000) + 1;
-                int randomNumber = random.Next(0, 10000) + 1;
+                var randomID = random.Next(0, 10000) + 1;
+                var randomNumber = random.Next(0, 10000) + 1;
 
                 World world = db.Worlds.FindOne(Query<World>.EQ(w => w.id, randomID));
                 world.randomNumber = randomNumber;
@@ -395,9 +485,11 @@ namespace HttpListener
                 db.Worlds.Save(world);
             }
 
-            response.ContentType = "application/json";
-            return new JavaScriptSerializer().Serialize(
-                worlds.Count > 1 ? (Object)worlds : (Object)worlds[0]);
+            serializer(
+                worlds.Count > 1
+                    ? worlds
+                    : (object)worlds[0],
+                response);
         }
     }
 }

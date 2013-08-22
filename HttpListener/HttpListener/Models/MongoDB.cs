@@ -1,9 +1,12 @@
 ﻿using System.Configuration;
+using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+
+using Newtonsoft.Json;
 
 namespace Benchmarks.AspNet.Models
 {
@@ -48,6 +51,8 @@ namespace Benchmarks.AspNet.Models
     public class MongoWorld : World
     {
         [ScriptIgnore]
+        [JsonIgnore]
+        [IgnoreDataMember]
         public ObjectId _id { get; set; }
     }
 }
