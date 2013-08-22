@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 import argparse
+import sys
 from benchmarker import Benchmarker
+from unbuffered import Unbuffered
 
 ###################################################################################################
 # Main
 ###################################################################################################
+
+sys.stdout=Unbuffered(sys.stdout)
 
 ##########################################################
 # Set up argument parser
@@ -18,6 +22,7 @@ parser.add_argument('-i', dest='identity_file', help='ssh key to ssh from the se
 parser.add_argument('-p', dest='password_prompt', action='store_true')
 parser.add_argument('--install-software', action='store_true', help='runs the installation script before running the rest of the commands')
 parser.add_argument('--install', choices=['client', 'server', 'all'], default='all', help='Allows you to only install the server or client software')
+parser.add_argument('--install-error-action', choices=['abort', 'continue'], default='continue', help='action to take in case of error during installation')
 parser.add_argument('--test', nargs='+', help='names of tests to run')
 parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
 parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
