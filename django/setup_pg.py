@@ -15,7 +15,7 @@ def start(args):
     setup_util.replace_text("django/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
     setup_util.replace_text("django/hello/hello/settings.py", "\/home\/ubuntu",  home)
     env = os.environ.copy()
-    env['DJANGO_DB'] = 'mysql'
+    env['DJANGO_DB'] = 'postgresql_psycopg2'
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
         "hello.wsgi:application",
