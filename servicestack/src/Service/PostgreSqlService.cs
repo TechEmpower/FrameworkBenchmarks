@@ -61,7 +61,7 @@ namespace ServiceStackBenchmark
         public object Get(PostgreSqlDbRequest request)
         {
             // get a random world id
-            var id = SafeRandom.Instance.Next(1, 10000);
+            var id = SafeRandom.Instance.Next(0, 10000) + 1;
 
             // retrieve world from database
             using (var db = dbFactory.OpenDbConnection())
@@ -81,7 +81,7 @@ namespace ServiceStackBenchmark
             {
                 lock (ids)
                 {
-                    ids.Add(SafeRandom.Instance.Next(1, 10000));
+                    ids.Add(SafeRandom.Instance.Next(0, 10000) + 1);
                 }
             });
 
@@ -124,7 +124,7 @@ namespace ServiceStackBenchmark
             {
                 lock (ids)
                 {
-                    ids.Add(SafeRandom.Instance.Next(1, 10000));
+                    ids.Add(SafeRandom.Instance.Next(0, 10000) + 1);
                 }
             });
 
@@ -141,7 +141,7 @@ namespace ServiceStackBenchmark
         public object Get(PostgreSqlCachedDbRequest request)
         {
             // get a random world id
-            var id = SafeRandom.Instance.Next(1, 10000);
+            var id = SafeRandom.Instance.Next(0, 10000) + 1;
 
             // create the cache key for the random world id
             var cacheKey = UrnId.CreateWithParts<World>(new string[] { dbType, id.ToString() });

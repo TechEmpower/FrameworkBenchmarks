@@ -50,7 +50,7 @@ namespace ServiceStackBenchmark.Model
             {
                 lock (worlds)
                 {
-                    w.randomNumber = SafeRandom.Instance.Next(1, 10000);
+                    w.randomNumber = SafeRandom.Instance.Next(0, 10000) + 1;
                 }
             });
 
@@ -93,7 +93,7 @@ namespace ServiceStackBenchmark.Model
                     {
                         lock (worlds)
                         {
-                            worlds.Add(new World() { id = i, randomNumber = SafeRandom.Instance.Next(1, 10000) });
+                            worlds.Add(new World() { id = i, randomNumber = SafeRandom.Instance.Next(0, 10000) + 1 });
                         }
 
                     });
