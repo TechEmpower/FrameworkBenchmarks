@@ -22,6 +22,8 @@ class Installer:
   # __install_server_software
   ############################################################
   def __install_server_software(self):
+    print("\nINSTALL: Installing server software\n")
+
     #######################################
     # Prerequisites
     #######################################
@@ -34,6 +36,24 @@ class Installer:
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          16384' >> /etc/security/limits.conf\"")
+
+    ##############################################################
+    # System Tools
+    ##############################################################
+
+    #
+    # Leiningen
+    #
+    self.__run_command("mkdir -p bin")
+    self.__run_command("wget https://raw.github.com/technomancy/leiningen/stable/bin/lein")
+    self.__run_command("mv lein bin/lein")
+    self.__run_command("chmod +x bin/lein")
+
+    #
+    # Maven
+    #
+    self.__run_command("sudo apt-get install maven -qq")
+    self.__run_command("mvn -version")
 
     #######################################
     # Languages
@@ -151,7 +171,7 @@ class Installer:
     # Mono
     #
     self.__run_command("git clone git://github.com/mono/mono")
-    self.__run_command("git checkout mono-3.0.10", cwd="mono")
+    self.__run_command("git checkout mono-3.2.1", cwd="mono")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
     self.__run_command("make get-monolite-latest", cwd="mono")
     self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
@@ -160,7 +180,6 @@ class Installer:
     self.__run_command("mozroots --import --sync")
 
     self.__run_command("git clone git://github.com/mono/xsp")
-    self.__run_command("git checkout 3.0", cwd="xsp")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
     self.__run_command("make", cwd="xsp")
     self.__run_command("sudo make install", cwd="xsp")
@@ -210,39 +229,37 @@ class Installer:
     self.__run_command("cat ../config/resin.xml > resin-4.0.36/conf/resin.xml")
 
     ##############################################################
-    #
     # Frameworks
-    #
     ##############################################################
 
-    ##############################
+    #
     # Grails
-    ##############################
+    #
     self.__run_command("wget http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
     self.__run_command("unzip -o grails-2.1.1.zip")
     self.__run_command("rm grails-2.1.1.zip")
 
-    ##############################
+    #
     # Play 2
-    ##############################
+    #
     self.__run_command("wget http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip")
     self.__run_command("unzip -o play-2.1.2-RC1.zip")
     self.__run_command("rm play-2.1.2-RC1.zip")
 
-    ##############################
+    #
     # Play 1
-    ##############################
+    #
     self.__run_command("wget http://downloads.typesafe.com/releases/play-1.2.5.zip")
     self.__run_command("unzip -o play-1.2.5.zip")
     self.__run_command("rm play-1.2.5.zip")
     self.__run_command("mv play-1.2.5/play play-1.2.5/play1")
 
     # siena
-    self.__run_command("play-1.2.5/play1 install siena", send_yes=True)
+    self.__run_command("yes | play-1.2.5/play1 install siena")
 
-    ##############################
+    #
     # TreeFrog Framework
-    ##############################
+    #
     self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql g++", True)
     self.__run_command("wget http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.6.tar.gz")
     self.__run_command("tar xzf treefrog-1.6.tar.gz")
@@ -253,41 +270,23 @@ class Installer:
     self.__run_command("make", cwd="treefrog-1.6/tools")
     self.__run_command("sudo make install", cwd="treefrog-1.6/tools")
 
-    ##############################
+    #
     # Vert.x
-    ##############################
-    self.__run_command("curl http://vert-x.github.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
+    #
+    self.__run_command("curl http://vertx.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz | tar xvz")
 
-    ##############################
+    #
     # Yesod
-    ##############################
+    #
     self.__run_command("cabal update")
     self.__run_command("cabal install yesod persistent-mysql")
 
-    ##############################
+    #
     # Jester
-    ##############################
+    #
     self.__run_command("git clone git://github.com/dom96/jester.git jester/jester")
 
-    ##############################################################
-    #
-    # System Tools
-    #
-    ##############################################################
-
-    ##############################
-    # Maven
-    ##############################
-    # self.__run_command("sudo apt-get install maven2", send_yes=True)
-    self.__run_command("curl www.us.apache.org/dist/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz | tar xvz")
-
-    ##############################
-    # Leiningen
-    ##############################
-    self.__run_command("mkdir -p bin")
-    self.__run_command("wget https://raw.github.com/technomancy/leiningen/stable/bin/lein")
-    self.__run_command("mv lein bin/lein")
-    self.__run_command("chmod +x bin/lein")
+    print("\nINSTALL: Finished installing server software\n")
   ############################################################
   # End __install_server_software
   ############################################################
@@ -371,7 +370,9 @@ class Installer:
   # __install_client_software
   ############################################################
   def __install_client_software(self):
-    self.__run_command(self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), True)
+    print("\nINSTALL: Installing client software\n")
+
+    self.__run_command("cd .. && " + self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), True)
 
     remote_script = """
 
@@ -454,12 +455,14 @@ class Installer:
     sudo start mongodb
     """
     
-    print "Installing client software"
+    print("\nINSTALL: %s" % self.benchmarker.ssh_string)
     p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)
     returncode = p.returncode
     if returncode != 0:
-      self.__install_error("Subprocess failed with status code %s." % returncode)
+      self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.ssh_string))
+
+    print("\nINSTALL: Finished installing client software\n")
   ############################################################
   # End __install_client_software
   ############################################################
@@ -473,7 +476,7 @@ class Installer:
     except AttributeError:
       cwd = self.install_dir
 
-    print("\nINSTALL: Running '%s' in %s" % (command, cwd))
+    print("\nINSTALL: %s (cwd=%s)" % (command, cwd))
     if send_yes:
       process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
       process.communicate("yes")
@@ -482,7 +485,7 @@ class Installer:
       returncode = subprocess.call(command, shell=True, cwd=cwd)
 
     if returncode != 0:
-      self.__install_error("Call to '%s' in directory '%s' returned with status code %s." % (command, cwd, returncode))
+      self.__install_error("status code %s running command '%s' in directory '%s'." % (returncode, command, cwd))
   ############################################################
   # End __run_command
   ############################################################
