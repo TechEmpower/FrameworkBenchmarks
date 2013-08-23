@@ -4,6 +4,9 @@ using System.Linq;
 using System.Configuration;
 using System.Collections.Generic;
 using System.Threading;
+
+using MongoDB.Driver;
+
 using ServiceStack.ServiceHost;
 using ServiceStackBenchmark.Model;
 
@@ -11,6 +14,30 @@ namespace ServiceStackBenchmark
 {
     public static class AppHostConfigHelper
     {
+        public static bool InitMongoDB(this Funq.Container container)
+        {
+            try
+            {
+                // Register the MySql Database Connection Factory
+                var mongoDbConnectionString = ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString;
+                var client = new MongoClient(mongoDbConnectionString);
+                var server = client.GetServer();
+                var database = server.GetDatabase("hello_world");
+                container.Register<MongoDatabase>(c => database);
+
+                // Create needed tables in MySql Server if they do not exist
+                return database.CreateWorldTable() && database.CreateFortuneTable();
+            }
+            catch
+            {
+                // Unregister failed database connection factory
+                container.Register<MongoDatabase>(c => null);
+
+                return false;
+            }
+
+        }
+
         public static bool InitMySQL(this Funq.Container container)
         {
             try
@@ -91,6 +118,15 @@ namespace ServiceStackBenchmark
 
         public static void InitDatabaseRoutes(this Funq.Container container, IServiceRoutes routes)
         {
+            if (container.InitMongoDB())
+            {
+                routes.Add<MongoDBDbRequest>("/mongodb/db", "GET");
+                routes.Add<MongoDBQueriesRequest>("/mongodb/queries/{queries}", "GET");
+                routes.Add<MongoDBFortunesRequest>("/mongodb/fortunes", "GET");
+                routes.Add<MongoDBUpdatesRequest>("/mongodb/updates/{queries}", "GET");
+                routes.Add<MongoDBCachedDbRequest>("/mongodb/cached/db", "GET");
+            }
+
             if (container.InitMySQL())
             {
                 routes.Add<MySqlDbRequest>("/mysql/db", "GET");
