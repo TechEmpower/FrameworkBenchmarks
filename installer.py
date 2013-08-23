@@ -418,6 +418,7 @@ class Installer:
     sudo -u postgres -H /etc/init.d/postgresql stop
     sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
     sudo mv pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
+    sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
     sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/postgresql
     sudo -u postgres -H /etc/init.d/postgresql start
