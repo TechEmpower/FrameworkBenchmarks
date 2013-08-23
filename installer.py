@@ -490,17 +490,22 @@ class Installer:
     print("\nINSTALL: %s (cwd=%s)" % (command, cwd))
 
     while True:
-      # Execute command.
-      if send_yes:
-        process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
-        process.communicate("yes")
-        returncode = process.returncode
-      else:
-        returncode = subprocess.call(command, shell=True, cwd=cwd)
-
-      # Exit loop if successful.
-      if returncode == 0:
-        break
+      error_message = ""
+      try:
+        # Execute command.
+        if send_yes:
+          process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
+          process.communicate("yes")
+          returncode = process.returncode
+          if returncode:
+            raise subprocess.CalledProcessError(returncode, command)
+        else:
+          subprocess.check_call(command, shell=True, cwd=cwd)
+        break  # Exit loop if successful.
+      except:
+        exceptionType, exceptionValue, exceptionTraceBack = sys.exc_info()
+        error_message = "".join(traceback.format_exception_only(exceptionType, exceptionValue))
+        print error_message
 
       # Exit if there are no more attempts left.
       attempt += 1
@@ -512,11 +517,11 @@ class Installer:
         delay = 5
       else:
         delay = delay * 2
-      print("Execution failed with status code %s. Attempt %s/%s starting in %s seconds." % (returncode, attempt, max_attempts, delay))
+      print("Attempt %s/%s starting in %s seconds." % (attempt, max_attempts, delay))
       time.sleep(delay)
 
-    if returncode != 0:
-      self.__install_error("status code %s running command '%s' in directory '%s'." % (returncode, command, cwd))
+    if error_message:
+      self.__install_error(error_message)
   ############################################################
   # End __run_command
   ############################################################
