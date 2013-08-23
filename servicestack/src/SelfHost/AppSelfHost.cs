@@ -20,6 +20,9 @@ namespace ServiceStackBenchmark
 
         public override void Configure(Funq.Container container)
         {
+            // Configure the number of worker threads
+            AppHostConfigHelper.ConfigThreadPool();
+
             ServiceStack.Text.JsConfig.EmitCamelCaseNames = true;
 
             // Remove some unused features that by default are included
