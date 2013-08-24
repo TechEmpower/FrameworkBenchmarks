@@ -108,7 +108,7 @@ $file = (cat $php_download_page_file) -join ""
 if ($file -match '(?s)h4 id="php-5.4-nts-VC9-x86".*?href="/downloads/releases/(.*?)">Zip</a>') {
     $php_installer_file = $matches[1]
     $php_installer_url = "http://windows.php.net/downloads/releases/$php_installer_file"
-    Write-Host "Current PHP 5.4 release found at $php_current_release"
+    Write-Host "Current PHP 5.4 release found at $php_installer_url"
 }
 else {
     Write-Host "ERROR: Current PHP release was not found. Aborting."
