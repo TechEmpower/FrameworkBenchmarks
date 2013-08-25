@@ -304,18 +304,18 @@ class Installer:
       if three: self.__run_command(python3_bin + cmd)
       if pypy:  self.__run_command(pypy_bin + cmd)
 
-    self.__download("http://bitbucket.org/pypy/pypy/downloads/pypy-2.0.2-linux64.tar.bz2")
-    self.__run_command("tar xjf pypy-2.0.2-linux64.tar.bz2")
-    self.__run_command('ln -sf pypy-2.0.2 pypy')
+    self.__download("http://bitbucket.org/pypy/pypy/downloads/pypy-2.1-linux64.tar.bz2")
+    self.__run_command("tar xjf pypy-2.1-linux64.tar.bz2")
+    self.__run_command('ln -sf pypy-2.1 pypy')
     self.__download("http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz")
     self.__run_command("tar xzf Python-2.7.5.tgz")
     self.__download("http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz")
     self.__run_command("tar xJf Python-3.3.2.tar.xz")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.5")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.3.2")
-    self.__run_command("make -j", cwd="Python-2.7.5")
+    self.__run_command("make -j2", cwd="Python-2.7.5")
     self.__run_command("make install", cwd="Python-2.7.5")
-    self.__run_command("make -j", cwd="Python-3.3.2")
+    self.__run_command("make -j2", cwd="Python-3.3.2")
     self.__run_command("make install", cwd="Python-3.3.2")
 
     self.__download("https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
@@ -323,13 +323,14 @@ class Installer:
     self.__run_command(python_bin + "/python ez_setup.py")
     self.__run_command(python3_bin + "/python3 ez_setup.py")
 
-    easy_install('pip==1.3.1', two=True, three=True, pypy=True)
+    easy_install('pip==1.4.1', two=True, three=True, pypy=True)
     easy_install('MySQL-python==1.2.4', two=True, three=False, pypy=True)
     easy_install('https://github.com/clelland/MySQL-for-Python-3/archive/master.zip', two=False, three=True, pypy=False)
     easy_install('PyMySQL==0.5', pypy=True)
     easy_install('PyMySQL3==0.5', two=False, three=True)
-    easy_install('simplejson==3.3.0', two=True, three=True, pypy=False)
     easy_install('psycopg2==2.5.1', three=True)
+
+    easy_install('simplejson==3.3.0', two=True, three=True, pypy=False)
     easy_install('ujson==1.33', three=True)
     easy_install('https://github.com/downloads/surfly/gevent/gevent-1.0rc2.tar.gz', three=True)
     easy_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
@@ -345,10 +346,10 @@ class Installer:
     easy_install('pymongo==2.5.2', two=True, three=True, pypy=True)
 
     # Django
-    easy_install("https://www.djangoproject.com/download/1.6b1/tarball/", two=True, three=True, pypy=True)
+    easy_install("https://www.djangoproject.com/download/1.6b2/tarball/", two=True, three=True, pypy=True)
 
     # Flask
-    easy_install('Werkzeug==0.9.2', two=True, three=True, pypy=True)
+    easy_install('Werkzeug==0.9.3', two=True, three=True, pypy=True)
     easy_install('flask==0.10.1', two=True, three=True, pypy=True)
     easy_install('sqlalchemy==0.8.2', two=True, three=True, pypy=True)
     easy_install('Jinja2==2.7', two=True, three=True, pypy=True)
