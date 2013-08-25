@@ -313,9 +313,9 @@ class Installer:
     self.__run_command("tar xJf Python-3.3.2.tar.xz")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.5")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.3.2")
-    self.__run_command("make -j", cwd="Python-2.7.5")
+    self.__run_command("make -j2", cwd="Python-2.7.5")
     self.__run_command("make install", cwd="Python-2.7.5")
-    self.__run_command("make -j", cwd="Python-3.3.2")
+    self.__run_command("make -j2", cwd="Python-3.3.2")
     self.__run_command("make install", cwd="Python-3.3.2")
 
     self.__download("https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
