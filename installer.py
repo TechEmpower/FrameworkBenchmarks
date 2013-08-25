@@ -358,6 +358,10 @@ class Installer:
     easy_install('bottle==0.11.6', two=True, three=True, pypy=True)
     easy_install('bottle-sqlalchemy==0.4', two=True, three=True, pypy=True)
 
+    # Falcon
+    easy_install('Cython==0.19.1', two=True, three=True, pypy=True)
+    easy_install('falcon==0.1.6post3', two=True, three=True, pypy=True)
+
   ############################################################
   # __install_error
   ############################################################
