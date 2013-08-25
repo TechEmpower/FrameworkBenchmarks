@@ -12,8 +12,10 @@ proc = None
 
 def start(args):
     global proc
-    setup_util.replace_text("django-stripped/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
-    setup_util.replace_text("django-stripped/hello/hello/settings.py", "\/home\/ubuntu",  home)
+    setup_util.replace_text("django/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
+    setup_util.replace_text("django/hello/hello/settings.py", "\/home\/ubuntu",  home)
+    env = os.environ.copy()
+    env['DJANGO_DB'] = 'postgresql_psycopg2'
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
         "hello.wsgi:application",
@@ -21,7 +23,8 @@ def start(args):
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU*3),
         "--log-level=critical"],
-        cwd="django-stripped/hello")
+        cwd="django/hello",
+        env=env)
     return 0
 
 def stop():

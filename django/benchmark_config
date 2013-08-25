@@ -20,6 +20,16 @@
       "update_url": "/update?queries=",
       "port": 8080,
       "sort": 242
+    },
+    "postgresql": {
+      "setup_file": "setup_pg",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "sort": 245
     }
   }]
 }
