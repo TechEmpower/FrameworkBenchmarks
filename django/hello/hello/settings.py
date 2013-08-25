@@ -1,5 +1,7 @@
 # Django settings for hello project.
 
+import os
+
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
@@ -11,10 +13,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'hello_world',                      # Or path to database file if using sqlite3.
-        'USER': 'benchmarkdbuser',                      # Not used with sqlite3.
-        'PASSWORD': 'benchmarkdbpass',                  # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.' + os.environ['DJANGO_DB'], # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'hello_world',           # Or path to database file if using sqlite3.
+        'USER': 'benchmarkdbuser',       # Not used with sqlite3.
+        'PASSWORD': 'benchmarkdbpass',   # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         'CONN_MAX_AGE': 30,
@@ -38,14 +40,14 @@ SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
-USE_I18N = True
+USE_I18N = False
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
-USE_L10N = True
+USE_L10N = False
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"

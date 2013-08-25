@@ -12,7 +12,7 @@ import tornado.httpserver
 tornado.options.define('port', default=8888, type=int, help="Server port")
 
 
-class BaseHandler(torando.web.RequestHandler):
+class BaseHandler(tornado.web.RequestHandler):
     def compute_etag(self):
         return None
 
