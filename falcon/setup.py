@@ -18,7 +18,7 @@ def start(args):
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU*3),
         "--log-level=critical"],
-        cwd="flask")
+        cwd="falcon")
     return 0
 
 def stop():
