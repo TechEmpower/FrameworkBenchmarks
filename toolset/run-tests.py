@@ -1,14 +1,21 @@
 #!/usr/bin/env python
 import argparse
 import sys
-from benchmarker import Benchmarker
-from unbuffered import Unbuffered
+from benchmark.benchmarker import Benchmarker
+from setup.linux.unbuffered import Unbuffered
 
 ###################################################################################################
 # Main
 ###################################################################################################
 
+# Enable unbuffered output so messages will appear in the proper order with subprocess output.
 sys.stdout=Unbuffered(sys.stdout)
+
+# Ensure the current directory (which should be the benchmark home directory) is in the path so that the tests can be imported.
+sys.path.append('.')
+
+# Ensure toolset/setup/linux is in the path so that the tests can "import setup_util".
+sys.path.append('toolset/setup/linux')
 
 ##########################################################
 # Set up argument parser
