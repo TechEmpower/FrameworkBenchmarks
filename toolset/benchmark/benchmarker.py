@@ -1,6 +1,5 @@
-from installer import Installer
-from framework_test import FrameworkTest
-import framework_test
+from setup.linux.installer import Installer
+from benchmark import framework_test
 
 import os
 import json
@@ -197,8 +196,8 @@ class Benchmarker:
     # Loop through each directory (we assume we're being run from the benchmarking root)
     # and look for the files that signify a benchmark test
     for dirname, dirnames, filenames in os.walk('.'):
-      # Look for the benchmark_config file, this will set up our tests
-      # It's format looks like this:
+      # Look for the benchmark_config file, this will set up our tests.
+      # Its format looks like this:
       #
       # {
       #   "framework": "nodejs",
@@ -490,7 +489,7 @@ class Benchmarker:
     # Load the latest data
     self.latest = None
     try:
-      with open('latest.json', 'r') as f:
+      with open('toolset/benchmark/latest.json', 'r') as f:
         # Load json file into config object
         self.latest = json.load(f)
     except IOError:
@@ -537,5 +536,3 @@ class Benchmarker:
   ############################################################
   # End __init__
   ############################################################
-  
-  
