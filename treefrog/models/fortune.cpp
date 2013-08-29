@@ -46,7 +46,7 @@ Fortune Fortune::create(const QString &message)
     FortuneObject obj;
     obj.message = message;
     if (!obj.create()) {
-        obj.clear();
+        return Fortune();
     }
     return Fortune(obj);
 }
@@ -61,7 +61,7 @@ Fortune Fortune::create(const QVariantMap &values)
     return model;
 }
 
-Fortune Fortune::get(const uint &id)
+Fortune Fortune::get(uint id)
 {
     TSqlORMapper<FortuneObject> mapper;
     return Fortune(mapper.findByPrimaryKey(id));
@@ -72,12 +72,12 @@ QList<Fortune> Fortune::getAll()
     return tfGetModelListByCriteria<Fortune, FortuneObject>(TCriteria());
 }
 
-TSqlObject *Fortune::data()
+TModelObject *Fortune::modelData()
 {
     return d.data();
 }
 
-const TSqlObject *Fortune::data() const
+const TModelObject *Fortune::modelData() const
 {
     return d.data();
 }
