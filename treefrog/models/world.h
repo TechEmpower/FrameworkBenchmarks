@@ -8,7 +8,7 @@
 #include <TGlobal>
 #include <TAbstractModel>
 
-class TSqlObject;
+class TModelObject;
 class WorldObject;
 
 
@@ -21,20 +21,20 @@ public:
     ~World();
 
     uint id() const;
-    int randomnumber() const;
-    void setRandomnumber(int randomnumber);
+    int randomNumber() const;
+    void setRandomNumber(int randomNumber);
     World &operator=(const World &other);
 
-    static World create(int randomnumber);
+    static World create(int randomNumber);
     static World create(const QVariantMap &values);
-    static World get(const uint &id);
+    static World get(uint id);
     static QList<World> getAll();
 
 private:
     QSharedDataPointer<WorldObject> d;
 
-    TSqlObject *data();
-    const TSqlObject *data() const;
+    TModelObject *modelData();
+    const TModelObject *modelData() const;
 };
 
 Q_DECLARE_METATYPE(World)
