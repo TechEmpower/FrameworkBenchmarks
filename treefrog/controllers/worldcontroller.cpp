@@ -34,7 +34,7 @@ void WorldController::queries(const QString &num)
         World world = World::get(id);
         worlds << world.toVariantMap();
     }
-    setContentType("application/json");
+    setContentType("application/json; charset=UTF-8");
     renderText(jsonEncode(worlds), false);
 }
 
@@ -42,7 +42,7 @@ void WorldController::random()
 {
     int id = Tf::random(9999) + 1;
     World world = World::get(id);
-    setContentType("application/json");
+    setContentType("application/json; charset=UTF-8");
     renderText(jsonEncode(world.toVariantMap()), false);
 }
 
@@ -127,11 +127,11 @@ void WorldController::updates(const QString &num)
     for (int i = 0; i < d; ++i) {
         int id = Tf::random(9999) + 1;
         World world = World::get(id);
-        world.setRandomnumber( Tf::random(9999) + 1 );
+        world.setRandomNumber( Tf::random(9999) + 1 );
         world.update();
 	worlds << world.toVariantMap();
     }
-    setContentType("application/json");
+    setContentType("application/json; charset=UTF-8");
     renderText(jsonEncode(worlds), false);
 }
 

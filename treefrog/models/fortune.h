@@ -8,7 +8,7 @@
 #include <TGlobal>
 #include <TAbstractModel>
 
-class TSqlObject;
+class TModelObject;
 class FortuneObject;
 
 
@@ -27,14 +27,14 @@ public:
 
     static Fortune create(const QString &message);
     static Fortune create(const QVariantMap &values);
-    static Fortune get(const uint &id);
+    static Fortune get(uint id);
     static QList<Fortune> getAll();
 
 private:
     QSharedDataPointer<FortuneObject> d;
 
-    TSqlObject *data();
-    const TSqlObject *data() const;
+    TModelObject *modelData();
+    const TModelObject *modelData() const;
 };
 
 Q_DECLARE_METATYPE(Fortune)

@@ -24,7 +24,15 @@ QString ApplicationController::jsonEncode(const QVariantMap &obj)
 {
     QString ret("{");
     for (QMap<QString, QVariant>::const_iterator i = obj.begin(); i != obj.end(); ++i) {
-        ret += QString("\"%1\": \"%2\", ").arg(i.key()).arg(i.value().toString());
+        switch (i.value().type()) {
+        case QVariant::UInt:
+        case QVariant::Int:
+            ret += QString("\"%1\":%2, ").arg(i.key()).arg(i.value().toInt());
+            break;
+        default:
+            ret += QString("\"%1\":\"%2\", ").arg(i.key()).arg(i.value().toString());
+            break; 
+        }
     }
     ret.chop(2);
     ret += QLatin1Char('}');
@@ -35,8 +43,8 @@ QString ApplicationController::jsonEncode(const QList<QVariantMap> &lst)
 {
     QString ret("[");
     for (QListIterator<QVariantMap> it(lst); it.hasNext(); ) {
-      ret += jsonEncode(it.next());
-      ret += QLatin1String(", ");
+        ret += jsonEncode(it.next());
+        ret += QLatin1String(", ");
     }
     ret.chop(2);
     ret += QLatin1Char(']');
