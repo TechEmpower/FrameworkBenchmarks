@@ -218,6 +218,9 @@ main() {
         
         // Mongo query test
         app.get("/db-mongo").listen((request) {
+
+          _setJsonHeaders(request.response);
+
           _mongoQuery().then((data) {
             request.response.json({
               "id": data["id"],
@@ -230,6 +233,8 @@ main() {
         app.get("/queries-mongo").listen((request) {
           
           var queries = _parseQueriesParam(request.param("queries"));
+
+          _setJsonHeaders(request.response);
           
           Future.wait(
               new List.generate(
@@ -252,7 +257,9 @@ main() {
         // Mongo updates test
         app.get("/updates-mongo").listen((request) {
           var queries = _parseQueriesParam(request.param("queries"));
-          
+
+          _setJsonHeaders(request.response);
+
           Future.wait(new List.generate(queries, (index) {
             return _mongoQuery()
                 .then((world) {
@@ -275,8 +282,9 @@ main() {
         
         // Mongo fortunes test
         app.get("/fortunes-mongo").listen((request) {
-          print("works");
+          
           _setHtmlHeaders(request.response);
+          
           _fortuneCollection.find().toList().then((fortunes) {
             fortunes = fortunes.map((fortune) {
               return new Fortune(fortune["id"], fortune["message"]);
