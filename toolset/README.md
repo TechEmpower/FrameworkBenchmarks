@@ -1,10 +1,10 @@
 # Benchmark Tools
 
-This directory contains tools and instructions that you can use to deploy the benchmark suite on an environment under your control.
+This directory contains tools and instructions that you can use to deploy and run the benchmark suite on an environment under your control.
 
 ## Deployment
 
-For deployment instructions, refer to the [Toolset Deployment README file](deployment/README.md).
+For deployment instructions, refer to the [Benchmark Suite Deployment README file](deployment/README.md).
 
 ## Running the test suite on Linux
 

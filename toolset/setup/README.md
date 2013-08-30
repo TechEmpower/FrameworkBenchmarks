@@ -1,4 +1,4 @@
-# Toolset Setup
+# Benchmark Suite Setup
 
 This directory contains scripts to install the benchmark suite on adequately provisioned hosts.
 
@@ -8,11 +8,18 @@ It is composed of these directories:
 * `sqlserver`: Scripts to setup the SQL Server database server.
 * `windows`: Scripts to setup the Windows server.
 
+The setup process is documented below.
+
+Notice that, as an alternative to the manual setup process, you can use the [automated deployment script](../deployment/common/README.md).
+
+If these instructions get out of date or require clarification, please [open an issue](https://github.com/TechEmpower/FrameworkBenchmarks/issues/new).
+
+
 ## Prerequisites
 
 Before starting setup, all the required hosts must be provisioned, with the respective operating system and required software installed, and with connectivity for remote management (SSH on Linux, RDP and WinRM on Windows).
 
-Refer to [Toolset Deployment README file](../deployment/README.md) for the provisioning procedures documentation.
+Refer to [Benchmark Suite Deployment README file](../deployment/README.md) for the provisioning procedures documentation.
 
 ## Linux server and client setup
 
@@ -71,7 +78,7 @@ This should run the verification step for a single framework.
 ## Windows server setup
 
 * Connect to the Windows server via Remote Desktop.
-* Copy `installer-bootstrap.ps1` from this repository to the server (use CTRL-C and CTRL-V).
+* Copy `installer-bootstrap.ps1` from "toolset/setup/windows" to the server (use CTRL-C and CTRL-V).
 * Copy your Linux client private key too.
 * Right click on the installer script and select `Run with PowerShell`.
 * Press Enter to confirm.
@@ -83,7 +90,7 @@ The client/database machine is still assumed to be a Linux box. You can install 
 
     python toolset\run-tests.py -s server-private-ip -c client-private-ip -i "C:\Users\Administrator\Desktop\client.key" --install-software --install client --list-tests
 
-but this step probably is not required if you installed the Linux server and client as described above.
+but this step is not required if you already installed the Linux server and client as described above.
 
 Now you can run tests:
 

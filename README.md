@@ -10,7 +10,7 @@ Join in the conversation at our Google Group: https://groups.google.com/forum/?f
 
 We ran our tests using two dedicated i7 2600k machines as well as two EC2 m1.large instances.
 
-On the [Toolset README file](toolset/README.md) you will find tools and instructions to replicate our tests using either EC2 or your own dedicated machines.
+On the [Benchmark Tools README file](toolset/README.md) you will find tools and instructions to replicate our tests using EC2, Windows Azure or your own dedicated machines.
 
 ## Updating Tests
 
