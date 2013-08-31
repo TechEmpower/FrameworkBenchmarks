@@ -26,7 +26,7 @@ Also, if you do change the dependency of any test, please update the README file
 
 If you would like to update any of the software used, again, please be as specific as possible, while we still install some software via apt-get and don't specify a version, we would like to have as much control over the versions as possible.
 
-The main file that installs all the software is in installer.py. It's broken up into two sections, server software and client software.
+The main file that installs all the software is in `toolset/setup/linux/installer.py`. It's broken up into two sections, server software and client software.
 
 Additionally, it may be necessary to update the setup.py file in the framework's directory to use this new version.
 
