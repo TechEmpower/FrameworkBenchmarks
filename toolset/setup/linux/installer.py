@@ -192,6 +192,12 @@ class Installer:
     self.__run_command("chmod +x install.sh", cwd="nimrod")
     self.__run_command("sudo ./install.sh /usr/bin", cwd="nimrod")
 
+    #
+    # Racket
+    #
+
+    self.__run_command("sudo apt-get install racket", True)
+
     #######################################
     # Webservers
     #######################################
