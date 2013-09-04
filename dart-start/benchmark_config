@@ -17,7 +17,7 @@
       "db_url": "/db-mongo",
       "query_url": "/queries-mongo?queries=",
       "fortune_url": "/fortunes-mongo",
-      "update_url": "/updates-mongo?queries="
+      "update_url": "/updates-mongo?queries=",
       "port": 8080,
       "sort": 246
     }
