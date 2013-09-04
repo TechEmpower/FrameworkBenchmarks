@@ -216,9 +216,14 @@ class Benchmarker:
       # }
       if 'benchmark_config' in filenames:
         config = None
-        with open(os.path.join(dirname, 'benchmark_config'), 'r') as config_file:
+        config_file_name = os.path.join(dirname, 'benchmark_config')
+        with open(config_file_name, 'r') as config_file:
           # Load json file into config object
-          config = json.load(config_file)
+          try:
+            config = json.load(config_file)
+          except:
+            print("Error loading '%s'." % config_file_name)
+            raise
 
         if config == None:
           continue
