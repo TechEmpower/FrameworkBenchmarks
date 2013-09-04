@@ -306,15 +306,15 @@ function azure_continue_deployment {
 information "Deploying Web Framework Benchmarks to Windows Azure..."
 echo ""
 
+azure_check_configuration
+azure_set_variables
+
 echo "The resources will be created with the base name $AZURE_DEPLOYMENT_NAME" \
 "in $AZURE_DEPLOYMENT_LOCATION under the subscription $AZURE_DEPLOYMENT_SUBSCRIPTION" \
 "using $AZURE_DEPLOYMENT_VM_SIZE virtual machines."
 echo "The benchmark suite will be cloned from the $BENCHMARK_BRANCH branch of the repository at $BENCHMARK_REPOSITORY."
 echo ""
 
-# Execute deployment steps
-azure_check_configuration
-azure_set_variables
 azure_configure_command_line_tools
 azure_create_common_resources
 azure_create_vms
