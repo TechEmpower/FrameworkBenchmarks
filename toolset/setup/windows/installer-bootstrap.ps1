@@ -10,7 +10,7 @@ $basedir = "C:\FrameworkBenchmarks"
 $workdir = $basedir + "\installs"
 
 $repo = "https://github.com/TechEmpower/FrameworkBenchmarks"
-$installer = $basedir + "\installer.ps1"
+$installer = $basedir + "\toolset\setup\windows\installer.ps1"
 
 $git = "C:\Git\bin\git.exe"
 $gitinstaller_file = "Git-1.8.1.2-preview20130201.exe"
