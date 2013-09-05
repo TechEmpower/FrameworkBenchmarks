@@ -29,7 +29,7 @@
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
-      "sort": 245
+      "sort": 317
     }
   }]
 }

@@ -8,7 +8,7 @@
       "fortune_url": "/fortune",
       "update_url": "/update?queries=",
       "port": 8080,
-      "sort": 141
+      "sort": 314
     }
   }]
 }
