@@ -306,9 +306,9 @@ class Installer:
     python3_bin= "~/FrameworkBenchmarks/installs/py3/bin"
     def easy_install(pkg, two=True, three=False, pypy=False):
       cmd = "/easy_install -ZU '" + pkg + "'"
-      if two:   self.__run_command(python_bin + cmd)
-      if three: self.__run_command(python3_bin + cmd)
-      if pypy:  self.__run_command(pypy_bin + cmd)
+      if two:   self.__run_command(python_bin + cmd, retry=True)
+      if three: self.__run_command(python3_bin + cmd, retry=True)
+      if pypy:  self.__run_command(pypy_bin + cmd, retry=True)
 
     self.__download("http://bitbucket.org/pypy/pypy/downloads/pypy-2.1-linux64.tar.bz2")
     self.__run_command("tar xjf pypy-2.1-linux64.tar.bz2")
