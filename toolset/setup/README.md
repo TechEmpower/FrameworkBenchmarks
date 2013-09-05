@@ -102,7 +102,7 @@ Now you can run tests:
 * Run a `Command Prompt` as Administrator.
 * Enter this command:
 
-        powershell -ExecutionPolicy Bypass -Command "iex (New-Object Net.WebClient).DownloadString('https://raw.github.com/TechEmpower/FrameworkBenchmarks/master/setup-sqlserver-bootstrap.ps1')"
+        powershell -ExecutionPolicy Bypass -Command "iex (New-Object Net.WebClient).DownloadString('https://raw.github.com/TechEmpower/FrameworkBenchmarks/master/toolset/setup/sqlserver/setup-sqlserver-bootstrap.ps1')"
 
 * This will configure SQL Server, the Windows Firewall, and populate the database.
 
