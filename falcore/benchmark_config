@@ -10,7 +10,7 @@
       "update_url": "/update?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 27
+      "sort": 300
     }
   }]
 }

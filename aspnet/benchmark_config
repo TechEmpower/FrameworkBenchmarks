@@ -81,7 +81,7 @@
       "fortune_url": "/entityframework/postgresql/fortunes",
       "update_url": "/entityframework/postgresql/update?queries=",
       "port": 8080,
-      "sort": 96
+      "sort": 302
     },
     "sqlserver-entityframework": {
       "setup_file": "setup_iis",
@@ -91,7 +91,7 @@
       "fortune_url": "/entityframework/sqlserver/fortunes",
       "update_url": "/entityframework/sqlserver/update?queries=",
       "port": 8080,
-      "sort": 97
+      "sort": 303
     },
     "mono": {
       "setup_file": "setup_nginx",

@@ -16,7 +16,7 @@
       "fortune_url": "/fortunes/mysql",
       "update_url": "/updates/mysql?queries=",
       "port": 8080,
-      "sort": 121
+      "sort": 306
     },
     "postgresql" : {
       "setup_file": "setup",
@@ -25,7 +25,7 @@
       "fortune_url": "/fortunes/postgresql",
       "update_url": "/updates/postgresql?queries=",
       "port": 8080,
-      "sort": 122
+      "sort": 307
     },
     "mongodb" : {
       "setup_file": "setup",
@@ -34,7 +34,7 @@
       "fortune_url": "/fortunes/mongodb",
       "update_url": "/updates/mongodb?queries=",
       "port": 8080,
-      "sort": 123
+      "sort": 308
     }
   }]
 }

@@ -1,5 +1,5 @@
 {
-  "framework": "start",
+  "framework": "stream",
   "tests": [{
     "postgresql-raw": {
       "setup_file": "setup",
@@ -10,7 +10,7 @@
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 245
+      "sort": 320
     },
     "mongodb-raw": {
       "setup_file": "setup",
@@ -19,7 +19,7 @@
       "fortune_url": "/fortunes-mongo",
       "update_url": "/updates-mongo?queries=",
       "port": 8080,
-      "sort": 246
+      "sort": 321
     }
   }]
 }

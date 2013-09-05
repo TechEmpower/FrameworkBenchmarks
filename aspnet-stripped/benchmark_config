@@ -7,7 +7,7 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 134
+      "sort": 309
     },
     "mysql-raw": {
       "setup_file": "setup_iis",
@@ -17,7 +17,7 @@
       "fortune_url": "/fortunes?provider=mysql",
       "update_url": "/updates?provider=mysql&queries=",
       "port": 8080,
-      "sort": 135
+      "sort": 310
     },
     "postgresql-raw": {
       "setup_file": "setup_iis",
@@ -27,7 +27,7 @@
       "fortune_url": "/fortunes?provider=postgresql",
       "update_url": "/updates?provider=postgresql&queries=",
       "port": 8080,
-      "sort": 136
+      "sort": 311
     },
     "mongodb-raw": {
       "setup_file": "setup_iis",
@@ -37,7 +37,7 @@
       "fortune_url": "/mongodbfortunes",
       "update_url": "/mongodbupdates?queries=",
       "port": 8080,
-      "sort": 137
+      "sort": 312
     },
     "sqlserver-raw": {
       "setup_file": "setup_iis",
@@ -47,7 +47,7 @@
       "fortune_url": "/fortunes?provider=sqlserver",
       "update_url": "/updates?provider=sqlserver&queries=",
       "port": 8080,
-      "sort": 138
+      "sort": 313
     }
   }]
 }
