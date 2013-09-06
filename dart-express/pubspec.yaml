@@ -1,0 +1,8 @@
+name: DartExpressBenchmark
+description: A benchmark of Dart Express, a simple, thin expressjs inspired layer around Dart's primitive HttpServer APIs.
+dependencies:
+  args: 0.6.21+3
+  express: 0.1.3
+  mongo_dart: 0.1.28
+  postgresql: 0.2.8
+  yaml: 0.6.21+3

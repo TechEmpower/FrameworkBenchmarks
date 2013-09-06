@@ -1,0 +1,8 @@
+extend ../public/layout
+
+block content
+    table
+        each fortune in fortunes
+            tr
+                td= fortune.id
+                td= fortune.message
