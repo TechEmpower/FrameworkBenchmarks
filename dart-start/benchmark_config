@@ -10,7 +10,19 @@
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 318
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "start",
+      "language": "Dart",
+      "orm": "Raw",
+      "platform": "Dart",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "",
+      "notes": "",
+      "versus": "dart"
     },
     "mongodb-raw": {
       "setup_file": "setup",
@@ -19,7 +31,19 @@
       "fortune_url": "/fortunes-mongo",
       "update_url": "/updates-mongo?queries=",
       "port": 8080,
-      "sort": 319
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "start",
+      "language": "Dart",
+      "orm": "Raw",
+      "platform": "Dart",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "",
+      "notes": "",
+      "versus": "dart"
     }
   }]
 }

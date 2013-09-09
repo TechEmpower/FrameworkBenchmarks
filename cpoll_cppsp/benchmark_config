@@ -4,9 +4,21 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
-	"plaintext_url": "/plaintext",
+      "plaintext_url": "/plaintext",
       "port": 16969,
-      "sort": 115
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "cpoll-cppsp",
+      "language": "C++",
+      "orm": "Raw",
+      "platform": "CPoll",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "",
+      "notes": "",
+      "versus": ""
     },
     "raw": {
       "setup_file": "setup",
@@ -15,21 +27,57 @@
       "fortune_url": "/fortune",
       "update_url": "/update?queries=",
       "port": 16969,
-      "sort": 130
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "cpoll-cppsp",
+      "language": "C++",
+      "orm": "Raw",
+      "platform": "CPoll",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "",
+      "notes": "",
+      "versus": ""
     },
     "postgres-raw": {
       "setup_file": "setup",
       "db_url": "/db_pg_async",
       "query_url": "/db_pg_async?queries=", 
       "port": 16969,
-      "sort": 131
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "cpoll-cppsp",
+      "language": "C++",
+      "orm": "Raw",
+      "platform": "CPoll",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "",
+      "notes": "",
+      "versus": ""
     },
     "postgres-raw-threadpool": {
       "setup_file": "setup",
       "db_url": "/db_pg_threadpool",
       "query_url": "/db_pg_threadpool?queries=", 
       "port": 16969,
-      "sort": 132
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "cpoll-cppsp",
+      "language": "C++",
+      "orm": "Raw",
+      "platform": "CPoll",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cpoll-pool",
+      "notes": "Threadpool",
+      "versus": ""
     }
   }]
 }

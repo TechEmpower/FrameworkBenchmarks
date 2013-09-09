@@ -7,7 +7,19 @@
       "db_url": "/play1/db",
       "query_url": "/play1/db?queries=",
       "port": 8080,
-      "sort": 66
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "play1-siena",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "play1-seina",
+      "notes": "Siena alternate",
+      "versus": "netty"
     }
   }]
 }

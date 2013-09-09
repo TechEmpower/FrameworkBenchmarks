@@ -6,14 +6,38 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 8
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": "nodejs"
     },
     "mongodb": {
       "setup_file": "setup",
       "db_url": "/mongoose",
       "query_url": "/mongoose?queries=",
       "port": 8080,
-      "sort": 9
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MongoDB",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": "nodejs"
     },
     "mongodb-raw": {
       "setup_file": "setup",
@@ -21,14 +45,38 @@
       "query_url": "/mongodbdriver?queries=",
       "update_url": "/update-mongodb?queries=",
       "port": 8080,
-      "sort": 47
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MongoDB",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": "nodejs"
     },
     "mysql": {
       "setup_file": "setup",
       "db_url": "/mysql-orm",
       "query_url": "/mysql-orm?queries=",
       "port": 8080,
-      "sort": 10
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": "nodejs"
     },
     "mysql-raw": {
       "setup_file": "setup",
@@ -36,7 +84,19 @@
       "query_url": "/mysql?queries=",
       "update_url": "/update?queries=",
       "port": 8080,
-      "sort": 28
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "nodejs",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nodejs",
+      "notes": "",
+      "versus": "nodejs"
     }
   }]
 }

@@ -1,15 +1,25 @@
 {
-    "framework" : "finagle",
-    "tests" : [{
-        "default" : {
-            "setup_file" : "setup",
-            "json_url" : "/json",
-            "db_url" : "/db",
-            "query_url" : "/db?queries=",
-            "port": 8080,
-            "sort": 44
-            }
-        }
-        ]
-
+  "framework": "finagle",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "finagle",
+      "language": "Scala",
+      "orm": "Micro",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "",
+      "notes": "",
+      "versus": "netty"
+    }
+  }]
 }

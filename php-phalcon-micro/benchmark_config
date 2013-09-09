@@ -8,7 +8,19 @@
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
-      "sort": 98
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "phalcon",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "phalcon",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

@@ -5,7 +5,19 @@
       "setup_file": "setup",
       "json_url": "/json",
       "port": 8080,
-      "sort": 25
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "webgo",
+      "language": "Go",
+      "orm": "Full",
+      "platform": "Go",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "",
+      "display_name": "webgo",
+      "notes": "",
+      "versus": "goo"
     }
   }]
 }

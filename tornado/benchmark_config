@@ -6,14 +6,38 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 52
+      "approach": "Realitic",
+      "classification": "Platform",
+      "database": "",
+      "framework": "tornado",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "Tornado",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "",
+      "display_name": "tornado",
+      "notes": "",
+      "versus": ""
     },
     "raw": {
       "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 53
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MongoDB",
+      "framework": "tornado",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "Tornado",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "tornado",
+      "notes": "",
+      "versus": ""
     },
     "pypy-raw": {
       "setup_file": "setup_pypy",
@@ -22,7 +46,19 @@
       "query_url": "/db?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 134
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MongoDB",
+      "framework": "tornado",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "Tornado",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "tornado-pypy",
+      "notes": "",
+      "versus": ""
     }
   }]
 }
