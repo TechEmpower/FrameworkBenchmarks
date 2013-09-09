@@ -510,7 +510,7 @@ class FrameworkTest:
     self.benchmarker = benchmarker
     self.__dict__.update(args)
 
-    # ensure diretory has __init__.py file so that we can use it as a Python package
+    # ensure directory has __init__.py file so that we can use it as a Python package
     if not os.path.exists(os.path.join(directory, "__init__.py")):
       open(os.path.join(directory, "__init__.py"), 'w').close()
 

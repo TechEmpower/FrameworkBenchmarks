@@ -20,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "go",
       "notes": "",
       "versus": "go"
     }

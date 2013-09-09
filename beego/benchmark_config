@@ -7,7 +7,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "MySQL",
+      "database": "None",
       "framework": "beego",
       "language": "Go",
       "orm": "Raw",
@@ -15,7 +15,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "beego",
       "notes": "",
       "versus": "go"
     }

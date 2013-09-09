@@ -17,7 +17,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play",
+      "display_name": "play-java",
       "notes": "",
       "versus": "netty"
     }

@@ -7,15 +7,15 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "",
+      "database": "None",
       "framework": "express",
       "language": "JavaScript",
       "orm": "Full",
       "platform": "Node.js",
       "webserver": "None",
       "os": "Linux",
-      "database_os": "",
-      "display_name": "",
+      "database_os": "Linux",
+      "display_name": "express",
       "notes": "",
       "versus": "node"
     },
@@ -35,7 +35,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "express",
       "notes": "",
       "versus": "node"
     },
@@ -56,7 +56,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "express",
       "notes": "",
       "versus": "node"
     }

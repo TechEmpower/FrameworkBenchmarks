@@ -37,7 +37,7 @@ parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
 parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
 parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
 parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
-parser.add_argument('--next-sort', action='store_true', default=False, help='displays the next value that can be used as a sort value')
+parser.add_argument('--list-test-metadata', action='store_true', default=False, help='writes all the test metadata as a JSON file in the results directory')
 parser.add_argument('--max-concurrency', default=256, help='the maximum concurrency that the tests will run at. The query tests will run at this concurrency', type=int)
 parser.add_argument('--max-queries', default=20, help='The maximum number of queries to run during the query test', type=int)
 parser.add_argument('--query-interval', default=5, type=int)
@@ -56,8 +56,8 @@ benchmarker = Benchmarker(vars(args))
 # Run the benchmarker in the specified mode
 if benchmarker.list_tests:
   benchmarker.run_list_tests()
-elif benchmarker.next_sort:
-  benchmarker.next_sort_value()
+elif benchmarker.list_test_metadata:
+  benchmarker.run_list_test_metadata()
 elif benchmarker.parse != None:
   benchmarker.parse_timestamp()
 else:

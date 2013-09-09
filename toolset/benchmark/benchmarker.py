@@ -31,6 +31,21 @@ class Benchmarker:
   ############################################################
   # End run_list_tests
   ############################################################
+
+  ############################################################
+  # Prints the metadata for all the available tests
+  ############################################################
+  def run_list_test_metadata(self):
+    all_tests = self.__gather_tests()
+
+    with open(os.path.join(self.full_results_directory(), "test_metadata.json"), "w") as f:
+      f.write(json.dumps(all_tests))
+
+    self.__finish()
+
+  ############################################################
+  # End run_list_test_metadata
+  ############################################################
   
   ############################################################
   # parse_timestamp
@@ -47,7 +62,7 @@ class Benchmarker:
     self.__finish()
 
   ############################################################
-  # End run_list_tests
+  # End parse_timestamp
   ############################################################
 
   ############################################################
@@ -309,7 +324,7 @@ class Benchmarker:
   ############################################################
   def __run_tests(self, tests):
     for test in tests:
-      if test.application_os != self.application_os or test.database_os != self.database_os:
+      if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
 		# application server or the database server don't match
 		# our current environment

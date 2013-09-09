@@ -7,7 +7,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
+      "database": "None",
       "framework": "dancer",
       "language": "Perl",
       "orm": "Full",
@@ -15,7 +15,7 @@
       "webserver": "Starman",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "dancer",
       "notes": "",
       "versus": ""
     },
@@ -34,7 +34,7 @@
       "webserver": "Starman",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "dancer",
       "notes": "",
       "versus": ""
     }

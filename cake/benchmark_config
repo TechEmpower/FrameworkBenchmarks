@@ -19,7 +19,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "cake",
       "notes": "",
       "versus": "php"
     }

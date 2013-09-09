@@ -19,7 +19,7 @@
       "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "compojure",
       "notes": "",
       "versus": "servlet"
     },
@@ -38,7 +38,7 @@
       "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "compojure-raw",
       "notes": "",
       "versus": "servlet"
     }

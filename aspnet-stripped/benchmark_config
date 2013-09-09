@@ -8,15 +8,15 @@
       "port": 8080,
       "approach": "Stripped",
       "classification": "Fullstack",
-      "database": "",
+      "database": "None",
       "framework": "aspnet",
       "language": "C#",
       "orm": "Raw",
       "platform": "NET",
       "webserver": "IIS",
       "os": "Windows",
-      "database_os": "",
-      "display_name": "",
+      "database_os": "Linux",
+      "display_name": "aspnet-stripped",
       "notes": "",
       "versus": ""
     },
@@ -37,7 +37,7 @@
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "aspnet-stripped-raw",
       "notes": "",
       "versus": ""
     },
@@ -58,7 +58,7 @@
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "aspnet-stripped-raw",
       "notes": "",
       "versus": ""
     },
@@ -79,7 +79,7 @@
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "aspnet-stripped-raw",
       "notes": "",
       "versus": ""
     },
@@ -100,7 +100,7 @@
       "webserver": "IIS",
       "os": "Windows",
       "database_os": "Windows",
-      "display_name": "",
+      "display_name": "aspnet-stripped-raw",
       "notes": "",
       "versus": ""
     }
