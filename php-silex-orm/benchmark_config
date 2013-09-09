@@ -7,7 +7,19 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 82 
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "silex",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "silex",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

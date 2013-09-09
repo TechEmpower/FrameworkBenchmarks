@@ -8,7 +8,19 @@
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 9000,
-      "sort": 135
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "play-scala",
+      "language": "Scala",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "play-slick",
+      "notes": "",
+      "versus": "netty"
     }
   }]
 }

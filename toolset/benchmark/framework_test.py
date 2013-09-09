@@ -81,10 +81,19 @@ class FrameworkTest:
     done
   """
 
-  # The sort value is the order in which we represent all the tests. (Mainly helpful for our charts to give the underlying data)
-  # a consistent ordering even when we add or remove tests. Each test should give a sort value in it's benchmark_config file.
-  sort = 1000
-  os = 'linux'
+  language = None
+  platform = None
+  webserver = None
+  classification = None
+  database = None
+  approach = None
+  orm = None
+  framework = None
+  os = None
+  database_os = None
+  display_name = None
+  notes = None
+  versus = None
 
   ##########################################################################################
   # Public Methods

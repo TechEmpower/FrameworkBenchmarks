@@ -7,14 +7,38 @@
       "db_url": "/db",
       "query_url": "/dbs/",
       "port": 8000,
-      "sort": 37
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "yesod",
+      "language": "Haskell",
+      "orm": "Raw",
+      "platform": "Wai",
+      "webserver": "Warp",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "yesod",
+      "notes": "",
+      "versus": "wai"
     },
     "mongodb-raw": {
       "setup_file": "setup",
       "db_url": "/mongo/raw/db",
       "query_url": "/mongo/raw/dbs/",
       "port": 8000,
-      "sort": 87
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "yesod",
+      "language": "Haskell",
+      "orm": "Raw",
+      "platform": "Wai",
+      "webserver": "Warp",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "yesod",
+      "notes": "",
+      "versus": "wai"
     }
   }]
 }

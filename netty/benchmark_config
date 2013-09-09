@@ -6,7 +6,19 @@
       "json_url": "/",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 30
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "",
+      "framework": "netty",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "",
+      "display_name": "netty",
+      "notes": "",
+      "versus": "netty"
     }
   }]
 }

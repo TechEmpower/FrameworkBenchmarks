@@ -8,7 +8,19 @@
       "query_url": "/spring/db?queries=",
       "fortune_url": "/spring/fortunes",
       "port": 8080,
-      "sort": 22
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "spring",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "spring",
+      "notes": "",
+      "versus": "servlet"
     }
   }]
 }

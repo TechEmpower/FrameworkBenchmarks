@@ -10,7 +10,19 @@
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 301
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "phpixie",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "phpixie",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

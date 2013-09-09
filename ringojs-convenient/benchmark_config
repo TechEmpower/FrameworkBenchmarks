@@ -1,5 +1,5 @@
 {
-  "framework": "ringojs-convinient",
+  "framework": "ringojs-convenient",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -10,7 +10,19 @@
       "plaintext_url": "/plaintext",
       "update_url": "/updates/",
       "port": 8080,
-      "sort": 75
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "ringo",
+      "language": "JavaScript",
+      "orm": "Micro",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ringo-conv",
+      "notes": "Convenient",
+      "versus": ""
     }
   }]
 }

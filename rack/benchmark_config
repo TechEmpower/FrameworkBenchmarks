@@ -6,14 +6,38 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 14
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "",
+      "framework": "rack",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Unicorn",
+      "os": "Linux",
+      "database_os": "",
+      "display_name": "rack",
+      "notes": "",
+      "versus": ""
     },
     "jruby": {
       "setup_file": "setup_jruby",
       "json_url": "/rack/json",
       "plaintext_url": "/rack/plaintext",
       "port": 8080,
-      "sort": 15
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "",
+      "framework": "rack",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "JRuby",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "",
+      "display_name": "rack",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

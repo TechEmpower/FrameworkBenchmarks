@@ -6,7 +6,19 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 64
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "silex",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "silex",
+      "notes": "",
+      "versus": "php"
     },
     "raw": {
       "setup_file": "setup_raw",
@@ -17,7 +29,19 @@
       "update_url": "/update?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 144
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "silex",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "silex",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

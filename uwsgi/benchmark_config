@@ -5,7 +5,19 @@
       "setup_file": "setup",
       "json_url": "/json",
       "port": 8080,
-      "sort": 244
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "",
+      "framework": "uwsgi",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "wsgi",
+      "webserver": "uwsgi",
+      "os": "Linux",
+      "database_os": "",
+      "display_name": "uwsgi",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

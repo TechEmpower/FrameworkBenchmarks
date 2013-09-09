@@ -10,7 +10,19 @@
       "update_url": "/update?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 27
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "go",
+      "language": "Go",
+      "orm": "Raw",
+      "platform": "Go",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "",
+      "notes": "",
+      "versus": "go"
     }
   }]
 }

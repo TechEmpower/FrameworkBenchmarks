@@ -7,7 +7,19 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 9000,
-      "sort": 48
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "unfiltered",
+      "language": "Scala",
+      "orm": "Micro",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "unfiltered",
+      "notes": "",
+      "versus": "netty"
     }
   }]
 }

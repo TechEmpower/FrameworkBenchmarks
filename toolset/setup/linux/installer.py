@@ -13,6 +13,9 @@ class Installer:
     if self.benchmarker.install == 'all' or self.benchmarker.install == 'server':
         self.__install_server_software()
 
+    if self.benchmarker.install == 'all' or self.benchmarker.install == 'database':
+        self.__install_database_software()
+
     if self.benchmarker.install == 'all' or self.benchmarker.install == 'client':
         self.__install_client_software()
   ############################################################
@@ -381,12 +384,12 @@ class Installer:
   ############################################################
 
   ############################################################
-  # __install_client_software
+  # __install_database_software
   ############################################################
-  def __install_client_software(self):
-    print("\nINSTALL: Installing client software\n")
+  def __install_database_software(self):
+    print("\nINSTALL: Installing database software\n")
 
-    self.__run_command("cd .. && " + self.benchmarker.sftp_string(batch_file="config/client_sftp_batch"), True)
+    self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="config/database_sftp_batch"), True)
 
     remote_script = """
 
@@ -438,6 +441,53 @@ class Installer:
     sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
     ##############################
+    # MongoDB
+    ##############################
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+    sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
+    sudo apt-get update
+	yes | sudo apt-get remove mongodb-clients
+    yes | sudo apt-get install mongodb-10gen
+
+    sudo stop mongodb
+    sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
+    sudo mv mongodb.conf /etc/mongodb.conf
+    sudo cp -R -p /var/lib/mongodb /ssd/
+    sudo cp -R -p /var/log/mongodb /ssd/log/
+    sudo start mongodb
+    """
+    
+    print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
+    p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" "), stdin=subprocess.PIPE)
+    p.communicate(remote_script)
+    returncode = p.returncode
+    if returncode != 0:
+      self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.database_ssh_string))
+
+    print("\nINSTALL: Finished installing database software\n")
+  ############################################################
+  # End __install_database_software
+  ############################################################
+
+  ############################################################
+  # __install_client_software
+  ############################################################
+  def __install_client_software(self):
+    print("\nINSTALL: Installing client software\n")
+
+    remote_script = """
+
+    ##############################
+    # Prerequisites
+    ##############################
+    yes | sudo apt-get update
+    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
+    sudo sh -c "echo '*               -    nofile          16384' >> /etc/security/limits.conf"
+
+    sudo mkdir -p /ssd
+    sudo mkdir -p /ssd/log
+
+    ##############################
     # wrk
     ##############################
 
@@ -453,29 +503,14 @@ class Installer:
     make
     sudo cp wrk /usr/local/bin/wrk-pipeline
     cd ~
-
-    ##############################
-    # MongoDB
-    ##############################
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-    sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
-    sudo apt-get update
-    yes | sudo apt-get install mongodb-10gen
-
-    sudo stop mongodb
-    sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
-    sudo mv mongodb.conf /etc/mongodb.conf
-    sudo cp -R -p /var/lib/mongodb /ssd/
-    sudo cp -R -p /var/log/mongodb /ssd/log/
-    sudo start mongodb
     """
     
-    print("\nINSTALL: %s" % self.benchmarker.ssh_string)
-    p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE)
+    print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
+    p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE)
     p.communicate(remote_script)
     returncode = p.returncode
     if returncode != 0:
-      self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.ssh_string))
+      self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
 
     print("\nINSTALL: Finished installing client software\n")
   ############################################################
