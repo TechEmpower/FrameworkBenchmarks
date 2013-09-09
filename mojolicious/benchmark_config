@@ -7,7 +7,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
+      "database": "None",
       "framework": "mojolicious",
       "language": "Perl",
       "orm": "Full",

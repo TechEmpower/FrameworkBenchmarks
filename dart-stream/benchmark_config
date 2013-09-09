@@ -20,7 +20,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "stream",
       "notes": "",
       "versus": "dart"
     },
@@ -41,7 +41,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "stream",
       "notes": "",
       "versus": "dart"
     }

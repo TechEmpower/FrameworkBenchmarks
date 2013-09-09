@@ -8,7 +8,7 @@
       "port": 16969,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "MySQL",
+      "database": "None",
       "framework": "cpoll-cppsp",
       "language": "C++",
       "orm": "Raw",
@@ -16,7 +16,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "cpoll-cppsp",
       "notes": "",
       "versus": ""
     },
@@ -37,7 +37,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "cpoll-cppsp-raw",
       "notes": "",
       "versus": ""
     },
@@ -56,7 +56,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "cpoll-cppsp-raw",
       "notes": "",
       "versus": ""
     },

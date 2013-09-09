@@ -20,7 +20,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "bottle",
       "notes": "",
       "versus": "wsgi"
     },
@@ -43,7 +43,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "bottle-py3",
       "notes": "",
       "versus": "wsgi"
     },
@@ -66,7 +66,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "bottle-pypy",
       "notes": "",
       "versus": "wsgi"
     },
@@ -87,7 +87,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "bottle-raw",
       "notes": "",
       "versus": "wsgi"
     }

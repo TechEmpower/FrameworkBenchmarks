@@ -17,7 +17,7 @@
       "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "grails",
       "notes": "",
       "versus": "servlet"
     }

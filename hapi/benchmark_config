@@ -7,7 +7,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "MySQL",
+      "database": "None",
       "framework": "hapi",
       "language": "JavaScript",
       "orm": "Raw",

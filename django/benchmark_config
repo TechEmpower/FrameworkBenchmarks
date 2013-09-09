@@ -19,7 +19,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "django",
       "notes": "",
       "versus": "wsgi"
     },
@@ -63,7 +63,7 @@
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "",
+      "display_name": "django",
       "notes": "",
       "versus": "wsgi"
     }
