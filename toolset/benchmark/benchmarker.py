@@ -37,11 +37,28 @@ class Benchmarker:
   ############################################################
   def run_list_test_metadata(self):
     all_tests = self.__gather_tests()
+    all_tests_json = json.dumps(map(lambda test: {
+      "name": test.name,
+      "approach": test.approach,
+      "classification": test.classification,
+      "database": test.database,
+      "framework": test.framework,
+      "language": test.language,
+      "orm": test.orm,
+      "platform": test.platform,
+      "webserver": test.webserver,
+      "os": test.os,
+      "database_os": test.database_os,
+      "display_name": test.display_name,
+      "notes": test.notes,
+      "versus": test.versus
+    }, all_tests))
 
     with open(os.path.join(self.full_results_directory(), "test_metadata.json"), "w") as f:
-      f.write(json.dumps(all_tests))
+      f.write(all_tests_json)
 
     self.__finish()
+
 
   ############################################################
   # End run_list_test_metadata
@@ -326,8 +343,8 @@ class Benchmarker:
     for test in tests:
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
-		# application server or the database server don't match
-		# our current environment
+        # application server or the database server don't match
+        # our current environment
         continue
       
       # If the user specified which tests to run, then 
