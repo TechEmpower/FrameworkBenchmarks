@@ -95,7 +95,7 @@ namespace ServiceStackBenchmark.Model
             fortunes.Add(new Fortune() { id = 8, message = "A list is only as strong as its weakest link. — Donald Knuth" });
             fortunes.Add(new Fortune() { id = 9, message = "Feature: A bug with seniority." });
             fortunes.Add(new Fortune() { id = 10, message = "Computers make very fast, very accurate mistakes." });
-            fortunes.Add(new Fortune() { id = 11, message = "&lt;script&gt;alert(\"This should not be displayed in a browser alert box.\");&lt;/script&gt;" });
+            fortunes.Add(new Fortune() { id = 11, message = "<script>alert(\"This should not be displayed in a browser alert box.\");</script>" });
             fortunes.Add(new Fortune() { id = 12, message = "フレームワークのベンチマーク" });
             return fortunes;
         }

@@ -1,5 +1,4 @@
 using System;
-using System.Data;
 using System.Linq;
 using System.Configuration;
 using System.Collections.Generic;
@@ -175,25 +174,23 @@ namespace ServiceStackBenchmark
         }
 
         /// <summary>
-        /// Method to config the Minimum and Maximum number of Worker Threads per Logical Processor Count.
+        /// Method to config the Minimum number of Worker Threads per Logical Processor Count.
         /// </summary>
         /// <remarks>the Completion Port Threads are set to their defaults as there is no IO concerrency in our app</remarks>
         public static void ConfigThreadPool()
         {
+            string minTPLPSetting = ConfigurationManager.AppSettings["minWorkerThreadsPerLogicalProcessor"];
+
+            if (minTPLPSetting == null)
+                return;
+
             int sysMinWorkerThreads, sysMinCompletionPortThreads;
             ThreadPool.GetMinThreads(out sysMinWorkerThreads, out sysMinCompletionPortThreads);
 
-            int sysMaxWorkerThreads, sysMaxCompletionPortThreads;
-            ThreadPool.GetMaxThreads(out sysMaxWorkerThreads, out sysMaxCompletionPortThreads);
-
-            int newMinWorkerThreadsPerCPU = Math.Max(1, Convert.ToInt32(ConfigurationManager.AppSettings["minWorkerThreadsPerLogicalProcessor"] ?? "1"));
-            int newMaxWorkerThreadsPerCPU = Math.Max(newMinWorkerThreadsPerCPU, Convert.ToInt32(ConfigurationManager.AppSettings["maxWorkerThreadsPerLogicalProcessor"] ?? "100"));
-
+            int newMinWorkerThreadsPerCPU = Math.Max(1, Convert.ToInt32(minTPLPSetting));
+                
             var minWorkerThreads = Environment.ProcessorCount * newMinWorkerThreadsPerCPU;
             ThreadPool.SetMinThreads(minWorkerThreads, sysMinCompletionPortThreads);
-
-            var maxWorkerThreads = Environment.ProcessorCount * newMaxWorkerThreadsPerCPU;
-            ThreadPool.SetMaxThreads(maxWorkerThreads, sysMaxCompletionPortThreads);
         }
     }
 }
