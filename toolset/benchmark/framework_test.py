@@ -5,6 +5,7 @@ import time
 import re
 import pprint
 import sys
+import traceback
 
 class FrameworkTest:
   ##########################################################################################
@@ -249,6 +250,7 @@ class FrameworkTest:
 
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
 
     # Query
@@ -262,6 +264,7 @@ class FrameworkTest:
         self.benchmarker.report_results(framework=self, test="query", results=results['results'])
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
 
     # fortune
@@ -275,6 +278,7 @@ class FrameworkTest:
         self.benchmarker.report_results(framework=self, test="fortune", results=results['results'])
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
 
     # update
@@ -288,6 +292,7 @@ class FrameworkTest:
         self.benchmarker.report_results(framework=self, test="update", results=results['results'])
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
 
     # plaintext
@@ -301,6 +306,7 @@ class FrameworkTest:
         self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
   ############################################################
   # End benchmark
@@ -449,7 +455,8 @@ class FrameworkTest:
   ############################################################
   def __run_benchmark(self, script, output_file):
     with open(output_file, 'w') as raw_file:
-      p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
+	  
+      p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
       p.communicate(script)
   ############################################################
   # End __run_benchmark

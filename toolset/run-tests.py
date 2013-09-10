@@ -47,7 +47,7 @@ parser.add_argument('--starting-concurrency', default=8, type=int)
 parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
 parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
 parser.add_argument('--name', default="ec2", help='The name to give this test. Results will be placed in a folder using this name.')
-parser.add_argument('--application-os', choices=['linux', 'windows'], default='linux', help='The operating system of the application server.')
+parser.add_argument('--os', choices=['linux', 'windows'], default='linux', help='The operating system of the application server.')
 parser.add_argument('--database-os', choices=['linux', 'windows'], default='linux', help='The operating system of the database server.')
 args = parser.parse_args()
 
