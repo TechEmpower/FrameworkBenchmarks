@@ -6,7 +6,7 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "approach": "Realitic",
+      "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
       "framework": "tornado",

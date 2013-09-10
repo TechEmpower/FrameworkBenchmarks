@@ -29,7 +29,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "Database",
+      "database": "MySQL",
       "framework": "nancy",
       "language": "C#",
       "orm": "Raw",
