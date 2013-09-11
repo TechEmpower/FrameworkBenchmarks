@@ -1,0 +1,30 @@
+
+
+Senthot follow the Apache2 open source release, and provided free of charge.
+Copyright © 2006-2012 by Senthot ( http://senthot.com ) All rights reserved.
+Senthot® Trademarks and copyright owner of CV. FBSCHOOL.
+
+Apache Licence is a well-known non-profit organization for open source Apache using the Protocol.
+The agreement similar to BSD, encourages code-sharing and respect for the original author's copyright
+allows code modification, and then released as open source or commercial software.
+Need to meet condition: 
+1.	Need to give the user a copy of the code Apache Licence;
+2.	If you have modified the code, explained in the file needs to be modified;
+3.	In the extension code (modifications and derived from source code) requires
+	with agreement of the original code, trademark, patent and other original author rules
+	requirements included in the description;
+4.	If we publish a Notice file included with the product, you Notice
+	accompanying this agreement is required in the content. You can add yourself to Notice
+	license, but not the performance of Apache Licence constitute a change.
+	Specific agreement reference: http://www.apache.org/licenses/LICENSE-2.0
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+POSSIBILITY OF SUCH DAMAGE. 
