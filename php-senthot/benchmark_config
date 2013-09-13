@@ -1,0 +1,14 @@
+{
+  "framework": "senthot",
+  "tests": [{
+    "raw": {
+      "setup_file": "setup",
+      "json_url": "/bench/rawjson",
+      "db_url": "/bench/rawdb",
+      "query_url": "/bench/rawdb?queries=",
+      "fortune_url": "/bench/rawfortunes",
+      "port": 80,
+      "sort": 200
+    }
+  }]
+}
