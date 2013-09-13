@@ -6,6 +6,12 @@
       "json_url": "/json",
       "port": 8080,
       "sort": 244
+    },
+    "nginx": {
+      "setup_file": "setup_nginx",
+      "json_url": "/json",
+      "port": 8080,
+      "sort": 323
     }
   }]
 }
