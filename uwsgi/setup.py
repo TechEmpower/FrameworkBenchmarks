@@ -10,7 +10,7 @@ PROCS = multiprocessing.cpu_count()
 
 def start(args):
     subprocess.Popen(
-        uwsgi + ' --master -L --gevent 1000 --http :8080 --http-keepalive ' +
+        uwsgi + ' --master -L -l 5000 --gevent 1000 --http :8080 --http-keepalive ' +
         '-p ' + str(PROCS) + ' -w hello --add-header "Connection: keep-alive" ' +
         ' --pidfile /tmp/uwsgi.pid',
         shell=True, cwd="uwsgi")
