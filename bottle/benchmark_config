@@ -42,6 +42,17 @@
       "update_url": "/raw-updates?queries=",
       "port": 8080,
       "sort": 89
+    },
+    "nginxuwsgi": {
+      "setup_file": "setup_nginxuwsgi",
+      "json_url": "/json",
+      "db_url": "/dbs",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "sort": 325
     }
   }]
 }
