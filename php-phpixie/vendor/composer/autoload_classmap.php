@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'PHPixie\\Config' => $vendorDir . '/phpixie/core/classes/PHPixie/Config.php',
     'PHPixie\\Controller' => $vendorDir . '/phpixie/core/classes/PHPixie/Controller.php',
+    'PHPixie\\Cookie' => $vendorDir . '/phpixie/core/classes/PHPixie/Cookie.php',
     'PHPixie\\DB' => $vendorDir . '/phpixie/db/classes/PHPixie/DB.php',
     'PHPixie\\DB\\Connection' => $vendorDir . '/phpixie/db/classes/PHPixie/DB/Connection.php',
     'PHPixie\\DB\\Expression' => $vendorDir . '/phpixie/db/classes/PHPixie/DB/Expression.php',
@@ -33,4 +34,5 @@ return array(
     'PHPixie\\Router' => $vendorDir . '/phpixie/core/classes/PHPixie/Router.php',
     'PHPixie\\Session' => $vendorDir . '/phpixie/core/classes/PHPixie/Session.php',
     'PHPixie\\View' => $vendorDir . '/phpixie/core/classes/PHPixie/View.php',
+    'PHPixie\\View\\Helper' => $vendorDir . '/phpixie/core/classes/PHPixie/View/Helper.php',
 );
