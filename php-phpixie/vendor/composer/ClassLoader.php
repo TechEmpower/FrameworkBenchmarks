@@ -49,7 +49,7 @@ class ClassLoader
 
     public function getPrefixes()
     {
-        return call_user_func_array('array_merge', $this->prefixes);
+        return $this->prefixes;
     }
 
     public function getFallbackDirs()
@@ -98,21 +98,19 @@ class ClassLoader
 
             return;
         }
-
-        $first = $prefix[0];
-        if (!isset($this->prefixes[$first][$prefix])) {
-            $this->prefixes[$first][$prefix] = (array) $paths;
+        if (!isset($this->prefixes[$prefix])) {
+            $this->prefixes[$prefix] = (array) $paths;
 
             return;
         }
         if ($prepend) {
-            $this->prefixes[$first][$prefix] = array_merge(
+            $this->prefixes[$prefix] = array_merge(
                 (array) $paths,
-                $this->prefixes[$first][$prefix]
+                $this->prefixes[$prefix]
             );
         } else {
-            $this->prefixes[$first][$prefix] = array_merge(
-                $this->prefixes[$first][$prefix],
+            $this->prefixes[$prefix] = array_merge(
+                $this->prefixes[$prefix],
                 (array) $paths
             );
         }
@@ -131,7 +129,7 @@ class ClassLoader
 
             return;
         }
-        $this->prefixes[substr($prefix, 0, 1)][$prefix] = (array) $paths;
+        $this->prefixes[$prefix] = (array) $paths;
     }
 
     /**
@@ -197,7 +195,6 @@ class ClassLoader
      */
     public function findFile($class)
     {
-        // work around for PHP 5.3.0 - 5.3.2 https://bugs.php.net/50731
         if ('\\' == $class[0]) {
             $class = substr($class, 1);
         }
@@ -208,7 +205,7 @@ class ClassLoader
 
         if (false !== $pos = strrpos($class, '\\')) {
             // namespaced class name
-            $classPath = strtr(substr($class, 0, $pos), '\\', DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            $classPath = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 0, $pos)) . DIRECTORY_SEPARATOR;
             $className = substr($class, $pos + 1);
         } else {
             // PEAR-like class name
@@ -216,16 +213,13 @@ class ClassLoader
             $className = $class;
         }
 
-        $classPath .= strtr($className, '_', DIRECTORY_SEPARATOR) . '.php';
+        $classPath .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
-        $first = $class[0];
-        if (isset($this->prefixes[$first])) {
-            foreach ($this->prefixes[$first] as $prefix => $dirs) {
-                if (0 === strpos($class, $prefix)) {
-                    foreach ($dirs as $dir) {
-                        if (file_exists($dir . DIRECTORY_SEPARATOR . $classPath)) {
-                            return $dir . DIRECTORY_SEPARATOR . $classPath;
-                        }
+        foreach ($this->prefixes as $prefix => $dirs) {
+            if (0 === strpos($class, $prefix)) {
+                foreach ($dirs as $dir) {
+                    if (file_exists($dir . DIRECTORY_SEPARATOR . $classPath)) {
+                        return $dir . DIRECTORY_SEPARATOR . $classPath;
                     }
                 }
             }

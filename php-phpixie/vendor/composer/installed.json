@@ -6,25 +6,25 @@
         "source": {
             "type": "git",
             "url": "https://github.com/dracony/PHPixie-Core.git",
-            "reference": "11092a22456ecb30f488fc246def5a16ffa47abf"
+            "reference": "0133c031b634d1ea5074e213f8bc5fab2e53a9f2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/dracony/PHPixie-Core/zipball/11092a22456ecb30f488fc246def5a16ffa47abf",
-            "reference": "11092a22456ecb30f488fc246def5a16ffa47abf",
+            "url": "https://api.github.com/repos/dracony/PHPixie-Core/zipball/0133c031b634d1ea5074e213f8bc5fab2e53a9f2",
+            "reference": "0133c031b634d1ea5074e213f8bc5fab2e53a9f2",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2013-07-17 12:57:49",
+        "time": "2013-08-27 16:03:04",
         "type": "library",
         "extra": {
             "branch-alias": {
                 "dev-master": "2.*-dev"
             }
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-0": {
                 "PHPixie": "classes/"
@@ -54,25 +54,25 @@
         "source": {
             "type": "git",
             "url": "https://github.com/dracony/PHPixie-DB.git",
-            "reference": "4a3706193b0064a18d5c3115e6f1831c9f14de2e"
+            "reference": "73d39e124ec08849fc6931c23b4936a3d69c1204"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/dracony/PHPixie-DB/zipball/4a3706193b0064a18d5c3115e6f1831c9f14de2e",
-            "reference": "4a3706193b0064a18d5c3115e6f1831c9f14de2e",
+            "url": "https://api.github.com/repos/dracony/PHPixie-DB/zipball/73d39e124ec08849fc6931c23b4936a3d69c1204",
+            "reference": "73d39e124ec08849fc6931c23b4936a3d69c1204",
             "shasum": ""
         },
         "require": {
             "phpixie/core": "2.*@dev"
         },
-        "time": "2013-06-22 22:25:03",
+        "time": "2013-09-13 07:05:46",
         "type": "library",
         "extra": {
             "branch-alias": {
                 "dev-master": "2.x-dev"
             }
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-0": {
                 "PHPixie": "classes/"
@@ -105,25 +105,25 @@
         "source": {
             "type": "git",
             "url": "https://github.com/dracony/PHPixie-ORM.git",
-            "reference": "c6c379b9efd17e021a9659f01ed2f75027e3a2fc"
+            "reference": "526ffdb542656a401ba92ce2e53b8859484a11b8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/dracony/PHPixie-ORM/zipball/c6c379b9efd17e021a9659f01ed2f75027e3a2fc",
-            "reference": "c6c379b9efd17e021a9659f01ed2f75027e3a2fc",
+            "url": "https://api.github.com/repos/dracony/PHPixie-ORM/zipball/526ffdb542656a401ba92ce2e53b8859484a11b8",
+            "reference": "526ffdb542656a401ba92ce2e53b8859484a11b8",
             "shasum": ""
         },
         "require": {
             "phpixie/db": "2.*@dev"
         },
-        "time": "2013-07-15 23:35:57",
+        "time": "2013-08-03 17:01:37",
         "type": "library",
         "extra": {
             "branch-alias": {
                 "dev-master": "2.x-dev"
             }
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-0": {
                 "PHPixie": "classes/"
