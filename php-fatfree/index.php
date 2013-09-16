@@ -3,6 +3,7 @@
 $f3=require('lib/base.php');
 
 $f3->set('DEBUG',0);
+$f3->set('CACHE',true);
 $f3->set('UI','ui/');
 // lazy initialized DB object
 $f3->set('DB',function() {
