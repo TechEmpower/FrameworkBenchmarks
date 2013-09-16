@@ -4,6 +4,11 @@ $f3=require('lib/base.php');
 
 $f3->set('DEBUG',0);
 $f3->set('UI','ui/');
+// lazy initialized DB object
+$f3->set('DB',function() {
+	return new \DB\SQL('mysql:host=localhost;port=3306;dbname=hello_world',
+	                   'benchmarkdbuser', 'benchmarkdbpass');
+});
 
 // https://github.com/TechEmpower/FrameworkBenchmarks#json-response
 $f3->route('GET /json',function($f3) {
@@ -22,9 +27,9 @@ $f3->route(
     ),
     function ($f3,$params) {
     /** @var Base $f3 */
-        $params += array('queries' => 1); //default value
-        $db = new \DB\SQL('mysql:host=localhost;port=3306;dbname=hello_world',
-                          'benchmarkdbuser', 'benchmarkdbpass');
+        $params += array('queries' => 1); //default value        
+        $dbc = $f3->get('DB');
+        $db = $dbc();
         $result = array();
         for ($i = 0; $i < $params['queries']; ++$i) {
             $id = mt_rand(1, 10000);
@@ -45,9 +50,9 @@ $f3->route(
     ),
     function ($f3, $params) {
         /** @var Base $f3 */
-        $params += array('queries' => 1); //default value
-        $db = new \DB\SQL('mysql:host=localhost;port=3306;dbname=hello_world',
-                          'benchmarkdbuser', 'benchmarkdbpass');
+        $params += array('queries' => 1); //default value        
+        $dbc = $f3->get('DB');
+        $db = $dbc();
         $mapper = new \DB\SQL\Mapper($db,'World');
         $result = array();
         for ($i = 0; $i < $params['queries']; ++$i) {
@@ -69,8 +74,8 @@ $f3->route('GET /plaintext', function ($f3) {
 
 $f3->route('GET /fortune', function ($f3) {
     /** @var Base $f3 */
-    $db = new \DB\SQL('mysql:host=localhost;port=3306;dbname=hello_world',
-                      'benchmarkdbuser', 'benchmarkdbpass');
+    $dbc = $f3->get('DB');
+    $db = $dbc();
     $result = $db->exec('SELECT id, message FROM Fortune');
     $result[] = 'Additional fortune added at request time.';
     asort($result);
@@ -85,9 +90,9 @@ $f3->route(
          'GET /updateraw/@queries',
     ),function($f3,$params) {
     /** @var Base $f3 */
-    $params += array('queries' => 1); //default value
-    $db = new \DB\SQL('mysql:host=localhost;port=3306;dbname=hello_world',
-                      'benchmarkdbuser', 'benchmarkdbpass');
+    $params += array('queries' => 1); //default value    
+    $dbc = $f3->get('DB');
+    $db = $dbc();
     
     $result = array();
     for ($i = 0; $i < $params['queries']; ++$i) {
