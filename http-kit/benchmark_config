@@ -7,7 +7,19 @@
       "db_url": "/http-kit/db/1",
       "query_url": "/http-kit/db/",
       "port": 8080,
-      "sort": 36
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "http-kit",
+      "language": "Clojure",
+      "orm": "Raw",
+      "platform": "http-kit",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "http-kit",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

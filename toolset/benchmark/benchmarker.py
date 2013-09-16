@@ -24,7 +24,7 @@ class Benchmarker:
     all_tests = self.__gather_tests()
 
     for test in all_tests:
-      print str(test.sort) + ": " + test.name
+      print test.name
 
     self.__finish()
 
@@ -33,21 +33,35 @@ class Benchmarker:
   ############################################################
 
   ############################################################
-  # next_sort
-  # Prints the next available sort number that should be used 
-  # for any new tests
+  # Prints the metadata for all the available tests
   ############################################################
-  def next_sort_value(self):
+  def run_list_test_metadata(self):
     all_tests = self.__gather_tests()
+    all_tests_json = json.dumps(map(lambda test: {
+      "name": test.name,
+      "approach": test.approach,
+      "classification": test.classification,
+      "database": test.database,
+      "framework": test.framework,
+      "language": test.language,
+      "orm": test.orm,
+      "platform": test.platform,
+      "webserver": test.webserver,
+      "os": test.os,
+      "database_os": test.database_os,
+      "display_name": test.display_name,
+      "notes": test.notes,
+      "versus": test.versus
+    }, all_tests))
 
-    # all_tests is already sorted by sort, so we can just get
-    # the last one and add one to it.
-    print " Next sort number is: " + str(all_tests[-1].sort + 1)
+    with open(os.path.join(self.full_results_directory(), "test_metadata.json"), "w") as f:
+      f.write(all_tests_json)
 
     self.__finish()
 
+
   ############################################################
-  # End next_sort_value
+  # End run_list_test_metadata
   ############################################################
   
   ############################################################
@@ -65,7 +79,7 @@ class Benchmarker:
     self.__finish()
 
   ############################################################
-  # End run_list_tests
+  # End parse_timestamp
   ############################################################
 
   ############################################################
@@ -87,10 +101,11 @@ class Benchmarker:
     ##########################
     print textwrap.dedent("""
       =====================================================
-        Preparing up Server and Client ...
+        Preparing Server, Database, and Client ...
       =====================================================
       """)
     self.__setup_server()
+    self.__setup_database()
     self.__setup_client()
 
     ##########################
@@ -116,19 +131,35 @@ class Benchmarker:
   ############################################################
 
   ############################################################
-  # sftp_string(batch_file)
+  # database_sftp_string(batch_file)
+  # generates a fully qualified URL for sftp to database
+  ############################################################
+  def database_sftp_string(self, batch_file):
+    sftp_string =  "sftp -oStrictHostKeyChecking=no "
+    if batch_file != None: sftp_string += " -b " + batch_file + " "
+
+    if self.database_identity_file != None:
+      sftp_string += " -i " + self.database_identity_file + " "
+
+    return sftp_string + self.database_user + "@" + self.database_host
+  ############################################################
+  # End database_sftp_string
+  ############################################################
+
+  ############################################################
+  # client_sftp_string(batch_file)
   # generates a fully qualified URL for sftp to client
   ############################################################
-  def sftp_string(self, batch_file):
-    sftp_string =  "sftp -oStrictHostKeyChecking=no " 
+  def client_sftp_string(self, batch_file):
+    sftp_string =  "sftp -oStrictHostKeyChecking=no "
     if batch_file != None: sftp_string += " -b " + batch_file + " "
-    
-    if self.identity_file != None:
-      sftp_string += " -i " + self.identity_file + " "
+
+    if self.client_identity_file != None:
+      sftp_string += " -i " + self.client_identity_file + " "
 
     return sftp_string + self.client_user + "@" + self.client_host
   ############################################################
-  # End sftp_string
+  # End client_sftp_string
   ############################################################
 
   ############################################################
@@ -178,7 +209,7 @@ class Benchmarker:
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
 
-    self.results['rawData'][test][framework.sort] = results
+    self.results['rawData'][test][framework.name] = results
 
   ############################################################
   # End report_results
@@ -230,7 +261,7 @@ class Benchmarker:
 
         tests = tests + framework_test.parse_config(config, dirname[2:], self)
 
-    tests.sort(key=lambda x: x.sort)
+    tests.sort(key=lambda x: x.name)
     return tests
   ############################################################
   # End __gather_tests
@@ -262,13 +293,33 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # Makes any necessary changes to the database machine that 
+  # should be made before running the tests. Is very similar
+  # to the server setup, but may also include database specific
+  # changes.
+  ############################################################
+  def __setup_database(self):
+    p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
+    p.communicate("""
+      sudo sysctl -w net.core.somaxconn=5000
+      sudo -s ulimit -n 16384
+      sudo sysctl net.ipv4.tcp_tw_reuse=1
+      sudo sysctl net.ipv4.tcp_tw_recycle=1
+      sudo sysctl -w kernel.shmmax=2147483648
+      sudo sysctl -w kernel.shmall=2097152
+    """)
+  ############################################################
+  # End __setup_database
+  ############################################################
+
+  ############################################################
   # Makes any necessary changes to the client machine that 
   # should be made before running the tests. Is very similar
   # to the server setup, but may also include client specific
   # changes.
   ############################################################
   def __setup_client(self):
-    p = subprocess.Popen(self.ssh_string, stdin=subprocess.PIPE, shell=True)
+    p = subprocess.Popen(self.client_ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
       sudo sysctl -w net.core.somaxconn=5000
       sudo -s ulimit -n 16384
@@ -290,10 +341,12 @@ class Benchmarker:
   ############################################################
   def __run_tests(self, tests):
     for test in tests:
-      if test.os == 'nt' and os.name != 'nt':
-        # this is a windows only test, but we're not on windows. abort.
+      if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
+        # the operating system requirements of this test for the
+        # application server or the database server don't match
+        # our current environment
         continue
-        
+      
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
@@ -322,10 +375,11 @@ class Benchmarker:
       -----------------------------------------------------
       """.format(name=test.name))
       try:
-        p = subprocess.Popen(self.ssh_string, stdin=subprocess.PIPE, shell=True)
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
         p.communicate("""
           sudo restart mysql
           sudo restart mongodb
+		  sudo /etc/init.d/postgresql restart
         """)
         time.sleep(10)
         
@@ -463,7 +517,9 @@ class Benchmarker:
     self.start_time = time.time()
 
     # setup some additional variables
+    if self.database_user == None: self.database_user = self.client_user
     if self.database_host == None: self.database_host = self.client_host
+    if self.database_identity_file == None: self.database_identity_file = self.client_identity_file
 
     self.result_directory = os.path.join("results", self.name)
       
@@ -530,9 +586,12 @@ class Benchmarker:
       self.results['frameworks'] = [t.name for t in self.__gather_tests()]
 
     # Setup the ssh command string
-    self.ssh_string = "ssh -T -o StrictHostKeyChecking=no " + self.client_user + "@" + self.client_host
-    if self.identity_file != None:
-      self.ssh_string = self.ssh_string + " -i " + self.identity_file
+    self.database_ssh_string = "ssh -T -o StrictHostKeyChecking=no " + self.database_user + "@" + self.database_host
+    self.client_ssh_string = "ssh -T -o StrictHostKeyChecking=no " + self.client_user + "@" + self.client_host
+    if self.database_identity_file != None:
+      self.database_ssh_string = self.database_ssh_string + " -i " + self.database_identity_file
+    if self.client_identity_file != None:
+      self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
 
     if self.install_software:
       install = Installer(self)

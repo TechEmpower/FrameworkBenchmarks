@@ -6,7 +6,19 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 73
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "ringo",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ringojs",
+      "notes": "",
+      "versus": ""
     },
     "raw": {
       "setup_file": "setup",
@@ -15,7 +27,19 @@
       "fortune_url": "/fortune",
       "update_url": "/updates?queries=",
       "port": 8080,
-      "sort": 74
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "ringo",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ringojs",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

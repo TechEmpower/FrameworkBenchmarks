@@ -36,5 +36,13 @@ def stop():
   
   subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + root + "/nginx.conf -s stop", shell=True)
   subprocess.check_call("rm -f " + root + "/nginx.upstream.conf", shell=True)
-  subprocess.check_call("pkill -9 mono-sgen", shell=True)
+  #
+  # stop mono
+  #
+  p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+  out, err = p.communicate()
+  for line in out.splitlines():
+    if 'mono-server' in line:
+      pid = int(line.split(None, 2)[1])
+      os.kill(pid, 9)
   return 0

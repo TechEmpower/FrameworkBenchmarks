@@ -7,7 +7,19 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 20
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "sinatra",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Unicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "sinatra",
+      "notes": "",
+      "versus": "rack-ruby"
     },
     "jruby": {
       "setup_file": "setup_jruby",
@@ -15,7 +27,19 @@
       "db_url": "/sinatra/db",
       "query_url": "/sinatra/db?queries=",
       "port": 8080,
-      "sort": 21
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "sinatra",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "JRuby",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "sinatra-jruby",
+      "notes": "",
+      "versus": "rack-jruby"
     }
   }]
 }

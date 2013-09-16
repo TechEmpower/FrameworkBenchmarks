@@ -7,7 +7,19 @@
       "plaintext_url": "/plaintext",
       "cache_url": "/cache",
       "port": 8080,
-      "sort": 120
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "undertow",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "undertow",
+      "notes": "",
+      "versus": ""
     },
     "mysql" : {
       "setup_file": "setup",
@@ -16,7 +28,19 @@
       "fortune_url": "/fortunes/mysql",
       "update_url": "/updates/mysql?queries=",
       "port": 8080,
-      "sort": 306
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "undertow",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "undertow",
+      "notes": "",
+      "versus": ""
     },
     "postgresql" : {
       "setup_file": "setup",
@@ -25,7 +49,19 @@
       "fortune_url": "/fortunes/postgresql",
       "update_url": "/updates/postgresql?queries=",
       "port": 8080,
-      "sort": 307
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "undertow",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "undertow",
+      "notes": "",
+      "versus": ""
     },
     "mongodb" : {
       "setup_file": "setup",
@@ -34,7 +70,19 @@
       "fortune_url": "/fortunes/mongodb",
       "update_url": "/updates/mongodb?queries=",
       "port": 8080,
-      "sort": 308
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MongoDB",
+      "framework": "undertow",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "undertow",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

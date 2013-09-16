@@ -7,7 +7,19 @@
       "db_url": "/db",
       "query_url": "/dbs/",
       "port": 8000,
-      "sort": 322
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "racket-ws",
+      "language": "Racket",
+      "orm": "Micro",
+      "platform": "Racket",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "racket-ws",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

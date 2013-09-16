@@ -10,7 +10,19 @@
       "update_url": "/world/updates/",
       "plaintext_url": "/world/plain",
       "port": 8080,
-      "sort": 305
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "treefrog",
+      "language": "C++",
+      "orm": "Micro",
+      "platform": "Treefrog",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "treefrog",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

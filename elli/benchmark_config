@@ -7,6 +7,18 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 39
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "elli",
+      "language": "Erlang",
+      "orm": "Raw",
+      "platform": "elli",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "elli",
+      "notes": "",
+      "versus": ""
   }}]
 }
