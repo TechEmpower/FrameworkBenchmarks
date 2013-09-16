@@ -1,4 +1,3 @@
-
 import subprocess
 import sys
 import setup_util
@@ -23,7 +22,6 @@ def start(args):
     #subprocess.check_call("sudo /etc/init.d/apache2 start", shell=True)
     
     subprocess.check_call("sudo chown -R www-data:www-data php-fatfree", shell=True)
-    subprocess.check_call("sudo chmod -R www-data:www-data php-fatfree", shell=True)
     subprocess.check_call("sudo php-fpm --fpm-config config/php-fpm.conf -g " + home + "/FrameworkBenchmarks/php-fatfree/deploy/php-fpm.pid", shell=True)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php-fatfree/deploy/nginx.conf", shell=True)
     
