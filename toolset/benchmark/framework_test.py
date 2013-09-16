@@ -5,6 +5,7 @@ import time
 import re
 import pprint
 import sys
+import traceback
 
 class FrameworkTest:
   ##########################################################################################
@@ -81,10 +82,19 @@ class FrameworkTest:
     done
   """
 
-  # The sort value is the order in which we represent all the tests. (Mainly helpful for our charts to give the underlying data)
-  # a consistent ordering even when we add or remove tests. Each test should give a sort value in it's benchmark_config file.
-  sort = 1000
-  os = 'linux'
+  language = None
+  platform = None
+  webserver = None
+  classification = None
+  database = None
+  approach = None
+  orm = None
+  framework = None
+  os = None
+  database_os = None
+  display_name = None
+  notes = None
+  versus = None
 
   ##########################################################################################
   # Public Methods
@@ -240,6 +250,7 @@ class FrameworkTest:
 
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
 
     # Query
@@ -253,6 +264,7 @@ class FrameworkTest:
         self.benchmarker.report_results(framework=self, test="query", results=results['results'])
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
 
     # fortune
@@ -266,6 +278,7 @@ class FrameworkTest:
         self.benchmarker.report_results(framework=self, test="fortune", results=results['results'])
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
 
     # update
@@ -279,6 +292,7 @@ class FrameworkTest:
         self.benchmarker.report_results(framework=self, test="update", results=results['results'])
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
 
     # plaintext
@@ -292,6 +306,7 @@ class FrameworkTest:
         self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
         print "Complete"
     except AttributeError:
+      traceback.print_exc()
       pass
   ############################################################
   # End benchmark
@@ -440,7 +455,8 @@ class FrameworkTest:
   ############################################################
   def __run_benchmark(self, script, output_file):
     with open(output_file, 'w') as raw_file:
-      p = subprocess.Popen(self.benchmarker.ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
+	  
+      p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=raw_file)
       p.communicate(script)
   ############################################################
   # End __run_benchmark
@@ -501,7 +517,7 @@ class FrameworkTest:
     self.benchmarker = benchmarker
     self.__dict__.update(args)
 
-    # ensure diretory has __init__.py file so that we can use it as a Python package
+    # ensure directory has __init__.py file so that we can use it as a Python package
     if not os.path.exists(os.path.join(directory, "__init__.py")):
       open(os.path.join(directory, "__init__.py"), 'w').close()
 

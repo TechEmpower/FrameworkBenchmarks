@@ -8,7 +8,19 @@
       "db_url": "/dborm.php",
       "query_url": "/dborm.php?queries=",
       "port": 8080,
-      "sort": 11
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "php",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "php",
+      "notes": "",
+      "versus": "php"
     },
     "raw": {
       "setup_file": "setup",
@@ -17,7 +29,19 @@
       "fortune_url": "/fortune.php",
       "update_url": "/updateraw.php?queries=",
       "port": 8080,
-      "sort": 12
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "php",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "php",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

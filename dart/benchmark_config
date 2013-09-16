@@ -10,7 +10,19 @@
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 129
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "dart",
+      "language": "Dart",
+      "orm": "Raw",
+      "platform": "Dart",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "dart",
+      "notes": "",
+      "versus": "dart"
     }
   }]
 }

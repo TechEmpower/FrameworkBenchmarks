@@ -9,7 +9,19 @@
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
-      "sort": 3
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "django",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "wsgi",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "django",
+      "notes": "",
+      "versus": "wsgi"
     },
     "py3": {
       "setup_file": "setup_py3",
@@ -19,7 +31,19 @@
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
-      "sort": 242
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "django",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "wsgi",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "django-py3",
+      "notes": "",
+      "versus": "wsgi"
     },
     "postgresql": {
       "setup_file": "setup_pg",
@@ -29,7 +53,19 @@
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
-      "sort": 317
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "django",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "wsgi",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "django",
+      "notes": "",
+      "versus": "wsgi"
     }
   }]
 }

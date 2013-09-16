@@ -7,7 +7,19 @@
       "db_url": "/hello_world/db",
       "query_url": "/hello_world/db?queries=",
       "port": 8080,
-      "sort": 34
+      "approach": "Stripped",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Unicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails",
+      "notes": "",
+      "versus": "rack"
     },
     "jruby": {
       "setup_file": "setup_jruby",
@@ -15,7 +27,19 @@
       "db_url": "/rails/hello_world/db",
       "query_url": "/rails/hello_world/db?queries=",
       "port": 8080,
-      "sort": 35
+      "approach": "Stripped",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "JRuby",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails",
+      "notes": "",
+      "versus": "rack"
     }
   }]
 }

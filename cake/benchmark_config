@@ -9,7 +9,19 @@
       "fortunes_url": "/fortunes",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 1
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "cake",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cake",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

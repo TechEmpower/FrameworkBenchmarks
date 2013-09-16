@@ -9,7 +9,19 @@
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
-      "sort": 72
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "phalcon",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "phalcon",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

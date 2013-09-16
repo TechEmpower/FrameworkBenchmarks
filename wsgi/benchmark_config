@@ -6,14 +6,38 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 29
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "wsgi",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "wsgi",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "wsgi",
+      "notes": "",
+      "versus": "wsgi"
     },
-    "nginxuwsgi": {
+    "nginx-uwsgi": {
       "setup_file": "setup_nginxuwsgi",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 324
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "wsgi",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "wsgi",
+      "webserver": "nginx-uWSGI",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "wsgi-nginx-uWSGI",
+      "notes": "",
+      "versus": "wsgi"
     }
   }]
 }

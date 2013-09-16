@@ -9,7 +9,19 @@
       "fortune_url": "/fortune",
       "update_url": "/update?queries=",
       "port": 8080,
-      "sort": 16
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Unicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails",
+      "notes": "",
+      "versus": "rack"
     },
     "jruby": {
       "setup_file": "setup_jruby",
@@ -19,7 +31,19 @@
       "fortune_url": "/rails/fortune",
       "update_url": "/rails/update?queries=",
       "port": 8080,
-      "sort": 17
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "JRuby",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails",
+      "notes": "",
+      "versus": "rack"
     }
   }]
 }

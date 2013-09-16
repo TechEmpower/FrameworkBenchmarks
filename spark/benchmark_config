@@ -7,7 +7,19 @@
       "db_url": "/spark/db",
       "query_url": "/spark/db?queries=",
       "port": 8080,
-      "sort": 71
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "spark",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "spark",
+      "notes": "",
+      "versus": "servlet"
     }
   }]
 }

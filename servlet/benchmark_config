@@ -6,7 +6,19 @@
       "json_url": "/servlet/json",
       "plaintext_url": "/servlet/plaintext",
       "port": 8080,
-      "sort": 18
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "servlet",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "servlet",
+      "notes": "",
+      "versus": "servlet"
     },
     "raw": {
       "setup_file": "setup",
@@ -15,7 +27,19 @@
       "fortune_url": "/servlet//fortunes",
       "update_url": "/servlet/update?queries=",
       "port": 8080,
-      "sort": 19
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "servlet",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "servlet",
+      "notes": "",
+      "versus": "servlet"
     },
     "postgres-raw": {
       "setup_file": "setup",
@@ -23,7 +47,19 @@
       "query_url": "/servlet/postgres?queries=",
       "update_url": "/servlet/postgres-update?queries=",
       "port": 8080,
-      "sort": 99
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "servlet",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "servlet",
+      "notes": "",
+      "versus": "servlet"
     }
   }]
 }
