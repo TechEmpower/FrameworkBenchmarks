@@ -1,18 +1,14 @@
 package controllers;
 
 import akka.dispatch.ExecutionContexts;
-import akka.dispatch.Futures;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.World;
 import play.Play;
 import play.core.NamedThreadFactory;
-import play.libs.Akka;
 import play.libs.F;
 import play.libs.Json;
 
-import static play.libs.Akka.future;
-
-import org.codehaus.jackson.node.ObjectNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.ExecutionContext;
@@ -51,7 +47,7 @@ public class Application extends Controller {
     public static class IsDbAvailable implements Predicate {
         @Override
         public boolean condition() {
-            return (tpe.getQueue().size() < maxConnections * MAX_QUERIES_PER_REQUEST);
+            return tpe.getQueue().size() < maxConnections * MAX_QUERIES_PER_REQUEST;
         }
     }
 
@@ -62,35 +58,24 @@ public class Application extends Controller {
     }
 
     @Predicated(predicate = IsDbAvailable.class, failed = SERVICE_UNAVAILABLE)
-    public static Result db(final Integer queries) {
+    public static F.Promise<Result> db(final Integer queries) {
         final Random random = ThreadLocalRandom.current();
         final List<F.Promise<? extends World>> promises = new ArrayList<F.Promise<? extends World>>(queries);
         for (int i = 0; i < queries; ++i) {
-            // There's no convenience method for submitting a future on an EC in Java. There is
-            // an issue that will address this though: https://github.com/playframework/Play20/issues/972
-            // Meanwhile we call the Akka future directly and wrap its result in a promise.
-            final F.Promise p = Akka.asPromise(Futures.future(
-                    findWorld(Long.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1)), dbEc));
+            final F.Promise<World> p = F.Promise.promise(new F.Function0<World>() {
+                @Override
+                public World apply() throws Throwable {
+                    return World.find.byId(Long.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1));
+                }
+            }, dbEc);
             promises.add(p);
         }
-        return async(F.Promise.sequence(promises).map(new F.Function<List<World>, Result>() {
-
+        return F.Promise.sequence(promises).map(new F.Function<List<World>, Result>() {
             @Override
             public Result apply(List<World> worlds) {
                 return ok(Json.toJson(worlds));
             }
-
-        }));
-
-    }
-
-    private static Callable<World> findWorld(final Long id) {
-        return new Callable<World>() {
-            @Override
-            public World call() {
-                return World.find.byId(id);
-            }
-        };
+        });
     }
 
 }
