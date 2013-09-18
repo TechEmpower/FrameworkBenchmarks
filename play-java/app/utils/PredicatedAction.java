@@ -5,18 +5,19 @@ package utils;
  * condition is not satisfied then a supplied status result is yielded.
  */
 
+import play.libs.F;
 import play.mvc.Action;
 import play.mvc.Http;
-import play.mvc.Result;
+import play.mvc.SimpleResult;
 
 public class PredicatedAction extends Action<Predicated> {
     @Override
-    public Result call(final Http.Context ctx) throws Throwable {
+    public F.Promise<SimpleResult> call(final Http.Context ctx) throws Throwable {
         final Predicate p = configuration.predicate().newInstance();
         if (p.condition()) {
             return delegate.call(ctx);
         } else {
-            return status(configuration.failed());
+            return F.Promise.<SimpleResult>pure(status(configuration.failed()));
         }
     }
 }

@@ -3,7 +3,6 @@ package models;
 import javax.persistence.*;
 
 import play.db.jpa.JPA;
-import play.db.jpa.Transactional;
 
 @Entity
 public class World {
