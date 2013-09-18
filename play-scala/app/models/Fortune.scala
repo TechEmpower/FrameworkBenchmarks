@@ -4,6 +4,7 @@ import play.api.db._
 import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
+import scala.language.postfixOps
 
 case class Fortune(id: Pk[Long], message: String)
 
