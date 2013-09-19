@@ -9,4 +9,6 @@ libraryDependencies ++= Seq(
   "org.hibernate" % "hibernate-entitymanager" % "4.2.1.Final"
   )
 
+dependencyOverrides += "com.jolbox" % "bonecp" % "0.7.1.RELEASE"
+
 playJavaSettings
