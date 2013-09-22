@@ -4,7 +4,7 @@ import persistenceContext._
 
 class CreateSchema extends Migration {
 
-    def timestamp = System.currentTimeMillis + 1
+    def timestamp = System.currentTimeMillis + 100
 
     def up = {
         removeAllEntitiesTables.cascade.ifExists
@@ -15,7 +15,7 @@ class CreateSchema extends Migration {
 
 class MigrateFortunes extends Migration {
 
-    def timestamp = System.currentTimeMillis + 2
+    def timestamp = System.currentTimeMillis + 200
 
     def up = {
         customScript {
@@ -33,7 +33,7 @@ class MigrateFortunes extends Migration {
 
 class MigrateWorlds extends Migration {
 
-    def timestamp = System.currentTimeMillis + 3
+    def timestamp = System.currentTimeMillis + 300
 
     def up = {
         customScript {
