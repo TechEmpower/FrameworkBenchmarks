@@ -9,6 +9,7 @@ import textwrap
 import pprint
 import csv
 import sys
+import pickle
 from datetime import datetime
 
 class Benchmarker:
@@ -21,7 +22,7 @@ class Benchmarker:
   # Prints all the available tests
   ############################################################
   def run_list_tests(self):
-    all_tests = self.__gather_tests()
+    all_tests = self.__gather_tests
 
     for test in all_tests:
       print test.name
@@ -36,7 +37,7 @@ class Benchmarker:
   # Prints the metadata for all the available tests
   ############################################################
   def run_list_test_metadata(self):
-    all_tests = self.__gather_tests()
+    all_tests = self.__gather_tests
     all_tests_json = json.dumps(map(lambda test: {
       "name": test.name,
       "approach": test.approach,
@@ -69,8 +70,8 @@ class Benchmarker:
   # Re-parses the raw data for a given timestamp
   ############################################################
   def parse_timestamp(self):
-    all_tests = self.__gather_tests()
-    
+    all_tests = self.__gather_tests
+
     for test in all_tests:
       test.parse_all()
     
@@ -94,7 +95,7 @@ class Benchmarker:
     # Get a list of all known
     # tests that we can run.
     ##########################    
-    all_tests = self.__gather_tests()
+    all_tests = self.__gather_tests
 
     ##########################
     # Setup client/server
@@ -222,6 +223,7 @@ class Benchmarker:
   ############################################################
   # Gathers all the tests
   ############################################################
+  @property
   def __gather_tests(self):
     tests = []
     # Loop through each directory (we assume we're being run from the benchmarking root)
@@ -248,6 +250,7 @@ class Benchmarker:
       if 'benchmark_config' in filenames:
         config = None
         config_file_name = os.path.join(dirname, 'benchmark_config')
+
         with open(config_file_name, 'r') as config_file:
           # Load json file into config object
           try:
@@ -340,6 +343,13 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __run_tests(self, tests):
+
+    try:
+      runattempts_file = open('run_attempts.pickle','b')
+      runattempts = pickle.load(runattempts_file)
+    except:
+      runattempts = list()
+
     for test in tests:
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
@@ -359,7 +369,11 @@ class Benchmarker:
       # If the test does not contain an implementation of the current test-type, skip it
       if self.type != 'all' and not test.contains_type(self.type):
         continue
-      
+
+      if runattempts != None and test.name in runattempts:
+        continue
+
+      runattempts.append(test.name)
       print textwrap.dedent("""
       =====================================================
         Beginning {name}
@@ -379,7 +393,7 @@ class Benchmarker:
         p.communicate("""
           sudo restart mysql
           sudo restart mongodb
-		  sudo /etc/init.d/postgresql restart
+		      sudo /etc/init.d/postgresql restart
         """)
         time.sleep(10)
         
@@ -429,7 +443,15 @@ class Benchmarker:
         -----------------------------------------------------
         """.format(name=test.name))
         time.sleep(5)
+      except (OSError, subprocess.CalledProcessError):
+        print textwrap.dedent("""
+        -----------------------------------------------------
+          Subprocess Error {name}
+        -----------------------------------------------------
+        """.format(name=test.name))
       except (KeyboardInterrupt, SystemExit):
+        pickle.dump(runattempts, 'run_attempts.pickle')
+        runattempts_file.close()
         test.stop()
         print """
         -----------------------------------------------------
@@ -438,7 +460,9 @@ class Benchmarker:
         """
         self.__finish()
         sys.exit()
-    
+    runattempts = list()
+    pickle.dump(runattempts, 'run_attempts.pickle')
+    runattempts_file.close()
   ############################################################
   # End __run_tests
   ############################################################
@@ -569,7 +593,7 @@ class Benchmarker:
       self.results = dict()
       self.results['concurrencyLevels'] = self.concurrency_levels
       self.results['queryIntervals'] = self.query_intervals
-      self.results['frameworks'] = [t.name for t in self.__gather_tests()]
+      self.results['frameworks'] = [t.name for t in self.__gather_tests]
       self.results['duration'] = self.duration
       self.results['rawData'] = dict()
       self.results['rawData']['json'] = dict()
@@ -583,7 +607,7 @@ class Benchmarker:
       #  if x.name not in self.results['frameworks']:
       #    self.results['frameworks'] = self.results['frameworks'] + [x.name]
       # Always overwrite framework list
-      self.results['frameworks'] = [t.name for t in self.__gather_tests()]
+      self.results['frameworks'] = [t.name for t in self.__gather_tests]
 
     # Setup the ssh command string
     self.database_ssh_string = "ssh -T -o StrictHostKeyChecking=no " + self.database_user + "@" + self.database_host
