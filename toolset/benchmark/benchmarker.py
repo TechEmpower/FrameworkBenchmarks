@@ -370,8 +370,8 @@ class Benchmarker:
       if self.type != 'all' and not test.contains_type(self.type):
         continue
 
-      if runattempts != None and test.name in runattempts:
-        continue
+      #if runattempts != None and test.name in runattempts:
+      #  continue
 
       #runattempts.append(test.name)
       print textwrap.dedent("""
