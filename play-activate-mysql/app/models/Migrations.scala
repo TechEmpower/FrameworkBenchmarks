@@ -41,7 +41,7 @@ class MigrateWorlds extends Migration {
             try {
                 val rs = con.createStatement.executeQuery("SELECT id, randomNumber FROM World")
                 while (rs.next)
-                    new ActivateWorld(rs.getLong(1), rs.getInt(1))
+                    new ActivateWorld(rs.getLong(1), rs.getInt(2))
             } finally
                 con.close
         }
