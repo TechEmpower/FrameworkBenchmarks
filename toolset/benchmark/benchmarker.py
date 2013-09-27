@@ -344,11 +344,11 @@ class Benchmarker:
   ############################################################
   def __run_tests(self, tests):
 
-    try:
-      runattempts_file = open('run_attempts.pickle','b')
-      runattempts = pickle.load(runattempts_file)
-    except:
-      runattempts = list()
+    #try:
+    #  runattempts_file = open('run_attempts.pickle','b')
+    #  runattempts = pickle.load(runattempts_file)
+    #except:
+    #  runattempts = list()
 
     for test in tests:
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
@@ -373,7 +373,7 @@ class Benchmarker:
       if runattempts != None and test.name in runattempts:
         continue
 
-      runattempts.append(test.name)
+      #runattempts.append(test.name)
       print textwrap.dedent("""
       =====================================================
         Beginning {name}
@@ -450,8 +450,8 @@ class Benchmarker:
         -----------------------------------------------------
         """.format(name=test.name))
       except (KeyboardInterrupt, SystemExit):
-        pickle.dump(runattempts, 'run_attempts.pickle')
-        runattempts_file.close()
+        #pickle.dump(runattempts, 'run_attempts.pickle')
+        #runattempts_file.close()
         test.stop()
         print """
         -----------------------------------------------------
@@ -460,9 +460,9 @@ class Benchmarker:
         """
         self.__finish()
         sys.exit()
-    runattempts = list()
-    pickle.dump(runattempts, 'run_attempts.pickle')
-    runattempts_file.close()
+    #runattempts = list()
+    #pickle.dump(runattempts, 'run_attempts.pickle')
+    #runattempts_file.close()
   ############################################################
   # End __run_tests
   ############################################################
