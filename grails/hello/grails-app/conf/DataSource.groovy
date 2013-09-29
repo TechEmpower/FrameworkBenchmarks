@@ -6,16 +6,22 @@ dataSource {
     dialect = org.hibernate.dialect.MySQL5InnoDBDialect
     username = "benchmarkdbuser"
     password = "benchmarkdbpass"
-    properties {
-        maxActive = 256
-        maxIdle = 25
-        minIdle = 5
-        initialSize = 5
-        minEvictableIdleTimeMillis = 60000
-        timeBetweenEvictionRunsMillis = 60000
-        maxWait = 10000
-        validationQuery = "/* ping */"
-    }
+
+	properties {
+       maxActive = 256
+       maxIdle = 25
+       minIdle = 5
+       initialSize = 5
+       minEvictableIdleTimeMillis = 60000
+       timeBetweenEvictionRunsMillis = 60000
+       maxWait = 10000
+       numTestsPerEvictionRun=3
+       testOnBorrow=false
+       testWhileIdle=true
+       testOnReturn=false
+       validationQuery="/* ping */"
+       jdbcInterceptors="ConnectionState"
+	}
 }
 hibernate {
     // Purposely turning off query cache
