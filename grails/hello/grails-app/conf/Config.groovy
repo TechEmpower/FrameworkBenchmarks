@@ -85,6 +85,9 @@ grails.exceptionresolver.params.exclude = ['password']
 // disabling query cache
 grails.hibernate.cache.queries = false
 
+// OSIV is readonly by default
+grails.hibernate.osiv.readonly = true
+
 // set per-environment serverURL stem for creating absolute links
 environments {
     development {
