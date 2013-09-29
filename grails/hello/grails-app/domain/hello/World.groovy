@@ -7,6 +7,7 @@ class World {
     }
 
     static mapping = {
+      table name: 'World'
       version false
       columns {
         randomNumber     column:"randomNumber"
