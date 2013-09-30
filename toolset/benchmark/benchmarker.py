@@ -449,6 +449,14 @@ class Benchmarker:
           Subprocess Error {name}
         -----------------------------------------------------
         """.format(name=test.name))
+        try:
+          test.stop()
+        except (subprocess.CalledProcess):
+          print textwrap.dedent("""
+        -----------------------------------------------------
+          Subprocess Error: Test .stop() raised exception {name}
+        -----------------------------------------------------
+        """.format(name=test.name))
       except (KeyboardInterrupt, SystemExit):
         #pickle.dump(runattempts, 'run_attempts.pickle')
         #runattempts_file.close()
