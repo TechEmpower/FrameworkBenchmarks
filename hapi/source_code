@@ -1,0 +1,4 @@
+./hapi/app.js
+./hapi/package.json
+./hapi/views/
+./hapi/views/fortunes.handlebars

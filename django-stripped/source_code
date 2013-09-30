@@ -1,0 +1,7 @@
+./django-stripped/hello/world/models.py
+./django-stripped/hello/world/views.py
+./django-stripped/hello/hello/settings.py
+./django-stripped/hello/hello/urls.py
+./django-stripped/hello/hello/wsgi.py
+./django-stripped/hello/templates/
+./django-stripped/hello/templates/base.html

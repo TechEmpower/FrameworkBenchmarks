@@ -1,0 +1,8 @@
+./php-phalcon-micro/deploy/php-phalcon-micro
+./php-phalcon-micro/public/
+./php-phalcon-micro/public/index.php
+./php-phalcon-micro/views/
+./php-phalcon-micro/views/layouts
+./php-phalcon-micro/views/layouts/bench.volt
+./php-phalcon-micro/views/bench
+./php-phalcon-micro/views/bench/fortunes.volt

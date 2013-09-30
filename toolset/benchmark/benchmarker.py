@@ -302,7 +302,6 @@ class Benchmarker:
         if config == None:
           continue
         frameworks.append(str(config['framework']))
-
     return frameworks
   ############################################################
   # End __gather_frameworks
@@ -523,6 +522,8 @@ class Benchmarker:
   def __parse_results(self, tests):
     # Run the method to get the commmit count of each framework.
     self.__count_commits()
+   # Call the method which counts the sloc for each framework
+    self.__count_sloc()
 
     # Time to create parsed files
     # Aggregate JSON file
@@ -565,6 +566,33 @@ class Benchmarker:
 
   ############################################################
   # End __parse_results
+  ############################################################
+
+
+  #############################################################
+  # __count_sloc
+  # This is assumed to be run from the benchmark root directory
+  #############################################################
+  def __count_sloc(self):
+    all_frameworks = self.__gather_frameworks()
+    jsonResult = {}
+
+    for framework in all_frameworks:
+      try:
+        command = "cloc --list-file=" + framework['directory'] + "/source_code --yaml"
+        lineCount = subprocess.check_output(command, shell=True)
+        # Find the last instance of the word 'code' in the yaml output. This should
+        # be the line count for the sum of all listed files or just the line count
+        # for the last file in the case where there's only one file listed.
+        lineCount = lineCount[lineCount.rfind('code'):len(lineCount)]
+        lineCount = lineCount.strip('code: ')
+        lineCount = lineCount[0:lineCount.rfind('comment')]
+        jsonResult[framework['name']] = int(lineCount)
+      except:
+        continue
+    self.results['rawData']['slocCounts'] = jsonResult
+  ############################################################
+  # End __count_sloc
   ############################################################
 
   ############################################################
