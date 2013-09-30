@@ -271,6 +271,45 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # Gathers all the frameworks
+  ############################################################
+  def __gather_frameworks(self):
+    frameworks = []
+    # Loop through each directory (we assume we're being run from the benchmarking root)
+    for dirname, dirnames, filenames in os.walk('.'):
+      # Look for the benchmark_config file, this will contain our framework name
+      # It's format looks like this:
+      #
+      # {
+      #   "framework": "nodejs",
+      #   "tests": [{
+      #     "default": {
+      #       "setup_file": "setup",
+      #       "json_url": "/json"
+      #     },
+      #     "mysql": {
+      #       "setup_file": "setup",
+      #       "db_url": "/mysql",
+      #       "query_url": "/mysql?queries="
+      #     },
+      #     ...
+      #   }]
+      # }
+      if 'benchmark_config' in filenames:
+        config = None
+        with open(os.path.join(dirname, 'benchmark_config'), 'r') as config_file:
+          # Load json file into config object
+          config = json.load(config_file)
+        if config == None:
+          continue
+        frameworks.append(str(config['framework']))
+
+    return frameworks
+  ############################################################
+  # End __gather_frameworks
+  ############################################################
+
+  ############################################################
   # Makes any necessary changes to the server that should be 
   # made before running the tests. This involves setting kernal
   # settings to allow for more connections, or more file
@@ -483,10 +522,14 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __parse_results(self, tests):
+    # Run the method to get the commmit count of each framework.
+    self.__count_commits()
+
     # Time to create parsed files
     # Aggregate JSON file
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
       f.write(json.dumps(self.results))
+
     
     # JSON CSV
     # with open(os.path.join(self.full_results_directory(), "json.csv"), 'wb') as csvfile:
@@ -523,6 +566,28 @@ class Benchmarker:
 
   ############################################################
   # End __parse_results
+  ############################################################
+
+  ############################################################
+  # __count_commits
+  ############################################################
+  def __count_commits(self):
+    all_frameworks = self.__gather_frameworks()
+
+    jsonResult = {}
+
+    for framework in all_frameworks:
+      try:
+        command = "git rev-list HEAD -- " + framework + " | sort -u | wc -l"
+        commitCount = subprocess.check_output(command, shell=True)
+        jsonResult[framework] = int(commitCount)
+      except:
+        continue
+
+    self.results['rawData']['commitCounts'] = jsonResult
+    self.commits = jsonResult
+  ############################################################
+  # End __count_commits
   ############################################################
 
   ############################################################
