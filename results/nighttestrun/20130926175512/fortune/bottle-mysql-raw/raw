@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 19:00:51 PDT 2013
+
+  System load:  0.11               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortuneraw
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortuneraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.09ms  644.81us  15.44ms   97.46%
+    Req/Sec     0.99k   115.05     1.22k    72.97%
+  37625 requests in 5.00s, 52.32MB read
+Requests/sec:   7524.48
+Transfer/sec:     10.46MB
+
+---------------------------------------------------------
+ Running Warmup bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortuneraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortuneraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.45ms   13.63ms 150.71ms   75.91%
+    Req/Sec     1.07k   121.73     1.46k    80.19%
+  124431 requests in 15.00s, 173.02MB read
+Requests/sec:   8294.55
+Transfer/sec:     11.53MB
+
+---------------------------------------------------------
+ Concurrency: 8 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortuneraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortuneraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.05ms  222.27us   2.36ms   77.60%
+    Req/Sec     1.00k   105.46     1.33k    63.93%
+  113472 requests in 15.00s, 157.78MB read
+Requests/sec:   7564.68
+Transfer/sec:     10.52MB
+
+---------------------------------------------------------
+ Concurrency: 16 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortuneraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortuneraw
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.90ms    0.92ms   7.66ms   87.17%
+    Req/Sec     1.16k   249.50     1.89k    63.63%
+  132361 requests in 15.00s, 184.04MB read
+Requests/sec:   8824.00
+Transfer/sec:     12.27MB
+
+---------------------------------------------------------
+ Concurrency: 32 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortuneraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortuneraw
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.93ms    2.28ms  19.26ms   86.06%
+    Req/Sec     1.14k   319.24     2.44k    67.55%
+  126380 requests in 15.00s, 175.73MB read
+Requests/sec:   8424.84
+Transfer/sec:     11.71MB
+
+---------------------------------------------------------
+ Concurrency: 64 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortuneraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortuneraw
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.92ms    5.24ms  55.17ms   81.91%
+    Req/Sec     1.16k   413.52     2.40k    68.55%
+  123701 requests in 15.00s, 172.00MB read
+Requests/sec:   8244.96
+Transfer/sec:     11.46MB
+
+---------------------------------------------------------
+ Concurrency: 128 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortuneraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortuneraw
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.39ms    8.86ms  73.35ms   73.30%
+    Req/Sec     1.09k   216.09     1.74k    65.20%
+  124324 requests in 15.00s, 172.87MB read
+Requests/sec:   8286.23
+Transfer/sec:     11.52MB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortuneraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortuneraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.26ms   12.40ms 134.56ms   75.50%
+    Req/Sec     1.07k    74.02     1.28k    68.06%
+  124399 requests in 15.00s, 172.97MB read
+Requests/sec:   8292.55
+Transfer/sec:     11.53MB

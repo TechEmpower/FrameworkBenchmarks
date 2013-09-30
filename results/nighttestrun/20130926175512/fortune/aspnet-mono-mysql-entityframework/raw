@@ -1,0 +1,141 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 18:18:37 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/entityframework/mysql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  15 requests in 6.00s, 24.15KB read
+  Socket errors: connect 0, read 0, write 0, timeout 19
+  Non-2xx or 3xx responses: 1
+Requests/sec:      2.50
+Transfer/sec:      4.02KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/entityframework/mysql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  152 requests in 16.00s, 225.54KB read
+  Socket errors: connect 0, read 6, write 0, timeout 1816
+  Non-2xx or 3xx responses: 22
+Requests/sec:      9.50
+Transfer/sec:     14.09KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/entityframework/mysql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  10 requests in 16.01s, 17.02KB read
+  Socket errors: connect 0, read 0, write 0, timeout 60
+Requests/sec:      0.62
+Transfer/sec:      1.06KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/entityframework/mysql/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25 requests in 16.00s, 42.55KB read
+  Socket errors: connect 0, read 0, write 0, timeout 116
+Requests/sec:      1.56
+Transfer/sec:      2.66KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/entityframework/mysql/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  9 requests in 16.01s, 15.32KB read
+  Socket errors: connect 0, read 0, write 0, timeout 246
+Requests/sec:      0.56
+Transfer/sec:      0.96KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/entityframework/mysql/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  49 requests in 16.00s, 79.56KB read
+  Socket errors: connect 0, read 0, write 0, timeout 454
+  Non-2xx or 3xx responses: 3
+Requests/sec:      3.06
+Transfer/sec:      4.97KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/entityframework/mysql/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  45 requests in 16.00s, 71.84KB read
+  Socket errors: connect 0, read 3, write 0, timeout 937
+  Non-2xx or 3xx responses: 2
+Requests/sec:      2.81
+Transfer/sec:      4.49KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/entityframework/mysql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  68 requests in 16.00s, 107.84KB read
+  Socket errors: connect 0, read 2, write 0, timeout 1805
+  Non-2xx or 3xx responses: 6
+Requests/sec:      4.25
+Transfer/sec:      6.74KB

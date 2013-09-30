@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 00:43:56 PDT 2013
+
+  System load:  0.01               Processes:           117
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/mysql-orm/
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mysql-orm/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.35ms    2.11ms  20.64ms   97.44%
+    Req/Sec     1.01k   302.67     1.67k    68.00%
+  37575 requests in 5.00s, 7.84MB read
+Requests/sec:   7514.18
+Transfer/sec:      1.57MB
+
+---------------------------------------------------------
+ Running Warmup hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mysql-orm/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.92ms   16.07ms  87.96ms   61.67%
+    Req/Sec     1.45k   454.39     3.06k    75.85%
+  165835 requests in 15.00s, 34.60MB read
+Requests/sec:  11056.00
+Transfer/sec:      2.31MB
+
+---------------------------------------------------------
+ Concurrency: 8 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/mysql-orm/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.26ms    1.75ms  21.00ms   98.01%
+    Req/Sec     1.00k   253.64     1.55k    77.04%
+  113418 requests in 15.00s, 23.66MB read
+Requests/sec:   7561.09
+Transfer/sec:      1.58MB
+
+---------------------------------------------------------
+ Concurrency: 16 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/mysql-orm/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.02ms    2.71ms  35.75ms   95.30%
+    Req/Sec     1.23k   463.43     2.78k    68.59%
+  139413 requests in 15.00s, 29.09MB read
+Requests/sec:   9293.83
+Transfer/sec:      1.94MB
+
+---------------------------------------------------------
+ Concurrency: 32 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/mysql-orm/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.68ms    3.10ms  37.61ms   90.03%
+    Req/Sec     1.33k   558.05     3.11k    61.10%
+  146264 requests in 15.00s, 30.52MB read
+Requests/sec:   9750.55
+Transfer/sec:      2.03MB
+
+---------------------------------------------------------
+ Concurrency: 64 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/mysql-orm/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.53ms    4.25ms  42.53ms   83.18%
+    Req/Sec     1.34k   409.19     2.94k    76.40%
+  153961 requests in 15.00s, 32.12MB read
+Requests/sec:  10263.28
+Transfer/sec:      2.14MB
+
+---------------------------------------------------------
+ Concurrency: 128 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/mysql-orm/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.96ms    9.60ms  69.75ms   87.15%
+    Req/Sec     1.40k   309.66     2.42k    69.35%
+  162369 requests in 15.00s, 33.88MB read
+Requests/sec:  10824.51
+Transfer/sec:      2.26MB
+
+---------------------------------------------------------
+ Concurrency: 256 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/mysql-orm/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.40ms   12.42ms  74.95ms   68.34%
+    Req/Sec     1.41k   203.49     2.01k    64.53%
+  167433 requests in 15.00s, 34.93MB read
+Requests/sec:  11161.38
+Transfer/sec:      2.33MB

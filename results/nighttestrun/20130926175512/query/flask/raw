@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 22:42:41 PDT 2013
+
+  System load:  0.04               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.40ms    0.87ms  17.87ms   80.92%
+    Req/Sec   316.68     65.21   555.00     64.58%
+  12017 requests in 5.00s, 2.75MB read
+Requests/sec:   2402.36
+Transfer/sec:    562.00KB
+
+---------------------------------------------------------
+ Running Warmup flask
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.32ms   31.88ms 297.05ms   69.72%
+    Req/Sec   317.28     24.35   395.00     71.84%
+  37700 requests in 15.01s, 8.61MB read
+Requests/sec:   2512.24
+Transfer/sec:    587.72KB
+
+---------------------------------------------------------
+ Queries: 1 for flask
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    70.37ms   24.70ms 264.78ms   70.08%
+    Req/Sec   452.60     30.66   558.00     69.17%
+  53638 requests in 15.00s, 10.42MB read
+Requests/sec:   3574.74
+Transfer/sec:    711.38KB
+
+---------------------------------------------------------
+ Queries: 5 for flask
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   192.30ms   69.66ms 567.12ms   71.43%
+    Req/Sec   167.55     14.63   218.00     73.16%
+  20047 requests in 15.01s, 6.65MB read
+Requests/sec:   1335.56
+Transfer/sec:    453.73KB
+
+---------------------------------------------------------
+ Queries: 10 for flask
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   336.22ms  115.26ms   1.28s    77.35%
+    Req/Sec    95.61     10.72   120.00     81.90%
+  11313 requests in 15.03s, 5.68MB read
+Requests/sec:    752.90
+Transfer/sec:    387.30KB
+
+---------------------------------------------------------
+ Queries: 15 for flask
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   485.71ms  156.83ms   1.68s    73.60%
+    Req/Sec    65.75      6.91    87.00     78.15%
+  7868 requests in 15.04s, 5.29MB read
+Requests/sec:    523.19
+Transfer/sec:    360.53KB
+
+---------------------------------------------------------
+ Queries: 20 for flask
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   631.66ms  226.41ms   1.83s    72.35%
+    Req/Sec    49.93      6.82    62.00     77.42%
+  6030 requests in 15.10s, 5.09MB read
+Requests/sec:    399.22
+Transfer/sec:    344.84KB
