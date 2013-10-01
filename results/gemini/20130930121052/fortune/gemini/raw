@@ -1,0 +1,119 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.16ms    1.94ms  19.14ms   82.18%
+    Req/Sec   257.00     62.44   500.00     70.78%
+  9600 requests in 5.00s, 13.07MB read
+Requests/sec:   1919.64
+Transfer/sec:      2.61MB
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    85.77ms   49.21ms   1.69s    94.63%
+    Req/Sec   381.95     55.22     1.13k    92.92%
+  45432 requests in 15.00s, 61.87MB read
+Requests/sec:   3028.52
+Transfer/sec:      4.12MB
+
+---------------------------------------------------------
+ Concurrency: 8 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.25ms    2.59ms  46.42ms   97.99%
+    Req/Sec   522.13    106.03     2.40k    77.49%
+  59425 requests in 15.00s, 80.93MB read
+Requests/sec:   3961.84
+Transfer/sec:      5.40MB
+
+---------------------------------------------------------
+ Concurrency: 16 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.16ms    2.62ms  92.95ms   97.35%
+    Req/Sec   518.03    107.66     2.33k    67.43%
+  58931 requests in 15.00s, 80.26MB read
+Requests/sec:   3928.54
+Transfer/sec:      5.35MB
+
+---------------------------------------------------------
+ Concurrency: 32 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.26ms    3.49ms  59.41ms   94.62%
+    Req/Sec   502.70     78.91     1.58k    72.90%
+  58677 requests in 15.00s, 79.91MB read
+Requests/sec:   3911.30
+Transfer/sec:      5.33MB
+
+---------------------------------------------------------
+ Concurrency: 64 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.41ms    6.50ms 131.61ms   93.96%
+    Req/Sec   468.73     55.44     1.03k    68.10%
+  55664 requests in 15.00s, 75.81MB read
+Requests/sec:   3710.10
+Transfer/sec:      5.05MB
+
+---------------------------------------------------------
+ Concurrency: 128 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.83ms   12.64ms 280.34ms   94.13%
+    Req/Sec   475.72     32.20     0.86k    77.76%
+  56766 requests in 15.00s, 77.31MB read
+Requests/sec:   3784.33
+Transfer/sec:      5.15MB
+
+---------------------------------------------------------
+ Concurrency: 256 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.33ms  100.83ms   2.98s    99.31%
+    Req/Sec   480.72    182.20     3.81k    92.18%
+  56252 requests in 15.00s, 76.61MB read
+  Socket errors: connect 0, read 0, write 0, timeout 45
+Requests/sec:   3749.20
+Transfer/sec:      5.11MB

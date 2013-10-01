@@ -1,0 +1,104 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/update-mongodb?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/update-mongodb?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.35ms    1.56ms  23.44ms   95.95%
+    Req/Sec   141.80     29.94   214.00     75.46%
+  5520 requests in 5.00s, 0.93MB read
+Requests/sec:   1103.72
+Transfer/sec:    189.70KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update-mongodb?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update-mongodb?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   227.57ms   13.01ms 308.71ms   77.64%
+    Req/Sec   139.95     13.95   194.00     84.94%
+  16731 requests in 15.03s, 2.81MB read
+Requests/sec:   1113.01
+Transfer/sec:    191.30KB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update-mongodb?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update-mongodb?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   143.68ms   10.04ms 209.85ms   81.32%
+    Req/Sec   222.25     24.24   309.00     83.29%
+  26664 requests in 15.10s, 4.35MB read
+Requests/sec:   1766.35
+Transfer/sec:    294.97KB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update-mongodb?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update-mongodb?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   468.41ms   19.66ms 552.91ms   92.24%
+    Req/Sec    68.48     10.03   118.00     89.14%
+  8063 requests in 15.03s, 1.48MB read
+Requests/sec:    536.40
+Transfer/sec:    100.57KB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update-mongodb?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update-mongodb?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   893.38ms   21.86ms 952.82ms   81.57%
+    Req/Sec    34.86      8.79    42.00     82.44%
+  4229 requests in 15.19s, 0.88MB read
+Requests/sec:    278.36
+Transfer/sec:     58.99KB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update-mongodb?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update-mongodb?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.32s    64.74ms   1.36s    91.28%
+    Req/Sec    24.76     46.01   182.00     88.21%
+  2951 requests in 16.01s, 697.40KB read
+Requests/sec:    184.28
+Transfer/sec:     43.55KB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update-mongodb?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update-mongodb?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.80s    34.70ms   1.83s    84.39%
+    Req/Sec    16.81     16.38    36.00     24.07%
+  2122 requests in 15.99s, 553.29KB read
+Requests/sec:    132.72
+Transfer/sec:     34.61KB

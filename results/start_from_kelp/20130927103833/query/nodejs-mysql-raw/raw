@@ -1,0 +1,109 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/mysql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/mysql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.87ms   81.97ms 358.99ms   89.53%
+    Req/Sec    32.85     30.51    88.00     72.09%
+  1192 requests in 5.03s, 250.89KB read
+Requests/sec:    236.79
+Transfer/sec:     49.84KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/mysql?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mysql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   593.88ms  489.04ms   2.76s    85.98%
+    Req/Sec    69.01     28.16   100.00     81.37%
+  8373 requests in 15.02s, 1.72MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    557.32
+Transfer/sec:    117.32KB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/mysql?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mysql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   371.66ms  365.78ms   2.29s    85.11%
+    Req/Sec   123.67     48.89   194.00     79.31%
+  14901 requests in 15.02s, 2.61MB read
+Requests/sec:    991.84
+Transfer/sec:    178.00KB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/mysql?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mysql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.93s   627.82ms   3.38s    77.58%
+    Req/Sec    17.88     11.73    49.00     68.35%
+  2204 requests in 15.21s, 669.09KB read
+  Socket errors: connect 0, read 0, write 0, timeout 70
+Requests/sec:    144.87
+Transfer/sec:     43.98KB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/mysql?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mysql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.08s     1.22s    6.06s    73.54%
+    Req/Sec     8.53      8.46    36.00     61.36%
+  1100 requests in 15.28s, 505.67KB read
+  Socket errors: connect 0, read 0, write 0, timeout 748
+Requests/sec:     71.98
+Transfer/sec:     33.09KB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/mysql?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mysql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.64s     1.24s    8.66s    84.42%
+    Req/Sec     5.95      2.75    10.00     68.18%
+  773 requests in 16.03s, 475.16KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1076
+Requests/sec:     48.22
+Transfer/sec:     29.64KB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/mysql?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mysql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.92s     2.06s   11.72s    78.57%
+    Req/Sec     4.40      2.56     8.00     60.00%
+  576 requests in 16.04s, 443.65KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1320
+Requests/sec:     35.91
+Transfer/sec:     27.66KB

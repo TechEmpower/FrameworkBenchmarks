@@ -1,0 +1,119 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer bottle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.81ms    7.76ms  58.43ms   57.65%
+    Req/Sec    91.32     64.82   250.00     79.73%
+  2625 requests in 5.01s, 3.66MB read
+Requests/sec:    523.94
+Transfer/sec:    747.54KB
+
+---------------------------------------------------------
+ Running Warmup bottle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   493.98ms  276.76ms   1.95s    94.50%
+    Req/Sec    71.42     27.03   181.00     72.57%
+  8536 requests in 15.24s, 11.89MB read
+Requests/sec:    560.06
+Transfer/sec:    799.06KB
+
+---------------------------------------------------------
+ Concurrency: 8 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.24ms    4.33ms  58.52ms   75.80%
+    Req/Sec    65.51     19.29   125.00     88.06%
+  7554 requests in 15.01s, 10.53MB read
+Requests/sec:    503.21
+Transfer/sec:    717.96KB
+
+---------------------------------------------------------
+ Concurrency: 16 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.25ms    4.01ms  73.07ms   78.37%
+    Req/Sec    66.51      9.70   109.00     70.23%
+  7991 requests in 15.02s, 11.13MB read
+Requests/sec:    531.88
+Transfer/sec:    758.87KB
+
+---------------------------------------------------------
+ Concurrency: 32 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.10ms    7.11ms 111.11ms   78.88%
+    Req/Sec    70.31      9.26   100.00     58.71%
+  8465 requests in 15.02s, 11.79MB read
+Requests/sec:    563.58
+Transfer/sec:    804.10KB
+
+---------------------------------------------------------
+ Concurrency: 64 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   121.37ms   12.97ms 162.91ms   70.49%
+    Req/Sec    65.87      6.63    88.00     62.57%
+  7937 requests in 15.04s, 11.06MB read
+Requests/sec:    527.90
+Transfer/sec:    753.18KB
+
+---------------------------------------------------------
+ Concurrency: 128 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   242.73ms   41.02ms 723.77ms   94.01%
+    Req/Sec    66.61     10.06   110.00     69.86%
+  8043 requests in 15.13s, 11.21MB read
+Requests/sec:    531.54
+Transfer/sec:    758.37KB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   476.88ms  148.61ms   2.22s    91.27%
+    Req/Sec    70.58     25.39   145.00     63.33%
+  8321 requests in 15.19s, 11.59MB read
+  Socket errors: connect 0, read 0, write 0, timeout 15
+Requests/sec:    547.92
+Transfer/sec:    781.75KB

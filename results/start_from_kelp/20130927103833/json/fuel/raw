@@ -1,0 +1,127 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 10:42:58 PDT 2013
+
+  System load:  0.01               Processes:           357
+  Usage of /:   16.3% of 58.69GB   Users logged in:     1
+  Memory usage: 9%                 IP address for eth0: 172.16.98.181
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Primer fuel
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.23ms   12.35ms  62.12ms   63.11%
+    Req/Sec    36.05      7.92    57.00     66.99%
+  1467 requests in 5.02s, 320.87KB read
+Requests/sec:    292.52
+Transfer/sec:     63.98KB
+
+---------------------------------------------------------
+ Running Warmup fuel
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.76s   691.73ms   2.33s    76.23%
+    Req/Sec    37.52     28.64   163.00     67.16%
+  4352 requests in 15.13s, 0.93MB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+Requests/sec:    287.58
+Transfer/sec:     62.91KB
+
+---------------------------------------------------------
+ Concurrency: 8 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.40ms   11.15ms  57.05ms   64.74%
+    Req/Sec    40.32      7.63    64.00     75.20%
+  4870 requests in 15.02s, 1.04MB read
+Requests/sec:    324.34
+Transfer/sec:     70.93KB
+
+---------------------------------------------------------
+ Concurrency: 16 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.08ms   24.61ms 136.27ms   64.36%
+    Req/Sec    39.69      7.06    61.00     72.01%
+  4815 requests in 15.03s, 1.03MB read
+Requests/sec:    320.32
+Transfer/sec:     70.06KB
+
+---------------------------------------------------------
+ Concurrency: 32 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.46ms   51.26ms 221.24ms   62.22%
+    Req/Sec    39.53      4.06    52.00     68.33%
+  4787 requests in 15.03s, 1.02MB read
+Requests/sec:    318.59
+Transfer/sec:     69.68KB
+
+---------------------------------------------------------
+ Concurrency: 64 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   186.73ms   92.15ms 443.57ms   66.48%
+    Req/Sec    40.24      3.58    52.00     71.98%
+  4875 requests in 15.04s, 1.04MB read
+Requests/sec:    324.16
+Transfer/sec:     70.91KB
+
+---------------------------------------------------------
+ Concurrency: 128 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   405.84ms  192.35ms 847.31ms   62.84%
+    Req/Sec    40.92      4.47    51.00     58.78%
+  4946 requests in 15.06s, 1.06MB read
+Requests/sec:    328.46
+Transfer/sec:     71.85KB
+
+---------------------------------------------------------
+ Concurrency: 256 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   801.02ms  579.92ms   7.28s    82.66%
+    Req/Sec    38.48      8.85    67.00     83.76%
+  4482 requests in 15.10s, 0.96MB read
+  Socket errors: connect 0, read 0, write 0, timeout 93
+Requests/sec:    296.92
+Transfer/sec:     64.95KB

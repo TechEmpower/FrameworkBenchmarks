@@ -1,0 +1,91 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   386.93us  173.55us   5.24ms   95.15%
+    Req/Sec     2.71k   293.92     3.44k    73.66%
+  100375 requests in 5.00s, 15.99MB read
+Requests/sec:  20073.11
+Transfer/sec:      3.20MB
+
+---------------------------------------------------------
+ Running Warmup netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.71ms    1.28ms  32.00ms   79.10%
+    Req/Sec     2.38k   266.08     3.56k    78.95%
+  280799 requests in 15.01s, 44.72MB read
+Requests/sec:  18713.14
+Transfer/sec:      2.98MB
+
+---------------------------------------------------------
+ Concurrency: 256 for netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.45ms    5.73ms  84.39ms   83.24%
+    Req/Sec    11.64k     1.24k   14.80k    75.83%
+  1374016 requests in 15.03s, 218.83MB read
+Requests/sec:  91442.09
+Transfer/sec:     14.56MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   174.54ms   40.30ms 875.98ms   98.27%
+    Req/Sec    11.96k     1.37k   15.17k    76.67%
+  1403568 requests in 15.07s, 223.54MB read
+Requests/sec:  93128.58
+Transfer/sec:     14.83MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   797.06ms  337.88ms   2.90s    93.51%
+    Req/Sec    10.46k     2.26k   15.38k    77.78%
+  1213712 requests in 15.09s, 193.30MB read
+Requests/sec:  80436.22
+Transfer/sec:     12.81MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.55s     3.95s   12.00s    59.74%
+    Req/Sec     5.21k     2.11k   10.91k    66.12%
+  596342 requests in 15.35s, 94.98MB read
+  Socket errors: connect 11, read 21, write 318082, timeout 65354
+Requests/sec:  38846.15
+Transfer/sec:      6.19MB

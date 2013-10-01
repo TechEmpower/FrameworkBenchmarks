@@ -1,0 +1,141 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct  1 11:32:06 PDT 2013
+
+  System load:  0.02               Processes:           138
+  Usage of /:   35.2% of 58.69GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth0: 172.16.98.181
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/json/default
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/json/default
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   564.80ms  556.91ms   1.14s    24.98%
+    Req/Sec    43.88     95.27   344.00     82.81%
+  2275 requests in 6.00s, 714.57KB read
+  Socket errors: connect 0, read 2, write 0, timeout 11
+  Non-2xx or 3xx responses: 13
+Requests/sec:    379.01
+Transfer/sec:    119.05KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/default
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   171.90ms  352.98ms   2.09s    88.51%
+    Req/Sec   104.86     36.91   231.00     66.89%
+  12600 requests in 15.00s, 3.92MB read
+  Socket errors: connect 0, read 149, write 0, timeout 684
+  Non-2xx or 3xx responses: 997
+Requests/sec:    839.82
+Transfer/sec:    267.32KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/default
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.67ms    8.77ms  35.11ms   73.80%
+    Req/Sec    28.47     67.50   352.00     83.65%
+  3304 requests in 16.00s, 1.01MB read
+  Socket errors: connect 0, read 1, write 0, timeout 49
+  Non-2xx or 3xx responses: 27
+Requests/sec:    206.46
+Transfer/sec:     64.85KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/default
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.19ms   17.40ms  46.44ms   45.55%
+    Req/Sec    43.72     88.22   418.00     80.64%
+  5125 requests in 16.01s, 1.57MB read
+  Socket errors: connect 0, read 6, write 0, timeout 101
+  Non-2xx or 3xx responses: 67
+Requests/sec:    320.20
+Transfer/sec:    100.63KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/default
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   134.84ms   80.79ms 234.16ms   64.43%
+    Req/Sec    26.66     61.52   322.00     84.75%
+  4451 requests in 16.02s, 1.37MB read
+  Socket errors: connect 0, read 4, write 0, timeout 211
+  Non-2xx or 3xx responses: 95
+Requests/sec:    277.83
+Transfer/sec:     87.62KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/default
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   349.38ms  223.48ms 565.98ms   70.71%
+    Req/Sec    39.14     65.57   360.00     82.41%
+  5483 requests in 16.01s, 1.69MB read
+  Socket errors: connect 0, read 34, write 0, timeout 385
+  Non-2xx or 3xx responses: 257
+Requests/sec:    342.40
+Transfer/sec:    108.36KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/default
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   408.82ms  400.50ms   1.18s    61.07%
+    Req/Sec    58.53     61.95   290.00     82.61%
+  7730 requests in 16.03s, 2.40MB read
+  Socket errors: connect 0, read 66, write 0, timeout 674
+  Non-2xx or 3xx responses: 469
+Requests/sec:    482.31
+Transfer/sec:    153.22KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/default
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   208.98ms  359.94ms   2.11s    86.75%
+    Req/Sec    95.34     40.41   272.00     70.56%
+  11662 requests in 16.00s, 3.63MB read
+  Socket errors: connect 0, read 191, write 0, timeout 656
+  Non-2xx or 3xx responses: 1318
+Requests/sec:    728.71
+Transfer/sec:    231.99KB

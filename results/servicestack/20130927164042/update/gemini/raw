@@ -1,0 +1,107 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.93ms   67.13ms 473.30ms   93.73%
+    Req/Sec    85.97     38.40   312.00     84.02%
+  3464 requests in 5.01s, 712.18KB read
+Requests/sec:    691.92
+Transfer/sec:    142.26KB
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   218.08ms  118.18ms   1.13s    81.89%
+    Req/Sec   150.11     21.96   192.00     80.38%
+  17862 requests in 15.00s, 3.59MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:   1190.61
+Transfer/sec:    244.81KB
+
+---------------------------------------------------------
+ Queries: 1 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   114.64ms  125.30ms   1.44s    91.16%
+    Req/Sec   297.53     54.47   411.00     80.11%
+  35564 requests in 15.00s, 6.06MB read
+Requests/sec:   2370.17
+Transfer/sec:    413.81KB
+
+---------------------------------------------------------
+ Queries: 5 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   404.27ms  184.81ms   2.20s    76.31%
+    Req/Sec    81.15      8.76   106.00     71.67%
+  9689 requests in 15.05s, 2.84MB read
+Requests/sec:    643.96
+Transfer/sec:    192.99KB
+
+---------------------------------------------------------
+ Queries: 10 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   768.23ms  210.49ms   1.63s    75.11%
+    Req/Sec    40.95      4.60    50.00     66.67%
+  4867 requests in 15.03s, 2.16MB read
+Requests/sec:    323.91
+Transfer/sec:    147.34KB
+
+---------------------------------------------------------
+ Queries: 15 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.16s   242.64ms   2.09s    73.98%
+    Req/Sec    28.20      3.03    34.00     62.50%
+  3313 requests in 15.07s, 1.97MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    219.80
+Transfer/sec:    134.09KB
+
+---------------------------------------------------------
+ Queries: 20 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.63s   427.81ms   3.49s    68.29%
+    Req/Sec    19.14      2.98    27.00     64.00%
+  2276 requests in 15.48s, 1.70MB read
+  Socket errors: connect 0, read 0, write 0, timeout 72
+Requests/sec:    147.01
+Transfer/sec:    112.49KB

@@ -1,0 +1,121 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/json.php
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/json.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.71ms    3.14ms  56.96ms   98.76%
+    Req/Sec   726.23    128.38     1.00k    80.82%
+  27978 requests in 5.00s, 6.00MB read
+Requests/sec:   5594.97
+Transfer/sec:      1.20MB
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.72ms   47.21ms   1.73s    90.53%
+    Req/Sec   650.96     89.47     1.18k    78.35%
+  77550 requests in 15.00s, 16.64MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:   5168.31
+Transfer/sec:      1.11MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.88ms    3.34ms  48.22ms   94.88%
+    Req/Sec   780.76    477.42     5.10k    90.16%
+  89119 requests in 15.00s, 19.12MB read
+Requests/sec:   5941.31
+Transfer/sec:      1.27MB
+
+---------------------------------------------------------
+ Concurrency: 16 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json.php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.26ms    6.18ms  78.35ms   96.00%
+    Req/Sec   784.35    705.47     6.11k    93.45%
+  89292 requests in 15.00s, 19.16MB read
+Requests/sec:   5952.79
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Concurrency: 32 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json.php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.26ms   18.32ms 245.80ms   97.35%
+    Req/Sec   760.78    793.20     5.82k    92.23%
+  87489 requests in 15.00s, 18.77MB read
+Requests/sec:   5832.77
+Transfer/sec:      1.25MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json.php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.08ms   26.68ms 517.46ms   96.87%
+    Req/Sec   702.20    542.99     3.91k    83.38%
+  82701 requests in 15.00s, 17.74MB read
+Requests/sec:   5512.68
+Transfer/sec:      1.18MB
+
+---------------------------------------------------------
+ Concurrency: 128 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json.php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.49ms   23.45ms 746.64ms   71.52%
+    Req/Sec   681.45    352.46     3.04k    73.51%
+  80792 requests in 15.00s, 17.33MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:   5385.18
+Transfer/sec:      1.16MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/json.php
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   510.24ms    1.11s    5.20s    84.82%
+    Req/Sec   647.97    501.66     5.31k    75.37%
+  76962 requests in 15.00s, 16.51MB read
+  Socket errors: connect 0, read 0, write 0, timeout 110
+Requests/sec:   5130.32
+Transfer/sec:      1.10MB

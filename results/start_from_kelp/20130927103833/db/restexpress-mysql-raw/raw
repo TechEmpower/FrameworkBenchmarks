@@ -1,0 +1,120 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer restexpress-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/restexpress/mysql
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/restexpress/mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    80.66ms   39.72ms 202.51ms   85.25%
+    Req/Sec    13.43      4.18    19.00     68.85%
+  532 requests in 5.04s, 61.71KB read
+Requests/sec:    105.57
+Transfer/sec:     12.25KB
+
+---------------------------------------------------------
+ Running Warmup restexpress-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/restexpress/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.09s   362.03ms   2.54s    59.34%
+    Req/Sec    31.62     26.66   104.00     65.03%
+  3373 requests in 15.04s, 391.25KB read
+  Socket errors: connect 0, read 0, write 0, timeout 116
+Requests/sec:    224.22
+Transfer/sec:     26.01KB
+
+---------------------------------------------------------
+ Concurrency: 8 for restexpress-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/restexpress/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.81ms   42.15ms 256.36ms   89.30%
+    Req/Sec    33.63     17.78   173.00     76.50%
+  4088 requests in 15.01s, 474.19KB read
+Requests/sec:    272.34
+Transfer/sec:     31.59KB
+
+---------------------------------------------------------
+ Concurrency: 16 for restexpress-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/restexpress/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/mysql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.34ms   38.98ms 263.07ms   84.14%
+    Req/Sec    37.31     12.56   127.00     76.14%
+  4538 requests in 15.02s, 526.41KB read
+Requests/sec:    302.11
+Transfer/sec:     35.04KB
+
+---------------------------------------------------------
+ Concurrency: 32 for restexpress-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/restexpress/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/mysql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   103.36ms   48.52ms 403.68ms   84.21%
+    Req/Sec    39.68      7.94    67.00     74.74%
+  4808 requests in 15.03s, 557.69KB read
+Requests/sec:    319.96
+Transfer/sec:     37.11KB
+
+---------------------------------------------------------
+ Concurrency: 64 for restexpress-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/restexpress/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/mysql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   177.75ms   56.81ms 402.28ms   71.89%
+    Req/Sec    45.03      5.57    59.00     66.67%
+  5416 requests in 15.08s, 628.22KB read
+Requests/sec:    359.17
+Transfer/sec:     41.66KB
+
+---------------------------------------------------------
+ Concurrency: 128 for restexpress-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/restexpress/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/mysql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   357.09ms  103.79ms 684.78ms   66.77%
+    Req/Sec    44.91      8.68    85.00     77.85%
+  5254 requests in 15.10s, 609.35KB read
+Requests/sec:    347.97
+Transfer/sec:     40.36KB
+
+---------------------------------------------------------
+ Concurrency: 256 for restexpress-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/restexpress/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   760.35ms  350.35ms   1.70s    74.71%
+    Req/Sec    44.87     25.73   181.00     71.66%
+  5143 requests in 15.37s, 596.54KB read
+  Socket errors: connect 0, read 0, write 0, timeout 86
+Requests/sec:    334.63
+Transfer/sec:     38.81KB

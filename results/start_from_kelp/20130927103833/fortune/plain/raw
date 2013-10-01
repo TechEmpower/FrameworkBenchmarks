@@ -1,0 +1,122 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer plain
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:9080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:9080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.96ms   40.77ms  97.48ms   68.79%
+    Req/Sec   443.74    468.92     1.89k    88.53%
+  15987 requests in 5.00s, 21.97MB read
+Requests/sec:   3197.12
+Transfer/sec:      4.39MB
+
+---------------------------------------------------------
+ Running Warmup plain
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.23s     3.58s   14.76s    76.14%
+    Req/Sec   697.70      1.00k    4.69k    84.25%
+  64941 requests in 15.04s, 89.24MB read
+  Socket errors: connect 0, read 0, write 0, timeout 857
+Requests/sec:   4319.08
+Transfer/sec:      5.94MB
+
+---------------------------------------------------------
+ Concurrency: 8 for plain
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:9080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    79.15ms  121.34ms 281.61ms   71.32%
+    Req/Sec   557.45    503.38     1.89k    58.95%
+  64100 requests in 15.00s, 88.09MB read
+Requests/sec:   4273.29
+Transfer/sec:      5.87MB
+
+---------------------------------------------------------
+ Concurrency: 16 for plain
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:9080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.65ms   29.36ms  66.19ms   68.05%
+    Req/Sec   562.05    506.59     1.89k    56.28%
+  64823 requests in 15.00s, 89.08MB read
+Requests/sec:   4321.77
+Transfer/sec:      5.94MB
+
+---------------------------------------------------------
+ Concurrency: 32 for plain
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:9080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.26ms   55.42ms 125.73ms   61.38%
+    Req/Sec   552.60    587.29     2.50k    84.10%
+  64103 requests in 15.00s, 88.09MB read
+Requests/sec:   4273.62
+Transfer/sec:      5.87MB
+
+---------------------------------------------------------
+ Concurrency: 64 for plain
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:9080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   466.09ms  620.68ms   1.71s    82.02%
+    Req/Sec   570.80    843.35     4.64k    82.06%
+  64026 requests in 15.00s, 87.99MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:   4267.93
+Transfer/sec:      5.87MB
+
+---------------------------------------------------------
+ Concurrency: 128 for plain
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:9080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.34s     3.28s    9.88s    72.31%
+    Req/Sec   543.52      0.88k    4.00k    87.02%
+  64438 requests in 15.01s, 88.55MB read
+  Socket errors: connect 0, read 0, write 0, timeout 72
+Requests/sec:   4293.48
+Transfer/sec:      5.90MB
+
+---------------------------------------------------------
+ Concurrency: 256 for plain
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:9080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.96s     2.70s    6.10s    71.91%
+    Req/Sec     0.96k     1.04k    4.48k    83.97%
+  61699 requests in 15.03s, 84.79MB read
+  Socket errors: connect 0, read 0, write 0, timeout 829
+Requests/sec:   4105.83
+Transfer/sec:      5.64MB

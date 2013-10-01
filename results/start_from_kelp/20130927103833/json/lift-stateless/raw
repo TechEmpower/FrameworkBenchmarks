@@ -1,0 +1,120 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.03ms   15.37ms  99.51ms   63.40%
+    Req/Sec    34.81      9.54    64.00     72.05%
+  1400 requests in 5.02s, 437.50KB read
+Requests/sec:    278.96
+Transfer/sec:     87.17KB
+
+---------------------------------------------------------
+ Running Warmup lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    96.69ms   57.65ms 430.76ms   69.65%
+    Req/Sec   307.24    170.09     0.92k    76.92%
+  13390 requests in 15.13s, 4.09MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1027
+Requests/sec:    885.13
+Transfer/sec:    276.60KB
+
+---------------------------------------------------------
+ Concurrency: 8 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.23ms    3.52ms  31.53ms   94.26%
+    Req/Sec   398.26    144.94     1.33k    68.19%
+  45264 requests in 15.00s, 13.81MB read
+Requests/sec:   3017.14
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Concurrency: 16 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.91ms    3.75ms  91.95ms   94.99%
+    Req/Sec   573.35    190.89     2.33k    76.99%
+  65436 requests in 15.00s, 19.97MB read
+Requests/sec:   4361.51
+Transfer/sec:      1.33MB
+
+---------------------------------------------------------
+ Concurrency: 32 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.53ms    3.65ms  47.10ms   82.15%
+    Req/Sec   550.12     93.17     1.25k    71.99%
+  64515 requests in 15.00s, 19.69MB read
+Requests/sec:   4300.49
+Transfer/sec:      1.31MB
+
+---------------------------------------------------------
+ Concurrency: 64 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.87ms    6.81ms  64.92ms   69.52%
+    Req/Sec   515.38     48.43   702.00     70.65%
+  61164 requests in 15.01s, 18.67MB read
+Requests/sec:   4076.24
+Transfer/sec:      1.24MB
+
+---------------------------------------------------------
+ Concurrency: 128 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.07ms   19.82ms 130.38ms   68.82%
+    Req/Sec   464.88     45.75   661.00     69.94%
+  55661 requests in 15.00s, 16.99MB read
+Requests/sec:   3709.71
+Transfer/sec:      1.13MB
+
+---------------------------------------------------------
+ Concurrency: 256 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.71s   437.34ms   4.60s    93.41%
+    Req/Sec   426.32    268.87     1.89k    68.73%
+  47262 requests in 15.01s, 14.42MB read
+  Socket errors: connect 0, read 0, write 0, timeout 84
+Requests/sec:   3149.01
+Transfer/sec:      0.96MB

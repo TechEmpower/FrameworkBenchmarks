@@ -1,0 +1,133 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/ado/mysql/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/ado/mysql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.91s     0.00us   2.91s   100.00%
+    Req/Sec     0.18      1.98    22.00     99.19%
+  31 requests in 6.01s, 48.62KB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+  Non-2xx or 3xx responses: 3
+Requests/sec:      5.16
+Transfer/sec:      8.10KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/ado/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   695.83ms  181.62ms 780.14ms   93.53%
+    Req/Sec     0.64      3.40    26.00     96.62%
+  207 requests in 16.04s, 262.82KB read
+  Socket errors: connect 0, read 26, write 0, timeout 1808
+  Non-2xx or 3xx responses: 65
+Requests/sec:     12.91
+Transfer/sec:     16.39KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/ado/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  32 requests in 16.01s, 54.47KB read
+  Socket errors: connect 0, read 0, write 0, timeout 57
+Requests/sec:      2.00
+Transfer/sec:      3.40KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/ado/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  45 requests in 16.01s, 58.63KB read
+  Socket errors: connect 0, read 3, write 0, timeout 113
+  Non-2xx or 3xx responses: 13
+Requests/sec:      2.81
+Transfer/sec:      3.66KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/ado/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18 requests in 16.01s, 27.88KB read
+  Socket errors: connect 0, read 0, write 0, timeout 237
+  Non-2xx or 3xx responses: 2
+Requests/sec:      1.12
+Transfer/sec:      1.74KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/ado/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  83 requests in 16.02s, 108.11KB read
+  Socket errors: connect 0, read 8, write 0, timeout 455
+  Non-2xx or 3xx responses: 24
+Requests/sec:      5.18
+Transfer/sec:      6.75KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/ado/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   193.20ms  198.51ms 459.82ms   72.11%
+    Req/Sec     0.78      7.10    96.00     98.41%
+  258 requests in 16.03s, 394.94KB read
+  Socket errors: connect 0, read 7, write 0, timeout 919
+  Non-2xx or 3xx responses: 32
+Requests/sec:     16.10
+Transfer/sec:     24.64KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/ado/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   649.92ms  262.50ms 784.91ms   86.13%
+    Req/Sec     0.68      3.81    29.00     96.35%
+  243 requests in 16.04s, 332.09KB read
+  Socket errors: connect 0, read 18, write 0, timeout 1804
+  Non-2xx or 3xx responses: 59
+Requests/sec:     15.15
+Transfer/sec:     20.71KB

@@ -9,7 +9,7 @@ import textwrap
 import pprint
 import csv
 import sys
-import pickle
+import logging
 from datetime import datetime
 
 class Benchmarker:
@@ -201,6 +201,18 @@ class Benchmarker:
   ############################################################
   # End output_file
   ############################################################
+
+  ############################################################
+  # Latest intermediate results dirctory
+  ############################################################
+
+  def latest_results_directory(self):
+    path = os.path.join(self.result_directory,"latest")
+    try:
+      os.makedirs(path)
+    except OSError:
+      pass
+    return path
 
   ############################################################
   # report_results
@@ -401,9 +413,12 @@ class Benchmarker:
       if self.type != 'all' and not test.contains_type(self.type):
         continue
 
-      if results['frameworks'] != None and test.name in results['frameworks']:
+      logging.debug("self.results['frameworks'] != None: " + str(self.results['frameworks'] != None))
+      logging.debug("test.name: " + str(test.name))
+      logging.debug("self.results['completed']: " + str(self.results['completed']))
+      if self.results['frameworks'] != None and test.name in self.results['completed']:
+        logging.info('Framework %s found in latest saved data. Skipping.',str(test.name))
         continue
-
 
       print textwrap.dedent("""
       =====================================================
@@ -438,6 +453,7 @@ class Benchmarker:
               Stopped {name}
             -----------------------------------------------------
             """.format(name=test.name))
+          self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
           continue
         
         time.sleep(self.sleep)
@@ -484,13 +500,9 @@ class Benchmarker:
         Saving results through {name}
         ----------------------------------------------------
         )""".format(name=test.name))
-        try:
-          with open(os.path.join('toolset/benchmark/', 'latest.json'), 'w') as f:
-            f.write(json.dumps(self.results))
-        except (IOError):
-            print("Error writing latest.json")
-
+        self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
       except (OSError, subprocess.CalledProcessError):
+        self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
         print textwrap.dedent("""
         -----------------------------------------------------
           Subprocess Error {name}
@@ -499,6 +511,7 @@ class Benchmarker:
         try:
           test.stop()
         except (subprocess.CalledProcessError):
+          self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           print textwrap.dedent("""
         -----------------------------------------------------
           Subprocess Error: Test .stop() raised exception {name}
@@ -624,6 +637,21 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # __write_intermediate_results
+  ############################################################
+  def __write_intermediate_results(test_name,status_message):
+    try:
+      self.results["completed"][test_name] = status_message
+      with open(os.path.join(self.latest_results_directory, 'results.json'), 'w') as f:
+        f.write(json.dumps(self.results))
+    except (IOError):
+      logging.error("Error writing results.json")
+
+  ############################################################
+  # End __write_intermediate_results
+  ############################################################
+
+  ############################################################
   # __finish
   ############################################################
   def __finish(self):
@@ -646,13 +674,18 @@ class Benchmarker:
     self.__dict__.update(args)
     self.start_time = time.time()
 
+    # setup logging
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    
     # setup some additional variables
     if self.database_user == None: self.database_user = self.client_user
     if self.database_host == None: self.database_host = self.client_host
     if self.database_identity_file == None: self.database_identity_file = self.client_identity_file
 
+    # setup results and latest_results directories 
     self.result_directory = os.path.join("results", self.name)
-      
+    self.latest_results_directory = self.latest_results_directory()
+  
     if self.parse != None:
       self.timestamp = self.parse
     else:
@@ -678,25 +711,36 @@ class Benchmarker:
       queries = queries + self.query_interval
     
     # Load the latest data
-    self.latest = None
-    try:
-      with open('toolset/benchmark/latest.json', 'r') as f:
-        # Load json file into config object
-        self.latest = json.load(f)
-    except IOError:
-      pass
-    
+    #self.latest = None
+    #try:
+    #  with open('toolset/benchmark/latest.json', 'r') as f:
+    #    # Load json file into config object
+    #    self.latest = json.load(f)
+    #    logging.info("toolset/benchmark/latest.json loaded to self.latest")
+    #    logging.debug("contents of latest.json: " + str(json.dumps(self.latest)))
+    #except IOError:
+    #  logging.warn("IOError on attempting to read toolset/benchmark/latest.json")
+    #
+    #self.results = None
+    #try: 
+    #  if self.latest != None and self.name in self.latest.keys():
+    #    with open(os.path.join(self.result_directory, str(self.latest[self.name]), 'results.json'), 'r') as f:
+    #      # Load json file into config object
+    #      self.results = json.load(f)
+    #except IOError:
+    #  pass
+
     self.results = None
     try:
-      if self.latest != None and self.name in self.latest.keys():
-        with open(os.path.join(self.result_directory, str(self.latest[self.name]), 'results.json'), 'r') as f:
-          # Load json file into config object
-          self.results = json.load(f)
+      with open(os.path.join(self.latest_results_directory, 'results.json'), 'r') as f:
+        #Load json file into results object
+        self.results = json.load(f)
     except IOError:
-      pass
+      logging.warn("results.json for test %s not found.",self.name) 
     
     if self.results == None:
       self.results = dict()
+      self.results['name'] = self.name
       self.results['concurrencyLevels'] = self.concurrency_levels
       self.results['queryIntervals'] = self.query_intervals
       self.results['frameworks'] = [t.name for t in self.__gather_tests]
@@ -707,7 +751,8 @@ class Benchmarker:
       self.results['rawData']['query'] = dict()
       self.results['rawData']['fortune'] = dict()
       self.results['rawData']['update'] = dict()
-      self.results['rawData']['plaintext'] = dict()
+      self.results['rawData']['plainteat'] = dict()
+      self.results['completed'] = dict()
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:

@@ -1,0 +1,125 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 14:20:33 PDT 2013
+
+  System load:  0.81               Processes:           92
+  Usage of /:   19.1% of 58.69GB   Users logged in:     1
+  Memory usage: 13%                IP address for eth0: 172.16.98.181
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Primer restexpress
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/restexpress/json
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/restexpress/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.80ms    2.13ms  16.69ms   76.78%
+    Req/Sec   290.32     84.33   565.00     68.73%
+  10849 requests in 5.00s, 1.17MB read
+Requests/sec:   2169.25
+Transfer/sec:    239.38KB
+
+---------------------------------------------------------
+ Running Warmup restexpress
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/restexpress/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.04ms   13.05ms   1.47s    98.56%
+    Req/Sec     1.61k   301.37     4.35k    82.77%
+  183306 requests in 15.00s, 19.75MB read
+Requests/sec:  12220.59
+Transfer/sec:      1.32MB
+
+---------------------------------------------------------
+ Concurrency: 8 for restexpress
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/restexpress/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   741.27us  433.36us   7.00ms   89.70%
+    Req/Sec     1.47k   244.23     2.33k    79.94%
+  164053 requests in 15.00s, 17.68MB read
+Requests/sec:  10937.88
+Transfer/sec:      1.18MB
+
+---------------------------------------------------------
+ Concurrency: 16 for restexpress
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/restexpress/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.33ms  510.06us   6.52ms   77.47%
+    Req/Sec     1.58k   166.29     2.22k    66.02%
+  180684 requests in 15.00s, 19.47MB read
+Requests/sec:  12045.96
+Transfer/sec:      1.30MB
+
+---------------------------------------------------------
+ Concurrency: 32 for restexpress
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/restexpress/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.46ms  782.47us  12.06ms   77.62%
+    Req/Sec     1.72k   181.86     2.56k    73.15%
+  195174 requests in 15.00s, 21.03MB read
+Requests/sec:  13012.31
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Concurrency: 64 for restexpress
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/restexpress/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.74ms    1.15ms  21.39ms   78.93%
+    Req/Sec     1.78k   211.83     2.50k    64.08%
+  204261 requests in 15.00s, 22.01MB read
+Requests/sec:  13618.35
+Transfer/sec:      1.47MB
+
+---------------------------------------------------------
+ Concurrency: 128 for restexpress
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/restexpress/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.43ms    1.92ms  26.49ms   81.41%
+    Req/Sec     1.76k   303.45     3.31k    78.63%
+  204071 requests in 15.00s, 21.99MB read
+Requests/sec:  13605.59
+Transfer/sec:      1.47MB
+
+---------------------------------------------------------
+ Concurrency: 256 for restexpress
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/restexpress/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/restexpress/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.35ms   14.61ms 248.73ms   99.14%
+    Req/Sec     1.79k   486.59     5.87k    87.69%
+  204798 requests in 15.00s, 22.07MB read
+Requests/sec:  13651.57
+Transfer/sec:      1.47MB

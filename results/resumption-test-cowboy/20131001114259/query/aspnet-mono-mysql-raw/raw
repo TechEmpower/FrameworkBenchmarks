@@ -1,0 +1,125 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct  1 12:05:42 PDT 2013
+
+  System load:  1.92               Processes:           141
+  Usage of /:   35.2% of 58.69GB   Users logged in:     1
+  Memory usage: 19%                IP address for eth0: 172.16.98.181
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/ado/mysql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/ado/mysql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  41 requests in 6.00s, 14.34KB read
+  Socket errors: connect 0, read 0, write 0, timeout 17
+  Non-2xx or 3xx responses: 3
+Requests/sec:      6.83
+Transfer/sec:      2.39KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/ado/mysql?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   373.94ms   44.11ms 425.51ms   84.26%
+    Req/Sec     0.52      2.42    17.00     94.90%
+  357 requests in 16.02s, 125.62KB read
+  Socket errors: connect 0, read 9, write 0, timeout 1816
+  Non-2xx or 3xx responses: 40
+Requests/sec:     22.28
+Transfer/sec:      7.84KB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/ado/mysql?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  285 requests in 16.04s, 93.00KB read
+  Socket errors: connect 0, read 3, write 0, timeout 1838
+  Non-2xx or 3xx responses: 24
+Requests/sec:     17.77
+Transfer/sec:      5.80KB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/ado/mysql?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   369.59ms   98.99ms 502.68ms   67.50%
+    Req/Sec     0.27      1.71    19.00     96.49%
+  283 requests in 16.04s, 121.32KB read
+  Socket errors: connect 0, read 12, write 0, timeout 1847
+  Non-2xx or 3xx responses: 31
+Requests/sec:     17.64
+Transfer/sec:      7.56KB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/ado/mysql?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.75ms    7.79ms  19.95ms   81.15%
+    Req/Sec     0.02      0.29     4.00     99.48%
+  218 requests in 16.03s, 123.85KB read
+  Socket errors: connect 0, read 1, write 0, timeout 1886
+  Non-2xx or 3xx responses: 30
+Requests/sec:     13.60
+Transfer/sec:      7.73KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/ado/mysql?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   699.56ms  280.75ms 848.67ms   85.80%
+    Req/Sec     1.46      8.52    82.00     96.30%
+  276 requests in 16.02s, 200.27KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1867
+  Non-2xx or 3xx responses: 25
+Requests/sec:     17.23
+Transfer/sec:     12.50KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/ado/mysql?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/ado/mysql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   229.48ms  279.69ms 581.82ms   60.18%
+    Req/Sec     0.17      1.16    10.00     97.74%
+  180 requests in 16.04s, 146.02KB read
+  Socket errors: connect 0, read 3, write 0, timeout 1828
+  Non-2xx or 3xx responses: 29
+Requests/sec:     11.22
+Transfer/sec:      9.10KB
