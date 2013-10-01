@@ -639,7 +639,7 @@ class Benchmarker:
   ############################################################
   # __write_intermediate_results
   ############################################################
-  def __write_intermediate_results(test_name,status_message):
+  def __write_intermediate_results(self,test_name,status_message):
     try:
       self.results["completed"][test_name] = status_message
       with open(os.path.join(self.latest_results_directory, 'results.json'), 'w') as f:
