@@ -500,7 +500,7 @@ class Benchmarker:
         Saving results through {name}
         ----------------------------------------------------
         )""".format(name=test.name))
-        self.__write_intermediate_results(test.name,"completed successfully")
+        self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
       except (OSError, subprocess.CalledProcessError):
         self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
         print textwrap.dedent("""
@@ -639,7 +639,7 @@ class Benchmarker:
   ############################################################
   # __write_intermediate_results
   ############################################################
-  def __write_intermediate_results(test_name,status_message):
+  def __write_intermediate_results(self,test_name,status_message):
     try:
       self.results["completed"][test_name] = status_message
       with open(os.path.join(self.latest_results_directory, 'results.json'), 'w') as f:

@@ -14,7 +14,7 @@
     </server>
 
     <host>
-      <web-app id="/" root-directory="/home/hyoung/FrameworkBenchmarks/gemini/Docroot" />
+      <web-app id="/" root-directory="/home/sbandy/FrameworkBenchmarks/gemini/Docroot" />
     </host>
 
   </cluster>
