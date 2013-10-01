@@ -381,12 +381,6 @@ class Benchmarker:
   ############################################################
   def __run_tests(self, tests):
 
-    #try:
-    #  runattempts_file = open('run_attempts.pickle','b')
-    #  runattempts = pickle.load(runattempts_file)
-    #except:
-    #  runattempts = list()
-
     for test in tests:
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
@@ -407,10 +401,10 @@ class Benchmarker:
       if self.type != 'all' and not test.contains_type(self.type):
         continue
 
-      #if runattempts != None and test.name in runattempts:
-      #  continue
+      if results['frameworks'] != None and test.name in results['frameworks']:
+        continue
 
-      #runattempts.append(test.name)
+
       print textwrap.dedent("""
       =====================================================
         Beginning {name}
@@ -480,6 +474,22 @@ class Benchmarker:
         -----------------------------------------------------
         """.format(name=test.name))
         time.sleep(5)
+
+        ##########################################################
+        # Save results thus far into toolset/benchmark/latest.json
+        ##########################################################
+
+        print textwrap.dedent("""
+        ----------------------------------------------------
+        Saving results through {name}
+        ----------------------------------------------------
+        )""".format(name=test.name))
+        try:
+          with open(os.path.join('toolset/benchmark/', 'latest.json'), 'w') as f:
+            f.write(json.dumps(self.results))
+        except (IOError):
+            print("Error writing latest.json")
+
       except (OSError, subprocess.CalledProcessError):
         print textwrap.dedent("""
         -----------------------------------------------------
@@ -488,15 +498,13 @@ class Benchmarker:
         """.format(name=test.name))
         try:
           test.stop()
-        except (subprocess.CalledProcess):
+        except (subprocess.CalledProcessError):
           print textwrap.dedent("""
         -----------------------------------------------------
           Subprocess Error: Test .stop() raised exception {name}
         -----------------------------------------------------
         """.format(name=test.name))
       except (KeyboardInterrupt, SystemExit):
-        #pickle.dump(runattempts, 'run_attempts.pickle')
-        #runattempts_file.close()
         test.stop()
         print """
         -----------------------------------------------------
@@ -505,9 +513,7 @@ class Benchmarker:
         """
         self.__finish()
         sys.exit()
-    #runattempts = list()
-    #pickle.dump(runattempts, 'run_attempts.pickle')
-    #runattempts_file.close()
+
   ############################################################
   # End __run_tests
   ############################################################
