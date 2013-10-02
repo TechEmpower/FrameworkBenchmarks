@@ -1,0 +1,43 @@
+CPPSP: C++ Server Pages
+=======================
+CPPSP (C++ Server Pages) is a web application framework similar to ASP and ASP .Net. It features a template parser that parses, compiles, and loads CPPSP pages automatically at runtime. CPPSP pages have a very similar syntax to ASP and ASP .NET, where all code is considered HTML by default, and server-side active code can be embedded using "<% ... %>". 
+
+Features
+================
+* Automatic parsing and compiling of pages. Just copy a .cppsp file into your www directory, and it is instantly accessible. No need to manually compile CPPSP pages. 
+* Automatic re-compilation. Make a modification to a .cppsp file, and the changes will show up in your browser immediately after refresh.
+* Simple syntax and API similar to ASP .Net
+* (0.2 and above) SocketD web server multiplexer allows you to share the same port (usually 80) with multiple cppsp web application hosts, and even between cppsp and another web server (lighttpd, nginx, ...). SocketD supports hostname and request URI matching, but request URI matching does not work well with HTTP keep-alive.
+* (0.2 and above) Modules API allows you to extend the functionality of the web server. The "www" directory included in this tarball includes a few example modules, including one that adds directory listing functionality.
+
+Installing
+================
+
+To compile cppsp, just type:
+	make all -j3
+
+(not needed if you downloaded the binary tarball)
+
+To run cppsp with example scripts, type:
+	./run_example
+
+It will listen on port 16969, and serve files from ./www/
+
+To load modules, specify "-m" on the command line (module path is relative to web root):
+	./run_example -m /dir_list.cppsm
+
+To run cppsp with socketd, type:
+	./run_socketd_example
+
+Then visit http://localhost:16969/ (not 127.0.0.1!) (see socketd_exampleconf)
+
+To install cppsp, just copy the cppsp_standalone file to anywhere you like. You can then simply write a few init scripts if you want it to automatically start on boot.
+
+
+Note: If you plan to benchmark the connections/s performance of cppsp (with keep-alive disabled), make sure you download and compile the Hoard memory allocator:
+
+http://www.hoard.org/
+
+Then, LD_PRELOAD it before running cppsp. There is a possible bug in glibc where if large chunks of memory are malloc()'d and free()'d, glibc repeatedly calls mprotect(), which is very expensive.
+
+
