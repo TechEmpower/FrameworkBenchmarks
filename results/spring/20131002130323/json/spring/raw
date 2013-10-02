@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 13:04:53 PDT 2013
+
+  System load:  0.0                Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/spring/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/spring/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.96ms    3.22ms  28.51ms   97.94%
+    Req/Sec     2.47k     1.13k    5.44k    61.61%
+  86797 requests in 5.00s, 14.65MB read
+Requests/sec:  17360.66
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Running Warmup spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/spring/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.42ms  568.67ms   3.62s    97.14%
+    Req/Sec     9.14k     3.50k   30.44k    71.18%
+  1029459 requests in 15.00s, 173.77MB read
+  Socket errors: connect 0, read 0, write 0, timeout 17
+Requests/sec:  68633.42
+Transfer/sec:     11.59MB
+
+---------------------------------------------------------
+ Concurrency: 8 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/spring/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   191.49us  123.25us  10.19ms   96.74%
+    Req/Sec     5.38k   444.35     6.55k    70.97%
+  610740 requests in 15.00s, 103.09MB read
+Requests/sec:  40717.03
+Transfer/sec:      6.87MB
+
+---------------------------------------------------------
+ Concurrency: 16 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/spring/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   251.42us  312.21us  11.49ms   94.43%
+    Req/Sec     8.54k     1.45k   11.67k    68.68%
+  969475 requests in 15.00s, 163.65MB read
+Requests/sec:  64634.00
+Transfer/sec:     10.91MB
+
+---------------------------------------------------------
+ Concurrency: 32 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/spring/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   454.93us  629.15us  12.40ms   94.22%
+    Req/Sec     9.89k     2.14k   17.78k    72.39%
+  1124019 requests in 15.00s, 189.73MB read
+Requests/sec:  74940.44
+Transfer/sec:     12.65MB
+
+---------------------------------------------------------
+ Concurrency: 64 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/spring/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms    1.07ms  18.21ms   93.50%
+    Req/Sec     9.83k     1.90k   21.00k    77.04%
+  1115833 requests in 15.00s, 188.35MB read
+Requests/sec:  74394.29
+Transfer/sec:     12.56MB
+
+---------------------------------------------------------
+ Concurrency: 128 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/spring/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.94ms    3.32ms  50.70ms   96.32%
+    Req/Sec     9.62k     1.93k   18.78k    81.75%
+  1092826 requests in 15.00s, 184.47MB read
+Requests/sec:  72859.50
+Transfer/sec:     12.30MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/spring/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.61ms   35.66ms 471.00ms   97.45%
+    Req/Sec     9.42k     3.32k   30.00k    72.28%
+  1068467 requests in 15.00s, 180.36MB read
+Requests/sec:  71243.76
+Transfer/sec:     12.03MB
