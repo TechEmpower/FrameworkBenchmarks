@@ -10,6 +10,7 @@ import pprint
 import csv
 import sys
 import logging
+from multiprocessing import Process
 from datetime import datetime
 
 class Benchmarker:
@@ -386,39 +387,73 @@ class Benchmarker:
 
   ############################################################
   # __run_tests
+  #
+  # 2013-10-02 ASB  Calls each test passed in tests to
+  #                 __run_test in a separate process.  Each
+  #                 test is given a set amount of time and if
+  #                 kills the child process (and subsequently
+  #                 all of its child processes).  Uses
+  #                 multiprocessing module.
+  ############################################################
+
+  def __run_tests(self, tests):
+    logging.debug("Start __run_tests.")
+    for test in tests:
+      logging.debug("Creating child process for %s",test.name)
+      if __name__ == '__main__':
+        test_process = Process(target=f, args=(test,))
+        logging.debug("Starting child process for %s",test.name)
+        test_process.start()
+        test_process.join(self.run_test_timeout_seconds)
+        logging.debug("Child process for %s joined parent")
+        if(test_process.is_alive()):
+          logging.debug("Child process for %s is still alive. Terminating.",test.name)
+          write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
+          test_process.terminate()
+    logging.debug("End __run_tests.")
+
+  ############################################################
+  # End __run_tests
+  ############################################################
+
+  ############################################################
+  # __run_test
+  # 2013-10-02 ASB  Previously __run_tests.  This code now only
+  #                 processes a single test.
+  #
   # Ensures that the system has all necessary software to run
   # the tests. This does not include that software for the individual
   # test, but covers software such as curl and weighttp that
   # are needed.
   ############################################################
-  def __run_tests(self, tests):
+  def __run_test(self, test):
 
-    for test in tests:
+      logging.debug("Start __run_test for: %s",test.name)
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
         # application server or the database server don't match
         # our current environment
-        continue
+        return
       
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
-        continue
+        return
       
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
-        continue
+        return
       
       # If the test does not contain an implementation of the current test-type, skip it
       if self.type != 'all' and not test.contains_type(self.type):
-        continue
+        return
 
       logging.debug("self.results['frameworks'] != None: " + str(self.results['frameworks'] != None))
       logging.debug("test.name: " + str(test.name))
       logging.debug("self.results['completed']: " + str(self.results['completed']))
       if self.results['frameworks'] != None and test.name in self.results['completed']:
         logging.info('Framework %s found in latest saved data. Skipping.',str(test.name))
-        continue
+        return
 
       print textwrap.dedent("""
       =====================================================
@@ -454,7 +489,7 @@ class Benchmarker:
             -----------------------------------------------------
             """.format(name=test.name))
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
-          continue
+          return
         
         time.sleep(self.sleep)
 
@@ -638,6 +673,7 @@ class Benchmarker:
   # parsed via argparser.
   ############################################################
   def __init__(self, args):
+    self.run_test_timeout_seconds = 60
     self.__dict__.update(args)
     self.start_time = time.time()
 
