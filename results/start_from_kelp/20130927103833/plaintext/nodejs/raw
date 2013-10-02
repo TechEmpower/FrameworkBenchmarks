@@ -1,0 +1,76 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 12:10:03 PDT 2013
+
+  System load:  0.88               Processes:           94
+  Usage of /:   17.8% of 58.69GB   Users logged in:     1
+  Memory usage: 26%                IP address for eth0: 172.16.98.181
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Primer nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14ms  222.95us   4.45ms   91.95%
+    Req/Sec     0.93k    91.42     1.11k    78.27%
+  35084 requests in 5.00s, 5.75MB read
+Requests/sec:   7015.47
+Transfer/sec:      1.15MB
+
+---------------------------------------------------------
+ Running Warmup nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.48ms    3.45ms  77.50ms   92.58%
+    Req/Sec   742.25     95.37     1.07k    83.70%
+  88504 requests in 15.03s, 14.52MB read
+Requests/sec:   5888.70
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   420.28ms   72.15ms 839.98ms   96.02%
+    Req/Sec     1.23k   169.15     1.54k    85.00%
+  144504 requests in 15.21s, 23.70MB read
+Requests/sec:   9500.17
+Transfer/sec:      1.56MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+unable to connect to localhost:8080 Connection refused
+
+---------------------------------------------------------
+ Concurrency: 4096 for nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+unable to connect to localhost:8080 Connection refused
+
+---------------------------------------------------------
+ Concurrency: 16384 for nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+unable to connect to localhost:8080 Connection refused

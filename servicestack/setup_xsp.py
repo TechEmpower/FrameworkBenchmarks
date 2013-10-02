@@ -11,7 +11,7 @@ def start(args):
 
   try:
     subprocess.check_call("rm -rf bin obj", shell=True, cwd="servicestack/src")
-    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="servicestack/src/Web.config")
+    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="servicestack/src")
     subprocess.Popen("MONO_OPTIONS=--gc=sgen xsp4 --nonstop", shell=True, cwd="servicestack/src")
     return 0
   except subprocess.CalledProcessError:

@@ -1,0 +1,121 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.98ms    2.69ms  23.85ms   77.68%
+    Req/Sec   219.78     67.79   769.00     83.43%
+  8509 requests in 5.00s, 1.81MB read
+Requests/sec:   1700.84
+Transfer/sec:    370.32KB
+
+---------------------------------------------------------
+ Running Warmup micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   144.03ms  144.88ms   3.89s    97.89%
+    Req/Sec   226.10     22.46   275.00     78.41%
+  26742 requests in 15.01s, 5.69MB read
+  Socket errors: connect 0, read 0, write 0, timeout 23
+Requests/sec:   1782.08
+Transfer/sec:    388.01KB
+
+---------------------------------------------------------
+ Concurrency: 8 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.69ms    3.44ms  47.12ms   87.49%
+    Req/Sec   246.86     90.20     1.11k    87.05%
+  28430 requests in 15.00s, 6.04MB read
+Requests/sec:   1895.07
+Transfer/sec:    412.60KB
+
+---------------------------------------------------------
+ Concurrency: 16 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.32ms    5.51ms  93.87ms   78.80%
+    Req/Sec   237.22     87.89     1.05k    81.31%
+  27877 requests in 15.00s, 5.93MB read
+Requests/sec:   1857.95
+Transfer/sec:    404.52KB
+
+---------------------------------------------------------
+ Concurrency: 32 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.42ms    9.64ms  92.34ms   75.13%
+    Req/Sec   229.43     57.56   681.00     81.67%
+  27319 requests in 15.00s, 5.81MB read
+Requests/sec:   1820.76
+Transfer/sec:    396.43KB
+
+---------------------------------------------------------
+ Concurrency: 64 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.36ms   18.28ms 147.10ms   75.84%
+    Req/Sec   228.78     41.88   541.00     79.65%
+  27397 requests in 15.01s, 5.83MB read
+Requests/sec:   1825.68
+Transfer/sec:    397.50KB
+
+---------------------------------------------------------
+ Concurrency: 128 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.26ms   72.23ms   3.27s    96.77%
+    Req/Sec   234.76     58.36   519.00     77.92%
+  26470 requests in 15.01s, 5.63MB read
+  Socket errors: connect 0, read 0, write 0, timeout 58
+Requests/sec:   1763.70
+Transfer/sec:    384.02KB
+
+---------------------------------------------------------
+ Concurrency: 256 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   150.03ms  550.29ms   9.85s    99.20%
+    Req/Sec   224.06     97.24   447.00     64.05%
+  26220 requests in 15.00s, 5.58MB read
+  Socket errors: connect 0, read 0, write 0, timeout 302
+Requests/sec:   1747.65
+Transfer/sec:    380.54KB

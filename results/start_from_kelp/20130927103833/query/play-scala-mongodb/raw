@@ -1,0 +1,105 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:9000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:9000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.82ms    1.28ms  17.37ms   91.41%
+    Req/Sec   154.65     32.74   272.00     83.58%
+  6029 requests in 5.00s, 571.11KB read
+Requests/sec:   1205.09
+Transfer/sec:    114.15KB
+
+---------------------------------------------------------
+ Running Warmup play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9000/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9000/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   163.78ms   44.80ms 712.16ms   86.89%
+    Req/Sec   197.42     68.84   676.00     77.83%
+  22997 requests in 15.04s, 2.13MB read
+Requests/sec:   1529.21
+Transfer/sec:    144.86KB
+
+---------------------------------------------------------
+ Queries: 1 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9000/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9000/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.68ms   19.34ms 746.31ms   83.89%
+    Req/Sec   287.97     49.06   598.00     84.47%
+  34028 requests in 15.00s, 2.95MB read
+Requests/sec:   2268.23
+Transfer/sec:    201.57KB
+
+---------------------------------------------------------
+ Queries: 5 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9000/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9000/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   313.37ms   79.95ms 937.97ms   78.33%
+    Req/Sec   103.37     31.83   329.00     85.34%
+  11872 requests in 15.00s, 1.27MB read
+Requests/sec:    791.37
+Transfer/sec:     86.56KB
+
+---------------------------------------------------------
+ Queries: 10 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9000/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9000/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   581.18ms  118.48ms 922.85ms   76.91%
+    Req/Sec    54.38     16.70   124.00     82.19%
+  6355 requests in 15.13s, 850.23KB read
+Requests/sec:    420.04
+Transfer/sec:     56.20KB
+
+---------------------------------------------------------
+ Queries: 15 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9000/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9000/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   875.27ms  176.28ms   1.29s    74.93%
+    Req/Sec    37.18     23.91   150.00     64.78%
+  4344 requests in 15.06s, 687.23KB read
+Requests/sec:    288.36
+Transfer/sec:     45.62KB
+
+---------------------------------------------------------
+ Queries: 20 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9000/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9000/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.13s   222.26ms   1.56s    75.20%
+    Req/Sec    27.42     15.27    65.00     56.00%
+  3172 requests in 15.17s, 582.36KB read
+  Socket errors: connect 0, read 0, write 0, timeout 32
+Requests/sec:    209.08
+Transfer/sec:     38.39KB

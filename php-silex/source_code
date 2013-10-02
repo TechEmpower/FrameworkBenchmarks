@@ -1,0 +1,5 @@
+./php-silex/deploy/php-silex
+./php-silex/web/
+./php-silex/web/.htaccess
+./php-silex/web/index.php
+./php-silex/web/index_raw.php

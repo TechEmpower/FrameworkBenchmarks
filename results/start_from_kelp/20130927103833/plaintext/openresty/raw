@@ -1,0 +1,94 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.69ms   15.75ms  70.58ms   89.29%
+    Req/Sec     2.36k     1.15k   12.70k    77.37%
+  90893 requests in 5.00s, 16.29MB read
+Requests/sec:  18176.72
+Transfer/sec:      3.26MB
+
+---------------------------------------------------------
+ Running Warmup openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.03s   876.64ms   6.35s    91.72%
+    Req/Sec     2.40k     2.72k   20.22k    91.84%
+  265566 requests in 15.03s, 47.60MB read
+  Socket errors: connect 0, read 0, write 0, timeout 53
+Requests/sec:  17670.43
+Transfer/sec:      3.17MB
+
+---------------------------------------------------------
+ Concurrency: 256 for openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   512.94ms  519.05ms   1.25s    59.10%
+    Req/Sec     3.12k     4.65k   21.48k    88.89%
+  378253 requests in 15.04s, 67.80MB read
+Requests/sec:  25144.25
+Transfer/sec:      4.51MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   862.04ms    2.82s   14.95s    91.23%
+    Req/Sec     1.38k     2.41k   15.31k    81.48%
+  339474 requests in 15.28s, 60.85MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3911
+Requests/sec:  22217.60
+Transfer/sec:      3.98MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   357.71ms    1.69s    9.11s    95.04%
+    Req/Sec   545.59      2.84k   26.24k    96.28%
+  349629 requests in 15.73s, 62.67MB read
+  Socket errors: connect 0, read 0, write 0, timeout 22383
+Requests/sec:  22233.66
+Transfer/sec:      3.99MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.23s     4.69s   14.33s    57.07%
+    Req/Sec     4.97k     4.41k   16.05k    52.65%
+  364005 requests in 15.12s, 65.25MB read
+  Socket errors: connect 11, read 0, write 0, timeout 95509
+Requests/sec:  24069.83
+Transfer/sec:      4.31MB

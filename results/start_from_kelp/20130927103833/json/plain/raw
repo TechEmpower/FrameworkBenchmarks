@@ -1,0 +1,131 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 13:22:09 PDT 2013
+
+  System load:  0.69               Processes:           93
+  Usage of /:   18.4% of 58.69GB   Users logged in:     1
+  Memory usage: 54%                IP address for eth0: 172.16.98.181
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Primer plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:9080/json
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:9080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    54.08ms   60.58ms 137.44ms   60.18%
+    Req/Sec   282.32    339.65     1.54k    85.68%
+  10234 requests in 5.00s, 1.90MB read
+Requests/sec:   2047.07
+Transfer/sec:    389.82KB
+
+---------------------------------------------------------
+ Running Warmup plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.07s     2.13s   13.56s    75.07%
+    Req/Sec   727.65      1.62k    8.40k    87.53%
+  40987 requests in 21.53s, 7.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1363
+Requests/sec:   1903.83
+Transfer/sec:    362.55KB
+
+---------------------------------------------------------
+ Concurrency: 8 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:9080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.35s   571.35ms   1.71s    84.81%
+    Req/Sec   165.95    439.52     2.00k    86.92%
+  23566 requests in 15.67s, 4.38MB read
+Requests/sec:   1504.18
+Transfer/sec:    286.44KB
+
+---------------------------------------------------------
+ Concurrency: 16 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:9080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.28s     1.31s    5.91s    95.01%
+    Req/Sec    63.21    310.25     3.78k    95.33%
+  9917 requests in 15.27s, 1.84MB read
+  Socket errors: connect 0, read 6, write 0, timeout 47
+Requests/sec:    649.60
+Transfer/sec:    123.70KB
+
+---------------------------------------------------------
+ Concurrency: 32 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:9080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.65s   966.10ms   6.80s    97.83%
+    Req/Sec    35.75    294.26     6.78k    98.03%
+  7534 requests in 15.80s, 1.40MB read
+  Socket errors: connect 0, read 3, write 0, timeout 125
+Requests/sec:    476.82
+Transfer/sec:     90.80KB
+
+---------------------------------------------------------
+ Concurrency: 64 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:9080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.18s     1.49s    4.79s    88.56%
+    Req/Sec   180.93    702.78     7.20k    93.48%
+  22490 requests in 15.03s, 4.18MB read
+  Socket errors: connect 0, read 0, write 0, timeout 104
+Requests/sec:   1496.57
+Transfer/sec:    284.99KB
+
+---------------------------------------------------------
+ Concurrency: 128 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:9080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.14s     3.93s   10.94s    53.45%
+    Req/Sec     0.94k     1.90k   13.33k    83.96%
+  76975 requests in 15.01s, 14.31MB read
+  Socket errors: connect 0, read 0, write 0, timeout 335
+Requests/sec:   5129.17
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Concurrency: 256 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:9080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.83s     4.15s   14.92s    75.65%
+    Req/Sec     1.37k     1.96k   10.94k    80.91%
+  126921 requests in 15.13s, 23.60MB read
+  Socket errors: connect 0, read 0, write 0, timeout 791
+Requests/sec:   8391.08
+Transfer/sec:      1.56MB

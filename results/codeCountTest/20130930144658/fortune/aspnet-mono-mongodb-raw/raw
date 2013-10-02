@@ -1,0 +1,134 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/mongodb/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.94s     1.13s    2.67s    76.47%
+    Req/Sec    11.91     28.83   183.00     92.16%
+  380 requests in 5.02s, 199.62KB read
+  Socket errors: connect 0, read 22, write 0, timeout 5
+  Non-2xx or 3xx responses: 49
+Requests/sec:     75.75
+Transfer/sec:     39.79KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mongodb/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   830.39ms    1.04s    4.18s    87.65%
+    Req/Sec    34.26     10.28    66.00     76.27%
+  4194 requests in 15.07s, 2.02MB read
+  Socket errors: connect 0, read 402, write 0, timeout 269
+  Non-2xx or 3xx responses: 1115
+Requests/sec:    278.36
+Transfer/sec:    137.30KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mongodb/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    81.03ms  100.57ms 447.93ms   76.83%
+    Req/Sec    30.13     27.94   245.00     68.16%
+  3806 requests in 16.01s, 1.99MB read
+  Socket errors: connect 0, read 97, write 0, timeout 5
+  Non-2xx or 3xx responses: 350
+Requests/sec:    237.79
+Transfer/sec:    127.00KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mongodb/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   107.82ms  166.20ms 549.48ms   86.85%
+    Req/Sec    34.14     24.82   175.00     73.89%
+  4174 requests in 15.03s, 2.08MB read
+  Socket errors: connect 0, read 351, write 0, timeout 0
+  Non-2xx or 3xx responses: 807
+Requests/sec:    277.67
+Transfer/sec:    141.68KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mongodb/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.71ms  144.21ms 713.24ms   81.78%
+    Req/Sec    35.97     16.14    93.00     70.93%
+  4427 requests in 15.05s, 2.19MB read
+  Socket errors: connect 0, read 416, write 0, timeout 4
+  Non-2xx or 3xx responses: 945
+Requests/sec:    294.18
+Transfer/sec:    148.72KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mongodb/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   206.27ms  246.68ms   1.11s    80.82%
+    Req/Sec    36.12     13.13   100.00     72.15%
+  4346 requests in 15.04s, 2.11MB read
+  Socket errors: connect 0, read 409, write 0, timeout 0
+  Non-2xx or 3xx responses: 1080
+Requests/sec:    289.02
+Transfer/sec:    143.70KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mongodb/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   432.85ms  487.51ms   2.04s    82.04%
+    Req/Sec    37.85     14.60    94.00     72.59%
+  4340 requests in 15.08s, 2.11MB read
+  Socket errors: connect 0, read 454, write 0, timeout 12
+  Non-2xx or 3xx responses: 1072
+Requests/sec:    287.80
+Transfer/sec:    143.26KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/mongodb/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   731.34ms  658.96ms   2.44s    54.26%
+    Req/Sec    35.80      6.85    52.00     70.54%
+  4283 requests in 15.13s, 2.06MB read
+  Socket errors: connect 0, read 466, write 0, timeout 16
+  Non-2xx or 3xx responses: 1140
+Requests/sec:    283.15
+Transfer/sec:    139.60KB
