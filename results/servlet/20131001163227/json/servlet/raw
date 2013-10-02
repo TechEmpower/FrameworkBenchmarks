@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct  1 16:33:54 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+40 packages can be updated.
+12 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/servlet/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/servlet/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   191.31us   32.27us   1.10ms   71.07%
+    Req/Sec     5.29k   318.59     6.78k    74.67%
+  197888 requests in 5.00s, 29.63MB read
+Requests/sec:  39580.64
+Transfer/sec:      5.93MB
+
+---------------------------------------------------------
+ Running Warmup servlet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/servlet/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.76ms   50.87ms   1.81s    99.89%
+    Req/Sec    28.27k     4.17k   63.22k    92.03%
+  3127885 requests in 15.00s, 468.33MB read
+Requests/sec: 208533.45
+Transfer/sec:     31.22MB
+
+---------------------------------------------------------
+ Concurrency: 8 for servlet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/servlet/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   190.35us   30.28us   1.58ms   68.74%
+    Req/Sec     5.31k   258.14     6.44k    77.70%
+  610635 requests in 15.00s, 91.43MB read
+Requests/sec:  40709.71
+Transfer/sec:      6.10MB
+
+---------------------------------------------------------
+ Concurrency: 16 for servlet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/servlet/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   188.30us   46.70us   1.30ms   68.10%
+    Req/Sec    10.72k   550.33    12.33k    64.55%
+  1220215 requests in 15.00s, 182.70MB read
+Requests/sec:  81349.41
+Transfer/sec:     12.18MB
+
+---------------------------------------------------------
+ Concurrency: 32 for servlet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/servlet/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   178.63us   83.54us   1.73ms   85.05%
+    Req/Sec    22.76k     1.39k   26.67k    64.22%
+  2582071 requests in 15.00s, 386.61MB read
+Requests/sec: 172143.22
+Transfer/sec:     25.77MB
+
+---------------------------------------------------------
+ Concurrency: 64 for servlet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/servlet/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   295.53us  143.34us   3.00ms   92.69%
+    Req/Sec    28.20k     1.79k   33.00k    62.22%
+  3190185 requests in 15.00s, 477.66MB read
+Requests/sec: 212701.16
+Transfer/sec:     31.85MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servlet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/servlet/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   599.11us  159.44us  10.42ms   92.28%
+    Req/Sec    28.01k     1.63k   32.44k    63.66%
+  3169609 requests in 15.00s, 474.58MB read
+Requests/sec: 211321.69
+Transfer/sec:     31.64MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/servlet/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21ms  200.74us  13.30ms   93.06%
+    Req/Sec    27.87k     1.64k   36.56k    64.59%
+  3157737 requests in 15.00s, 472.80MB read
+Requests/sec: 210524.89
+Transfer/sec:     31.52MB
