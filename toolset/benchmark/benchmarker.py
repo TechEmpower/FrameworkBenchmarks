@@ -549,39 +549,6 @@ class Benchmarker:
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
       f.write(json.dumps(self.results))
 
-    
-    # JSON CSV
-    # with open(os.path.join(self.full_results_directory(), "json.csv"), 'wb') as csvfile:
-    #  writer = csv.writer(csvfile)
-    #  writer.writerow(["Framework"] + self.concurrency_levels)
-    #  for key, value in self.results['rawData']['json'].iteritems():
-    #    framework = self.results['frameworks'][int(key)]
-    #    writer.writerow([framework] + value)
-
-    # DB CSV
-    #with open(os.path.join(self.full_results_directory(), "db.csv"), 'wb') as csvfile:
-    #  writer = csv.writer(csvfile)
-    #  writer.writerow(["Framework"] + self.concurrency_levels)
-    #  for key, value in self.results['rawData']['db'].iteritems():
-    #    framework = self.results['frameworks'][int(key)]
-    #    writer.writerow([framework] + value)
-
-    # Query CSV
-    #with open(os.path.join(self.full_results_directory(), "query.csv"), 'wb') as csvfile:
-    #  writer = csv.writer(csvfile)
-    #  writer.writerow(["Framework"] + self.query_intervals)
-    #  for key, value in self.results['rawData']['query'].iteritems():
-    #    framework = self.results['frameworks'][int(key)]
-    #    writer.writerow([framework] + value)
-
-    # Fortune CSV
-    #with open(os.path.join(self.full_results_directory(), "fortune.csv"), 'wb') as csvfile:
-    #  writer = csv.writer(csvfile)
-    #  writer.writerow(["Framework"] + self.query_intervals)
-    #  if 'fortune' in self.results['rawData'].keys():
-    #    for key, value in self.results['rawData']['fortune'].iteritems():
-    #      framework = self.results['frameworks'][int(key)]
-    #      writer.writerow([framework] + value)
 
   ############################################################
   # End __parse_results
