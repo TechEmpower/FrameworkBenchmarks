@@ -1,0 +1,6 @@
+gfsdhkjgfdjsk
+
+<%
+throw runtime_error("aaaaa");
+
+%>
