@@ -398,17 +398,15 @@ class Benchmarker:
 
   def __run_tests(self, tests):
     logging.debug("Start __run_tests.")
+    logging.debug("__name__ = %s",__name__)
     for test in tests:
-      logging.debug("Creating child process for %s",test.name)
-      if __name__ == '__main__':
-        test_process = Process(target=f, args=(test,))
-        logging.debug("Starting child process for %s",test.name)
+      if __name__ == 'benchmark.benchmarker':
+        test_process = Process(target=self.__run_test, args=(test,))
         test_process.start()
         test_process.join(self.run_test_timeout_seconds)
-        logging.debug("Child process for %s joined parent")
         if(test_process.is_alive()):
           logging.debug("Child process for %s is still alive. Terminating.",test.name)
-          write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
+          self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
           test_process.terminate()
     logging.debug("End __run_tests.")
 
@@ -428,7 +426,6 @@ class Benchmarker:
   ############################################################
   def __run_test(self, test):
 
-      logging.debug("Start __run_test for: %s",test.name)
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
         # application server or the database server don't match
@@ -673,9 +670,10 @@ class Benchmarker:
   # parsed via argparser.
   ############################################################
   def __init__(self, args):
-    self.run_test_timeout_seconds = 60
+    
     self.__dict__.update(args)
     self.start_time = time.time()
+    self.run_test_timeout_seconds = 900
 
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
