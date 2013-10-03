@@ -431,7 +431,7 @@ class Benchmarker:
         # application server or the database server don't match
         # our current environment
         return
-      
+ 
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
@@ -445,6 +445,7 @@ class Benchmarker:
       if self.type != 'all' and not test.contains_type(self.type):
         return
 
+      logging.debug("test.os.lower() = %s  test.database_os.lower() = %s",test.os.lower(),test.database_os.lower()) 
       logging.debug("self.results['frameworks'] != None: " + str(self.results['frameworks'] != None))
       logging.debug("test.name: " + str(test.name))
       logging.debug("self.results['completed']: " + str(self.results['completed']))
@@ -674,7 +675,7 @@ class Benchmarker:
     
     self.__dict__.update(args)
     self.start_time = time.time()
-    self.run_test_timeout_seconds = 900
+    self.run_test_timeout_seconds = 3600
 
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)

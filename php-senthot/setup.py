@@ -6,7 +6,7 @@ from os.path import expanduser
 home = expanduser("~")
 
 def start(args):
-  setup_util.replace_text("php-senthot/app/conf/application.ini", "'DB_HOST' => 'localhost'", "'DB_HOST' => '" + args.database_host +"'")
+  setup_util.replace_text("php-senthot/app/Conf/config.php", "'DB_HOST' => 'localhost'", "'DB_HOST' => '" + args.database_host +"'")
   setup_util.replace_text("php-senthot/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
 
   try:
