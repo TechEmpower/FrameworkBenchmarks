@@ -426,25 +426,29 @@ class Benchmarker:
   ############################################################
   def __run_test(self, test):
 
-      if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
-        # the operating system requirements of this test for the
-        # application server or the database server don't match
-        # our current environment
-        return
-      
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
         return
+
+      if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
+        # the operating system requirements of this test for the
+        # application server or the database server don't match
+        # our current environment
+        logging.info("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.")
+        return 
       
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
+        logging.info("Test %s has been added to the excludes list. Skipping.", test.name)
         return
       
       # If the test does not contain an implementation of the current test-type, skip it
       if self.type != 'all' and not test.contains_type(self.type):
+        logging.info("Test type %s does not contain an implementation of the current test-type. Skipping", self.type)
         return
 
+      logging.debug("test.os.lower() = %s  test.database_os.lower() = %s",test.os.lower(),test.database_os.lower()) 
       logging.debug("self.results['frameworks'] != None: " + str(self.results['frameworks'] != None))
       logging.debug("test.name: " + str(test.name))
       logging.debug("self.results['completed']: " + str(self.results['completed']))
@@ -673,7 +677,7 @@ class Benchmarker:
     
     self.__dict__.update(args)
     self.start_time = time.time()
-    self.run_test_timeout_seconds = 900
+    self.run_test_timeout_seconds = 3600
 
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
