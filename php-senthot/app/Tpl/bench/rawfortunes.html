@@ -1,0 +1,14 @@
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table>
+  <tr>
+    <th>id</th>
+    <th>message</th>
+  </tr>
+  <volist name="data" id="vo">
+    <tr>
+      <td>{$vo.id|htmlspecialchars}</td>
+      <td>{$vo.message|htmlspecialchars}</td>
+    </tr>
+   </volist>
+  </table></body></html>
+
+
