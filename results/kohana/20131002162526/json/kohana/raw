@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 16:26:48 PDT 2013
+
+  System load:  0.0                Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/bench/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.44ms    0.87ms   6.70ms   69.09%
+    Req/Sec   445.83     89.56   777.00     63.58%
+  16899 requests in 5.00s, 3.61MB read
+Requests/sec:   3378.88
+Transfer/sec:    738.97KB
+
+---------------------------------------------------------
+ Running Warmup kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.24ms   48.26ms   1.07s    75.87%
+    Req/Sec   467.08     49.64   676.00     75.91%
+  55791 requests in 15.00s, 11.92MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:   3718.81
+Transfer/sec:    813.34KB
+
+---------------------------------------------------------
+ Concurrency: 8 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.40ms  835.75us   9.35ms   70.12%
+    Req/Sec   448.16     90.80   777.00     62.89%
+  51040 requests in 15.00s, 10.90MB read
+Requests/sec:   3402.14
+Transfer/sec:    744.05KB
+
+---------------------------------------------------------
+ Concurrency: 16 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.38ms    1.78ms  20.04ms   70.51%
+    Req/Sec   487.03     99.68     1.00k    71.07%
+  56041 requests in 15.00s, 11.97MB read
+Requests/sec:   3735.59
+Transfer/sec:    816.98KB
+
+---------------------------------------------------------
+ Concurrency: 32 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.44ms    4.06ms  40.86ms   71.04%
+    Req/Sec   491.47     75.37     0.93k    68.60%
+  57937 requests in 15.00s, 12.37MB read
+Requests/sec:   3861.52
+Transfer/sec:    844.52KB
+
+---------------------------------------------------------
+ Concurrency: 64 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.75ms    9.69ms  77.51ms   73.39%
+    Req/Sec   482.86     64.05   730.00     70.79%
+  57456 requests in 15.00s, 12.27MB read
+Requests/sec:   3829.30
+Transfer/sec:    837.49KB
+
+---------------------------------------------------------
+ Concurrency: 128 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.69ms   20.19ms 170.26ms   69.73%
+    Req/Sec   470.33     58.28   774.00     73.05%
+  56173 requests in 15.00s, 12.00MB read
+Requests/sec:   3743.81
+Transfer/sec:    818.80KB
+
+---------------------------------------------------------
+ Concurrency: 256 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.36ms   75.83ms   3.80s    95.06%
+    Req/Sec   472.18     46.10   681.00     72.73%
+  56612 requests in 15.00s, 12.09MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:   3773.52
+Transfer/sec:    825.30KB

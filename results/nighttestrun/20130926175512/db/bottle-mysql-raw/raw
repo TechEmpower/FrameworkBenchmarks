@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 18:56:43 PDT 2013
+
+  System load:  0.08               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/dbsraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   694.32us  126.10us   1.44ms   73.09%
+    Req/Sec     1.51k    93.08     1.89k    67.20%
+  57086 requests in 5.00s, 10.28MB read
+Requests/sec:  11417.44
+Transfer/sec:      2.06MB
+
+---------------------------------------------------------
+ Running Warmup bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.34ms    7.98ms  87.08ms   82.40%
+    Req/Sec     1.86k   145.74     2.33k    77.08%
+  220827 requests in 15.00s, 39.76MB read
+Requests/sec:  14722.27
+Transfer/sec:      2.65MB
+
+---------------------------------------------------------
+ Concurrency: 8 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   690.49us  124.72us   1.63ms   73.16%
+    Req/Sec     1.51k    95.49     1.89k    65.46%
+  172328 requests in 15.00s, 31.03MB read
+Requests/sec:  11488.80
+Transfer/sec:      2.07MB
+
+---------------------------------------------------------
+ Concurrency: 16 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.02ms  483.27us   4.26ms   89.03%
+    Req/Sec     2.12k   362.47     3.11k    67.93%
+  240569 requests in 15.00s, 43.31MB read
+Requests/sec:  16038.21
+Transfer/sec:      2.89MB
+
+---------------------------------------------------------
+ Concurrency: 32 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.20ms    1.32ms  12.86ms   85.39%
+    Req/Sec     1.94k   547.53     3.89k    65.64%
+  220331 requests in 15.00s, 39.67MB read
+Requests/sec:  14688.84
+Transfer/sec:      2.64MB
+
+---------------------------------------------------------
+ Concurrency: 64 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.37ms    2.37ms  23.05ms   77.47%
+    Req/Sec     1.94k   293.42     3.25k    67.43%
+  221782 requests in 15.00s, 39.93MB read
+Requests/sec:  14785.31
+Transfer/sec:      2.66MB
+
+---------------------------------------------------------
+ Concurrency: 128 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.70ms    4.68ms  64.22ms   80.31%
+    Req/Sec     1.92k   285.62     2.85k    68.14%
+  222958 requests in 15.00s, 40.14MB read
+Requests/sec:  14864.17
+Transfer/sec:      2.68MB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.19ms    7.69ms  71.79ms   81.47%
+    Req/Sec     1.89k   135.03     2.42k    66.99%
+  222632 requests in 15.00s, 40.08MB read
+Requests/sec:  14841.57
+Transfer/sec:      2.67MB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct  1 16:06:54 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+40 packages can be updated.
+12 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/sinatra/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/sinatra/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.51ms    4.49ms  37.24ms   87.82%
+    Req/Sec   178.38     66.13   349.00     64.77%
+  6611 requests in 5.00s, 1.29MB read
+Requests/sec:   1321.40
+Transfer/sec:    263.25KB
+
+---------------------------------------------------------
+ Running Warmup sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/sinatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    98.49ms   99.84ms   1.27s    88.60%
+    Req/Sec   343.38     59.82   465.00     65.61%
+  40697 requests in 15.00s, 7.92MB read
+Requests/sec:   2712.28
+Transfer/sec:    540.34KB
+
+---------------------------------------------------------
+ Concurrency: 8 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/sinatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.55ms    1.08ms  18.50ms   93.22%
+    Req/Sec   426.88     83.00   700.00     73.65%
+  48636 requests in 15.00s, 9.46MB read
+Requests/sec:   3242.14
+Transfer/sec:    645.89KB
+
+---------------------------------------------------------
+ Concurrency: 16 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/sinatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.19ms    2.60ms  21.96ms   61.26%
+    Req/Sec   409.57     91.05   785.00     70.71%
+  47633 requests in 15.00s, 9.27MB read
+Requests/sec:   3175.10
+Transfer/sec:    632.54KB
+
+---------------------------------------------------------
+ Concurrency: 32 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/sinatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.35ms    6.61ms  36.36ms   56.52%
+    Req/Sec   403.51     71.87   684.00     70.27%
+  47797 requests in 15.00s, 9.30MB read
+Requests/sec:   3185.95
+Transfer/sec:    634.70KB
+
+---------------------------------------------------------
+ Concurrency: 64 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/sinatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.22ms   14.89ms  63.39ms   52.09%
+    Req/Sec   400.46     54.01   589.00     69.19%
+  47774 requests in 15.00s, 9.29MB read
+Requests/sec:   3184.43
+Transfer/sec:    634.40KB
+
+---------------------------------------------------------
+ Concurrency: 128 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/sinatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.07ms   32.16ms 118.92ms   49.75%
+    Req/Sec   394.37     40.22   544.00     67.00%
+  47180 requests in 15.01s, 9.18MB read
+Requests/sec:   3144.20
+Transfer/sec:    626.38KB
+
+---------------------------------------------------------
+ Concurrency: 256 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/sinatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.57ms   66.04ms 226.55ms   51.58%
+    Req/Sec   380.96     41.50   492.00     79.42%
+  45582 requests in 15.00s, 8.87MB read
+Requests/sec:   3038.25
+Transfer/sec:    605.28KB

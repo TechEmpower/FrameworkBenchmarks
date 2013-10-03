@@ -1,0 +1,1 @@
+<table><tr><th>id</th><th>message</th></tr><?php foreach ($fortunes as $fortune) { ?><tr><td><?php echo $fortune['id']; ?></td><td><?php echo $this->escaper->escapeHtml($fortune['message']); ?></td></tr><?php } ?></table>

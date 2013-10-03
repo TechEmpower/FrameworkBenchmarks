@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 00:34:41 PDT 2013
+
+  System load:  0.05               Processes:           117
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer hapi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   711.56us    1.27ms  16.04ms   98.25%
+    Req/Sec     1.82k   715.01     3.44k    63.00%
+  67490 requests in 5.00s, 12.74MB read
+Requests/sec:  13498.94
+Transfer/sec:      2.55MB
+
+---------------------------------------------------------
+ Running Warmup hapi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.31ms    6.55ms  62.00ms   76.54%
+    Req/Sec     2.13k   244.37     2.96k    68.56%
+  251843 requests in 15.00s, 47.55MB read
+Requests/sec:  16791.56
+Transfer/sec:      3.17MB
+
+---------------------------------------------------------
+ Concurrency: 8 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   756.86us    1.65ms  16.84ms   98.19%
+    Req/Sec     1.86k   532.75     3.22k    71.36%
+  211554 requests in 15.00s, 39.95MB read
+Requests/sec:  14103.50
+Transfer/sec:      2.66MB
+
+---------------------------------------------------------
+ Concurrency: 16 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms    1.70ms  19.99ms   94.13%
+    Req/Sec     2.14k     0.89k    4.67k    66.34%
+  243453 requests in 15.00s, 45.97MB read
+Requests/sec:  16230.22
+Transfer/sec:      3.06MB
+
+---------------------------------------------------------
+ Concurrency: 32 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.11ms    2.28ms  24.64ms   92.57%
+    Req/Sec     2.26k     1.02k    6.00k    67.42%
+  253796 requests in 15.00s, 47.92MB read
+Requests/sec:  16920.35
+Transfer/sec:      3.20MB
+
+---------------------------------------------------------
+ Concurrency: 64 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.89ms    3.06ms  32.81ms   79.42%
+    Req/Sec     2.39k   822.98     4.89k    64.87%
+  259703 requests in 15.00s, 49.04MB read
+Requests/sec:  17314.69
+Transfer/sec:      3.27MB
+
+---------------------------------------------------------
+ Concurrency: 128 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.67ms    4.56ms  41.07ms   77.84%
+    Req/Sec     2.21k   399.51     3.32k    67.71%
+  257739 requests in 15.00s, 48.67MB read
+Requests/sec:  17182.92
+Transfer/sec:      3.24MB
+
+---------------------------------------------------------
+ Concurrency: 256 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.14ms    8.56ms  64.30ms   67.65%
+    Req/Sec     2.16k   300.65     3.91k    69.08%
+  254879 requests in 15.00s, 48.13MB read
+Requests/sec:  16991.35
+Transfer/sec:      3.21MB

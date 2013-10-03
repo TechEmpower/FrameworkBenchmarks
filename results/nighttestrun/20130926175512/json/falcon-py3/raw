@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 22:05:53 PDT 2013
+
+  System load:  0.08               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   235.09us   93.17us   2.84ms   91.73%
+    Req/Sec     4.36k   401.80     5.44k    66.45%
+  165367 requests in 5.00s, 31.38MB read
+Requests/sec:  33075.72
+Transfer/sec:      6.28MB
+
+---------------------------------------------------------
+ Running Warmup falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.27ms    9.08ms  50.11ms   82.86%
+    Req/Sec     5.41k     1.34k   10.78k    82.82%
+  633142 requests in 15.00s, 120.16MB read
+Requests/sec:  42216.67
+Transfer/sec:      8.01MB
+
+---------------------------------------------------------
+ Concurrency: 8 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   236.21us  102.92us   3.73ms   93.31%
+    Req/Sec     4.37k   406.49     5.44k    66.68%
+  496484 requests in 15.00s, 94.22MB read
+Requests/sec:  33100.16
+Transfer/sec:      6.28MB
+
+---------------------------------------------------------
+ Concurrency: 16 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   390.80us  321.89us  15.44ms   93.48%
+    Req/Sec     5.43k     1.06k    8.67k    70.90%
+  619041 requests in 15.00s, 117.48MB read
+Requests/sec:  41270.64
+Transfer/sec:      7.83MB
+
+---------------------------------------------------------
+ Concurrency: 32 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms    2.40ms  40.37ms   95.89%
+    Req/Sec     5.53k     2.30k   14.11k    67.62%
+  629707 requests in 15.00s, 119.51MB read
+Requests/sec:  41982.56
+Transfer/sec:      7.97MB
+
+---------------------------------------------------------
+ Concurrency: 64 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.59ms    2.78ms  30.53ms   95.35%
+    Req/Sec     5.57k     1.78k   14.56k    72.60%
+  633458 requests in 15.00s, 120.22MB read
+Requests/sec:  42232.68
+Transfer/sec:      8.01MB
+
+---------------------------------------------------------
+ Concurrency: 128 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.17ms    5.91ms  56.88ms   89.32%
+    Req/Sec     5.80k     1.90k   13.56k    68.76%
+  630257 requests in 15.00s, 119.61MB read
+Requests/sec:  42017.86
+Transfer/sec:      7.97MB
+
+---------------------------------------------------------
+ Concurrency: 256 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.19ms    9.08ms  52.19ms   83.04%
+    Req/Sec     5.47k     1.07k    9.73k    65.16%
+  633674 requests in 15.00s, 120.26MB read
+Requests/sec:  42257.60
+Transfer/sec:      8.02MB

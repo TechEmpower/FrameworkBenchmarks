@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 12:29:19 PDT 2013
+
+  System load:  0.05               Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/rails/hello_world/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/rails/hello_world/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.69ms    1.66ms  20.36ms   94.37%
+    Req/Sec   296.23     67.03   500.00     80.13%
+  11111 requests in 5.00s, 4.24MB read
+Requests/sec:   2221.25
+Transfer/sec:    868.74KB
+
+---------------------------------------------------------
+ Running Warmup rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/hello_world/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/hello_world/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   135.99ms   51.57ms 297.27ms   63.63%
+    Req/Sec   232.60     16.08   271.00     81.02%
+  27882 requests in 15.00s, 10.65MB read
+Requests/sec:   1858.36
+Transfer/sec:    726.79KB
+
+---------------------------------------------------------
+ Queries: 1 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/hello_world/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/hello_world/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.10ms   44.98ms 239.02ms   64.27%
+    Req/Sec   290.62     19.08   367.00     76.66%
+  34779 requests in 15.00s, 12.23MB read
+Requests/sec:   2318.18
+Transfer/sec:    834.76KB
+
+---------------------------------------------------------
+ Queries: 5 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/hello_world/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/hello_world/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   209.85ms   63.91ms 406.33ms   68.19%
+    Req/Sec   150.68     15.13   203.00     90.28%
+  18026 requests in 15.01s, 8.54MB read
+Requests/sec:   1200.88
+Transfer/sec:    582.52KB
+
+---------------------------------------------------------
+ Queries: 10 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/hello_world/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/hello_world/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   328.44ms   78.88ms 577.49ms   65.29%
+    Req/Sec    95.93      6.97   112.00     87.12%
+  11494 requests in 15.02s, 7.18MB read
+Requests/sec:    765.05
+Transfer/sec:    489.65KB
+
+---------------------------------------------------------
+ Queries: 15 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/hello_world/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/hello_world/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   453.81ms   98.88ms 805.79ms   67.83%
+    Req/Sec    70.36      3.37    82.00     71.11%
+  8409 requests in 15.02s, 6.53MB read
+Requests/sec:    559.80
+Transfer/sec:    445.06KB
+
+---------------------------------------------------------
+ Queries: 20 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/hello_world/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/hello_world/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   565.38ms  116.63ms 927.13ms   68.43%
+    Req/Sec    54.83      4.64    61.00     83.06%
+  6579 requests in 15.03s, 6.10MB read
+Requests/sec:    437.79
+Transfer/sec:    415.90KB

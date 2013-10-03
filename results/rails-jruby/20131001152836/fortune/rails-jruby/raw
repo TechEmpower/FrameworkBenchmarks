@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct  1 15:36:39 PDT 2013
+
+  System load:  0.03               Processes:           116
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+40 packages can be updated.
+12 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/rails/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/rails/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    92.31ms  231.58ms 705.47ms   87.41%
+    Req/Sec   207.88     91.43   355.00     78.80%
+  7645 requests in 5.00s, 11.88MB read
+Requests/sec:   1528.08
+Transfer/sec:      2.37MB
+
+---------------------------------------------------------
+ Running Warmup rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   144.71ms   67.49ms 527.64ms   67.84%
+    Req/Sec   222.44     23.31   262.00     76.47%
+  26576 requests in 15.02s, 41.29MB read
+Requests/sec:   1769.48
+Transfer/sec:      2.75MB
+
+---------------------------------------------------------
+ Concurrency: 8 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/rails/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.53ms    1.45ms  17.69ms   90.43%
+    Req/Sec   313.64     77.14   555.00     57.48%
+  35680 requests in 15.00s, 55.43MB read
+Requests/sec:   2378.42
+Transfer/sec:      3.69MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/rails/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.86ms    3.21ms  32.24ms   75.76%
+    Req/Sec   310.76     65.95   526.00     74.38%
+  36344 requests in 15.00s, 56.46MB read
+Requests/sec:   2422.55
+Transfer/sec:      3.76MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/rails/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.96ms    7.26ms  45.98ms   68.73%
+    Req/Sec   300.45     46.18   458.00     68.07%
+  35688 requests in 15.00s, 55.44MB read
+Requests/sec:   2378.64
+Transfer/sec:      3.70MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/rails/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.09ms   15.11ms  83.66ms   65.92%
+    Req/Sec   285.34     33.14   408.00     68.34%
+  34091 requests in 15.01s, 52.96MB read
+Requests/sec:   2271.66
+Transfer/sec:      3.53MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/rails/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    60.11ms   31.01ms 175.27ms   68.21%
+    Req/Sec   265.07     20.45   333.00     69.53%
+  31714 requests in 15.00s, 49.27MB read
+Requests/sec:   2113.58
+Transfer/sec:      3.28MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/rails/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   137.72ms   58.64ms 321.80ms   67.96%
+    Req/Sec   231.66     17.41   284.00     82.46%
+  27813 requests in 15.00s, 43.21MB read
+Requests/sec:   1853.90
+Transfer/sec:      2.88MB
