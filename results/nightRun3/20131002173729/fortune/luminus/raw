@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 01:15:36 PDT 2013
+
+  System load:  0.28               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/luminus/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/luminus/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   721.36us  269.26us   5.81ms   96.47%
+    Req/Sec     1.47k   142.92     1.78k    76.41%
+  54378 requests in 5.00s, 119.28MB read
+Requests/sec:  10875.06
+Transfer/sec:     23.85MB
+
+---------------------------------------------------------
+ Running Warmup luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.69ms   52.11ms   1.05s    94.69%
+    Req/Sec     2.14k   480.93     4.03k    69.21%
+  254325 requests in 15.00s, 557.85MB read
+Requests/sec:  16955.09
+Transfer/sec:     37.19MB
+
+---------------------------------------------------------
+ Concurrency: 8 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/luminus/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   712.23us  344.41us  11.20ms   98.47%
+    Req/Sec     1.49k   138.17     1.89k    75.32%
+  169399 requests in 15.00s, 371.57MB read
+Requests/sec:  11293.09
+Transfer/sec:     24.77MB
+
+---------------------------------------------------------
+ Concurrency: 16 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/luminus/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.98ms  817.90us  17.98ms   94.48%
+    Req/Sec     2.25k   390.61     3.11k    70.61%
+  255756 requests in 15.00s, 560.99MB read
+Requests/sec:  17050.52
+Transfer/sec:     37.40MB
+
+---------------------------------------------------------
+ Concurrency: 32 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/luminus/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.80ms    1.52ms  21.10ms   90.81%
+    Req/Sec     2.49k   480.22     4.00k    72.18%
+  282788 requests in 15.00s, 620.28MB read
+Requests/sec:  18852.64
+Transfer/sec:     41.35MB
+
+---------------------------------------------------------
+ Concurrency: 64 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/luminus/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.51ms    3.65ms  39.71ms   87.35%
+    Req/Sec     2.43k   511.18     4.69k    75.72%
+  282519 requests in 15.00s, 619.69MB read
+Requests/sec:  18834.93
+Transfer/sec:     41.31MB
+
+---------------------------------------------------------
+ Concurrency: 128 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/luminus/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.38ms   15.71ms 266.17ms   90.06%
+    Req/Sec     2.28k   565.24     4.60k    69.17%
+  268952 requests in 15.00s, 589.93MB read
+Requests/sec:  17930.95
+Transfer/sec:     39.33MB
+
+---------------------------------------------------------
+ Concurrency: 256 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.25ms   47.29ms 965.29ms   94.18%
+    Req/Sec     2.12k   471.69     3.80k    67.78%
+  252897 requests in 15.00s, 554.72MB read
+Requests/sec:  16859.76
+Transfer/sec:     36.98MB

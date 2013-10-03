@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 19:18:36 PDT 2013
+
+  System load:  0.08               Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/world.json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/world.json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.90ms    2.00ms  17.34ms   73.66%
+    Req/Sec   131.39     25.44   200.00     64.75%
+  5092 requests in 5.00s, 1.18MB read
+Requests/sec:   1017.47
+Transfer/sec:    241.19KB
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/world.json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   196.41ms  129.77ms 879.94ms   74.59%
+    Req/Sec   155.87     15.15   207.00     82.39%
+  18622 requests in 15.02s, 4.31MB read
+Requests/sec:   1239.64
+Transfer/sec:    293.92KB
+
+---------------------------------------------------------
+ Concurrency: 8 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/world.json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world.json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.28ms   15.85ms  86.12ms   93.15%
+    Req/Sec    72.51     42.34   235.00     75.80%
+  8755 requests in 15.02s, 2.24MB read
+  Non-2xx or 3xx responses: 4472
+Requests/sec:    582.96
+Transfer/sec:    152.50KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/world.json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world.json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.69ms    6.54ms  67.59ms   68.99%
+    Req/Sec    56.36      8.25    79.00     56.79%
+  6794 requests in 15.02s, 1.89MB read
+  Non-2xx or 3xx responses: 6794
+Requests/sec:    452.39
+Transfer/sec:    128.98KB
+
+---------------------------------------------------------
+ Concurrency: 32 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/world.json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world.json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    63.50ms   18.72ms 155.85ms   73.49%
+    Req/Sec    63.63      7.12    88.00     68.63%
+  7664 requests in 15.02s, 2.13MB read
+  Non-2xx or 3xx responses: 7664
+Requests/sec:    510.20
+Transfer/sec:    145.47KB
+
+---------------------------------------------------------
+ Concurrency: 64 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/world.json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world.json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   123.24ms   63.60ms 752.70ms   84.15%
+    Req/Sec    64.13      7.51    89.00     69.93%
+  7722 requests in 15.02s, 2.15MB read
+  Non-2xx or 3xx responses: 7722
+Requests/sec:    514.11
+Transfer/sec:    146.58KB
+
+---------------------------------------------------------
+ Concurrency: 128 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/world.json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world.json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   214.17ms  250.37ms   3.84s    93.56%
+    Req/Sec    89.89     39.85   190.00     73.01%
+  10589 requests in 15.03s, 2.71MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+  Non-2xx or 3xx responses: 5488
+Requests/sec:    704.50
+Transfer/sec:    184.58KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/world.json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   346.10ms  291.84ms   2.65s    80.65%
+    Req/Sec   109.50     45.93   185.00     54.65%
+  13045 requests in 15.03s, 3.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 16
+  Non-2xx or 3xx responses: 3726
+Requests/sec:    868.07
+Transfer/sec:    217.73KB

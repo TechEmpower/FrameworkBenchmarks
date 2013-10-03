@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 08:19:43 PDT 2013
+
+  System load:  0.28               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/spring/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.01ms  561.56us  12.66ms   91.65%
+    Req/Sec     1.14k   304.76     1.78k    61.41%
+  40115 requests in 5.00s, 62.86MB read
+Requests/sec:   8022.34
+Transfer/sec:     12.57MB
+
+---------------------------------------------------------
+ Running Warmup spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.04ms   30.77ms 343.07ms   96.04%
+    Req/Sec     3.04k     0.88k   11.93k    78.52%
+  353119 requests in 15.00s, 553.30MB read
+Requests/sec:  23541.96
+Transfer/sec:     36.89MB
+
+---------------------------------------------------------
+ Concurrency: 8 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   735.53us  303.08us   8.68ms   98.41%
+    Req/Sec     1.43k   145.82     1.89k    89.17%
+  163241 requests in 15.00s, 255.78MB read
+Requests/sec:  10882.70
+Transfer/sec:     17.05MB
+
+---------------------------------------------------------
+ Concurrency: 16 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   847.40us  635.14us  13.29ms   97.03%
+    Req/Sec     2.57k   367.24     3.33k    83.68%
+  292809 requests in 15.00s, 458.80MB read
+Requests/sec:  19521.16
+Transfer/sec:     30.59MB
+
+---------------------------------------------------------
+ Concurrency: 32 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.46ms    1.81ms  19.73ms   97.59%
+    Req/Sec     3.32k   682.81     4.89k    81.11%
+  377222 requests in 15.00s, 591.06MB read
+Requests/sec:  25148.54
+Transfer/sec:     39.40MB
+
+---------------------------------------------------------
+ Concurrency: 64 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.80ms    2.72ms  31.06ms   95.59%
+    Req/Sec     3.33k   691.02     5.44k    87.39%
+  377370 requests in 15.00s, 591.30MB read
+Requests/sec:  25158.38
+Transfer/sec:     39.42MB
+
+---------------------------------------------------------
+ Concurrency: 128 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.38ms    4.00ms  55.18ms   85.25%
+    Req/Sec     3.10k   568.88     4.68k    85.38%
+  362844 requests in 15.00s, 568.54MB read
+Requests/sec:  24192.72
+Transfer/sec:     37.91MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spring
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/spring/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.74ms    9.15ms 131.02ms   78.07%
+    Req/Sec     2.98k   508.99     4.97k    75.76%
+  352852 requests in 15.00s, 552.88MB read
+Requests/sec:  23524.27
+Transfer/sec:     36.86MB

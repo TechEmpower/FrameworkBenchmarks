@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 03:19:00 PDT 2013
+
+  System load:  0.47               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/updateraw.php?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/updateraw.php?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.99ms    4.83ms  40.20ms   89.15%
+    Req/Sec    81.16     21.09   129.00     77.85%
+  3221 requests in 5.01s, 813.17KB read
+Requests/sec:    642.78
+Transfer/sec:    162.28KB
+
+---------------------------------------------------------
+ Running Warmup php-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updateraw.php?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updateraw.php?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.66ms   71.36ms   1.24s    97.99%
+    Req/Sec     1.08k   462.93     1.98k    59.28%
+  128371 requests in 15.00s, 31.65MB read
+Requests/sec:   8558.09
+Transfer/sec:      2.11MB
+
+---------------------------------------------------------
+ Queries: 1 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updateraw.php?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updateraw.php?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.43ms   85.05ms 793.03ms   98.26%
+    Req/Sec     1.95k     0.87k    3.85k    62.00%
+  233115 requests in 15.05s, 49.96MB read
+Requests/sec:  15489.78
+Transfer/sec:      3.32MB
+
+---------------------------------------------------------
+ Queries: 5 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updateraw.php?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updateraw.php?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    78.58ms   45.33ms 548.89ms   86.98%
+    Req/Sec   448.63    127.71   686.00     66.53%
+  53687 requests in 15.04s, 18.42MB read
+Requests/sec:   3569.16
+Transfer/sec:      1.22MB
+
+---------------------------------------------------------
+ Queries: 10 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updateraw.php?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updateraw.php?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   184.62ms  154.88ms   1.19s    93.57%
+    Req/Sec   210.02     75.27   345.00     69.93%
+  25144 requests in 15.01s, 12.70MB read
+Requests/sec:   1675.29
+Transfer/sec:    866.73KB
+
+---------------------------------------------------------
+ Queries: 15 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updateraw.php?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updateraw.php?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   257.30ms  152.51ms   1.00s    90.79%
+    Req/Sec   136.96     43.91   273.00     74.41%
+  16156 requests in 15.03s, 10.77MB read
+Requests/sec:   1074.78
+Transfer/sec:    733.35KB
+
+---------------------------------------------------------
+ Queries: 20 for php-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updateraw.php?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updateraw.php?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   292.79ms  109.21ms   1.03s    92.19%
+    Req/Sec   111.91     22.02   152.00     80.75%
+  13406 requests in 15.01s, 11.09MB read
+Requests/sec:    892.95
+Transfer/sec:    756.53KB

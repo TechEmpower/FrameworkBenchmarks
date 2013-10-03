@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 19:46:06 PDT 2013
+
+  System load:  0.18               Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/compojure/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   216.72us   84.51us   2.53ms   90.41%
+    Req/Sec     4.73k   340.79     5.78k    73.98%
+  178830 requests in 5.00s, 25.92MB read
+Requests/sec:  35768.12
+Transfer/sec:      5.18MB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.85ms    8.15ms 125.70ms   97.01%
+    Req/Sec    14.39k     3.31k   31.22k    80.49%
+  1638461 requests in 15.00s, 237.51MB read
+Requests/sec: 109256.04
+Transfer/sec:     15.84MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.87ms   79.47ms 742.53ms   90.96%
+    Req/Sec    16.22k     3.23k   30.25k    70.93%
+  1939716 requests in 15.00s, 281.18MB read
+Requests/sec: 129336.25
+Transfer/sec:     18.75MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   127.12ms  478.43ms   6.94s    93.67%
+    Req/Sec    15.66k     4.77k   26.34k    79.84%
+  1854690 requests in 15.00s, 268.85MB read
+  Socket errors: connect 0, read 96, write 0, timeout 1144
+Requests/sec: 123640.56
+Transfer/sec:     17.92MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   153.18ms  452.89ms   9.86s    90.46%
+    Req/Sec    18.24k     4.43k   27.37k    80.16%
+  1865124 requests in 15.00s, 270.37MB read
+  Socket errors: connect 0, read 895, write 0, timeout 19517
+Requests/sec: 124305.78
+Transfer/sec:     18.02MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for compojure
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/compojure/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.38s     3.96s    9.76s    76.43%
+    Req/Sec    16.71k     6.33k   37.62k    73.66%
+  1790954 requests in 15.01s, 259.61MB read
+  Socket errors: connect 11, read 2447, write 0, timeout 102654
+Requests/sec: 119302.57
+Transfer/sec:     17.29MB

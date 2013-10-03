@@ -1,0 +1,138 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 08:48:35 PDT 2013
+
+  System load:  0.0                Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortunes-php
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortunes-php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.94ms   17.68ms  73.83ms   79.34%
+    Req/Sec    59.10     15.56   115.00     68.88%
+  2327 requests in 5.01s, 2.92MB read
+  Non-2xx or 3xx responses: 1136
+Requests/sec:    464.06
+Transfer/sec:    595.83KB
+
+---------------------------------------------------------
+ Running Warmup symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes-php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   527.51ms  519.98ms   3.98s    77.37%
+    Req/Sec    60.38      6.63    78.00     77.60%
+  7383 requests in 15.05s, 9.15MB read
+  Socket errors: connect 0, read 0, write 0, timeout 29
+  Non-2xx or 3xx responses: 3660
+Requests/sec:    490.46
+Transfer/sec:    622.76KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes-php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.44ms   17.13ms  79.06ms   80.77%
+    Req/Sec    61.21     18.58   136.00     70.26%
+  7381 requests in 15.02s, 9.19MB read
+  Non-2xx or 3xx responses: 3639
+Requests/sec:    491.46
+Transfer/sec:    626.52KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes-php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.26ms   33.62ms 178.39ms   82.56%
+    Req/Sec    62.76     14.46   105.00     69.25%
+  7558 requests in 15.02s, 9.34MB read
+  Non-2xx or 3xx responses: 3762
+Requests/sec:    503.29
+Transfer/sec:    637.13KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes-php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.20ms   67.86ms 414.85ms   86.68%
+    Req/Sec    58.08     14.44   105.00     68.84%
+  7072 requests in 15.02s, 8.22MB read
+  Non-2xx or 3xx responses: 3964
+Requests/sec:    470.96
+Transfer/sec:    560.80KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes-php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   154.86ms  182.08ms   1.37s    87.59%
+    Req/Sec    54.18     15.78    94.00     64.29%
+  6655 requests in 15.04s, 7.14MB read
+  Non-2xx or 3xx responses: 4161
+Requests/sec:    442.50
+Transfer/sec:    486.29KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes-php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   292.03ms  302.59ms   3.12s    86.61%
+    Req/Sec    54.46     15.30   102.00     67.77%
+  6646 requests in 15.03s, 7.33MB read
+  Non-2xx or 3xx responses: 4013
+Requests/sec:    442.11
+Transfer/sec:    499.20KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2-php-templates
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes-php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes-php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   604.67ms  506.95ms   3.13s    65.96%
+    Req/Sec    51.81     14.22    81.00     66.96%
+  6117 requests in 15.07s, 6.03MB read
+  Socket errors: connect 0, read 0, write 0, timeout 24
+  Non-2xx or 3xx responses: 4251
+Requests/sec:    405.94
+Transfer/sec:    409.71KB

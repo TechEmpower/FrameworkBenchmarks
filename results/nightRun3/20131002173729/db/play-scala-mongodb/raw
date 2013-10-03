@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 04:10:01 PDT 2013
+
+  System load:  0.0                Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.22ms    3.48ms  34.25ms   95.57%
+    Req/Sec   657.06    272.54     1.23k    62.33%
+  23624 requests in 5.00s, 2.05MB read
+Requests/sec:   4723.58
+Transfer/sec:    419.77KB
+
+---------------------------------------------------------
+ Running Warmup play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.58ms   64.47ms 641.26ms   98.91%
+    Req/Sec     2.75k   611.56     5.36k    81.15%
+  313350 requests in 15.00s, 27.19MB read
+Requests/sec:  20888.91
+Transfer/sec:      1.81MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.04ms    2.08ms  22.72ms   97.77%
+    Req/Sec     1.35k   278.29     1.89k    87.55%
+  153685 requests in 15.00s, 13.34MB read
+Requests/sec:  10245.61
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.25ms    2.59ms  32.48ms   97.45%
+    Req/Sec     2.27k   490.98     3.00k    89.24%
+  258205 requests in 15.00s, 22.41MB read
+Requests/sec:  17213.81
+Transfer/sec:      1.49MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.70ms    1.59ms  20.35ms   97.29%
+    Req/Sec     2.68k   441.89     3.67k    88.37%
+  304778 requests in 15.00s, 26.45MB read
+Requests/sec:  20318.83
+Transfer/sec:      1.76MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.45ms    3.20ms  37.91ms   97.34%
+    Req/Sec     2.70k   477.59     4.10k    84.87%
+  307009 requests in 15.00s, 26.64MB read
+Requests/sec:  20467.68
+Transfer/sec:      1.78MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.30ms    2.73ms  30.73ms   95.32%
+    Req/Sec     2.78k   555.34     5.22k    79.78%
+  315574 requests in 15.00s, 27.39MB read
+Requests/sec:  21038.73
+Transfer/sec:      1.83MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.41ms   99.98ms   1.47s    98.44%
+    Req/Sec     2.78k   703.63     5.78k    76.62%
+  316447 requests in 15.00s, 27.46MB read
+Requests/sec:  21097.30
+Transfer/sec:      1.83MB
