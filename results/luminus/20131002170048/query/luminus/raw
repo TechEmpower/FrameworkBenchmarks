@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 17:06:45 PDT 2013
+
+  System load:  0.18               Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/luminus/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/luminus/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.19ms  355.81us  10.29ms   97.82%
+    Req/Sec     0.89k    92.64     1.11k    66.67%
+  33688 requests in 5.00s, 6.73MB read
+Requests/sec:   6737.02
+Transfer/sec:      1.35MB
+
+---------------------------------------------------------
+ Running Warmup luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/db/2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.11ms   32.28ms 509.99ms   91.43%
+    Req/Sec     1.85k   331.70     3.18k    69.61%
+  219931 requests in 15.00s, 43.95MB read
+Requests/sec:  14662.55
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Queries: 1 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.57ms   30.26ms 606.95ms   93.94%
+    Req/Sec     2.85k   531.38     5.15k    68.94%
+  338614 requests in 15.00s, 57.41MB read
+Requests/sec:  22575.26
+Transfer/sec:      3.83MB
+
+---------------------------------------------------------
+ Queries: 5 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/db/5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.86ms   47.01ms 768.00ms   89.79%
+    Req/Sec     0.88k    87.30     1.25k    69.78%
+  104893 requests in 15.00s, 30.60MB read
+Requests/sec:   6992.20
+Transfer/sec:      2.04MB
+
+---------------------------------------------------------
+ Queries: 10 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/db/10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.74ms   63.38ms 677.78ms   86.96%
+    Req/Sec   471.65     55.42   736.00     73.77%
+  56428 requests in 15.00s, 25.01MB read
+Requests/sec:   3761.43
+Transfer/sec:      1.67MB
+
+---------------------------------------------------------
+ Queries: 15 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/db/15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.12ms   77.55ms 670.92ms   83.95%
+    Req/Sec   321.59     36.53   477.00     79.72%
+  38437 requests in 15.00s, 22.86MB read
+Requests/sec:   2562.30
+Transfer/sec:      1.52MB
+
+---------------------------------------------------------
+ Queries: 20 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/db/20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   128.20ms   88.29ms 571.22ms   78.12%
+    Req/Sec   243.99     15.76   286.00     67.66%
+  29174 requests in 15.01s, 21.77MB read
+Requests/sec:   1943.87
+Transfer/sec:      1.45MB
