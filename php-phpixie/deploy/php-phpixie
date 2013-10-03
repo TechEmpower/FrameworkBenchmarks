@@ -1,6 +1,6 @@
 <VirtualHost *:8080>
-  Alias /php-phpixie/ "/home/ubuntu/FrameworkBenchmarks/php-phpixie/web/"
-  <Directory /home/ubuntu/FrameworkBenchmarks/php-phpixie/web/>
+  Alias /php-phpixie/ "/home/fb/FrameworkBenchmarks/php-phpixie/web/"
+  <Directory /home/fb/FrameworkBenchmarks/php-phpixie/web/>
           Options Indexes FollowSymLinks MultiViews
           #AllowOverride None
           Order allow,deny
