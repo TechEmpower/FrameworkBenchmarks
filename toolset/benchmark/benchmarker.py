@@ -499,7 +499,7 @@ class Benchmarker:
         ----------------------------------------------------
         Saving results through {name}
         ----------------------------------------------------
-        )""".format(name=test.name))
+        """.format(name=test.name))
         self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
       except (OSError, subprocess.CalledProcessError):
         self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
