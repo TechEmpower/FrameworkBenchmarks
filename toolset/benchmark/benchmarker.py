@@ -560,7 +560,6 @@ class Benchmarker:
   # This is assumed to be run from the benchmark root directory
   #############################################################
   def __count_sloc(self):
-    print "here!!!!"
     all_frameworks = self.__gather_frameworks()
     jsonResult = {}
 
