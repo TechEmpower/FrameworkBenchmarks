@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 02:24:33 PDT 2013
+
+  System load:  0.0                Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer onion
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   189.73us   30.27us 270.00us   66.25%
+    Req/Sec     5.30k   252.08     6.00k    62.18%
+  203368 requests in 5.00s, 26.96MB read
+Requests/sec:  40677.62
+Transfer/sec:      5.39MB
+
+---------------------------------------------------------
+ Running Warmup onion
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.45ms    4.57ms   1.46s   100.00%
+    Req/Sec    22.64k     2.30k   39.56k    69.94%
+  2566713 requests in 15.00s, 340.25MB read
+  Socket errors: connect 0, read 14, write 0, timeout 28
+Requests/sec: 171121.12
+Transfer/sec:     22.68MB
+
+---------------------------------------------------------
+ Concurrency: 8 for onion
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   189.94us   25.59us 468.00us   76.01%
+    Req/Sec     5.26k   243.95     6.78k    68.61%
+  611710 requests in 15.00s, 81.09MB read
+Requests/sec:  40782.22
+Transfer/sec:      5.41MB
+
+---------------------------------------------------------
+ Concurrency: 16 for onion
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   187.79us   34.35us 340.00us   69.20%
+    Req/Sec    10.71k   568.75    13.89k    72.38%
+  1223897 requests in 15.00s, 162.24MB read
+Requests/sec:  81595.94
+Transfer/sec:     10.82MB
+
+---------------------------------------------------------
+ Concurrency: 32 for onion
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   182.26us   54.90us   1.89ms   71.39%
+    Req/Sec    22.28k     1.43k   26.89k    64.47%
+  2528049 requests in 15.00s, 335.12MB read
+Requests/sec: 168552.74
+Transfer/sec:     22.34MB
+
+---------------------------------------------------------
+ Concurrency: 64 for onion
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   388.44us    1.11ms 623.46ms  100.00%
+    Req/Sec    21.22k     2.30k   36.33k    86.10%
+  2415252 requests in 15.00s, 320.17MB read
+Requests/sec: 161026.01
+Transfer/sec:     21.35MB
+
+---------------------------------------------------------
+ Concurrency: 128 for onion
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   763.74us    3.04ms   1.46s   100.00%
+    Req/Sec    21.70k     2.14k   41.67k    82.04%
+  2462675 requests in 15.00s, 326.45MB read
+Requests/sec: 164216.51
+Transfer/sec:     21.77MB
+
+---------------------------------------------------------
+ Concurrency: 256 for onion
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.41ms    6.58ms   3.12s   100.00%
+    Req/Sec    22.87k     2.72k   39.89k    73.33%
+  2589626 requests in 15.00s, 343.28MB read
+  Socket errors: connect 0, read 22, write 0, timeout 42
+Requests/sec: 172648.39
+Transfer/sec:     22.89MB

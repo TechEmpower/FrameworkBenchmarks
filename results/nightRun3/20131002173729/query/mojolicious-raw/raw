@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 01:36:29 PDT 2013
+
+  System load:  0.76               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   388.96ms  597.07ms   1.31s    70.42%
+    Req/Sec   394.76    278.27     0.89k    59.21%
+  15559 requests in 5.00s, 2.28MB read
+Requests/sec:   3111.29
+Transfer/sec:    467.76KB
+
+---------------------------------------------------------
+ Running Warmup mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.20ms    9.86ms  69.64ms   94.22%
+    Req/Sec     7.89k     1.68k   13.90k    69.68%
+  921882 requests in 15.00s, 279.85MB read
+  Non-2xx or 3xx responses: 870805
+Requests/sec:  61461.04
+Transfer/sec:     18.66MB
+
+---------------------------------------------------------
+ Queries: 1 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   116.40ms  363.91ms   1.31s    91.39%
+    Req/Sec     6.85k     2.83k   17.22k    77.37%
+  778369 requests in 15.00s, 235.21MB read
+  Non-2xx or 3xx responses: 728779
+Requests/sec:  51893.43
+Transfer/sec:     15.68MB
+
+---------------------------------------------------------
+ Queries: 5 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.46ms   10.44ms  75.84ms   94.21%
+    Req/Sec     7.58k     1.63k   13.91k    72.04%
+  884368 requests in 15.00s, 268.61MB read
+  Non-2xx or 3xx responses: 836239
+Requests/sec:  58959.82
+Transfer/sec:     17.91MB
+
+---------------------------------------------------------
+ Queries: 10 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.96ms  325.34ms   1.22s    92.05%
+    Req/Sec     7.63k     3.21k   18.20k    75.12%
+  860073 requests in 15.00s, 262.60MB read
+  Non-2xx or 3xx responses: 821545
+Requests/sec:  57351.19
+Transfer/sec:     17.51MB
+
+---------------------------------------------------------
+ Queries: 15 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.92ms   15.44ms 145.22ms   95.12%
+    Req/Sec     8.14k     1.70k   15.24k    74.57%
+  957218 requests in 15.14s, 293.06MB read
+  Non-2xx or 3xx responses: 919132
+Requests/sec:  63233.48
+Transfer/sec:     19.36MB
+
+---------------------------------------------------------
+ Queries: 20 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   101.07ms  329.44ms   1.25s    92.10%
+    Req/Sec     6.71k     2.69k   17.64k    77.72%
+  772692 requests in 15.00s, 235.93MB read
+  Non-2xx or 3xx responses: 738117
+Requests/sec:  51514.88
+Transfer/sec:     15.73MB

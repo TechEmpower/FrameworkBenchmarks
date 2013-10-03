@@ -1,0 +1,105 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 08:35:19 PDT 2013
+
+  System load:  0.16               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer stream-postgresql-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   387.65us   99.78us   2.34ms   80.03%
+    Req/Sec     2.68k   179.55     3.33k    57.28%
+  101656 requests in 5.00s, 20.74MB read
+Requests/sec:  20332.54
+Transfer/sec:      4.15MB
+
+---------------------------------------------------------
+ Running Warmup stream-postgresql-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.17ms   25.45ms 493.03ms   95.49%
+    Req/Sec     3.58k   691.31     7.23k    70.21%
+  420944 requests in 15.00s, 85.89MB read
+Requests/sec:  28064.52
+Transfer/sec:      5.73MB
+
+---------------------------------------------------------
+ Concurrency: 256 for stream-postgresql-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   144.70ms  115.93ms   1.22s    86.20%
+    Req/Sec     3.62k   295.45     4.64k    74.15%
+  432794 requests in 15.00s, 88.31MB read
+Requests/sec:  28858.49
+Transfer/sec:      5.89MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for stream-postgresql-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   521.58ms  781.09ms   7.31s    86.85%
+    Req/Sec     3.78k   449.75     5.24k    70.95%
+  448127 requests in 15.00s, 91.44MB read
+  Socket errors: connect 0, read 18, write 0, timeout 820
+Requests/sec:  29875.69
+Transfer/sec:      6.10MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for stream-postgresql-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.39s     3.27s   14.02s    88.61%
+    Req/Sec     3.31k   449.03     4.26k    79.51%
+  388355 requests in 15.00s, 82.73MB read
+  Socket errors: connect 0, read 384690, write 0, timeout 13088
+  Non-2xx or 3xx responses: 25848
+Requests/sec:  25882.32
+Transfer/sec:      5.51MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for stream-postgresql-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.49s     3.55s   14.94s    91.58%
+    Req/Sec     1.64k     1.47k    4.34k    41.56%
+  206892 requests in 15.01s, 44.53MB read
+  Socket errors: connect 11, read 259158, write 0, timeout 69757
+  Non-2xx or 3xx responses: 17351
+Requests/sec:  13783.57
+Transfer/sec:      2.97MB

@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 02:32:21 PDT 2013
+
+  System load:  0.07               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.99ms   51.45us  40.16ms   73.66%
+    Req/Sec    24.97      0.85    37.00     97.10%
+  1008 requests in 5.00s, 1.38MB read
+Requests/sec:    201.42
+Transfer/sec:    283.25KB
+
+---------------------------------------------------------
+ Running Warmup onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.50ms   53.92ms   3.24s    99.84%
+    Req/Sec   562.33    137.26     0.88k    69.94%
+  66222 requests in 15.00s, 90.97MB read
+  Socket errors: connect 0, read 93, write 0, timeout 374
+Requests/sec:   4413.79
+Transfer/sec:      6.06MB
+
+---------------------------------------------------------
+ Concurrency: 8 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.98ms  115.44us  43.93ms   97.17%
+    Req/Sec    24.95      1.41    37.00     98.76%
+  3008 requests in 15.00s, 4.13MB read
+Requests/sec:    200.47
+Transfer/sec:    281.91KB
+
+---------------------------------------------------------
+ Concurrency: 16 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.51ms    2.00ms  44.02ms   63.05%
+    Req/Sec    52.86     74.73   222.00     85.13%
+  5850 requests in 15.04s, 8.03MB read
+Requests/sec:    388.99
+Transfer/sec:    547.06KB
+
+---------------------------------------------------------
+ Concurrency: 32 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   167.43ms   74.09ms 624.76ms   74.81%
+    Req/Sec   103.33     94.34   444.00     57.91%
+  11455 requests in 15.01s, 15.73MB read
+Requests/sec:    762.97
+Transfer/sec:      1.05MB
+
+---------------------------------------------------------
+ Concurrency: 64 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   872.90ms  698.00ms   1.46s    58.77%
+    Req/Sec   200.23    165.37   666.00     67.06%
+  22742 requests in 15.01s, 31.24MB read
+Requests/sec:   1515.52
+Transfer/sec:      2.08MB
+
+---------------------------------------------------------
+ Concurrency: 128 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.61ms   55.35ms   3.13s    99.87%
+    Req/Sec   377.05     55.93   430.00     87.70%
+  44139 requests in 15.00s, 60.63MB read
+  Socket errors: connect 0, read 10, write 0, timeout 26
+Requests/sec:   2942.39
+Transfer/sec:      4.04MB
+
+---------------------------------------------------------
+ Concurrency: 256 for onion-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.22ms   78.57ms   3.12s    99.73%
+    Req/Sec   652.84    142.70     0.88k    67.19%
+  76324 requests in 15.01s, 104.84MB read
+  Socket errors: connect 0, read 63, write 0, timeout 227
+Requests/sec:   5086.41
+Transfer/sec:      6.99MB

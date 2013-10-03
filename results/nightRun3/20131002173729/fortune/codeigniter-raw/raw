@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 19:33:37 PDT 2013
+
+  System load:  0.0                Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/index.php/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.66ms  720.51us   6.58ms   72.79%
+    Req/Sec   402.78     75.30   666.00     69.36%
+  15274 requests in 5.00s, 31.22MB read
+Requests/sec:   3054.28
+Transfer/sec:      6.24MB
+
+---------------------------------------------------------
+ Running Warmup codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.88ms   38.89ms 274.41ms   71.00%
+    Req/Sec   441.28     24.62   528.00     69.46%
+  52840 requests in 15.01s, 107.99MB read
+Requests/sec:   3521.28
+Transfer/sec:      7.20MB
+
+---------------------------------------------------------
+ Concurrency: 8 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.66ms  730.83us   7.20ms   74.16%
+    Req/Sec   400.58     73.49   666.00     69.95%
+  45611 requests in 15.00s, 93.21MB read
+Requests/sec:   3040.32
+Transfer/sec:      6.21MB
+
+---------------------------------------------------------
+ Concurrency: 16 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.71ms    1.95ms  16.13ms   67.71%
+    Req/Sec   447.57     90.89   833.00     76.33%
+  51701 requests in 15.00s, 105.66MB read
+Requests/sec:   3446.33
+Transfer/sec:      7.04MB
+
+---------------------------------------------------------
+ Concurrency: 32 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.09ms    4.32ms  43.26ms   74.18%
+    Req/Sec   458.69     77.52   840.00     71.69%
+  54012 requests in 15.00s, 110.38MB read
+Requests/sec:   3600.23
+Transfer/sec:      7.36MB
+
+---------------------------------------------------------
+ Concurrency: 64 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.85ms    9.47ms 123.75ms   76.93%
+    Req/Sec   452.82     54.62   647.00     69.06%
+  53912 requests in 15.00s, 110.18MB read
+Requests/sec:   3593.86
+Transfer/sec:      7.34MB
+
+---------------------------------------------------------
+ Concurrency: 128 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.90ms   20.52ms 167.84ms   76.43%
+    Req/Sec   445.30     41.64   611.00     71.67%
+  53222 requests in 15.01s, 108.77MB read
+Requests/sec:   3546.63
+Transfer/sec:      7.25MB
+
+---------------------------------------------------------
+ Concurrency: 256 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.43ms   41.23ms 391.95ms   74.53%
+    Req/Sec   443.90     59.44     0.92k    86.72%
+  52888 requests in 15.00s, 108.09MB read
+Requests/sec:   3525.55
+Transfer/sec:      7.21MB

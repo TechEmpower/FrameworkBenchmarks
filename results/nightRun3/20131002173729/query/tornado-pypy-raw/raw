@@ -1,0 +1,116 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 09:15:32 PDT 2013
+
+  System load:  0.45               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.72ms  319.06us   3.76ms   80.07%
+    Req/Sec   619.06     75.63     0.89k    71.84%
+  23441 requests in 5.00s, 3.62MB read
+Requests/sec:   4687.34
+Transfer/sec:    741.55KB
+
+---------------------------------------------------------
+ Running Warmup tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   196.44ms  274.87ms   1.06s    83.85%
+    Req/Sec   414.06    210.43     0.89k    74.56%
+  49659 requests in 15.16s, 7.67MB read
+Requests/sec:   3275.78
+Transfer/sec:    518.24KB
+
+---------------------------------------------------------
+ Queries: 1 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   321.84ms  131.50ms 616.77ms   64.69%
+    Req/Sec   100.32     11.67   132.00     69.18%
+  11953 requests in 15.04s, 1.77MB read
+Requests/sec:    794.72
+Transfer/sec:    120.30KB
+
+---------------------------------------------------------
+ Queries: 5 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.58s   470.04ms   2.06s    55.22%
+    Req/Sec    19.97     13.11    55.00     62.82%
+  2399 requests in 15.27s, 421.70KB read
+Requests/sec:    157.12
+Transfer/sec:     27.62KB
+
+---------------------------------------------------------
+ Queries: 10 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   563.89ms  967.47ms   3.57s    85.42%
+    Req/Sec   129.55     95.67   276.00     59.18%
+  11404 requests in 15.26s, 2.28MB read
+  Socket errors: connect 0, read 0, write 0, timeout 237
+Requests/sec:    747.34
+Transfer/sec:    153.26KB
+
+---------------------------------------------------------
+ Queries: 15 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   431.17ms  560.18ms   2.07s    86.52%
+    Req/Sec   130.64     65.06   323.00     71.58%
+  13619 requests in 15.52s, 3.12MB read
+Requests/sec:    877.41
+Transfer/sec:    205.64KB
+
+---------------------------------------------------------
+ Queries: 20 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.67s     3.35s   10.24s    45.83%
+    Req/Sec     4.33      3.21    10.00     54.17%
+  523 requests in 16.01s, 138.41KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1300
+Requests/sec:     32.67
+Transfer/sec:      8.65KB

@@ -1,0 +1,139 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 00:36:28 PDT 2013
+
+  System load:  0.03               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    53.60ms    7.06ms  61.67ms   89.78%
+    Req/Sec    22.94     38.35   307.00     70.89%
+  1604 requests in 5.04s, 31.55MB read
+  Non-2xx or 3xx responses: 731
+Requests/sec:    318.17
+Transfer/sec:      6.26MB
+
+---------------------------------------------------------
+ Running Warmup kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   359.42ms  553.21ms   5.56s    97.99%
+    Req/Sec   132.26     97.32   384.00     66.35%
+  16475 requests in 15.01s, 204.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 198
+  Non-2xx or 3xx responses: 4408
+Requests/sec:   1097.70
+Transfer/sec:     13.60MB
+
+---------------------------------------------------------
+ Concurrency: 8 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.68ms   22.00ms  59.54ms   73.85%
+    Req/Sec    70.57     92.60   363.00     76.47%
+  8692 requests in 15.04s, 86.65MB read
+  Non-2xx or 3xx responses: 1781
+Requests/sec:    577.78
+Transfer/sec:      5.76MB
+
+---------------------------------------------------------
+ Concurrency: 16 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.86ms   10.82ms  70.65ms   87.38%
+    Req/Sec    40.38      6.50    75.00     71.95%
+  4877 requests in 15.05s, 198.84MB read
+  Non-2xx or 3xx responses: 4877
+Requests/sec:    324.15
+Transfer/sec:     13.22MB
+
+---------------------------------------------------------
+ Concurrency: 32 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.06ms   14.15ms 104.29ms   77.12%
+    Req/Sec    58.92      6.37    80.00     62.38%
+  7096 requests in 15.05s, 289.63MB read
+  Non-2xx or 3xx responses: 7096
+Requests/sec:    471.44
+Transfer/sec:     19.24MB
+
+---------------------------------------------------------
+ Concurrency: 64 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    98.84ms   49.13ms 199.06ms   58.73%
+    Req/Sec   117.21     86.85   294.00     74.65%
+  13805 requests in 15.04s, 247.08MB read
+  Non-2xx or 3xx responses: 5642
+Requests/sec:    917.84
+Transfer/sec:     16.43MB
+
+---------------------------------------------------------
+ Concurrency: 128 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   204.27ms  200.22ms   5.17s    98.98%
+    Req/Sec   108.02     81.21   323.00     78.06%
+  12685 requests in 15.03s, 255.17MB read
+  Socket errors: connect 0, read 0, write 0, timeout 21
+  Non-2xx or 3xx responses: 5915
+Requests/sec:    844.22
+Transfer/sec:     16.98MB
+
+---------------------------------------------------------
+ Concurrency: 256 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   404.26ms  605.55ms   6.05s    97.93%
+    Req/Sec   104.96     77.27   300.00     79.03%
+  12201 requests in 15.02s, 250.30MB read
+  Socket errors: connect 0, read 0, write 0, timeout 207
+  Non-2xx or 3xx responses: 5796
+Requests/sec:    812.41
+Transfer/sec:     16.67MB

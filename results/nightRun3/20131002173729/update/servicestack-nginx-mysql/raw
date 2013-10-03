@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 06:45:00 PDT 2013
+
+  System load:  0.0                Processes:           124
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/mysql/updates/2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mysql/updates/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  3 requests in 6.00s, 20.97KB read
+  Socket errors: connect 0, read 0, write 0, timeout 21
+  Non-2xx or 3xx responses: 1
+Requests/sec:      0.50
+Transfer/sec:      3.49KB
+
+---------------------------------------------------------
+ Running Warmup servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mysql/updates/2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/updates/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  60 requests in 16.00s, 364.19KB read
+  Socket errors: connect 0, read 5, write 0, timeout 1824
+  Non-2xx or 3xx responses: 29
+Requests/sec:      3.75
+Transfer/sec:     22.76KB
+
+---------------------------------------------------------
+ Queries: 1 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mysql/updates/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/updates/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  29 requests in 16.00s, 195.94KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1833
+  Non-2xx or 3xx responses: 12
+Requests/sec:      1.81
+Transfer/sec:     12.24KB
+
+---------------------------------------------------------
+ Queries: 5 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mysql/updates/5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/updates/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.07ms   19.96ms  63.43ms   88.84%
+    Req/Sec     0.04      0.66    10.00     99.57%
+  32 requests in 16.01s, 285.85KB read
+  Socket errors: connect 0, read 2, write 0, timeout 1962
+  Non-2xx or 3xx responses: 7
+Requests/sec:      2.00
+Transfer/sec:     17.86KB
+
+---------------------------------------------------------
+ Queries: 10 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mysql/updates/10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/updates/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  37 requests in 16.01s, 279.31KB read
+  Socket errors: connect 0, read 3, write 0, timeout 1858
+  Non-2xx or 3xx responses: 11
+Requests/sec:      2.31
+Transfer/sec:     17.45KB
+
+---------------------------------------------------------
+ Queries: 15 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mysql/updates/15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/updates/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   109.32ms  175.62ms 562.52ms   87.98%
+    Req/Sec     0.04      0.27     2.00     97.12%
+  48 requests in 16.00s, 359.54KB read
+  Socket errors: connect 0, read 2, write 0, timeout 1927
+  Non-2xx or 3xx responses: 16
+Requests/sec:      3.00
+Transfer/sec:     22.47KB
+
+---------------------------------------------------------
+ Queries: 20 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mysql/updates/20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/updates/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34 requests in 16.01s, 258.56KB read
+  Socket errors: connect 0, read 1, write 0, timeout 1952
+  Non-2xx or 3xx responses: 11
+Requests/sec:      2.12
+Transfer/sec:     16.15KB
