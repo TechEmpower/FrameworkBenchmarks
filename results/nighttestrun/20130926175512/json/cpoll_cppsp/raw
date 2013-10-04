@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 20:21:17 PDT 2013
+
+  System load:  0.02               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:16969/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:16969/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   189.78us   30.93us 320.00us   71.58%
+    Req/Sec     5.29k   247.54     5.89k    63.70%
+  203472 requests in 5.00s, 35.12MB read
+Requests/sec:  40697.15
+Transfer/sec:      7.02MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.33ms   87.14us   2.34ms   76.42%
+    Req/Sec    25.26k     1.41k   31.44k    60.76%
+  2862324 requests in 15.00s, 494.08MB read
+Requests/sec: 190825.61
+Transfer/sec:     32.94MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:16969/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   190.36us   32.78us 573.00us   69.30%
+    Req/Sec     5.29k   248.95     6.33k    63.45%
+  610450 requests in 15.00s, 105.37MB read
+Requests/sec:  40697.15
+Transfer/sec:      7.02MB
+
+---------------------------------------------------------
+ Concurrency: 16 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:16969/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   185.11us   41.47us 461.00us   65.70%
+    Req/Sec    10.87k   803.26    14.00k    90.16%
+  1243294 requests in 15.00s, 214.61MB read
+Requests/sec:  82888.16
+Transfer/sec:     14.31MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:16969/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   182.79us   54.58us 592.00us   71.61%
+    Req/Sec    22.25k     1.48k   26.89k    65.12%
+  2525165 requests in 15.00s, 435.88MB read
+Requests/sec: 168348.65
+Transfer/sec:     29.06MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:16969/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   336.48us   70.32us   2.06ms   82.17%
+    Req/Sec    24.62k     1.42k   29.44k    62.31%
+  2793043 requests in 15.00s, 482.12MB read
+Requests/sec: 186216.16
+Transfer/sec:     32.14MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:16969/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   668.37us   73.18us   2.74ms   76.97%
+    Req/Sec    25.05k     1.39k   33.00k    61.02%
+  2840898 requests in 15.00s, 490.38MB read
+Requests/sec: 189409.03
+Transfer/sec:     32.69MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cpoll_cppsp
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:16969/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.34ms   94.72us   8.57ms   79.52%
+    Req/Sec    25.24k     1.40k   32.56k    57.38%
+  2858740 requests in 14.99s, 493.46MB read
+Requests/sec: 190670.62
+Transfer/sec:     32.91MB

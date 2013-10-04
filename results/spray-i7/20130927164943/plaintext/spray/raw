@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 16:54:04 PDT 2013
+
+  System load:  0.33               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+40 packages can be updated.
+12 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   401.94us   57.06us 841.00us   81.53%
+    Req/Sec     2.56k   264.23     3.89k    77.76%
+  96870 requests in 5.00s, 13.12MB read
+Requests/sec:  19376.33
+Transfer/sec:      2.62MB
+
+---------------------------------------------------------
+ Running Warmup spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.67ms    3.55ms  24.59ms   62.83%
+    Req/Sec     3.05k   186.85     3.64k    62.49%
+  358609 requests in 15.00s, 48.56MB read
+Requests/sec:  23907.69
+Transfer/sec:      3.24MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   151.63ms   30.35ms 212.00ms   57.48%
+    Req/Sec     3.36k   129.01     3.62k    61.67%
+  401744 requests in 15.00s, 54.40MB read
+Requests/sec:  26788.33
+Transfer/sec:      3.63MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   626.05ms  242.21ms   1.08s    52.22%
+    Req/Sec     3.24k   159.07     3.57k    64.12%
+  386922 requests in 15.00s, 52.40MB read
+  Socket errors: connect 0, read 6, write 0, timeout 0
+Requests/sec:  25793.50
+Transfer/sec:      3.49MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.10s   728.55ms   3.91s    69.82%
+    Req/Sec     3.39k   624.81     3.86k    94.57%
+  376822 requests in 15.01s, 51.03MB read
+  Socket errors: connect 0, read 71, write 0, timeout 7717
+Requests/sec:  25108.11
+Transfer/sec:      3.40MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for spray
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.30s     3.35s   14.06s    53.63%
+    Req/Sec     3.09k   674.96     5.57k    69.23%
+  363996 requests in 15.02s, 49.29MB read
+  Socket errors: connect 11, read 960, write 0, timeout 86861
+Requests/sec:  24236.61
+Transfer/sec:      3.28MB

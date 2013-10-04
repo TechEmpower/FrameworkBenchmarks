@@ -1,0 +1,110 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/updates/2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/updates/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.49ms    3.45ms  50.30ms   92.25%
+    Req/Sec    99.93     25.29   238.00     68.76%
+  3940 requests in 5.01s, 852.42KB read
+Requests/sec:    787.17
+Transfer/sec:    170.30KB
+
+---------------------------------------------------------
+ Running Warmup ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/updates/2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/updates/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   354.37ms  145.70ms   1.85s    80.15%
+    Req/Sec    89.31     31.32   326.00     86.79%
+  10401 requests in 15.01s, 2.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 60
+Requests/sec:    692.84
+Transfer/sec:    149.91KB
+
+---------------------------------------------------------
+ Queries: 1 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/updates/1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/updates/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   239.54ms   99.06ms   1.14s    72.89%
+    Req/Sec   130.66     32.83   367.00     85.96%
+  15157 requests in 15.16s, 2.73MB read
+  Socket errors: connect 0, read 0, write 0, timeout 60
+Requests/sec:   1000.06
+Transfer/sec:    184.37KB
+
+---------------------------------------------------------
+ Queries: 5 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/updates/5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/updates/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   551.30ms  136.13ms   1.66s    81.02%
+    Req/Sec    54.18      9.89    83.00     75.34%
+  6529 requests in 15.04s, 2.00MB read
+  Socket errors: connect 0, read 0, write 0, timeout 60
+Requests/sec:    434.12
+Transfer/sec:    136.04KB
+
+---------------------------------------------------------
+ Queries: 10 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/updates/10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/updates/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   905.30ms  191.61ms   2.15s    77.17%
+    Req/Sec    33.58      6.39    51.00     72.90%
+  3952 requests in 15.52s, 1.83MB read
+  Socket errors: connect 0, read 0, write 0, timeout 60
+Requests/sec:    254.67
+Transfer/sec:    120.57KB
+
+---------------------------------------------------------
+ Queries: 15 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/updates/15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/updates/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.32s   216.82ms   2.37s    80.77%
+    Req/Sec    22.19      6.00    35.00     73.68%
+  2726 requests in 15.07s, 1.69MB read
+  Socket errors: connect 0, read 0, write 0, timeout 65
+Requests/sec:    180.93
+Transfer/sec:    114.62KB
+
+---------------------------------------------------------
+ Queries: 20 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/updates/20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/updates/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.55s   451.93ms   2.72s    72.44%
+    Req/Sec    19.29      7.44    33.00     68.24%
+  2190 requests in 15.12s, 1.70MB read
+  Socket errors: connect 0, read 0, write 0, timeout 67
+Requests/sec:    144.80
+Transfer/sec:    114.92KB

@@ -1,0 +1,119 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/compojure/json
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/compojure/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.34ms    3.42ms  55.50ms   88.28%
+    Req/Sec   260.45     77.62   533.00     71.74%
+  9859 requests in 5.00s, 1.62MB read
+Requests/sec:   1970.11
+Transfer/sec:    330.92KB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/compojure/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.70s     4.14s   14.13s    90.71%
+    Req/Sec   796.18    702.71     5.94k    82.54%
+  73621 requests in 15.00s, 12.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 588
+Requests/sec:   4907.59
+Transfer/sec:    824.32KB
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/compojure/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   810.35us    1.90ms  41.39ms   99.08%
+    Req/Sec     1.50k   246.04     5.89k    84.04%
+  169948 requests in 15.00s, 27.88MB read
+Requests/sec:  11330.18
+Transfer/sec:      1.86MB
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/compojure/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.49ms    1.29ms  47.56ms   98.11%
+    Req/Sec     1.44k   207.32     3.90k    74.20%
+  163950 requests in 15.00s, 26.89MB read
+Requests/sec:  10930.46
+Transfer/sec:      1.79MB
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/compojure/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.01ms    1.52ms  81.42ms   94.18%
+    Req/Sec     1.41k   204.81     4.33k    72.70%
+  160281 requests in 15.00s, 26.29MB read
+Requests/sec:  10684.67
+Transfer/sec:      1.75MB
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/compojure/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.24ms    5.49ms 263.82ms   97.30%
+    Req/Sec     1.37k   214.42     4.61k    79.77%
+  157604 requests in 15.00s, 25.85MB read
+Requests/sec:  10506.44
+Transfer/sec:      1.72MB
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/compojure/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.88ms    8.29ms 282.16ms   94.86%
+    Req/Sec     1.27k   164.83     2.73k    80.47%
+  150082 requests in 15.00s, 24.62MB read
+Requests/sec:  10004.47
+Transfer/sec:      1.64MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/compojure/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.94ms   37.14ms   2.31s    98.33%
+    Req/Sec     1.25k   228.58     7.51k    85.84%
+  148326 requests in 15.00s, 24.33MB read
+Requests/sec:   9888.49
+Transfer/sec:      1.62MB

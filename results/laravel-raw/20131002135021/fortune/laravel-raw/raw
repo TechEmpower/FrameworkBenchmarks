@@ -1,0 +1,139 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 13:55:50 PDT 2013
+
+  System load:  0.0                Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.30ms    5.18ms  32.94ms   72.11%
+    Req/Sec    63.21     16.98   142.00     58.23%
+  2528 requests in 5.01s, 4.78MB read
+  Non-2xx or 3xx responses: 2528
+Requests/sec:    504.41
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Running Warmup laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   331.86ms  275.98ms   1.96s    74.33%
+    Req/Sec   102.38     30.69   191.00     80.47%
+  12231 requests in 15.02s, 21.46MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+  Non-2xx or 3xx responses: 10523
+Requests/sec:    814.16
+Transfer/sec:      1.43MB
+
+---------------------------------------------------------
+ Concurrency: 8 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.85ms    9.33ms  78.76ms   63.85%
+    Req/Sec   119.92     70.55   384.00     58.84%
+  14359 requests in 15.01s, 22.28MB read
+  Non-2xx or 3xx responses: 8722
+Requests/sec:    956.36
+Transfer/sec:      1.48MB
+
+---------------------------------------------------------
+ Concurrency: 16 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.98ms   12.56ms 115.67ms   74.12%
+    Req/Sec   100.88     57.09   356.00     80.95%
+  11981 requests in 15.02s, 20.27MB read
+  Non-2xx or 3xx responses: 8855
+Requests/sec:    797.41
+Transfer/sec:      1.35MB
+
+---------------------------------------------------------
+ Concurrency: 32 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.37ms   26.75ms 327.80ms   73.97%
+    Req/Sec   118.67     53.34   310.00     79.45%
+  14089 requests in 15.02s, 23.51MB read
+  Non-2xx or 3xx responses: 10195
+Requests/sec:    938.33
+Transfer/sec:      1.57MB
+
+---------------------------------------------------------
+ Concurrency: 64 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    90.84ms   36.57ms 372.37ms   77.49%
+    Req/Sec    89.60      8.47   111.00     66.59%
+  10775 requests in 15.02s, 20.88MB read
+  Non-2xx or 3xx responses: 10762
+Requests/sec:    717.43
+Transfer/sec:      1.39MB
+
+---------------------------------------------------------
+ Concurrency: 128 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   176.65ms  136.60ms   2.51s    86.17%
+    Req/Sec    88.80      8.58   108.00     67.02%
+  10674 requests in 15.01s, 20.53MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+  Non-2xx or 3xx responses: 10674
+Requests/sec:    711.02
+Transfer/sec:      1.37MB
+
+---------------------------------------------------------
+ Concurrency: 256 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   347.06ms  357.44ms   3.72s    90.51%
+    Req/Sec   100.80     29.01   180.00     82.84%
+  12156 requests in 15.02s, 21.28MB read
+  Socket errors: connect 0, read 0, write 0, timeout 22
+  Non-2xx or 3xx responses: 10589
+Requests/sec:    809.57
+Transfer/sec:      1.42MB

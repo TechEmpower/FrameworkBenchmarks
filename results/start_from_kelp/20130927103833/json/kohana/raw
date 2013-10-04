@@ -1,0 +1,119 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/bench/json
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.07ms    7.18ms  40.26ms   64.00%
+    Req/Sec    67.67     14.02   105.00     61.68%
+  2720 requests in 5.01s, 594.88KB read
+Requests/sec:    542.98
+Transfer/sec:    118.75KB
+
+---------------------------------------------------------
+ Running Warmup kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   501.54ms  261.58ms   1.48s    67.76%
+    Req/Sec    66.16     15.21   115.00     74.65%
+  7747 requests in 15.02s, 1.65MB read
+Requests/sec:    515.94
+Transfer/sec:    112.86KB
+
+---------------------------------------------------------
+ Concurrency: 8 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.32ms    7.72ms  87.53ms   64.82%
+    Req/Sec    66.66     13.84   120.00     79.27%
+  7964 requests in 15.01s, 1.70MB read
+Requests/sec:    530.65
+Transfer/sec:    116.06KB
+
+---------------------------------------------------------
+ Concurrency: 16 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/bench/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.03ms   15.61ms  91.89ms   64.81%
+    Req/Sec    66.18     11.14   119.00     68.75%
+  7965 requests in 15.02s, 1.70MB read
+Requests/sec:    530.39
+Transfer/sec:    116.00KB
+
+---------------------------------------------------------
+ Concurrency: 32 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/bench/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.09ms   31.69ms 171.30ms   65.06%
+    Req/Sec    67.50      8.75   109.00     75.32%
+  8143 requests in 15.02s, 1.74MB read
+Requests/sec:    542.17
+Transfer/sec:    118.58KB
+
+---------------------------------------------------------
+ Concurrency: 64 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/bench/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   122.06ms   62.98ms 312.55ms   66.47%
+    Req/Sec    64.51      6.77    83.00     70.59%
+  7808 requests in 15.03s, 1.67MB read
+Requests/sec:    519.66
+Transfer/sec:    113.65KB
+
+---------------------------------------------------------
+ Concurrency: 128 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/bench/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   235.63ms  116.83ms 590.48ms   64.72%
+    Req/Sec    67.00      5.29    79.00     70.00%
+  8065 requests in 15.05s, 1.72MB read
+Requests/sec:    536.03
+Transfer/sec:    117.26KB
+
+---------------------------------------------------------
+ Concurrency: 256 for kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   482.45ms  815.00ms  11.70s    98.89%
+    Req/Sec    69.18     16.39   106.00     69.72%
+  7838 requests in 15.01s, 1.67MB read
+  Socket errors: connect 0, read 0, write 0, timeout 264
+Requests/sec:    522.10
+Transfer/sec:    114.21KB

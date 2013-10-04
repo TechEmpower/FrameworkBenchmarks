@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 00:10:59 PDT 2013
+
+  System load:  0.48               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.17ms    4.19ms  32.53ms   85.04%
+    Req/Sec    80.09     18.56   128.00     49.17%
+  3177 requests in 5.02s, 538.54KB read
+Requests/sec:    633.39
+Transfer/sec:    107.37KB
+
+---------------------------------------------------------
+ Running Warmup go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.53ms   49.52ms 704.99ms   95.48%
+    Req/Sec     1.05k   422.05     1.93k    65.29%
+  125297 requests in 15.00s, 20.74MB read
+Requests/sec:   8353.34
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Queries: 1 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.05ms   76.43ms 730.84ms   97.67%
+    Req/Sec     2.03k     0.98k    4.13k    62.06%
+  240464 requests in 15.00s, 32.05MB read
+Requests/sec:  16034.29
+Transfer/sec:      2.14MB
+
+---------------------------------------------------------
+ Queries: 5 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.85ms   68.75ms 950.77ms   94.66%
+    Req/Sec   414.46    123.50   696.00     71.45%
+  49567 requests in 15.00s, 12.76MB read
+Requests/sec:   3304.23
+Transfer/sec:      0.85MB
+
+---------------------------------------------------------
+ Queries: 10 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   189.76ms  135.84ms   1.08s    92.10%
+    Req/Sec   192.99     63.56   319.00     69.88%
+  23299 requests in 15.01s, 9.53MB read
+Requests/sec:   1552.29
+Transfer/sec:    650.00KB
+
+---------------------------------------------------------
+ Queries: 15 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   270.46ms  122.33ms 944.57ms   87.45%
+    Req/Sec   130.16     37.94   214.00     68.69%
+  15555 requests in 15.01s, 8.72MB read
+Requests/sec:   1036.33
+Transfer/sec:    594.77KB
+
+---------------------------------------------------------
+ Queries: 20 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   311.36ms  107.04ms 953.27ms   90.28%
+    Req/Sec   104.19     19.71   141.00     83.33%
+  12644 requests in 15.01s, 9.00MB read
+Requests/sec:    842.14
+Transfer/sec:    614.00KB

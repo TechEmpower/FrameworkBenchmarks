@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 21:44:15 PDT 2013
+
+  System load:  0.24               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms  279.07us   2.54ms   94.12%
+    Req/Sec     1.16k   104.65     1.44k    70.82%
+  44191 requests in 5.00s, 75.90MB read
+Requests/sec:   8838.17
+Transfer/sec:     15.18MB
+
+---------------------------------------------------------
+ Running Warmup falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.71ms    6.57ms  46.22ms   67.40%
+    Req/Sec     1.63k    72.34     1.93k    68.93%
+  193251 requests in 15.00s, 331.92MB read
+Requests/sec:  12886.17
+Transfer/sec:     22.13MB
+
+---------------------------------------------------------
+ Concurrency: 8 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms  302.82us   7.24ms   95.12%
+    Req/Sec     1.15k   119.22     1.44k    62.51%
+  131328 requests in 15.00s, 225.56MB read
+Requests/sec:   8755.14
+Transfer/sec:     15.04MB
+
+---------------------------------------------------------
+ Concurrency: 16 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.30ms  500.44us  12.73ms   89.95%
+    Req/Sec     1.63k   169.38     2.22k    68.56%
+  185341 requests in 15.00s, 318.34MB read
+Requests/sec:  12356.14
+Transfer/sec:     21.22MB
+
+---------------------------------------------------------
+ Concurrency: 32 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.49ms  734.20us  13.34ms   76.44%
+    Req/Sec     1.70k   184.51     2.33k    59.31%
+  193223 requests in 15.00s, 331.87MB read
+Requests/sec:  12881.56
+Transfer/sec:     22.13MB
+
+---------------------------------------------------------
+ Concurrency: 64 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.91ms    1.32ms  14.98ms   67.07%
+    Req/Sec     1.70k   159.65     2.33k    75.52%
+  195534 requests in 15.00s, 335.84MB read
+Requests/sec:  13035.89
+Transfer/sec:     22.39MB
+
+---------------------------------------------------------
+ Concurrency: 128 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.82ms    3.01ms  25.94ms   67.37%
+    Req/Sec     1.65k   106.00     2.04k    68.40%
+  194669 requests in 15.00s, 334.36MB read
+Requests/sec:  12978.17
+Transfer/sec:     22.29MB
+
+---------------------------------------------------------
+ Concurrency: 256 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.70ms    6.64ms  48.43ms   67.58%
+    Req/Sec     1.63k    73.66     1.86k    68.03%
+  193665 requests in 15.00s, 332.63MB read
+Requests/sec:  12909.40
+Transfer/sec:     22.17MB

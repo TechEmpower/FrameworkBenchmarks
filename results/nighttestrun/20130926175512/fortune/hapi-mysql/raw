@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 00:48:03 PDT 2013
+
+  System load:  0.03               Processes:           117
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.29ms    1.34ms  19.05ms   98.13%
+    Req/Sec     0.92k   230.71     1.44k    76.46%
+  34818 requests in 5.00s, 53.26MB read
+Requests/sec:   6961.52
+Transfer/sec:     10.65MB
+
+---------------------------------------------------------
+ Running Warmup hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.06ms    9.38ms  57.41ms   70.31%
+    Req/Sec     1.34k   135.38     1.78k    66.86%
+  159034 requests in 15.00s, 243.27MB read
+Requests/sec:  10601.45
+Transfer/sec:     16.22MB
+
+---------------------------------------------------------
+ Concurrency: 8 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.27ms    1.26ms  17.67ms   98.13%
+    Req/Sec     0.92k   203.03     1.33k    80.96%
+  104849 requests in 15.00s, 160.39MB read
+Requests/sec:   6989.81
+Transfer/sec:     10.69MB
+
+---------------------------------------------------------
+ Concurrency: 16 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.88ms    1.54ms  21.14ms   96.43%
+    Req/Sec     1.20k   328.63     2.11k    70.35%
+  136629 requests in 15.00s, 209.00MB read
+Requests/sec:   9108.32
+Transfer/sec:     13.93MB
+
+---------------------------------------------------------
+ Concurrency: 32 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.75ms    2.91ms  30.19ms   89.76%
+    Req/Sec     1.29k   461.55     2.67k    61.08%
+  144451 requests in 15.00s, 220.97MB read
+Requests/sec:   9630.12
+Transfer/sec:     14.73MB
+
+---------------------------------------------------------
+ Concurrency: 64 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.57ms    3.27ms  35.64ms   87.58%
+    Req/Sec     1.32k   295.50     2.46k    66.91%
+  150278 requests in 15.00s, 229.88MB read
+Requests/sec:  10018.17
+Transfer/sec:     15.32MB
+
+---------------------------------------------------------
+ Concurrency: 128 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.75ms    7.19ms  44.58ms   67.87%
+    Req/Sec     1.32k   284.01     2.16k    67.46%
+  154461 requests in 15.00s, 236.28MB read
+Requests/sec:  10297.93
+Transfer/sec:     15.75MB
+
+---------------------------------------------------------
+ Concurrency: 256 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.35ms   12.11ms  95.30ms   77.45%
+    Req/Sec     1.34k   149.03     1.84k    68.54%
+  158281 requests in 15.00s, 242.12MB read
+Requests/sec:  10552.16
+Transfer/sec:     16.14MB

@@ -1,0 +1,108 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer revel-jet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.70ms   41.12ms 153.32ms   90.09%
+    Req/Sec   100.25     46.33   210.00     67.57%
+  4028 requests in 5.00s, 678.82KB read
+Requests/sec:    804.94
+Transfer/sec:    135.65KB
+
+---------------------------------------------------------
+ Running Warmup revel-jet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   258.30ms  159.70ms   1.41s    82.02%
+    Req/Sec   126.60     23.54   165.00     71.35%
+  15107 requests in 15.02s, 2.49MB read
+Requests/sec:   1006.08
+Transfer/sec:    169.53KB
+
+---------------------------------------------------------
+ Queries: 1 for revel-jet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   152.97ms   62.62ms 570.89ms   78.90%
+    Req/Sec   210.24     23.51   277.00     79.25%
+  25065 requests in 15.00s, 3.32MB read
+Requests/sec:   1670.62
+Transfer/sec:    226.41KB
+
+---------------------------------------------------------
+ Queries: 5 for revel-jet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   678.16ms  281.65ms   1.90s    79.75%
+    Req/Sec    49.19     10.19    65.00     67.09%
+  5854 requests in 15.08s, 1.50MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    388.08
+Transfer/sec:    101.91KB
+
+---------------------------------------------------------
+ Queries: 10 for revel-jet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.22s   282.58ms   2.12s    70.92%
+    Req/Sec    25.93      2.38    30.00     66.07%
+  3096 requests in 15.11s, 1.26MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    204.83
+Transfer/sec:     85.57KB
+
+---------------------------------------------------------
+ Queries: 15 for revel-jet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.60s   263.07ms   2.41s    71.88%
+    Req/Sec    19.94      1.97    24.00     65.62%
+  2130 requests in 15.16s, 1.19MB read
+  Socket errors: connect 0, read 0, write 0, timeout 47
+Requests/sec:    140.54
+Transfer/sec:     80.53KB
+
+---------------------------------------------------------
+ Queries: 20 for revel-jet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.32s   366.72ms   3.35s    70.63%
+    Req/Sec    13.06      1.70    16.00     72.22%
+  1496 requests in 15.38s, 1.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 404
+Requests/sec:     97.27
+Transfer/sec:     70.82KB

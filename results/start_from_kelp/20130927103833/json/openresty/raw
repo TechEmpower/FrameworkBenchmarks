@@ -1,0 +1,128 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 12:41:49 PDT 2013
+
+  System load:  0.04               Processes:           100
+  Usage of /:   17.8% of 58.69GB   Users logged in:     1
+  Memory usage: 30%                IP address for eth0: 172.16.98.181
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Primer openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.33ms   15.78ms  50.30ms   87.67%
+    Req/Sec     2.27k     1.05k   10.33k    76.53%
+  85732 requests in 5.00s, 17.08MB read
+Requests/sec:  17147.61
+Transfer/sec:      3.42MB
+
+---------------------------------------------------------
+ Running Warmup openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.44s   773.96ms   6.86s    91.73%
+    Req/Sec     2.40k     3.12k   21.89k    88.59%
+  271458 requests in 15.03s, 54.09MB read
+  Socket errors: connect 0, read 0, write 0, timeout 88
+Requests/sec:  18066.74
+Transfer/sec:      3.60MB
+
+---------------------------------------------------------
+ Concurrency: 8 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.95ms   14.39ms  56.90ms   90.82%
+    Req/Sec     2.49k     1.00k   13.11k    80.99%
+  282545 requests in 15.00s, 56.30MB read
+Requests/sec:  18837.55
+Transfer/sec:      3.75MB
+
+---------------------------------------------------------
+ Concurrency: 16 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.40ms   47.71ms 147.10ms   83.04%
+    Req/Sec     2.40k     1.57k    6.89k    59.92%
+  273758 requests in 15.00s, 54.55MB read
+Requests/sec:  18250.87
+Transfer/sec:      3.64MB
+
+---------------------------------------------------------
+ Concurrency: 32 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   507.11ms  346.75ms 793.79ms   68.28%
+    Req/Sec     2.42k     1.96k   11.44k    55.67%
+  275433 requests in 15.00s, 54.89MB read
+Requests/sec:  18359.10
+Transfer/sec:      3.66MB
+
+---------------------------------------------------------
+ Concurrency: 64 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   354.99ms  167.21ms 589.16ms   70.90%
+    Req/Sec     2.33k     3.34k   19.11k    84.59%
+  265020 requests in 15.01s, 52.81MB read
+Requests/sec:  17657.09
+Transfer/sec:      3.52MB
+
+---------------------------------------------------------
+ Concurrency: 128 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.28s     1.01s    3.27s    77.78%
+    Req/Sec     2.35k     4.05k   21.44k    90.18%
+  266959 requests in 15.02s, 53.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 23
+Requests/sec:  17769.04
+Transfer/sec:      3.54MB
+
+---------------------------------------------------------
+ Concurrency: 256 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.46s   793.51ms   6.36s    92.45%
+    Req/Sec     2.46k     3.53k   21.89k    86.00%
+  270110 requests in 15.03s, 53.82MB read
+  Socket errors: connect 0, read 0, write 0, timeout 62
+Requests/sec:  17971.97
+Transfer/sec:      3.58MB

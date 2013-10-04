@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 00:08:47 PDT 2013
+
+  System load:  0.33               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   630.09us  184.06us   2.15ms   95.70%
+    Req/Sec     1.65k   132.58     2.00k    70.64%
+  62634 requests in 5.00s, 84.34MB read
+Requests/sec:  12526.57
+Transfer/sec:     16.87MB
+
+---------------------------------------------------------
+ Running Warmup go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.33ms    9.07ms  80.24ms   69.03%
+    Req/Sec     2.88k   288.17     3.86k    76.50%
+  340783 requests in 15.00s, 458.89MB read
+Requests/sec:  22723.73
+Transfer/sec:     30.60MB
+
+---------------------------------------------------------
+ Concurrency: 8 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   633.32us  201.02us   2.34ms   96.47%
+    Req/Sec     1.65k   132.90     2.00k    70.57%
+  188165 requests in 15.00s, 253.38MB read
+Requests/sec:  12544.47
+Transfer/sec:     16.89MB
+
+---------------------------------------------------------
+ Concurrency: 16 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   807.08us  293.75us   5.84ms   94.10%
+    Req/Sec     2.60k   228.93     3.22k    66.15%
+  295328 requests in 15.00s, 397.69MB read
+Requests/sec:  19688.83
+Transfer/sec:     26.51MB
+
+---------------------------------------------------------
+ Concurrency: 32 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.40ms  545.47us  11.10ms   80.77%
+    Req/Sec     3.02k   295.99     4.00k    63.36%
+  342972 requests in 15.00s, 461.84MB read
+Requests/sec:  22865.12
+Transfer/sec:     30.79MB
+
+---------------------------------------------------------
+ Concurrency: 64 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.81ms    1.21ms  15.50ms   70.66%
+    Req/Sec     3.02k   357.90     4.44k    68.27%
+  343416 requests in 15.00s, 462.44MB read
+Requests/sec:  22894.35
+Transfer/sec:     30.83MB
+
+---------------------------------------------------------
+ Concurrency: 128 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.61ms    3.44ms  31.42ms   66.26%
+    Req/Sec     2.94k   276.06     3.94k    68.75%
+  342892 requests in 15.00s, 461.73MB read
+Requests/sec:  22860.63
+Transfer/sec:     30.78MB
+
+---------------------------------------------------------
+ Concurrency: 256 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.29ms    8.84ms  72.57ms   65.25%
+    Req/Sec     2.89k   243.36     3.78k    67.64%
+  341714 requests in 15.00s, 460.15MB read
+Requests/sec:  22781.38
+Transfer/sec:     30.68MB

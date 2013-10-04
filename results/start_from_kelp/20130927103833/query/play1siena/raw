@@ -1,0 +1,105 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer play1siena
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/play1/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/play1/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.92ms    7.89ms  89.71ms   94.49%
+    Req/Sec   127.87     39.01   555.00     82.62%
+  5059 requests in 5.01s, 2.28MB read
+Requests/sec:   1010.11
+Transfer/sec:    465.16KB
+
+---------------------------------------------------------
+ Running Warmup play1siena
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/play1/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/play1/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   213.14ms  228.53ms   2.35s    98.81%
+    Req/Sec   160.99     57.40   333.00     68.30%
+  18539 requests in 15.02s, 8.34MB read
+  Socket errors: connect 0, read 0, write 0, timeout 105
+Requests/sec:   1234.17
+Transfer/sec:    568.34KB
+
+---------------------------------------------------------
+ Queries: 1 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/play1/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/play1/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   157.26ms   11.04ms 283.62ms   77.65%
+    Req/Sec   202.96     10.99   253.00     74.54%
+  24309 requests in 15.01s, 10.20MB read
+Requests/sec:   1619.67
+Transfer/sec:    695.61KB
+
+---------------------------------------------------------
+ Queries: 5 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/play1/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/play1/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   314.24ms   12.52ms 359.74ms   67.26%
+    Req/Sec   101.70      7.04   132.00     84.32%
+  12229 requests in 15.09s, 6.62MB read
+Requests/sec:    810.31
+Transfer/sec:    449.37KB
+
+---------------------------------------------------------
+ Queries: 10 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/play1/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/play1/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   504.65ms   17.58ms 601.00ms   67.98%
+    Req/Sec    62.96     13.23   106.00     71.76%
+  7597 requests in 15.22s, 5.27MB read
+Requests/sec:    499.01
+Transfer/sec:    354.17KB
+
+---------------------------------------------------------
+ Queries: 15 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/play1/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/play1/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   740.36ms   40.80ms 847.15ms   74.54%
+    Req/Sec    42.51      7.38    63.00     68.03%
+  5175 requests in 15.44s, 4.37MB read
+Requests/sec:    335.22
+Transfer/sec:    289.94KB
+
+---------------------------------------------------------
+ Queries: 20 for play1siena
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/play1/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/play1/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   875.04ms   54.93ms 970.24ms   71.51%
+    Req/Sec    36.33     16.39    74.00     79.89%
+  4382 requests in 15.65s, 4.37MB read
+Requests/sec:    280.00
+Transfer/sec:    285.64KB

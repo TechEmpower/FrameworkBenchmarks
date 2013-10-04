@@ -1,0 +1,110 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/luminus/dbraw/2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/luminus/dbraw/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.79ms    2.24ms  31.66ms   94.44%
+    Req/Sec   232.96     63.75   800.00     64.75%
+  8890 requests in 5.00s, 1.78MB read
+Requests/sec:   1777.16
+Transfer/sec:    363.70KB
+
+---------------------------------------------------------
+ Running Warmup luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/luminus/dbraw/2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/luminus/dbraw/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   175.54ms  831.93ms  14.18s    95.73%
+    Req/Sec   187.38     76.63   433.00     70.31%
+  21512 requests in 15.01s, 4.30MB read
+  Socket errors: connect 0, read 0, write 0, timeout 694
+Requests/sec:   1433.44
+Transfer/sec:    293.34KB
+
+---------------------------------------------------------
+ Queries: 1 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/luminus/dbraw/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   421.48ms    1.56s    7.78s    94.32%
+    Req/Sec   290.05    151.75   831.00     71.82%
+  33663 requests in 15.00s, 5.71MB read
+  Socket errors: connect 0, read 0, write 0, timeout 460
+Requests/sec:   2243.58
+Transfer/sec:    389.50KB
+
+---------------------------------------------------------
+ Queries: 5 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/luminus/dbraw/5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/luminus/dbraw/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.49s     3.55s   13.23s    87.71%
+    Req/Sec   106.31     86.56   539.00     85.43%
+  10483 requests in 15.02s, 3.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 768
+Requests/sec:    698.13
+Transfer/sec:    208.54KB
+
+---------------------------------------------------------
+ Queries: 10 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/luminus/dbraw/10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/luminus/dbraw/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.01s     2.27s   10.22s    90.11%
+    Req/Sec    52.97     27.18   169.00     69.23%
+  5716 requests in 15.04s, 2.53MB read
+  Socket errors: connect 0, read 0, write 0, timeout 762
+Requests/sec:    380.10
+Transfer/sec:    172.54KB
+
+---------------------------------------------------------
+ Queries: 15 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/luminus/dbraw/15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/luminus/dbraw/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.37s     3.45s   14.70s    88.72%
+    Req/Sec    31.16     16.88    87.00     76.09%
+  3867 requests in 15.04s, 2.30MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1140
+Requests/sec:    257.10
+Transfer/sec:    156.58KB
+
+---------------------------------------------------------
+ Queries: 20 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/luminus/dbraw/20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/luminus/dbraw/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.58s     3.72s   13.05s    86.98%
+    Req/Sec    41.33     36.30   146.00     75.95%
+  2909 requests in 15.06s, 2.17MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1341
+Requests/sec:    193.14
+Transfer/sec:    147.62KB

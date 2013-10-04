@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 04:00:27 PDT 2013
+
+  System load:  0.17               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.92ms  548.05us  12.84ms   98.27%
+    Req/Sec     1.17k   158.70     1.44k    58.69%
+  43252 requests in 5.00s, 97.43MB read
+Requests/sec:   8649.99
+Transfer/sec:     19.48MB
+
+---------------------------------------------------------
+ Running Warmup play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.88ms   10.69ms 648.01ms   80.20%
+    Req/Sec     1.81k   309.08     3.24k    75.63%
+  211625 requests in 15.00s, 476.70MB read
+Requests/sec:  14107.91
+Transfer/sec:     31.78MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   844.35us  201.82us   8.40ms   94.49%
+    Req/Sec     1.24k   100.78     1.44k    81.52%
+  141416 requests in 15.00s, 318.55MB read
+Requests/sec:   9427.59
+Transfer/sec:     21.24MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.26ms  606.88us  14.72ms   95.10%
+    Req/Sec     1.68k   196.29     2.22k    72.22%
+  191605 requests in 15.00s, 431.61MB read
+Requests/sec:  12773.80
+Transfer/sec:     28.77MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.53ms    2.49ms  40.16ms   97.82%
+    Req/Sec     1.79k   267.10     2.56k    80.49%
+  203383 requests in 15.00s, 458.14MB read
+Requests/sec:  13558.60
+Transfer/sec:     30.54MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.66ms    2.09ms  37.29ms   82.98%
+    Req/Sec     1.83k   260.85     2.64k    77.74%
+  209950 requests in 15.00s, 472.93MB read
+Requests/sec:  13996.06
+Transfer/sec:     31.53MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.97ms    3.92ms  76.48ms   73.43%
+    Req/Sec     1.83k   320.39     3.47k    80.71%
+  212482 requests in 15.00s, 478.63MB read
+Requests/sec:  14164.88
+Transfer/sec:     31.91MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.79ms    9.14ms 251.94ms   75.80%
+    Req/Sec     1.82k   307.81     3.22k    74.45%
+  212460 requests in 15.00s, 478.58MB read
+Requests/sec:  14163.24
+Transfer/sec:     31.90MB

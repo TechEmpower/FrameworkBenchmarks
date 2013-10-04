@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 14:51:13 PDT 2013
+
+  System load:  0.26               Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-jpa
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:9000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:9000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   824.43us  389.50us  12.20ms   96.80%
+    Req/Sec     1.28k   137.98     1.67k    74.97%
+  48377 requests in 5.00s, 6.94MB read
+Requests/sec:   9676.00
+Transfer/sec:      1.39MB
+
+---------------------------------------------------------
+ Running Warmup play-jpa
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.74ms   33.19ms 633.33ms   99.32%
+    Req/Sec     3.12k   576.48     5.50k    78.82%
+  355275 requests in 15.00s, 50.99MB read
+Requests/sec:  23685.61
+Transfer/sec:      3.40MB
+
+---------------------------------------------------------
+ Queries: 1 for play-jpa
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.93ms   32.61ms 680.46ms   99.53%
+    Req/Sec     4.06k   709.97     8.33k    79.73%
+  460984 requests in 15.00s, 52.20MB read
+Requests/sec:  30732.91
+Transfer/sec:      3.48MB
+
+---------------------------------------------------------
+ Queries: 5 for play-jpa
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.73ms   51.50ms 765.49ms   99.23%
+    Req/Sec     1.81k   347.75     3.15k    76.51%
+  211121 requests in 15.00s, 49.67MB read
+Requests/sec:  14075.80
+Transfer/sec:      3.31MB
+
+---------------------------------------------------------
+ Queries: 10 for play-jpa
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.89ms   15.55ms 688.22ms   90.68%
+    Req/Sec     1.08k   213.83     1.81k    72.52%
+  127897 requests in 15.01s, 49.45MB read
+Requests/sec:   8523.48
+Transfer/sec:      3.30MB
+
+---------------------------------------------------------
+ Queries: 15 for play-jpa
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.26ms   31.17ms 760.67ms   97.57%
+    Req/Sec   767.07    183.50     1.36k    70.30%
+  90902 requests in 15.00s, 48.90MB read
+Requests/sec:   6060.00
+Transfer/sec:      3.26MB
+
+---------------------------------------------------------
+ Queries: 20 for play-jpa
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    53.70ms   17.82ms 316.61ms   75.91%
+    Req/Sec   603.16    153.08     1.05k    68.41%
+  71698 requests in 15.01s, 49.42MB read
+Requests/sec:   4776.94
+Transfer/sec:      3.29MB

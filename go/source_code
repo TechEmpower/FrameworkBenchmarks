@@ -1,0 +1,6 @@
+./go/src/
+./go/src/hello
+./go/src/hello/hello.go
+./go/templates/
+./go/templates/fortune.html
+./go/templates/layout.html

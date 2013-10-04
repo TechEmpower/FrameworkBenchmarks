@@ -1,0 +1,79 @@
+<%#
+#include <iostream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdexcept>
+#include <cppsp/common.H>
+#include <delegate.H>
+#include <dirent.h>
+
+int aaaaa=0;
+%>
+<%@ class p %>
+<%#
+void listDir(string dir,const function<void(dirent&)>& cb)
+{
+	DIR* d=opendir(dir.c_str());
+	if(d==NULL) {
+		throw runtime_error(strerror(errno));
+		return;
+	}
+	int len = offsetof(dirent, d_name) + pathconf(dir.c_str(), _PC_NAME_MAX) + 1;
+	char ent[len];
+	dirent* ent1=(dirent*)ent;
+	while(readdir_r(d, (dirent*)ent, &ent1)==0 && ent1!=NULL) {
+		if(strcmp(ent1->d_name, ".")==0 || strcmp(ent1->d_name, "..")==0)
+			continue;
+		cb(*ent1);
+	}
+	closedir(d);
+}
+%>
+<html>
+	<head>
+		<title>fgdhjf</title>
+	</head>
+	<body>
+		<table border="1">
+			<tr>
+				<td>UID: </td>
+				<td><%=getuid()%></td>
+			</tr>
+			<tr>
+				<td>GID: </td>
+				<td><%=getgid()%></td>
+			</tr>
+		</table>
+		<form method="post" action="1.cppsp?a=1111111&b=222222">
+			<input type="text" name="input1" /><br />
+			<input type="text" name="input2" />
+			<input type="submit" value="click here" />
+		</form>
+		
+		<%="ddd"%>
+		s
+		gsjdhkh
+		test1
+		<%
+		for(int i=0;i<10;i++) {
+			%>
+			gfdsgsfdgdsf<br />
+			<%
+		}
+		//throw runtime_error("aaaaa");
+		%>
+		<%=(++aaaaa)%><br />
+		<br />=============================<br />
+		<table border="1">
+		<%
+		listDir(server->mapPath("/"), [&](dirent& d) {
+			%>
+			<tr>
+				<td><%=htmlEscape(d.d_name)%></td>
+			</tr>
+			<%
+		});
+		%>
+		</table>
+	</body>
+</html>

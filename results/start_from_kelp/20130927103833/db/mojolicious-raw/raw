@@ -1,0 +1,118 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.69ms    5.32ms  32.94ms   79.87%
+    Req/Sec    54.73     27.10    97.00     70.09%
+  2586 requests in 6.01s, 474.08KB read
+Requests/sec:    430.46
+Transfer/sec:     78.91KB
+
+---------------------------------------------------------
+ Running Warmup mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   529.61ms   75.97ms 728.78ms   68.36%
+    Req/Sec    60.89     16.74    94.00     69.89%
+  7371 requests in 15.23s, 1.25MB read
+Requests/sec:    483.90
+Transfer/sec:     84.06KB
+
+---------------------------------------------------------
+ Concurrency: 8 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.63ms    5.57ms 100.40ms   93.74%
+    Req/Sec    49.40     10.77    75.00     73.49%
+  5939 requests in 15.01s, 0.87MB read
+Requests/sec:    395.54
+Transfer/sec:     59.47KB
+
+---------------------------------------------------------
+ Concurrency: 16 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.21ms    3.80ms  57.07ms   72.41%
+    Req/Sec    51.01      7.40    73.00     68.36%
+  6137 requests in 15.02s, 0.90MB read
+Requests/sec:    408.52
+Transfer/sec:     61.42KB
+
+---------------------------------------------------------
+ Concurrency: 32 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    80.30ms    8.16ms 186.53ms   78.77%
+    Req/Sec    49.63      4.85    67.00     73.60%
+  6024 requests in 15.04s, 0.88MB read
+Requests/sec:    400.66
+Transfer/sec:     60.25KB
+
+---------------------------------------------------------
+ Concurrency: 64 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   156.07ms   11.62ms 236.84ms   72.27%
+    Req/Sec    51.05      4.15    73.00     82.51%
+  6184 requests in 15.07s, 0.91MB read
+Requests/sec:    410.38
+Transfer/sec:     61.72KB
+
+---------------------------------------------------------
+ Concurrency: 128 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   314.63ms   18.08ms 420.84ms   77.66%
+    Req/Sec    50.39      5.42    62.00     76.60%
+  6106 requests in 15.14s, 0.90MB read
+Requests/sec:    403.30
+Transfer/sec:     60.65KB
+
+---------------------------------------------------------
+ Concurrency: 256 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   641.27ms   53.47ms 755.08ms   77.10%
+    Req/Sec    50.88     30.65   126.00     73.53%
+  6163 requests in 15.46s, 0.91MB read
+Requests/sec:    398.71
+Transfer/sec:     59.96KB

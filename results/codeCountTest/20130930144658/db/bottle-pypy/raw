@@ -1,0 +1,118 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/dbs
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/dbs
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    53.19ms   65.60ms 245.70ms   87.16%
+    Req/Sec    76.43     80.98   272.00     68.95%
+  1464 requests in 5.02s, 191.21KB read
+Requests/sec:    291.69
+Transfer/sec:     38.10KB
+
+---------------------------------------------------------
+ Running Warmup bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/dbs
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/dbs
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   763.71ms  275.97ms   1.64s    68.45%
+    Req/Sec    46.44     21.17   123.00     74.18%
+  5624 requests in 15.34s, 734.71KB read
+Requests/sec:    366.60
+Transfer/sec:     47.89KB
+
+---------------------------------------------------------
+ Concurrency: 8 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/dbs
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/dbs
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.52ms   71.95ms 272.39ms   90.95%
+    Req/Sec   121.97     66.74   285.00     51.74%
+  13010 requests in 15.00s, 1.66MB read
+Requests/sec:    867.10
+Transfer/sec:    113.28KB
+
+---------------------------------------------------------
+ Concurrency: 16 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/dbs
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/dbs
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.10ms   56.71ms 422.34ms   97.15%
+    Req/Sec   154.48     79.13   368.00     64.80%
+  13569 requests in 15.07s, 1.73MB read
+Requests/sec:    900.53
+Transfer/sec:    117.65KB
+
+---------------------------------------------------------
+ Concurrency: 32 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/dbs
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/dbs
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.69ms   41.59ms 538.15ms   92.73%
+    Req/Sec   155.99     59.40   309.00     70.50%
+  14592 requests in 15.02s, 1.86MB read
+Requests/sec:    971.35
+Transfer/sec:    126.90KB
+
+---------------------------------------------------------
+ Concurrency: 64 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/dbs
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/dbs
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.70ms   90.28ms 682.59ms   97.54%
+    Req/Sec   141.29     52.36   272.00     72.80%
+  15936 requests in 15.03s, 2.03MB read
+Requests/sec:   1060.15
+Transfer/sec:    138.50KB
+
+---------------------------------------------------------
+ Concurrency: 128 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/dbs
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/dbs
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   123.55ms   77.43ms 678.54ms   97.94%
+    Req/Sec   149.36     61.26   310.00     71.40%
+  16379 requests in 15.12s, 2.09MB read
+Requests/sec:   1083.60
+Transfer/sec:    141.56KB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/dbs
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/dbs
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   230.93ms  108.82ms 758.98ms   66.08%
+    Req/Sec   168.18     86.73   366.00     70.27%
+  16897 requests in 15.05s, 2.16MB read
+Requests/sec:   1122.60
+Transfer/sec:    146.66KB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 00:18:31 PDT 2013
+
+  System load:  0.61               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/grails/hello/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/grails/hello/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.10ms  550.18us   5.98ms   87.36%
+    Req/Sec     1.08k   318.97     1.67k    60.55%
+  38936 requests in 5.00s, 8.20MB read
+Requests/sec:   7787.15
+Transfer/sec:      1.64MB
+
+---------------------------------------------------------
+ Running Warmup grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/grails/hello/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.76ms   35.86ms 484.44ms   93.36%
+    Req/Sec     1.98k   499.76     4.63k    73.72%
+  231280 requests in 15.00s, 48.70MB read
+Requests/sec:  15420.48
+Transfer/sec:      3.25MB
+
+---------------------------------------------------------
+ Concurrency: 8 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/grails/hello/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   793.28us  265.64us   9.73ms   94.56%
+    Req/Sec     1.33k   128.77     1.67k    88.67%
+  150996 requests in 15.00s, 31.79MB read
+Requests/sec:  10066.61
+Transfer/sec:      2.12MB
+
+---------------------------------------------------------
+ Concurrency: 16 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/grails/hello/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.04ms  546.79us  13.22ms   90.45%
+    Req/Sec     2.07k   298.10     2.89k    74.24%
+  235986 requests in 15.00s, 49.69MB read
+Requests/sec:  15732.76
+Transfer/sec:      3.31MB
+
+---------------------------------------------------------
+ Concurrency: 32 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/grails/hello/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.83ms    1.07ms  17.14ms   88.97%
+    Req/Sec     2.39k   446.42     3.78k    70.51%
+  272212 requests in 15.00s, 57.32MB read
+Requests/sec:  18147.74
+Transfer/sec:      3.82MB
+
+---------------------------------------------------------
+ Concurrency: 64 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/grails/hello/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.75ms    2.47ms  30.44ms   88.51%
+    Req/Sec     2.35k   424.09     3.78k    78.12%
+  268734 requests in 15.00s, 56.58MB read
+Requests/sec:  17916.01
+Transfer/sec:      3.77MB
+
+---------------------------------------------------------
+ Concurrency: 128 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/grails/hello/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    77.04ms  256.24ms   1.04s    93.20%
+    Req/Sec     1.95k   649.76     5.38k    84.76%
+  229498 requests in 15.00s, 48.32MB read
+Requests/sec:  15300.13
+Transfer/sec:      3.22MB
+
+---------------------------------------------------------
+ Concurrency: 256 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/grails/hello/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.23ms  135.22ms 780.40ms   95.65%
+    Req/Sec     1.98k   628.64     4.59k    77.13%
+  234432 requests in 15.00s, 49.36MB read
+Requests/sec:  15628.42
+Transfer/sec:      3.29MB

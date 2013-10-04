@@ -1,0 +1,105 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.91ms    2.19ms  18.96ms   77.86%
+    Req/Sec   105.67     25.99   173.00     67.66%
+  4211 requests in 5.01s, 1.70MB read
+Requests/sec:    841.03
+Transfer/sec:    348.69KB
+
+---------------------------------------------------------
+ Running Warmup play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   296.83ms   71.44ms 889.75ms   83.16%
+    Req/Sec   111.80     56.63   292.00     63.96%
+  13469 requests in 15.14s, 5.45MB read
+Requests/sec:    889.40
+Transfer/sec:    368.75KB
+
+---------------------------------------------------------
+ Queries: 1 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   222.59ms   30.07ms 406.23ms   94.49%
+    Req/Sec   143.23     48.30   410.00     79.84%
+  16847 requests in 15.12s, 6.31MB read
+Requests/sec:   1114.57
+Transfer/sec:    427.52KB
+
+---------------------------------------------------------
+ Queries: 5 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   370.17ms   69.26ms   1.01s    92.81%
+    Req/Sec    86.53     51.82   360.00     67.38%
+  10302 requests in 15.15s, 5.12MB read
+Requests/sec:    680.06
+Transfer/sec:    345.93KB
+
+---------------------------------------------------------
+ Queries: 10 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   523.96ms   76.50ms   1.17s    94.13%
+    Req/Sec    61.44     26.41   163.00     83.17%
+  7135 requests in 15.29s, 4.63MB read
+Requests/sec:    466.54
+Transfer/sec:    309.73KB
+
+---------------------------------------------------------
+ Queries: 15 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   699.12ms  116.45ms 944.12ms   87.21%
+    Req/Sec    44.70     23.30   135.00     79.05%
+  5388 requests in 15.32s, 4.31MB read
+Requests/sec:    351.61
+Transfer/sec:    287.97KB
+
+---------------------------------------------------------
+ Queries: 20 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   871.53ms  167.02ms 993.86ms   92.03%
+    Req/Sec    34.93     21.32   128.00     56.35%
+  4188 requests in 15.50s, 3.98MB read
+  Socket errors: connect 0, read 0, write 0, timeout 27
+Requests/sec:    270.26
+Transfer/sec:    263.30KB

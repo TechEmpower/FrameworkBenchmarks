@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 06:05:40 PDT 2013
+
+  System load:  0.18               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.22ms    1.20ms  17.06ms   94.83%
+    Req/Sec   495.48     94.42   700.00     63.49%
+  18084 requests in 5.00s, 25.09MB read
+Requests/sec:   3615.87
+Transfer/sec:      5.02MB
+
+---------------------------------------------------------
+ Running Warmup ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.09ms   52.58ms 560.74ms   86.94%
+    Req/Sec   647.22     92.66     0.99k    71.59%
+  77332 requests in 15.00s, 107.31MB read
+Requests/sec:   5154.70
+Transfer/sec:      7.15MB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.12ms    0.92ms  16.73ms   92.72%
+    Req/Sec   510.02     89.99   777.00     77.07%
+  58159 requests in 15.00s, 80.70MB read
+Requests/sec:   3877.05
+Transfer/sec:      5.38MB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.41ms    2.02ms  41.44ms   90.81%
+    Req/Sec   641.40    142.09     1.11k    75.51%
+  72990 requests in 15.00s, 101.28MB read
+Requests/sec:   4865.67
+Transfer/sec:      6.75MB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.59ms    6.70ms 104.88ms   90.57%
+    Req/Sec   650.70    152.49     1.17k    69.76%
+  76424 requests in 15.00s, 106.05MB read
+Requests/sec:   5094.10
+Transfer/sec:      7.07MB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.03ms   17.78ms 358.49ms   90.83%
+    Req/Sec   646.67    112.87     1.05k    69.29%
+  77008 requests in 15.00s, 106.86MB read
+Requests/sec:   5132.73
+Transfer/sec:      7.12MB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.17ms   30.87ms 328.38ms   87.89%
+    Req/Sec   646.74    111.69     1.01k    72.69%
+  77229 requests in 15.00s, 107.16MB read
+Requests/sec:   5147.38
+Transfer/sec:      7.14MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs-convenient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.78ms   55.06ms 686.31ms   86.95%
+    Req/Sec   654.46     90.77     1.08k    73.05%
+  77689 requests in 15.00s, 107.80MB read
+Requests/sec:   5178.87
+Transfer/sec:      7.19MB

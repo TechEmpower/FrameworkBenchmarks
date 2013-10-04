@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 19:49:10 PDT 2013
+
+  System load:  0.15               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/index.php/bench/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/index.php/bench/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.69ms  663.08us   8.40ms   74.04%
+    Req/Sec   396.82     68.78   600.00     73.79%
+  15043 requests in 5.00s, 3.88MB read
+Requests/sec:   3007.90
+Transfer/sec:    794.58KB
+
+---------------------------------------------------------
+ Running Warmup codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/db/2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.15ms   42.28ms 361.07ms   72.72%
+    Req/Sec   448.96     54.34   742.00     80.72%
+  53620 requests in 15.00s, 13.83MB read
+Requests/sec:   3573.80
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Queries: 1 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.99ms   41.13ms 469.23ms   74.89%
+    Req/Sec   473.03     36.90   639.00     75.29%
+  56587 requests in 15.00s, 12.67MB read
+Requests/sec:   3771.76
+Transfer/sec:    864.60KB
+
+---------------------------------------------------------
+ Queries: 5 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/db/5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    82.29ms   46.53ms 372.60ms   71.36%
+    Req/Sec   393.36     47.86   786.00     86.39%
+  47080 requests in 15.01s, 16.97MB read
+Requests/sec:   3137.41
+Transfer/sec:      1.13MB
+
+---------------------------------------------------------
+ Queries: 10 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/db/10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    98.95ms   51.65ms 368.16ms   71.02%
+    Req/Sec   329.22     29.67   489.00     80.17%
+  39569 requests in 15.02s, 21.05MB read
+Requests/sec:   2634.82
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Queries: 15 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/db/15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   112.61ms   53.31ms 508.20ms   72.74%
+    Req/Sec   286.18     24.88   402.00     83.86%
+  34336 requests in 15.01s, 24.12MB read
+Requests/sec:   2287.43
+Transfer/sec:      1.61MB
+
+---------------------------------------------------------
+ Queries: 20 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/db/20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   128.27ms   59.49ms 384.04ms   70.00%
+    Req/Sec   251.95     31.79   444.00     84.33%
+  30039 requests in 15.00s, 26.23MB read
+Requests/sec:   2002.11
+Transfer/sec:      1.75MB

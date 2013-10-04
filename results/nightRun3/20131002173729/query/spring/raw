@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 08:17:47 PDT 2013
+
+  System load:  0.67               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/spring/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/spring/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.97ms  182.16us   4.83ms   77.35%
+    Req/Sec     1.09k   108.00     1.44k    69.60%
+  40833 requests in 5.00s, 8.39MB read
+Requests/sec:   8165.37
+Transfer/sec:      1.68MB
+
+---------------------------------------------------------
+ Running Warmup spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/spring/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.10ms    8.93ms 295.37ms   81.28%
+    Req/Sec     2.94k   482.71     6.42k    81.42%
+  342925 requests in 15.00s, 70.49MB read
+Requests/sec:  22861.90
+Transfer/sec:      4.70MB
+
+---------------------------------------------------------
+ Queries: 1 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/spring/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.13ms    9.59ms 171.52ms   93.87%
+    Req/Sec     4.00k   741.60     8.10k    79.10%
+  468289 requests in 15.00s, 82.07MB read
+Requests/sec:  31221.45
+Transfer/sec:      5.47MB
+
+---------------------------------------------------------
+ Queries: 5 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/spring/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.88ms    8.88ms 158.77ms   79.94%
+    Req/Sec     1.63k   144.18     2.90k    78.53%
+  193238 requests in 15.00s, 57.29MB read
+Requests/sec:  12882.88
+Transfer/sec:      3.82MB
+
+---------------------------------------------------------
+ Queries: 10 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/spring/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.60ms   10.02ms 158.58ms   81.84%
+    Req/Sec     0.95k    67.97     1.35k    73.31%
+  113714 requests in 15.00s, 50.94MB read
+Requests/sec:   7579.15
+Transfer/sec:      3.40MB
+
+---------------------------------------------------------
+ Queries: 15 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/spring/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.02ms   13.71ms 168.48ms   81.86%
+    Req/Sec   667.75     43.78     0.91k    72.74%
+  79778 requests in 15.00s, 47.83MB read
+Requests/sec:   5318.99
+Transfer/sec:      3.19MB
+
+---------------------------------------------------------
+ Queries: 20 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/spring/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/spring/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    61.77ms   15.71ms 281.28ms   80.92%
+    Req/Sec   517.24     31.16   674.00     68.20%
+  61827 requests in 15.00s, 46.44MB read
+Requests/sec:   4120.89
+Transfer/sec:      3.09MB

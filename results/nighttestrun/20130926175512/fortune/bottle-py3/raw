@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 19:12:46 PDT 2013
+
+  System load:  0.09               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.89ms    1.25ms  19.88ms   90.19%
+    Req/Sec   379.41     81.54   666.00     84.94%
+  14391 requests in 5.00s, 20.05MB read
+Requests/sec:   2877.41
+Transfer/sec:      4.01MB
+
+---------------------------------------------------------
+ Running Warmup bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.12ms   31.70ms 321.88ms   71.03%
+    Req/Sec   386.78     35.18   480.00     71.80%
+  45244 requests in 15.00s, 63.04MB read
+Requests/sec:   3015.75
+Transfer/sec:      4.20MB
+
+---------------------------------------------------------
+ Concurrency: 8 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.89ms    1.18ms  21.45ms   88.25%
+    Req/Sec   380.75     81.85   666.00     84.50%
+  43353 requests in 15.00s, 60.40MB read
+Requests/sec:   2889.88
+Transfer/sec:      4.03MB
+
+---------------------------------------------------------
+ Concurrency: 16 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.42ms    2.23ms  41.81ms   78.82%
+    Req/Sec   399.30     93.66   727.00     67.57%
+  46151 requests in 15.00s, 64.30MB read
+Requests/sec:   3076.38
+Transfer/sec:      4.29MB
+
+---------------------------------------------------------
+ Concurrency: 32 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.77ms    5.54ms  81.37ms   78.99%
+    Req/Sec   392.29     79.79   652.00     66.79%
+  45244 requests in 15.00s, 63.04MB read
+Requests/sec:   3015.68
+Transfer/sec:      4.20MB
+
+---------------------------------------------------------
+ Concurrency: 64 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.58ms   11.34ms  93.89ms   70.34%
+    Req/Sec   386.36     78.84   625.00     64.78%
+  45192 requests in 15.01s, 62.97MB read
+Requests/sec:   3011.59
+Transfer/sec:      4.20MB
+
+---------------------------------------------------------
+ Concurrency: 128 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.51ms   16.34ms 153.12ms   72.86%
+    Req/Sec   379.91     39.14   500.00     71.30%
+  45248 requests in 15.00s, 63.04MB read
+Requests/sec:   3015.71
+Transfer/sec:      4.20MB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.97ms   29.57ms 326.08ms   73.92%
+    Req/Sec   381.81     22.34   444.00     66.19%
+  45240 requests in 15.00s, 63.03MB read
+Requests/sec:   3015.42
+Transfer/sec:      4.20MB

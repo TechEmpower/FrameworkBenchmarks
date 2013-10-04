@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct  1 17:49:17 PDT 2013
+
+  System load:  0.12               Processes:           116
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+40 packages can be updated.
+12 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.86ms  792.48us  16.64ms   84.77%
+    Req/Sec   375.73     66.68   555.00     48.78%
+  14236 requests in 5.00s, 2.99MB read
+Requests/sec:   2845.90
+Transfer/sec:    612.97KB
+
+---------------------------------------------------------
+ Running Warmup bottle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    85.83ms   23.83ms 250.57ms   70.68%
+    Req/Sec   373.80     22.25   441.00     65.18%
+  44411 requests in 15.00s, 9.34MB read
+Requests/sec:   2959.98
+Transfer/sec:    637.59KB
+
+---------------------------------------------------------
+ Queries: 1 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.21ms   18.93ms 177.58ms   69.25%
+    Req/Sec   573.60     37.02   700.00     71.02%
+  67450 requests in 15.00s, 12.14MB read
+Requests/sec:   4496.39
+Transfer/sec:    828.95KB
+
+---------------------------------------------------------
+ Queries: 5 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   171.94ms   40.10ms 488.89ms   71.80%
+    Req/Sec   185.43     13.94   235.00     71.75%
+  21945 requests in 15.01s, 6.63MB read
+Requests/sec:   1461.75
+Transfer/sec:    452.40KB
+
+---------------------------------------------------------
+ Queries: 10 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   315.03ms   74.52ms 751.93ms   78.67%
+    Req/Sec   100.94      9.77   128.00     69.67%
+  11983 requests in 15.03s, 5.44MB read
+Requests/sec:    797.23
+Transfer/sec:    370.46KB
+
+---------------------------------------------------------
+ Queries: 15 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   460.52ms  103.88ms   1.18s    80.36%
+    Req/Sec    68.36      8.57    90.00     79.17%
+  8234 requests in 15.02s, 4.98MB read
+Requests/sec:    548.07
+Transfer/sec:    339.74KB
+
+---------------------------------------------------------
+ Queries: 20 for bottle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   609.19ms  189.19ms   1.72s    76.33%
+    Req/Sec    51.86      6.12    68.00     70.80%
+  6276 requests in 15.08s, 4.75MB read
+Requests/sec:    416.18
+Transfer/sec:    322.57KB

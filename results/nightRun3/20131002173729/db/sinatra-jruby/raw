@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 07:32:15 PDT 2013
+
+  System load:  0.13               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/sinatra/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/sinatra/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.71ms    2.89ms  25.33ms   75.64%
+    Req/Sec    93.00     10.27   115.00     66.67%
+  3496 requests in 5.00s, 0.92MB read
+Requests/sec:    698.66
+Transfer/sec:    188.16KB
+
+---------------------------------------------------------
+ Running Warmup sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/sinatra/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   368.04ms  295.54ms   1.92s    95.54%
+    Req/Sec   101.90     18.64   118.00     91.67%
+  11528 requests in 15.02s, 3.03MB read
+Requests/sec:    767.71
+Transfer/sec:    206.76KB
+
+---------------------------------------------------------
+ Concurrency: 8 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/sinatra/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.79ms   16.04ms 219.61ms   99.41%
+    Req/Sec   136.31     29.70   235.00     72.97%
+  15685 requests in 15.00s, 4.13MB read
+Requests/sec:   1045.57
+Transfer/sec:    281.59KB
+
+---------------------------------------------------------
+ Concurrency: 16 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/sinatra/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.91ms    3.54ms  36.03ms   75.22%
+    Req/Sec   137.04     23.95   216.00     59.39%
+  16246 requests in 15.02s, 4.27MB read
+Requests/sec:   1081.57
+Transfer/sec:    291.28KB
+
+---------------------------------------------------------
+ Concurrency: 32 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/sinatra/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.26ms   72.91ms 502.58ms   97.28%
+    Req/Sec   129.07     26.43   176.00     87.55%
+  15404 requests in 15.00s, 4.05MB read
+Requests/sec:   1026.72
+Transfer/sec:    276.51KB
+
+---------------------------------------------------------
+ Concurrency: 64 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/sinatra/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    60.94ms   11.67ms  92.96ms   70.59%
+    Req/Sec   131.59      8.55   154.00     66.88%
+  15716 requests in 15.02s, 4.13MB read
+Requests/sec:   1046.60
+Transfer/sec:    281.85KB
+
+---------------------------------------------------------
+ Concurrency: 128 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/sinatra/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   125.99ms   22.56ms 221.70ms   68.48%
+    Req/Sec   126.77      4.86   139.00     79.35%
+  15013 requests in 15.01s, 3.95MB read
+Requests/sec:   1000.12
+Transfer/sec:    269.34KB
+
+---------------------------------------------------------
+ Concurrency: 256 for sinatra-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/sinatra/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/sinatra/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   274.59ms   56.52ms 488.25ms   66.03%
+    Req/Sec   114.79      7.76   130.00     84.44%
+  13569 requests in 15.01s, 3.57MB read
+Requests/sec:    904.00
+Transfer/sec:    243.46KB

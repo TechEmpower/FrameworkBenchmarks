@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 20:01:23 PDT 2013
+
+  System load:  0.13               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/compojure/fortune-hiccup
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   657.70us  255.92us   7.38ms   97.41%
+    Req/Sec     1.60k   160.25     1.89k    75.28%
+  59584 requests in 5.00s, 75.80MB read
+Requests/sec:  11916.68
+Transfer/sec:     15.16MB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/fortune-hiccup
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.72ms   51.13ms   1.55s    96.30%
+    Req/Sec     2.48k   596.63     5.44k    70.59%
+  294948 requests in 15.00s, 375.23MB read
+Requests/sec:  19663.64
+Transfer/sec:     25.02MB
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/fortune-hiccup
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   656.78us  361.73us  11.75ms   99.10%
+    Req/Sec     1.62k   140.51     1.89k    74.93%
+  183721 requests in 15.00s, 233.73MB read
+Requests/sec:  12247.98
+Transfer/sec:     15.58MB
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/fortune-hiccup
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.89ms  653.55us  14.99ms   96.73%
+    Req/Sec     2.46k   335.83     3.11k    78.38%
+  279463 requests in 15.00s, 355.53MB read
+Requests/sec:  18631.01
+Transfer/sec:     23.70MB
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/fortune-hiccup
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.63ms    1.75ms  22.93ms   95.34%
+    Req/Sec     2.85k   579.97     4.44k    78.41%
+  323956 requests in 15.00s, 412.14MB read
+Requests/sec:  21597.26
+Transfer/sec:     27.48MB
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/fortune-hiccup
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.03ms    3.06ms  31.43ms   87.56%
+    Req/Sec     2.85k   585.41     5.00k    76.50%
+  329509 requests in 15.00s, 419.20MB read
+Requests/sec:  21965.83
+Transfer/sec:     27.94MB
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/fortune-hiccup
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.19ms   13.31ms 189.23ms   90.41%
+    Req/Sec     2.65k   548.51     4.80k    67.93%
+  313953 requests in 15.00s, 399.41MB read
+Requests/sec:  20930.87
+Transfer/sec:     26.63MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/fortune-hiccup
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.48ms   47.63ms 927.22ms   95.31%
+    Req/Sec     2.51k   603.44     4.80k    69.85%
+  296832 requests in 15.00s, 377.63MB read
+Requests/sec:  19791.55
+Transfer/sec:     25.18MB
