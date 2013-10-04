@@ -1,0 +1,11 @@
+﻿@* Generator: Template *@@*
+*@@using System.Web;@*
+*@@functions {
+    public IEnumerable<Benchmarks.AspNet.Models.Fortune> Model { get; set; }
+}@*
+*@<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>@*
+*@@foreach (var fortune in Model)
+{
+<tr><td>@fortune.ID</td><td>@HttpUtility.HtmlEncode(fortune.Message)</td></tr>@*
+*@}
+</table></body></html>

@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 02:54:43 UTC 2013
+
+  System load:  0.01               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.51ms    1.33ms  17.96ms   67.67%
+    Req/Sec   197.90     65.70   333.00     60.15%
+  7556 requests in 5.00s, 1.35MB read
+Requests/sec:   1510.66
+Transfer/sec:    277.02KB
+
+---------------------------------------------------------
+ Running Warmup tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   297.18ms   98.39ms 377.88ms   77.02%
+    Req/Sec   163.36    282.70     2.33k    88.02%
+  18485 requests in 15.03s, 3.31MB read
+Requests/sec:   1229.71
+Transfer/sec:    225.49KB
+
+---------------------------------------------------------
+ Concurrency: 8 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.74ms    1.62ms  23.51ms   65.63%
+    Req/Sec   195.77     72.67   333.00     51.05%
+  22304 requests in 15.00s, 3.99MB read
+Requests/sec:   1486.80
+Transfer/sec:    272.64KB
+
+---------------------------------------------------------
+ Concurrency: 16 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.56ms    2.22ms  23.64ms   78.61%
+    Req/Sec   200.58     56.53   444.00     74.03%
+  22827 requests in 15.00s, 4.09MB read
+Requests/sec:   1521.59
+Transfer/sec:    279.03KB
+
+---------------------------------------------------------
+ Concurrency: 32 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.88ms   10.73ms  72.52ms   86.20%
+    Req/Sec   198.62    120.74   444.00     69.11%
+  22601 requests in 15.01s, 4.05MB read
+Requests/sec:   1505.95
+Transfer/sec:    276.16KB
+
+---------------------------------------------------------
+ Concurrency: 64 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    53.92ms   27.50ms 111.91ms   59.58%
+    Req/Sec   192.52    139.45   777.00     65.64%
+  21850 requests in 15.01s, 3.91MB read
+Requests/sec:   1455.76
+Transfer/sec:    266.96KB
+
+---------------------------------------------------------
+ Concurrency: 128 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   163.79ms  116.19ms 339.73ms   69.75%
+    Req/Sec   178.72    206.29     1.55k    85.04%
+  20235 requests in 15.02s, 3.62MB read
+Requests/sec:   1347.01
+Transfer/sec:    247.01KB
+
+---------------------------------------------------------
+ Concurrency: 256 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   311.41ms  108.11ms 556.01ms   70.95%
+    Req/Sec   161.52    274.27     2.44k    85.40%
+  18195 requests in 15.01s, 3.26MB read
+Requests/sec:   1211.87
+Transfer/sec:    222.23KB

@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 21:20:35 UTC 2013
+
+  System load:  0.1                Processes:           72
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 10%                IP address for eth0: 10.254.22.217
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.252.47.47:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.47.47:8080/servlet/postgres
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  9999 requests in 6.00s, 1.55MB read
+Requests/sec:   1666.48
+Transfer/sec:    264.92KB
+
+---------------------------------------------------------
+ Running Warmup servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/servlet/postgres
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  68330 requests in 15.02s, 10.69MB read
+  Socket errors: connect 0, read 59, write 0, timeout 180
+Requests/sec:   4549.60
+Transfer/sec:    729.12KB
+
+---------------------------------------------------------
+ Concurrency: 8 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.252.47.47:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/servlet/postgres
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  64373 requests in 15.00s, 9.99MB read
+Requests/sec:   4291.68
+Transfer/sec:    682.24KB
+
+---------------------------------------------------------
+ Concurrency: 16 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.252.47.47:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/servlet/postgres
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  81621 requests in 15.00s, 12.67MB read
+Requests/sec:   5440.81
+Transfer/sec:    864.90KB
+
+---------------------------------------------------------
+ Concurrency: 32 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.252.47.47:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/servlet/postgres
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  81666 requests in 15.00s, 12.68MB read
+Requests/sec:   5444.36
+Transfer/sec:    865.48KB
+
+---------------------------------------------------------
+ Concurrency: 64 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.252.47.47:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/servlet/postgres
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.69ms  220.27ms 735.03ms   89.67%
+    Req/Sec   174.64    407.57     2.00k    83.63%
+  85037 requests in 15.00s, 13.20MB read
+Requests/sec:   5667.87
+Transfer/sec:      0.88MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.252.47.47:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/servlet/postgres
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  86677 requests in 15.00s, 13.46MB read
+Requests/sec:   5777.88
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.252.47.47:8080/servlet/postgres
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/servlet/postgres
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  78743 requests in 15.01s, 12.32MB read
+  Socket errors: connect 0, read 64, write 0, timeout 214
+Requests/sec:   5247.27
+Transfer/sec:    840.69KB

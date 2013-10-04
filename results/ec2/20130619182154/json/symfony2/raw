@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   154.94ms   39.28ms 202.48ms   78.17%
+    Req/Sec    14.19     35.94   111.00     86.48%
+  524 requests in 5.02s, 127.42KB read
+Requests/sec:    104.32
+Transfer/sec:     25.37KB
+
+---------------------------------------------------------
+ Running Warmup symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.58s   951.57ms   4.44s    82.92%
+    Req/Sec    21.46     51.99   555.00     82.75%
+  2302 requests in 15.07s, 559.76KB read
+  Socket errors: connect 0, read 0, write 0, timeout 24
+Requests/sec:    152.71
+Transfer/sec:     37.13KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   129.21ms   51.25ms 223.19ms   71.30%
+    Req/Sec    21.56     42.24   111.00     79.28%
+  2469 requests in 15.02s, 600.27KB read
+Requests/sec:    164.42
+Transfer/sec:     39.97KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   327.56ms  120.77ms 455.85ms   71.40%
+    Req/Sec    21.52     45.36   222.00     80.67%
+  2440 requests in 15.03s, 593.24KB read
+Requests/sec:    162.39
+Transfer/sec:     39.48KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   753.97ms  303.84ms   1.05s    82.24%
+    Req/Sec    21.39     47.05   333.00     81.41%
+  2438 requests in 15.03s, 592.83KB read
+Requests/sec:    162.16
+Transfer/sec:     39.43KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.24s   547.82ms   2.05s    63.71%
+    Req/Sec    21.34     48.40   400.00     81.95%
+  2405 requests in 15.05s, 584.81KB read
+Requests/sec:    159.77
+Transfer/sec:     38.85KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.50s   871.83ms   3.14s    82.98%
+    Req/Sec    21.70     49.20   777.00     81.45%
+  2401 requests in 15.09s, 583.84KB read
+  Socket errors: connect 0, read 0, write 0, timeout 34
+Requests/sec:    159.09
+Transfer/sec:     38.68KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.84s     1.06s    4.67s    82.76%
+    Req/Sec    20.87     48.72   400.00     82.61%
+  2273 requests in 15.20s, 552.71KB read
+  Socket errors: connect 0, read 0, write 0, timeout 28
+Requests/sec:    149.57
+Transfer/sec:     36.37KB

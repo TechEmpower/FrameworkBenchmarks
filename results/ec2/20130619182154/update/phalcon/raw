@@ -1,0 +1,122 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 04:52:11 UTC 2013
+
+  System load:  0.82               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.82ms    3.39ms  24.67ms   61.27%
+    Req/Sec    57.86     52.31   111.00     30.66%
+  2181 requests in 5.02s, 576.19KB read
+Requests/sec:    434.79
+Transfer/sec:    114.87KB
+
+---------------------------------------------------------
+ Running Warmup phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   542.73ms  196.34ms 931.57ms   75.22%
+    Req/Sec    87.60    106.91   777.00     78.89%
+  9884 requests in 15.01s, 2.55MB read
+Requests/sec:    658.43
+Transfer/sec:    173.97KB
+
+---------------------------------------------------------
+ Queries: 1 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   411.32ms  166.68ms 660.13ms   52.54%
+    Req/Sec   112.90    113.10     1.11k    90.01%
+  12710 requests in 15.03s, 2.85MB read
+Requests/sec:    845.89
+Transfer/sec:    193.94KB
+
+---------------------------------------------------------
+ Queries: 5 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   993.63ms  283.10ms   1.28s    67.38%
+    Req/Sec    51.31     73.44   555.00     91.06%
+  5714 requests in 15.02s, 2.06MB read
+Requests/sec:    380.36
+Transfer/sec:    140.36KB
+
+---------------------------------------------------------
+ Queries: 10 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.53s   267.66ms   1.75s    79.66%
+    Req/Sec    31.07     58.06   555.00     74.71%
+  3374 requests in 15.10s, 1.79MB read
+Requests/sec:    223.47
+Transfer/sec:    121.74KB
+
+---------------------------------------------------------
+ Queries: 15 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.06s   251.02ms   2.28s    84.74%
+    Req/Sec    21.88     48.77   400.00     81.41%
+  2312 requests in 15.10s, 1.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    153.11
+Transfer/sec:    110.15KB
+
+---------------------------------------------------------
+ Queries: 20 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.74s   350.01ms   2.96s    85.89%
+    Req/Sec    17.52     43.87   444.00     84.91%
+  1842 requests in 15.15s, 1.61MB read
+  Socket errors: connect 0, read 0, write 0, timeout 125
+Requests/sec:    121.55
+Transfer/sec:    108.68KB

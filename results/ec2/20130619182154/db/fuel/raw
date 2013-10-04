@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 04:09:58 UTC 2013
+
+  System load:  0.01               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   375.05ms  204.38ms 509.60ms   73.65%
+    Req/Sec    27.89     46.45   111.00     73.42%
+  1058 requests in 5.03s, 242.53KB read
+Requests/sec:    210.49
+Transfer/sec:     48.25KB
+
+---------------------------------------------------------
+ Running Warmup fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.97s     1.17s    4.35s    65.61%
+    Req/Sec    31.47     59.49   700.00     74.62%
+  3442 requests in 15.04s, 789.16KB read
+  Socket errors: connect 0, read 0, write 0, timeout 18
+Requests/sec:    228.83
+Transfer/sec:     52.47KB
+
+---------------------------------------------------------
+ Concurrency: 8 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   103.04ms   52.98ms 189.17ms   55.40%
+    Req/Sec    32.14     48.43   222.00     69.31%
+  3662 requests in 15.01s, 839.42KB read
+Requests/sec:    243.95
+Transfer/sec:     55.92KB
+
+---------------------------------------------------------
+ Concurrency: 16 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   264.51ms  129.91ms 413.46ms   65.42%
+    Req/Sec    31.72     53.37   222.00     72.09%
+  3601 requests in 15.01s, 825.46KB read
+Requests/sec:    239.93
+Transfer/sec:     55.00KB
+
+---------------------------------------------------------
+ Concurrency: 32 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   898.95ms  478.36ms   1.37s    74.42%
+    Req/Sec    31.54     56.02   333.00     73.35%
+  3567 requests in 15.01s, 817.72KB read
+Requests/sec:    237.61
+Transfer/sec:     54.47KB
+
+---------------------------------------------------------
+ Concurrency: 64 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.40s   748.14ms   2.45s    66.91%
+    Req/Sec    31.67     57.15   400.00     73.69%
+  3572 requests in 15.02s, 818.97KB read
+Requests/sec:    237.77
+Transfer/sec:     54.51KB
+
+---------------------------------------------------------
+ Concurrency: 128 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.05s   982.47ms   3.13s    57.31%
+    Req/Sec    31.47     57.44   555.00     73.94%
+  3511 requests in 15.02s, 805.00KB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    233.68
+Transfer/sec:     53.58KB
+
+---------------------------------------------------------
+ Concurrency: 256 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.95s     1.15s    4.12s    66.24%
+    Req/Sec    30.45     58.00   666.00     75.23%
+  3330 requests in 15.12s, 763.43KB read
+  Socket errors: connect 0, read 0, write 0, timeout 14
+Requests/sec:    220.27
+Transfer/sec:     50.50KB

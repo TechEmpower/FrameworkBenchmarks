@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 14:06:32 PDT 2013
+
+  System load:  0.27                Processes:           133
+  Usage of /:   11.6% of 129.62GB   Users logged in:     1
+  Memory usage: 6%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.95ms   14.04ms  60.24ms   91.20%
+    Req/Sec     2.04k     1.11k    4.67k    68.81%
+  72474 requests in 5.00s, 12.44MB read
+Requests/sec:  14495.79
+Transfer/sec:      2.49MB
+
+---------------------------------------------------------
+ Running Warmup tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.53ms    2.85ms  85.83ms   99.22%
+    Req/Sec     9.59k     1.17k   12.11k    71.00%
+  1081154 requests in 15.00s, 185.59MB read
+Requests/sec:  72081.84
+Transfer/sec:     12.37MB
+
+---------------------------------------------------------
+ Concurrency: 8 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   417.70us    1.59ms  36.51ms   99.77%
+    Req/Sec     3.03k   261.79     4.11k    83.02%
+  344063 requests in 15.00s, 59.06MB read
+Requests/sec:  22937.84
+Transfer/sec:      3.94MB
+
+---------------------------------------------------------
+ Concurrency: 16 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   312.31us  355.98us  44.91ms   99.75%
+    Req/Sec     6.66k     0.98k    9.89k    65.68%
+  756446 requests in 15.00s, 129.85MB read
+Requests/sec:  50431.60
+Transfer/sec:      8.66MB
+
+---------------------------------------------------------
+ Concurrency: 32 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   417.82us  729.50us  90.11ms   99.88%
+    Req/Sec    10.02k     1.53k   15.22k    75.50%
+  1136986 requests in 15.00s, 195.18MB read
+Requests/sec:  75802.05
+Transfer/sec:     13.01MB
+
+---------------------------------------------------------
+ Concurrency: 64 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   841.04us    1.08ms  64.51ms   99.72%
+    Req/Sec    10.07k     1.52k   15.22k    73.31%
+  1142967 requests in 15.00s, 196.20MB read
+Requests/sec:  76203.02
+Transfer/sec:     13.08MB
+
+---------------------------------------------------------
+ Concurrency: 128 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.66ms    1.77ms  95.98ms   99.37%
+    Req/Sec    10.22k     1.20k   14.78k    73.19%
+  1161263 requests in 15.00s, 199.34MB read
+Requests/sec:  77422.23
+Transfer/sec:     13.29MB
+
+---------------------------------------------------------
+ Concurrency: 256 for tornado-pypy-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.43ms    2.74ms  76.05ms   99.26%
+    Req/Sec     9.87k     1.10k   13.56k    75.56%
+  1122183 requests in 15.00s, 192.64MB read
+Requests/sec:  74815.95
+Transfer/sec:     12.84MB

@@ -1,6 +1,6 @@
 package hello;
 
-import static javax.ws.rs.core.MediaType.*;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,40 +15,43 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.jersey.spi.resource.Singleton;
 
 @Provider
+@Singleton
 @Produces(APPLICATION_JSON)
 public class JsonMessageBodyWriter implements MessageBodyWriter<Object> {
-  private static final ObjectMapper mapper = new ObjectMapper();
+  
+  private final ObjectMapper mapper = new ObjectMapper();
 
   @Override
   public boolean isWriteable(
-      Class<?> type,
-      Type genericType,
-      Annotation[] annotations,
-      MediaType mediaType) {
-    return APPLICATION_JSON_TYPE.equals(mediaType);
+      final Class<?> type,
+      final Type genericType,
+      final Annotation[] annotations,
+      final MediaType mediaType) {
+    return "json".equals(mediaType.getSubtype());
   }
 
   @Override
   public long getSize(
-      Object t,
-      Class<?> type,
-      Type genericType,
-      Annotation[] annotations,
-      MediaType mediaType) {
+      final Object t,
+      final Class<?> type,
+      final Type genericType,
+      final Annotation[] annotations,
+      final MediaType mediaType) {
     return -1; // We can't predict the output size at this point
   }
 
   @Override
   public void writeTo(
-      Object t,
-      Class<?> type,
-      Type genericType,
-      Annotation[] annotations,
-      MediaType mediaType,
-      MultivaluedMap<String, Object> httpHeaders,
-      OutputStream entityStream)
+      final Object t,
+      final Class<?> type,
+      final Type genericType,
+      final Annotation[] annotations,
+      final MediaType mediaType,
+      final MultivaluedMap<String, Object> httpHeaders,
+      final OutputStream entityStream)
       throws IOException, WebApplicationException {
     mapper.writeValue(entityStream, t);
   }

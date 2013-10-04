@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 13:18:02 PDT 2013
+
+  System load:  0.09                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer scalatra
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/scalatra/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/scalatra/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   447.91us    1.02ms  18.88ms   96.97%
+    Req/Sec     3.87k     1.92k    6.89k    55.27%
+  134949 requests in 5.00s, 25.87MB read
+Requests/sec:  26992.11
+Transfer/sec:      5.17MB
+
+---------------------------------------------------------
+ Running Warmup scalatra
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/scalatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.92ms  115.58ms   3.17s    99.64%
+    Req/Sec    14.39k     4.09k   38.70k    77.54%
+  1603310 requests in 15.00s, 307.34MB read
+Requests/sec: 106894.12
+Transfer/sec:     20.49MB
+
+---------------------------------------------------------
+ Concurrency: 8 for scalatra
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/scalatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   173.72us  103.51us   6.50ms   97.68%
+    Req/Sec     5.89k   523.61     7.22k    77.64%
+  670016 requests in 15.00s, 128.43MB read
+Requests/sec:  44668.59
+Transfer/sec:      8.56MB
+
+---------------------------------------------------------
+ Concurrency: 16 for scalatra
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/scalatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   188.39us  170.90us  10.55ms   95.09%
+    Req/Sec    11.00k     1.35k   14.00k    74.56%
+  1248639 requests in 15.00s, 239.35MB read
+Requests/sec:  83244.74
+Transfer/sec:     15.96MB
+
+---------------------------------------------------------
+ Concurrency: 32 for scalatra
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/scalatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   341.62us    0.97ms  20.24ms   96.78%
+    Req/Sec    14.94k     3.65k   23.44k    67.58%
+  1692960 requests in 15.00s, 324.52MB read
+Requests/sec: 112868.10
+Transfer/sec:     21.64MB
+
+---------------------------------------------------------
+ Concurrency: 64 for scalatra
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/scalatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   619.71us    1.12ms  20.40ms   97.26%
+    Req/Sec    15.02k     2.73k   26.11k    79.16%
+  1702493 requests in 15.00s, 326.35MB read
+Requests/sec: 113505.11
+Transfer/sec:     21.76MB
+
+---------------------------------------------------------
+ Concurrency: 128 for scalatra
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/scalatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14ms    1.56ms  41.36ms   97.21%
+    Req/Sec    15.14k     2.35k   27.22k    83.36%
+  1712596 requests in 15.00s, 328.29MB read
+Requests/sec: 114175.59
+Transfer/sec:     21.89MB
+
+---------------------------------------------------------
+ Concurrency: 256 for scalatra
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/scalatra/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.09ms   11.64ms 180.41ms   96.94%
+    Req/Sec    14.60k     3.29k   40.89k    79.61%
+  1656035 requests in 15.00s, 317.44MB read
+Requests/sec: 110398.70
+Transfer/sec:     21.16MB

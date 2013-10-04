@@ -1,0 +1,28 @@
+{
+  "framework": "phpixie",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "phpixie",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "phpixie",
+      "notes": "",
+      "versus": "php"
+    }
+  }]
+}

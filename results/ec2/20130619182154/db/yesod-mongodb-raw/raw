@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 06:05:09 UTC 2013
+
+  System load:  0.05               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8000/mongo/raw/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.08ms    3.05ms  48.77ms   47.53%
+    Req/Sec    27.14     47.26   111.00     75.15%
+  985 requests in 5.02s, 155.61KB read
+Requests/sec:    196.14
+Transfer/sec:     30.99KB
+
+---------------------------------------------------------
+ Running Warmup yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/mongo/raw/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.19ms   31.87ms 248.49ms   89.54%
+    Req/Sec   512.30    253.61     2.10k    66.17%
+  57521 requests in 15.00s, 8.87MB read
+Requests/sec:   3833.82
+Transfer/sec:    605.67KB
+
+---------------------------------------------------------
+ Concurrency: 8 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/mongo/raw/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.61ms  460.15us  41.26ms   61.11%
+    Req/Sec    27.14     47.02   111.00     74.97%
+  2998 requests in 15.04s, 473.60KB read
+Requests/sec:    199.36
+Transfer/sec:     31.49KB
+
+---------------------------------------------------------
+ Concurrency: 16 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/mongo/raw/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.53ms    1.44ms  44.36ms   60.98%
+    Req/Sec    53.60     81.98   222.00     83.44%
+  5992 requests in 15.01s, 0.92MB read
+Requests/sec:    399.28
+Transfer/sec:     63.08KB
+
+---------------------------------------------------------
+ Concurrency: 32 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/mongo/raw/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.39ms    2.04ms  45.29ms   66.61%
+    Req/Sec   105.58     94.09   444.00     39.52%
+  11979 requests in 15.01s, 1.85MB read
+Requests/sec:    798.05
+Transfer/sec:    126.09KB
+
+---------------------------------------------------------
+ Concurrency: 64 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/mongo/raw/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.65ms   12.02ms  81.78ms   82.52%
+    Req/Sec   208.53    151.35   777.00     66.48%
+  23654 requests in 15.01s, 3.65MB read
+Requests/sec:   1576.36
+Transfer/sec:    249.05KB
+
+---------------------------------------------------------
+ Concurrency: 128 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/mongo/raw/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.74ms    3.71ms  67.13ms   92.36%
+    Req/Sec   407.28    194.46     1.22k    69.98%
+  46195 requests in 15.00s, 7.13MB read
+Requests/sec:   3078.89
+Transfer/sec:    486.44KB
+
+---------------------------------------------------------
+ Concurrency: 256 for yesod-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8000/mongo/raw/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8000/mongo/raw/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.87ms   36.47ms 276.06ms   89.79%
+    Req/Sec   508.77    259.39     1.78k    64.04%
+  57479 requests in 15.00s, 8.87MB read
+Requests/sec:   3831.19
+Transfer/sec:    605.29KB

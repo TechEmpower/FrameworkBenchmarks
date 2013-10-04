@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:16969/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:16969/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   742.73us   62.18us   1.00ms   72.96%
+    Req/Sec     1.41k    49.80     1.67k    84.90%
+  53073 requests in 5.00s, 69.49MB read
+Requests/sec:  10615.01
+Transfer/sec:     13.90MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.04ms    3.05ms 216.64ms   97.73%
+    Req/Sec     8.35k   640.43    10.22k    66.63%
+  943909 requests in 15.00s, 1.21GB read
+Requests/sec:  62931.22
+Transfer/sec:     82.40MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   743.80us   65.46us   1.07ms   73.30%
+    Req/Sec     1.41k    56.53     1.67k    79.21%
+  159166 requests in 15.00s, 208.41MB read
+Requests/sec:  10611.19
+Transfer/sec:     13.89MB
+
+---------------------------------------------------------
+ Concurrency: 16 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   703.34us  104.94us   4.66ms   72.22%
+    Req/Sec     2.97k   149.64     3.67k    66.23%
+  338106 requests in 15.00s, 442.71MB read
+Requests/sec:  22541.03
+Transfer/sec:     29.52MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   671.97us  146.63us   1.99ms   75.74%
+    Req/Sec     6.25k   391.29     7.33k    65.00%
+  710453 requests in 15.00s, 0.91GB read
+Requests/sec:  47366.16
+Transfer/sec:     62.02MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.99ms    1.17ms 103.15ms   96.97%
+    Req/Sec     8.59k     0.86k   11.56k    69.23%
+  975129 requests in 15.00s, 1.25GB read
+Requests/sec:  65012.72
+Transfer/sec:     85.13MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.03ms    2.56ms 206.46ms   97.71%
+    Req/Sec     8.37k   720.40    10.89k    67.76%
+  951044 requests in 15.00s, 1.22GB read
+Requests/sec:  63409.36
+Transfer/sec:     83.03MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.08ms    4.83ms 212.22ms   98.55%
+    Req/Sec     8.32k   680.28    10.44k    73.84%
+  945358 requests in 15.00s, 1.21GB read
+Requests/sec:  63026.68
+Transfer/sec:     82.53MB

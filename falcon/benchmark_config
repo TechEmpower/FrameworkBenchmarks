@@ -1,0 +1,62 @@
+{
+  "framework": "falcon",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "falcon",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "wsgi",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "falcon",
+      "notes": "",
+      "versus": "wsgi"
+    },
+    "py3": {
+      "setup_file": "setup_py3",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "falcon",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "wsgi",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "falcon-py3",
+      "notes": "",
+      "versus": "wsgi"
+    },
+    "pypy": {
+      "setup_file": "setup_pypy",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "falcon",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "wsgi",
+      "webserver": "Gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "falcon-pypy",
+      "notes": "",
+      "versus": "wsgi"
+    }
+  }]
+}

@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 07:59:36 UTC 2013
+
+  System load:  0.55               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+49 packages can be updated.
+22 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer hapi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.61ms    5.56ms  32.35ms   93.12%
+    Req/Sec   385.53    240.72     1.11k    78.64%
+  14212 requests in 5.00s, 2.68MB read
+Requests/sec:   2841.97
+Transfer/sec:    549.52KB
+
+---------------------------------------------------------
+ Running Warmup hapi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   109.72ms   30.80ms 147.95ms   44.07%
+    Req/Sec   393.88    475.58     3.20k    81.87%
+  44615 requests in 15.03s, 8.42MB read
+Requests/sec:   2967.84
+Transfer/sec:    573.86KB
+
+---------------------------------------------------------
+ Concurrency: 8 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.59ms    5.02ms  28.90ms   91.61%
+    Req/Sec   389.88    361.07     1.55k    84.51%
+  44026 requests in 15.00s, 8.31MB read
+Requests/sec:   2934.80
+Transfer/sec:    567.47KB
+
+---------------------------------------------------------
+ Concurrency: 16 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.08ms    5.05ms  33.94ms   91.78%
+    Req/Sec   424.16    161.91     0.89k    66.39%
+  48200 requests in 15.00s, 9.10MB read
+Requests/sec:   3213.07
+Transfer/sec:    621.28KB
+
+---------------------------------------------------------
+ Concurrency: 32 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.07ms    6.66ms  45.76ms   89.77%
+    Req/Sec   421.25    153.51     0.89k    69.39%
+  47811 requests in 15.01s, 9.03MB read
+Requests/sec:   3185.40
+Transfer/sec:    615.93KB
+
+---------------------------------------------------------
+ Concurrency: 64 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.33ms   12.92ms  69.54ms   89.80%
+    Req/Sec   419.07    230.71     0.90k    63.84%
+  47709 requests in 15.00s, 9.01MB read
+Requests/sec:   3180.20
+Transfer/sec:    614.92KB
+
+---------------------------------------------------------
+ Concurrency: 128 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    52.95ms   32.53ms 114.08ms   68.52%
+    Req/Sec   416.46    368.08     1.78k    62.94%
+  47202 requests in 15.02s, 8.91MB read
+Requests/sec:   3142.75
+Transfer/sec:    607.68KB
+
+---------------------------------------------------------
+ Concurrency: 256 for hapi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   123.92ms   60.37ms 191.31ms   46.00%
+    Req/Sec   404.11    518.29     3.56k    83.90%
+  45874 requests in 15.02s, 8.66MB read
+Requests/sec:   3053.50
+Transfer/sec:    590.42KB

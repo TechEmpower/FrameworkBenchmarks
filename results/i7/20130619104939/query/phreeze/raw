@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 12:53:27 PDT 2013
+
+  System load:  0.18                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phreeze
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.64ms   81.84ms 381.25ms   88.17%
+    Req/Sec   250.94    105.44   444.00     84.40%
+  9572 requests in 5.00s, 4.25MB read
+Requests/sec:   1913.44
+Transfer/sec:    869.84KB
+
+---------------------------------------------------------
+ Running Warmup phreeze
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.81s     2.79s    5.76s    33.93%
+    Req/Sec   211.16    250.56     2.00k    82.55%
+  16218 requests in 15.41s, 7.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 365
+Requests/sec:   1052.76
+Transfer/sec:    478.63KB
+
+---------------------------------------------------------
+ Queries: 1 for phreeze
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.49s     3.22s    8.30s    79.97%
+    Req/Sec    89.21    201.59     2.22k    83.90%
+  11883 requests in 15.83s, 4.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1045
+Requests/sec:    750.55
+Transfer/sec:    315.01KB
+
+---------------------------------------------------------
+ Queries: 5 for phreeze
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.66s     2.89s    6.26s    60.35%
+    Req/Sec   129.07    190.50     1.40k    82.20%
+  16231 requests in 16.00s, 8.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 820
+Requests/sec:   1014.25
+Transfer/sec:    567.42KB
+
+---------------------------------------------------------
+ Queries: 10 for phreeze
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.88s     2.68s    7.34s    51.37%
+    Req/Sec   103.11    154.32     2.33k    84.01%
+  11206 requests in 16.00s, 8.04MB read
+  Socket errors: connect 0, read 0, write 0, timeout 566
+Requests/sec:    700.23
+Transfer/sec:    514.76KB
+
+---------------------------------------------------------
+ Queries: 15 for phreeze
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.51s     3.60s    7.61s    59.19%
+    Req/Sec    94.44    146.16     2.60k    86.58%
+  10957 requests in 15.01s, 9.73MB read
+  Socket errors: connect 0, read 0, write 0, timeout 788
+Requests/sec:    729.85
+Transfer/sec:    664.00KB
+
+---------------------------------------------------------
+ Queries: 20 for phreeze
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.79s     3.91s   12.26s    60.65%
+    Req/Sec    66.98    118.49     0.89k    81.59%
+  7797 requests in 15.02s, 8.26MB read
+  Socket errors: connect 0, read 0, write 0, timeout 658
+Requests/sec:    519.18
+Transfer/sec:    563.05KB

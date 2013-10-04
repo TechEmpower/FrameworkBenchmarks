@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 01:55:22 UTC 2013
+
+  System load:  0.38               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.69ms    8.42ms  61.42ms   94.69%
+    Req/Sec   293.35    147.89     1.00k    64.25%
+  10597 requests in 5.00s, 1.13MB read
+Requests/sec:   2119.09
+Transfer/sec:    231.78KB
+
+---------------------------------------------------------
+ Running Warmup finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.68ms   23.13ms 663.88ms   99.10%
+    Req/Sec     3.17k   816.71     7.22k    73.09%
+  346977 requests in 15.00s, 37.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:  23132.05
+Transfer/sec:      2.47MB
+
+---------------------------------------------------------
+ Concurrency: 8 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   616.04us  361.43us  10.69ms   97.14%
+    Req/Sec     1.71k   238.15     2.56k    76.67%
+  193543 requests in 15.00s, 20.67MB read
+Requests/sec:  12903.79
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Concurrency: 16 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.20ms   58.01ms 214.37ms   91.90%
+    Req/Sec     2.00k   684.93     3.22k    84.05%
+  227874 requests in 15.00s, 24.34MB read
+Requests/sec:  15192.61
+Transfer/sec:      1.62MB
+
+---------------------------------------------------------
+ Concurrency: 32 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.45ms   50.14ms 213.46ms   93.96%
+    Req/Sec     2.28k   749.54     4.11k    82.65%
+  260375 requests in 15.00s, 27.81MB read
+Requests/sec:  17359.84
+Transfer/sec:      1.85MB
+
+---------------------------------------------------------
+ Concurrency: 64 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.13ms   10.69ms 108.82ms   98.11%
+    Req/Sec     2.77k   609.58     5.44k    76.95%
+  313950 requests in 15.00s, 33.53MB read
+Requests/sec:  20933.28
+Transfer/sec:      2.24MB
+
+---------------------------------------------------------
+ Concurrency: 128 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.58ms    3.39ms  35.40ms   76.08%
+    Req/Sec     3.04k   594.65     5.50k    72.70%
+  342740 requests in 15.00s, 36.61MB read
+Requests/sec:  22850.70
+Transfer/sec:      2.44MB
+
+---------------------------------------------------------
+ Concurrency: 256 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.58ms    8.02ms 647.57ms   89.43%
+    Req/Sec     3.15k     0.85k    8.33k    74.31%
+  356998 requests in 15.00s, 38.13MB read
+Requests/sec:  23802.69
+Transfer/sec:      2.54MB

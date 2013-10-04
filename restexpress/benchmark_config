@@ -1,0 +1,61 @@
+{
+  "framework": "restexpress",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/restexpress/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "rest-express",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rest-express",
+      "notes": "",
+      "versus": "netty"
+    },
+    "mysql-raw": {
+      "setup_file": "setup",
+      "db_url": "/restexpress/mysql",
+      "query_url": "/restexpress/mysql?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "rest-express",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rest-express",
+      "notes": "",
+      "versus": "netty"
+    },
+    "mongodb": {
+      "setup_file": "setup",
+      "db_url": "/restexpress/mongodb",
+      "query_url": "/restexpress/mongodb?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "rest-express",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rest-express",
+      "notes": "",
+      "versus": "netty"
+    }
+  }]
+}

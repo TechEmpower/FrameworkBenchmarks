@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 07:53:54 PDT 2013
+
+  System load:  0.27                Processes:           138
+  Usage of /:   11.3% of 129.62GB   Users logged in:     1
+  Memory usage: 12%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.40ms    1.33ms  14.99ms   90.05%
+    Req/Sec   323.27     78.23   555.00     71.21%
+  11829 requests in 5.00s, 16.41MB read
+Requests/sec:   2365.06
+Transfer/sec:      3.28MB
+
+---------------------------------------------------------
+ Running Warmup ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.78ms  241.27ms   1.85s    96.30%
+    Req/Sec   442.98    218.35     1.50k    60.35%
+  50149 requests in 15.00s, 69.59MB read
+Requests/sec:   3342.37
+Transfer/sec:      4.64MB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.11ms    1.13ms  18.86ms   91.86%
+    Req/Sec   349.54     72.05   555.00     73.46%
+  39776 requests in 15.00s, 55.19MB read
+Requests/sec:   2651.51
+Transfer/sec:      3.68MB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.19ms    2.99ms  43.28ms   88.62%
+    Req/Sec   427.87    117.47   800.00     61.75%
+  48695 requests in 15.00s, 67.57MB read
+Requests/sec:   3245.90
+Transfer/sec:      4.50MB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.88ms   20.03ms 233.27ms   94.71%
+    Req/Sec   438.99    179.38     1.22k    69.20%
+  49961 requests in 15.00s, 69.33MB read
+Requests/sec:   3330.18
+Transfer/sec:      4.62MB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.36ms   40.70ms 349.33ms   93.52%
+    Req/Sec   441.34    208.61     1.33k    62.40%
+  50176 requests in 15.00s, 69.62MB read
+Requests/sec:   3344.34
+Transfer/sec:      4.64MB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.94ms   87.85ms 913.16ms   92.76%
+    Req/Sec   440.14    220.79     1.55k    66.25%
+  50092 requests in 15.00s, 69.51MB read
+Requests/sec:   3338.65
+Transfer/sec:      4.63MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    98.80ms  149.31ms 854.48ms   91.07%
+    Req/Sec   443.11    223.86     1.44k    70.81%
+  50094 requests in 15.01s, 69.51MB read
+Requests/sec:   3338.40
+Transfer/sec:      4.63MB

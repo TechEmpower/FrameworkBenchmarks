@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-23-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 14:43:21 PDT 2013
+
+  System load:  2.37                Processes:           128
+  Usage of /:   10.1% of 131.63GB   Users logged in:     1
+  Memory usage: 32%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+121 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/compojure/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/compojure/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.10ms  247.06us   4.06ms   88.10%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  35266 requests in 5.00s, 7.05MB read
+Requests/sec:   7053.48
+Transfer/sec:      1.41MB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/compojure/db/2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.03ms   42.40ms 539.75ms   92.46%
+    Req/Sec     1.03k   177.55     2.00k    96.76%
+  446741 requests in 30.00s, 89.28MB read
+Requests/sec:  14891.91
+Transfer/sec:      2.98MB
+
+---------------------------------------------------------
+ Queries: 1 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.74ms   28.74ms 701.55ms   91.94%
+    Req/Sec     2.91k   306.83     4.00k    89.70%
+  746621 requests in 30.00s, 126.58MB read
+Requests/sec:  24889.10
+Transfer/sec:      4.22MB
+
+---------------------------------------------------------
+ Queries: 5 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/compojure/db/5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.63ms   53.89ms 569.30ms   88.41%
+    Req/Sec    11.28    105.63     1.00k    98.87%
+  202520 requests in 30.00s, 59.08MB read
+Requests/sec:   6750.52
+Transfer/sec:      1.97MB
+
+---------------------------------------------------------
+ Queries: 10 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/compojure/db/10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.40ms   78.71ms 771.53ms   88.62%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  105985 requests in 30.00s, 46.98MB read
+Requests/sec:   3532.61
+Transfer/sec:      1.57MB
+
+---------------------------------------------------------
+ Queries: 15 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/compojure/db/15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   102.04ms   94.67ms 753.83ms   84.94%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  70674 requests in 30.00s, 42.03MB read
+Requests/sec:   2355.59
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Queries: 20 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/compojure/db/20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/compojure/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   128.84ms  105.74ms 859.76ms   81.70%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  54481 requests in 30.00s, 40.66MB read
+Requests/sec:   1815.91
+Transfer/sec:      1.36MB

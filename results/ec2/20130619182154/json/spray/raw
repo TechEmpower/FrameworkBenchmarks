@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+49 packages can be updated.
+22 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spray
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.30ms    3.83ms  34.45ms   93.55%
+    Req/Sec     0.90k   733.73     2.89k    80.99%
+  31477 requests in 5.00s, 5.46MB read
+Requests/sec:   6296.72
+Transfer/sec:      1.09MB
+
+---------------------------------------------------------
+ Running Warmup spray
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.83ms   29.48ms 510.15ms   98.37%
+    Req/Sec     4.44k     1.40k    9.11k    71.80%
+  483837 requests in 15.00s, 83.98MB read
+Requests/sec:  32259.02
+Transfer/sec:      5.60MB
+
+---------------------------------------------------------
+ Concurrency: 8 for spray
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.17ms   20.63ms 156.94ms   98.21%
+    Req/Sec     2.53k   404.97     3.00k    96.33%
+  285996 requests in 15.00s, 49.64MB read
+Requests/sec:  19067.28
+Transfer/sec:      3.31MB
+
+---------------------------------------------------------
+ Concurrency: 16 for spray
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.23ms   22.92ms 201.34ms   98.68%
+    Req/Sec     3.55k   709.11     4.67k    80.15%
+  403431 requests in 15.00s, 70.02MB read
+Requests/sec:  26896.97
+Transfer/sec:      4.67MB
+
+---------------------------------------------------------
+ Concurrency: 32 for spray
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07ms  801.25us  18.43ms   97.54%
+    Req/Sec     4.06k     0.86k    7.89k    69.30%
+  460492 requests in 15.00s, 79.93MB read
+Requests/sec:  30701.30
+Transfer/sec:      5.33MB
+
+---------------------------------------------------------
+ Concurrency: 64 for spray
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.38ms   21.04ms 190.84ms   98.74%
+    Req/Sec     4.39k     1.21k    8.30k    70.02%
+  498398 requests in 15.00s, 86.51MB read
+Requests/sec:  33230.10
+Transfer/sec:      5.77MB
+
+---------------------------------------------------------
+ Concurrency: 128 for spray
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.70ms    1.43ms  15.60ms   74.80%
+    Req/Sec     4.70k     0.99k    7.78k    64.08%
+  527999 requests in 15.00s, 91.64MB read
+Requests/sec:  35204.44
+Transfer/sec:      6.11MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spray
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.74ms    4.17ms 184.19ms   83.49%
+    Req/Sec     4.56k     1.24k    8.22k    66.95%
+  511828 requests in 15.00s, 88.84MB read
+Requests/sec:  34123.00
+Transfer/sec:      5.92MB

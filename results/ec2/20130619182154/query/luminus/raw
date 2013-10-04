@@ -1,0 +1,125 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 08:35:15 UTC 2013
+
+  System load:  0.39               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+49 packages can be updated.
+22 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/luminus/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/luminus/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.50ms    3.91ms  36.33ms   96.81%
+    Req/Sec   267.35     77.34   600.00     89.22%
+  9951 requests in 5.00s, 1.99MB read
+Requests/sec:   1990.13
+Transfer/sec:    407.29KB
+
+---------------------------------------------------------
+ Running Warmup luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/db/2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   401.97ms  854.53ms   3.46s    88.38%
+    Req/Sec   316.94    266.85     2.44k    76.39%
+  33024 requests in 15.01s, 6.60MB read
+  Socket errors: connect 0, read 0, write 0, timeout 39
+Requests/sec:   2200.54
+Transfer/sec:    450.33KB
+
+---------------------------------------------------------
+ Queries: 1 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   102.98ms  132.48ms 685.27ms   92.83%
+    Req/Sec   461.30    283.40     2.67k    69.57%
+  52241 requests in 15.00s, 8.86MB read
+Requests/sec:   3482.74
+Transfer/sec:    604.65KB
+
+---------------------------------------------------------
+ Queries: 5 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/db/5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   828.07ms    1.05s    3.28s    76.64%
+    Req/Sec   144.02    127.01     1.00k    56.68%
+  16229 requests in 15.01s, 4.73MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:   1081.57
+Transfer/sec:    323.09KB
+
+---------------------------------------------------------
+ Queries: 10 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/db/10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.43s     1.11s    3.09s    49.97%
+    Req/Sec    78.87     93.20     1.44k    82.34%
+  8881 requests in 15.02s, 3.94MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    591.30
+Transfer/sec:    268.39KB
+
+---------------------------------------------------------
+ Queries: 15 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/db/15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.01s     1.20s    3.42s    54.32%
+    Req/Sec    54.28     74.78   600.00     90.33%
+  6093 requests in 15.03s, 3.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 11
+Requests/sec:    405.31
+Transfer/sec:    246.87KB
+
+---------------------------------------------------------
+ Queries: 20 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/db/20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.24s     1.04s    3.31s    64.12%
+    Req/Sec    40.78     64.77   600.00     82.58%
+  4581 requests in 15.04s, 3.42MB read
+  Socket errors: connect 0, read 0, write 0, timeout 16
+Requests/sec:    304.51
+Transfer/sec:    232.70KB

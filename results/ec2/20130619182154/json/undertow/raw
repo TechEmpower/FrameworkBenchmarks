@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 07:54:20 UTC 2013
+
+  System load:  0.0                Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+49 packages can be updated.
+22 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer undertow
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.42ms    5.30ms  29.48ms   87.81%
+    Req/Sec     0.90k   499.82     2.89k    65.04%
+  32202 requests in 5.01s, 3.72MB read
+Requests/sec:   6433.44
+Transfer/sec:    760.20KB
+
+---------------------------------------------------------
+ Running Warmup undertow
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.19ms    2.48ms 219.67ms   77.31%
+    Req/Sec     6.38k     1.01k   12.44k    79.95%
+  712350 requests in 15.00s, 82.20MB read
+Requests/sec:  47505.45
+Transfer/sec:      5.48MB
+
+---------------------------------------------------------
+ Concurrency: 8 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.66ms   29.18ms 201.98ms   97.85%
+    Req/Sec     2.90k   489.64     3.44k    95.57%
+  328444 requests in 15.00s, 37.90MB read
+Requests/sec:  21897.90
+Transfer/sec:      2.53MB
+
+---------------------------------------------------------
+ Concurrency: 16 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   491.16us  311.31us  12.33ms   95.36%
+    Req/Sec     4.10k   798.87     6.33k    66.55%
+  465629 requests in 15.00s, 53.73MB read
+Requests/sec:  31044.09
+Transfer/sec:      3.58MB
+
+---------------------------------------------------------
+ Concurrency: 32 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   790.77us  693.30us  13.17ms   91.05%
+    Req/Sec     5.39k     1.36k    9.78k    66.30%
+  612711 requests in 15.00s, 70.70MB read
+Requests/sec:  40853.32
+Transfer/sec:      4.71MB
+
+---------------------------------------------------------
+ Concurrency: 64 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.19ms  190.83ms 830.00ms   94.36%
+    Req/Sec     5.35k     1.83k   11.33k    75.49%
+  608257 requests in 15.00s, 70.19MB read
+Requests/sec:  40555.60
+Transfer/sec:      4.68MB
+
+---------------------------------------------------------
+ Concurrency: 128 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.79ms    1.50ms  21.16ms   83.70%
+    Req/Sec     6.12k     1.31k   16.56k    69.07%
+  693763 requests in 15.00s, 80.06MB read
+Requests/sec:  46258.20
+Transfer/sec:      5.34MB
+
+---------------------------------------------------------
+ Concurrency: 256 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.46ms    3.40ms 624.40ms   89.70%
+    Req/Sec     6.15k     0.88k   12.44k    77.99%
+  698091 requests in 15.00s, 80.56MB read
+Requests/sec:  46544.14
+Transfer/sec:      5.37MB

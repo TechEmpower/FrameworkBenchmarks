@@ -1,0 +1,5 @@
+<%
+response->headers["Server"]="cppsp/0.2";
+response->headers["Content-Type"]="text/plain";
+%>Hello, World!
+

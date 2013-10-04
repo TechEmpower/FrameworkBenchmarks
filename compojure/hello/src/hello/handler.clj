@@ -137,6 +137,10 @@ message text, and then return the results."
 ; Define route handlers
 (defroutes app-routes
   (GET "/" [] "Hello, World!")
+  (GET "/plaintext" []
+       {:status 200
+        :headers {"Content-Type" "text/plain; charset=utf-8"}
+        :body "Hello, World!"})
   (GET "/json" [] (response {:message "Hello, World!"}))
   (GET "/db/:queries" [queries] (response (run-queries (get-query-count queries))))
   (GET "/dbraw/:queries" [queries] (response (run-queries-raw (get-query-count queries))))

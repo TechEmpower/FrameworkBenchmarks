@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 10:55:47 PDT 2013
+
+  System load:  0.14                Processes:           134
+  Usage of /:   11.5% of 129.62GB   Users logged in:     1
+  Memory usage: 4%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/entityframework/postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   631.63ms  897.18ms   2.14s    69.27%
+    Req/Sec    74.15     69.82   222.00     47.03%
+  2111 requests in 5.02s, 673.59KB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    420.89
+Transfer/sec:    134.30KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.53s     1.25s    3.29s    48.26%
+    Req/Sec    87.45    107.54     0.89k    78.57%
+  9875 requests in 15.06s, 3.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    655.85
+Transfer/sec:    209.30KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.41ms   28.08ms 113.22ms   81.57%
+    Req/Sec   105.98     64.72   222.00     62.26%
+  12068 requests in 15.01s, 3.76MB read
+Requests/sec:    804.06
+Transfer/sec:    256.56KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.52ms   40.93ms 123.37ms   74.58%
+    Req/Sec   114.86     84.41   444.00     44.16%
+  13076 requests in 15.02s, 4.07MB read
+Requests/sec:    870.50
+Transfer/sec:    277.76KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   103.62ms  104.92ms 281.35ms   69.12%
+    Req/Sec   113.79     99.03   555.00     51.71%
+  12978 requests in 15.01s, 4.04MB read
+Requests/sec:    864.67
+Transfer/sec:    275.90KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   336.19ms  328.62ms 942.75ms   74.63%
+    Req/Sec   100.12    103.32   600.00     84.63%
+  11384 requests in 15.01s, 3.55MB read
+Requests/sec:    758.45
+Transfer/sec:    242.02KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07s   985.29ms   2.24s    37.01%
+    Req/Sec    90.59    106.66   700.00     77.88%
+  10213 requests in 15.06s, 3.18MB read
+  Socket errors: connect 0, read 0, write 0, timeout 5
+Requests/sec:    678.15
+Transfer/sec:    216.40KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.78s     1.51s    4.89s    60.60%
+    Req/Sec    84.68    108.84     0.89k    79.21%
+  9542 requests in 15.07s, 2.97MB read
+  Socket errors: connect 0, read 0, write 0, timeout 18
+Requests/sec:    633.03
+Transfer/sec:    202.02KB

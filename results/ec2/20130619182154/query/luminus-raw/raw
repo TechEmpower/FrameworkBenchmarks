@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 08:43:22 UTC 2013
+
+  System load:  0.8                Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+49 packages can be updated.
+22 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/luminus/dbraw/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/luminus/dbraw/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.76ms    1.00ms  13.53ms   86.26%
+    Req/Sec   391.46     80.36   700.00     68.23%
+  14711 requests in 5.00s, 2.94MB read
+Requests/sec:   2941.99
+Transfer/sec:    602.07KB
+
+---------------------------------------------------------
+ Running Warmup luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/dbraw/2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/dbraw/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   143.69ms  220.67ms 979.11ms   90.08%
+    Req/Sec   377.48    236.79     2.22k    69.26%
+  42702 requests in 15.00s, 8.53MB read
+Requests/sec:   2846.90
+Transfer/sec:    582.61KB
+
+---------------------------------------------------------
+ Queries: 1 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/dbraw/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   133.39ms  316.51ms   1.73s    92.68%
+    Req/Sec   551.74    348.31     2.78k    72.13%
+  62574 requests in 15.00s, 10.61MB read
+Requests/sec:   4171.84
+Transfer/sec:    724.29KB
+
+---------------------------------------------------------
+ Queries: 5 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/dbraw/5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/dbraw/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   519.07ms  974.41ms   3.66s    90.23%
+    Req/Sec   209.53    155.83     1.55k    70.41%
+  22308 requests in 15.00s, 6.51MB read
+  Socket errors: connect 0, read 0, write 0, timeout 32
+Requests/sec:   1486.81
+Transfer/sec:    444.14KB
+
+---------------------------------------------------------
+ Queries: 10 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/dbraw/10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/dbraw/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   621.49ms  460.63ms   1.31s    54.19%
+    Req/Sec   109.13    103.53   600.00     49.07%
+  12309 requests in 15.02s, 5.46MB read
+Requests/sec:    819.49
+Transfer/sec:    371.97KB
+
+---------------------------------------------------------
+ Queries: 15 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/dbraw/15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/dbraw/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   902.18ms  535.90ms   1.78s    59.35%
+    Req/Sec    77.79     88.06   600.00     83.06%
+  8711 requests in 15.01s, 5.18MB read
+Requests/sec:    580.26
+Transfer/sec:    353.40KB
+
+---------------------------------------------------------
+ Queries: 20 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/luminus/dbraw/20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/luminus/dbraw/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.17s   554.22ms   1.95s    67.07%
+    Req/Sec    58.57     77.28   555.00     89.33%
+  6539 requests in 15.02s, 4.88MB read
+Requests/sec:    435.25
+Transfer/sec:    332.65KB

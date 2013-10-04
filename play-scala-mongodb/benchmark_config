@@ -6,7 +6,19 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 9000,
-      "sort": 83
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MongoDB",
+      "framework": "play-scala",
+      "language": "Scala",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "play-scala",
+      "notes": "",
+      "versus": "netty"
     }
   }]
 }

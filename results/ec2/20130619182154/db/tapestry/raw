@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 23:25:17 UTC 2013
+
+  System load:  0.06               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tapestry
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/tapestry/hellodb
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.47ms    8.12ms  47.98ms   94.94%
+    Req/Sec   170.39     91.14   555.00     81.81%
+  6267 requests in 5.00s, 1.19MB read
+Requests/sec:   1252.29
+Transfer/sec:    243.10KB
+
+---------------------------------------------------------
+ Running Warmup tapestry
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/tapestry/hellodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   471.66ms  835.23ms   2.96s    85.24%
+    Req/Sec   249.95    186.26     1.30k    68.10%
+  28186 requests in 15.01s, 5.35MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:   1877.91
+Transfer/sec:    365.12KB
+
+---------------------------------------------------------
+ Concurrency: 8 for tapestry
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/tapestry/hellodb
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.02ms    2.88ms  39.45ms   96.39%
+    Req/Sec   380.73     78.97   555.00     75.25%
+  43229 requests in 15.00s, 8.19MB read
+Requests/sec:   2881.98
+Transfer/sec:    559.43KB
+
+---------------------------------------------------------
+ Concurrency: 16 for tapestry
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/tapestry/hellodb
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.67ms    7.37ms  60.36ms   94.34%
+    Req/Sec   454.96    160.60     1.00k    75.22%
+  51793 requests in 15.00s, 9.82MB read
+Requests/sec:   3453.10
+Transfer/sec:    670.35KB
+
+---------------------------------------------------------
+ Concurrency: 32 for tapestry
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/tapestry/hellodb
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.15ms   48.69ms 288.39ms   93.73%
+    Req/Sec   479.82    251.09     1.67k    65.09%
+  54489 requests in 15.00s, 10.33MB read
+Requests/sec:   3632.15
+Transfer/sec:    705.25KB
+
+---------------------------------------------------------
+ Concurrency: 64 for tapestry
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/tapestry/hellodb
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.46ms   86.51ms 477.17ms   93.85%
+    Req/Sec   480.40    261.23     1.67k    68.74%
+  54688 requests in 15.00s, 10.37MB read
+Requests/sec:   3645.16
+Transfer/sec:    707.98KB
+
+---------------------------------------------------------
+ Concurrency: 128 for tapestry
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/tapestry/hellodb
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    53.48ms  108.90ms 637.88ms   92.98%
+    Req/Sec   477.80    247.49     1.90k    66.65%
+  54223 requests in 15.00s, 10.29MB read
+Requests/sec:   3615.02
+Transfer/sec:    702.82KB
+
+---------------------------------------------------------
+ Concurrency: 256 for tapestry
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/tapestry/hellodb
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/tapestry/hellodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   108.76ms  198.47ms   1.80s    96.37%
+    Req/Sec   442.14    234.42     3.00k    69.83%
+  50259 requests in 15.00s, 9.55MB read
+Requests/sec:   3350.29
+Transfer/sec:    651.62KB

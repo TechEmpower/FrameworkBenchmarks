@@ -1,0 +1,24 @@
+{
+  "framework": "play",
+  "tests": [{
+    "jpa": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 9000,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "play-java",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "play-java-jpa",
+      "notes": "JPA alternate",
+      "versus": "netty"
+    }
+  }]
+}

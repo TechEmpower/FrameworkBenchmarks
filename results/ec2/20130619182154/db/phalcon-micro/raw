@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 06:27:18 UTC 2013
+
+  System load:  0.07               Processes:           76
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.79ms   55.73ms 250.86ms   94.51%
+    Req/Sec   308.68    113.32   666.00     79.43%
+  11740 requests in 5.00s, 2.55MB read
+Requests/sec:   2347.91
+Transfer/sec:    522.16KB
+
+---------------------------------------------------------
+ Running Warmup phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   190.63ms  229.19ms   1.21s    92.33%
+    Req/Sec   267.75    172.52     1.11k    73.52%
+  29761 requests in 15.00s, 6.46MB read
+Requests/sec:   1983.46
+Transfer/sec:    441.11KB
+
+---------------------------------------------------------
+ Concurrency: 8 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.28ms   16.27ms 143.78ms   98.58%
+    Req/Sec   323.16     99.21   777.00     61.28%
+  36771 requests in 15.00s, 7.99MB read
+Requests/sec:   2451.43
+Transfer/sec:    545.17KB
+
+---------------------------------------------------------
+ Concurrency: 16 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.77ms    2.97ms  35.81ms   78.22%
+    Req/Sec   329.65    110.72     0.90k    66.62%
+  37551 requests in 15.00s, 8.16MB read
+Requests/sec:   2502.99
+Transfer/sec:    556.64KB
+
+---------------------------------------------------------
+ Concurrency: 32 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.06ms   26.58ms 193.57ms   97.64%
+    Req/Sec   332.80    140.43     1.40k    82.01%
+  37870 requests in 15.00s, 8.22MB read
+Requests/sec:   2524.00
+Transfer/sec:    561.31KB
+
+---------------------------------------------------------
+ Concurrency: 64 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.50ms   13.21ms  75.01ms   73.69%
+    Req/Sec   329.10    166.96     1.22k    66.90%
+  37457 requests in 15.00s, 8.14MB read
+Requests/sec:   2496.79
+Transfer/sec:    555.29KB
+
+---------------------------------------------------------
+ Concurrency: 128 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    82.22ms   81.02ms 359.02ms   91.68%
+    Req/Sec   284.76    180.42     1.33k    68.45%
+  32415 requests in 15.00s, 7.04MB read
+Requests/sec:   2160.74
+Transfer/sec:    480.55KB
+
+---------------------------------------------------------
+ Concurrency: 256 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   204.46ms  206.09ms 804.76ms   86.89%
+    Req/Sec   268.26    200.09     1.33k    71.82%
+  30450 requests in 15.00s, 6.61MB read
+Requests/sec:   2029.70
+Transfer/sec:    451.40KB

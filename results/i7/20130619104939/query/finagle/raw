@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 12:21:43 PDT 2013
+
+  System load:  7.97                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   843.01us  196.27us   8.93ms   83.13%
+    Req/Sec     1.25k   110.47     1.55k    73.75%
+  46944 requests in 5.00s, 6.70MB read
+Requests/sec:   9389.00
+Transfer/sec:      1.34MB
+
+---------------------------------------------------------
+ Running Warmup finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.26ms  105.97ms   1.51s    99.16%
+    Req/Sec     5.71k     1.19k   11.67k    77.75%
+  645925 requests in 15.00s, 92.12MB read
+Requests/sec:  43062.75
+Transfer/sec:      6.14MB
+
+---------------------------------------------------------
+ Queries: 1 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.30ms   15.63ms 653.39ms   98.93%
+    Req/Sec     8.50k     1.46k   15.11k    75.94%
+  963020 requests in 15.00s, 108.16MB read
+Requests/sec:  64204.21
+Transfer/sec:      7.21MB
+
+---------------------------------------------------------
+ Queries: 5 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.88ms   35.78ms 665.58ms   97.10%
+    Req/Sec     2.76k   653.99     6.11k    72.86%
+  311213 requests in 15.00s, 72.97MB read
+Requests/sec:  20748.21
+Transfer/sec:      4.86MB
+
+---------------------------------------------------------
+ Queries: 10 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.44ms   32.02ms 711.42ms   95.88%
+    Req/Sec     1.48k   400.69     3.40k    69.41%
+  164959 requests in 15.00s, 63.67MB read
+Requests/sec:  10998.32
+Transfer/sec:      4.25MB
+
+---------------------------------------------------------
+ Queries: 15 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.85ms   50.71ms   1.65s    95.49%
+    Req/Sec     1.02k   343.10     2.67k    70.30%
+  115794 requests in 15.00s, 62.24MB read
+Requests/sec:   7719.69
+Transfer/sec:      4.15MB
+
+---------------------------------------------------------
+ Queries: 20 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.49ms   69.87ms 739.23ms   95.55%
+    Req/Sec   785.47    314.21     2.44k    67.36%
+  88727 requests in 15.00s, 61.13MB read
+Requests/sec:   5914.39
+Transfer/sec:      4.07MB

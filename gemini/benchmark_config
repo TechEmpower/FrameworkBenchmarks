@@ -5,10 +5,24 @@
       "setup_file": "setup",
       "json_url": "/",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/query?queries=",
       "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 0
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "gemini",
+      "language": "Java",
+      "orm": "Micro",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "gemini",
+      "notes": "",
+      "versus": "servlet"
     }
   }]
 }

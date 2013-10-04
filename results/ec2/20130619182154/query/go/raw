@@ -1,0 +1,113 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/queries?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/queries?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.29ms   66.14ms 218.79ms   89.54%
+    Req/Sec   582.92    220.27     0.90k    87.75%
+  22402 requests in 5.00s, 3.71MB read
+Requests/sec:   4480.94
+Transfer/sec:    759.43KB
+
+---------------------------------------------------------
+ Running Warmup go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/queries?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/queries?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.47ms   51.56ms 405.78ms   91.55%
+    Req/Sec   712.98    355.16     2.44k    66.81%
+  81044 requests in 14.99s, 13.41MB read
+Requests/sec:   5405.37
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Queries: 1 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/queries?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/queries?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.86ms   39.46ms 360.87ms   91.39%
+    Req/Sec     1.19k   514.31     3.20k    68.79%
+  134902 requests in 15.01s, 17.98MB read
+Requests/sec:   8988.07
+Transfer/sec:      1.20MB
+
+---------------------------------------------------------
+ Queries: 5 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/queries?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/queries?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   122.12ms   83.97ms 397.12ms   85.96%
+    Req/Sec   336.08    223.24     1.55k    63.08%
+  38108 requests in 15.01s, 9.81MB read
+Requests/sec:   2539.06
+Transfer/sec:    669.14KB
+
+---------------------------------------------------------
+ Queries: 10 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/queries?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/queries?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   273.40ms  172.16ms 634.74ms   74.65%
+    Req/Sec   179.64    151.76     1.10k    60.65%
+  20358 requests in 15.01s, 8.32MB read
+Requests/sec:   1356.14
+Transfer/sec:    567.78KB
+
+---------------------------------------------------------
+ Queries: 15 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/queries?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/queries?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   420.18ms  214.97ms 763.14ms   61.02%
+    Req/Sec   123.41    121.97     0.90k    53.19%
+  13902 requests in 15.03s, 7.79MB read
+Requests/sec:    924.98
+Transfer/sec:    530.80KB
+
+---------------------------------------------------------
+ Queries: 20 for go
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/queries?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/queries?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   543.82ms  230.01ms 897.56ms   55.80%
+    Req/Sec    94.06    103.41   777.00     77.16%
+  10594 requests in 15.01s, 7.54MB read
+Requests/sec:    705.75
+Transfer/sec:    514.47KB

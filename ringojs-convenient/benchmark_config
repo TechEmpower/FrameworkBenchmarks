@@ -1,0 +1,28 @@
+{
+  "framework": "ringojs-convenient",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db/",
+      "fortune_url": "/fortune",
+      "plaintext_url": "/plaintext",
+      "update_url": "/updates/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "ringo",
+      "language": "JavaScript",
+      "orm": "Micro",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ringo-conv",
+      "notes": "Convenient",
+      "versus": ""
+    }
+  }]
+}

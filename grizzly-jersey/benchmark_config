@@ -4,8 +4,23 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
       "port": 8080,
-      "sort": 38
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "grizzly-jersey",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "Grizzly",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "grizzly-jersey",
+      "notes": "",
+      "versus": "servlet"
     }
   }]
 }

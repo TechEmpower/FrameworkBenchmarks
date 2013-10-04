@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/servlet/postgres?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/servlet/postgres?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.36ms   10.62ms  83.38ms   98.30%
+    Req/Sec     1.06k   171.34     1.44k    94.43%
+  40241 requests in 5.00s, 7.47MB read
+Requests/sec:   8047.95
+Transfer/sec:      1.49MB
+
+---------------------------------------------------------
+ Running Warmup servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/postgres?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.81ms   89.92ms 716.33ms   95.97%
+    Req/Sec     3.62k     1.40k   10.18k    74.30%
+  393940 requests in 14.93s, 73.09MB read
+Requests/sec:  26391.82
+Transfer/sec:      4.90MB
+
+---------------------------------------------------------
+ Queries: 1 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/postgres?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.38ms   73.95ms 516.41ms   92.03%
+    Req/Sec     6.73k     3.71k   37.10k    72.91%
+  674489 requests in 15.00s, 104.70MB read
+Requests/sec:  44966.20
+Transfer/sec:      6.98MB
+
+---------------------------------------------------------
+ Queries: 5 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/postgres?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.98ms   54.83ms 908.23ms   96.78%
+    Req/Sec     1.58k   575.02     4.44k    72.76%
+  172023 requests in 15.01s, 47.72MB read
+Requests/sec:  11462.37
+Transfer/sec:      3.18MB
+
+---------------------------------------------------------
+ Queries: 10 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/postgres?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.81ms   41.77ms 470.02ms   95.72%
+    Req/Sec     1.04k   390.97     9.00k    76.11%
+  112667 requests in 15.00s, 48.32MB read
+Requests/sec:   7509.47
+Transfer/sec:      3.22MB
+
+---------------------------------------------------------
+ Queries: 15 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/postgres?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.39ms   34.35ms 326.84ms   88.00%
+    Req/Sec   753.39    351.54     7.44k    78.18%
+  82181 requests in 15.02s, 47.70MB read
+Requests/sec:   5472.91
+Transfer/sec:      3.18MB
+
+---------------------------------------------------------
+ Queries: 20 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/postgres?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/postgres?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    61.03ms   35.33ms 375.13ms   85.05%
+    Req/Sec   572.30    229.21     2.22k    70.40%
+  64759 requests in 15.00s, 47.40MB read
+Requests/sec:   4316.30
+Transfer/sec:      3.16MB

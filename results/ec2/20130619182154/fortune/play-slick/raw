@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+49 packages can be updated.
+22 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:9000/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    78.58ms   69.81ms 250.66ms   80.20%
+    Req/Sec    54.31     57.39   222.00     97.51%
+  1980 requests in 5.02s, 4.44MB read
+Requests/sec:    394.71
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Running Warmup play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   434.77ms  189.73ms 598.41ms   71.24%
+    Req/Sec   173.68    337.23     3.22k    87.98%
+  19190 requests in 15.06s, 43.06MB read
+Requests/sec:   1274.07
+Transfer/sec:      2.86MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.17ms    1.77ms  22.42ms   92.55%
+    Req/Sec   263.95     63.98   444.00     73.68%
+  29999 requests in 15.00s, 67.32MB read
+Requests/sec:   1999.84
+Transfer/sec:      4.49MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.76ms    3.21ms  42.06ms   90.34%
+    Req/Sec   283.81     90.23   666.00     75.69%
+  32353 requests in 15.00s, 72.60MB read
+Requests/sec:   2156.73
+Transfer/sec:      4.84MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.11ms    8.07ms  48.89ms   86.59%
+    Req/Sec   309.44    135.27     0.89k    79.72%
+  35125 requests in 15.00s, 78.82MB read
+Requests/sec:   2341.50
+Transfer/sec:      5.25MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.84ms   24.89ms 109.29ms   83.52%
+    Req/Sec   317.41    226.80     1.11k    67.03%
+  36092 requests in 15.00s, 80.99MB read
+Requests/sec:   2405.77
+Transfer/sec:      5.40MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    84.62ms   54.35ms 178.40ms   65.38%
+    Req/Sec   319.55    326.53     1.78k    83.43%
+  36310 requests in 15.01s, 81.48MB read
+Requests/sec:   2419.27
+Transfer/sec:      5.43MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   358.07ms  438.65ms   1.80s    75.34%
+    Req/Sec   329.55    429.21     3.00k    84.37%
+  37291 requests in 15.00s, 83.68MB read
+Requests/sec:   2486.23
+Transfer/sec:      5.58MB

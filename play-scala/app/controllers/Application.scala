@@ -34,7 +34,7 @@ object Application extends Controller {
   // # of db requests per web request to determine this threshold. It is a rough check as we don't know how many
   // queries we're going to make or what other threads are running in parallel etc. Nevertheless, the check is
   // adequate in order to throttle the acceptance of requests to the size of the pool.
-  def isDbAvailable: Boolean = (tpe.getQueue.size() < maxConnections * MaxQueriesPerRequest)
+  def isDbAvailable: Boolean = tpe.getQueue.size() < maxConnections * MaxQueriesPerRequest
 
 
   def json() = Action {
@@ -42,29 +42,51 @@ object Application extends Controller {
   }
 
   def db(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
-    Action {
-      Async {
-        val random = ThreadLocalRandom.current()
+    Action.async {
+      val random = ThreadLocalRandom.current()
 
-        val worlds = Future.sequence((for {
-          _ <- 1 to queries
-        } yield Future(World.findById(random.nextInt(TestDatabaseRows) + 1))(dbEc)
-          ).toList)
+      val worlds = Future.sequence((for {
+        _ <- 1 to queries
+      } yield Future(World.findById(random.nextInt(TestDatabaseRows) + 1))(dbEc)
+        ).toList)
 
-        worlds map {
-          w => Ok(Json.toJson(w))
-        }
+      worlds map {
+        w => Ok(Json.toJson(w))
       }
     }
   }
 
   def fortunes() = PredicatedAction(isDbAvailable, ServiceUnavailable) {
-    Action {
-      Async {
-        Future(Fortune.getAll())(dbEc).map { fs =>
-          val fortunes =  fs :+ Fortune(anorm.NotAssigned, "Additional fortune added at request time.")
-          Ok(views.html.fortune(fortunes))
-        }
+    Action.async {
+      Future(Fortune.getAll())(dbEc).map { fs =>
+        val fortunes =  Fortune(anorm.NotAssigned, "Additional fortune added at request time.") +: fs
+        Ok(views.html.fortune(fortunes))
+      }
+    }
+  }
+
+  def update(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
+    Action.async {
+      val random = ThreadLocalRandom.current()
+
+      val boundsCheckedQueries = queries match {
+        case q if q > 500 => 500
+        case q if q <   1 => 1
+        case _ => queries
+      }
+
+      val worlds = Future.sequence((for {
+        _ <- 1 to boundsCheckedQueries
+      } yield Future {
+          val world = World.findById(random.nextInt(TestDatabaseRows) + 1)
+          val updatedWorld = world.copy(randomNumber = random.nextInt(TestDatabaseRows) + 1)
+          World.updateRandom(updatedWorld)
+          updatedWorld
+        }(dbEc)
+      ).toList)
+
+      worlds.map {
+        w => Ok(Json.toJson(w)).withHeaders("Server" -> "Netty")
       }
     }
   }

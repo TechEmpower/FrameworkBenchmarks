@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 03:10:29 UTC 2013
+
+  System load:  0.0                Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   175.79ms   75.26ms 221.94ms   77.77%
+    Req/Sec    24.45     44.42   111.00     76.68%
+  903 requests in 5.01s, 220.23KB read
+Requests/sec:    180.33
+Transfer/sec:     43.98KB
+
+---------------------------------------------------------
+ Running Warmup lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.83s     1.13s    3.95s    74.13%
+    Req/Sec    33.23     60.74   500.00     73.51%
+  3633 requests in 15.04s, 0.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:    241.61
+Transfer/sec:     58.93KB
+
+---------------------------------------------------------
+ Concurrency: 8 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.04ms   52.34ms 160.86ms   60.84%
+    Req/Sec    36.53     50.08   200.00     65.15%
+  4159 requests in 15.01s, 0.99MB read
+Requests/sec:    277.03
+Transfer/sec:     67.56KB
+
+---------------------------------------------------------
+ Concurrency: 16 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   344.44ms  216.43ms 643.83ms   44.45%
+    Req/Sec    36.45     56.24   300.00     68.30%
+  4140 requests in 15.01s, 0.99MB read
+Requests/sec:    275.77
+Transfer/sec:     67.25KB
+
+---------------------------------------------------------
+ Concurrency: 32 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   768.80ms  462.68ms   1.49s    63.61%
+    Req/Sec    36.20     60.52   444.00     70.46%
+  4104 requests in 15.02s, 0.98MB read
+Requests/sec:    273.26
+Transfer/sec:     66.64KB
+
+---------------------------------------------------------
+ Concurrency: 64 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.33s   738.99ms   2.37s    65.18%
+    Req/Sec    35.48     61.62   666.00     71.50%
+  3992 requests in 15.02s, 0.95MB read
+Requests/sec:    265.86
+Transfer/sec:     64.85KB
+
+---------------------------------------------------------
+ Concurrency: 128 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.42s   669.45ms   2.49s    68.00%
+    Req/Sec    34.54     60.62   444.00     72.18%
+  3842 requests in 15.04s, 0.92MB read
+Requests/sec:    255.41
+Transfer/sec:     62.30KB
+
+---------------------------------------------------------
+ Concurrency: 256 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.37s     1.46s    4.82s    73.30%
+    Req/Sec    32.55     58.15   500.00     73.20%
+  3592 requests in 15.07s, 0.86MB read
+  Socket errors: connect 0, read 0, write 0, timeout 25
+Requests/sec:    238.33
+Transfer/sec:     58.14KB

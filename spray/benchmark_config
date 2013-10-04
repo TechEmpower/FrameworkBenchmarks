@@ -1,0 +1,24 @@
+{
+  "framework" : "spray",
+  "tests" : [{
+    "default" : {
+      "setup_file" : "setup",
+      "json_url" : "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "spray",
+      "language": "Scala",
+      "orm": "Raw",
+      "platform": "Spray",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "spray",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

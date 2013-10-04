@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+42 packages can be updated.
+21 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.255.5.228:16969/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.255.5.228:16969/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  25746 requests in 5.00s, 4.41MB read
+Requests/sec:   5150.84
+Transfer/sec:      0.88MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:16969/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:16969/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    63.71ms  104.44ms 751.13ms   96.59%
+    Req/Sec   263.91    464.64     3.00k    74.62%
+  80203 requests in 14.99s, 13.73MB read
+Requests/sec:   5350.24
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Queries: 1 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:16969/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:16969/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    89.67ms  247.00ms 974.71ms   92.35%
+    Req/Sec     1.39k     1.20k    6.00k    55.98%
+  148456 requests in 15.01s, 20.92MB read
+Requests/sec:   9889.42
+Transfer/sec:      1.39MB
+
+---------------------------------------------------------
+ Queries: 5 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:16969/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:16969/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  39736 requests in 15.01s, 10.45MB read
+Requests/sec:   2648.15
+Transfer/sec:    713.44KB
+
+---------------------------------------------------------
+ Queries: 10 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:16969/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:16969/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  21179 requests in 15.10s, 8.78MB read
+Requests/sec:   1403.04
+Transfer/sec:    595.72KB
+
+---------------------------------------------------------
+ Queries: 15 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:16969/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:16969/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  14419 requests in 15.04s, 8.16MB read
+Requests/sec:    958.67
+Transfer/sec:    555.79KB
+
+---------------------------------------------------------
+ Queries: 20 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.255.5.228:16969/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.255.5.228:16969/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  10900 requests in 15.07s, 7.82MB read
+Requests/sec:    723.50
+Transfer/sec:    531.69KB

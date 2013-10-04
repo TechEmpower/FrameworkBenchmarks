@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 11:13:28 PDT 2013
+
+  System load:  0.14                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   389.14us  197.99us   7.46ms   97.84%
+    Req/Sec     2.70k   313.19     4.00k    88.11%
+  97166 requests in 5.00s, 15.57MB read
+Requests/sec:  19434.96
+Transfer/sec:      3.11MB
+
+---------------------------------------------------------
+ Running Warmup http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.89ms    3.35ms 641.27ms   99.33%
+    Req/Sec    17.92k     3.02k   29.00k    71.10%
+  2014406 requests in 15.00s, 322.74MB read
+Requests/sec: 134307.37
+Transfer/sec:     21.52MB
+
+---------------------------------------------------------
+ Concurrency: 8 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   374.72us   63.04us   2.43ms   92.28%
+    Req/Sec     2.77k   147.97     3.44k    68.54%
+  313787 requests in 15.00s, 50.27MB read
+Requests/sec:  20919.44
+Transfer/sec:      3.35MB
+
+---------------------------------------------------------
+ Concurrency: 16 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   416.15us  165.43us   6.81ms   90.18%
+    Req/Sec     5.04k   577.56     7.33k    69.64%
+  572979 requests in 15.00s, 91.80MB read
+Requests/sec:  38199.30
+Transfer/sec:      6.12MB
+
+---------------------------------------------------------
+ Concurrency: 32 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   464.07us  269.62us   7.91ms   87.52%
+    Req/Sec     9.34k     1.95k   16.11k    66.74%
+  1060134 requests in 15.00s, 169.85MB read
+Requests/sec:  70678.14
+Transfer/sec:     11.32MB
+
+---------------------------------------------------------
+ Concurrency: 64 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   624.63us  384.64us   7.76ms   88.23%
+    Req/Sec    13.80k     2.61k   21.89k    69.12%
+  1561599 requests in 15.00s, 250.20MB read
+Requests/sec: 104113.03
+Transfer/sec:     16.68MB
+
+---------------------------------------------------------
+ Concurrency: 128 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.04ms  549.11us   9.12ms   83.42%
+    Req/Sec    16.34k     2.93k   30.44k    69.75%
+  1837550 requests in 15.00s, 294.41MB read
+Requests/sec: 122508.78
+Transfer/sec:     19.63MB
+
+---------------------------------------------------------
+ Concurrency: 256 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/http-kit/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/http-kit/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.86ms    2.84ms 626.20ms   98.89%
+    Req/Sec    18.07k     3.16k   32.33k    72.47%
+  2039737 requests in 15.00s, 326.80MB read
+Requests/sec: 135989.97
+Transfer/sec:     21.79MB

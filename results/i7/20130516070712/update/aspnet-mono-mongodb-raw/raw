@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue May 28 11:10:10 PDT 2013
+
+  System load:  0.07               Processes:           135
+  Usage of /:   8.9% of 129.62GB   Users logged in:     1
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+124 packages can be updated.
+65 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongodb/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongodb/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.73ms    4.20ms  48.83ms   92.80%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5487 requests in 5.00s, 1.89MB read
+Requests/sec:   1096.32
+Transfer/sec:    385.97KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongodb/update?queries=2
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongodb/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   206.86ms  219.72ms   1.55s    81.04%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36613 requests in 30.00s, 12.59MB read
+Requests/sec:   1220.30
+Transfer/sec:    429.64KB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongodb/update?queries=1
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongodb/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   187.49ms  200.40ms   1.08s    80.30%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  38301 requests in 30.00s, 12.01MB read
+Requests/sec:   1276.56
+Transfer/sec:    409.83KB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongodb/update?queries=5
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongodb/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   250.23ms  257.17ms   1.07s    81.52%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  31203 requests in 30.00s, 13.59MB read
+Requests/sec:   1039.99
+Transfer/sec:    463.99KB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongodb/update?queries=10
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongodb/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   298.58ms  227.46ms   1.33s    68.96%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  25275 requests in 30.00s, 14.84MB read
+Requests/sec:    842.41
+Transfer/sec:    506.58KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongodb/update?queries=15
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongodb/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   396.08ms  205.50ms   1.10s    68.97%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  18987 requests in 30.00s, 14.03MB read
+Requests/sec:    632.84
+Transfer/sec:    478.77KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://172.16.98.122:8080/mongodb/update?queries=20
+---------------------------------------------------------
+
+Running 30s test @ http://172.16.98.122:8080/mongodb/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   518.82ms  179.69ms   1.11s    72.65%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  14564 requests in 30.00s, 12.97MB read
+Requests/sec:    485.45
+Transfer/sec:    442.60KB

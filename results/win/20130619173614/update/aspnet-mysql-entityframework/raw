@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 21:06:40 UTC 2013
+
+  System load:  0.19               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 10%                IP address for eth0: 10.254.22.217
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.252.47.47:8080/entityframework/mysql/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.47.47:8080/entityframework/mysql/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1593 requests in 5.02s, 492.46KB read
+Requests/sec:    317.28
+Transfer/sec:     98.08KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/entityframework/mysql/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/mysql/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  4403 requests in 15.05s, 1.33MB read
+Requests/sec:    292.59
+Transfer/sec:     90.45KB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/entityframework/mysql/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/mysql/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  6759 requests in 15.04s, 1.84MB read
+Requests/sec:    449.43
+Transfer/sec:    124.99KB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/entityframework/mysql/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/mysql/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2464 requests in 15.31s, 0.97MB read
+Requests/sec:    160.97
+Transfer/sec:     64.90KB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/entityframework/mysql/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/mysql/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  1326 requests in 16.01s, 740.46KB read
+  Socket errors: connect 0, read 0, write 0, timeout 492
+Requests/sec:     82.84
+Transfer/sec:     46.26KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/entityframework/mysql/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/mysql/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  969 requests in 16.00s, 691.59KB read
+  Socket errors: connect 0, read 0, write 0, timeout 787
+Requests/sec:     60.55
+Transfer/sec:     43.21KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/entityframework/mysql/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/mysql/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  692 requests in 16.01s, 601.18KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1072
+Requests/sec:     43.23
+Transfer/sec:     37.55KB

@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 22:00:57 UTC 2013
+
+  System load:  0.57               Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/mongoose
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.69ms    1.85ms  20.09ms   75.90%
+    Req/Sec   333.70    153.68   777.00     77.66%
+  12211 requests in 5.00s, 2.70MB read
+Requests/sec:   2440.75
+Transfer/sec:    552.46KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   114.77ms   45.79ms 195.68ms   68.46%
+    Req/Sec   377.31    336.72     2.30k    59.19%
+  42665 requests in 15.01s, 9.43MB read
+Requests/sec:   2843.36
+Transfer/sec:    643.58KB
+
+---------------------------------------------------------
+ Concurrency: 8 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mongoose
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.77ms    2.22ms  25.86ms   74.63%
+    Req/Sec   357.65    206.11     0.89k    73.91%
+  40512 requests in 15.00s, 8.95MB read
+Requests/sec:   2700.59
+Transfer/sec:    611.27KB
+
+---------------------------------------------------------
+ Concurrency: 16 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mongoose
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.92ms    5.52ms  35.62ms   72.18%
+    Req/Sec   373.52    368.76     1.67k    85.35%
+  42400 requests in 15.01s, 9.37MB read
+Requests/sec:   2825.65
+Transfer/sec:    639.56KB
+
+---------------------------------------------------------
+ Concurrency: 32 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mongoose
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.39ms   19.00ms  91.11ms   93.67%
+    Req/Sec   370.62    204.49     1.00k    66.78%
+  42170 requests in 15.01s, 9.32MB read
+Requests/sec:   2810.13
+Transfer/sec:    636.06KB
+
+---------------------------------------------------------
+ Concurrency: 64 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mongoose
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.07ms   56.10ms 226.24ms   91.63%
+    Req/Sec   375.37    223.31     1.00k    60.18%
+  42831 requests in 15.00s, 9.47MB read
+Requests/sec:   2854.52
+Transfer/sec:    646.11KB
+
+---------------------------------------------------------
+ Concurrency: 128 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mongoose
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.00ms   16.64ms  98.57ms   86.00%
+    Req/Sec   383.66    260.60     1.55k    60.41%
+  43480 requests in 15.00s, 9.61MB read
+Requests/sec:   2898.80
+Transfer/sec:    656.12KB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/mongoose
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mongoose
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   114.75ms   56.24ms 215.12ms   70.77%
+    Req/Sec   387.10    357.01     1.89k    59.47%
+  43930 requests in 15.00s, 9.71MB read
+Requests/sec:   2928.97
+Transfer/sec:    662.96KB

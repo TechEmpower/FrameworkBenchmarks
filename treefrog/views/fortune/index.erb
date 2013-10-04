@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<%#include "fortune.h" %>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+<tr>
+<th>id</th>
+<th>message</th>
+</tr>
+<% tfetch(QList<Fortune>, fortuneList); %>
+<% for (QListIterator<Fortune> it(fortuneList); it.hasNext(); ) {
+     const Fortune &i = it.next(); %>
+<tr>
+<td><%= i.id() %></td>
+<td><%= i.message() %></td>
+</tr>
+<% } %>
+</table>
+</body>
+</html>

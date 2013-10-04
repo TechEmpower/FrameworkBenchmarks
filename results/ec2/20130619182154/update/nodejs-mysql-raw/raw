@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 00:08:09 UTC 2013
+
+  System load:  1.69               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   171.16ms   70.71ms 242.69ms   66.80%
+    Req/Sec    20.27     41.68   111.00     80.80%
+  169 requests in 6.00s, 35.57KB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:     28.16
+Transfer/sec:      5.93KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.06s   807.12ms   4.10s    71.90%
+    Req/Sec    20.09     44.13   444.00     81.87%
+  2226 requests in 15.23s, 468.68KB read
+  Socket errors: connect 0, read 0, write 0, timeout 37
+Requests/sec:    146.18
+Transfer/sec:     30.78KB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.32s     1.06s    3.81s    54.32%
+    Req/Sec    39.29     68.52   444.00     82.73%
+  4499 requests in 15.11s, 807.43KB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:    297.67
+Transfer/sec:     53.42KB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.12s     1.07s    7.37s    79.69%
+    Req/Sec     8.72     29.27   222.00     91.74%
+  981 requests in 15.78s, 297.85KB read
+  Socket errors: connect 0, read 0, write 0, timeout 786
+Requests/sec:     62.16
+Transfer/sec:     18.87KB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.57s     1.82s   14.01s    96.62%
+    Req/Sec     4.21     20.90   222.00     96.03%
+  489 requests in 15.89s, 224.85KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1181
+Requests/sec:     30.77
+Transfer/sec:     14.15KB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.07s     2.52s   15.14s    84.59%
+    Req/Sec     2.31     15.44   200.00     97.79%
+  230 requests in 15.58s, 141.41KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1408
+Requests/sec:     14.76
+Transfer/sec:      9.08KB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.46s     3.10s   15.10s    85.98%
+    Req/Sec     1.22     11.34   200.00     98.84%
+  124 requests in 16.01s, 95.52KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1585
+Requests/sec:      7.74
+Transfer/sec:      5.97KB

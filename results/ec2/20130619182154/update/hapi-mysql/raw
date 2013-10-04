@@ -1,0 +1,126 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 08:17:06 UTC 2013
+
+  System load:  0.18               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+49 packages can be updated.
+22 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/mysql-orm-update/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/mysql-orm-update/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   135.26ms   41.31ms 158.68ms   81.35%
+    Req/Sec    20.14     41.31   111.00     80.74%
+  791 requests in 5.03s, 193.57KB read
+Requests/sec:    157.31
+Transfer/sec:     38.49KB
+
+---------------------------------------------------------
+ Running Warmup hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/mysql-orm-update/2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mysql-orm-update/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.66s     1.16s    4.93s    73.27%
+    Req/Sec    20.14     44.73   444.00     81.97%
+  2322 requests in 15.35s, 568.14KB read
+  Socket errors: connect 0, read 0, write 0, timeout 193
+Requests/sec:    151.27
+Transfer/sec:     37.01KB
+
+---------------------------------------------------------
+ Queries: 1 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/mysql-orm-update/1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mysql-orm-update/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.46s     1.21s    5.26s    73.47%
+    Req/Sec    36.41     67.14   500.00     84.45%
+  4161 requests in 15.07s, 0.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 11
+Requests/sec:    276.12
+Transfer/sec:     58.99KB
+
+---------------------------------------------------------
+ Queries: 5 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/mysql-orm-update/5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mysql-orm-update/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.39s     1.50s    9.18s    82.84%
+    Req/Sec     9.00     29.75   333.00     91.48%
+  1035 requests in 15.82s, 350.60KB read
+  Socket errors: connect 0, read 0, write 0, timeout 769
+Requests/sec:     65.43
+Transfer/sec:     22.16KB
+
+---------------------------------------------------------
+ Queries: 10 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/mysql-orm-update/10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mysql-orm-update/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.14s     2.06s   14.42s    63.42%
+    Req/Sec     3.95     20.17   222.00     96.26%
+  440 requests in 16.01s, 217.36KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1286
+Requests/sec:     27.49
+Transfer/sec:     13.58KB
+
+---------------------------------------------------------
+ Queries: 15 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/mysql-orm-update/15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mysql-orm-update/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.98s     3.86s   15.22s    65.91%
+    Req/Sec     2.45     15.92   200.00     97.67%
+  257 requests in 16.01s, 166.74KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1525
+Requests/sec:     16.05
+Transfer/sec:     10.41KB
+
+---------------------------------------------------------
+ Queries: 20 for hapi-mysql
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/mysql-orm-update/20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/mysql-orm-update/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.50s     1.28s   15.34s    82.68%
+    Req/Sec     2.16     14.87   111.00     97.94%
+  131 requests in 16.02s, 105.38KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1647
+Requests/sec:      8.18
+Transfer/sec:      6.58KB

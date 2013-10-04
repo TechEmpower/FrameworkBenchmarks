@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 8.0
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:16969/db_pg_threadpool?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:16969/db_pg_threadpool?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.89ms  133.32us   2.09ms   73.47%
+    Req/Sec     1.18k    80.20     1.44k    85.50%
+  44565 requests in 5.00s, 7.63MB read
+Requests/sec:   8912.86
+Transfer/sec:      1.53MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_threadpool?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_threadpool?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.32ms   28.41ms 267.92ms   95.36%
+    Req/Sec     8.44k     6.11k   41.22k    76.28%
+  727975 requests in 15.00s, 124.65MB read
+Requests/sec:  48526.28
+Transfer/sec:      8.31MB
+
+---------------------------------------------------------
+ Queries: 1 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_threadpool?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_threadpool?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.17ms   36.60ms 485.65ms   97.03%
+    Req/Sec    15.69k    10.69k   71.44k    71.48%
+  1321640 requests in 15.00s, 186.26MB read
+Requests/sec:  88110.92
+Transfer/sec:     12.42MB
+
+---------------------------------------------------------
+ Queries: 5 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_threadpool?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_threadpool?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.65ms   35.08ms 199.83ms   94.05%
+    Req/Sec     3.70k     2.86k   20.11k    79.74%
+  310678 requests in 15.00s, 81.74MB read
+Requests/sec:  20710.80
+Transfer/sec:      5.45MB
+
+---------------------------------------------------------
+ Queries: 10 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_threadpool?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_threadpool?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.88ms   36.77ms 253.51ms   94.20%
+    Req/Sec     1.74k     1.22k   10.33k    80.68%
+  157721 requests in 15.00s, 65.39MB read
+Requests/sec:  10512.48
+Transfer/sec:      4.36MB
+
+---------------------------------------------------------
+ Queries: 15 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_threadpool?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_threadpool?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    37.84ms   35.72ms 329.95ms   94.53%
+    Req/Sec     1.05k   627.91     7.20k    81.67%
+  103344 requests in 15.00s, 58.50MB read
+Requests/sec:   6889.58
+Transfer/sec:      3.90MB
+
+---------------------------------------------------------
+ Queries: 20 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_threadpool?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_threadpool?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.69ms   27.23ms 321.14ms   85.00%
+    Req/Sec   704.46    342.71     5.33k    77.57%
+  76052 requests in 15.00s, 54.58MB read
+Requests/sec:   5069.16
+Transfer/sec:      3.64MB

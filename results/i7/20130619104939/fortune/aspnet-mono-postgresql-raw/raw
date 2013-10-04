@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 10:30:14 PDT 2013
+
+  System load:  1.82                Processes:           267
+  Usage of /:   11.5% of 129.62GB   Users logged in:     1
+  Memory usage: 5%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    54.02ms   69.62ms 203.09ms   83.65%
+    Req/Sec   106.11     84.50   333.00     36.24%
+  3564 requests in 5.07s, 5.92MB read
+Requests/sec:    703.15
+Transfer/sec:      1.17MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.64s     1.34s    3.41s    42.02%
+    Req/Sec    93.41    120.13     0.90k    83.61%
+  10745 requests in 15.01s, 17.86MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:    715.72
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.01ms   77.94ms 197.68ms   69.83%
+    Req/Sec   102.04     85.68   333.00     34.58%
+  11653 requests in 15.09s, 19.37MB read
+Requests/sec:    772.12
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    82.15ms   86.04ms 199.81ms   63.44%
+    Req/Sec   112.15    103.49   666.00     43.88%
+  12789 requests in 15.01s, 21.26MB read
+Requests/sec:    852.29
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   149.91ms  149.73ms 378.67ms   71.19%
+    Req/Sec   114.73    115.39   600.00     88.30%
+  12994 requests in 15.00s, 21.60MB read
+Requests/sec:    865.99
+Transfer/sec:      1.44MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   288.83ms  261.52ms 645.23ms   32.19%
+    Req/Sec   107.44    118.07   777.00     89.04%
+  12194 requests in 15.00s, 20.27MB read
+Requests/sec:    812.70
+Transfer/sec:      1.35MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.00s     1.00s    2.24s    57.75%
+    Req/Sec   107.01    121.13     0.89k    88.70%
+  12029 requests in 15.05s, 20.00MB read
+Requests/sec:    799.28
+Transfer/sec:      1.33MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.58s     1.34s    3.47s    55.57%
+    Req/Sec    99.17    125.53     1.00k    88.91%
+  11350 requests in 15.03s, 18.87MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:    754.96
+Transfer/sec:      1.25MB

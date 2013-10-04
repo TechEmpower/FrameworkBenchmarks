@@ -9,10 +9,9 @@ return new \Phalcon\Config(array(
         'name'     => 'hello_world',
     ),
     'application' => array(
-        'controllersDir' => __DIR__ . '/../../app/controllers/',
-        'modelsDir'      => __DIR__ . '/../../app/models/',
-        'viewsDir'       => __DIR__ . '/../../app/views/',
-        'routes'         => __DIR__ . '/../../app/config/routes.php',
+        'controllersDir' => APP_PATH . '/app/controllers/',
+        'modelsDir'      => APP_PATH . '/app/models/',
+        'viewsDir'       => APP_PATH . '/app/views/',
         'baseUri'        => '/',
     )
 ));

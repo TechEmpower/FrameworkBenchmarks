@@ -1,0 +1,45 @@
+{
+  "framework": "luminus",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/luminus/json",
+      "db_url": "/luminus/db/1",
+      "query_url": "/luminus/db/",
+      "fortune_url": "/luminus/fortune",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "luminus",
+      "language": "Clojure",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "luminus",
+      "notes": "",
+      "versus": "servlet"
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/luminus/dbraw/1",
+      "query_url": "/luminus/dbraw/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "luminus",
+      "language": "Clojure",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "luminus",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }]
+}

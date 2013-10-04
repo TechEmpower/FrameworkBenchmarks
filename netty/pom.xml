@@ -12,13 +12,18 @@
     <dependency>
     	<groupId>io.netty</groupId>
     	<artifactId>netty-codec-http</artifactId>
-    	<version>4.0.0.CR1</version>
+    	<version>4.0.0.CR7</version>
     </dependency>
 	 <dependency>
 		<groupId>com.fasterxml.jackson.core</groupId>
 		<artifactId>jackson-databind</artifactId>
 		<version>2.1.1</version>
 	</dependency>
+    <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>3.18.0-GA</version>
+    </dependency>
   </dependencies>
   
   <build>

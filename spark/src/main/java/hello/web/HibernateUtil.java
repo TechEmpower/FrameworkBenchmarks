@@ -43,11 +43,16 @@ public class HibernateUtil {
     private static Configuration configuration() {
         boolean jndi = Boolean.parseBoolean(System.getProperty("jndi", "true"));
         Configuration configuration = new Configuration();
+        // We're always going to use the -local config now since there were previous 
+        // problems with the jndi config.
+        /*
         if (jndi) {
             configuration.configure("/hibernate-jndi.cfg.xml");
         } else {
             configuration.configure("/hibernate-local.cfg.xml");
         }
+        */
+        configuration.configure("/hibernate-local.cfg.xml");
         return configuration;
     }
     

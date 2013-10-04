@@ -1,0 +1,24 @@
+{
+  "framework": "plack",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "plack",
+      "language": "Perl",
+      "orm": "Raw",
+      "platform": "Plack",
+      "webserver": "Starman",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "plack",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

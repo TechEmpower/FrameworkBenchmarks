@@ -7,7 +7,19 @@
       "db_url": "/wicket/db",
       "query_url": "/wicket/db?queries=",
       "port": 8080,
-      "sort": 26
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "wicket",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "wicket",
+      "notes": "",
+      "versus": "servlet"
     }
   }]
 }

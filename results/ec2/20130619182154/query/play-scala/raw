@@ -1,0 +1,123 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 00:35:14 UTC 2013
+
+  System load:  0.78               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:9000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:9000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.70ms    4.47ms  37.77ms   95.94%
+    Req/Sec   212.44     65.42   444.00     68.14%
+  8021 requests in 5.00s, 1.15MB read
+Requests/sec:   1604.57
+Transfer/sec:    235.91KB
+
+---------------------------------------------------------
+ Running Warmup play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   212.74ms  100.13ms 368.26ms   71.63%
+    Req/Sec   244.25    328.09     3.22k    87.24%
+  27546 requests in 15.00s, 3.95MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+Requests/sec:   1836.52
+Transfer/sec:    270.00KB
+
+---------------------------------------------------------
+ Queries: 1 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   133.71ms  125.87ms 728.57ms   91.02%
+    Req/Sec   376.91    337.53     2.56k    71.03%
+  42617 requests in 15.00s, 4.83MB read
+Requests/sec:   2840.66
+Transfer/sec:    329.49KB
+
+---------------------------------------------------------
+ Queries: 5 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   547.95ms  217.01ms 840.15ms   49.59%
+    Req/Sec   129.66    327.56     3.11k    90.31%
+  14582 requests in 15.00s, 3.43MB read
+Requests/sec:    972.14
+Transfer/sec:    234.39KB
+
+---------------------------------------------------------
+ Queries: 10 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   928.23ms  269.75ms   1.27s    56.14%
+    Req/Sec    73.27    264.19     3.56k    93.15%
+  8129 requests in 15.17s, 3.15MB read
+Requests/sec:    535.89
+Transfer/sec:    212.35KB
+
+---------------------------------------------------------
+ Queries: 15 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15s   206.40ms   1.34s    89.66%
+    Req/Sec    54.48    209.42     3.22k    92.79%
+  5916 requests in 15.09s, 3.19MB read
+  Socket errors: connect 0, read 0, write 0, timeout 50
+Requests/sec:    392.01
+Transfer/sec:    216.16KB
+
+---------------------------------------------------------
+ Queries: 20 for play-scala
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:9000/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:9000/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.53s   251.90ms   1.71s    91.01%
+    Req/Sec    41.90    175.01     2.44k    93.73%
+  4487 requests in 15.13s, 3.10MB read
+  Socket errors: connect 0, read 0, write 0, timeout 76
+Requests/sec:    296.54
+Transfer/sec:    209.53KB

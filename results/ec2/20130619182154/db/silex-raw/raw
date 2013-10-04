@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 03:52:48 UTC 2013
+
+  System load:  0.04               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   171.48ms   97.58ms 299.51ms   64.62%
+    Req/Sec    32.79     52.66   222.00     70.57%
+  1181 requests in 5.01s, 299.55KB read
+Requests/sec:    235.89
+Transfer/sec:     59.83KB
+
+---------------------------------------------------------
+ Running Warmup silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.05s     1.07s    3.48s    62.01%
+    Req/Sec    46.82     75.40   555.00     91.82%
+  5137 requests in 15.02s, 1.27MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:    341.91
+Transfer/sec:     86.74KB
+
+---------------------------------------------------------
+ Concurrency: 8 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   295.46ms  247.33ms 609.15ms   32.09%
+    Req/Sec    52.57     66.59   333.00     92.48%
+  5972 requests in 15.01s, 1.48MB read
+Requests/sec:    397.90
+Transfer/sec:    100.92KB
+
+---------------------------------------------------------
+ Concurrency: 16 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   605.06ms  485.56ms   1.24s    41.19%
+    Req/Sec    53.21     72.62   400.00     90.29%
+  6049 requests in 15.02s, 1.50MB read
+Requests/sec:    402.86
+Transfer/sec:    102.18KB
+
+---------------------------------------------------------
+ Concurrency: 32 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   910.43ms  700.31ms   1.95s    50.04%
+    Req/Sec    53.73     77.06   555.00     89.21%
+  6101 requests in 15.02s, 1.51MB read
+Requests/sec:    406.31
+Transfer/sec:    103.07KB
+
+---------------------------------------------------------
+ Concurrency: 64 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   651.68ms  394.02ms   1.13s    62.43%
+    Req/Sec    52.68     79.77   555.00     89.37%
+  5957 requests in 15.01s, 1.48MB read
+Requests/sec:    396.76
+Transfer/sec:    100.64KB
+
+---------------------------------------------------------
+ Concurrency: 128 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   667.75ms  277.08ms 989.18ms   65.26%
+    Req/Sec    51.97     77.25   555.00     90.45%
+  5874 requests in 15.03s, 1.46MB read
+Requests/sec:    390.91
+Transfer/sec:     99.17KB
+
+---------------------------------------------------------
+ Concurrency: 256 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.93s     1.00s    3.27s    59.13%
+    Req/Sec    50.89     78.84   600.00     90.50%
+  5668 requests in 15.02s, 1.40MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:    377.42
+Transfer/sec:     95.74KB

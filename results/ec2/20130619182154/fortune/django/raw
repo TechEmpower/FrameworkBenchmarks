@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 21:20:40 UTC 2013
+
+  System load:  0.21               Processes:           80
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.19ms   19.49ms  59.38ms   53.01%
+    Req/Sec    58.23     55.01   222.00     52.76%
+  2216 requests in 5.01s, 3.09MB read
+Requests/sec:    442.15
+Transfer/sec:    632.14KB
+
+---------------------------------------------------------
+ Running Warmup django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   817.67ms  273.37ms   1.57s    75.31%
+    Req/Sec    57.13     75.71   555.00     90.09%
+  6555 requests in 15.26s, 9.15MB read
+Requests/sec:    429.43
+Transfer/sec:    613.95KB
+
+---------------------------------------------------------
+ Concurrency: 8 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.52ms   42.39ms 138.74ms   83.17%
+    Req/Sec    57.54     55.44   222.00     51.81%
+  6547 requests in 15.01s, 9.14MB read
+Requests/sec:    436.14
+Transfer/sec:    623.55KB
+
+---------------------------------------------------------
+ Concurrency: 16 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    82.72ms   48.82ms 154.86ms   55.29%
+    Req/Sec    57.56     64.77   333.00     93.04%
+  6589 requests in 15.02s, 9.20MB read
+Requests/sec:    438.71
+Transfer/sec:    627.22KB
+
+---------------------------------------------------------
+ Concurrency: 32 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   126.90ms   56.90ms 215.98ms   57.92%
+    Req/Sec    58.25     71.23   444.00     90.90%
+  6636 requests in 15.03s, 9.27MB read
+Requests/sec:    441.55
+Transfer/sec:    631.28KB
+
+---------------------------------------------------------
+ Concurrency: 64 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   237.93ms  109.07ms 463.79ms   66.24%
+    Req/Sec    57.37     73.96   444.00     90.13%
+  6518 requests in 15.05s, 9.10MB read
+Requests/sec:    433.06
+Transfer/sec:    619.14KB
+
+---------------------------------------------------------
+ Concurrency: 128 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   465.19ms  212.14ms   1.02s    71.80%
+    Req/Sec    57.61     73.73   444.00     90.04%
+  6560 requests in 15.11s, 9.16MB read
+Requests/sec:    434.23
+Transfer/sec:    620.82KB
+
+---------------------------------------------------------
+ Concurrency: 256 for django
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   802.16ms  273.76ms   1.61s    78.87%
+    Req/Sec    57.48     78.34   500.00     89.39%
+  6558 requests in 15.04s, 9.16MB read
+  Socket errors: connect 0, read 1, write 0, timeout 0
+Requests/sec:    436.13
+Transfer/sec:    623.53KB

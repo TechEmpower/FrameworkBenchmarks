@@ -4,6 +4,7 @@ var mustache = require('ringo/mustache');
 // DO NOT TOUCH THE FOLLOWING LINE.
 // THIS VARIABLE IS REGEX REPLACED BY setup.py
 var dbHost = 'localhost';
+var mongodbUri = 'mongodb://localhost/hello_world';
 
 var sortFortunes = function(a, b) {
  return (a.message < b.message) ? -1 : (a.message > b.message) ? 1 : 0;
@@ -77,6 +78,42 @@ exports.app = function(req) {
          if (connection !== null) {
             connection.close();
          }
+      }
+   } else if (path === '/plaintext') {
+      return {
+        status: 200,
+        headers: {"Content-Type": 'text/plain'},
+        body: ['Hello World']
+      };
+   } else if (path === '/updates') {
+      var queryCount = parseInt(req.env.servletRequest.getParameter('queries'), 10);
+      if (isNaN(queryCount) || queryCount < 1) {
+         queryCount = 1;
+      } else if (queryCount > 500) {
+         queryCount = 500;
+      }
+      try {
+         var connection = datasource.getConnection();
+         var body = [];
+         for (var i = 0; i < queryCount; i++) {
+            let randId = ((Math.random() * 10000) | 0) + 1;
+            world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
+            world.randomNumber = ((Math.random() * 10000) | 0) + 1;
+            sql.execute(connection, 'UPDATE World SET randomNumber = ' + world.randomNumber + ' WHERE id = ' + world.id);
+            body.push(world);
+         }
+      } catch (e) {
+         connection.close();
+         connection = null;
+      } finally {
+         if (connection !== null) {
+            connection.close();
+         }
+      }
+      return {
+         status: 200,
+         headers: {"Content-Type": "application/json; charset=UTF-8"},
+         body: [JSON.stringify(body)]
       }
    }
 };

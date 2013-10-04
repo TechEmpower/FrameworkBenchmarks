@@ -1,0 +1,23 @@
+{
+  "framework": "jester",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "jester",
+      "language": "Nimrod",
+      "orm": "Raw",
+      "platform": "Nimrod",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "jester",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

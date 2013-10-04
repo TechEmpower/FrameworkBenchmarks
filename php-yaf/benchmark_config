@@ -1,0 +1,26 @@
+{
+  "framework": "yaf",
+  "tests": [{
+    "raw": {
+      "setup_file": "setup",
+      "json_url": "/bench/raw/json",
+      "db_url": "/bench/raw/db",
+      "query_url": "/bench/raw/db?queries=",
+      "fortune_url": "/bench/raw/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "yaf",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "yaf",
+      "notes": "",
+      "versus": "php"
+    }
+  }]
+}

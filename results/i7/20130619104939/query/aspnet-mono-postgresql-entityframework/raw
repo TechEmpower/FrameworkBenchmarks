@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 10:58:00 PDT 2013
+
+  System load:  0.67                Processes:           248
+  Usage of /:   11.5% of 129.62GB   Users logged in:     1
+  Memory usage: 5%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/entityframework/postgresql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/entityframework/postgresql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.69ms   35.40ms  98.65ms   69.54%
+    Req/Sec    77.53     54.05   222.00     66.83%
+  2963 requests in 5.01s, 1.02MB read
+Requests/sec:    591.52
+Transfer/sec:    208.26KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.72s     2.18s    5.57s    41.22%
+    Req/Sec    72.22     98.79   700.00     83.35%
+  8122 requests in 15.01s, 2.79MB read
+  Socket errors: connect 0, read 0, write 0, timeout 65
+Requests/sec:    541.18
+Transfer/sec:    190.55KB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.03s     1.75s    5.07s    61.60%
+    Req/Sec    83.92    108.45     0.89k    79.73%
+  9411 requests in 15.05s, 2.95MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+Requests/sec:    625.33
+Transfer/sec:    200.77KB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.91s     3.37s    8.59s    51.19%
+    Req/Sec    51.77     81.55   777.00     89.72%
+  5795 requests in 15.19s, 2.52MB read
+  Socket errors: connect 0, read 0, write 0, timeout 173
+Requests/sec:    381.52
+Transfer/sec:    170.22KB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.27s     2.09s    6.73s    66.13%
+    Req/Sec    34.46     64.42   555.00     73.69%
+  3825 requests in 15.04s, 2.25MB read
+  Socket errors: connect 0, read 0, write 0, timeout 146
+Requests/sec:    254.36
+Transfer/sec:    152.97KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.70s     3.20s   10.45s    70.25%
+    Req/Sec    25.35     53.02   444.00     79.06%
+  2802 requests in 15.13s, 2.07MB read
+  Socket errors: connect 0, read 0, write 0, timeout 317
+Requests/sec:    185.13
+Transfer/sec:    140.06KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-mono-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.45s     2.39s    9.00s    73.35%
+    Req/Sec    20.00     46.77   400.00     82.95%
+  2147 requests in 15.06s, 1.91MB read
+  Socket errors: connect 0, read 0, write 0, timeout 371
+Requests/sec:    142.52
+Transfer/sec:    129.94KB

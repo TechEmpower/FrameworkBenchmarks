@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   600.96us  131.27us   4.67ms   77.79%
+    Req/Sec     1.69k   151.73     2.33k    68.08%
+  63877 requests in 5.00s, 10.66MB read
+Requests/sec:  12777.73
+Transfer/sec:      2.13MB
+
+---------------------------------------------------------
+ Running Warmup cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.55ms    6.30ms 105.89ms   73.69%
+    Req/Sec     1.73k   365.88     4.20k    67.69%
+  196795 requests in 15.00s, 32.83MB read
+Requests/sec:  13123.37
+Transfer/sec:      2.19MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   775.88us    2.63ms  41.22ms   99.49%
+    Req/Sec     1.69k   203.00     2.44k    86.03%
+  192465 requests in 15.00s, 32.11MB read
+Requests/sec:  12831.64
+Transfer/sec:      2.14MB
+
+---------------------------------------------------------
+ Concurrency: 16 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21ms  377.80us   7.84ms   63.79%
+    Req/Sec     1.76k   309.90     3.11k    63.20%
+  200082 requests in 15.00s, 33.38MB read
+Requests/sec:  13339.91
+Transfer/sec:      2.23MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.43ms  825.40us   9.62ms   63.80%
+    Req/Sec     1.76k   294.44     3.33k    70.66%
+  200696 requests in 15.00s, 33.49MB read
+Requests/sec:  13380.90
+Transfer/sec:      2.23MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.91ms    2.05ms  26.49ms   71.70%
+    Req/Sec     1.76k   316.07     4.11k    74.52%
+  200249 requests in 15.00s, 33.41MB read
+Requests/sec:  13350.06
+Transfer/sec:      2.23MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.30ms   75.19ms 229.12ms   85.01%
+    Req/Sec     1.50k   665.03     4.00k    80.87%
+  170830 requests in 15.00s, 28.50MB read
+Requests/sec:  11389.04
+Transfer/sec:      1.90MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.20ms   55.06ms 238.90ms   92.33%
+    Req/Sec     1.64k   648.79     7.22k    80.88%
+  183890 requests in 14.99s, 30.68MB read
+Requests/sec:  12264.24
+Transfer/sec:      2.05MB

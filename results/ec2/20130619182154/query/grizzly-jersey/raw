@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 01:14:18 UTC 2013
+
+  System load:  0.57               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.39ms    1.78ms  17.27ms   94.51%
+    Req/Sec   202.88     47.55   333.00     82.25%
+  7671 requests in 5.00s, 1.49MB read
+Requests/sec:   1533.34
+Transfer/sec:    304.88KB
+
+---------------------------------------------------------
+ Running Warmup grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   251.02ms   94.82ms 373.82ms   44.56%
+    Req/Sec   209.06    331.97     1.78k    86.65%
+  23801 requests in 15.09s, 4.62MB read
+Requests/sec:   1577.68
+Transfer/sec:    313.61KB
+
+---------------------------------------------------------
+ Queries: 1 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   223.74ms  107.57ms 342.72ms   55.04%
+    Req/Sec   256.05    369.30     2.11k    86.01%
+  29145 requests in 15.06s, 4.77MB read
+Requests/sec:   1935.63
+Transfer/sec:    324.70KB
+
+---------------------------------------------------------
+ Queries: 5 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   491.36ms  209.48ms 675.91ms   60.64%
+    Req/Sec   126.27    200.89     1.20k    86.60%
+  14470 requests in 15.27s, 4.14MB read
+Requests/sec:    947.63
+Transfer/sec:    277.52KB
+
+---------------------------------------------------------
+ Queries: 10 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   541.34ms  102.94ms 615.22ms   68.58%
+    Req/Sec    83.19    153.92     0.89k    89.00%
+  9514 requests in 15.25s, 4.16MB read
+Requests/sec:    624.01
+Transfer/sec:    279.56KB
+
+---------------------------------------------------------
+ Queries: 15 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   737.68ms  106.89ms 803.42ms   75.99%
+    Req/Sec    58.82    118.08   777.00     85.40%
+  6763 requests in 15.34s, 3.98MB read
+Requests/sec:    440.74
+Transfer/sec:    265.87KB
+
+---------------------------------------------------------
+ Queries: 20 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   752.77ms   33.10ms 770.13ms   80.18%
+    Req/Sec    47.47     99.88   500.00     87.30%
+  5503 requests in 15.52s, 4.08MB read
+Requests/sec:    354.47
+Transfer/sec:    268.80KB

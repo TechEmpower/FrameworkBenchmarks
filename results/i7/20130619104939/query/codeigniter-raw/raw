@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 14:00:05 PDT 2013
+
+  System load:  1.25                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/index.php/bench/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/index.php/bench/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.81ms  488.88us   5.40ms   78.41%
+    Req/Sec   376.80     57.91   555.00     52.40%
+  14279 requests in 5.00s, 3.68MB read
+Requests/sec:   2855.06
+Transfer/sec:    754.19KB
+
+---------------------------------------------------------
+ Running Warmup codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/index.php/bench/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.21ms   88.72ms 576.87ms   92.48%
+    Req/Sec   467.93    256.52     3.44k    70.03%
+  53130 requests in 15.00s, 13.71MB read
+Requests/sec:   3541.49
+Transfer/sec:      0.91MB
+
+---------------------------------------------------------
+ Queries: 1 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/index.php/bench/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    75.53ms   78.84ms 625.74ms   92.18%
+    Req/Sec   492.82    249.80     1.70k    65.94%
+  56007 requests in 15.00s, 12.54MB read
+Requests/sec:   3733.11
+Transfer/sec:    855.75KB
+
+---------------------------------------------------------
+ Queries: 5 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/index.php/bench/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   104.25ms  124.90ms 731.24ms   93.35%
+    Req/Sec   409.09    242.69     3.67k    70.47%
+  46463 requests in 15.01s, 16.74MB read
+Requests/sec:   3096.38
+Transfer/sec:      1.12MB
+
+---------------------------------------------------------
+ Queries: 10 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/index.php/bench/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   120.50ms  118.68ms 657.63ms   91.91%
+    Req/Sec   343.92    205.26     1.44k    62.73%
+  39010 requests in 15.00s, 20.75MB read
+Requests/sec:   2599.85
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Queries: 15 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/index.php/bench/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   160.21ms  188.63ms 810.57ms   90.69%
+    Req/Sec   297.34    201.25     2.80k    75.22%
+  33750 requests in 15.01s, 23.71MB read
+Requests/sec:   2249.04
+Transfer/sec:      1.58MB
+
+---------------------------------------------------------
+ Queries: 20 for codeigniter-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/index.php/bench/db/20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/index.php/bench/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   213.06ms  295.99ms   1.25s    90.01%
+    Req/Sec   262.73    172.52     1.22k    73.53%
+  29829 requests in 15.01s, 26.04MB read
+Requests/sec:   1987.34
+Transfer/sec:      1.74MB

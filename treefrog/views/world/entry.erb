@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<%#include "world.h" %>
+<% tfetch(QVariantMap, world); %>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title><%= controller()->name() + ": " + controller()->activeAction() %></title>
+</head>
+<body>
+<p style="color: red"><%=$ error %></p>
+<p style="color: green"><%=$ notice %></p>
+
+<h1>New World</h1>
+
+<%== formTag(urla("create"), Tf::Post) %>
+  <p>
+    <label>RandomNumber<br /><input name="world[randomNumber]" value="<%= world["randomNumber"] %>" /></label>
+  </p>
+  <p>
+    <input type="submit" value="Create" />
+  </p>
+</form>
+
+<%== linkTo("Back", urla("index")) %>
+
+</body>
+</html>

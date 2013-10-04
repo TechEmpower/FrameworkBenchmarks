@@ -1,0 +1,4 @@
+#!/bin/bash
+cd cppsp_0.2
+exec ./run_application "$@"
+

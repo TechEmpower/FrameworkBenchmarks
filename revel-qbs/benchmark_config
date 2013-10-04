@@ -1,0 +1,26 @@
+{
+  "framework": "revel-qbs",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "revel",
+      "language": "Go",
+      "orm": "Raw",
+      "platform": "Go",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "revel-qbs",
+      "notes": "",
+      "versus": "go"
+    }
+  }]
+}

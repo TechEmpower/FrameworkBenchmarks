@@ -6,8 +6,21 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8000,
-      "sort": 41
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "snap",
+      "language": "Haskell",
+      "orm": "Full",
+      "platform": "Snap",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "snap",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

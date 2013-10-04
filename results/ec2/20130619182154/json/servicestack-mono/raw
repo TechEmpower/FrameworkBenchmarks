@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 08:46:54 UTC 2013
+
+  System load:  0.35               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+49 packages can be updated.
+22 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.66s     1.62s    4.57s    82.64%
+    Req/Sec    12.27     46.50   333.00     92.38%
+  213 requests in 5.01s, 60.74KB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+Requests/sec:     42.54
+Transfer/sec:     12.13KB
+
+---------------------------------------------------------
+ Running Warmup servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.29s   865.90ms   2.09s    70.02%
+    Req/Sec    73.85     96.42   700.00     82.90%
+  8382 requests in 15.01s, 2.33MB read
+Requests/sec:    558.32
+Transfer/sec:    159.21KB
+
+---------------------------------------------------------
+ Concurrency: 8 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.79ms   50.67ms 140.54ms   53.91%
+    Req/Sec    72.03     92.04   444.00     81.17%
+  8208 requests in 15.01s, 2.29MB read
+Requests/sec:    546.70
+Transfer/sec:    155.87KB
+
+---------------------------------------------------------
+ Concurrency: 16 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   131.89ms   89.89ms 263.04ms   63.48%
+    Req/Sec    71.04     97.96   555.00     81.20%
+  8080 requests in 15.02s, 2.25MB read
+Requests/sec:    538.06
+Transfer/sec:    153.41KB
+
+---------------------------------------------------------
+ Concurrency: 32 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   234.35ms  151.16ms 404.95ms   65.59%
+    Req/Sec    70.39    100.41   777.00     82.16%
+  8015 requests in 15.02s, 2.23MB read
+Requests/sec:    533.50
+Transfer/sec:    152.11KB
+
+---------------------------------------------------------
+ Concurrency: 64 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   378.57ms  225.49ms 598.56ms   75.54%
+    Req/Sec    69.20     98.16   666.00     83.22%
+  7900 requests in 15.04s, 2.20MB read
+Requests/sec:    525.41
+Transfer/sec:    149.80KB
+
+---------------------------------------------------------
+ Concurrency: 128 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   645.70ms  361.12ms   1.06s    68.84%
+    Req/Sec    66.74     91.45   600.00     84.57%
+  7631 requests in 15.03s, 2.13MB read
+Requests/sec:    507.85
+Transfer/sec:    144.82KB
+
+---------------------------------------------------------
+ Concurrency: 256 for servicestack-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.35s   757.35ms   2.01s    74.04%
+    Req/Sec    63.79     90.55   666.00     85.95%
+  7298 requests in 15.01s, 2.03MB read
+Requests/sec:    486.34
+Transfer/sec:    138.68KB

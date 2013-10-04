@@ -5,22 +5,60 @@
       "setup_file": "setup",
       "json_url": "/json",
       "port": 8080,
-      "sort": 4
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "express",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "express",
+      "notes": "",
+      "versus": "node"
     },
     "mongodb": {
       "setup_file": "setup",
       "db_url": "/mongoose",
       "query_url": "/mongoose?queries=",
+      "update_url": "/mongoose-update?queries=",
       "port": 8080,
-      "sort": 5
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "express",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "express",
+      "notes": "",
+      "versus": "node"
     },
     "mysql": {
       "setup_file": "setup",
       "db_url": "/mysql-orm",
       "query_url": "/mysql-orm?queries=",
       "fortune_url": "/fortune",
+      "update_url": "/mysql-orm-update?queries=",
       "port": 8080,
-      "sort": 6
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "express",
+      "language": "JavaScript",
+      "orm": "Full",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "express",
+      "notes": "",
+      "versus": "node"
     }
   }]
 }

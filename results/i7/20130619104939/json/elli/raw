@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 11:39:52 PDT 2013
+
+  System load:  0.76                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 11%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer elli
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   343.36us    0.93ms  14.71ms   99.35%
+    Req/Sec     3.61k   451.08     4.33k    87.96%
+  136941 requests in 5.00s, 15.93MB read
+Requests/sec:  27391.15
+Transfer/sec:      3.19MB
+
+---------------------------------------------------------
+ Running Warmup elli
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.57ms  371.90us  12.56ms   71.63%
+    Req/Sec    21.51k     1.48k   27.44k    65.23%
+  2436081 requests in 15.00s, 283.43MB read
+Requests/sec: 162411.07
+Transfer/sec:     18.90MB
+
+---------------------------------------------------------
+ Concurrency: 8 for elli
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   296.83us  460.80us  15.11ms   99.57%
+    Req/Sec     3.65k   464.00     4.55k    84.62%
+  415768 requests in 15.00s, 48.37MB read
+Requests/sec:  27718.52
+Transfer/sec:      3.23MB
+
+---------------------------------------------------------
+ Concurrency: 16 for elli
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms    3.32ms  22.36ms   96.24%
+    Req/Sec     5.30k     1.90k    8.78k    66.27%
+  604465 requests in 15.00s, 70.33MB read
+Requests/sec:  40298.71
+Transfer/sec:      4.69MB
+
+---------------------------------------------------------
+ Concurrency: 32 for elli
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   412.47us    1.28ms  19.92ms   98.72%
+    Req/Sec    12.84k     2.74k   16.56k    85.68%
+  1458073 requests in 15.00s, 169.64MB read
+Requests/sec:  97208.92
+Transfer/sec:     11.31MB
+
+---------------------------------------------------------
+ Concurrency: 64 for elli
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   396.52us   86.52us  10.58ms   70.19%
+    Req/Sec    20.99k     1.19k   23.89k    58.66%
+  2377112 requests in 15.00s, 276.57MB read
+Requests/sec: 158479.64
+Transfer/sec:     18.44MB
+
+---------------------------------------------------------
+ Concurrency: 128 for elli
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   785.10us  180.09us  10.65ms   69.76%
+    Req/Sec    21.42k     1.35k   26.44k    65.20%
+  2424744 requests in 15.00s, 282.11MB read
+Requests/sec: 161656.93
+Transfer/sec:     18.81MB
+
+---------------------------------------------------------
+ Concurrency: 256 for elli
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.59ms  376.61us  11.98ms   72.24%
+    Req/Sec    21.27k     1.47k   27.22k    67.67%
+  2409277 requests in 15.00s, 280.32MB read
+Requests/sec: 160624.46
+Transfer/sec:     18.69MB

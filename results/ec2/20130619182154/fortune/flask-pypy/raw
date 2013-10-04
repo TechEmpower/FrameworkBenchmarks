@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 07:03:40 UTC 2013
+
+  System load:  0.33               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+49 packages can be updated.
+22 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   493.82ms  531.49ms   1.28s    74.38%
+    Req/Sec    64.63     84.74   555.00     90.43%
+  2299 requests in 5.01s, 3.04MB read
+Requests/sec:    458.73
+Transfer/sec:    621.79KB
+
+---------------------------------------------------------
+ Running Warmup flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.44s     1.88s    4.29s    65.59%
+    Req/Sec    75.67    100.04   777.00     82.21%
+  8486 requests in 15.09s, 11.23MB read
+  Socket errors: connect 0, read 0, write 0, timeout 163
+Requests/sec:    562.28
+Transfer/sec:    762.16KB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.48ms  110.54ms 407.14ms   88.53%
+    Req/Sec   148.90    104.99   600.00     71.19%
+  16809 requests in 15.00s, 22.25MB read
+Requests/sec:   1120.27
+Transfer/sec:      1.48MB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    96.26ms  113.29ms 259.58ms   66.58%
+    Req/Sec   142.24    137.42   666.00     51.19%
+  16087 requests in 15.02s, 21.29MB read
+Requests/sec:   1071.24
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   107.43ms   98.52ms 237.20ms   63.31%
+    Req/Sec   129.14    126.02   444.00     48.26%
+  14621 requests in 15.02s, 19.35MB read
+Requests/sec:    973.20
+Transfer/sec:      1.29MB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   167.12ms  138.51ms 342.30ms   41.54%
+    Req/Sec   170.29    201.46     0.90k    85.12%
+  19402 requests in 15.03s, 25.68MB read
+Requests/sec:   1290.97
+Transfer/sec:      1.71MB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   260.44ms  302.56ms 797.68ms   74.57%
+    Req/Sec   177.82    152.18     0.90k    55.78%
+  20209 requests in 15.02s, 26.75MB read
+Requests/sec:   1345.58
+Transfer/sec:      1.78MB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   484.30ms  516.22ms   1.61s    80.68%
+    Req/Sec   161.66    136.18     0.89k    54.82%
+  18339 requests in 15.03s, 24.28MB read
+Requests/sec:   1220.38
+Transfer/sec:      1.62MB

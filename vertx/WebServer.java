@@ -1,18 +1,21 @@
 import java.io.IOException;
 import java.nio.charset.*;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.vertx.java.core.Handler;
+import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.deploy.Verticle;
+import org.vertx.java.platform.Verticle;
 
 public class WebServer
 	extends    Verticle
@@ -21,7 +24,7 @@ public class WebServer
   private final ObjectMapper mapper = new ObjectMapper();
 
   @Override
-  public void start() throws Exception
+  public void start()
   {
     this.getVertx().createHttpServer().requestHandler(this).listen(8080);
   }
@@ -29,45 +32,43 @@ public class WebServer
   @Override
   public void handle(HttpServerRequest req)
   {
-    if (req.path.equals("/json"))
+    if (req.path().equals("/json"))
     {
       handleJson(req);
     }
-    else if (req.path.equals("/db"))
+    else if (req.path().equals("/db"))
     {
       handleDb(req);
     }
     else
     {
-      req.response.statusCode = 404;
-      req.response.end();
+      req.response().setStatusCode(404);
+      req.response().end();
     }
   }
 
-  public static class HelloMessage
-  {
-    public final String message = "Hello, world";
-  }
 
   private void handleJson(HttpServerRequest req)
   {
-    String result;
+    Buffer buffer;
     try
     {
-      result = mapper.writeValueAsString(new HelloMessage());
+      Map<String, String> data = new HashMap<String, String>();
+      data.put("message", "Hello, world");
+      buffer = new Buffer(mapper.writeValueAsBytes(data));
     }
     catch (IOException e)
     {
-      req.response.statusCode = 500;
-      req.response.end();
+      req.response().setStatusCode(500);
+      req.response().end();
       return;
     }
     
-    int contentLength = result.getBytes(StandardCharsets.UTF_8).length;
-    req.response.putHeader("Content-Type", "application/json; charset=UTF-8");
-    req.response.putHeader("Content-Length", contentLength);
-    req.response.write(result);
-    req.response.end();
+
+    req.response().putHeader("Content-Type", "application/json; charset=UTF-8");
+    req.response().putHeader("Content-Length", Integer.toString(buffer.length()));
+    req.response().write(buffer);
+    req.response().end();
   }
 
   private void handleDb(final HttpServerRequest req)
@@ -112,7 +113,7 @@ public class WebServer
     @Override
     public void handle(Message<JsonObject> reply)
     {
-      final JsonObject body = reply.body;
+      final JsonObject body = reply.body();
 
       if ("ok".equals(body.getString("status")))
       {
@@ -127,15 +128,15 @@ public class WebServer
         {
           final String result = mapper.writeValueAsString(worlds);
           final int contentLength = result.getBytes(StandardCharsets.UTF_8).length;
-          this.req.response.putHeader("Content-Type", "application/json; charset=UTF-8");
-          this.req.response.putHeader("Content-Length", contentLength);
-          this.req.response.write(result);
-          this.req.response.end();
+          this.req.response().putHeader("Content-Type", "application/json; charset=UTF-8");
+          this.req.response().putHeader("Content-Length", Integer.toString(contentLength));
+          this.req.response().write(result);
+          this.req.response().end();
         }
         catch (IOException e)
         {
-          req.response.statusCode = 500;
-          req.response.end();
+          req.response().setStatusCode(500);
+          req.response().end();
         }
       }
     }

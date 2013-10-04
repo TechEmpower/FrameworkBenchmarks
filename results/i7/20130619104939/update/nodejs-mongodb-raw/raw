@@ -1,0 +1,116 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 12:37:27 PDT 2013
+
+  System load:  4.33                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/update-mongodb?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/update-mongodb?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.32ms    1.41ms  15.94ms   82.48%
+    Req/Sec   203.16     51.91   333.00     76.50%
+  7682 requests in 5.00s, 2.17MB read
+Requests/sec:   1535.48
+Transfer/sec:    444.70KB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update-mongodb?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   201.47ms   55.39ms 274.87ms   50.59%
+    Req/Sec   176.89    129.39     0.89k    68.50%
+  20118 requests in 15.01s, 5.69MB read
+Requests/sec:   1340.59
+Transfer/sec:    388.25KB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update-mongodb?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    98.87ms   34.81ms 165.56ms   55.38%
+    Req/Sec   346.72    194.55     1.33k    66.58%
+  39408 requests in 15.01s, 8.71MB read
+Requests/sec:   2625.40
+Transfer/sec:    594.24KB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update-mongodb?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   752.08ms  305.45ms   1.10s    74.37%
+    Req/Sec    70.23     88.63   600.00     84.41%
+  7987 requests in 15.03s, 3.75MB read
+Requests/sec:    531.44
+Transfer/sec:    255.28KB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update-mongodb?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.47s   403.75ms   1.68s    81.85%
+    Req/Sec    35.64     63.83   444.00     72.50%
+  4053 requests in 15.08s, 3.15MB read
+Requests/sec:    268.68
+Transfer/sec:    214.05KB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update-mongodb?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.96s   952.19ms   3.39s    84.09%
+    Req/Sec    23.62     49.39   333.00     79.68%
+  2682 requests in 15.05s, 2.92MB read
+  Socket errors: connect 0, read 0, write 0, timeout 338
+Requests/sec:    178.16
+Transfer/sec:    198.29KB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update-mongodb?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update-mongodb?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.20s   632.75ms   3.45s    86.99%
+    Req/Sec    17.76     46.21   333.00     85.49%
+  2024 requests in 15.13s, 2.82MB read
+  Socket errors: connect 0, read 0, write 0, timeout 188
+Requests/sec:    133.79
+Transfer/sec:    191.21KB

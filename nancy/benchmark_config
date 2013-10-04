@@ -1,0 +1,45 @@
+{
+  "framework": "nancy",
+  "tests": [{
+    "default": {
+      "setup_file": "setup_iis",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "nancy",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": "NET",
+      "webserver": "IIS",
+      "os": "Windows",
+      "database_os": "Linux",
+      "display_name": "nancy",
+      "notes": "",
+      "versus": ""
+    },
+    "mono": {
+      "setup_file": "setup_nginx",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "nancy",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": "Mono",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nancy",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

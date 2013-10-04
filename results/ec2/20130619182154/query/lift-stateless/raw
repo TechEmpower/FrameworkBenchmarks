@@ -1,0 +1,122 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 02:08:22 UTC 2013
+
+  System load:  0.43               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    53.86ms   42.33ms 123.29ms   55.16%
+    Req/Sec    61.75     59.54   222.00     51.05%
+  2326 requests in 5.01s, 814.40KB read
+Requests/sec:    464.15
+Transfer/sec:    162.51KB
+
+---------------------------------------------------------
+ Running Warmup lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db/2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   776.82ms  271.08ms   1.25s    56.40%
+    Req/Sec    66.84     90.90     0.89k    86.05%
+  7385 requests in 15.03s, 2.53MB read
+Requests/sec:    491.32
+Transfer/sec:    172.03KB
+
+---------------------------------------------------------
+ Queries: 1 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   740.90ms  287.21ms   1.22s    51.37%
+    Req/Sec    71.14     90.80   777.00     84.62%
+  7936 requests in 15.04s, 2.47MB read
+Requests/sec:    527.59
+Transfer/sec:    168.36KB
+
+---------------------------------------------------------
+ Queries: 5 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db/5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   847.06ms  324.18ms   1.36s    52.87%
+    Req/Sec    65.09     88.67     1.00k    86.37%
+  7271 requests in 15.05s, 3.15MB read
+Requests/sec:    483.27
+Transfer/sec:    214.66KB
+
+---------------------------------------------------------
+ Queries: 10 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db/10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   939.13ms  377.37ms   1.48s    50.90%
+    Req/Sec    60.86     87.47     1.11k    87.17%
+  6865 requests in 15.05s, 4.02MB read
+Requests/sec:    456.16
+Transfer/sec:    273.33KB
+
+---------------------------------------------------------
+ Queries: 15 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db/15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07s   412.31ms   1.70s    52.25%
+    Req/Sec    57.01     85.64   777.00     88.52%
+  6259 requests in 15.05s, 4.61MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:    415.75
+Transfer/sec:    313.57KB
+
+---------------------------------------------------------
+ Queries: 20 for lift-stateless
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db/20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   884.57ms  228.37ms   1.15s    64.79%
+    Req/Sec    53.64     82.70   666.00     89.43%
+  5901 requests in 15.03s, 5.24MB read
+  Socket errors: connect 0, read 0, write 0, timeout 62
+Requests/sec:    392.57
+Transfer/sec:    356.87KB

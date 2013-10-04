@@ -1,21 +1,31 @@
-
 import subprocess
-import sys
 import setup_util
+import multiprocessing
 import os
 
-def start(args):
-  subprocess.Popen("gunicorn hello:app -b 0.0.0.0:8080 -w " + str((args.max_threads * 2)) + " --log-level=critical", shell=True, cwd="wsgi")
-  return 0
-def stop():
-  p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-  out, err = p.communicate()
-  for line in out.splitlines():
-    if 'gunicorn' in line:
-      try:
-        pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
-      except OSError:
-        pass
+bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
+NCPU = multiprocessing.cpu_count()
 
-  return 0
+proc = None
+
+
+def start(args):
+    global proc
+    proc = subprocess.Popen([
+        bin_dir + "/gunicorn",
+        "hello:app",
+        "-k", "meinheld.gmeinheld.MeinheldWorker",
+        "-b", "0.0.0.0:8080",
+        '-w', str(NCPU),
+        "--log-level=critical"],
+        cwd="wsgi")
+    return 0
+
+def stop():
+    global proc
+    if proc is None:
+        return 0
+    proc.terminate()
+    proc.wait()
+    proc = None
+    return 0

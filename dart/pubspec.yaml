@@ -1,0 +1,8 @@
+name: dartbenchmark
+description: A benchmark of dart
+dependencies:
+  args: 0.5.9
+  crypto: 0.5.13
+  mustache: 0.1.5
+  postgresql: 0.2.7
+  yaml: 0.5.7

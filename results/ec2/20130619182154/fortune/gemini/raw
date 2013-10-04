@@ -1,0 +1,127 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.48ms    2.13ms  26.71ms   91.94%
+    Req/Sec   523.83    224.43     1.22k    70.06%
+  18799 requests in 5.00s, 25.60MB read
+Requests/sec:   3760.17
+Transfer/sec:      5.12MB
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.09ms   76.29ms 328.32ms   90.99%
+    Req/Sec   719.02    337.30     2.33k    73.08%
+  82348 requests in 15.18s, 112.15MB read
+Requests/sec:   5425.93
+Transfer/sec:      7.39MB
+
+---------------------------------------------------------
+ Concurrency: 8 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.42ms  542.67us  15.60ms   89.51%
+    Req/Sec   755.14    138.11     1.11k    63.89%
+  85895 requests in 15.00s, 116.98MB read
+Requests/sec:   5726.66
+Transfer/sec:      7.80MB
+
+---------------------------------------------------------
+ Concurrency: 16 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.11ms    4.76ms  68.79ms   99.32%
+    Req/Sec   776.04    163.91     1.44k    68.97%
+  88412 requests in 15.00s, 120.40MB read
+Requests/sec:   5893.91
+Transfer/sec:      8.03MB
+
+---------------------------------------------------------
+ Concurrency: 32 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.54ms    2.46ms  45.24ms   96.82%
+    Req/Sec   780.25    131.58     1.33k    79.75%
+  88606 requests in 15.00s, 120.67MB read
+Requests/sec:   5906.48
+Transfer/sec:      8.04MB
+
+---------------------------------------------------------
+ Concurrency: 64 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.63ms    2.82ms  65.60ms   89.93%
+    Req/Sec   799.55    130.72     1.67k    75.36%
+  90938 requests in 15.00s, 123.84MB read
+Requests/sec:   6062.64
+Transfer/sec:      8.26MB
+
+---------------------------------------------------------
+ Concurrency: 128 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.59ms    7.62ms 154.03ms   92.07%
+    Req/Sec   789.09    230.02     1.89k    70.82%
+  89755 requests in 15.00s, 122.23MB read
+Requests/sec:   5983.62
+Transfer/sec:      8.15MB
+
+---------------------------------------------------------
+ Concurrency: 256 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.80ms   50.50ms   1.26s    98.79%
+    Req/Sec   774.51    301.47     3.90k    70.61%
+  87830 requests in 15.00s, 119.61MB read
+Requests/sec:   5853.92
+Transfer/sec:      7.97MB

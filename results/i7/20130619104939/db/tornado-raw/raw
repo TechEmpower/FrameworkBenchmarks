@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 13:08:28 PDT 2013
+
+  System load:  0.61                Processes:           135
+  Usage of /:   11.2% of 129.62GB   Users logged in:     1
+  Memory usage: 9%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.47ms  429.11us   8.24ms   81.46%
+    Req/Sec   742.50    145.51     1.11k    71.36%
+  28129 requests in 5.00s, 5.04MB read
+Requests/sec:   5625.22
+Transfer/sec:      1.01MB
+
+---------------------------------------------------------
+ Running Warmup tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.64ms   10.69ms 101.57ms   74.45%
+    Req/Sec     1.00k   293.01     2.22k    62.73%
+  113517 requests in 15.00s, 20.33MB read
+Requests/sec:   7567.29
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 8 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.49ms  432.85us   8.38ms   75.42%
+    Req/Sec   734.16    159.83     1.11k    63.72%
+  83536 requests in 15.00s, 14.96MB read
+Requests/sec:   5568.83
+Transfer/sec:      1.00MB
+
+---------------------------------------------------------
+ Concurrency: 16 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.10ms  683.83us  15.47ms   69.02%
+    Req/Sec     1.00k   199.51     1.67k    63.61%
+  113551 requests in 15.00s, 20.33MB read
+Requests/sec:   7570.02
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 32 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.97ms    1.47ms  23.75ms   85.52%
+    Req/Sec     1.07k   185.66     1.67k    74.36%
+  121418 requests in 15.00s, 21.74MB read
+Requests/sec:   8094.26
+Transfer/sec:      1.45MB
+
+---------------------------------------------------------
+ Concurrency: 64 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.75ms    4.73ms  29.29ms   72.43%
+    Req/Sec     1.06k   181.04     1.55k    75.63%
+  120710 requests in 15.00s, 21.62MB read
+Requests/sec:   8046.91
+Transfer/sec:      1.44MB
+
+---------------------------------------------------------
+ Concurrency: 128 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.59ms    7.71ms  74.26ms   76.40%
+    Req/Sec     1.01k   255.79     1.90k    69.11%
+  114708 requests in 15.00s, 20.54MB read
+Requests/sec:   7646.17
+Transfer/sec:      1.37MB
+
+---------------------------------------------------------
+ Concurrency: 256 for tornado-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.39ms   16.27ms 117.17ms   65.90%
+    Req/Sec     1.00k   299.28     2.22k    67.56%
+  113003 requests in 15.00s, 20.24MB read
+Requests/sec:   7532.26
+Transfer/sec:      1.35MB

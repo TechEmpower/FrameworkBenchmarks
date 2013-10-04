@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 01:43:50 UTC 2013
+
+  System load:  0.09               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer onion
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   692.88us    4.00ms  44.10ms   99.15%
+    Req/Sec     3.01k   349.76     3.44k    98.02%
+  114129 requests in 5.00s, 15.13MB read
+Requests/sec:  22832.86
+Transfer/sec:      3.03MB
+
+---------------------------------------------------------
+ Running Warmup onion
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.48ms   77.43ms   6.49s    99.98%
+    Req/Sec     6.85k     1.73k   23.33k    78.49%
+  771647 requests in 15.00s, 102.29MB read
+  Socket errors: connect 0, read 42, write 0, timeout 77
+Requests/sec:  51443.82
+Transfer/sec:      6.82MB
+
+---------------------------------------------------------
+ Concurrency: 8 for onion
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   321.62us   63.76us   6.10ms   91.46%
+    Req/Sec     3.06k   165.75     3.44k    59.55%
+  346793 requests in 15.00s, 45.97MB read
+Requests/sec:  23121.28
+Transfer/sec:      3.06MB
+
+---------------------------------------------------------
+ Concurrency: 16 for onion
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   384.63us   96.85us   7.88ms   88.43%
+    Req/Sec     5.10k   361.67     6.22k    70.49%
+  579659 requests in 15.00s, 76.84MB read
+Requests/sec:  38648.14
+Transfer/sec:      5.12MB
+
+---------------------------------------------------------
+ Concurrency: 32 for onion
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   657.30us  848.19us  25.31ms   98.67%
+    Req/Sec     6.30k     1.22k    9.89k    68.70%
+  716623 requests in 15.00s, 95.00MB read
+Requests/sec:  47783.90
+Transfer/sec:      6.33MB
+
+---------------------------------------------------------
+ Concurrency: 64 for onion
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.27ms    2.38ms  44.43ms   96.21%
+    Req/Sec     6.81k     2.12k   17.67k    68.80%
+  772919 requests in 15.00s, 102.46MB read
+Requests/sec:  51529.10
+Transfer/sec:      6.83MB
+
+---------------------------------------------------------
+ Concurrency: 128 for onion
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.48ms    2.92ms  37.83ms   94.41%
+    Req/Sec     6.83k     1.78k   26.78k    72.53%
+  774545 requests in 15.00s, 102.67MB read
+Requests/sec:  51640.70
+Transfer/sec:      6.85MB
+
+---------------------------------------------------------
+ Concurrency: 256 for onion
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.12ms   31.28ms   3.13s    99.95%
+    Req/Sec     6.68k     1.49k   23.40k    77.21%
+  755704 requests in 15.00s, 100.18MB read
+  Socket errors: connect 0, read 12, write 0, timeout 53
+Requests/sec:  50381.77
+Transfer/sec:      6.68MB

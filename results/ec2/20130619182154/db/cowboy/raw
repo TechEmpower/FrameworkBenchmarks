@@ -1,0 +1,134 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 01:29:59 UTC 2013
+
+  System load:  0.48               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 9%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.23ms    2.31ms  15.99ms   93.45%
+    Req/Sec   373.70    114.30   600.00     70.12%
+  13812 requests in 5.00s, 2.38MB read
+Requests/sec:   2762.68
+Transfer/sec:    487.59KB
+
+---------------------------------------------------------
+ Running Warmup cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.22ms   26.50ms 185.04ms   89.10%
+    Req/Sec   503.37    298.00     1.89k    69.96%
+  56413 requests in 15.01s, 9.72MB read
+Requests/sec:   3758.70
+Transfer/sec:    663.39KB
+
+---------------------------------------------------------
+ Concurrency: 8 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.40ms    0.90ms  14.80ms   97.35%
+    Req/Sec   447.34     76.30   666.00     77.21%
+  50896 requests in 15.01s, 8.77MB read
+Requests/sec:   3391.35
+Transfer/sec:    598.55KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.99ms    3.86ms  52.32ms   95.72%
+    Req/Sec   456.80    106.34   700.00     79.23%
+  52070 requests in 15.00s, 8.97MB read
+Requests/sec:   3471.17
+Transfer/sec:    612.64KB
+
+---------------------------------------------------------
+ Concurrency: 32 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.71ms    2.10ms  32.03ms   72.40%
+    Req/Sec   489.84    103.60     1.00k    75.64%
+  55447 requests in 15.00s, 9.56MB read
+Requests/sec:   3696.39
+Transfer/sec:    652.39KB
+
+---------------------------------------------------------
+ Concurrency: 64 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.88ms    6.00ms  48.99ms   76.37%
+    Req/Sec   479.60    193.25     1.00k    70.42%
+  54633 requests in 15.00s, 9.42MB read
+Requests/sec:   3641.66
+Transfer/sec:    642.74KB
+
+---------------------------------------------------------
+ Concurrency: 128 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.70ms   11.52ms  88.01ms   81.83%
+    Req/Sec   503.31    264.96     1.78k    62.14%
+  57218 requests in 15.01s, 9.86MB read
+Requests/sec:   3811.99
+Transfer/sec:    672.81KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cowboy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.72ms   11.83ms 112.30ms   79.37%
+    Req/Sec   500.07    291.98     2.00k    67.19%
+  56581 requests in 15.00s, 9.75MB read
+Requests/sec:   3771.86
+Transfer/sec:    665.72KB

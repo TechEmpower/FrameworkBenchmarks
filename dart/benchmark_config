@@ -1,0 +1,28 @@
+{
+  "framework": "dart",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "dart",
+      "language": "Dart",
+      "orm": "Raw",
+      "platform": "Dart",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "dart",
+      "notes": "",
+      "versus": "dart"
+    }
+  }]
+}

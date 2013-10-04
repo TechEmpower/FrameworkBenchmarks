@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 03:29:27 UTC 2013
+
+  System load:  0.02               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/bench/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/bench/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.46ms   28.91ms  93.06ms   74.07%
+    Req/Sec    35.62     50.38   222.00     66.33%
+  1281 requests in 5.01s, 293.65KB read
+Requests/sec:    255.60
+Transfer/sec:     58.59KB
+
+---------------------------------------------------------
+ Running Warmup kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/bench/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/bench/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.12s   993.44ms   3.41s    54.02%
+    Req/Sec    43.52     75.21   666.00     92.13%
+  4803 requests in 15.01s, 1.08MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:    319.88
+Transfer/sec:     73.34KB
+
+---------------------------------------------------------
+ Concurrency: 8 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/bench/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/bench/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   106.73ms   84.66ms 282.60ms   60.76%
+    Req/Sec    45.17     53.01   222.00     57.57%
+  5129 requests in 15.01s, 1.15MB read
+Requests/sec:    341.81
+Transfer/sec:     78.35KB
+
+---------------------------------------------------------
+ Concurrency: 16 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/bench/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/bench/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   512.12ms  382.67ms 920.06ms   47.24%
+    Req/Sec    46.19     61.88   333.00     80.06%
+  5252 requests in 15.02s, 1.18MB read
+Requests/sec:    349.77
+Transfer/sec:     80.18KB
+
+---------------------------------------------------------
+ Concurrency: 32 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/bench/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/bench/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   761.36ms  530.63ms   1.39s    51.11%
+    Req/Sec    45.76     65.56   444.00     93.95%
+  5195 requests in 15.02s, 1.16MB read
+Requests/sec:    345.97
+Transfer/sec:     79.31KB
+
+---------------------------------------------------------
+ Concurrency: 64 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/bench/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/bench/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   985.12ms  618.69ms   1.72s    53.78%
+    Req/Sec    44.88     68.28   500.00     93.38%
+  5066 requests in 15.02s, 1.13MB read
+Requests/sec:    337.38
+Transfer/sec:     77.35KB
+
+---------------------------------------------------------
+ Concurrency: 128 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/bench/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/bench/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14s   571.15ms   1.72s    64.20%
+    Req/Sec    44.54     69.66   500.00     93.04%
+  4982 requests in 15.02s, 1.12MB read
+Requests/sec:    331.65
+Transfer/sec:     76.04KB
+
+---------------------------------------------------------
+ Concurrency: 256 for kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/bench/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/bench/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.09s   922.98ms   3.20s    60.43%
+    Req/Sec    42.79     71.13   600.00     92.75%
+  4764 requests in 15.03s, 1.07MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:    316.99
+Transfer/sec:     72.68KB

@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 05:13:14 UTC 2013
+
+  System load:  0.7                Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    94.32ms   61.03ms 181.86ms   53.65%
+    Req/Sec    43.49     56.58   222.00     81.70%
+  1595 requests in 5.01s, 294.08KB read
+Requests/sec:    318.64
+Transfer/sec:     58.75KB
+
+---------------------------------------------------------
+ Running Warmup ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.65s     1.04s    2.70s    65.52%
+    Req/Sec    65.85     99.13     1.44k    86.08%
+  6760 requests in 15.04s, 1.22MB read
+  Socket errors: connect 0, read 0, write 0, timeout 41
+Requests/sec:    449.52
+Transfer/sec:     82.87KB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    88.39ms   87.93ms 215.26ms   67.30%
+    Req/Sec    81.06     81.68   333.00     80.98%
+  9221 requests in 15.01s, 1.66MB read
+Requests/sec:    614.26
+Transfer/sec:    113.24KB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   168.11ms  168.06ms 395.13ms   67.96%
+    Req/Sec    93.00     99.47   555.00     75.29%
+  10543 requests in 15.01s, 1.90MB read
+Requests/sec:    702.55
+Transfer/sec:    129.52KB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   269.18ms  274.16ms 725.40ms   68.74%
+    Req/Sec   101.02    109.30   666.00     82.99%
+  11485 requests in 15.01s, 2.07MB read
+Requests/sec:    765.20
+Transfer/sec:    141.06KB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   353.35ms  343.46ms 857.32ms   54.67%
+    Req/Sec   101.92    109.12   777.00     83.81%
+  11554 requests in 15.01s, 2.08MB read
+Requests/sec:    769.80
+Transfer/sec:    141.92KB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   573.16ms  511.73ms   1.31s    42.78%
+    Req/Sec   100.74    114.13   800.00     84.49%
+  11394 requests in 15.05s, 2.05MB read
+Requests/sec:    756.90
+Transfer/sec:    139.54KB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs-convinient
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   747.37ms  539.83ms   1.46s    32.01%
+    Req/Sec    98.91    119.17     1.22k    85.40%
+  11215 requests in 15.01s, 2.02MB read
+Requests/sec:    746.96
+Transfer/sec:    137.70KB

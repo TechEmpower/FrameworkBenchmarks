@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri May 17 05:48:20 UTC 2013
+
+  System load:  0.57              Processes:           75
+  Usage of /:   63.7% of 7.87GB   Users logged in:     1
+  Memory usage: 10%               IP address for eth0: 10.254.54.43
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+27 packages can be updated.
+15 updates are security updates.
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.254.19.48:8080/fortunesraw
+---------------------------------------------------------
+
+Running 5s test @ http://10.254.19.48:8080/fortunesraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.95ms    1.91ms  10.45ms   64.58%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  5949 requests in 5.00s, 8.19MB read
+Requests/sec:   1189.16
+Transfer/sec:      1.64MB
+
+---------------------------------------------------------
+ Running Warmup flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/fortunesraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunesraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   244.97ms  103.60ms 755.94ms   73.79%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  35966 requests in 30.01s, 49.53MB read
+Requests/sec:   1198.64
+Transfer/sec:      1.65MB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 8 -t 8 http://10.254.19.48:8080/fortunesraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunesraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.21ms    2.19ms  19.44ms   63.95%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  34937 requests in 30.00s, 48.11MB read
+Requests/sec:   1164.48
+Transfer/sec:      1.60MB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 16 -t 8 http://10.254.19.48:8080/fortunesraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunesraw
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.30ms    5.43ms  51.45ms   70.55%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36173 requests in 30.00s, 49.81MB read
+Requests/sec:   1205.65
+Transfer/sec:      1.66MB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 32 -t 8 http://10.254.19.48:8080/fortunesraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunesraw
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.51ms   22.05ms 118.29ms   58.64%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  35972 requests in 30.00s, 49.54MB read
+Requests/sec:   1199.00
+Transfer/sec:      1.65MB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 64 -t 8 http://10.254.19.48:8080/fortunesraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunesraw
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    65.35ms   33.03ms 196.24ms   70.04%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  36323 requests in 30.00s, 50.02MB read
+Requests/sec:   1210.59
+Transfer/sec:      1.67MB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 128 -t 8 http://10.254.19.48:8080/fortunesraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunesraw
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   123.98ms   53.18ms 345.68ms   73.31%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  35820 requests in 30.01s, 49.33MB read
+Requests/sec:   1193.77
+Transfer/sec:      1.64MB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive' -d 30 -c 256 -t 8 http://10.254.19.48:8080/fortunesraw
+---------------------------------------------------------
+
+Running 30s test @ http://10.254.19.48:8080/fortunesraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   228.56ms   80.14ms 605.63ms   82.02%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  35958 requests in 30.01s, 49.52MB read
+Requests/sec:   1198.27
+Transfer/sec:      1.65MB

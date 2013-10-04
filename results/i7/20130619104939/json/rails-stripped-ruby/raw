@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 26 10:57:05 PDT 2013
+
+  System load:  0.19                Processes:           135
+  Usage of /:   11.1% of 129.62GB   Users logged in:     1
+  Memory usage: 8%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/hello_world/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/hello_world/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.59ms   10.78ms  48.90ms   91.48%
+    Req/Sec   731.54    269.54     1.11k    85.70%
+  27602 requests in 5.00s, 10.16MB read
+Requests/sec:   5520.03
+Transfer/sec:      2.03MB
+
+---------------------------------------------------------
+ Running Warmup rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/hello_world/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.31ms    6.62ms 117.92ms   73.59%
+    Req/Sec   768.96    293.44     2.22k    68.95%
+  87371 requests in 15.00s, 32.16MB read
+Requests/sec:   5825.04
+Transfer/sec:      2.14MB
+
+---------------------------------------------------------
+ Concurrency: 8 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/hello_world/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.71ms   24.38ms 115.68ms   91.68%
+    Req/Sec   722.32    265.86     1.22k    75.86%
+  82336 requests in 15.00s, 30.31MB read
+Requests/sec:   5489.03
+Transfer/sec:      2.02MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/hello_world/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.43ms    3.42ms  71.06ms   95.05%
+    Req/Sec   545.13    221.79     1.22k    62.39%
+  62897 requests in 15.00s, 23.15MB read
+Requests/sec:   4192.71
+Transfer/sec:      1.54MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/hello_world/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.27ms   10.53ms 114.57ms   98.57%
+    Req/Sec   551.34    222.60     1.22k    62.32%
+  62569 requests in 15.00s, 23.03MB read
+Requests/sec:   4170.59
+Transfer/sec:      1.54MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/hello_world/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.18ms    3.28ms  78.45ms   92.21%
+    Req/Sec   772.40    162.09     1.33k    71.20%
+  87877 requests in 15.00s, 32.35MB read
+Requests/sec:   5858.18
+Transfer/sec:      2.16MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/hello_world/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.23ms    4.55ms  89.24ms   86.75%
+    Req/Sec   772.67    236.83     1.55k    72.60%
+  87849 requests in 15.00s, 32.34MB read
+Requests/sec:   5856.02
+Transfer/sec:      2.16MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/hello_world/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.62ms    8.07ms 130.36ms   84.36%
+    Req/Sec   768.13    305.52     2.22k    65.93%
+  87331 requests in 15.00s, 32.14MB read
+Requests/sec:   5821.53
+Transfer/sec:      2.14MB

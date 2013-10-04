@@ -1,24 +1,32 @@
+import random
+import sys
+
+import motor
 import tornado.ioloop
 import tornado.web
-from tornado import gen
-import motor
-import random
-from tornado import escape
+from tornado import gen, escape
 import tornado.options
 from tornado.options import options
+import tornado.httpserver
+
+tornado.options.define('port', default=8888, type=int, help="Server port")
 
 
-tornado.options.define('port', default=8888, type=int, help=(
-    "Server port"))
+class BaseHandler(tornado.web.RequestHandler):
+    def compute_etag(self):
+        return None
 
-db = motor.MotorClient("127.0.0.1").open_sync().hello_world
-
-class JsonSerializeTestHandler(tornado.web.RequestHandler):
+class JsonSerializeTestHandler(BaseHandler):
     def get(self):
         obj = dict(message="Hello, World!")
         self.write(obj)
 
-class QueryTestHandler(tornado.web.RequestHandler):
+class PlaintextHandler(BaseHandler):
+    def get(self):
+        self.set_header('Content-Type', 'text/plain')
+        self.write(b"Hello, World!")
+
+class QueryTestHandler(BaseHandler):
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
@@ -44,10 +52,14 @@ class QueryTestHandler(tornado.web.RequestHandler):
 
 application = tornado.web.Application([
     (r"/json", JsonSerializeTestHandler),
+    (r"/plaintext", PlaintextHandler),
     (r"/db", QueryTestHandler),
 ])
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
-    application.listen(options.port)
+    server = tornado.httpserver.HTTPServer(application)
+    server.bind(options.port)
+    server.start(0)
+    db = motor.MotorClient("localhost").open_sync().hello_world
     tornado.ioloop.IOLoop.instance().start()

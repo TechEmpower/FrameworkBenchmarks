@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 04:42:09 UTC 2013
+
+  System load:  0.26               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spark
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/spark/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/spark/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.69ms   20.08ms 129.83ms   97.13%
+    Req/Sec     1.00k   494.82     3.11k    74.35%
+  36007 requests in 5.00s, 5.32MB read
+Requests/sec:   7203.07
+Transfer/sec:      1.06MB
+
+---------------------------------------------------------
+ Running Warmup spark
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/spark/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/spark/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.39ms  708.14ms  14.95s    99.16%
+    Req/Sec     3.43k     2.01k   13.89k    65.30%
+  312270 requests in 15.00s, 46.16MB read
+  Socket errors: connect 0, read 0, write 0, timeout 598
+Requests/sec:  20817.31
+Transfer/sec:      3.08MB
+
+---------------------------------------------------------
+ Concurrency: 8 for spark
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/spark/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/spark/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.01ms   19.06ms 104.00ms   96.44%
+    Req/Sec     2.74k   601.44     3.56k    94.82%
+  311920 requests in 15.00s, 46.11MB read
+Requests/sec:  20796.60
+Transfer/sec:      3.07MB
+
+---------------------------------------------------------
+ Concurrency: 16 for spark
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/spark/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/spark/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   619.70us  404.22us  16.26ms   96.25%
+    Req/Sec     3.41k   620.71     6.00k    66.14%
+  387548 requests in 15.00s, 57.29MB read
+Requests/sec:  25838.39
+Transfer/sec:      3.82MB
+
+---------------------------------------------------------
+ Concurrency: 32 for spark
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/spark/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/spark/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.24ms  574.96us  21.60ms   90.91%
+    Req/Sec     3.42k   498.89     9.00k    72.68%
+  389044 requests in 15.00s, 57.51MB read
+Requests/sec:  25939.78
+Transfer/sec:      3.83MB
+
+---------------------------------------------------------
+ Concurrency: 64 for spark
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/spark/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/spark/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.58ms    1.07ms  27.10ms   87.26%
+    Req/Sec     3.31k   456.56     9.70k    73.70%
+  375836 requests in 15.00s, 55.56MB read
+Requests/sec:  25061.72
+Transfer/sec:      3.70MB
+
+---------------------------------------------------------
+ Concurrency: 128 for spark
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/spark/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/spark/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.03ms    1.91ms  42.30ms   79.76%
+    Req/Sec     3.36k   451.11     7.55k    76.85%
+  381181 requests in 15.00s, 56.35MB read
+Requests/sec:  25416.25
+Transfer/sec:      3.76MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spark
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/spark/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/spark/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.49ms  196.23ms   6.21s    99.72%
+    Req/Sec     3.31k   808.98    13.11k    85.03%
+  375916 requests in 14.99s, 55.57MB read
+  Socket errors: connect 0, read 0, write 0, timeout 69
+Requests/sec:  25077.13
+Transfer/sec:      3.71MB

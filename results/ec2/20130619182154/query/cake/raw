@@ -1,0 +1,126 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 20:58:54 UTC 2013
+
+  System load:  0.33               Processes:           74
+  Usage of /:   25.8% of 19.69GB   Users logged in:     1
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cake
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/world.json?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/world.json?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    93.79ms   40.19ms 138.11ms   57.77%
+    Req/Sec    29.41     47.25   200.00     71.98%
+  1120 requests in 5.01s, 304.60KB read
+Requests/sec:    223.40
+Transfer/sec:     60.76KB
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/world.json?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/world.json?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.15s     1.17s    4.43s    58.51%
+    Req/Sec    27.78     56.52   555.00     77.66%
+  2995 requests in 15.16s, 814.69KB read
+  Socket errors: connect 0, read 0, write 0, timeout 22
+Requests/sec:    197.54
+Transfer/sec:     53.73KB
+
+---------------------------------------------------------
+ Queries: 1 for cake
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/world.json?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/world.json?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.03s     1.28s    5.10s    59.57%
+    Req/Sec    28.47     56.40   555.00     76.80%
+  3102 requests in 15.07s, 735.47KB read
+  Socket errors: connect 0, read 0, write 0, timeout 19
+Requests/sec:    205.80
+Transfer/sec:     48.79KB
+
+---------------------------------------------------------
+ Queries: 5 for cake
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/world.json?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/world.json?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.67s   633.05ms   3.65s    72.82%
+    Req/Sec    22.27     48.77   400.00     80.98%
+  2427 requests in 15.16s, 0.90MB read
+  Socket errors: connect 0, read 0, write 0, timeout 51
+Requests/sec:    160.10
+Transfer/sec:     60.48KB
+
+---------------------------------------------------------
+ Queries: 10 for cake
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/world.json?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/world.json?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.35s     1.01s    5.09s    65.38%
+    Req/Sec    18.45     43.96   500.00     83.83%
+  1951 requests in 15.16s, 1.05MB read
+  Socket errors: connect 0, read 0, write 0, timeout 121
+Requests/sec:    128.69
+Transfer/sec:     71.10KB
+
+---------------------------------------------------------
+ Queries: 15 for cake
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/world.json?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/world.json?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.25s   458.79ms   3.55s    87.15%
+    Req/Sec    15.77     40.88   400.00     86.06%
+  1625 requests in 15.10s, 1.15MB read
+  Socket errors: connect 0, read 0, write 0, timeout 207
+Requests/sec:    107.59
+Transfer/sec:     78.24KB
+
+---------------------------------------------------------
+ Queries: 20 for cake
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/world.json?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/world.json?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.52s   416.84ms   3.88s    88.58%
+    Req/Sec    14.08     38.76   333.00     87.50%
+  1412 requests in 15.27s, 1.24MB read
+  Socket errors: connect 0, read 0, write 0, timeout 378
+Requests/sec:     92.48
+Transfer/sec:     83.41KB

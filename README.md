@@ -1,6 +1,6 @@
 # Web Framework Performance Comparison
 
-This project is an attempt to provide representative and objective performance measures across a wide field of web application frameworks. With much help from the community, we now have very broad coverage and are happy to broaden it further with contributions. The project presently includes frameworks on many languages including Go, Python, Java, Ruby, PHP, Clojure, Groovy, JavaScript, Erlang, Haskell, Scala, Lua, and C.  The current tests exercise the frameworks' JSON seralization and object-relational model (ORM).  Future tests will exercise server-side template libraries and other computation.
+This project provides representative performance measures across a wide field of web application frameworks. With much help from the community, coverage is quite broad and we are happy to broaden it further with contributions. The project presently includes frameworks on many languages including Go, Python, Java, Ruby, PHP, Clojure, Groovy, JavaScript, Erlang, Haskell, Scala, Lua, and C.  The current tests exercise plaintext responses, JSON seralization, database reads and writes via the object-relational mapper (ORM), collections, sorting, server-side templates, and XSS counter-measures.  Future tests will exercise other components and greater computation.
 
 Read more and see the results of our tests on Amazon EC2 and physical hardware at http://www.techempower.com/benchmarks/
 
@@ -8,128 +8,9 @@ Join in the conversation at our Google Group: https://groups.google.com/forum/?f
 
 ## Running the test suite
 
-We ran our tests using two dedicated i7 2600k machines as well as two EC2 m1.large instances. Below you will find instructions on how to replicate our tests using either EC2 or your own dedicated machines.
+We ran our tests using two dedicated i7 2600k machines as well as two EC2 m1.large instances.
 
-###EC2 Instructions
-
-#### 1. Create EC2 Instances
-
-Create two EC2 instances running Ubuntu Server 12.04.1 LTS 64-bit. We tested on m1.large instances, but feel free to experiment with different configurations. Give the instance that will act as the application server more then the default 8GB of disk capacity (we used 20GB).
-
-##### Security Group
-
-When propmted to create a security group for the instances, here are the ports that you'll need to open.
-
-* 22 (SSH)
-* 8080 (Most of the tests run on 8080)
-* 3306 (MySQL)
-* 5432 (PostgreSQL)
-* 9000 (Play Framework)
-* 27017 (MongoDB)
-* 3000 (yesod)
-* 8000 (snap)
-
-
-#### 2. Setting up the servers
-
-To coordinate the tests via scripting, the servers need to be able to work together. So once the instances are running, the first thing you'll want to do is copy your ssh key to the application server instance so that you can ssh between the two machines:
-
-	sftp -i path-to-pem-file ubuntu@server-instance-ip
-	put path-to-pem-file .ssh/
-	exit
-
-Now ssh into the server instance and clone the latest from this repository (the scripts we use to run the tests expect that you'll clone the repository into your home directory):
-
-	ssh -i path-to-pem-file ubuntu@server-instance-ip
-	yes | sudo apt-get install git-core
-	git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
-	cd FrameworkBenchmarks
-
-Next, we're going to setup the servers with all the necessary software:
-
-	./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --install-software --list-tests
-    source ~/.bash_profile
-    # For your first time through the tests, set the ulimit for open files
-    ulimit -n 8192
-    # Most software is installed autormatically by the script, but running the mongo command below from 
-    # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
-    cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
-    cd ../../..
-    cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
-    cd ..
-    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
-	  mongo --host client-private-ip < config/create.js
-
-Assuming the above finished without error, we're ready to start the test suite:
-
-	nohup ./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --max-threads number-of-cores &
-
-For the number-of-cores parameter, you will need to know your application server's core count. For example, Amazon EC2 large instances have 2 cores.
-
-This script will run the full set of tests. Results of all the tests will output to ~/FrameworkBenchmarks/results/ec2/*timestamp*. If you use a different configuration than two m1.large instances, please use the --name option to name the results appropriately.
-
-	nohup ./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --max-threads cores --name ec2-servertype-clienttype &
-
-So if you were running an m1.large and an m1.medium, it would look like this:
-
-	nohup ./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --max-threads cores --name ec2-m1.large-m1.medium &
-
-This will allow us to differentiate results.
-
-Be aware that on Large instances, if you include the slower frameworks (and they are included by default), the total runtime of a full suite of tests can be measured in days, not just hours. The EC2 bill isn't going to break the bank, but it's also not going to be chump change.
-
-### Dedicated Hardware Instructions
-
-If you have two servers or workstations lying around, then you can install and run the tests on physical hardware. Please be aware that these setup instructions can overwrite software and settings, It's best to follow these instructions on clean hardware. We assume that both machines are running Ubuntu Server 12.04 64-bit.
-
-#### 1. Prerequisites
-
-Before you get started, there are a couple of steps you can take to make running the tests easier on yourself. Since the tests can run for several hours, it helps to set everything up so that once the tests are running, you can leave the machines unattended and don't need to be around to enter ssh or sudo passwords.
-
-1. Setup an ssh key for the client machine
-2. Edit your sudoers file so that you do not need to enter your password for sudo access
-
-#### 2. Setting up the servers
-
-As it currently stands, the script that runs the tests makes some assumptions about where the code is placed, we assume that the FrameworkBenchmarks repository will be located in your home directory.
-
-Check out the latest from github:
-
-	cd ~
-	git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
-	cd FrameworkBenchmarks
-
-Next, we're going to setup the servers with all the necessary software:
-
-	./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --install-software --list-tests
-    source ~/.bash_profile
-    # For your first time through the tests, set the ulimit for open files
-    # Most software is installed autormatically by the script, but running the mongo command below from
-    # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.3 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
-    cd target && rvm jruby-1.7.3 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
-    cd ../../..
-    cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
-    cd ..
-    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
-    mongo --host client-ip < config/create.js
-
-Assuming this finished without error, we're ready to start the test suite:
-
-	nohup ./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --max-threads cores --name unique-machine-name &
-
-This will run the full set of tests. Results of all the tests will output to ~/FrameworkBenchmarks/results/unique-machine-name/*timestamp*.
-
-## Result Files
-
-After a test run, the directory ~/FrameworkBenchmarks/results/machine-name/timestamp will contains all the result files. In this folder are four files: three CSV files, one for each of the test types (json, db, query), and a single results.json file that contains all the results as well as some additional information. The results.json file is what we use to drive our blog post, and may or may not be useful to you. There are three subdirectories: one for each of the test types (json, db, query), each of these directories contain the raw weighttp results for each framework.
-
-## Benchmarking a Single Test
-
-If you are making changes to any of the tests, or you simply want to verify a single test, you can run the script with the --test flag. For example, if you only wanted to run the JRuby tests:
-
-	nohup ./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --max-threads cores --name unique-machine-name --test rack-jruby sinatra-jruby rails-jruby
+On the [Benchmark Tools README file](toolset/README.md) you will find tools and instructions to replicate our tests using EC2, Windows Azure or your own dedicated machines.
 
 ## Updating Tests
 
@@ -145,7 +26,7 @@ Also, if you do change the dependency of any test, please update the README file
 
 If you would like to update any of the software used, again, please be as specific as possible, while we still install some software via apt-get and don't specify a version, we would like to have as much control over the versions as possible.
 
-The main file that installs all the software is in installer.py. It's broken up into two sections, server software and client software.
+The main file that installs all the software is in `toolset/setup/linux/installer.py`. It's broken up into two sections, server software and client software.
 
 Additionally, it may be necessary to update the setup.py file in the framework's directory to use this new version.
 

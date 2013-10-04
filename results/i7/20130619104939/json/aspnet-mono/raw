@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Jun 27 10:10:50 PDT 2013
+
+  System load:  2.03                Processes:           130
+  Usage of /:   11.4% of 129.62GB   Users logged in:     1
+  Memory usage: 3%                  IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+29 packages can be updated.
+13 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:8080/json/default
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json/default
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    58.96ms  144.97ms 682.29ms   93.81%
+    Req/Sec   226.81    157.00   666.00     57.21%
+  7464 requests in 5.01s, 8.33MB read
+Requests/sec:   1491.02
+Transfer/sec:      1.66MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/default
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   633.28ms  816.68ms   2.28s    71.93%
+    Req/Sec   230.94    226.61     1.55k    57.46%
+  26316 requests in 15.02s, 29.18MB read
+Requests/sec:   1752.64
+Transfer/sec:      1.94MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/default
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.99ms   39.69ms 106.28ms   80.34%
+    Req/Sec   258.14    157.65   666.00     62.69%
+  29452 requests in 15.00s, 32.88MB read
+Requests/sec:   1963.27
+Transfer/sec:      2.19MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/default
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.02ms   69.32ms 201.60ms   82.48%
+    Req/Sec   287.21    194.05     1.00k    62.79%
+  32814 requests in 15.00s, 36.62MB read
+Requests/sec:   2187.21
+Transfer/sec:      2.44MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/default
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    82.20ms  105.76ms 258.98ms   71.96%
+    Req/Sec   261.12    223.78     1.33k    53.53%
+  29807 requests in 15.00s, 33.28MB read
+Requests/sec:   1986.57
+Transfer/sec:      2.22MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/default
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   126.89ms  162.25ms 460.33ms   73.54%
+    Req/Sec   264.92    231.72     1.55k    54.53%
+  30210 requests in 15.00s, 33.74MB read
+Requests/sec:   2013.44
+Transfer/sec:      2.25MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/default
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   223.52ms  254.61ms 679.47ms   72.40%
+    Req/Sec   245.71    227.49     1.33k    55.70%
+  27852 requests in 15.02s, 31.18MB read
+Requests/sec:   1854.83
+Transfer/sec:      2.08MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json/default
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/default
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   706.99ms  739.79ms   1.92s    73.01%
+    Req/Sec   203.11    224.21     1.44k    83.33%
+  23324 requests in 15.01s, 26.23MB read
+Requests/sec:   1554.26
+Transfer/sec:      1.75MB

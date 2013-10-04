@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Jun 28 04:55:38 UTC 2013
+
+  System load:  0.61               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 6%                 IP address for eth0: 10.254.111.115
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.01ms   22.22ms  77.12ms   85.55%
+    Req/Sec   125.10    107.13   555.00     62.38%
+  4406 requests in 5.00s, 778.79KB read
+Requests/sec:    880.44
+Transfer/sec:    155.63KB
+
+---------------------------------------------------------
+ Running Warmup ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15s     2.36s    6.62s    83.64%
+    Req/Sec   290.44    220.47     4.11k    70.90%
+  32553 requests in 15.00s, 5.62MB read
+  Socket errors: connect 0, read 0, write 0, timeout 152
+Requests/sec:   2170.00
+Transfer/sec:    383.56KB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.47ms   46.94ms 145.90ms   76.59%
+    Req/Sec   558.38    463.24     2.33k    62.13%
+  63276 requests in 15.00s, 10.92MB read
+Requests/sec:   4218.03
+Transfer/sec:    745.57KB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.58ms   45.63ms 149.65ms   87.02%
+    Req/Sec   682.51    430.86     2.89k    65.96%
+  77453 requests in 15.00s, 13.37MB read
+Requests/sec:   5163.70
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.00ms   40.90ms 188.41ms   92.95%
+    Req/Sec   798.18    392.48     3.00k    69.89%
+  90948 requests in 15.00s, 15.70MB read
+Requests/sec:   6061.94
+Transfer/sec:      1.05MB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.55ms   21.02ms 230.41ms   92.95%
+    Req/Sec     0.87k   289.84     2.90k    72.14%
+  99503 requests in 15.00s, 17.18MB read
+Requests/sec:   6633.17
+Transfer/sec:      1.14MB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.51ms   38.55ms 320.68ms   90.30%
+    Req/Sec     0.92k   324.90     2.78k    73.58%
+  104850 requests in 15.00s, 18.10MB read
+Requests/sec:   6990.45
+Transfer/sec:      1.21MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.253.67.217:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.58ms   76.44ms 645.14ms   90.11%
+    Req/Sec     0.90k   327.75     3.11k    73.57%
+  101803 requests in 15.00s, 17.57MB read
+Requests/sec:   6788.73
+Transfer/sec:      1.17MB

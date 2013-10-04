@@ -1,0 +1,113 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 2.0
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+47 packages can be updated.
+21 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.253.67.217:8080/servlet/postgres-update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.16ms    1.88ms  17.30ms   73.92%
+    Req/Sec   131.97     49.22   222.00     71.83%
+  4975 requests in 5.00s, 0.92MB read
+Requests/sec:    994.22
+Transfer/sec:    188.91KB
+
+---------------------------------------------------------
+ Running Warmup servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/servlet/postgres-update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   239.00ms  159.03ms 634.84ms   78.87%
+    Req/Sec   189.28    157.96     1.78k    66.92%
+  22218 requests in 15.01s, 4.12MB read
+Requests/sec:   1480.28
+Transfer/sec:    281.25KB
+
+---------------------------------------------------------
+ Queries: 1 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/servlet/postgres-update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   138.47ms  137.60ms 530.27ms   85.90%
+    Req/Sec   363.91    313.90     2.89k    71.19%
+  42504 requests in 15.00s, 6.60MB read
+Requests/sec:   2833.88
+Transfer/sec:    450.49KB
+
+---------------------------------------------------------
+ Queries: 5 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/servlet/postgres-update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   599.05ms  220.48ms 908.21ms   49.25%
+    Req/Sec    76.23     84.78   700.00     83.12%
+  8974 requests in 15.03s, 2.49MB read
+Requests/sec:    597.05
+Transfer/sec:    169.60KB
+
+---------------------------------------------------------
+ Queries: 10 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/servlet/postgres-update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07s   239.65ms   1.41s    66.91%
+    Req/Sec    41.42     63.03   500.00     87.34%
+  4725 requests in 15.04s, 2.03MB read
+Requests/sec:    314.27
+Transfer/sec:    138.05KB
+
+---------------------------------------------------------
+ Queries: 15 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/servlet/postgres-update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.53s   238.46ms   1.74s    78.76%
+    Req/Sec    28.43     53.53   400.00     78.18%
+  3165 requests in 15.05s, 1.84MB read
+Requests/sec:    210.35
+Transfer/sec:    125.03KB
+
+---------------------------------------------------------
+ Queries: 20 for servlet-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.253.67.217:8080/servlet/postgres-update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.253.67.217:8080/servlet/postgres-update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.85s   215.59ms   2.09s    72.23%
+    Req/Sec    22.29     48.14   444.00     81.29%
+  2436 requests in 15.05s, 1.78MB read
+Requests/sec:    161.90
+Transfer/sec:    121.36KB
