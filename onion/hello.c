@@ -223,7 +223,7 @@ void free_connection(struct test_data *data, MYSQL *db){
 }
 
 onion_connection_status return_plaintext(onion_request *req, onion_response *res){
-	onion_response_set_header(res, "Content-Type","plain/text");
+	onion_response_set_header(res, "Content-Type","text/plain");
 	onion_response_write0(res, "Hello, World!");
 	return OCS_PROCESSED;
 }
