@@ -40,58 +40,9 @@ When adding a new framework or new test to an existing framework, please follow 
 * Update/add [setup file](#setup-files)
 * When creating a database test, please use the MySQL table hello_world.World, or the MongoDB collection hello_world.world
 
-There are three different tests that we currently run:
+### The Tests
 
-* JSON Response
-* Database (single query)
-* Database (multiple query)
-
-The single query database test can be treated as a special case of the multiple query test with the query-count parameter set to 1.
-
-### JSON Response
-
-This test needs to follow the following conventions:
-
-* The message object should be instantiated as a new object for each request.
-* The test should use a JSON serializer to render the newly instantiated object to JSON.
-* Set the response Content-Type to application/json.
-* The response should be {"message": "Hello, World!"}
-* White space in the response does not matter.
-
-Pseudo-code:
-
-	obj = { message : "Hello, World!" }
-	render json.encode(obj)
-
-### Database (single query)
-
-This test will:
-
-* Access a database table or collection named "World" that is known to contain 10,000 rows/entries.
-* Query for a single row from the table or collection using a randomly generated id (the ids range from 1 to 10,000).
-* Set the response Content-Type to application/json.
-* Serialize the row to JSON and send the resulting string as the response.
-
-By convention, if the test does not use an ORM, and instead uses the raw database connectivity provided by the platform (e.g., JDBC), we append a "-raw" to the test name in the [benchmark_config](#the-benchmark_config-file) file.  For example, "php-raw".
-
-Pseudo-code:
-
-	random_id = random(1, 10000)
-	world = World.find(random_id)
-	render json.encode(world)
-
-### Database (multiple queries)
-
-This test is very similar to the single query test, and in some cases it will be implemented using the same code. A URL parameter is made available to specify the number of queries to run per request. The response is a list of objects resulting from the queries for random rows.
-
-Pseudo-code:
-
-	number_of_queries = get("queries")
-	worlds = []
-	for i = 0; i < number_of_queries; i++
-        random_id = random(1, 10000)
-        worlds[i] = World.find(random_id)
-	render json.encode(worlds)
+For descriptions of the test types that we run against each framework, see the [test requirements section of the Results web site](http://www.techempower.com/benchmarks/#section=code).
 
 ## The benchmark_config File
 
