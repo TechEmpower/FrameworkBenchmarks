@@ -10,98 +10,97 @@ import pprint
 import csv
 import sys
 import logging
-from multiprocessing import Process
 from datetime import datetime
 
 class Benchmarker:
 
-##########################################################################################
-# Public methods
-##########################################################################################
+  ##########################################################################################
+  # Public methods
+  ##########################################################################################
 
-############################################################
-# Prints all the available tests
-############################################################
-def run_list_tests(self):
-all_tests = self.__gather_tests
+  ############################################################
+  # Prints all the available tests
+  ############################################################
+  def run_list_tests(self):
+    all_tests = self.__gather_tests
 
-for test in all_tests:
-print test.name
+    for test in all_tests:
+      print test.name
 
-self.__finish()
-############################################################
-# End run_list_tests
-############################################################
+    self.__finish()
+  ############################################################
+  # End run_list_tests
+  ############################################################
 
-############################################################
-# Prints the metadata for all the available tests
-############################################################
-def run_list_test_metadata(self):
-all_tests = self.__gather_tests
-all_tests_json = json.dumps(map(lambda test: {
-"name": test.name,
-"approach": test.approach,
-"classification": test.classification,
-"database": test.database,
-"framework": test.framework,
-"language": test.language,
-"orm": test.orm,
-"platform": test.platform,
-"webserver": test.webserver,
-"os": test.os,
-"database_os": test.database_os,
-"display_name": test.display_name,
-"notes": test.notes,
-"versus": test.versus
-}, all_tests))
+  ############################################################
+  # Prints the metadata for all the available tests
+  ############################################################
+  def run_list_test_metadata(self):
+    all_tests = self.__gather_tests
+    all_tests_json = json.dumps(map(lambda test: {
+      "name": test.name,
+      "approach": test.approach,
+      "classification": test.classification,
+      "database": test.database,
+      "framework": test.framework,
+      "language": test.language,
+      "orm": test.orm,
+      "platform": test.platform,
+      "webserver": test.webserver,
+      "os": test.os,
+      "database_os": test.database_os,
+      "display_name": test.display_name,
+      "notes": test.notes,
+      "versus": test.versus
+    }, all_tests))
 
-with open(os.path.join(self.full_results_directory(), "test_metadata.json"), "w") as f:
-f.write(all_tests_json)
+    with open(os.path.join(self.full_results_directory(), "test_metadata.json"), "w") as f:
+      f.write(all_tests_json)
 
-self.__finish()
+    self.__finish()
 
 
-############################################################
-# End run_list_test_metadata
-############################################################
+  ############################################################
+  # End run_list_test_metadata
+  ############################################################
+  
+  ############################################################
+  # parse_timestamp
+  # Re-parses the raw data for a given timestamp
+  ############################################################
+  def parse_timestamp(self):
+    all_tests = self.__gather_tests
 
-############################################################
-# parse_timestamp
-# Re-parses the raw data for a given timestamp
-############################################################
-def parse_timestamp(self):
-all_tests = self.__gather_tests
+    for test in all_tests:
+      test.parse_all()
+    
+    self.__parse_results(all_tests)
 
-for test in all_tests:
-test.parse_all()
+    self.__finish()
 
-self.__parse_results(all_tests)
+  ############################################################
+  # End parse_timestamp
+  ############################################################
 
-self.__finish()
+  ############################################################
+  # Run the tests:
+  # This process involves setting up the client/server machines
+  # with any necessary change. Then going through each test,
+  # running their setup script, verifying the URLs, and
+  # running benchmarks against them.
+  ############################################################
+  def run(self):
+    ##########################
+    # Get a list of all known
+    # tests that we can run.
+    ##########################    
+    all_tests = self.__gather_tests
 
-############################################################
-# End parse_timestamp
-############################################################
-
-############################################################
-# Run the tests:
-# This process involves setting up the client/server machines
-# with any necessary change. Then going through each test,
-# running their setup script, verifying the URLs, and
-# running benchmarks against them.
-############################################################
-def run(self):
-##########################
-# Get a list of all known
-# tests that we can run.
-##########################    
-all_tests = self.__gather_tests
-
-##########################
-# Setup client/server
-##########################
-print textwrap.dedent("""
-=====================================================
+    ##########################
+    # Setup client/server
+    ##########################
+    print textwrap.dedent("""
+      =====================================================
         Preparing Server, Database, and Client ...
       =====================================================
       """)
@@ -387,74 +386,39 @@ print textwrap.dedent("""
 
   ############################################################
   # __run_tests
-  #
-  # 2013-10-02 ASB  Calls each test passed in tests to
-  #                 __run_test in a separate process.  Each
-  #                 test is given a set amount of time and if
-  #                 kills the child process (and subsequently
-  #                 all of its child processes).  Uses
-  #                 multiprocessing module.
-  ############################################################
-
-  def __run_tests(self, tests):
-    logging.debug("Start __run_tests.")
-    logging.debug("__name__ = %s",__name__)
-    for test in tests:
-      if __name__ == 'benchmark.benchmarker':
-        test_process = Process(target=self.__run_test, args=(test,))
-        test_process.start()
-        test_process.join(self.run_test_timeout_seconds)
-        if(test_process.is_alive()):
-          logging.debug("Child process for %s is still alive. Terminating.",test.name)
-          self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
-          test_process.terminate()
-    logging.debug("End __run_tests.")
-
-  ############################################################
-  # End __run_tests
-  ############################################################
-
-  ############################################################
-  # __run_test
-  # 2013-10-02 ASB  Previously __run_tests.  This code now only
-  #                 processes a single test.
-  #
   # Ensures that the system has all necessary software to run
   # the tests. This does not include that software for the individual
   # test, but covers software such as curl and weighttp that
   # are needed.
   ############################################################
-  def __run_test(self, test):
+  def __run_tests(self, tests):
 
-      # If the user specified which tests to run, then 
-      # we can skip over tests that are not in that list
-      if self.test != None and test.name not in self.test:
-        return
-
+    for test in tests:
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
         # application server or the database server don't match
         # our current environment
-        logging.info("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.")
-        return 
+        continue
+      
+      # If the user specified which tests to run, then 
+      # we can skip over tests that are not in that list
+      if self.test != None and test.name not in self.test:
+        continue
       
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
-        logging.info("Test %s has been added to the excludes list. Skipping.", test.name)
-        return
+        continue
       
       # If the test does not contain an implementation of the current test-type, skip it
       if self.type != 'all' and not test.contains_type(self.type):
-        logging.info("Test type %s does not contain an implementation of the current test-type. Skipping", self.type)
-        return
+        continue
 
-      logging.debug("test.os.lower() = %s  test.database_os.lower() = %s",test.os.lower(),test.database_os.lower()) 
       logging.debug("self.results['frameworks'] != None: " + str(self.results['frameworks'] != None))
       logging.debug("test.name: " + str(test.name))
       logging.debug("self.results['completed']: " + str(self.results['completed']))
       if self.results['frameworks'] != None and test.name in self.results['completed']:
         logging.info('Framework %s found in latest saved data. Skipping.',str(test.name))
-        return
+        continue
 
       print textwrap.dedent("""
       =====================================================
@@ -490,7 +454,7 @@ print textwrap.dedent("""
             -----------------------------------------------------
             """.format(name=test.name))
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
-          return
+          continue
         
         time.sleep(self.sleep)
 
@@ -674,10 +638,8 @@ print textwrap.dedent("""
   # parsed via argparser.
   ############################################################
   def __init__(self, args):
-    
     self.__dict__.update(args)
     self.start_time = time.time()
-    self.run_test_timeout_seconds = 3600
 
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)

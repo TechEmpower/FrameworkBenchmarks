@@ -1,25 +1,25 @@
 import subprocess
 import setup_util
 from os.path import expanduser
+from os import kill
 
 python = expanduser('~/FrameworkBenchmarks/installs/py2/bin/python')
 cwd = expanduser('~/FrameworkBenchmarks/tornado')
-proc = None
-
 
 def start(args):
-    global proc
     setup_util.replace_text(
         cwd + "/server.py", "localhost", args.database_host)
 
-    proc = subprocess.Popen(
+    subprocess.Popen(
         python + " server.py --port=8080 --logging=error",
         shell=True, cwd=cwd)
     return 0
 
 def stop():
-    global proc
-    if proc:
-        proc.terminate()
-        proc = None
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'FrameworkBenchmarks/installs/py2/bin/python server.py --port=8080 --logging=error' in line:
+        pid = int(line.split(None,2)[1])
+        kill(pid, 9)
     return 0
