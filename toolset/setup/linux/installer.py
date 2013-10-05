@@ -283,8 +283,8 @@ class Installer:
     #
     # Vert.x
     #
-    self.__download("http://vertx.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz")
-    self.__run_command("tar xzf vert.x-1.3.1.final.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.0.0-final.tar.gz")
+    self.__run_command("tar xzf vert.x-2.0.0-final.tar.gz")
 
     #
     # Yesod
