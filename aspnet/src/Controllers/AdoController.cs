@@ -4,12 +4,14 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Web.Mvc;
+using System.Threading.Tasks;
 
 using Benchmarks.AspNet.Models;
 
 namespace Benchmarks.AspNet.Controllers
 {
-    public class AdoController : Controller
+
+    public class AdoController : AsyncController
     {
         Random random = new Random();
 
@@ -22,13 +24,13 @@ namespace Benchmarks.AspNet.Controllers
             return connection;
         }
         
-        public ActionResult Index(string providerName, int? queries)
+        public async Task<ActionResult> Index(string providerName, int? queries)
         {
             List<World> worlds = new List<World>(Math.Max(1, Math.Min(500, queries ?? 1)));
             
             using (DbConnection connection = CreateConnection(providerName))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 
                 using (DbCommand command = connection.CreateCommand())
                 {
@@ -47,9 +49,9 @@ namespace Benchmarks.AspNet.Controllers
                         
                         // Don't use CommandBehavior.SingleRow because that will make the MySql provider
                         // send two extra commands to limit the result to one row.
-                        using (DbDataReader reader = command.ExecuteReader())
+                        using (DbDataReader reader = await command.ExecuteReaderAsync())
                         {
-                            if (reader.Read())
+                            if (await reader.ReadAsync())
                             {
                                 worlds.Add(new World
                                 {
@@ -66,21 +68,21 @@ namespace Benchmarks.AspNet.Controllers
                                    : Json(worlds[0], JsonRequestBehavior.AllowGet);
         }
         
-        public ActionResult Fortunes(string providerName)
+        public async Task<ActionResult> Fortunes(string providerName)
         {
             List<Fortune> fortunes = new List<Fortune>();
             
             using (DbConnection connection = CreateConnection(providerName))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 
                 using (DbCommand command = connection.CreateCommand())
                 {
                     command.CommandText = "SELECT * FROM Fortune";
                     
-                    using (DbDataReader reader = command.ExecuteReader(CommandBehavior.SequentialAccess))
+                    using (DbDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.SequentialAccess))
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             fortunes.Add(new Fortune
                             {
@@ -98,13 +100,13 @@ namespace Benchmarks.AspNet.Controllers
             return View("Fortunes", fortunes);
         }
 
-        public ActionResult Update(string providerName, int? queries)
+        public async Task<ActionResult> Update(string providerName, int? queries)
         {
             List<World> worlds = new List<World>(Math.Max(1, Math.Min(500, queries ?? 1)));
 
             using (DbConnection connection = CreateConnection(providerName))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 using (DbCommand selectCommand = connection.CreateCommand(),
                                  updateCommand = connection.CreateCommand())
@@ -128,9 +130,9 @@ namespace Benchmarks.AspNet.Controllers
 
                         // Don't use CommandBehavior.SingleRow because that will make the MySql provider
                         // send two extra commands to limit the result to one row.
-                        using (DbDataReader reader = selectCommand.ExecuteReader())
+                        using (DbDataReader reader = await selectCommand.ExecuteReaderAsync())
                         {
-                            if (reader.Read())
+                            if (await reader.ReadAsync())
                             {
                                 world = new World
                                 {
@@ -155,7 +157,7 @@ namespace Benchmarks.AspNet.Controllers
                         updateCommand.Parameters.Add(idUpdateParameter);
                         updateCommand.Parameters.Add(numberParameter);
 
-                        updateCommand.ExecuteNonQuery();
+                        await updateCommand.ExecuteNonQueryAsync();
                         
                         world.randomNumber = randomNumber;
                         worlds.Add(world);

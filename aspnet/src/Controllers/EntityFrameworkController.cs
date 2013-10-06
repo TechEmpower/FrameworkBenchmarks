@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 using Benchmarks.AspNet.Models;
@@ -10,7 +14,7 @@ namespace Benchmarks.AspNet.Controllers
     {
         Random random = new Random();
 
-        public ActionResult Index(string providerName, int? queries)
+        public async Task<ActionResult> Index(string providerName, int? queries)
         {
             List<World> worlds = new List<World>(Math.Max(1, Math.Min(500, queries ?? 1)));
 
@@ -19,7 +23,7 @@ namespace Benchmarks.AspNet.Controllers
                 for (int i = 0; i < worlds.Capacity; i++)
                 {
                     int randomID = random.Next(0, 10000) + 1;
-                    worlds.Add(db.Worlds.Find(randomID));
+                    worlds.Add(await db.Worlds.FindAsync(CancellationToken.None, randomID));
                 }
             }
 
@@ -27,13 +31,13 @@ namespace Benchmarks.AspNet.Controllers
                                    : Json(worlds[0], JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Fortunes(string providerName)
+        public async Task<ActionResult> Fortunes(string providerName)
         {
             List<Fortune> fortunes = new List<Fortune>();
 
             using (EntityFramework db = new EntityFramework(providerName))
             {
-                fortunes.AddRange(db.Fortunes);
+                fortunes.AddRange(await db.Fortunes.ToListAsync());
             }
 
             fortunes.Add(new Fortune { ID = 0, Message = "Additional fortune added at request time." });
@@ -42,7 +46,7 @@ namespace Benchmarks.AspNet.Controllers
             return View("Fortunes", fortunes);
         }
 
-        public ActionResult Update(string providerName, int? queries)
+        public async Task<ActionResult> Update(string providerName, int? queries)
         {
             List<World> worlds = new List<World>(Math.Max(1, Math.Min(500, queries ?? 1)));
 
@@ -53,13 +57,13 @@ namespace Benchmarks.AspNet.Controllers
                     int randomID = random.Next(0, 10000) + 1;
                     int randomNumber = random.Next(0, 10000) + 1;
                     
-                    World world = db.Worlds.Find(randomID);
+                    World world = await db.Worlds.FindAsync(CancellationToken.None, randomID);
                     world.randomNumber = randomNumber;
                     worlds.Add(world);
                 }
 
                 // batch update
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
 
             return Json(worlds, JsonRequestBehavior.AllowGet);
