@@ -47,18 +47,15 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
   private void handlePlainText(HttpServerRequest req) {
     req.response().putHeader("Content-Type", "application/json; charset=UTF-8");
     req.response().putHeader("Content-Length", helloWorldContentLength);
-    req.response().write(helloWorldBuffer);
-    req.response().end();
+    req.response().end(helloWorldBuffer);
   }
 
   private void handleJson(HttpServerRequest req) {
     String result = Json.encode(Collections.singletonMap("message", "Hello, world!"));
-
     int contentLength = result.getBytes(StandardCharsets.UTF_8).length;
     req.response().putHeader("Content-Type", "application/json; charset=UTF-8");
     req.response().putHeader("Content-Length", String.valueOf(contentLength));
-    req.response().write(result);
-    req.response().end();
+    req.response().end(result);
   }
 
   private void handleDbMongo(final HttpServerRequest req) {
@@ -105,8 +102,7 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
           final int contentLength = result.getBytes(StandardCharsets.UTF_8).length;
           this.req.response().putHeader("Content-Type", "application/json; charset=UTF-8");
           this.req.response().putHeader("Content-Length", String.valueOf(contentLength));
-          this.req.response().write(result);
-          this.req.response().end();
+          this.req.response().end(result);
         }
       } else {
         System.err.println("Failed to execute query");
