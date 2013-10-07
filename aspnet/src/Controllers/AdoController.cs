@@ -10,8 +10,7 @@ using Benchmarks.AspNet.Models;
 
 namespace Benchmarks.AspNet.Controllers
 {
-
-    public class AdoController : AsyncController
+    public class AdoController : Controller
     {
         Random random = new Random();
 
