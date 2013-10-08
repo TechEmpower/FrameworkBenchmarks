@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct  8 10:31:46 PDT 2013
+
+  System load:  0.17               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+48 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer vertx
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/p
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/p
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.37ms   15.35ms 204.02ms   99.43%
+    Req/Sec     4.98k   538.16     6.78k    80.63%
+  189477 requests in 5.00s, 17.89MB read
+Requests/sec:  37898.95
+Transfer/sec:      3.58MB
+
+---------------------------------------------------------
+ Running Warmup vertx
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/p
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/p
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.13ms  453.80us  20.80ms   95.33%
+    Req/Sec    30.19k     2.84k   45.78k    91.92%
+  3400739 requests in 15.00s, 321.08MB read
+Requests/sec: 226760.26
+Transfer/sec:     21.41MB
+
+---------------------------------------------------------
+ Concurrency: 256 for vertx
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/p
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/p
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.70ms    2.27ms  28.43ms   90.51%
+    Req/Sec    92.90k     6.45k  134.40k    78.91%
+  10672448 requests in 15.00s, 0.98GB read
+Requests/sec: 711519.11
+Transfer/sec:     67.18MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for vertx
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/p
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/p
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.40ms   16.72ms 812.90ms   93.54%
+    Req/Sec    90.98k     7.10k  134.63k    79.54%
+  10667096 requests in 15.00s, 0.98GB read
+  Socket errors: connect 0, read 60, write 0, timeout 47
+Requests/sec: 711137.55
+Transfer/sec:     67.14MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for vertx
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/p
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/p
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   178.93ms  975.52ms   9.38s    98.63%
+    Req/Sec    89.17k    12.86k  121.60k    76.74%
+  10391578 requests in 15.00s, 0.96GB read
+  Socket errors: connect 0, read 551, write 0, timeout 5027
+Requests/sec: 692679.97
+Transfer/sec:     65.40MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for vertx
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/p
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/p
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.39s     6.62s   14.66s    66.71%
+    Req/Sec    86.73k    24.23k  194.04k    76.89%
+  10182173 requests in 15.02s, 0.94GB read
+  Socket errors: connect 11, read 1108, write 0, timeout 77003
+Requests/sec: 677687.84
+Transfer/sec:     63.98MB
