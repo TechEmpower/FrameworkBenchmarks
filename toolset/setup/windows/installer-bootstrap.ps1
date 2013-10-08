@@ -30,8 +30,12 @@ $env:Path += ";C:\Git\bin"; [Environment]::SetEnvironmentVariable("Path", $env:P
 Write-Host "Removing git installation files...`n"
 Remove-Item -Recurse -Force $basedir
 
-Write-Host "Downloading FrameworkBenchmarks from git...`n"
-&$git "clone" $repo $basedir | Out-Host
+if (-not (Test-Path $basedir))
+{
+    Write-Host "Downloading FrameworkBenchmarks from git...`n"
+    &$git "clone" $repo $basedir | Out-Host
+}
+
 
 Write-Host "`nLaunching installer...`n"
 Set-ExecutionPolicy -ExecutionPolicy Bypass -ErrorAction 'SilentlyContinue'
