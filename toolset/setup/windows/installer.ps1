@@ -16,6 +16,12 @@ function GetMd5FileHash($fileName) {
 }
 
 #
+# Chocolatey package manager
+#
+Write-Host "Installing Chocolatey package manager"
+Invoke-Expression ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+
+#
 # ASP.NET
 #
 Write-Host "Installing IIS, .NET and ASP.NET..."
@@ -200,8 +206,8 @@ Write-Host "Installing Java...`n"
 #$env:JAVA_HOME = $jre_dir; [Environment]::SetEnvironmentVariable("JAVA_HOME", $jre_dir, [System.EnvironmentVariableTarget]::Machine)
 
 # jdk
-$jdk_master_hash = "81bf3218a2eec7963b979187fb4109f3" # http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
-$jdk_url = "http://ghaffarian.net/downloads/Java/JDK/jdk-7u25-windows-x64.exe"
+$jdk_master_hash = "7412ccc2ac8a0f418eb58c5f170742a3" # http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
+$jdk_url = "http://ghaffarian.net/downloads/Java/JDK/jdk-7u40-windows-x64.exe"
 $jdk_local = "$workdir\jdk-7u21-windows-x64.exe"
 $jdk_dir = "C:\Java\jdk"
 (New-Object System.Net.WebClient).DownloadFile($jdk_url, $jdk_local)
@@ -250,6 +256,19 @@ $maven_dir = "C:\Java\maven"
 [System.IO.Compression.ZipFile]::ExtractToDirectory($maven_local, $workdir) | Out-Null
 Move-Item "$workdir\apache-maven-3.0.5" $maven_dir
 $env:Path += ";$maven_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+# scala
+cinst scala -version 2.10.2
+
+# play 2.2
+$play_url = "http://downloads.typesafe.com/play/2.2.0/play-2.2.0.zip"
+$play_local = "$workdir\play-2.2.0.zip"
+$play_dir = "C:\Java\play"
+(New-Object System.Net.WebClient).DownloadFile($play_url, $play_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($play_local, $workdir) | Out-Null
+Move-Item "$workdir\play-2.2.0" $play_dir
+$env:Path += ";$play_dir"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # Firewall
