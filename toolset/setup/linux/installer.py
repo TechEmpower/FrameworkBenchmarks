@@ -39,6 +39,9 @@ class Installer:
     self.__run_command("sudo apt-get install gcc-4.8 g++-4.8", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
+    self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
+    self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
+    self.__run_command("source ../../.profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          16384' >> /etc/security/limits.conf\"")
 
     ##############################################################
