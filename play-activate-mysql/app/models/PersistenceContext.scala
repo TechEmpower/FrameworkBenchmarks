@@ -18,6 +18,6 @@ object persistenceContext extends ActivateContext {
         val dialect = mySqlDialect
     }
     
-    val indexWorldByLegacyId = memoryIndex[ActivateWorld].on(_.legacyId)
+    val indexWorldByLegacyId = memoryIndex[ActivateWorld]("indexWorldByLegacyId").on(_.legacyId)
 
 }
