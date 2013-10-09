@@ -21,6 +21,9 @@ $ant_installer_file       = "$ant_version-bin.zip"
 $maven_version            = "apache-maven-3.0.5"
 $maven_installer_file     = "$maven_version-bin.zip"
 $maven_installer_path     = "maven-3/3.0.5/binaries/$maven_installer_file"
+$scala_version            = "2.10.2"
+$play_version             = "2.2.0"
+$play_installer_file      = "play-$play_version.zip"
 $mercurial_installer_file = "mercurial-2.6.1-x64.msi"
 $cygwin_installer_file    = "setup-x86_64.exe"
 
@@ -41,6 +44,12 @@ function GetMd5FileHash($fileName) {
     $hash | % { [Void]$sb.Append($_.ToString("x2")) }
     $sb.ToString()
 }
+
+#
+# Chocolatey package manager
+#
+Write-Host "Installing Chocolatey package manager"
+Invoke-Expression ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
 
 #
 # ASP.NET
@@ -279,6 +288,19 @@ $maven_dir = "C:\Java\maven"
 [System.IO.Compression.ZipFile]::ExtractToDirectory($maven_local, $workdir) | Out-Null
 Move-Item "$workdir\$maven_version" $maven_dir
 $env:Path += ";$maven_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+# scala
+cinst scala -version $scala_version
+
+# play
+$play_url = "http://downloads.typesafe.com/play/$play_version/$play_installer_file"
+$play_local = "$workdir\$play_installer_file"
+$play_dir = "C:\Java\play"
+(New-Object System.Net.WebClient).DownloadFile($play_url, $play_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($play_local, $workdir) | Out-Null
+Move-Item "$workdir\play-$play_version" $play_dir
+$env:Path += ";$play_dir"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # Firewall
