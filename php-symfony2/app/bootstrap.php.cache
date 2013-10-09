@@ -234,7 +234,7 @@ return isset($this->scopedServices[$name]);
 }
 public static function camelize($id)
 {
-return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) { return ('.'=== $match[1] ?'_':'').strtoupper($match[2]); }, $id);
+return strtr(ucwords(strtr($id, array('_'=>' ','.'=>'_ '))), array(' '=>''));
 }
 public static function underscore($id)
 {
@@ -325,13 +325,12 @@ protected $debug;
 protected $booted;
 protected $name;
 protected $startTime;
-protected $classes;
 protected $errorReportingLevel;
-const VERSION ='2.2.1';
-const VERSION_ID ='20101';
+const VERSION ='2.2.8';
+const VERSION_ID ='20208';
 const MAJOR_VERSION ='2';
 const MINOR_VERSION ='2';
-const RELEASE_VERSION ='1';
+const RELEASE_VERSION ='8';
 const EXTRA_VERSION ='';
 public function __construct($environment, $debug)
 {
@@ -340,7 +339,6 @@ $this->debug = (Boolean) $debug;
 $this->booted = false;
 $this->rootDir = $this->getRootDir();
 $this->name = $this->getName();
-$this->classes = array();
 $this->bundles = array();
 if ($this->debug) {
 $this->startTime = microtime(true);
@@ -352,7 +350,9 @@ public function init()
 ini_set('display_errors', 0);
 if ($this->debug) {
 error_reporting(-1);
+if (class_exists('Symfony\Component\ClassLoader\DebugClassLoader')) {
 DebugClassLoader::enable();
+}
 ErrorHandler::register($this->errorReportingLevel);
 if ('cli'!== php_sapi_name()) {
 ExceptionHandler::register();
@@ -876,7 +876,7 @@ if ($relativePath = $file->getRelativePath()) {
 $ns .='\\'.strtr($relativePath,'/','\\');
 }
 $r = new \ReflectionClass($ns.'\\'.$file->getBasename('.php'));
-if ($r->isSubclassOf('Symfony\\Component\\Console\\Command\\Command') && !$r->isAbstract()) {
+if ($r->isSubclassOf('Symfony\\Component\\Console\\Command\\Command') && !$r->isAbstract() && !$r->getConstructor()->getNumberOfRequiredParameters()) {
 $application->add($r->newInstance());
 }
 }
@@ -1078,7 +1078,6 @@ return (string) $var;
 namespace Symfony\Component\HttpKernel\DependencyInjection
 {
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
