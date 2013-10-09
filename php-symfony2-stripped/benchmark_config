@@ -1,5 +1,5 @@
 {
-  "framework": "symfony2",
+  "framework": "symfony2-stripped",
   "tests": [{
     "default": {
       "setup_file": "setup",
