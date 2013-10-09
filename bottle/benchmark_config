@@ -90,6 +90,29 @@
       "display_name": "bottle-raw",
       "notes": "",
       "versus": "wsgi"
+    },
+    "nginx-uwsgi": {
+      "setup_file": "setup_nginxuwsgi",
+      "json_url": "/json",
+      "db_url": "/dbs",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "bottle",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "wsgi",
+      "webserver": "nginx-uWSGI",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "bottle-nginx-uWSGI",
+      "notes": "",
+      "versus": "wsgi"
     }
   }]
 }

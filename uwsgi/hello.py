@@ -7,7 +7,7 @@ def application(environ, start_response):
     }
     data = ujson.dumps(response)
     response_headers = [
-        ('Content-type', 'text/plain'),
+        ('Content-type', 'application/json'),
         ('Content-Length', str(len(data)))
     ]
     start_response('200 OK', response_headers)
