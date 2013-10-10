@@ -8,10 +8,6 @@ import play.api.Play
 import net.fwbrasil.activate.OptimisticOfflineLocking
 
 object persistenceContext extends ActivateContext {
-
-	System.setProperty("activate.offlineLocking.enable", "true")
-	System.setProperty("activate.offlineLocking.validateReads", "true")
-
 	require(OptimisticOfflineLocking.isEnabled)
 	require(OptimisticOfflineLocking.validateReads)
     
