@@ -5,8 +5,15 @@ import net.fwbrasil.activate.storage.relational.idiom.postgresqlDialect
 import net.fwbrasil.activate.storage.relational.PooledJdbcRelationalStorage
 import net.fwbrasil.activate.storage.relational.idiom.mySqlDialect
 import play.api.Play
+import net.fwbrasil.activate.OptimisticOfflineLocking
 
 object persistenceContext extends ActivateContext {
+
+	System.setProperty("activate.offlineLocking.enable", "true")
+	System.setProperty("activate.offlineLocking.validateReads", "true")
+
+	require(OptimisticOfflineLocking.isEnabled)
+	require(OptimisticOfflineLocking.validateReads)
     
     private def config = Play.current.configuration
     
@@ -18,6 +25,6 @@ object persistenceContext extends ActivateContext {
         val dialect = mySqlDialect
     }
     
-    val indexWorldByLegacyId = memoryIndex[ActivateWorld]("indexWorldByLegacyId").on(_.legacyId)
+    val indexWorldByLegacyId = memoryIndex[ActivateWorld].on(_.legacyId)
 
 }
