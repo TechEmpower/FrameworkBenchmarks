@@ -24,7 +24,7 @@ def start(args):
     
     # fastcgi
     for port in range(9001, 9001 + args.max_threads):
-      subprocess.Popen("mono-sgen -O=all Event2Host/bin/Release/Event2Host.exe 127.0.0.1 " + str(port) + " " + args.database_host + " &", shell=True, cwd=app)
+      subprocess.Popen("mono-sgen -O=all LibeventHost/bin/Release/LibeventHost.exe 127.0.0.1 " + str(port) + " " + args.database_host + " &", shell=True, cwd=app)
     return 0
   except subprocess.CalledProcessError:
     return 1
