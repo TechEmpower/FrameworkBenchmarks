@@ -2,6 +2,7 @@
 import argparse
 import ConfigParser
 import sys
+import os
 from pprint import pprint 
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
@@ -33,7 +34,7 @@ def main(argv=None):
     try:
         with open (args.conf_file):
             config = ConfigParser.SafeConfigParser()
-            config.read([args.conf_file])
+            config.read([os.getcwd() + '/' + args.conf_file])
             defaults = dict(config.items("Defaults"))
     except IOError:
         if args.conf_file != 'benchmark.cfg':
