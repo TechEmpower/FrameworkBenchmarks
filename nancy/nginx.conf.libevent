@@ -1,0 +1,24 @@
+# worker_processes n;
+pid /tmp/nginx.pid;
+error_log /dev/null crit;
+
+events {
+    worker_connections 8192;
+}
+
+http {
+    access_log off;
+
+    #upstream mono {
+    #    server 127.0.0.1:9001;
+    #}
+    include nginx.upstream.conf;
+
+    server {
+        listen 8080;
+
+        location / {
+            proxy_pass http://mono;
+        }
+    }
+}
