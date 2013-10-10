@@ -56,7 +56,8 @@ public final class HelloWebServer {
    * @throws SQLException if reading from the SQL database (while priming the
    *                      cache) fails
    */
-  public HelloWebServer() throws IOException, SQLException {
+  public HelloWebServer() throws ClassNotFoundException, IOException, SQLException {
+    Class.forName("org.postgresql.Driver");
     Properties properties = new Properties();
     try (InputStream in = HelloWebServer.class.getResourceAsStream(
         "server.properties")) {
@@ -142,6 +143,7 @@ public final class HelloWebServer {
             .addPath("/cache",
                 new CacheHandler(objectMapper, worldCache)),
             Headers.SERVER_STRING, "undertow")))
+        .setWorkerThreads(200)
         .build()
         .start();
   }

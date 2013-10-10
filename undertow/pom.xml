@@ -13,17 +13,17 @@
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
-            <version>1.0.0.Beta3</version>
+            <version>1.0.0.Beta17</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.xnio</groupId>
             <artifactId>xnio-api</artifactId>
-            <version>3.1.0.CR5</version>
+            <version>3.1.0.CR7</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.xnio</groupId>
             <artifactId>xnio-nio</artifactId>
-            <version>3.1.0.CR5</version>
+            <version>3.1.0.CR7</version>
         </dependency>
         <!-- Database drivers -->
         <dependency>
