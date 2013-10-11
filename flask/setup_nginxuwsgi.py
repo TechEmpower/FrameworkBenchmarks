@@ -24,4 +24,12 @@ def start(args):
 def stop():
     subprocess.call('sudo /usr/local/nginx/sbin/nginx -s stop', shell=True)
     subprocess.call(bin_dir + '/uwsgi --ini ' + config_dir + '/uwsgi_stop.ini', shell=True)
+
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'FrameworkBenchmarks/installs/py2/bin/' in line:
+        pid = int(line.split(None,2)[1])
+        kill(pid, 9)
+
     return 0
