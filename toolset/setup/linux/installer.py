@@ -175,7 +175,7 @@ class Installer:
     # Mono
     #
     self.__run_command("git clone git://github.com/mono/mono", retry=True)
-    self.__run_command("git checkout mono-3.2.1", cwd="mono")
+    self.__run_command("git checkout mono-3.2.3", cwd="mono")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
     self.__run_command("make get-monolite-latest", cwd="mono")
     self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
