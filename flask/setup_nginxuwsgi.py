@@ -30,6 +30,6 @@ def stop():
     for line in out.splitlines():
       if 'FrameworkBenchmarks/installs/py2/bin/' in line:
         pid = int(line.split(None,2)[1])
-        kill(pid, 9)
+        os.kill(pid, 9)
 
     return 0
