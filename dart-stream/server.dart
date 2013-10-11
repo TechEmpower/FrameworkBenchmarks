@@ -51,34 +51,34 @@ var _fortunesTemplate;
 // MongoDB connection
 var _mongoDb;
 
-// world Collection
+// World Collection
 var _worldCollection;
 
 // Fortunes Collection
 var _fortuneCollection;
 
-// world table size
+// World table size
 const _WORLD_TABLE_SIZE = 10000;
-// fortune table size used only for generation of data
+// Fortune table size used only for generation of data
 const _FORTUNE_TABLE_SIZE = 100;
 
 final _RANDOM = new Random();
 
-class fortune implements Comparable<fortune> {
+class Fortune implements Comparable<Fortune> {
   int id;
 
   String message;
 
-  fortune(this.id, this.message);
+  Fortune(this.id, this.message);
 
-  compareTo(fortune other) => message.compareTo(other.message);
+  compareTo(Fortune other) => message.compareTo(other.message);
 }
 
-class world {
+class World {
   int id;
   int randomnumber;
 
-  world(this.id, this.randomnumber);
+  World(this.id, this.randomnumber);
 
   toJson() => { "id": id, "randomnumber": randomnumber };
 }
@@ -103,8 +103,8 @@ main() {
        var mongoConfig = yaml.loadYaml(config);
        _mongoDb = new Db("mongodb://${mongoConfig["host"]}/${mongoConfig["database"]}");
        return _mongoDb.open().then((_) {
-         _worldCollection = _mongoDb.collection("world");
-         _fortuneCollection = _mongoDb.collection("fortune");
+         _worldCollection = _mongoDb.collection("World");
+         _fortuneCollection = _mongoDb.collection("Fortune");
        });
      })
    ]).then((_) {
@@ -150,7 +150,7 @@ _updatesTest(HttpConnect connect) {
             return _connectionPool.connect()
               .then((connection) {
                 return connection.execute(
-                      'UPDATE "world" SET "randomnumber" = @randomnumber WHERE "id" = @id;',
+                      'UPDATE "World" SET "randomnumber" = @randomnumber WHERE "id" = @id;',
                       { 
                         'randomnumber': world.randomnumber,
                         'id': world.id 
@@ -167,12 +167,12 @@ _updatesTest(HttpConnect connect) {
 _fortunesTest(HttpConnect connect) {
   
   return _connectionPool.connect().then((connection) {
-    return connection.query('SELECT "id", "message" FROM "fortune";')
-        .map((row) => new fortune(row[0], row[1]))
+    return connection.query('SELECT "id", "message" FROM "Fortune";')
+        .map((row) => new Fortune(row[0], row[1]))
           .toList()
             .whenComplete(() { connection.close(); });
   }).then((fortunes) {
-    fortunes.add(new fortune(0, 'Additional fortune added at request time.'));
+    fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
     return fortunesView(connect, fortunes: fortunes);
   });
@@ -240,9 +240,9 @@ _fortunesMongoTest(HttpConnect connect) {
   
   return _fortuneCollection.find().toList().then((fortunes) {
     fortunes = fortunes.map((fortune) {
-      return new fortune(fortune["id"], fortune["message"]);
+      return new Fortune(fortune["id"], fortune["message"]);
     }).toList();
-    fortunes.add(new fortune(0, 'Additional fortune added at request time.'));
+    fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
     return fortunesView(connect, fortunes: fortunes);
   });
@@ -288,9 +288,9 @@ _parseQueriesParam(param) {
 _query() {
   return _connectionPool.connect().then((connection) {
     return connection
-      .query('SELECT "id", "randomnumber" FROM "world" WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
+      .query('SELECT "id", "randomnumber" FROM "World" WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
       .single
-      .then((row) =>new world(row[0], row[1]))
+      .then((row) =>new World(row[0], row[1]))
       .whenComplete(() {
         connection.close();
       });
