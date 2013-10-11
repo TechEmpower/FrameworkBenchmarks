@@ -23,6 +23,7 @@ def start(args):
     subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c ' + root + '/nginx.conf.libevent -g "' + workers + '"', shell=True)
     
     # fastcgi
+    os.environ['MONO_GC_PARAMS']="nursery-size=16m"
     for port in range(9001, 9001 + args.max_threads):
       subprocess.Popen("mono-sgen -O=all LibeventHost/bin/Release/LibeventHost.exe 127.0.0.1 " + str(port) + " " + args.database_host + " &", shell=True, cwd=app)
     return 0
