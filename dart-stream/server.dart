@@ -51,34 +51,34 @@ var _fortunesTemplate;
 // MongoDB connection
 var _mongoDb;
 
-// World Collection
+// world Collection
 var _worldCollection;
 
 // Fortunes Collection
 var _fortuneCollection;
 
-// World table size
+// world table size
 const _WORLD_TABLE_SIZE = 10000;
-// Fortune table size used only for generation of data
+// fortune table size used only for generation of data
 const _FORTUNE_TABLE_SIZE = 100;
 
 final _RANDOM = new Random();
 
-class Fortune implements Comparable<Fortune> {
+class fortune implements Comparable<fortune> {
   int id;
 
   String message;
 
-  Fortune(this.id, this.message);
+  fortune(this.id, this.message);
 
-  compareTo(Fortune other) => message.compareTo(other.message);
+  compareTo(fortune other) => message.compareTo(other.message);
 }
 
-class World {
+class world {
   int id;
   int randomnumber;
 
-  World(this.id, this.randomnumber);
+  world(this.id, this.randomnumber);
 
   toJson() => { "id": id, "randomnumber": randomnumber };
 }
@@ -168,11 +168,11 @@ _fortunesTest(HttpConnect connect) {
   
   return _connectionPool.connect().then((connection) {
     return connection.query('SELECT "id", "message" FROM "fortune";')
-        .map((row) => new Fortune(row[0], row[1]))
+        .map((row) => new fortune(row[0], row[1]))
           .toList()
             .whenComplete(() { connection.close(); });
   }).then((fortunes) {
-    fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
+    fortunes.add(new fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
     return fortunesView(connect, fortunes: fortunes);
   });
@@ -240,9 +240,9 @@ _fortunesMongoTest(HttpConnect connect) {
   
   return _fortuneCollection.find().toList().then((fortunes) {
     fortunes = fortunes.map((fortune) {
-      return new Fortune(fortune["id"], fortune["message"]);
+      return new fortune(fortune["id"], fortune["message"]);
     }).toList();
-    fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
+    fortunes.add(new fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
     return fortunesView(connect, fortunes: fortunes);
   });
@@ -290,7 +290,7 @@ _query() {
     return connection
       .query('SELECT "id", "randomnumber" FROM "world" WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
       .single
-      .then((row) =>new World(row[0], row[1]))
+      .then((row) =>new world(row[0], row[1]))
       .whenComplete(() {
         connection.close();
       });
