@@ -27,6 +27,7 @@ $play_installer_file      = "play-$play_version.zip"
 $mercurial_installer_file = "mercurial-2.6.1-x64.msi"
 $cygwin_installer_file    = "setup-x86_64.exe"
 
+
 $basedir = "C:\FrameworkBenchmarks"
 $workdir = "$basedir\installs"
 New-Item -Path $workdir -Type directory -Force | Out-Null
