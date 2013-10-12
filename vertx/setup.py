@@ -4,8 +4,6 @@ import sys
 import setup_util
 import os
 
-nCpu = multiprocessing.cpu_count()
-
 def start(args):
   setup_util.replace_text("vertx/app.js", "host: '.*'", "host: '" + args.database_host + "'")
   try:

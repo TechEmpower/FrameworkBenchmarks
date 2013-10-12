@@ -207,6 +207,5 @@ namespace ServiceStackBenchmark.Model
                 return false;
             }
         }
-
     }
 }

@@ -262,7 +262,6 @@ class Benchmarker:
       if 'benchmark_config' in filenames:
         config = None
         config_file_name = os.path.join(dirname, 'benchmark_config')
-
         with open(config_file_name, 'r') as config_file:
           # Load json file into config object
           try:
@@ -425,7 +424,6 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __run_test(self, test):
-
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
@@ -455,7 +453,6 @@ class Benchmarker:
       if self.results['frameworks'] != None and test.name in self.results['completed']:
         logging.info('Framework %s found in latest saved data. Skipping.',str(test.name))
         return
-
       print textwrap.dedent("""
       =====================================================
         Beginning {name}
@@ -584,7 +581,6 @@ class Benchmarker:
     # Aggregate JSON file
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
       f.write(json.dumps(self.results))
-
 
   ############################################################
   # End __parse_results

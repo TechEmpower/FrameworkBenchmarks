@@ -28,6 +28,7 @@ main() {
 /// The entity used in the database query and update tests.
 class World {
   int id;
+
   int randomnumber;
 
   World(this.id, this.randomnumber);

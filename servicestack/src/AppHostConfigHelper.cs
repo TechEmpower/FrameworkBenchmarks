@@ -125,7 +125,6 @@ namespace ServiceStackBenchmark
                 routes.Add<MongoDBUpdatesRequest>("/mongodb/updates/{queries}", "GET");
                 routes.Add<MongoDBCachedDbRequest>("/mongodb/cached/db", "GET");
             }
-
             if (container.InitMySQL())
             {
                 routes.Add<MySqlDbRequest>("/mysql/db", "GET");

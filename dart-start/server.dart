@@ -45,6 +45,7 @@ class Fortune implements Comparable<Fortune> {
 
 class World {
   int id;
+
   int randomnumber;
 
   World(this.id, this.randomnumber);
