@@ -1,0 +1,24 @@
+{
+  "framework": "evhttp-sharp",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/",
+      "plaintext_url": "/plaintext",
+      "port": 8085,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "evhttp-sharp",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": "Mono",
+      "webserver": "none",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "evhttp-sharp",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
