@@ -262,6 +262,7 @@ class Benchmarker:
       if 'benchmark_config' in filenames:
         config = None
         config_file_name = os.path.join(dirname, 'benchmark_config')
+
         with open(config_file_name, 'r') as config_file:
           # Load json file into config object
           try:
@@ -453,6 +454,7 @@ class Benchmarker:
       if self.results['frameworks'] != None and test.name in self.results['completed']:
         logging.info('Framework %s found in latest saved data. Skipping.',str(test.name))
         return
+
       print textwrap.dedent("""
       =====================================================
         Beginning {name}
