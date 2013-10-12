@@ -11,7 +11,7 @@ class ActivateFortune(val legacyId: Long, val message: String) extends Entity
 object ActivateFortune {
     // Pre load entities
     transactional {
-        all[ActivateFortune].foreach(_.legacyId)
+        persistenceContext.all[ActivateFortune].foreach(_.legacyId)
     }
     def all =
         cachedQuery {
