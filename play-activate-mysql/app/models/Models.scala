@@ -9,6 +9,10 @@ import play.api.libs.json.Writes
 class ActivateFortune(val legacyId: Long, val message: String) extends Entity
 
 object ActivateFortune {
+    // Pre load entities
+    transactional {
+        all[ActivateFortune].foreach(_.legacyId)
+    }
     def all =
         cachedQuery {
             (fortune: ActivateFortune) => where()
