@@ -49,12 +49,6 @@ object Application extends Controller {
 
             val random = ThreadLocalRandom.current()
 
-            val boundsCheckedQueries = queries match {
-                case q if q > 500 => 500
-                case q if q < 1 => 1
-                case _ => queries
-            }
-
             transactional {
                 val worlds =
                     for (_ <- 1 to queries) yield {
