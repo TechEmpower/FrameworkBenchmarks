@@ -16,3 +16,5 @@ mods/
 .idea/
 .hsenv/
 azure.err
+php-kohana/application/logs/
+php-fuel/fuel/app/logs/
