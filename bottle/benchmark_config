@@ -62,7 +62,7 @@
       "framework": "bottle",
       "language": "Python",
       "orm": "Full",
-      "platform": "wsgi",
+      "platform": "pypy",
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
