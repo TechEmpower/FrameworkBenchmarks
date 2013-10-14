@@ -19,7 +19,7 @@ func hello(val string) string {
 }
 
 func main() {
-	logger := log.New(ioutil.Discard, "", log.Ldate|log.Ltime)
+	logger := log.New(ioutil.Discard, "", 0)
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	web.Get("/(.*)", hello)
 	web.SetLogger(logger)
