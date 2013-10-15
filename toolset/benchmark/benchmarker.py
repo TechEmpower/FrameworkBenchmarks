@@ -399,15 +399,23 @@ class Benchmarker:
   def __run_tests(self, tests):
     logging.debug("Start __run_tests.")
     logging.debug("__name__ = %s",__name__)
-    for test in tests:
-      if __name__ == 'benchmark.benchmarker':
-        test_process = Process(target=self.__run_test, args=(test,))
-        test_process.start()
-        test_process.join(self.run_test_timeout_seconds)
-        if(test_process.is_alive()):
-          logging.debug("Child process for %s is still alive. Terminating.",test.name)
-          self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
-          test_process.terminate()
+
+    if self.os.lower() == 'windows':
+      logging.debug("Executing __run_tests on Windows")
+      for test in tests:
+        __run_test(test)
+    else:
+      logging.debug("Executing __run_tests on Linux")
+      # These features do not work on Windows
+      for test in tests:
+        if __name__ == 'benchmark.benchmarker':
+          test_process = Process(target=self.__run_test, args=(test,))
+          test_process.start()
+          test_process.join(self.run_test_timeout_seconds)
+          if(test_process.is_alive()):
+            logging.debug("Child process for %s is still alive. Terminating.",test.name)
+            self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
+            test_process.terminate()
     logging.debug("End __run_tests.")
 
   ############################################################
