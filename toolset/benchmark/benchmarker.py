@@ -430,6 +430,11 @@ class Benchmarker:
       if self.test != None and test.name not in self.test:
         return
 
+      if hasattr(test, 'skip'):
+        if test.skip.lower() == "true":
+          logging.info("Test %s benchmark_config specifies to skip this test. Skipping.", test.name)
+          return
+
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
         # application server or the database server don't match
