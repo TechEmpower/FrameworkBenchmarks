@@ -403,7 +403,7 @@ class Benchmarker:
     if self.os.lower() == 'windows':
       logging.debug("Executing __run_tests on Windows")
       for test in tests:
-        __run_test(test)
+        self.__run_test(test)
     else:
       logging.debug("Executing __run_tests on Linux")
       # These features do not work on Windows
