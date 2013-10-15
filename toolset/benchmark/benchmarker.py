@@ -754,7 +754,7 @@ class Benchmarker:
       self.results['rawData']['query'] = dict()
       self.results['rawData']['fortune'] = dict()
       self.results['rawData']['update'] = dict()
-      self.results['rawData']['plainteat'] = dict()
+      self.results['rawData']['plaintext'] = dict()
       self.results['completed'] = dict()
     else:
       #for x in self.__gather_tests():
