@@ -26,10 +26,4 @@ public class FortuneDao {
 	return fortunes;
     }
 
-    @Transactional
-    public void save(Fortune fortune) {
-	EntityManager entityManager = entitiyManagerProvider.get();
-	entityManager.persist(fortune);
-    }
-
 }
