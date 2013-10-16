@@ -9,7 +9,7 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MongoDB",
-      "framework": "play-scala",
+      "framework": "play2",
       "language": "Scala",
       "orm": "Raw",
       "platform": "Netty",

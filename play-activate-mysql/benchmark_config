@@ -11,7 +11,7 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "play-activate-mysql",
+      "framework": "play2",
       "language": "Scala",
       "orm": "Full",
       "platform": "Netty",

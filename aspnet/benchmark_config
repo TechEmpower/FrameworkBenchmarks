@@ -131,7 +131,7 @@
       "database": "SQLServer",
       "framework": "aspnet-mvc",
       "language": "C#",
-      "orm": "Full",
+      "orm": "Raw",
       "platform": "NET",
       "webserver": "IIS",
       "os": "Windows",
