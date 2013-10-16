@@ -45,7 +45,7 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
   }
 
   private void handlePlainText(HttpServerRequest req) {
-    req.response().putHeader("Content-Type", "application/json; charset=UTF-8");
+    req.response().putHeader("Content-Type", "text/plain; charset=UTF-8");
     req.response().putHeader("Content-Length", helloWorldContentLength);
     req.response().end(helloWorldBuffer);
   }
