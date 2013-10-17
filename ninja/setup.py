@@ -13,11 +13,11 @@ def start(args):
       subprocess.check_call('rmdir /S /Q "%RESIN_HOME%\\webapps\\"', shell=True)
       subprocess.check_call('mkdir "%RESIN_HOME%\\webapps\\"', shell=True)
       subprocess.check_call('copy ninja\\target\\ninja.war "%RESIN_HOME%\\webapps\\ninja.war"', shell=True)
-      subprocess.check_call('"%RESIN_HOME%\\bin\\start.bat"', shell=True)
+      subprocess.check_call('"%RESIN_HOME%\\bin\\start.bat -Dninja.mode=prod"', shell=True)
     else:
       subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
       subprocess.check_call("cp ninja/target/ninja.war $RESIN_HOME/webapps/ninja.war", shell=True)
-      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
+      subprocess.check_call("$RESIN_HOME/bin/resinctl start -Dninja.mode=prod", shell=True)
     return 0
   except subprocess.CalledProcessError:
     return 1
