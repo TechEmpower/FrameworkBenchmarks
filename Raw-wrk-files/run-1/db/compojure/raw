@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 18:03:26 PDT 2013
+
+  System load:  1.34               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/compojure/db/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   814.07us  457.81us  20.65ms   94.13%
+    Req/Sec     1.35k   283.53     1.78k    66.68%
+  48060 requests in 5.00s, 8.15MB read
+Requests/sec:   9612.11
+Transfer/sec:      1.63MB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.79ms   31.32ms 635.17ms   94.01%
+    Req/Sec     3.13k   529.71     5.26k    68.49%
+  368493 requests in 15.00s, 62.47MB read
+Requests/sec:  24563.76
+Transfer/sec:      4.16MB
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/db/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   702.93us  240.27us  12.74ms   96.06%
+    Req/Sec     1.50k   115.96     1.89k    81.00%
+  170116 requests in 15.00s, 28.84MB read
+Requests/sec:  11341.18
+Transfer/sec:      1.92MB
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/db/1
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   827.54us  496.48us  12.33ms   94.10%
+    Req/Sec     2.59k   297.59     3.44k    81.34%
+  294870 requests in 15.00s, 49.99MB read
+Requests/sec:  19658.25
+Transfer/sec:      3.33MB
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/db/1
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.31ms    0.95ms  15.35ms   92.49%
+    Req/Sec     3.35k   500.02     4.89k    78.42%
+  380419 requests in 15.00s, 64.50MB read
+Requests/sec:  25362.14
+Transfer/sec:      4.30MB
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/db/1
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.50ms    2.62ms  28.13ms   88.55%
+    Req/Sec     3.63k   758.92     6.67k    76.76%
+  412909 requests in 15.00s, 70.00MB read
+Requests/sec:  27528.73
+Transfer/sec:      4.67MB
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/db/1
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.96ms    8.51ms 103.01ms   87.24%
+    Req/Sec     3.32k   524.74     5.32k    69.16%
+  391828 requests in 15.00s, 66.43MB read
+Requests/sec:  26122.67
+Transfer/sec:      4.43MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.54ms   28.79ms 554.42ms   93.88%
+    Req/Sec     3.12k   598.75     5.48k    68.32%
+  370395 requests in 15.00s, 62.80MB read
+Requests/sec:  24693.19
+Transfer/sec:      4.19MB

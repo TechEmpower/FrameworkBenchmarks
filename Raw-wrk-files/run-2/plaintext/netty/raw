@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 01:11:56 PDT 2013
+
+  System load:  1.26               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   198.90us   39.99us   1.96ms   74.66%
+    Req/Sec     5.13k   297.50     6.44k    57.49%
+  193843 requests in 5.00s, 30.87MB read
+Requests/sec:  38772.78
+Transfer/sec:      6.18MB
+
+---------------------------------------------------------
+ Running Warmup netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.22ms  573.56us  25.96ms   96.55%
+    Req/Sec    27.79k     2.41k   36.89k    94.52%
+  3140394 requests in 15.00s, 500.15MB read
+Requests/sec: 209403.56
+Transfer/sec:     33.35MB
+
+---------------------------------------------------------
+ Concurrency: 256 for netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.32ms    0.96ms  27.24ms   94.10%
+    Req/Sec    71.85k     5.09k   93.78k    88.17%
+  8341720 requests in 15.00s, 1.30GB read
+Requests/sec: 556121.30
+Transfer/sec:     88.57MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.72ms   55.79ms   1.14s    96.99%
+    Req/Sec    71.39k     8.50k  107.67k    67.95%
+  8380416 requests in 15.00s, 1.30GB read
+  Socket errors: connect 0, read 0, write 0, timeout 1747
+Requests/sec: 558698.24
+Transfer/sec:     88.98MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   105.10ms  404.60ms   4.59s    95.86%
+    Req/Sec    68.91k    16.03k  132.00k    75.08%
+  8335928 requests in 15.00s, 1.30GB read
+  Socket errors: connect 0, read 179, write 0, timeout 11507
+Requests/sec: 555626.41
+Transfer/sec:     88.50MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for netty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.41s     6.40s   13.55s    81.23%
+    Req/Sec    67.89k    12.48k  151.38k    73.21%
+  8218030 requests in 15.02s, 1.28GB read
+  Socket errors: connect 11, read 342, write 0, timeout 77411
+Requests/sec: 547203.01
+Transfer/sec:     87.21MB

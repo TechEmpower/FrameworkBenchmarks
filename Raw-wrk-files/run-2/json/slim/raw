@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 07:22:10 PDT 2013
+
+  System load:  0.37               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer slim
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.85ms  653.70us   6.70ms   71.33%
+    Req/Sec   579.55    101.94     0.90k    72.39%
+  21958 requests in 5.00s, 4.69MB read
+Requests/sec:   4390.59
+Transfer/sec:      0.94MB
+
+---------------------------------------------------------
+ Running Warmup slim
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.83ms   50.86ms   2.67s    95.02%
+    Req/Sec   611.59     57.01     1.06k    81.24%
+  72910 requests in 15.00s, 15.57MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:   4859.66
+Transfer/sec:      1.04MB
+
+---------------------------------------------------------
+ Concurrency: 8 for slim
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.85ms  644.84us   6.18ms   70.96%
+    Req/Sec   580.19    100.72     0.90k    73.39%
+  66020 requests in 15.00s, 14.10MB read
+Requests/sec:   4401.03
+Transfer/sec:      0.94MB
+
+---------------------------------------------------------
+ Concurrency: 16 for slim
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.43ms    1.41ms  16.86ms   69.82%
+    Req/Sec   632.20    130.51     1.33k    58.34%
+  71893 requests in 15.00s, 15.35MB read
+Requests/sec:   4792.36
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Concurrency: 32 for slim
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.51ms    3.08ms  28.45ms   73.28%
+    Req/Sec   639.17     97.92     1.10k    71.25%
+  74844 requests in 15.00s, 15.98MB read
+Requests/sec:   4989.16
+Transfer/sec:      1.07MB
+
+---------------------------------------------------------
+ Concurrency: 64 for slim
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.82ms    6.63ms  73.14ms   76.09%
+    Req/Sec   633.96     77.83     0.95k    69.21%
+  75183 requests in 15.00s, 16.06MB read
+Requests/sec:   5010.93
+Transfer/sec:      1.07MB
+
+---------------------------------------------------------
+ Concurrency: 128 for slim
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.94ms   16.78ms 158.48ms   70.56%
+    Req/Sec   606.54     73.62     0.98k    72.67%
+  72495 requests in 15.01s, 15.48MB read
+Requests/sec:   4831.21
+Transfer/sec:      1.03MB
+
+---------------------------------------------------------
+ Concurrency: 256 for slim
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    53.93ms   78.66ms   3.77s    98.64%
+    Req/Sec   606.18     91.15     1.19k    83.60%
+  72054 requests in 15.00s, 15.39MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+Requests/sec:   4803.51
+Transfer/sec:      1.03MB

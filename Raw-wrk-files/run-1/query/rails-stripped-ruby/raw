@@ -1,0 +1,123 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 03:28:49 PDT 2013
+
+  System load:  0.48               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/hello_world/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/hello_world/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.60ms    9.30ms  43.81ms   93.26%
+    Req/Sec   317.27    105.73   555.00     73.78%
+  12052 requests in 5.00s, 4.88MB read
+Requests/sec:   2408.10
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Running Warmup rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/hello_world/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.65ms   17.74ms   1.04s    99.49%
+    Req/Sec    21.87k     4.62k   43.78k    68.25%
+  2469063 requests in 15.00s, 759.00MB read
+  Non-2xx or 3xx responses: 2459778
+Requests/sec: 164629.27
+Transfer/sec:     50.61MB
+
+---------------------------------------------------------
+ Queries: 1 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/hello_world/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.66ms   12.59ms 699.87ms   98.73%
+    Req/Sec    21.30k     4.77k   40.33k    68.12%
+  2409205 requests in 14.99s, 740.89MB read
+  Non-2xx or 3xx responses: 2391770
+Requests/sec: 160717.09
+Transfer/sec:     49.42MB
+
+---------------------------------------------------------
+ Queries: 5 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/hello_world/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.60ms   27.99ms   1.74s    99.86%
+    Req/Sec    22.29k     4.75k   41.10k    67.87%
+  2519129 requests in 15.00s, 774.07MB read
+  Non-2xx or 3xx responses: 2515932
+Requests/sec: 167947.64
+Transfer/sec:     51.61MB
+
+---------------------------------------------------------
+ Queries: 10 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/hello_world/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.57ms   33.25ms   2.28s    99.91%
+    Req/Sec    22.08k     4.48k   39.00k    68.81%
+  2497726 requests in 15.00s, 767.52MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+  Non-2xx or 3xx responses: 2495890
+Requests/sec: 166522.82
+Transfer/sec:     51.17MB
+
+---------------------------------------------------------
+ Queries: 15 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/hello_world/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.83ms   51.86ms   3.54s    99.94%
+    Req/Sec    22.23k     4.79k   39.78k    69.89%
+  2507396 requests in 15.00s, 770.44MB read
+  Socket errors: connect 0, read 0, write 0, timeout 88
+  Non-2xx or 3xx responses: 2506224
+Requests/sec: 167173.34
+Transfer/sec:     51.37MB
+
+---------------------------------------------------------
+ Queries: 20 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/hello_world/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.79ms   60.67ms   4.59s    99.96%
+    Req/Sec    22.44k     4.83k   41.11k    68.03%
+  2536234 requests in 15.00s, 779.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 326
+  Non-2xx or 3xx responses: 2535486
+Requests/sec: 169091.30
+Transfer/sec:     51.95MB

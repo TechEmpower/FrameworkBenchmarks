@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 13:10:05 PDT 2013
+
+  System load:  0.17               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/ado/sqlserver?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/ado/sqlserver?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.37ms  527.47us  10.78ms   98.58%
+    Req/Sec   444.56     59.97   600.00     85.82%
+  16895 requests in 5.00s, 5.10MB read
+Requests/sec:   3378.07
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/sqlserver?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.53ms   14.53ms 200.75ms   84.69%
+    Req/Sec     1.22k   136.51     1.53k    72.56%
+  143242 requests in 15.00s, 43.24MB read
+Requests/sec:   9547.95
+Transfer/sec:      2.88MB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/sqlserver?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.80ms   14.95ms 313.56ms   86.75%
+    Req/Sec     1.42k   137.54     1.77k    69.80%
+  167704 requests in 15.00s, 45.55MB read
+Requests/sec:  11179.99
+Transfer/sec:      3.04MB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/sqlserver?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.27ms    5.07ms  74.75ms   87.25%
+    Req/Sec     1.00k    55.46     1.09k    84.52%
+  118112 requests in 15.00s, 46.50MB read
+Requests/sec:   7873.34
+Transfer/sec:      3.10MB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/sqlserver?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.29ms    4.51ms  68.25ms   70.47%
+    Req/Sec   639.97     38.52   776.00     70.47%
+  75752 requests in 15.00s, 41.31MB read
+Requests/sec:   5049.61
+Transfer/sec:      2.75MB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/sqlserver?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    74.15ms    7.34ms  96.66ms   73.71%
+    Req/Sec   434.42     37.66   568.00     81.15%
+  51668 requests in 15.01s, 36.00MB read
+Requests/sec:   3442.30
+Transfer/sec:      2.40MB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/sqlserver?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    96.35ms    8.31ms 125.15ms   70.50%
+    Req/Sec   334.19     27.94   460.00     76.16%
+  39842 requests in 15.01s, 33.80MB read
+Requests/sec:   2654.56
+Transfer/sec:      2.25MB

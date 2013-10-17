@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 05:00:29 PDT 2013
+
+  System load:  0.04               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer silex
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.92ms    4.00ms  30.13ms   86.50%
+    Req/Sec   288.51     95.29   571.00     69.59%
+  11176 requests in 5.00s, 3.31MB read
+  Non-2xx or 3xx responses: 5144
+Requests/sec:   2233.17
+Transfer/sec:    677.02KB
+
+---------------------------------------------------------
+ Running Warmup silex
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   118.71ms  125.42ms 748.98ms   83.21%
+    Req/Sec   280.62     17.83   330.00     74.58%
+  33686 requests in 15.01s, 9.99MB read
+  Non-2xx or 3xx responses: 16035
+Requests/sec:   2243.60
+Transfer/sec:    681.33KB
+
+---------------------------------------------------------
+ Queries: 1 for silex
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.19ms  116.50ms 562.51ms   82.17%
+    Req/Sec   288.03     19.47   340.00     70.30%
+  34602 requests in 15.01s, 9.63MB read
+  Non-2xx or 3xx responses: 16283
+Requests/sec:   2304.59
+Transfer/sec:    656.83KB
+
+---------------------------------------------------------
+ Queries: 5 for silex
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   123.11ms  135.69ms 969.43ms   83.38%
+    Req/Sec   262.23     19.70   312.00     70.35%
+  31501 requests in 15.01s, 11.04MB read
+  Non-2xx or 3xx responses: 14929
+Requests/sec:   2098.79
+Transfer/sec:    752.95KB
+
+---------------------------------------------------------
+ Queries: 10 for silex
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   136.41ms  144.23ms 797.29ms   82.44%
+    Req/Sec   237.16     23.24   309.00     80.52%
+  28479 requests in 15.02s, 12.57MB read
+  Non-2xx or 3xx responses: 13417
+Requests/sec:   1896.03
+Transfer/sec:    856.77KB
+
+---------------------------------------------------------
+ Queries: 15 for silex
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   144.79ms  164.13ms 872.54ms   82.94%
+    Req/Sec   217.39     15.99   259.00     71.09%
+  26058 requests in 15.02s, 13.81MB read
+  Non-2xx or 3xx responses: 12364
+Requests/sec:   1735.44
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Queries: 20 for silex
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   164.56ms  188.11ms   1.22s    85.08%
+    Req/Sec   200.85     20.43   268.00     74.75%
+  24092 requests in 15.02s, 15.08MB read
+  Non-2xx or 3xx responses: 11181
+Requests/sec:   1604.17
+Transfer/sec:      1.00MB

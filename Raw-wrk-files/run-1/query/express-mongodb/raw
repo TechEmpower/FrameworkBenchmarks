@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 19:43:13 PDT 2013
+
+  System load:  0.17               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/mongoose?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mongoose?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.94ms  442.15us  12.77ms   93.36%
+    Req/Sec     1.13k   241.37     1.55k    74.14%
+  42524 requests in 5.00s, 7.34MB read
+Requests/sec:   8504.44
+Transfer/sec:      1.47MB
+
+---------------------------------------------------------
+ Running Warmup express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongoose?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.33ms   11.40ms  75.78ms   68.66%
+    Req/Sec     1.63k   237.17     2.09k    76.34%
+  193686 requests in 15.00s, 33.43MB read
+Requests/sec:  12910.52
+Transfer/sec:      2.23MB
+
+---------------------------------------------------------
+ Queries: 1 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongoose?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.10ms    7.90ms  74.07ms   68.35%
+    Req/Sec     2.36k   381.81     3.02k    75.08%
+  276594 requests in 15.00s, 46.16MB read
+Requests/sec:  18438.36
+Transfer/sec:      3.08MB
+
+---------------------------------------------------------
+ Queries: 5 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongoose?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.40ms   25.96ms 137.91ms   63.86%
+    Req/Sec     0.89k   128.65     1.21k    63.52%
+  106519 requests in 15.01s, 19.91MB read
+Requests/sec:   7098.53
+Transfer/sec:      1.33MB
+
+---------------------------------------------------------
+ Queries: 10 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongoose?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.85ms   26.26ms 173.61ms   65.55%
+    Req/Sec   512.37     75.53   717.00     77.55%
+  60809 requests in 15.01s, 12.82MB read
+Requests/sec:   4052.14
+Transfer/sec:      0.85MB
+
+---------------------------------------------------------
+ Queries: 15 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongoose?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.90ms   83.53ms 331.57ms   80.18%
+    Req/Sec   356.62    106.02   542.00     61.96%
+  41160 requests in 15.04s, 9.66MB read
+Requests/sec:   2736.01
+Transfer/sec:    657.28KB
+
+---------------------------------------------------------
+ Queries: 20 for express-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongoose?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   121.70ms   54.68ms 256.01ms   72.08%
+    Req/Sec   262.84     25.69   338.00     66.47%
+  31543 requests in 15.00s, 8.18MB read
+Requests/sec:   2102.43
+Transfer/sec:    558.46KB

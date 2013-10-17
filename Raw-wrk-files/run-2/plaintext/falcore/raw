@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 21:31:59 PDT 2013
+
+  System load:  0.2                Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcore
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   260.50us  103.95us   1.88ms   99.41%
+    Req/Sec     3.99k   301.07     4.44k    81.54%
+  148553 requests in 5.00s, 18.70MB read
+Requests/sec:  29712.47
+Transfer/sec:      3.74MB
+
+---------------------------------------------------------
+ Running Warmup falcore
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.81ms    0.96ms  18.64ms   81.23%
+    Req/Sec    18.71k     2.43k   26.67k    68.43%
+  2125135 requests in 15.00s, 267.52MB read
+Requests/sec: 141684.65
+Transfer/sec:     17.84MB
+
+---------------------------------------------------------
+ Concurrency: 256 for falcore
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.38ms   25.87ms 242.15ms   87.97%
+    Req/Sec    19.47k     1.69k   24.78k    70.79%
+  2325001 requests in 15.00s, 292.68MB read
+Requests/sec: 155016.99
+Transfer/sec:     19.51MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for falcore
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   102.45ms   31.32ms 824.37ms   85.08%
+    Req/Sec    19.40k     1.06k   24.89k    85.25%
+  2317108 requests in 15.00s, 291.69MB read
+  Socket errors: connect 0, read 53, write 0, timeout 87
+Requests/sec: 154474.19
+Transfer/sec:     19.45MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for falcore
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   291.18ms  368.24ms   2.03s    95.31%
+    Req/Sec    18.95k     6.67k   29.79k    73.74%
+  2295276 requests in 15.00s, 288.94MB read
+  Socket errors: connect 0, read 137, write 0, timeout 13273
+Requests/sec: 152999.55
+Transfer/sec:     19.26MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for falcore
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   524.10ms  907.83ms   7.43s    96.86%
+    Req/Sec    18.93k     4.25k   44.43k    80.91%
+  2269679 requests in 15.01s, 285.72MB read
+  Socket errors: connect 11, read 1233, write 0, timeout 86167
+Requests/sec: 151217.51
+Transfer/sec:     19.04MB

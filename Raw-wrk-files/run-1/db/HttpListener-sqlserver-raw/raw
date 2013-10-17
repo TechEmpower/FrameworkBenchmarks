@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 13:41:11 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?provider=sqlserver
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?provider=sqlserver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07ms  686.27us  18.47ms   98.16%
+    Req/Sec     1.00k   115.87     1.33k    90.52%
+  37946 requests in 5.00s, 6.69MB read
+Requests/sec:   7589.21
+Transfer/sec:      1.34MB
+
+---------------------------------------------------------
+ Running Warmup HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=sqlserver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.88ms    6.21ms 124.25ms   88.37%
+    Req/Sec     2.89k   678.89     5.05k    69.64%
+  340365 requests in 15.00s, 59.98MB read
+Requests/sec:  22690.98
+Transfer/sec:      4.00MB
+
+---------------------------------------------------------
+ Concurrency: 8 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=sqlserver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.11ms    1.00ms  21.10ms   98.05%
+    Req/Sec     0.99k   121.62     1.33k    89.50%
+  113275 requests in 15.00s, 19.96MB read
+Requests/sec:   7551.55
+Transfer/sec:      1.33MB
+
+---------------------------------------------------------
+ Concurrency: 16 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=sqlserver
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms    0.89ms  22.91ms   96.22%
+    Req/Sec     1.90k   218.83     2.44k    82.75%
+  215074 requests in 15.00s, 37.90MB read
+Requests/sec:  14338.33
+Transfer/sec:      2.53MB
+
+---------------------------------------------------------
+ Concurrency: 32 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=sqlserver
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.10ms    2.57ms  24.43ms   97.06%
+    Req/Sec     2.36k   519.66     4.00k    76.86%
+  267704 requests in 15.00s, 47.18MB read
+Requests/sec:  17846.81
+Transfer/sec:      3.15MB
+
+---------------------------------------------------------
+ Concurrency: 64 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=sqlserver
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.19ms    5.26ms  38.21ms   93.53%
+    Req/Sec     2.67k     0.89k    5.00k    74.20%
+  304295 requests in 15.00s, 53.62MB read
+Requests/sec:  20286.47
+Transfer/sec:      3.57MB
+
+---------------------------------------------------------
+ Concurrency: 128 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=sqlserver
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.78ms    5.34ms 106.19ms   91.83%
+    Req/Sec     2.65k   742.45     4.70k    70.14%
+  308910 requests in 15.00s, 54.44MB read
+Requests/sec:  20593.35
+Transfer/sec:      3.63MB
+
+---------------------------------------------------------
+ Concurrency: 256 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=sqlserver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.99ms    5.44ms  78.26ms   83.08%
+    Req/Sec     2.85k   678.84     5.03k    70.24%
+  336044 requests in 15.00s, 59.22MB read
+Requests/sec:  22402.88
+Transfer/sec:      3.95MB

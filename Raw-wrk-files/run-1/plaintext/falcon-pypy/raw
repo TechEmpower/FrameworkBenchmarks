@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 20:09:23 PDT 2013
+
+  System load:  0.09               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcon-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.51ms    6.42ms  60.07ms   97.21%
+    Req/Sec   734.06    250.11     1.44k    69.10%
+  27862 requests in 5.00s, 2.79MB read
+Requests/sec:   5572.06
+Transfer/sec:    571.35KB
+
+---------------------------------------------------------
+ Running Warmup falcon-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.60ms   33.39ms 248.51ms   67.94%
+    Req/Sec   740.03    100.16     0.94k    61.58%
+  87882 requests in 15.00s, 8.80MB read
+Requests/sec:   5858.63
+Transfer/sec:    600.74KB
+
+---------------------------------------------------------
+ Concurrency: 256 for falcon-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   758.09ms  826.33ms   3.56s    90.17%
+    Req/Sec   757.39    262.09     1.16k    52.23%
+  85382 requests in 15.01s, 8.55MB read
+  Socket errors: connect 0, read 0, write 0, timeout 150
+Requests/sec:   5688.83
+Transfer/sec:    583.33KB
+
+---------------------------------------------------------
+ Concurrency: 1024 for falcon-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.97s     1.94s    7.18s    74.57%
+    Req/Sec   738.89     63.25     0.88k    59.29%
+  88170 requests in 15.00s, 8.83MB read
+  Socket errors: connect 0, read 13, write 0, timeout 2394
+Requests/sec:   5877.17
+Transfer/sec:    602.64KB
+
+---------------------------------------------------------
+ Concurrency: 4096 for falcon-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.45s     2.95s   14.39s    80.23%
+    Req/Sec   725.79     77.11     0.92k    76.40%
+  87754 requests in 15.00s, 8.79MB read
+  Socket errors: connect 0, read 425, write 0, timeout 21216
+Requests/sec:   5848.42
+Transfer/sec:    599.69KB
+
+---------------------------------------------------------
+ Concurrency: 16384 for falcon-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  63129 requests in 15.01s, 6.32MB read
+  Socket errors: connect 11, read 1463, write 0, timeout 103725
+Requests/sec:   4205.65
+Transfer/sec:    431.24KB

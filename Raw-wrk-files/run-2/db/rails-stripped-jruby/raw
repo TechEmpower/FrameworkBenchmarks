@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 04:35:21 PDT 2013
+
+  System load:  0.05               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/rails/hello_world/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/rails/hello_world/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.83ms    1.58ms  19.47ms   88.11%
+    Req/Sec   288.70     76.77   500.00     71.08%
+  10566 requests in 5.00s, 3.72MB read
+Requests/sec:   2112.71
+Transfer/sec:    760.84KB
+
+---------------------------------------------------------
+ Running Warmup rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rails/hello_world/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   112.74ms   49.85ms 577.22ms   71.22%
+    Req/Sec   277.74     21.86   304.00     89.78%
+  32678 requests in 15.00s, 11.49MB read
+Requests/sec:   2178.25
+Transfer/sec:    784.45KB
+
+---------------------------------------------------------
+ Concurrency: 8 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/rails/hello_world/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rails/hello_world/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.68ms    1.36ms  18.76ms   96.27%
+    Req/Sec   411.41     81.76   666.00     69.29%
+  46785 requests in 15.00s, 16.45MB read
+Requests/sec:   3118.71
+Transfer/sec:      1.10MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/rails/hello_world/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rails/hello_world/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.16ms    2.19ms  23.43ms   74.66%
+    Req/Sec   416.56     83.68   714.00     78.89%
+  48268 requests in 15.00s, 16.98MB read
+Requests/sec:   3217.52
+Transfer/sec:      1.13MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/rails/hello_world/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rails/hello_world/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.33ms    5.00ms  32.72ms   67.15%
+    Req/Sec   398.63     59.73   617.00     71.39%
+  47115 requests in 15.00s, 16.57MB read
+Requests/sec:   3140.47
+Transfer/sec:      1.10MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/rails/hello_world/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rails/hello_world/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.69ms   10.56ms  64.89ms   67.67%
+    Req/Sec   374.74     43.50   527.00     68.88%
+  44637 requests in 15.00s, 15.70MB read
+Requests/sec:   2975.54
+Transfer/sec:      1.05MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/rails/hello_world/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rails/hello_world/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.34ms   22.40ms 112.19ms   61.77%
+    Req/Sec   338.93     26.31   414.00     68.40%
+  40539 requests in 15.00s, 14.26MB read
+Requests/sec:   2702.04
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rails-stripped-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/rails/hello_world/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/rails/hello_world/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   109.67ms   44.53ms 249.96ms   64.98%
+    Req/Sec   288.97     23.78   399.00     77.53%
+  34691 requests in 15.02s, 12.20MB read
+Requests/sec:   2309.78
+Transfer/sec:    831.82KB

@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 05:11:48 PDT 2013
+
+  System load:  0.01               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.07ms    1.28ms  12.83ms   74.49%
+    Req/Sec   351.82     76.47   583.00     68.82%
+  13194 requests in 5.00s, 3.13MB read
+Requests/sec:   2637.95
+Transfer/sec:    641.33KB
+
+---------------------------------------------------------
+ Running Warmup silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    90.50ms  177.73ms   3.47s    97.69%
+    Req/Sec   364.87     52.30   540.00     74.84%
+  43426 requests in 15.01s, 10.31MB read
+  Socket errors: connect 0, read 0, write 0, timeout 31
+Requests/sec:   2893.81
+Transfer/sec:    703.58KB
+
+---------------------------------------------------------
+ Concurrency: 8 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.12ms    1.34ms  15.58ms   75.60%
+    Req/Sec   353.68     89.84   666.00     62.79%
+  40256 requests in 15.00s, 9.56MB read
+Requests/sec:   2683.34
+Transfer/sec:    652.36KB
+
+---------------------------------------------------------
+ Concurrency: 16 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.97ms    5.19ms  67.05ms   88.35%
+    Req/Sec   369.24    105.53   777.00     68.66%
+  43303 requests in 15.00s, 10.28MB read
+Requests/sec:   2886.48
+Transfer/sec:    701.75KB
+
+---------------------------------------------------------
+ Concurrency: 32 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.24ms   19.47ms 304.00ms   91.97%
+    Req/Sec   365.97    102.18   719.00     67.75%
+  43654 requests in 15.00s, 10.36MB read
+Requests/sec:   2909.54
+Transfer/sec:    707.36KB
+
+---------------------------------------------------------
+ Concurrency: 64 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.66ms   51.67ms 661.94ms   92.68%
+    Req/Sec   362.79    123.38     0.87k    70.17%
+  43508 requests in 15.00s, 10.33MB read
+Requests/sec:   2900.27
+Transfer/sec:    705.11KB
+
+---------------------------------------------------------
+ Concurrency: 128 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.78ms   66.72ms 522.05ms   86.78%
+    Req/Sec   360.99     61.98   715.00     71.53%
+  43280 requests in 15.00s, 10.28MB read
+Requests/sec:   2884.54
+Transfer/sec:    701.30KB
+
+---------------------------------------------------------
+ Concurrency: 256 for silex-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    91.70ms  194.97ms   3.41s    96.56%
+    Req/Sec   367.10     51.29   532.00     71.36%
+  43973 requests in 15.00s, 10.44MB read
+  Socket errors: connect 0, read 0, write 0, timeout 25
+Requests/sec:   2930.78
+Transfer/sec:    712.56KB

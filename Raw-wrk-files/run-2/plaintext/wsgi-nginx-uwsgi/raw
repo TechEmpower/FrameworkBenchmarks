@@ -1,0 +1,108 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 13:21:11 PDT 2013
+
+  System load:  1.36               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   256.91us   43.74us 466.00us   68.69%
+    Req/Sec     3.99k   209.17     4.67k    64.29%
+  149168 requests in 5.00s, 22.75MB read
+Requests/sec:  29835.15
+Transfer/sec:      4.55MB
+
+---------------------------------------------------------
+ Running Warmup wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.04ms   13.28ms   1.26s    99.23%
+    Req/Sec    16.36k     2.27k   24.56k    75.91%
+  1843475 requests in 15.00s, 302.69MB read
+  Non-2xx or 3xx responses: 134100
+Requests/sec: 122902.94
+Transfer/sec:     20.18MB
+
+---------------------------------------------------------
+ Concurrency: 256 for wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.82ms   22.68ms 654.14ms   93.66%
+    Req/Sec    17.03k   849.25    20.82k    71.51%
+  1983319 requests in 15.00s, 355.86MB read
+  Non-2xx or 3xx responses: 332833
+Requests/sec: 132244.16
+Transfer/sec:     23.73MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   124.72ms  262.91ms  13.62s    98.88%
+    Req/Sec    16.00k     2.06k   32.10k    82.19%
+  1826664 requests in 15.00s, 322.14MB read
+  Socket errors: connect 0, read 0, write 0, timeout 254
+  Non-2xx or 3xx responses: 271496
+Requests/sec: 121778.02
+Transfer/sec:     21.48MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   274.68ms    1.39s   14.01s    98.59%
+    Req/Sec    16.44k     4.78k   23.95k    78.10%
+  1889287 requests in 15.00s, 340.86MB read
+  Socket errors: connect 0, read 831, write 0, timeout 16990
+  Non-2xx or 3xx responses: 328728
+Requests/sec: 125941.93
+Transfer/sec:     22.72MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.13s     5.88s   14.94s    79.94%
+    Req/Sec    15.63k     9.79k   76.05k    79.41%
+  1862598 requests in 15.01s, 327.98MB read
+  Socket errors: connect 11, read 2258, write 0, timeout 89800
+  Non-2xx or 3xx responses: 273753
+Requests/sec: 124097.04
+Transfer/sec:     21.85MB

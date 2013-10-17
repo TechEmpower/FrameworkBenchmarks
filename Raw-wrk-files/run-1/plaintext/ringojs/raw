@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 03:54:29 PDT 2013
+
+  System load:  0.27               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   412.60us  570.11us  15.96ms   99.44%
+    Req/Sec     2.76k   570.43     4.00k    66.83%
+  103807 requests in 5.00s, 14.35MB read
+Requests/sec:  20760.79
+Transfer/sec:      2.87MB
+
+---------------------------------------------------------
+ Running Warmup ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.72ms   18.69ms 646.56ms   92.54%
+    Req/Sec     6.18k     1.92k   14.44k    68.18%
+  702125 requests in 15.00s, 97.09MB read
+Requests/sec:  46814.33
+Transfer/sec:      6.47MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    80.19ms   76.97ms 470.20ms   79.88%
+    Req/Sec     6.62k   454.45     8.05k    72.52%
+  787986 requests in 15.00s, 108.96MB read
+Requests/sec:  52539.50
+Transfer/sec:      7.27MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   301.46ms   83.37ms 658.90ms   78.54%
+    Req/Sec     6.58k   292.33     8.56k    85.84%
+  784502 requests in 15.00s, 108.48MB read
+  Socket errors: connect 0, read 95, write 0, timeout 45
+Requests/sec:  52297.75
+Transfer/sec:      7.23MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.12s   233.22ms   4.49s    82.44%
+    Req/Sec     6.69k   477.62     9.91k    85.61%
+  791617 requests in 15.00s, 109.47MB read
+  Socket errors: connect 0, read 365, write 0, timeout 430
+Requests/sec:  52766.53
+Transfer/sec:      7.30MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for ringojs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.26s     1.50s    7.75s    72.45%
+    Req/Sec     6.40k     1.94k   15.32k    76.64%
+  757192 requests in 15.02s, 104.71MB read
+  Socket errors: connect 11, read 1096, write 0, timeout 58974
+Requests/sec:  50400.93
+Transfer/sec:      6.97MB

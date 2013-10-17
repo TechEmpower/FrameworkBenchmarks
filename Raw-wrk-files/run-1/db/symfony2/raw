@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 06:35:55 PDT 2013
+
+  System load:  0.01               Processes:           123
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer symfony2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.02ms   14.10ms  61.71ms   83.18%
+    Req/Sec    73.48     20.67   163.00     66.37%
+  2925 requests in 5.01s, 832.21KB read
+  Non-2xx or 3xx responses: 1442
+Requests/sec:    583.97
+Transfer/sec:    166.15KB
+
+---------------------------------------------------------
+ Running Warmup symfony2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   412.54ms  450.60ms   2.00s    80.30%
+    Req/Sec    74.83     15.82   149.00     80.69%
+  8954 requests in 15.03s, 2.49MB read
+  Non-2xx or 3xx responses: 4445
+Requests/sec:    595.65
+Transfer/sec:    169.64KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.79ms   13.65ms  68.44ms   81.55%
+    Req/Sec    75.03     21.51   158.00     74.60%
+  8998 requests in 15.01s, 2.50MB read
+  Non-2xx or 3xx responses: 4409
+Requests/sec:    599.35
+Transfer/sec:    170.39KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.48ms   29.86ms 185.85ms   50.66%
+    Req/Sec    69.75     21.61   138.00     64.80%
+  8430 requests in 15.01s, 2.69MB read
+  Non-2xx or 3xx responses: 4623
+Requests/sec:    561.67
+Transfer/sec:    183.76KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    95.07ms  107.63ms 910.78ms   88.73%
+    Req/Sec    48.23     19.69   127.00     78.00%
+  5956 requests in 15.02s, 2.94MB read
+  Non-2xx or 3xx responses: 4998
+Requests/sec:    396.46
+Transfer/sec:    200.10KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   165.27ms  209.09ms   1.64s    89.03%
+    Req/Sec    53.89     24.09   147.00     74.52%
+  6659 requests in 15.04s, 2.82MB read
+  Non-2xx or 3xx responses: 4851
+Requests/sec:    442.81
+Transfer/sec:    191.79KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   252.30ms  321.56ms   2.13s    85.53%
+    Req/Sec    66.95     18.55   113.00     68.02%
+  8147 requests in 15.12s, 2.58MB read
+  Non-2xx or 3xx responses: 4556
+Requests/sec:    538.91
+Transfer/sec:    174.73KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   566.18ms  546.27ms   4.55s    56.48%
+    Req/Sec    59.82     19.02    98.00     62.31%
+  6980 requests in 15.05s, 2.73MB read
+  Socket errors: connect 0, read 0, write 0, timeout 16
+  Non-2xx or 3xx responses: 4725
+Requests/sec:    463.78
+Transfer/sec:    185.45KB

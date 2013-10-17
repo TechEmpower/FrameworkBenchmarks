@@ -1,0 +1,138 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 21:05:16 PDT 2013
+
+  System load:  0.06               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.77ms    4.31ms  29.77ms   65.37%
+    Req/Sec    73.75     29.60   181.00     58.82%
+  3057 requests in 5.01s, 3.93MB read
+  Non-2xx or 3xx responses: 1823
+Requests/sec:    609.99
+Transfer/sec:    802.33KB
+
+---------------------------------------------------------
+ Running Warmup fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   392.96ms  263.26ms   4.11s    88.13%
+    Req/Sec    81.88      7.94   101.00     75.00%
+  9836 requests in 15.07s, 9.00MB read
+  Socket errors: connect 0, read 0, write 0, timeout 19
+  Non-2xx or 3xx responses: 9836
+Requests/sec:    652.69
+Transfer/sec:    611.26KB
+
+---------------------------------------------------------
+ Concurrency: 8 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.52ms    4.35ms  30.73ms   63.05%
+    Req/Sec    88.91     32.51   181.00     57.18%
+  10569 requests in 15.01s, 16.05MB read
+  Non-2xx or 3xx responses: 3607
+Requests/sec:    704.33
+Transfer/sec:      1.07MB
+
+---------------------------------------------------------
+ Concurrency: 16 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.54ms   10.86ms 123.38ms   81.28%
+    Req/Sec   102.78     32.86   204.00     54.45%
+  12330 requests in 15.01s, 19.44MB read
+  Non-2xx or 3xx responses: 3426
+Requests/sec:    821.70
+Transfer/sec:      1.30MB
+
+---------------------------------------------------------
+ Concurrency: 32 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.25ms   13.88ms  90.54ms   68.46%
+    Req/Sec   109.71     26.10   187.00     62.21%
+  13200 requests in 15.02s, 20.44MB read
+  Non-2xx or 3xx responses: 4068
+Requests/sec:    878.89
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Concurrency: 64 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    85.75ms   32.58ms 308.61ms   72.13%
+    Req/Sec    95.32     19.04   158.00     73.62%
+  11424 requests in 15.02s, 13.42MB read
+  Non-2xx or 3xx responses: 8183
+Requests/sec:    760.72
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Concurrency: 128 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   180.78ms   88.02ms   1.29s    79.41%
+    Req/Sec    85.56      6.09   102.00     71.95%
+  10288 requests in 15.02s, 9.41MB read
+  Non-2xx or 3xx responses: 10288
+Requests/sec:    685.02
+Transfer/sec:    641.54KB
+
+---------------------------------------------------------
+ Concurrency: 256 for fuel
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   347.59ms  213.56ms   2.31s    81.54%
+    Req/Sec    91.78     16.03   137.00     77.69%
+  10922 requests in 15.02s, 12.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+  Non-2xx or 3xx responses: 8507
+Requests/sec:    727.30
+Transfer/sec:    832.05KB

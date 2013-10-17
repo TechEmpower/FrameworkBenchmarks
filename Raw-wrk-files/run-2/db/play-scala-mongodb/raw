@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 03:24:28 PDT 2013
+
+  System load:  0.0                Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.20ms    1.96ms  20.28ms   93.44%
+    Req/Sec   587.75    228.25     1.00k    56.66%
+  21228 requests in 5.00s, 2.77MB read
+Requests/sec:   4245.61
+Transfer/sec:    567.08KB
+
+---------------------------------------------------------
+ Running Warmup play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.55ms   30.70ms 640.35ms   99.71%
+    Req/Sec     2.33k   479.38     5.53k    81.40%
+  268687 requests in 15.00s, 35.05MB read
+Requests/sec:  17911.22
+Transfer/sec:      2.34MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07ms    1.35ms  17.14ms   98.30%
+    Req/Sec     1.10k   168.37     1.44k    87.59%
+  124860 requests in 15.00s, 16.29MB read
+Requests/sec:   8323.84
+Transfer/sec:      1.09MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.20ms    1.39ms  19.02ms   98.06%
+    Req/Sec     1.93k   311.66     2.56k    88.97%
+  220178 requests in 15.00s, 28.72MB read
+Requests/sec:  14678.80
+Transfer/sec:      1.91MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.95ms    1.87ms  29.04ms   98.20%
+    Req/Sec     2.33k   326.39     3.00k    83.77%
+  264684 requests in 15.00s, 34.53MB read
+Requests/sec:  17645.71
+Transfer/sec:      2.30MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.95ms    2.70ms  31.85ms   97.35%
+    Req/Sec     2.29k   369.14     3.11k    82.22%
+  260218 requests in 15.00s, 33.94MB read
+Requests/sec:  17348.21
+Transfer/sec:      2.26MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.57ms    3.18ms  45.40ms   96.48%
+    Req/Sec     2.28k   421.79     4.18k    79.62%
+  262254 requests in 15.00s, 34.21MB read
+Requests/sec:  17483.92
+Transfer/sec:      2.28MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-scala-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.56ms   43.33ms 639.78ms   99.11%
+    Req/Sec     2.35k   511.34     4.18k    75.50%
+  269836 requests in 15.00s, 35.20MB read
+Requests/sec:  17990.12
+Transfer/sec:      2.35MB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 14 14:47:20 PDT 2013
+
+  System load:  0.03               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/entityframework/mysql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.79ms   10.38ms  41.88ms   91.64%
+    Req/Sec   362.07    122.48   555.00     81.53%
+  13664 requests in 5.00s, 22.84MB read
+Requests/sec:   2731.80
+Transfer/sec:      4.57MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.10ms   25.34ms 323.50ms   82.20%
+    Req/Sec   757.48     66.20     0.91k    66.19%
+  89297 requests in 15.00s, 149.29MB read
+Requests/sec:   5952.93
+Transfer/sec:      9.95MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.61ms    9.90ms  46.25ms   92.20%
+    Req/Sec   352.30    115.77   555.00     85.32%
+  40114 requests in 15.00s, 67.06MB read
+Requests/sec:   2673.87
+Transfer/sec:      4.47MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.57ms    9.30ms  42.05ms   87.98%
+    Req/Sec   813.98    314.22     1.22k    85.08%
+  91424 requests in 15.01s, 152.84MB read
+Requests/sec:   6090.41
+Transfer/sec:     10.18MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.60ms    8.58ms  74.41ms   89.81%
+    Req/Sec   826.48    306.71     1.41k    73.32%
+  95723 requests in 15.00s, 160.03MB read
+Requests/sec:   6381.27
+Transfer/sec:     10.67MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.86ms    9.99ms 115.04ms   88.74%
+    Req/Sec   785.53    176.77     1.27k    63.67%
+  92216 requests in 15.02s, 154.17MB read
+Requests/sec:   6141.23
+Transfer/sec:     10.27MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.85ms   16.91ms 176.53ms   85.73%
+    Req/Sec   759.96    128.98     1.12k    69.19%
+  89704 requests in 15.00s, 149.97MB read
+Requests/sec:   5979.73
+Transfer/sec:     10.00MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/mysql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.98ms   25.96ms 301.90ms   83.07%
+    Req/Sec   759.31     81.15     0.93k    69.96%
+  89701 requests in 15.00s, 149.96MB read
+Requests/sec:   5979.35
+Transfer/sec:     10.00MB

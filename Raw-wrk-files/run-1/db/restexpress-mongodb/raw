@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 03:36:16 PDT 2013
+
+  System load:  0.19               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/restexpress/mongodb
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/restexpress/mongodb
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   565.49us  427.94us  14.34ms   96.13%
+    Req/Sec     1.96k   363.56     2.56k    74.39%
+  69891 requests in 5.00s, 6.07MB read
+Requests/sec:  13975.71
+Transfer/sec:      1.21MB
+
+---------------------------------------------------------
+ Running Warmup restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/restexpress/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.22ms   29.57ms 649.96ms   99.52%
+    Req/Sec     9.24k     2.16k   19.33k    81.29%
+  1034459 requests in 15.00s, 89.77MB read
+Requests/sec:  68965.46
+Transfer/sec:      5.99MB
+
+---------------------------------------------------------
+ Concurrency: 8 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/restexpress/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   490.82us  116.20us  10.29ms   90.83%
+    Req/Sec     2.12k   127.83     2.44k    87.70%
+  241441 requests in 15.00s, 20.95MB read
+Requests/sec:  16096.36
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Concurrency: 16 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/restexpress/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   498.39us  240.64us   9.43ms   96.10%
+    Req/Sec     4.22k   349.75     5.11k    79.91%
+  480356 requests in 15.00s, 41.69MB read
+Requests/sec:  32024.42
+Transfer/sec:      2.78MB
+
+---------------------------------------------------------
+ Concurrency: 32 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/restexpress/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   711.04us  845.97us  14.24ms   93.83%
+    Req/Sec     6.03k     0.97k    9.44k    67.49%
+  685442 requests in 15.00s, 59.49MB read
+Requests/sec:  45696.44
+Transfer/sec:      3.97MB
+
+---------------------------------------------------------
+ Concurrency: 64 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/restexpress/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21ms    2.76ms  49.38ms   94.28%
+    Req/Sec     7.97k     1.70k   13.33k    72.69%
+  904510 requests in 15.00s, 78.50MB read
+Requests/sec:  60302.04
+Transfer/sec:      5.23MB
+
+---------------------------------------------------------
+ Concurrency: 128 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/restexpress/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.49ms   17.84ms 708.60ms   99.56%
+    Req/Sec     8.98k     1.87k   15.89k    74.68%
+  1018113 requests in 15.00s, 88.36MB read
+Requests/sec:  67879.85
+Transfer/sec:      5.89MB
+
+---------------------------------------------------------
+ Concurrency: 256 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/restexpress/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.75ms   45.95ms 651.78ms   98.97%
+    Req/Sec     9.16k     2.21k   16.56k    80.35%
+  1035500 requests in 15.00s, 89.87MB read
+Requests/sec:  69039.03
+Transfer/sec:      5.99MB

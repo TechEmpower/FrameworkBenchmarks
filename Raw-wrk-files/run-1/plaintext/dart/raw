@@ -1,0 +1,105 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 19:05:06 PDT 2013
+
+  System load:  0.05               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dart
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   365.05us   82.08us   1.26ms   74.45%
+    Req/Sec     2.83k   181.66     3.44k    73.92%
+  107419 requests in 5.00s, 19.97MB read
+Requests/sec:  21484.18
+Transfer/sec:      3.99MB
+
+---------------------------------------------------------
+ Running Warmup dart
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.78ms   35.75ms   1.08s    95.87%
+    Req/Sec     4.15k     0.87k    7.43k    70.67%
+  483636 requests in 15.00s, 89.92MB read
+Requests/sec:  32244.16
+Transfer/sec:      5.99MB
+
+---------------------------------------------------------
+ Concurrency: 256 for dart
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   132.35ms  118.08ms   1.39s    89.89%
+    Req/Sec     3.97k   315.01     5.02k    69.34%
+  475774 requests in 15.00s, 88.46MB read
+Requests/sec:  31718.58
+Transfer/sec:      5.90MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for dart
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   469.62ms  708.19ms   6.23s    86.77%
+    Req/Sec     4.17k   521.73     5.43k    67.63%
+  498887 requests in 15.00s, 92.75MB read
+  Socket errors: connect 0, read 32, write 0, timeout 644
+Requests/sec:  33260.00
+Transfer/sec:      6.18MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for dart
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.30s     3.61s   14.90s    88.41%
+    Req/Sec     3.79k   547.42     5.67k    80.99%
+  455367 requests in 15.00s, 88.18MB read
+  Socket errors: connect 0, read 449187, write 0, timeout 13270
+  Non-2xx or 3xx responses: 23180
+Requests/sec:  30352.95
+Transfer/sec:      5.88MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for dart
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.78s     4.07s   14.62s    72.84%
+    Req/Sec     2.45k     1.37k    4.80k    70.00%
+  288315 requests in 15.11s, 56.10MB read
+  Socket errors: connect 11, read 378190, write 0, timeout 53623
+  Non-2xx or 3xx responses: 16625
+Requests/sec:  19086.87
+Transfer/sec:      3.71MB

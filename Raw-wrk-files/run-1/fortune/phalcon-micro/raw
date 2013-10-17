@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 01:00:11 PDT 2013
+
+  System load:  0.04               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.94ms  165.49us   2.01ms   76.87%
+    Req/Sec     1.11k    90.57     1.44k    57.29%
+  42221 requests in 5.00s, 58.62MB read
+Requests/sec:   8443.32
+Transfer/sec:     11.72MB
+
+---------------------------------------------------------
+ Running Warmup phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.39ms   21.15ms 357.89ms   88.48%
+    Req/Sec     1.38k   131.04     2.25k    71.73%
+  164271 requests in 15.00s, 228.09MB read
+Requests/sec:  10950.98
+Transfer/sec:     15.21MB
+
+---------------------------------------------------------
+ Concurrency: 8 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.94ms  169.38us   2.14ms   77.10%
+    Req/Sec     1.11k    91.88     1.44k    56.51%
+  126795 requests in 15.00s, 176.06MB read
+Requests/sec:   8452.81
+Transfer/sec:     11.74MB
+
+---------------------------------------------------------
+ Concurrency: 16 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.49ms  809.39us  11.81ms   89.17%
+    Req/Sec     1.44k   219.38     2.11k    64.35%
+  163487 requests in 15.00s, 227.00MB read
+Requests/sec:  10899.05
+Transfer/sec:     15.13MB
+
+---------------------------------------------------------
+ Concurrency: 32 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.82ms    3.13ms  77.23ms   94.47%
+    Req/Sec     1.57k   341.91     3.11k    68.96%
+  178915 requests in 15.00s, 248.42MB read
+Requests/sec:  11927.61
+Transfer/sec:     16.56MB
+
+---------------------------------------------------------
+ Concurrency: 64 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.66ms    6.50ms 146.09ms   95.11%
+    Req/Sec     1.49k   244.72     2.45k    68.49%
+  174284 requests in 15.00s, 241.99MB read
+Requests/sec:  11619.14
+Transfer/sec:     16.13MB
+
+---------------------------------------------------------
+ Concurrency: 128 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.61ms   10.06ms 139.56ms   90.46%
+    Req/Sec     1.41k   165.58     2.21k    69.83%
+  167060 requests in 15.00s, 231.96MB read
+Requests/sec:  11137.62
+Transfer/sec:     15.46MB
+
+---------------------------------------------------------
+ Concurrency: 256 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.91ms   20.76ms 238.05ms   86.76%
+    Req/Sec     1.38k   162.27     3.70k    80.23%
+  164583 requests in 15.00s, 228.52MB read
+Requests/sec:  10970.68
+Transfer/sec:     15.23MB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 18:39:34 PDT 2013
+
+  System load:  0.35               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:16969/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:16969/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   472.84us   89.14us   0.91ms   65.62%
+    Req/Sec     2.20k   132.05     2.67k    61.72%
+  83137 requests in 5.00s, 111.79MB read
+Requests/sec:  16628.03
+Transfer/sec:     22.36MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.80ms   17.21ms 590.58ms   97.36%
+    Req/Sec     7.61k     2.29k   18.22k    74.77%
+  863991 requests in 15.00s, 1.13GB read
+Requests/sec:  57601.12
+Transfer/sec:     77.46MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   474.27us   91.42us   2.91ms   67.35%
+    Req/Sec     2.20k   134.13     2.67k    60.74%
+  249960 requests in 15.00s, 336.12MB read
+Requests/sec:  16663.95
+Transfer/sec:     22.41MB
+
+---------------------------------------------------------
+ Concurrency: 16 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   505.79us  263.18us  12.45ms   98.82%
+    Req/Sec     4.16k   263.45     5.00k    70.45%
+  473509 requests in 15.00s, 636.72MB read
+Requests/sec:  31567.74
+Transfer/sec:     42.45MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   624.24us  166.55us   7.94ms   78.60%
+    Req/Sec     6.70k   524.42     8.33k    71.79%
+  761533 requests in 15.00s, 1.00GB read
+Requests/sec:  50770.96
+Transfer/sec:     68.27MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.08ms  217.97us   7.09ms   81.63%
+    Req/Sec     7.75k   424.14     9.00k    62.47%
+  884965 requests in 15.00s, 1.16GB read
+Requests/sec:  58999.27
+Transfer/sec:     79.34MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.18ms  655.36us  16.34ms   77.17%
+    Req/Sec     7.73k   511.79     9.67k    69.64%
+  877993 requests in 15.00s, 1.15GB read
+Requests/sec:  58534.12
+Transfer/sec:     78.71MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:16969/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.37ms    1.00ms  29.14ms   77.81%
+    Req/Sec     7.67k   573.93    11.18k    75.30%
+  876205 requests in 15.00s, 1.15GB read
+Requests/sec:  58415.64
+Transfer/sec:     78.55MB
