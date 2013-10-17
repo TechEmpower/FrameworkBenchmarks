@@ -16,7 +16,7 @@
       "framework": "ringo",
       "language": "JavaScript",
       "orm": "Micro",
-      "platform": "Jetty",
+      "platform": "RingoJs",
       "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
