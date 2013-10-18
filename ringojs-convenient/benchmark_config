@@ -11,7 +11,7 @@
       "update_url": "/updates/",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Micro",
       "database": "MySQL",
       "framework": "ringo",
       "language": "JavaScript",
@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "ringo-conv",
       "notes": "Convenient",
-      "versus": ""
+      "versus": "ringo"
     }
   }]
 }
