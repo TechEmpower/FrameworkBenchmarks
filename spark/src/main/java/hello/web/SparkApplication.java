@@ -5,7 +5,9 @@ import static spark.Spark.get;
 import hello.domain.Message;
 import hello.domain.World;
 
+import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.hibernate.Session;
 
@@ -14,38 +16,34 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import com.google.gson.Gson;
-
 public class SparkApplication implements spark.servlet.SparkApplication {
 
-    private static final Gson   GSON                 = new Gson();
-    private static final Random RANDOM               = new Random();
-    private static final int    DB_ROWS              = 10000;
-    private static final String CONTENT_TYPE_JSON    = "application/json";
+    private static final int DB_ROWS = 10000;
+    private static final String MESSAGE = "Hello, World!";
+    private static final String CONTENT_TYPE_TEXT = "text/plain";
     
     @Override
     public void init() {
-        get(new Route("/json") {
+        get(new JsonTransformer("/json") {
             @Override
-            public Object handle(final Request request, final Response response) {
-                response.type(CONTENT_TYPE_JSON);
-                return GSON.toJson(new Message());
+            protected Object handleInternal(final Request request, final Response response) {
+                return new Message();
             }
         });
-        get(new Route("/db") {
+        get(new JsonTransformer("/db") {
             @Override
-            public Object handle(final Request request, final Response response) {
-                response.type(CONTENT_TYPE_JSON);
-                int queries = getQueries(request);
+            protected Object handleInternal(final Request request, final Response response) {
+                final int queries = getQueries(request);
                 
-                World[] worlds = new World[queries];
-                Session session = HibernateUtil.getSession();
+                final World[] worlds = new World[queries];
+                final Session session = HibernateUtil.getSession();
+                final Random random = ThreadLocalRandom.current();
                 
                 for (int i = 0; i < queries; i++) {
-                    worlds[i] = (World) session.byId(World.class).load(RANDOM.nextInt(DB_ROWS) + 1);
+                    worlds[i] = (World) session.byId(World.class).load(random.nextInt(DB_ROWS) + 1);
                 }
 
-                return GSON.toJson(worlds);
+                return worlds;
             }
             
             private int getQueries(final Request request) {
@@ -53,10 +51,23 @@ public class SparkApplication implements spark.servlet.SparkApplication {
                 return (param == null ? 1 : Integer.parseInt(param));
             }
         });
+        get(new Route("/plaintext") {
+            @Override
+            public Object handle(final Request request, final Response response) {
+                response.type(CONTENT_TYPE_TEXT);
+                return MESSAGE;
+            }
+        });
         after(new Filter("/db") {
             @Override
             public void handle(final Request request, final Response response) {
                 HibernateUtil.closeSession();
+            }
+        });
+        after(new Filter() {
+            @Override
+            public void handle(final Request request, final Response response) {
+                response.raw().addDateHeader("Date", new Date().getTime());
             }
         });
     }
