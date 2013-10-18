@@ -12,7 +12,7 @@ import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 public class Server {
     public static final String SERVER_VERSION = "Grizzly/" + Grizzly.getDotedVersion();
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         final int port = args.length > 0
                 ? Integer.parseInt(args[0]) : 8080;
         
@@ -39,8 +39,10 @@ public class Server {
         try {
             httpServer.start();
             
-            System.err.print("Server started. Press ENTER to stop.\n");
-            System.in.read();
+            System.err.print("Server started.\n");
+            synchronized (Server.class) {
+		Server.class.wait();
+            }
         } finally {
             httpServer.stop();
         }
