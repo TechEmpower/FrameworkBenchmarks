@@ -13,7 +13,7 @@ except ImportError:
     import json
 
 app = Bottle()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@localhost:3306/hello_world?charset=utf8'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world?charset=utf8'
 Base = declarative_base()
 db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 plugin = sqlalchemy.Plugin(db_engine, keyword='db', )
