@@ -84,12 +84,28 @@ The benchmark_config file is used by our run script to identify the available te
 
 The setup file is responsible for starting and stopping the test. This script is responsible for (among other things):
 
-* Setting the database host to the correct IP
-* Compiling/packaging the code
+* Modifying the framework's configuration to point to the correct database host
+* Compiling and/or packaging the code
 * Starting the server
 * Stopping the server
 
-The setup file is a python file that contains a start() and a stop() function. Here is an example of Wicket's setup file.
+The setup file is a python script that contains a start() and a stop() function.  The start function should build the source, make any necessary changes to the framework's configuration, and then start the server.  The stop function should shutdown the server, including all sub-processes as applicable.
+
+### Configuring database connectivity in start()
+
+By convention, the configuration files used by a framework should specify the database server as `localhost` so that developing tests in a single-machine environment can be done in an ad hoc fashion, without using the benchmark scripts.
+
+When running a benchmark script, the script needs to modify each framework's configuration so that the framework connects to a database host provided as a command line argument.  In order to do this, use setup_util.replace_text() to make necessary modifications prior to starting the server.
+
+For example:
+
+    setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+
+Using `localhost` in the raw configuration file is not a requirement as long as the `replace_text` call properly injects the database host provided to the benchmarker toolset as a command line argument.
+
+### A full example
+
+Here is an example of Wicket's setup file.
 
 	import subprocess
 	import sys
