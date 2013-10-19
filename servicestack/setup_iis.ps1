@@ -16,7 +16,7 @@ if ($action -eq 'start') {
     New-WebSite -Name Benchmarks -Port 8080 -PhysicalPath $wwwroot
     
     # Build the project
-    &$msbuild "$source\ServiceStackBenchmark.csproj" /t:ResotrePackages
+    &$msbuild "$source\ServiceStackBenchmark.csproj" /t:RestorePackages
     &$msbuild "$source\ServiceStackBenchmark.csproj" /p:Configuration=Release /p:Platform="x64" /t:Clean
     &$msbuild "$source\ServiceStackBenchmark.csproj" /p:Configuration=Release /p:Platform="x64" /p:DeployOnBuild=true /p:PublishProfile=IIS
 }
