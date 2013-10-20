@@ -1,6 +1,7 @@
 package hello
 
 import grails.converters.JSON
+import grails.transaction.Transactional
 import groovy.transform.CompileStatic
 import java.util.concurrent.ThreadLocalRandom
 
@@ -14,6 +15,7 @@ class HelloController {
       render msg as JSON
     }
 
+    @Transactional(readOnly=true)
     def db(int queries) {
       if(queries < 1) queries=1
       def worlds = new ArrayList(queries)
