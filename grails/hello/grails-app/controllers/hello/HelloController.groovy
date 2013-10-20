@@ -1,19 +1,21 @@
 package hello
 
 import grails.converters.JSON
+import groovy.transform.CompileStatic
 import java.util.concurrent.ThreadLocalRandom
 
+@CompileStatic
 class HelloController {
 
     def index() {
-      def response = [
+      def msg = [
         message: "Hello, world"
       ]
-      render response as JSON
+      render msg as JSON
     }
 
-    def db() {
-      int queries = params.queries ? params.int('queries') : 1
+    def db(int queries) {
+      if(queries < 1) queries=1
       def worlds = new ArrayList(queries)
       def random = ThreadLocalRandom.current();
 
@@ -24,9 +26,9 @@ class HelloController {
     }
     
     def json() {
-      def response = [
+      def msg = [
         message: "Hello, world"
       ]
-      render response as JSON
+      render msg as JSON
     }
 }
