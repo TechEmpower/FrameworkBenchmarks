@@ -48,3 +48,19 @@ class MigrateWorlds extends Migration {
     }
 
 }
+
+class CreateVersionIndexes extends Migration {
+    
+    def timestamp = System.currentTimeMillis + 400
+    
+    def up = {
+        customScript {
+            val con = storage.directAccess
+            try {
+                con.createStatement.executeUpdate("CREATE UNIQUE INDEX IX_WORLD_VERSION ON ActivateWorld(id, version)")
+                con.createStatement.executeUpdate("CREATE UNIQUE INDEX IX_WORLD_VERSION ON ActivateFortune(id, version)")
+            } finally
+                con.close
+        }
+    }
+}

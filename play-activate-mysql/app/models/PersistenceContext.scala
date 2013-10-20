@@ -19,8 +19,10 @@ object persistenceContext extends ActivateContext {
         val password = config.getString("db.default.password").get
         val url = config.getString("db.default.url").get
         val dialect = mySqlDialect
+        override val poolSize = 400
     }
     
     val indexWorldByLegacyId = memoryIndex[ActivateWorld].on(_.legacyId)
+    val indexFortuneAll = memoryIndex[ActivateFortune].on(_ => 1)
 
 }
