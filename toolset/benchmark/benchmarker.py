@@ -333,8 +333,9 @@ class Benchmarker:
       if os.name == 'nt':
         return True
       subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
-      subprocess.check_call("sudo sysctl -w net.core.somaxconn=5000".rsplit(" "))
-      subprocess.check_call("sudo -s ulimit -n 16384".rsplit(" "))
+      subprocess.check_call("sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535".rsplit(" "))
+      subprocess.check_call("sudo sysctl -w net.core.somaxconn=65535".rsplit(" "))
+      subprocess.check_call("sudo -s ulimit -n 65535".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_recycle=1".rsplit(" "))
       subprocess.check_call("sudo sysctl -w kernel.shmmax=134217728".rsplit(" "))
@@ -354,8 +355,9 @@ class Benchmarker:
   def __setup_database(self):
     p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
-      sudo sysctl -w net.core.somaxconn=5000
-      sudo -s ulimit -n 16384
+      sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
+      sudo sysctl -w net.core.somaxconn=65535
+      sudo -s ulimit -n 65535
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
       sudo sysctl -w kernel.shmmax=2147483648
@@ -374,8 +376,9 @@ class Benchmarker:
   def __setup_client(self):
     p = subprocess.Popen(self.client_ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
-      sudo sysctl -w net.core.somaxconn=5000
-      sudo -s ulimit -n 16384
+      sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
+      sudo sysctl -w net.core.somaxconn=65535
+      sudo -s ulimit -n 65535
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
       sudo sysctl -w kernel.shmmax=2147483648
