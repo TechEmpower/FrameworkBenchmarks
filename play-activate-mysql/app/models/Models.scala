@@ -9,19 +9,17 @@ import play.api.libs.json.Writes
 class ActivateFortune(val legacyId: Long, val message: String) extends Entity
 
 object ActivateFortune {
-    def all =
-        cachedQuery {
-            (fortune: ActivateFortune) => where()
-        }
+    def all = indexFortuneAll.get(1)
 }
 
 class ActivateWorld(val legacyId: Long, var randomNumber: Long) extends Entity
 
 object ActivateWorld {
-    def fingByLegacyId(legacyId: Long) = {
-        val lazyList = indexWorldByLegacyId.get(legacyId)
-        lazyList.headOption.getOrElse(throw new IllegalStateException("invalid id " + legacyId))
-    }
+    def fingByLegacyId(legacyId: Long) =
+        indexWorldByLegacyId
+            .get(legacyId)
+            .headOption
+            .getOrElse(throw new IllegalStateException("invalid id " + legacyId))
 }
 
 object Models {
