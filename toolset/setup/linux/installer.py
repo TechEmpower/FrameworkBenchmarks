@@ -42,7 +42,7 @@ class Installer:
     self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
     self.__run_command("source ../../.profile")
-    self.__run_command("sudo sh -c \"echo '*               -    nofile          16384' >> /etc/security/limits.conf\"")
+    self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
 
     ##############################################################
     # System Tools
@@ -401,7 +401,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
-    sudo sh -c "echo '*               -    nofile          16384' >> /etc/security/limits.conf"
+    sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
     sudo mkdir -p /ssd/log
@@ -485,7 +485,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
-    sudo sh -c "echo '*               -    nofile          16384' >> /etc/security/limits.conf"
+    sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
     sudo mkdir -p /ssd/log
