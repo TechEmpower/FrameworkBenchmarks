@@ -74,6 +74,10 @@ appcmd set config -section:httpProtocol /allowKeepAlive:true | Out-Null
 appcmd set config -section:httpLogging /dontLog:True | Out-Null
 # Enable detailed error pages
 #appcmd set config -section:system.webServer/httpErrors -errorMode:Detailed | Out-Null
+# Increase queue length for DefaultAppPool to avoid HTTP 503 errors coming from HTTP.SYS
+appcmd set apppool DefaultAppPool /queueLength:65535
+# Increase appConcurrentRequestLimit to avoid HTTP 503.2 errors from IIS http://support.microsoft.com/kb/943891
+appcmd set config -section:system.webServer/serverRuntime /appConcurrentRequestLimit:65535
 
 # URL Rewrite
 $rewrite_url = "http://download.microsoft.com/download/6/7/D/67D80164-7DD0-48AF-86E3-DE7A182D6815/rewrite_2.0_rtw_x64.msi"
