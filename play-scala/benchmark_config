@@ -19,7 +19,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play-scala",
+      "display_name": "play-scala-anorm",
       "notes": "",
       "versus": "netty"
     },
@@ -41,7 +41,7 @@
       "webserver": "None",
       "os": "Windows",
       "database_os": "Linux",
-      "display_name": "play-scala",
+      "display_name": "play-scala-anorm",
       "notes": "",
       "versus": "netty"
     }

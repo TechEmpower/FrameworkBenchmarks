@@ -16,8 +16,8 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play-scala",
-      "notes": "",
+      "display_name": "play-scala-rmongo",
+      "notes": "Uses Reactive Mongo",
       "versus": "netty"
     }
   }]
