@@ -58,7 +58,7 @@ class CreateVersionIndexes extends Migration {
             val con = storage.directAccess
             try {
                 con.createStatement.executeUpdate("CREATE UNIQUE INDEX IX_WORLD_VERSION ON ActivateWorld(id, version)")
-                con.createStatement.executeUpdate("CREATE UNIQUE INDEX IX_WORLD_VERSION ON ActivateFortune(id, version)")
+                con.createStatement.executeUpdate("CREATE UNIQUE INDEX IX_FORTUNE_VERSION ON ActivateFortune(id, version)")
             } finally
                 con.close
         }
