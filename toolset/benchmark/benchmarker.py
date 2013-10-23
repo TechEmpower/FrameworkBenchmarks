@@ -10,6 +10,7 @@ import pprint
 import csv
 import sys
 import logging
+import socket
 from multiprocessing import Process
 from datetime import datetime
 
@@ -493,7 +494,16 @@ class Benchmarker:
 		      sudo /etc/init.d/postgresql restart
         """)
         time.sleep(10)
-        
+
+        if self.__is_port_bound(test.port):
+          self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
+          print textwrap.dedent("""
+            ---------------------------------------------------------
+              Error: Port {port} is not available before start {name}
+            ---------------------------------------------------------
+            """.format(name=test.name, port=str(test.port)))
+          return
+
         result = test.start()
         if result != 0: 
           test.stop()
@@ -535,6 +545,16 @@ class Benchmarker:
         ##########################
         test.stop()
         time.sleep(5)
+
+        if self.__is_port_bound(test.port):
+          self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+          print textwrap.dedent("""
+            -----------------------------------------------------
+              Error: Port {port} was not released by stop {name}
+            -----------------------------------------------------
+            """.format(name=test.name, port=str(test.port)))
+          return
+
         print textwrap.dedent("""
         -----------------------------------------------------
           Stopped {name}
@@ -580,6 +600,43 @@ class Benchmarker:
 
   ############################################################
   # End __run_tests
+  ############################################################
+
+  ############################################################
+  # __is_port_bound
+  # Check if the requested port is available. If it
+  # isn't available, then a previous test probably didn't
+  # shutdown properly.
+  ############################################################
+  def __is_port_bound(self, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+      # Try to bind to all IP addresses, this port
+      s.bind(("", port))
+      # If we get here, we were able to bind successfully,
+      # which means the port is free.
+    except:
+      # If we get an exception, it might be because the port is still bound
+      # which would be bad, or maybe it is a privileged port (<1024) and we
+      # are not running as root, or maybe the server is gone, but sockets are
+      # still in TIME_WAIT (SO_REUSEADDR). To determine which scenario, try to
+      # connect.
+      try:
+        s.connect(("127.0.0.1", port))
+        # If we get here, we were able to connect to something, which means
+        # that the port is still bound.
+        return True
+      except:
+        # An exception means that we couldn't connect, so a server probably
+        # isn't still running on the port.
+        pass
+    finally:
+      s.close()
+
+    return False
+
+  ############################################################
+  # End __is_port_bound
   ############################################################
 
   ############################################################
