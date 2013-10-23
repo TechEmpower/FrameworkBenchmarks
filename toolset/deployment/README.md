@@ -55,14 +55,16 @@ Give the instance that will act as the application server more then the default 
 When prompted to create a security group for the instances, here are the ports that you'll need to open:
 
 * 22 (SSH)
-* 8080 (Most of the tests run on 8080)
+* 80 (php-senthot)
+* 3000 (yesod)
 * 3306 (MySQL)
 * 5432 (PostgreSQL)
-* 9000 (Play Framework)
-* 27017 (MongoDB)
-* 3000 (yesod)
-* 8000 (snap)
+* 8000 (snap, racket-ws, wai, yesod)
+* 8080 (Most of the tests run on 8080)
+* 9000 (Play Framework, Dropwizard, Unfiltered)
+* 9080 (Plain)
 * 16969 (cpoll)
+* 27017 (MongoDB)
 
 ## Windows Azure
 
