@@ -33,21 +33,19 @@ object Application extends Controller {
   private def collection: JSONCollection = database.collection[JSONCollection]("world")
   private val projection = Json.obj("_id" -> 0)
 
-  def db(queries: Int) = Action {
+  def db(queries: Int) = Action.async {
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    Async {
-      val random = ThreadLocalRandom.current()
-      val futureWorlds = Future.sequence((for {
-        _ <- 1 to queries
-      } yield { collection
-        .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
-        .one[JsValue]
-      }))
+    val random = ThreadLocalRandom.current()
+    val futureWorlds = Future.sequence((for {
+      _ <- 1 to queries
+    } yield { collection
+      .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
+      .one[JsValue]
+    }))
 
-      futureWorlds.map { worlds =>
-        Ok(Json.toJson(worlds))
-      }
+    futureWorlds.map { worlds =>
+      Ok(Json.toJson(worlds))
     }
   }
 
