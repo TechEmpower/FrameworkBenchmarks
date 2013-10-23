@@ -1,0 +1,112 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 17:40:01 PDT 2013
+
+  System load:  0.04               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.07ms    4.33ms  88.11ms   90.30%
+    Req/Sec    83.51    203.24   777.00     85.09%
+  3835 requests in 6.00s, 1.17MB read
+  Socket errors: connect 0, read 3, write 0, timeout 13
+  Non-2xx or 3xx responses: 89
+Requests/sec:    639.07
+Transfer/sec:    198.99KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   811.43ms  472.22ms   1.10s    73.91%
+    Req/Sec   107.31    197.13   625.00     80.60%
+  15325 requests in 16.00s, 4.73MB read
+  Socket errors: connect 0, read 158, write 0, timeout 1678
+  Non-2xx or 3xx responses: 4118
+Requests/sec:    957.57
+Transfer/sec:    302.65KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.27s     1.03s    4.90s    66.73%
+    Req/Sec   273.86     93.81   601.00     68.35%
+  31999 requests in 15.28s, 9.89MB read
+  Socket errors: connect 0, read 820, write 0, timeout 627
+  Non-2xx or 3xx responses: 22234
+Requests/sec:   2094.06
+Transfer/sec:    662.84KB
+
+---------------------------------------------------------
+ Concurrency: 1024 for aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.42s     4.81s   14.73s    70.91%
+    Req/Sec   299.69     76.65   455.00     62.07%
+  36039 requests in 15.01s, 11.14MB read
+  Socket errors: connect 0, read 1044, write 0, timeout 4408
+  Non-2xx or 3xx responses: 25474
+Requests/sec:   2400.75
+Transfer/sec:    760.24KB
+
+---------------------------------------------------------
+ Concurrency: 4096 for aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.94s     1.94s   14.78s    80.25%
+    Req/Sec    99.19     99.66   434.00     89.66%
+  13709 requests in 15.03s, 4.27MB read
+  Socket errors: connect 0, read 312, write 0, timeout 24580
+  Non-2xx or 3xx responses: 10398
+Requests/sec:    912.29
+Transfer/sec:    290.64KB
+
+---------------------------------------------------------
+ Concurrency: 16384 for aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  10568 requests in 15.04s, 3.29MB read
+  Socket errors: connect 11, read 70153, write 0, timeout 93525
+  Non-2xx or 3xx responses: 7557
+Requests/sec:    702.46
+Transfer/sec:    224.12KB

@@ -1,0 +1,144 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 18:54:32 PDT 2013
+
+  System load:  0.0                Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mongodb/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.37ms    5.24ms  16.21ms   77.13%
+    Req/Sec    94.68    194.17   700.00     80.43%
+  4090 requests in 6.00s, 5.63MB read
+  Socket errors: connect 0, read 0, write 0, timeout 13
+  Non-2xx or 3xx responses: 60
+Requests/sec:    681.57
+Transfer/sec:      0.94MB
+
+---------------------------------------------------------
+ Running Warmup servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   631.28ms  524.31ms   1.18s    56.01%
+    Req/Sec   156.54    208.24   797.00     72.56%
+  19840 requests in 16.00s, 23.27MB read
+  Socket errors: connect 0, read 49, write 0, timeout 1576
+  Non-2xx or 3xx responses: 4050
+Requests/sec:   1239.77
+Transfer/sec:      1.45MB
+
+---------------------------------------------------------
+ Concurrency: 8 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.43ms    1.90ms   5.83ms   87.54%
+    Req/Sec    86.99    183.87   666.00     81.24%
+  8897 requests in 16.00s, 12.32MB read
+  Socket errors: connect 0, read 2, write 0, timeout 47
+  Non-2xx or 3xx responses: 62
+Requests/sec:    555.93
+Transfer/sec:    788.35KB
+
+---------------------------------------------------------
+ Concurrency: 16 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.91ms   18.73ms  57.06ms   77.05%
+    Req/Sec    85.45    181.77     1.00k    81.40%
+  9873 requests in 16.00s, 13.52MB read
+  Socket errors: connect 0, read 1, write 0, timeout 102
+  Non-2xx or 3xx responses: 208
+Requests/sec:    617.01
+Transfer/sec:    865.46KB
+
+---------------------------------------------------------
+ Concurrency: 32 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.49ms   23.52ms  60.62ms   60.68%
+    Req/Sec    57.99    147.35     0.96k    86.45%
+  8339 requests in 16.00s, 11.11MB read
+  Socket errors: connect 0, read 1, write 0, timeout 214
+  Non-2xx or 3xx responses: 467
+Requests/sec:    521.15
+Transfer/sec:    711.13KB
+
+---------------------------------------------------------
+ Concurrency: 64 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   231.07ms  144.17ms 382.59ms   53.49%
+    Req/Sec   106.85    200.39     1.16k    78.75%
+  14732 requests in 16.00s, 19.13MB read
+  Socket errors: connect 0, read 15, write 0, timeout 431
+  Non-2xx or 3xx responses: 1279
+Requests/sec:    920.60
+Transfer/sec:      1.20MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    92.16ms   41.44ms 114.41ms   81.60%
+    Req/Sec    77.27    162.97   658.00     81.96%
+  10852 requests in 16.00s, 12.78MB read
+  Socket errors: connect 0, read 20, write 0, timeout 874
+  Non-2xx or 3xx responses: 2159
+Requests/sec:    678.22
+Transfer/sec:    818.14KB
+
+---------------------------------------------------------
+ Concurrency: 256 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   646.69ms  455.65ms   1.11s    62.49%
+    Req/Sec   126.71    200.71   800.00     76.89%
+  16363 requests in 16.00s, 16.91MB read
+  Socket errors: connect 0, read 59, write 0, timeout 1623
+  Non-2xx or 3xx responses: 5417
+Requests/sec:   1022.46
+Transfer/sec:      1.06MB

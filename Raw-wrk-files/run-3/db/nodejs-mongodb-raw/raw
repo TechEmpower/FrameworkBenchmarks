@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 14:17:46 PDT 2013
+
+  System load:  0.01               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mongodbdriver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   758.26us  155.38us   6.27ms   84.84%
+    Req/Sec     1.38k    97.47     1.67k    81.33%
+  51359 requests in 5.00s, 12.23MB read
+Requests/sec:  10271.26
+Transfer/sec:      2.45MB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.37ms    4.11ms  35.82ms   66.90%
+    Req/Sec     3.49k   364.78     4.96k    69.27%
+  407739 requests in 15.00s, 97.13MB read
+Requests/sec:  27182.32
+Transfer/sec:      6.48MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   749.39us  134.22us   6.53ms   79.58%
+    Req/Sec     1.40k    99.63     1.78k    79.52%
+  159023 requests in 15.00s, 37.88MB read
+Requests/sec:  10601.57
+Transfer/sec:      2.53MB
+
+---------------------------------------------------------
+ Concurrency: 16 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.90ms  352.53us   9.55ms   79.47%
+    Req/Sec     2.39k   521.10     3.78k    68.20%
+  272500 requests in 15.00s, 64.91MB read
+Requests/sec:  18166.48
+Transfer/sec:      4.33MB
+
+---------------------------------------------------------
+ Concurrency: 32 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.37ms  494.70us  12.89ms   73.38%
+    Req/Sec     3.12k   557.24     4.78k    60.50%
+  354140 requests in 15.00s, 84.36MB read
+Requests/sec:  23608.37
+Transfer/sec:      5.62MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.57ms    1.04ms  16.79ms   74.65%
+    Req/Sec     3.33k   524.57     5.22k    70.44%
+  378794 requests in 15.00s, 90.23MB read
+Requests/sec:  25253.44
+Transfer/sec:      6.02MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.64ms    1.36ms  24.41ms   76.55%
+    Req/Sec     3.62k   369.17     5.00k    66.14%
+  411585 requests in 15.00s, 98.04MB read
+Requests/sec:  27438.23
+Transfer/sec:      6.54MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/mongodbdriver
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.13ms    3.32ms  39.41ms   71.02%
+    Req/Sec     3.57k   374.08     6.05k    70.01%
+  416213 requests in 15.00s, 99.14MB read
+Requests/sec:  27747.30
+Transfer/sec:      6.61MB

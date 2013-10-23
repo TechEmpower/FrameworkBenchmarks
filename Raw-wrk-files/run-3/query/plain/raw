@@ -1,0 +1,118 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 15:56:31 PDT 2013
+
+  System load:  0.36               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:9080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:9080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   736.28us  428.34us  16.35ms   99.85%
+    Req/Sec     1.44k    91.04     1.67k    66.56%
+  54381 requests in 5.00s, 12.06MB read
+Requests/sec:  10875.59
+Transfer/sec:      2.41MB
+
+---------------------------------------------------------
+ Running Warmup plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.05ms   27.05ms   1.69s    99.95%
+    Req/Sec     2.08k   254.67     3.11k    77.56%
+  243187 requests in 15.00s, 53.94MB read
+Requests/sec:  16211.49
+Transfer/sec:      3.60MB
+
+---------------------------------------------------------
+ Queries: 1 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.91ms   10.57ms 674.69ms   99.83%
+    Req/Sec     3.87k   348.42     5.78k    87.00%
+  448618 requests in 15.00s, 85.90MB read
+Requests/sec:  29906.85
+Transfer/sec:      5.73MB
+
+---------------------------------------------------------
+ Queries: 5 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.68ms  225.08ms   3.49s    99.44%
+    Req/Sec     0.87k   204.20     1.51k    75.18%
+  103802 requests in 15.00s, 32.56MB read
+  Socket errors: connect 0, read 0, write 0, timeout 11
+Requests/sec:   6919.13
+Transfer/sec:      2.17MB
+
+---------------------------------------------------------
+ Queries: 10 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.24ms  392.04ms   7.14s    99.43%
+    Req/Sec   477.11    113.16   826.00     72.67%
+  53071 requests in 15.01s, 24.69MB read
+  Socket errors: connect 0, read 0, write 0, timeout 139
+Requests/sec:   3536.86
+Transfer/sec:      1.65MB
+
+---------------------------------------------------------
+ Queries: 15 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   211.98ms    1.16s   12.63s    98.63%
+    Req/Sec   304.99     92.09   566.00     73.59%
+  35890 requests in 15.01s, 22.13MB read
+  Socket errors: connect 0, read 0, write 0, timeout 352
+Requests/sec:   2391.72
+Transfer/sec:      1.48MB
+
+---------------------------------------------------------
+ Queries: 20 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   131.86ms  577.51ms  14.81s    99.33%
+    Req/Sec   265.40     59.47   438.00     70.55%
+  27074 requests in 15.06s, 20.80MB read
+  Socket errors: connect 0, read 0, write 0, timeout 425
+Requests/sec:   1797.32
+Transfer/sec:      1.38MB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 22:35:40 PDT 2013
+
+  System load:  0.25               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer treefrog
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/world/random
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/world/random
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.61ms    1.26ms   8.83ms   69.07%
+    Req/Sec   228.17     50.18   363.00     67.78%
+  8767 requests in 5.00s, 1.50MB read
+Requests/sec:   1751.89
+Transfer/sec:    307.57KB
+
+---------------------------------------------------------
+ Running Warmup treefrog
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/world/random
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world/random
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    90.39ms   57.60ms   1.54s    80.38%
+    Req/Sec   357.17     46.09   606.00     82.09%
+  42189 requests in 15.01s, 7.23MB read
+Requests/sec:   2811.62
+Transfer/sec:    493.61KB
+
+---------------------------------------------------------
+ Concurrency: 8 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/world/random
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world/random
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.20ms    6.85ms  92.92ms   99.39%
+    Req/Sec   227.57     54.00   363.00     72.54%
+  26227 requests in 15.00s, 4.50MB read
+Requests/sec:   1748.16
+Transfer/sec:    306.91KB
+
+---------------------------------------------------------
+ Concurrency: 16 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/world/random
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world/random
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.04ms    2.90ms  24.91ms   71.34%
+    Req/Sec   257.55     44.99   434.00     67.36%
+  30288 requests in 15.00s, 5.19MB read
+Requests/sec:   2018.64
+Transfer/sec:    354.41KB
+
+---------------------------------------------------------
+ Concurrency: 32 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/world/random
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world/random
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.99ms   10.21ms  57.49ms   71.00%
+    Req/Sec   230.40     34.67   347.00     70.10%
+  27305 requests in 15.01s, 4.68MB read
+Requests/sec:   1819.51
+Transfer/sec:    319.44KB
+
+---------------------------------------------------------
+ Concurrency: 64 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/world/random
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world/random
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.63ms   14.52ms 154.97ms   85.26%
+    Req/Sec   406.73     61.12   579.00     79.38%
+  48339 requests in 15.00s, 8.29MB read
+Requests/sec:   3222.07
+Transfer/sec:    565.67KB
+
+---------------------------------------------------------
+ Concurrency: 128 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/world/random
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world/random
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.19ms   23.63ms 179.28ms   71.00%
+    Req/Sec   378.35     40.86   576.00     74.41%
+  44938 requests in 15.00s, 7.70MB read
+Requests/sec:   2995.43
+Transfer/sec:    525.88KB
+
+---------------------------------------------------------
+ Concurrency: 256 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/world/random
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/world/random
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    92.29ms   54.52ms 760.09ms   75.49%
+    Req/Sec   350.35     48.76   659.00     86.90%
+  41450 requests in 15.00s, 7.11MB read
+Requests/sec:   2762.59
+Transfer/sec:    485.01KB

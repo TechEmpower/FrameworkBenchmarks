@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 12:26:28 PDT 2013
+
+  System load:  0.21               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nancy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.91ms  498.91us  12.91ms   94.34%
+    Req/Sec   363.23     57.98   500.00     55.41%
+  9286 requests in 5.00s, 12.69MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+  Non-2xx or 3xx responses: 9286
+Requests/sec:   1856.56
+Transfer/sec:      2.54MB
+
+---------------------------------------------------------
+ Running Warmup nancy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.38ms   64.62ms 684.53ms   86.79%
+    Req/Sec   507.54    100.17   773.00     70.28%
+  60248 requests in 15.00s, 82.34MB read
+  Non-2xx or 3xx responses: 60248
+Requests/sec:   4016.20
+Transfer/sec:      5.49MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nancy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.94ms    0.94ms  34.11ms   98.10%
+    Req/Sec   363.85     59.80   500.00     53.72%
+  41266 requests in 15.00s, 56.39MB read
+  Non-2xx or 3xx responses: 41266
+Requests/sec:   2750.76
+Transfer/sec:      3.76MB
+
+---------------------------------------------------------
+ Concurrency: 16 for nancy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.92ms    0.86ms  23.57ms   94.12%
+    Req/Sec   717.36     85.25     0.92k    74.01%
+  81667 requests in 15.00s, 111.61MB read
+  Non-2xx or 3xx responses: 81667
+Requests/sec:   5444.08
+Transfer/sec:      7.44MB
+
+---------------------------------------------------------
+ Concurrency: 32 for nancy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.81ms    3.19ms  50.47ms   89.87%
+    Req/Sec   718.16     98.86     1.00k    70.90%
+  83538 requests in 15.00s, 114.16MB read
+  Non-2xx or 3xx responses: 83538
+Requests/sec:   5568.45
+Transfer/sec:      7.61MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nancy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.19ms   13.25ms 235.87ms   94.81%
+    Req/Sec   669.41    130.17     1.02k    69.63%
+  78549 requests in 15.00s, 107.35MB read
+  Non-2xx or 3xx responses: 78549
+Requests/sec:   5236.32
+Transfer/sec:      7.16MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nancy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.70ms   22.95ms 334.32ms   91.20%
+    Req/Sec   633.26     95.45   847.00     65.08%
+  74768 requests in 15.01s, 102.18MB read
+  Non-2xx or 3xx responses: 74768
+Requests/sec:   4981.62
+Transfer/sec:      6.81MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nancy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    58.50ms   55.26ms 729.65ms   89.30%
+    Req/Sec   562.88     98.13   844.00     66.53%
+  66711 requests in 15.00s, 91.17MB read
+  Non-2xx or 3xx responses: 66711
+Requests/sec:   4446.60
+Transfer/sec:      6.08MB
