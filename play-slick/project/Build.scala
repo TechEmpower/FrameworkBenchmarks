@@ -1,6 +1,6 @@
 import sbt._
 import Keys._
-import PlayProject._
+import play.Project._
 
 object ApplicationBuild extends Build {
 
@@ -11,7 +11,7 @@ object ApplicationBuild extends Build {
     jdbc,
     anorm,
     "mysql" % "mysql-connector-java" % "5.1.22",
-    "com.typesafe.play" %% "play-slick" % "0.3.2" 
+    "com.typesafe.play" %% "play-slick" % "0.5.0.8" 
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
