@@ -20,9 +20,9 @@
       "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ringo-conv",
+      "display_name": "ringojs-conv",
       "notes": "Convenient",
-      "versus": "ringo"
+      "versus": "ringojs"
     }
   }]
 }
