@@ -1,9 +1,9 @@
 name: DartStreamBenchmark
 description: A benchmark for Stream, a lightweight Dart web server
 dependencies:
-  args: 0.8.1
+  args: 0.8.5
   crypto: 0.8.1
-  mongo_dart: 0.1.30
+  mongo_dart: 0.1.31
   postgresql: 0.2.8
-  stream: 0.8.4
-  yaml: 0.8.1
+  stream: 0.8.5
+  yaml: 0.8.5

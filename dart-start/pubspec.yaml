@@ -1,11 +1,10 @@
 name: DartStartBenchmark
 description: A benchmark of Dart Start, a Sinatra inspired web framework
 dependencies:
-  args: 0.8.1
-  crypto: 0.8.1
-  mongo_dart: 0.1.30
+  args: 0.8.5
+  crypto: 0.8.5
+  mongo_dart: 0.1.31
   mustache: 0.1.5
   postgresql: 0.2.8
   start: 0.0.9+1
-  yaml: 0.8.1
-
+  yaml: 0.8.5
