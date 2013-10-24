@@ -255,9 +255,9 @@ class Installer:
     #
     # Play 2
     #
-    self.__download("http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip")
-    self.__run_command("unzip -o play-2.1.2-RC1.zip")
-    self.__run_command("rm play-2.1.2-RC1.zip")
+    self.__download("http://downloads.typesafe.com/play/2.2.0/play-2.2.0.zip")
+    self.__run_command("unzip -o play-2.2.0.zip")
+    self.__run_command("rm play-2.2.0.zip")
 
     #
     # Play 1
