@@ -1,5 +1,5 @@
 {
-  "framework": "phpixie",
+  "framework": "php-phpixie",
   "tests": [{
     "default": {
       "setup_file": "setup",
