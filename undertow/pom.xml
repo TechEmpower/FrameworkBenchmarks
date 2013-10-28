@@ -13,7 +13,7 @@
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
-            <version>1.0.0.Beta17</version>
+            <version>1.0.0.Beta20</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.xnio</groupId>

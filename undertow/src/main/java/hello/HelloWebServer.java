@@ -11,6 +11,7 @@ import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
+import io.undertow.UndertowOptions;
 import io.undertow.util.Headers;
 
 import javax.sql.DataSource;
@@ -117,6 +118,8 @@ public final class HelloWebServer {
             Integer.parseInt(properties.getProperty("web.port")),
             properties.getProperty("web.host"))
         .setBufferSize(1024 * 16)
+        .setIoThreads(Runtime.getRuntime().availableProcessors() * 2) //this seems slightly faster in some configurations
+        .setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, false) //don't send a keep-alive header for HTTP/1.1 requests, as it is not required
         .setHandler(Handlers.date(Handlers.header(Handlers.path()
             .addPath("/json",
                 new JsonHandler(objectMapper))
