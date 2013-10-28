@@ -20,7 +20,8 @@
       "database_os": "Linux",
       "display_name": "play-scala-activate",
       "notes": "",
-      "versus": "netty"
+      "versus": "netty",
+      "skip": "true"
     }
   }]
 }
