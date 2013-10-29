@@ -27,12 +27,7 @@ def stop():
       pid = int(f.read())
       os.kill(pid, 9)
   else:
-    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    for line in out.splitlines():
-      if 'NettyServer' in line:
-        pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+    kill_running_process()
 
   try:
     os.remove("play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/RUNNING_PID")
@@ -40,3 +35,11 @@ def stop():
     pass
 
   return 0
+
+def kill_running_process():
+  try:
+    with open("./play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/RUNNING_PID") as f:
+      pid = int(f.read())
+      os.kill(pid,9)
+  except:
+    pass
