@@ -3,7 +3,7 @@ library stream_benchmark;
 import "dart:core";
 import "dart:io";
 import 'dart:async' show Future;
-import 'dart:json' as json;
+import 'dart:convert';
 import 'dart:math' show Random;
 import "package:stream/stream.dart";
 import "package:args/args.dart";
@@ -118,13 +118,13 @@ _jsonTest(HttpConnect connect) {
       "message": "Hello, World!"
   };
   
-  connect.response.write(json.stringify(helloWorld));
+  connect.response.write(JSON.encode(helloWorld));
 }
 
 _dbTest(HttpConnect connect) {
   
   return _query().then((data) {
-    connect.response.write(json.stringify(data));
+    connect.response.write(JSON.encode(data));
   });
 }
 
@@ -138,7 +138,7 @@ _queriesTest(HttpConnect connect) {
             growable: false
         )
     )
-    .then((response) => connect.response.write(json.stringify(response)));
+    .then((response) => connect.response.write(JSON.encode(response)));
 }
 
 _updatesTest(HttpConnect connect) {
@@ -162,7 +162,7 @@ _updatesTest(HttpConnect connect) {
                 .then((_) => world);
           });
     }, growable: false))
-    .then((worlds) => connect.response.write(json.stringify(worlds)));
+    .then((worlds) => connect.response.write(JSON.encode(worlds)));
 }
 
 _fortunesTest(HttpConnect connect) {
@@ -187,7 +187,7 @@ _plaintextTest(HttpConnect connect) {
 _dbMongoTest(HttpConnect connect) {
   
   return _mongoQuery().then((data) {
-    connect.response.write(json.stringify({
+    connect.response.write(JSON.encode({
       "id": data["id"],
       "randomnumber": data["randomnumber"]
     }));
@@ -211,7 +211,7 @@ _queriesMongoTest(HttpConnect connect) {
           "randomnumber": world["randomnumber"]
         };
       });
-      connect.response.write(json.stringify(results.toList()));
+      connect.response.write(JSON.encode(results.toList()));
     });
 }
 
@@ -233,7 +233,7 @@ _updatesMongoTest(HttpConnect connect) {
           "randomnumber": world["randomnumber"]
         };
       });
-      connect.response.write(json.stringify(result.toList()));
+      connect.response.write(JSON.encode(result.toList()));
     });
 }
 

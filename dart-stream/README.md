@@ -4,13 +4,13 @@ This test adds [Stream](https://github.com/rikulo/stream), a lightweight Dart we
 
 ## Versions
 
-* [Dart SDK version 0.8.5.1_r28990](https://launchpad.net/~hachre/+archive/dart)
-* [Dart args version 0.8.5](http://pub.dartlang.org/packages/args)
-* [Dart crypto version 0.8.5](http://pub.dartlang.org/packages/crypto)
+* [Dart SDK version 0.8.7.0_r29341](https://launchpad.net/~hachre/+archive/dart)
+* [Dart args version 0.8.7](http://pub.dartlang.org/packages/args)
+* [Dart crypto version 0.8.7](http://pub.dartlang.org/packages/crypto)
 * [Dart mongo_dart version 0.1.31](http://pub.dartlang.org/packages/mongo_dart)
-* [Dart postgresql version 0.2.8](http://pub.dartlang.org/packages/postgresql)
-* [Dart stream version 0.8.5](http://pub.dartlang.org/packages/start)
-* [Dart yaml version 0.8.5](http://pub.dartlang.org/packages/yaml)
+* [Dart postgresql version 0.2.9](http://pub.dartlang.org/packages/postgresql)
+* [Dart stream version 0.8.6+2](http://pub.dartlang.org/packages/start)
+* [Dart yaml version 0.8.7](http://pub.dartlang.org/packages/yaml)
 
 ## Test URLs
 
