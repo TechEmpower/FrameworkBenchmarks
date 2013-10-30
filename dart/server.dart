@@ -1,7 +1,6 @@
 import 'dart:async' show Future;
 import 'dart:io';
-import 'dart:utf';
-import 'dart:json' as json;
+import 'dart:convert';
 import 'dart:math' show Random;
 import 'package:args/args.dart' show ArgParser;
 import 'package:mustache/mustache.dart' as mustache;
@@ -135,7 +134,7 @@ _sendResponse(request, statusCode, [ type, response ]) {
     request.response.headers.contentType = type;
   }
   if (response != null) {
-    var data = encodeUtf8(response);
+    var data = UTF8.encode(response);
     request.response.contentLength = data.length;
     request.response.add(data);
   } else {
@@ -151,7 +150,7 @@ _sendHtml(request, response) {
 
 /// Completes the given [request] by writing the [response] as JSON.
 _sendJson(request, response) {
-  _sendResponse(request, HttpStatus.OK, _TYPE_JSON, json.stringify(response));
+  _sendResponse(request, HttpStatus.OK, _TYPE_JSON, JSON.encode(response));
 }
 
 /// Completes the given [request] by writing the [response] as plain text.
