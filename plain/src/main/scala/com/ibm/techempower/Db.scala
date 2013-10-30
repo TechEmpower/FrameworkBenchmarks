@@ -68,11 +68,11 @@ sealed abstract class DbResource
     case _: Throwable => 1
   }
 
-  @inline private[this] final def asJson = (r: RichResultSet) => J(Map("id" -> r.nextInt.get, "randomNumber" -> r.nextInt.get))
+  @inline private[this] final def asJson = (r: RichResultSet) => J(Map("id" -> r.nextNInt, "randomNumber" -> r.nextNInt))
 
   @inline private[this] final def asJson(id: Int, randomNumber: Int) = J(Map("id" -> id, "randomNumber" -> randomNumber))
 
-  @inline private[this] final def asTuple = (r: RichResultSet) => (r.nextInt.get, r.nextInt.get)
+  @inline private[this] final def asTuple = (r: RichResultSet) => (r.nextNInt, r.nextNInt)
 
   @inline private[this] final def next = random.nextInt(1, 10001)
 
