@@ -1,12 +1,12 @@
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
 export RESIN_HOME=~/FrameworkBenchmarks/installs/resin-4.0.36
-export GRAILS_HOME=~/FrameworkBenchmarks/installs/grails-2.1.1
+export GRAILS_HOME=~/FrameworkBenchmarks/installs/grails-2.3.1
 export VERTX_HOME=~/FrameworkBenchmarks/installs/vert.x-2.0.2-final
 export GOROOT=~/FrameworkBenchmarks/installs/go
 export GOPATH=~/FrameworkBenchmarks/go:~/FrameworkBenchmarks/webgo:~/FrameworkBenchmarks/revel
 export TOMCAT_HOME=~/FrameworkBenchmarks/installs/apache-tomcat-7.0.35
 export NODE_HOME=~/FrameworkBenchmarks/installs/node-v0.10.8-linux-x64
-export PLAY_HOME=~/FrameworkBenchmarks/installs/play-2.1.2-RC1
+export PLAY_HOME=~/FrameworkBenchmarks/installs/play-2.2.0
 export PLAY1_HOME=~/FrameworkBenchmarks/installs/play-1.2.5
 export MAVEN_HOME=~/FrameworkBenchmarks/installs/apache-maven-3.0.5
 export PERL_HOME=/opt/ActivePerl-5.16
