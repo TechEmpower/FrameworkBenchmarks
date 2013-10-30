@@ -1,5 +1,5 @@
 {
-  "framework": "play2",
+  "framework": "play-scala-mongodb",
   "tests": [{
     "mongodb": {
       "setup_file": "setup",

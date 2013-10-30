@@ -1,5 +1,5 @@
 {
-  "framework": "play2",
+  "framework": "play-activate-mysql",
   "tests": [{
     "default": {
       "setup_file": "setup",

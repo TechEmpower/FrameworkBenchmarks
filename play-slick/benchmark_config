@@ -1,5 +1,5 @@
 {
-  "framework": "play2",
+  "framework": "play-slick",
   "tests": [{
     "default": {
       "setup_file": "setup",
