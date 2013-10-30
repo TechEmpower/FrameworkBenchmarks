@@ -1,5 +1,5 @@
 {
-  "framework": "play-scala",
+  "framework": "play2",
   "tests": [{
     "default": {
       "setup_file": "setup",
