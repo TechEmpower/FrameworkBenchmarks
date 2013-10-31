@@ -1,7 +1,7 @@
 import "dart:core";
 import "dart:io";
 import 'dart:async' show Future;
-import 'dart:json' as json;
+import 'dart:convert';
 import 'dart:math' show Random;
 import "package:start/start.dart";
 import "package:args/args.dart";
@@ -93,7 +93,7 @@ main() {
           };
           
           _setJsonHeaders(request.response);
-          request.response.send(json.stringify(helloWorld));
+          request.response.send(JSON.encode(helloWorld));
         });
         
         
@@ -103,7 +103,7 @@ main() {
           _setJsonHeaders(request.response);
           
           _query().then((data) {
-            request.response.send(json.stringify(data));
+            request.response.send(JSON.encode(data));
           });
         });
         
@@ -121,7 +121,7 @@ main() {
                   growable: false
                 )
             )
-            .then((response) => request.response.send(json.stringify(response)));
+            .then((response) => request.response.send(JSON.encode(response)));
         });
         
         // Fortunes test
@@ -170,7 +170,7 @@ main() {
                       .then((_) => world);
                 });
           }, growable: false))
-          .then((worlds) => request.response.send(json.stringify(worlds)));
+          .then((worlds) => request.response.send(JSON.encode(worlds)));
         });
         
         // Plain text test
@@ -251,7 +251,7 @@ main() {
                   "randomnumber": world["randomnumber"]
                 };
               });
-              request.response.send(json.stringify(results.toList()));
+              request.response.send(JSON.encode(results.toList()));
             });
         });
         
@@ -276,7 +276,7 @@ main() {
                 "randomnumber": world["randomnumber"]
               };
             });
-            request.response.send(json.stringify(result.toList()));
+            request.response.send(JSON.encode(result.toList()));
           });
         });
         
