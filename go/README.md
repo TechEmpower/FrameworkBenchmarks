@@ -7,7 +7,7 @@ This is the go portion of a [benchmarking test suite](../) comparing a variety o
 
 ## Versions
 
-* [Go 1.1beta2](http://golang.org/)
+* [Go 1.2rc2](http://golang.org/)
 
 ## Test URLs
 
