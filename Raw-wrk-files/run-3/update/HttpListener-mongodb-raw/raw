@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 13:11:59 PDT 2013
+
+  System load:  0.06               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer HttpListener-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongodbupdates?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.80ms    1.00ms  28.42ms   93.52%
+    Req/Sec   383.25     62.52   555.00     80.98%
+  14565 requests in 5.00s, 3.04MB read
+Requests/sec:   2911.84
+Transfer/sec:    621.53KB
+
+---------------------------------------------------------
+ Running Warmup HttpListener-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   133.97ms   40.32ms 342.83ms   69.54%
+    Req/Sec   243.18     39.88   365.00     66.77%
+  29167 requests in 15.02s, 6.08MB read
+Requests/sec:   1942.11
+Transfer/sec:    414.54KB
+
+---------------------------------------------------------
+ Queries: 1 for HttpListener-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.01ms   33.38ms 238.86ms   65.65%
+    Req/Sec   374.05     61.74   552.00     66.88%
+  44412 requests in 15.02s, 7.83MB read
+Requests/sec:   2957.51
+Transfer/sec:    533.61KB
+
+---------------------------------------------------------
+ Queries: 5 for HttpListener-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   270.22ms   56.44ms 526.40ms   70.04%
+    Req/Sec   119.60     14.92   148.00     69.09%
+  14367 requests in 15.00s, 4.31MB read
+Requests/sec:    957.69
+Transfer/sec:    294.54KB
+
+---------------------------------------------------------
+ Queries: 10 for HttpListener-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   487.14ms  100.22ms 914.48ms   68.40%
+    Req/Sec    66.99     12.18   101.00     67.81%
+  8012 requests in 15.05s, 3.62MB read
+Requests/sec:    532.47
+Transfer/sec:    246.40KB
+
+---------------------------------------------------------
+ Queries: 15 for HttpListener-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   691.21ms   78.36ms 935.76ms   66.75%
+    Req/Sec    45.87      5.62    61.00     68.07%
+  5522 requests in 15.15s, 3.33MB read
+Requests/sec:    364.41
+Transfer/sec:    225.20KB
+
+---------------------------------------------------------
+ Queries: 20 for HttpListener-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   905.97ms  100.83ms   1.26s    73.73%
+    Req/Sec    34.43      4.52    49.00     70.16%
+  4185 requests in 15.08s, 3.16MB read
+Requests/sec:    277.55
+Transfer/sec:    214.53KB

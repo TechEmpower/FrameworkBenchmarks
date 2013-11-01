@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 23:42:44 PDT 2013
+
+  System load:  0.13               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.27ms   10.72ms 104.92ms   97.34%
+    Req/Sec   343.83     66.92   461.00     88.83%
+  12469 requests in 5.00s, 260.40MB read
+  Non-2xx or 3xx responses: 12469
+Requests/sec:   2493.45
+Transfer/sec:     52.07MB
+
+---------------------------------------------------------
+ Running Warmup nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.77ms   46.84ms 393.34ms   91.35%
+    Req/Sec   492.84     43.57   597.00     80.68%
+  58664 requests in 15.00s, 1.20GB read
+  Non-2xx or 3xx responses: 58664
+Requests/sec:   3910.36
+Transfer/sec:     81.75MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.31ms    3.10ms  27.26ms   96.75%
+    Req/Sec   365.00     83.51   555.00     89.98%
+  41675 requests in 15.00s, 870.32MB read
+  Non-2xx or 3xx responses: 41675
+Requests/sec:   2778.07
+Transfer/sec:     58.02MB
+
+---------------------------------------------------------
+ Concurrency: 16 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.11ms    3.84ms  38.74ms   94.32%
+    Req/Sec   441.38    101.82   833.00     72.95%
+  50961 requests in 15.00s, 1.04GB read
+  Non-2xx or 3xx responses: 50961
+Requests/sec:   3396.70
+Transfer/sec:     70.95MB
+
+---------------------------------------------------------
+ Concurrency: 32 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.89ms    5.17ms 105.72ms   85.63%
+    Req/Sec   468.09     81.10   800.00     74.39%
+  55045 requests in 15.00s, 1.12GB read
+  Non-2xx or 3xx responses: 55045
+Requests/sec:   3668.65
+Transfer/sec:     76.64MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.30ms    8.16ms  75.74ms   77.55%
+    Req/Sec   466.76     49.95   679.00     69.23%
+  55549 requests in 15.00s, 1.13GB read
+  Non-2xx or 3xx responses: 55549
+Requests/sec:   3702.60
+Transfer/sec:     77.36MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.15ms   21.77ms 351.88ms   89.31%
+    Req/Sec   467.78     41.66   603.00     68.89%
+  55836 requests in 15.00s, 1.14GB read
+  Non-2xx or 3xx responses: 55836
+Requests/sec:   3721.27
+Transfer/sec:     77.79MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.08ms   44.98ms 550.23ms   91.39%
+    Req/Sec   496.32     39.18   618.00     69.87%
+  59221 requests in 15.00s, 1.21GB read
+  Non-2xx or 3xx responses: 59221
+Requests/sec:   3947.00
+Transfer/sec:     82.51MB

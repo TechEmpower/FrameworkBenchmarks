@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 20:57:51 PDT 2013
+
+  System load:  0.01               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   787.01us    1.38ms  19.91ms   95.16%
+    Req/Sec     2.01k   784.78     3.22k    68.94%
+  70298 requests in 5.00s, 15.75MB read
+Requests/sec:  14059.34
+Transfer/sec:      3.15MB
+
+---------------------------------------------------------
+ Running Warmup start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.23ms   27.90ms   1.06s    95.63%
+    Req/Sec     3.52k   683.58     5.98k    69.52%
+  413796 requests in 15.00s, 92.72MB read
+Requests/sec:  27584.90
+Transfer/sec:      6.18MB
+
+---------------------------------------------------------
+ Concurrency: 8 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   388.44us  123.12us   7.94ms   86.17%
+    Req/Sec     2.69k   193.98     3.22k    68.74%
+  305492 requests in 15.00s, 68.45MB read
+Requests/sec:  20366.08
+Transfer/sec:      4.56MB
+
+---------------------------------------------------------
+ Concurrency: 16 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   632.42us  325.78us   9.12ms   82.79%
+    Req/Sec     3.32k   336.56     4.55k    69.35%
+  379000 requests in 15.00s, 84.92MB read
+Requests/sec:  25266.49
+Transfer/sec:      5.66MB
+
+---------------------------------------------------------
+ Concurrency: 32 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.19ms    1.02ms  11.42ms   86.16%
+    Req/Sec     3.57k   539.00     6.00k    70.82%
+  405831 requests in 15.00s, 90.93MB read
+Requests/sec:  27055.23
+Transfer/sec:      6.06MB
+
+---------------------------------------------------------
+ Concurrency: 64 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.41ms    3.27ms  66.33ms   88.86%
+    Req/Sec     3.60k   723.93     6.78k    70.30%
+  411690 requests in 15.00s, 92.25MB read
+Requests/sec:  27445.86
+Transfer/sec:      6.15MB
+
+---------------------------------------------------------
+ Concurrency: 128 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.75ms   10.92ms 244.95ms   95.47%
+    Req/Sec     3.54k   666.22     5.88k    69.26%
+  415494 requests in 15.00s, 93.10MB read
+Requests/sec:  27700.18
+Transfer/sec:      6.21MB
+
+---------------------------------------------------------
+ Concurrency: 256 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.67ms   32.16ms   1.08s    95.21%
+    Req/Sec     3.56k   743.05     6.81k    71.62%
+  417953 requests in 15.00s, 93.65MB read
+Requests/sec:  27863.44
+Transfer/sec:      6.24MB

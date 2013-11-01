@@ -1,0 +1,108 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 19:37:07 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cake
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.99ms    1.29ms  12.22ms   73.43%
+    Req/Sec   272.60     66.64   444.00     63.12%
+  10372 requests in 5.00s, 1.98MB read
+Requests/sec:   2072.78
+Transfer/sec:    404.74KB
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.93ms  136.38ms   1.46s    93.91%
+    Req/Sec   280.52     26.97   361.00     75.81%
+  33627 requests in 15.01s, 6.41MB read
+  Socket errors: connect 0, read 0, write 0, timeout 17
+Requests/sec:   2240.93
+Transfer/sec:    437.60KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cake
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.86s   524.67ms   4.02s    76.95%
+    Req/Sec   279.81     21.93   414.00     84.09%
+  33367 requests in 15.01s, 6.36MB read
+  Socket errors: connect 0, read 0, write 0, timeout 84
+Requests/sec:   2223.17
+Transfer/sec:    434.13KB
+
+---------------------------------------------------------
+ Concurrency: 1024 for cake
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.51s     2.81s   14.46s    74.71%
+    Req/Sec   282.64     46.80   345.00     75.76%
+  33368 requests in 15.01s, 6.36MB read
+  Socket errors: connect 0, read 194, write 0, timeout 4874
+  Non-2xx or 3xx responses: 2
+Requests/sec:   2223.73
+Transfer/sec:    434.34KB
+
+---------------------------------------------------------
+ Concurrency: 4096 for cake
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.10s     3.90s   14.91s    78.60%
+    Req/Sec   240.75     21.86   303.00     75.00%
+  28956 requests in 15.02s, 5.53MB read
+  Socket errors: connect 0, read 474492, write 0, timeout 22754
+  Non-2xx or 3xx responses: 69
+Requests/sec:   1928.40
+Transfer/sec:    377.22KB
+
+---------------------------------------------------------
+ Concurrency: 16384 for cake
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.53s     2.76s   14.91s    91.19%
+    Req/Sec   227.58     48.94   343.00     66.67%
+  27119 requests in 15.02s, 5.20MB read
+  Socket errors: connect 11, read 595760, write 0, timeout 41461
+  Non-2xx or 3xx responses: 224
+Requests/sec:   1806.05
+Transfer/sec:    354.79KB

@@ -1,0 +1,108 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct  1 11:06:44 PDT 2013
+
+  System load:  2.67               Processes:           136
+  Usage of /:   35.2% of 58.69GB   Users logged in:     1
+  Memory usage: 21%                IP address for eth0: 172.16.98.181
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  39 requests in 6.00s, 12.11KB read
+  Socket errors: connect 0, read 0, write 0, timeout 17
+Requests/sec:      6.50
+Transfer/sec:      2.02KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  277 requests in 16.05s, 89.29KB read
+  Socket errors: connect 0, read 4, write 0, timeout 1806
+  Non-2xx or 3xx responses: 32
+Requests/sec:     17.25
+Transfer/sec:      5.56KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  327 requests in 16.05s, 104.59KB read
+  Socket errors: connect 0, read 14, write 0, timeout 1918
+  Non-2xx or 3xx responses: 42
+Requests/sec:     20.37
+Transfer/sec:      6.52KB
+
+---------------------------------------------------------
+ Concurrency: 1024 for aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1018 requests in 16.11s, 321.38KB read
+  Socket errors: connect 0, read 30, write 0, timeout 7325
+  Non-2xx or 3xx responses: 252
+Requests/sec:     63.20
+Transfer/sec:     19.95KB
+
+---------------------------------------------------------
+ Concurrency: 4096 for aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   120.42ms    0.00us 120.42ms  100.00%
+    Req/Sec    58.00     32.01   104.00     66.67%
+  5141 requests in 15.11s, 1.57MB read
+  Socket errors: connect 0, read 178, write 0, timeout 24480
+  Non-2xx or 3xx responses: 737
+Requests/sec:    340.19
+Transfer/sec:    106.52KB
+
+---------------------------------------------------------
+ Concurrency: 16384 for aspnet-mono
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://localhost:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  6310 requests in 15.07s, 1.94MB read
+  Socket errors: connect 11, read 13897, write 0, timeout 101489
+  Non-2xx or 3xx responses: 1355
+Requests/sec:    418.80
+Transfer/sec:    132.03KB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 11:22:00 PDT 2013
+
+  System load:  0.27               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/ado/mysql/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/ado/mysql/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.79ms    1.35ms  19.87ms   98.71%
+    Req/Sec   285.75     55.05   400.00     73.37%
+  10809 requests in 5.00s, 3.26MB read
+Requests/sec:   2160.65
+Transfer/sec:    667.93KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.77ms   10.85ms 133.23ms   88.91%
+    Req/Sec     0.94k   126.92     1.06k    87.10%
+  110516 requests in 15.00s, 33.36MB read
+Requests/sec:   7366.06
+Transfer/sec:      2.22MB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.08ms   10.79ms 161.18ms   88.59%
+    Req/Sec     1.06k   124.47     1.27k    68.90%
+  125337 requests in 15.00s, 34.04MB read
+Requests/sec:   8354.94
+Transfer/sec:      2.27MB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.72ms   32.07ms 227.52ms   91.92%
+    Req/Sec   597.22    134.88   730.00     86.53%
+  70793 requests in 15.01s, 27.88MB read
+Requests/sec:   4717.71
+Transfer/sec:      1.86MB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    77.36ms    8.00ms 138.62ms   77.37%
+    Req/Sec   416.15     22.02   479.00     77.23%
+  49235 requests in 15.01s, 26.84MB read
+Requests/sec:   3280.29
+Transfer/sec:      1.79MB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   110.91ms   18.97ms 266.56ms   83.30%
+    Req/Sec   292.16     33.69   354.00     72.93%
+  34690 requests in 15.00s, 24.18MB read
+Requests/sec:   2311.98
+Transfer/sec:      1.61MB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   149.07ms   27.98ms 311.73ms   83.46%
+    Req/Sec   218.02     28.27   266.00     71.15%
+  25978 requests in 15.01s, 22.04MB read
+Requests/sec:   1731.29
+Transfer/sec:      1.47MB

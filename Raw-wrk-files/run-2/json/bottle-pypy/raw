@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 18:41:44 PDT 2013
+
+  System load:  0.05               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.66ms   21.98ms  74.47ms   88.05%
+    Req/Sec     2.76k     1.76k    5.44k    57.77%
+  98069 requests in 5.00s, 11.78MB read
+Requests/sec:  19616.15
+Transfer/sec:      2.36MB
+
+---------------------------------------------------------
+ Running Warmup bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.19ms   23.17ms 326.55ms   93.19%
+    Req/Sec     7.95k     5.37k   24.32k    65.23%
+  754746 requests in 15.00s, 90.69MB read
+Requests/sec:  50318.68
+Transfer/sec:      6.05MB
+
+---------------------------------------------------------
+ Concurrency: 8 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   666.30us    5.94ms  98.36ms   99.42%
+    Req/Sec     4.58k   501.38     6.00k    87.27%
+  520962 requests in 15.00s, 62.60MB read
+Requests/sec:  34731.35
+Transfer/sec:      4.17MB
+
+---------------------------------------------------------
+ Concurrency: 16 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   251.50us  450.42us  82.80ms   99.50%
+    Req/Sec     8.17k     1.19k   11.22k    73.81%
+  925931 requests in 15.00s, 111.26MB read
+Requests/sec:  61730.88
+Transfer/sec:      7.42MB
+
+---------------------------------------------------------
+ Concurrency: 32 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   414.11us    1.12ms 215.37ms   99.63%
+    Req/Sec    10.34k     2.16k   16.56k    67.29%
+  1170865 requests in 15.00s, 140.69MB read
+Requests/sec:  78061.72
+Transfer/sec:      9.38MB
+
+---------------------------------------------------------
+ Concurrency: 64 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   769.16us    2.40ms 303.40ms   98.99%
+    Req/Sec    11.16k     2.06k   17.44k    70.82%
+  1264266 requests in 15.00s, 151.92MB read
+Requests/sec:  84290.29
+Transfer/sec:     10.13MB
+
+---------------------------------------------------------
+ Concurrency: 128 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.69ms    5.33ms 420.34ms   94.13%
+    Req/Sec    10.24k     2.67k   22.22k    69.85%
+  1162732 requests in 15.00s, 139.72MB read
+Requests/sec:  77523.03
+Transfer/sec:      9.32MB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.12ms    9.79ms 748.08ms   90.71%
+    Req/Sec    11.03k     2.46k   22.33k    69.19%
+  1249923 requests in 15.00s, 150.19MB read
+Requests/sec:  83330.77
+Transfer/sec:     10.01MB

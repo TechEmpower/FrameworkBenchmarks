@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 20:00:17 PDT 2013
+
+  System load:  0.23               Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:16969/db_pg_async
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:16969/db_pg_async
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   253.21us   47.68us 536.00us   73.02%
+    Req/Sec     4.06k   296.51     4.78k    67.81%
+  153405 requests in 5.00s, 26.46MB read
+Requests/sec:  30683.33
+Transfer/sec:      5.29MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db_pg_async
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_async
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.55ms   20.60ms 195.15ms   98.80%
+    Req/Sec    10.08k     1.97k   14.89k    73.60%
+  1143034 requests in 15.00s, 197.18MB read
+Requests/sec:  76203.82
+Transfer/sec:     13.15MB
+
+---------------------------------------------------------
+ Concurrency: 8 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:16969/db_pg_async
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_async
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   253.64us   47.89us 627.00us   73.27%
+    Req/Sec     4.05k   301.72     4.89k    66.59%
+  460330 requests in 15.00s, 79.41MB read
+Requests/sec:  30689.33
+Transfer/sec:      5.29MB
+
+---------------------------------------------------------
+ Concurrency: 16 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:16969/db_pg_async
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_async
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   518.86us    4.22ms  68.09ms   99.61%
+    Req/Sec     8.05k   768.38     9.78k    84.14%
+  915340 requests in 15.00s, 157.90MB read
+Requests/sec:  61024.41
+Transfer/sec:     10.53MB
+
+---------------------------------------------------------
+ Concurrency: 32 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:16969/db_pg_async
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_async
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.54ms   31.70ms 248.52ms   98.34%
+    Req/Sec     9.79k     2.20k   13.33k    70.25%
+  1112840 requests in 15.00s, 191.98MB read
+Requests/sec:  74192.10
+Transfer/sec:     12.80MB
+
+---------------------------------------------------------
+ Concurrency: 64 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:16969/db_pg_async
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_async
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.34ms   54.54ms 358.99ms   97.61%
+    Req/Sec    10.10k     1.84k   13.67k    91.71%
+  1148801 requests in 15.00s, 198.18MB read
+Requests/sec:  76591.18
+Transfer/sec:     13.21MB
+
+---------------------------------------------------------
+ Concurrency: 128 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:16969/db_pg_async
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_async
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.64ms  353.69us  15.46ms   69.00%
+    Req/Sec    10.26k   685.04    14.67k    64.65%
+  1166406 requests in 15.00s, 201.22MB read
+Requests/sec:  77763.82
+Transfer/sec:     13.42MB
+
+---------------------------------------------------------
+ Concurrency: 256 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:16969/db_pg_async
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_async
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.06ms   93.69ms 514.73ms   96.52%
+    Req/Sec     9.90k     1.99k   14.00k    95.81%
+  1125562 requests in 15.00s, 194.17MB read
+Requests/sec:  75051.23
+Transfer/sec:     12.95MB

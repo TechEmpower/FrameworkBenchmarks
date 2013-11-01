@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 13:11:00 PDT 2013
+
+  System load:  0.02               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.54ms    1.23ms  15.46ms   74.15%
+    Req/Sec   137.09     29.08   222.00     74.70%
+  5341 requests in 5.01s, 1.45MB read
+Requests/sec:   1066.97
+Transfer/sec:    297.49KB
+
+---------------------------------------------------------
+ Running Warmup lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   208.48ms   70.12ms 530.99ms   71.51%
+    Req/Sec   155.27      7.29   180.00     68.54%
+  18598 requests in 15.02s, 5.07MB read
+Requests/sec:   1238.03
+Transfer/sec:    345.26KB
+
+---------------------------------------------------------
+ Queries: 1 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   177.52ms   67.25ms 447.99ms   71.73%
+    Req/Sec   179.27     11.31   209.00     83.51%
+  21438 requests in 15.01s, 5.11MB read
+Requests/sec:   1427.91
+Transfer/sec:    348.31KB
+
+---------------------------------------------------------
+ Queries: 5 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   285.20ms   87.61ms 555.39ms   66.27%
+    Req/Sec   111.53      7.43   127.00     79.35%
+  13359 requests in 15.02s, 5.01MB read
+Requests/sec:    889.18
+Transfer/sec:    341.17KB
+
+---------------------------------------------------------
+ Queries: 10 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   418.39ms  100.88ms 699.08ms   69.92%
+    Req/Sec    76.22      3.23    85.00     72.36%
+  9113 requests in 15.04s, 4.98MB read
+Requests/sec:    605.90
+Transfer/sec:    338.92KB
+
+---------------------------------------------------------
+ Queries: 15 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   551.22ms  101.21ms 860.34ms   70.05%
+    Req/Sec    57.67      5.37    73.00     85.48%
+  6892 requests in 15.05s, 4.94MB read
+Requests/sec:    457.88
+Transfer/sec:    336.11KB
+
+---------------------------------------------------------
+ Queries: 20 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   680.73ms  110.54ms   1.03s    68.29%
+    Req/Sec    46.62      4.59    59.00     80.49%
+  5537 requests in 15.04s, 4.91MB read
+Requests/sec:    368.25
+Transfer/sec:    334.64KB

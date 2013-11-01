@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 14 15:54:06 PDT 2013
+
+  System load:  0.05               Processes:           117
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/fortunes?provider=postgresql
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes?provider=postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.27ms  656.56us   6.74ms   70.87%
+    Req/Sec   324.74     62.39   500.00     66.98%
+  12154 requests in 5.00s, 16.77MB read
+Requests/sec:   2429.76
+Transfer/sec:      3.35MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   187.03ms  134.28ms   1.32s    95.50%
+    Req/Sec   175.90     18.65   223.00     69.86%
+  20874 requests in 15.01s, 28.81MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:   1390.66
+Transfer/sec:      1.92MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.30ms  706.48us   9.54ms   70.93%
+    Req/Sec   323.01     61.81   555.00     69.53%
+  36608 requests in 15.00s, 50.52MB read
+Requests/sec:   2440.26
+Transfer/sec:      3.37MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=postgresql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.82ms    2.80ms  24.01ms   75.38%
+    Req/Sec   357.80     62.53   586.00     68.16%
+  41715 requests in 15.00s, 57.57MB read
+Requests/sec:   2780.71
+Transfer/sec:      3.84MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=postgresql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.55ms   11.38ms  87.32ms   81.44%
+    Req/Sec   241.11     39.62   370.00     66.79%
+  28468 requests in 15.01s, 39.28MB read
+Requests/sec:   1897.08
+Transfer/sec:      2.62MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=postgresql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.50ms   27.82ms 209.05ms   76.81%
+    Req/Sec   199.24     27.20   305.00     70.51%
+  23551 requests in 15.03s, 32.50MB read
+Requests/sec:   1567.44
+Transfer/sec:      2.16MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=postgresql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    95.02ms   93.95ms   1.27s    94.71%
+    Req/Sec   168.21     22.28   224.00     67.72%
+  19831 requests in 15.01s, 27.37MB read
+Requests/sec:   1321.50
+Transfer/sec:      1.82MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   191.08ms   89.06ms   1.25s    89.34%
+    Req/Sec   167.57     15.38   203.00     63.38%
+  19760 requests in 15.01s, 27.27MB read
+Requests/sec:   1316.69
+Transfer/sec:      1.82MB

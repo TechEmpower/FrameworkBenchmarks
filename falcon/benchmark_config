@@ -50,7 +50,7 @@
       "framework": "falcon",
       "language": "Python",
       "orm": "Raw",
-      "platform": "wsgi",
+      "platform": "pypy",
       "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",

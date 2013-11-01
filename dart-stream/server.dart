@@ -76,11 +76,12 @@ class Fortune implements Comparable<Fortune> {
 
 class World {
   int id;
-  int randomNumber;
 
-  World(this.id, this.randomNumber);
+  int randomnumber;
 
-  toJson() => { "id": id, "randomNumber": randomNumber };
+  World(this.id, this.randomnumber);
+
+  toJson() => { "id": id, "randomnumber": randomnumber };
 }
 
 main() {
@@ -146,13 +147,13 @@ _updatesTest(HttpConnect connect) {
   return Future.wait(new List.generate(queries, (_) {
       return _query()
           .then((world) {
-            world.randomNumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
+            world.randomnumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
             return _connectionPool.connect()
               .then((connection) {
                 return connection.execute(
-                      'UPDATE "World" SET "randomNumber" = @randomNumber WHERE "id" = @id;',
+                      'UPDATE "World" SET "randomnumber" = @randomnumber WHERE "id" = @id;',
                       { 
-                        'randomNumber': world.randomNumber,
+                        'randomnumber': world.randomnumber,
                         'id': world.id 
                       }
                   )
@@ -188,7 +189,7 @@ _dbMongoTest(HttpConnect connect) {
   return _mongoQuery().then((data) {
     connect.response.write(json.stringify({
       "id": data["id"],
-      "randomNumber": data["randomNumber"]
+      "randomnumber": data["randomnumber"]
     }));
   });
 }
@@ -207,7 +208,7 @@ _queriesMongoTest(HttpConnect connect) {
       var results = response.map((world) {
         return {
           "id": world["id"],
-          "randomNumber": world["randomNumber"]
+          "randomnumber": world["randomnumber"]
         };
       });
       connect.response.write(json.stringify(results.toList()));
@@ -220,7 +221,7 @@ _updatesMongoTest(HttpConnect connect) {
   return Future.wait(new List.generate(queries, (index) {
       return _mongoQuery()
           .then((world) {
-            world["randomNumber"] = _RANDOM.nextInt(_WORLD_TABLE_SIZE);
+            world["randomnumber"] = _RANDOM.nextInt(_WORLD_TABLE_SIZE);
             return _worldCollection.update( { "_id": world["_id"] }, world)
                 .then((_) => world);
           });
@@ -229,7 +230,7 @@ _updatesMongoTest(HttpConnect connect) {
       var result = worlds.map((world) {
         return {
           "id": world["id"],
-          "randomNumber": world["randomNumber"]
+          "randomnumber": world["randomnumber"]
         };
       });
       connect.response.write(json.stringify(result.toList()));
@@ -288,7 +289,7 @@ _parseQueriesParam(param) {
 _query() {
   return _connectionPool.connect().then((connection) {
     return connection
-      .query('SELECT "id", "randomNumber" FROM "World" WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
+      .query('SELECT "id", "randomnumber" FROM "World" WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
       .single
       .then((row) =>new World(row[0], row[1]))
       .whenComplete(() {

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 10:47:02 PDT 2013
+
+  System load:  0.01               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.92ms  134.97ms 432.48ms   84.10%
+    Req/Sec   224.64    125.80   444.00     65.87%
+  8321 requests in 5.00s, 11.00MB read
+Requests/sec:   1662.55
+Transfer/sec:      2.20MB
+
+---------------------------------------------------------
+ Running Warmup flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   128.01ms  201.33ms   1.98s    93.49%
+    Req/Sec   286.87    100.66   474.00     61.95%
+  33298 requests in 15.01s, 44.01MB read
+Requests/sec:   2218.31
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.81ms   30.74ms 181.09ms   96.07%
+    Req/Sec   410.70    123.08   700.00     78.27%
+  46676 requests in 15.09s, 61.70MB read
+Requests/sec:   3092.70
+Transfer/sec:      4.09MB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.37ms    9.11ms 186.71ms   98.85%
+    Req/Sec   453.30    167.06     1.00k    66.51%
+  48992 requests in 15.00s, 64.76MB read
+Requests/sec:   3265.57
+Transfer/sec:      4.32MB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.23ms   10.05ms 213.26ms   94.32%
+    Req/Sec   468.37    215.09     1.21k    71.98%
+  51951 requests in 15.00s, 68.67MB read
+Requests/sec:   3462.89
+Transfer/sec:      4.58MB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.71ms   21.43ms 447.39ms   87.28%
+    Req/Sec   470.14    145.88   840.00     65.33%
+  53913 requests in 15.00s, 71.26MB read
+Requests/sec:   3593.14
+Transfer/sec:      4.75MB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.32ms   32.69ms 659.89ms   89.22%
+    Req/Sec   463.56    106.53   781.00     63.67%
+  54312 requests in 15.01s, 71.79MB read
+Requests/sec:   3618.75
+Transfer/sec:      4.78MB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask-pypy
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.52ms   60.41ms 821.69ms   79.36%
+    Req/Sec   454.63     76.32   649.00     64.85%
+  54270 requests in 15.01s, 71.73MB read
+Requests/sec:   3616.75
+Transfer/sec:      4.78MB

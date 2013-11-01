@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 18:56:51 PDT 2013
+
+  System load:  0.42               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   843.56us  773.69us  15.54ms   98.33%
+    Req/Sec     1.35k   191.44     1.67k    82.43%
+  49012 requests in 5.00s, 9.52MB read
+Requests/sec:   9802.89
+Transfer/sec:      1.90MB
+
+---------------------------------------------------------
+ Running Warmup dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.36ms   40.22ms   1.13s    94.90%
+    Req/Sec     2.46k   544.74     4.55k    68.63%
+  291231 requests in 15.00s, 56.58MB read
+Requests/sec:  19415.32
+Transfer/sec:      3.77MB
+
+---------------------------------------------------------
+ Concurrency: 8 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   744.98us  124.01us   2.20ms   74.28%
+    Req/Sec     1.41k    87.26     1.67k    63.52%
+  159905 requests in 15.00s, 31.07MB read
+Requests/sec:  10660.26
+Transfer/sec:      2.07MB
+
+---------------------------------------------------------
+ Concurrency: 16 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.93ms  284.17us  10.45ms   82.36%
+    Req/Sec     2.26k   177.94     2.78k    69.16%
+  257325 requests in 15.00s, 50.00MB read
+Requests/sec:  17155.39
+Transfer/sec:      3.33MB
+
+---------------------------------------------------------
+ Concurrency: 32 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.80ms    1.53ms  14.87ms   85.57%
+    Req/Sec     2.43k   445.15     4.11k    68.37%
+  276772 requests in 15.00s, 53.77MB read
+Requests/sec:  18452.09
+Transfer/sec:      3.59MB
+
+---------------------------------------------------------
+ Concurrency: 64 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.60ms    5.25ms  94.64ms   87.76%
+    Req/Sec     2.37k   570.52     4.71k    68.67%
+  275622 requests in 15.00s, 53.55MB read
+Requests/sec:  18375.66
+Transfer/sec:      3.57MB
+
+---------------------------------------------------------
+ Concurrency: 128 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.19ms   16.69ms 356.74ms   94.86%
+    Req/Sec     2.42k   539.02     4.35k    67.93%
+  284967 requests in 15.00s, 55.37MB read
+Requests/sec:  18997.63
+Transfer/sec:      3.69MB
+
+---------------------------------------------------------
+ Concurrency: 256 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.77ms   44.88ms   1.08s    94.98%
+    Req/Sec     2.42k   548.23     4.55k    69.93%
+  287440 requests in 15.00s, 55.85MB read
+Requests/sec:  19162.96
+Transfer/sec:      3.72MB

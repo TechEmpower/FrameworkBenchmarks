@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 21:12:17 PDT 2013
+
+  System load:  0.03               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/mysql-orm
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mysql-orm
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   640.59us  154.96us   6.27ms   85.02%
+    Req/Sec     1.62k   127.38     2.00k    72.92%
+  60342 requests in 5.00s, 11.67MB read
+Requests/sec:  12068.13
+Transfer/sec:      2.33MB
+
+---------------------------------------------------------
+ Running Warmup express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mysql-orm
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.07ms    4.28ms  50.10ms   91.73%
+    Req/Sec     3.00k   406.61     3.73k    87.49%
+  339832 requests in 15.00s, 65.72MB read
+Requests/sec:  22657.50
+Transfer/sec:      4.38MB
+
+---------------------------------------------------------
+ Concurrency: 8 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/mysql-orm
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   637.82us  136.28us   5.87ms   83.43%
+    Req/Sec     1.64k   121.07     2.00k    60.85%
+  186729 requests in 15.00s, 36.11MB read
+Requests/sec:  12448.60
+Transfer/sec:      2.41MB
+
+---------------------------------------------------------
+ Concurrency: 16 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/mysql-orm
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.86ms  295.14us   7.02ms   81.12%
+    Req/Sec     2.44k   327.41     3.33k    62.36%
+  277554 requests in 15.00s, 53.67MB read
+Requests/sec:  18503.97
+Transfer/sec:      3.58MB
+
+---------------------------------------------------------
+ Concurrency: 32 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/mysql-orm
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.50ms  671.23us   9.27ms   64.24%
+    Req/Sec     2.83k   356.33     4.00k    64.56%
+  322540 requests in 15.00s, 62.37MB read
+Requests/sec:  21503.01
+Transfer/sec:      4.16MB
+
+---------------------------------------------------------
+ Concurrency: 64 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/mysql-orm
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.02ms    1.94ms  21.86ms   78.23%
+    Req/Sec     2.89k   778.44     4.67k    56.70%
+  329111 requests in 15.00s, 63.64MB read
+Requests/sec:  21941.64
+Transfer/sec:      4.24MB
+
+---------------------------------------------------------
+ Concurrency: 128 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/mysql-orm
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.64ms    3.52ms  22.65ms   63.92%
+    Req/Sec     2.95k   445.44     3.95k    58.50%
+  343189 requests in 15.00s, 66.37MB read
+Requests/sec:  22879.48
+Transfer/sec:      4.42MB
+
+---------------------------------------------------------
+ Concurrency: 256 for express-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/mysql-orm
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql-orm
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.17ms    3.00ms  29.38ms   78.93%
+    Req/Sec     2.91k   163.66     3.37k    67.61%
+  343036 requests in 15.00s, 66.34MB read
+Requests/sec:  22873.65
+Transfer/sec:      4.42MB

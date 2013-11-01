@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 12:14:47 PDT 2013
+
+  System load:  0.55               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer http-kit
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/http-kit/db/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   488.91us  137.28us   4.62ms   84.19%
+    Req/Sec     2.16k   254.03     2.67k    72.50%
+  78339 requests in 5.00s, 12.24MB read
+Requests/sec:  15668.01
+Transfer/sec:      2.45MB
+
+---------------------------------------------------------
+ Running Warmup http-kit
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/http-kit/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.53ms    5.28ms 627.81ms   99.69%
+    Req/Sec     7.49k     0.85k   11.89k    76.63%
+  849342 requests in 15.00s, 132.75MB read
+Requests/sec:  56622.66
+Transfer/sec:      8.85MB
+
+---------------------------------------------------------
+ Concurrency: 8 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/http-kit/db/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   468.90us  194.97us   9.26ms   97.18%
+    Req/Sec     2.24k   157.41     2.67k    77.26%
+  254874 requests in 15.00s, 39.84MB read
+Requests/sec:  16991.48
+Transfer/sec:      2.66MB
+
+---------------------------------------------------------
+ Concurrency: 16 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/http-kit/db/1
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   479.62us  193.62us   9.78ms   93.13%
+    Req/Sec     4.37k   356.00     5.44k    70.37%
+  496928 requests in 15.00s, 77.67MB read
+Requests/sec:  33129.92
+Transfer/sec:      5.18MB
+
+---------------------------------------------------------
+ Concurrency: 32 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/http-kit/db/1
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   586.68us  323.83us  10.41ms   95.13%
+    Req/Sec     7.24k   815.25     9.22k    72.63%
+  822196 requests in 15.00s, 128.51MB read
+Requests/sec:  54814.55
+Transfer/sec:      8.57MB
+
+---------------------------------------------------------
+ Concurrency: 64 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/http-kit/db/1
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.16ms  421.59us  11.63ms   94.28%
+    Req/Sec     7.32k   806.94     9.78k    73.04%
+  831588 requests in 15.00s, 129.97MB read
+Requests/sec:  55438.99
+Transfer/sec:      8.66MB
+
+---------------------------------------------------------
+ Concurrency: 128 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/http-kit/db/1
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.29ms  515.19us  12.60ms   90.42%
+    Req/Sec     7.40k   834.12    10.56k    74.21%
+  838832 requests in 15.00s, 131.11MB read
+Requests/sec:  55924.61
+Transfer/sec:      8.74MB
+
+---------------------------------------------------------
+ Concurrency: 256 for http-kit
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/http-kit/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/http-kit/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.69ms   11.42ms 629.37ms   99.96%
+    Req/Sec     7.50k     0.87k   13.56k    77.04%
+  845638 requests in 15.00s, 132.17MB read
+Requests/sec:  56378.54
+Transfer/sec:      8.81MB

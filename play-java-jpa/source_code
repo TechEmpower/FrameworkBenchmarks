@@ -1,0 +1,9 @@
+./play-java-jpa/app/
+./play-java-jpa/app/controllers
+./play-java-jpa/app/controllers/Application.java
+./play-java-jpa/app/utils
+./play-java-jpa/app/utils/Predicate.java
+./play-java-jpa/app/utils/PredicatedAction.java
+./play-java-jpa/app/utils/Predicated.java
+./play-java-jpa/app/models
+./play-java-jpa/app/models/World.java

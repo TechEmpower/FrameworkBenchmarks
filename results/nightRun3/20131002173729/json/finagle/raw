@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 21:51:42 PDT 2013
+
+  System load:  0.1                Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer finagle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   338.60us  591.15us  11.84ms   98.78%
+    Req/Sec     3.65k     0.89k    5.11k    83.89%
+  126602 requests in 5.01s, 13.52MB read
+Requests/sec:  25285.93
+Transfer/sec:      2.70MB
+
+---------------------------------------------------------
+ Running Warmup finagle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.37ms    3.83ms 631.11ms   91.29%
+    Req/Sec    14.21k     2.60k   22.56k    77.50%
+  1588812 requests in 15.00s, 169.70MB read
+Requests/sec: 105924.40
+Transfer/sec:     11.31MB
+
+---------------------------------------------------------
+ Concurrency: 8 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   266.28us  306.24us   9.76ms   99.69%
+    Req/Sec     4.04k   302.11     4.67k    94.69%
+  452912 requests in 15.00s, 48.38MB read
+Requests/sec:  30194.92
+Transfer/sec:      3.23MB
+
+---------------------------------------------------------
+ Concurrency: 16 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   250.66us  273.98us   9.88ms   99.61%
+    Req/Sec     8.37k   761.85    10.00k    83.83%
+  951128 requests in 15.00s, 101.59MB read
+Requests/sec:  63409.95
+Transfer/sec:      6.77MB
+
+---------------------------------------------------------
+ Concurrency: 32 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   299.22us  360.25us  10.78ms   98.15%
+    Req/Sec    14.12k     1.64k   17.44k    81.89%
+  1603257 requests in 15.00s, 171.25MB read
+Requests/sec: 106888.53
+Transfer/sec:     11.42MB
+
+---------------------------------------------------------
+ Concurrency: 64 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   510.00us  574.36us  14.79ms   91.69%
+    Req/Sec    16.74k     2.09k   23.00k    77.94%
+  1900079 requests in 15.00s, 202.95MB read
+Requests/sec: 126675.44
+Transfer/sec:     13.53MB
+
+---------------------------------------------------------
+ Concurrency: 128 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.01ms    1.47ms 217.16ms   86.56%
+    Req/Sec    16.62k     2.48k   36.22k    77.95%
+  1876661 requests in 15.00s, 200.45MB read
+Requests/sec: 125121.87
+Transfer/sec:     13.36MB
+
+---------------------------------------------------------
+ Concurrency: 256 for finagle
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.25ms    3.67ms 647.35ms   90.97%
+    Req/Sec    14.82k     2.75k   35.56k    79.90%
+  1688178 requests in 15.00s, 180.32MB read
+Requests/sec: 112554.62
+Transfer/sec:     12.02MB

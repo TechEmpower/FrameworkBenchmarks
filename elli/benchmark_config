@@ -19,6 +19,7 @@
       "database_os": "Linux",
       "display_name": "elli",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "skip": "true"
   }}]
 }

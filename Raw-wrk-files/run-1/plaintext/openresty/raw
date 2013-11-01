@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 00:38:42 PDT 2013
+
+  System load:  1.91               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   184.44us   37.23us 390.00us   71.23%
+    Req/Sec     5.49k   358.93     6.78k    63.30%
+  206593 requests in 5.00s, 37.03MB read
+Requests/sec:  41320.31
+Transfer/sec:      7.41MB
+
+---------------------------------------------------------
+ Running Warmup openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.29ms  599.90us  22.84ms   96.39%
+    Req/Sec    25.95k     1.75k   37.67k    70.52%
+  2927667 requests in 15.00s, 524.76MB read
+Requests/sec: 195189.38
+Transfer/sec:     34.99MB
+
+---------------------------------------------------------
+ Concurrency: 256 for openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.01ms   14.71ms 480.17ms   98.06%
+    Req/Sec    32.59k     2.98k   45.97k    68.43%
+  3850799 requests in 15.00s, 690.23MB read
+  Socket errors: connect 0, read 0, write 0, timeout 8
+Requests/sec: 256727.45
+Transfer/sec:     46.02MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.91ms   95.57ms   4.53s    94.46%
+    Req/Sec    34.13k     6.33k   49.48k    67.01%
+  4289809 requests in 15.00s, 768.94MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1249
+Requests/sec: 285982.94
+Transfer/sec:     51.26MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   204.97ms  967.05ms  10.71s    97.99%
+    Req/Sec    41.34k    10.33k  131.25k    84.77%
+  4809936 requests in 15.00s, 862.27MB read
+  Socket errors: connect 0, read 77, write 0, timeout 8793
+Requests/sec: 320587.30
+Transfer/sec:     57.47MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for openresty
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.06s     6.37s   14.81s    73.06%
+    Req/Sec    43.26k     7.56k   75.02k    74.85%
+  5013238 requests in 15.02s, 0.88GB read
+  Socket errors: connect 11, read 1627, write 0, timeout 65613
+Requests/sec: 333880.85
+Transfer/sec:     59.88MB

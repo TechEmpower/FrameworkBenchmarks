@@ -4,6 +4,7 @@ import java.util.concurrent.ThreadLocalRandom.{ current => random }
 
 import scala.language.implicitConversions
 import scala.language.postfixOps
+import scala.collection.mutable.MutableList
 
 import com.ibm.plain.rest.{ Form, Resource }
 import com.ibm.plain.json.{ Json => J }
@@ -33,27 +34,28 @@ sealed abstract class DbResource
     extends Resource {
 
   @inline protected[this] final def get(form: Option[Form]): J = {
-    var list: List[J] = Nil
+    val output = new MutableList[J]
     val q = form match { case None => 1 case Some(f) => queries(f) }
-    withConnection(datasource) {
-      implicit connection => for (i <- 1 to q) { for (j <- selectsql << next <<! asJson) { list = j :: list } }
+    withConnection(datasource) { implicit connection =>
+      for (i <- 1 to q) { for (j <- selectsql << next <<! asJson) { output += j } }
     }
-    form match { case None => list.head case _ => J(list) }
+    form match { case None => output.head case _ => J(output.toList) }
   }
 
   @inline protected[this] final def update(form: Form): J = {
-    var list: List[J] = Nil
+    val input = new MutableList[World]
+    val output = new MutableList[J]
     val q = queries(form)
-    withConnection(datasource) {
-      implicit connection =>
-        for (i <- 1 to q) {
-          val id = next
+    withConnection(datasource) { implicit connection =>
+      for (i <- 1 to q) { for (j <- selectsql << next <<! asTuple) { input += j } }
+      input.foreach {
+        case (id, _) =>
           val randomNumber = next
           updatesql << randomNumber << id <<!!;
-          list = asJson(id, randomNumber) :: list
-        }
+          output += asJson(id, randomNumber)
+      }
     }
-    J(list)
+    J(output.toList)
   }
 
   @inline private[this] final def queries(form: Form) = try {
@@ -70,7 +72,11 @@ sealed abstract class DbResource
 
   @inline private[this] final def asJson(id: Int, randomNumber: Int) = J(Map("id" -> id, "randomNumber" -> randomNumber))
 
+  @inline private[this] final def asTuple = (r: RichResultSet) => (r.nextInt.get, r.nextInt.get)
+
   @inline private[this] final def next = random.nextInt(1, 10001)
+
+  private[this] final type World = (Int, Int)
 
   private[this] final val selectsql = "select id, randomNumber from World where id = ?"
 

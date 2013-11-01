@@ -18,7 +18,7 @@ class Worlds extends Table[World]("World") {
   }
 
   def updateRandom(world: World) {
-    DB.withSession { implicit session =>
+    DB.withSession { implicit session: Session =>
       this.where(_.id === world.id.bind).update(world)
     }
   }

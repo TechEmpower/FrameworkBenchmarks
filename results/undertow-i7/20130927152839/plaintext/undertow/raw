@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 15:32:21 PDT 2013
+
+  System load:  1.06               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+40 packages can be updated.
+12 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   190.19us   33.57us   0.91ms   72.89%
+    Req/Sec     5.28k   250.18     5.78k    62.84%
+  202920 requests in 5.00s, 33.29MB read
+Requests/sec:  40587.04
+Transfer/sec:      6.66MB
+
+---------------------------------------------------------
+ Running Warmup undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.24ms  295.35us  10.75ms   95.91%
+    Req/Sec    27.28k     1.93k   37.33k    82.12%
+  3089658 requests in 14.99s, 506.80MB read
+Requests/sec: 206055.83
+Transfer/sec:     33.80MB
+
+---------------------------------------------------------
+ Concurrency: 256 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.52ms    5.82ms 627.24ms   99.96%
+    Req/Sec    69.06k     4.06k   97.54k    91.44%
+  7972568 requests in 15.00s, 1.28GB read
+  Socket errors: connect 0, read 7, write 0, timeout 0
+Requests/sec: 531515.38
+Transfer/sec:     87.19MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.06ms   59.40ms   1.35s    97.48%
+    Req/Sec    68.69k    13.66k  174.48k    79.48%
+  8039248 requests in 15.00s, 1.29GB read
+  Socket errors: connect 0, read 20, write 0, timeout 2155
+Requests/sec: 535938.54
+Transfer/sec:     87.91MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    81.88ms  256.67ms   6.10s    93.87%
+    Req/Sec    68.48k    13.65k  153.33k    75.83%
+  7997312 requests in 15.00s, 1.28GB read
+  Socket errors: connect 0, read 27, write 0, timeout 9845
+Requests/sec: 533032.07
+Transfer/sec:     87.44MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for undertow
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.64s     6.78s   14.66s    60.89%
+    Req/Sec    76.44k    28.00k  190.82k    69.37%
+  7920408 requests in 15.02s, 1.27GB read
+  Socket errors: connect 11, read 105, write 0, timeout 77071
+Requests/sec: 527422.95
+Transfer/sec:     86.55MB

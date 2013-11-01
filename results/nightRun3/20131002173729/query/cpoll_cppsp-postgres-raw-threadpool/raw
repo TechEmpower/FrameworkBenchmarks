@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 20:08:04 PDT 2013
+
+  System load:  0.88               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:16969/db_pg_threadpool?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:16969/db_pg_threadpool?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   372.44us   66.65us 813.00us   73.94%
+    Req/Sec     2.78k   156.98     3.33k    62.50%
+  105367 requests in 5.00s, 21.08MB read
+Requests/sec:  21074.07
+Transfer/sec:      4.22MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db_pg_threadpool?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_threadpool?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.29ms  288.95ms   1.11s    92.53%
+    Req/Sec     5.96k     1.73k    7.90k    92.50%
+  680939 requests in 15.00s, 136.23MB read
+Requests/sec:  45398.38
+Transfer/sec:      9.08MB
+
+---------------------------------------------------------
+ Queries: 1 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db_pg_threadpool?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_threadpool?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.20ms  473.87us  25.80ms   88.85%
+    Req/Sec    10.49k   575.05    13.80k    57.83%
+  1191352 requests in 15.00s, 205.52MB read
+Requests/sec:  79437.27
+Transfer/sec:     13.70MB
+
+---------------------------------------------------------
+ Queries: 5 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db_pg_threadpool?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_threadpool?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.57ms  219.59ms 862.52ms   92.82%
+    Req/Sec     2.69k   755.92     3.23k    92.53%
+  316166 requests in 15.00s, 89.69MB read
+Requests/sec:  21081.77
+Transfer/sec:      5.98MB
+
+---------------------------------------------------------
+ Queries: 10 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db_pg_threadpool?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_threadpool?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.32ms    1.80ms  91.40ms   97.10%
+    Req/Sec     1.52k    34.83     1.67k    73.64%
+  179707 requests in 15.00s, 75.73MB read
+Requests/sec:  11978.25
+Transfer/sec:      5.05MB
+
+---------------------------------------------------------
+ Queries: 15 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db_pg_threadpool?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_threadpool?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    52.15ms  105.68ms 623.82ms   96.25%
+    Req/Sec     0.99k   193.71     1.21k    95.87%
+  117465 requests in 15.00s, 65.68MB read
+Requests/sec:   7831.17
+Transfer/sec:      4.38MB
+
+---------------------------------------------------------
+ Queries: 20 for cpoll_cppsp-postgres-raw-threadpool
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db_pg_threadpool?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db_pg_threadpool?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.40ms    3.32ms 177.90ms   93.84%
+    Req/Sec   755.62     28.80     0.87k    72.38%
+  90104 requests in 15.00s, 62.80MB read
+Requests/sec:   6006.55
+Transfer/sec:      4.19MB

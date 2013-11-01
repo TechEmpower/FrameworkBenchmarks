@@ -1,0 +1,119 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 14 15:15:22 PDT 2013
+
+  System load:  0.04               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/ado/postgresql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.35ms  504.74us  11.43ms   92.09%
+    Req/Sec   316.14     49.95   444.00     79.66%
+  11969 requests in 5.00s, 3.61MB read
+Requests/sec:   2392.86
+Transfer/sec:    739.73KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    37.65ms   64.40ms   2.06s    99.66%
+    Req/Sec   820.67     66.42     0.97k    73.40%
+  96415 requests in 15.00s, 29.11MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:   6426.93
+Transfer/sec:      1.94MB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.27ms   71.73ms   2.16s    98.88%
+    Req/Sec   763.30     84.95     0.98k    64.42%
+  89824 requests in 15.00s, 24.40MB read
+Requests/sec:   5987.71
+Transfer/sec:      1.63MB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.13ms  133.73ms   4.23s    99.20%
+    Req/Sec   547.13    126.66   746.00     69.09%
+  64660 requests in 15.00s, 25.46MB read
+  Socket errors: connect 0, read 0, write 0, timeout 54
+Requests/sec:   4310.47
+Transfer/sec:      1.70MB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   109.31ms  235.96ms   5.10s    98.39%
+    Req/Sec   317.09     97.50   570.00     66.30%
+  37747 requests in 15.06s, 20.58MB read
+  Socket errors: connect 0, read 0, write 0, timeout 63
+Requests/sec:   2507.23
+Transfer/sec:      1.37MB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   137.15ms  367.51ms  11.20s    97.31%
+    Req/Sec   245.81     61.76   368.00     65.35%
+  29336 requests in 15.01s, 20.45MB read
+  Socket errors: connect 0, read 0, write 0, timeout 191
+Requests/sec:   1954.69
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/postgresql?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/postgresql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   132.79ms  276.89ms   6.15s    98.06%
+    Req/Sec   208.00     53.37   351.00     71.03%
+  24805 requests in 15.01s, 21.04MB read
+  Socket errors: connect 0, read 0, write 0, timeout 317
+Requests/sec:   1652.64
+Transfer/sec:      1.40MB

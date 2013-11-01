@@ -23,7 +23,7 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " {wrk} {headers} -d 60 -c 8 -t 8 \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} -d 5 -c 8 -t 8 \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
     {wrk} {headers} -d 5 -c 8 -t 8 "http://{server_host}:{port}{url}"
@@ -132,8 +132,7 @@ class FrameworkTest:
     try:
       print "VERIFYING JSON (" + self.json_url + ") ..."
       url = self.benchmarker.generate_url(self.json_url, self.port)
-      subprocess.check_call(["curl", "-f", url])
-      print ""
+      self.__curl_url(url)
       self.json_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.json_url_passed = False
@@ -142,8 +141,7 @@ class FrameworkTest:
     try:
       print "VERIFYING DB (" + self.db_url + ") ..."
       url = self.benchmarker.generate_url(self.db_url, self.port)
-      subprocess.check_call(["curl", "-f", url])
-      print ""
+      self.__curl_url(url)
       self.db_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.db_url_passed = False
@@ -152,8 +150,7 @@ class FrameworkTest:
     try:
       print "VERIFYING Query (" + self.query_url + "2) ..."
       url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-      subprocess.check_call(["curl", "-f", url])
-      print ""
+      self.__curl_url(url)
       self.query_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.query_url_passed = False
@@ -162,8 +159,7 @@ class FrameworkTest:
     try:
       print "VERIFYING Fortune (" + self.fortune_url + ") ..."
       url = self.benchmarker.generate_url(self.fortune_url, self.port)
-      subprocess.check_call(["curl", "-f", url])
-      print ""
+      self.__curl_url(url)
       self.fortune_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.fortune_url_passed = False
@@ -172,8 +168,7 @@ class FrameworkTest:
     try:
       print "VERIFYING Update (" + self.update_url + "2) ..."
       url = self.benchmarker.generate_url(self.update_url + "2", self.port)
-      subprocess.check_call(["curl", "-f", url])
-      print ""
+      self.__curl_url(url)
       self.update_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.update_url_passed = False
@@ -182,8 +177,7 @@ class FrameworkTest:
     try:
       print "VERIFYING Plaintext (" + self.plaintext_url + ") ..."
       url = self.benchmarker.generate_url(self.plaintext_url, self.port)
-      subprocess.check_call(["curl", "-f", url])
-      print ""
+      self.__curl_url(url)
       self.plaintext_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.plaintext_url_passed = False
@@ -507,6 +501,32 @@ class FrameworkTest:
   ############################################################
   # End __format_request_headers
   ############################################################
+
+  ############################################################
+  # __curl_url
+  # Dump HTTP response and headers. Throw exception if there
+  # is an HTTP error.
+  ############################################################
+  def __curl_url(self, url):
+    # Use -i to output response with headers.
+    # Don't use -f so that the HTTP response code is ignored.
+    # Use --stderr - to redirect stderr to stdout so we get
+    # error output for sure in stdout.
+    # Use -sS to hide progress bar, but show errors.
+    subprocess.check_call(["curl", "-i", "--stderr", "-", "-sS", url])
+    # HTTP output may not end in a newline, so add that here.
+    print ""
+    # In the curl invocation above we could not use -f because
+    # then the HTTP response would not be output, so use -f in
+    # an additional invocation so that if there is an HTTP error,
+    # subprocess.CalledProcessError will be thrown. Note that this
+    # uses check_output() instead of check_call() so that we can
+    # ignore the HTTP response because we already output that in
+    # the first curl invocation.
+    subprocess.check_output(["curl", "-fsS", url])
+  ##############################################################
+  # End __curl_url
+  ##############################################################
 
   ##########################################################################################
   # Constructor

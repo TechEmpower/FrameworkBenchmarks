@@ -39,7 +39,10 @@ class Installer:
     self.__run_command("sudo apt-get install gcc-4.8 g++-4.8", True)
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
-    self.__run_command("sudo sh -c \"echo '*               -    nofile          16384' >> /etc/security/limits.conf\"")
+    self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
+    self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
+    self.__run_command("source ../../.profile")
+    self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
 
     ##############################################################
     # System Tools
@@ -115,8 +118,8 @@ class Installer:
     # go
     #
 
-    self.__download("http://go.googlecode.com/files/go1.1.1.linux-amd64.tar.gz");
-    self.__run_command("tar xzf go1.1.1.linux-amd64.tar.gz")
+    self.__download("http://go.googlecode.com/files/go1.2rc3.linux-amd64.tar.gz");
+    self.__run_command("tar xzf go1.2rc3.linux-amd64.tar.gz")
 
     #
     # Perl
@@ -124,10 +127,10 @@ class Installer:
 
     self.__download("http://downloads.activestate.com/ActivePerl/releases/5.16.3.1603/ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
     self.__run_command("tar xzf ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
-    self.__run_command("sudo ./install.sh --license-accepted --prefix /opt/ActivePerl-5.16 --no-install-html", cwd="ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746", send_yes=True)
+    self.__run_command("sudo ./install.sh --license-accepted --prefix /opt/ActivePerl-5.16 --no-install-html", cwd="ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746", send_yes=True, retry=True)
     self.__download("http://cpanmin.us", "cpanminus.pl")
-    self.__run_command("perl cpanminus.pl --sudo App::cpanminus")
-    self.__run_command("cpanm -f -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros EV IO::Socket::IP IO::Socket::SSL")
+    self.__run_command("perl cpanminus.pl --sudo App::cpanminus", retry=True)
+    self.__run_command("cpanm -f -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros EV IO::Socket::IP IO::Socket::SSL", retry=True)
 
     #
     # php
@@ -138,7 +141,7 @@ class Installer:
     self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
     self.__run_command("sudo make install", cwd="php-5.4.13")
-    self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13")
+    self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13", retry=True)
     self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
     self.__run_command("rm php-5.4.13.tar.gz")
@@ -172,7 +175,7 @@ class Installer:
     # Mono
     #
     self.__run_command("git clone git://github.com/mono/mono", retry=True)
-    self.__run_command("git checkout mono-3.2.1", cwd="mono")
+    self.__run_command("git checkout mono-3.2.3", cwd="mono")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
     self.__run_command("make get-monolite-latest", cwd="mono")
     self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
@@ -219,7 +222,7 @@ class Installer:
     #
     self.__download("http://openresty.org/download/ngx_openresty-1.2.7.5.tar.gz")
     self.__run_command("tar xzf ngx_openresty-1.2.7.5.tar.gz")
-    self.__run_command("./configure --with-luajit", cwd="ngx_openresty-1.2.7.5")
+    self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.2.7.5")
     self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
     self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
 
@@ -245,16 +248,16 @@ class Installer:
     #
     # Grails
     #
-    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
-    self.__run_command("unzip -o grails-2.1.1.zip")
-    self.__run_command("rm grails-2.1.1.zip")
+    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.1.zip")
+    self.__run_command("unzip -o grails-2.3.1.zip")
+    self.__run_command("rm grails-2.3.1.zip")
 
     #
     # Play 2
     #
-    self.__download("http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip")
-    self.__run_command("unzip -o play-2.1.2-RC1.zip")
-    self.__run_command("rm play-2.1.2-RC1.zip")
+    self.__download("http://downloads.typesafe.com/play/2.2.0/play-2.2.0.zip")
+    self.__run_command("unzip -o play-2.2.0.zip")
+    self.__run_command("rm play-2.2.0.zip")
 
     #
     # Play 1
@@ -271,26 +274,26 @@ class Installer:
     # TreeFrog Framework
     #
     self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql g++", True)
-    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.tar.gz")
-    self.__run_command("tar xzf treefrog-1.7.tar.gz")
-    self.__run_command("rm treefrog-1.7.tar.gz")
-    self.__run_command("./configure", cwd="treefrog-1.7")
-    self.__run_command("make", cwd="treefrog-1.7/src")
-    self.__run_command("sudo make install", cwd="treefrog-1.7/src")
-    self.__run_command("make", cwd="treefrog-1.7/tools")
-    self.__run_command("sudo make install", cwd="treefrog-1.7/tools")
+    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.2.tar.gz")
+    self.__run_command("tar xzf treefrog-1.7.2.tar.gz")
+    self.__run_command("rm treefrog-1.7.2.tar.gz")
+    self.__run_command("./configure", cwd="treefrog-1.7.2")
+    self.__run_command("make", cwd="treefrog-1.7.2/src")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.2/src")
+    self.__run_command("make", cwd="treefrog-1.7.2/tools")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.2/tools")
 
     #
     # Vert.x
     #
-    self.__download("http://vertx.io/vertx-downloads/downloads/vert.x-1.3.1.final.tar.gz")
-    self.__run_command("tar xzf vert.x-1.3.1.final.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.0.2-final.tar.gz?direct=true", "vert.x-2.0.2-final.tar.gz")
+    self.__run_command("tar xzf vert.x-2.0.2-final.tar.gz")
 
     #
     # Yesod
     #
-    self.__run_command("cabal update")
-    self.__run_command("cabal install yesod persistent-mysql")
+    self.__run_command("cabal update", retry=True)
+    self.__run_command("cabal install yesod persistent-mysql", retry=True)
 
     #
     # Jester
@@ -309,9 +312,9 @@ class Installer:
     python3_bin= "~/FrameworkBenchmarks/installs/py3/bin"
     def easy_install(pkg, two=True, three=False, pypy=False):
       cmd = "/easy_install -ZU '" + pkg + "'"
-      if two:   self.__run_command(python_bin + cmd)
-      if three: self.__run_command(python3_bin + cmd)
-      if pypy:  self.__run_command(pypy_bin + cmd)
+      if two:   self.__run_command(python_bin + cmd, retry=True)
+      if three: self.__run_command(python3_bin + cmd, retry=True)
+      if pypy:  self.__run_command(pypy_bin + cmd, retry=True)
 
     self.__download("http://bitbucket.org/pypy/pypy/downloads/pypy-2.1-linux64.tar.bz2")
     self.__run_command("tar xjf pypy-2.1-linux64.tar.bz2")
@@ -398,7 +401,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
-    sudo sh -c "echo '*               -    nofile          16384' >> /etc/security/limits.conf"
+    sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
     sudo mkdir -p /ssd/log
@@ -482,7 +485,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
-    sudo sh -c "echo '*               -    nofile          16384' >> /etc/security/limits.conf"
+    sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
     sudo mkdir -p /ssd/log

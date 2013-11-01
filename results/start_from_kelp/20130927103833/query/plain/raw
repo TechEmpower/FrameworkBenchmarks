@@ -1,0 +1,110 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:9080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:9080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    52.11ms   55.11ms 128.32ms   78.55%
+    Req/Sec   270.17    354.89     1.78k    84.67%
+  10189 requests in 5.00s, 2.26MB read
+Requests/sec:   2037.08
+Transfer/sec:    462.63KB
+
+---------------------------------------------------------
+ Running Warmup plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.39s     6.30s   14.91s    12.87%
+    Req/Sec   583.66      0.89k    3.82k    81.52%
+  44255 requests in 15.06s, 9.82MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1011
+Requests/sec:   2939.11
+Transfer/sec:    667.49KB
+
+---------------------------------------------------------
+ Queries: 1 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.75s     5.31s   14.93s    85.37%
+    Req/Sec     0.91k     1.21k    5.47k    81.14%
+  68116 requests in 15.04s, 13.04MB read
+  Socket errors: connect 0, read 0, write 0, timeout 988
+Requests/sec:   4529.32
+Transfer/sec:      0.87MB
+
+---------------------------------------------------------
+ Queries: 5 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.50s     4.64s   14.77s    87.51%
+    Req/Sec    82.20    260.08     1.66k    91.37%
+  21014 requests in 15.11s, 6.59MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1124
+Requests/sec:   1391.10
+Transfer/sec:    446.80KB
+
+---------------------------------------------------------
+ Queries: 10 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.36s     3.89s   14.87s    92.13%
+    Req/Sec   120.62    139.01   619.00     82.26%
+  12098 requests in 15.24s, 5.63MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1122
+Requests/sec:    793.94
+Transfer/sec:    378.19KB
+
+---------------------------------------------------------
+ Queries: 15 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   216.07ms  225.90ms 996.79ms   92.43%
+    Req/Sec   225.74    127.05   572.00     72.00%
+  8148 requests in 15.45s, 5.02MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1158
+Requests/sec:    527.51
+Transfer/sec:    333.13KB
+
+---------------------------------------------------------
+ Queries: 20 for plain
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:9080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:9080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   300.33ms  515.34ms  14.01s    99.66%
+    Req/Sec    50.49     28.60   152.00     64.15%
+  6289 requests in 15.22s, 4.83MB read
+  Socket errors: connect 0, read 0, write 0, timeout 843
+Requests/sec:    413.26
+Transfer/sec:    325.11KB

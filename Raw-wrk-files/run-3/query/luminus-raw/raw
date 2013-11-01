@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 13:27:04 PDT 2013
+
+  System load:  0.12               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/luminus/dbraw/2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/luminus/dbraw/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   786.55us  186.64us  11.04ms   89.76%
+    Req/Sec     1.33k    97.19     1.55k    65.47%
+  50426 requests in 5.00s, 10.08MB read
+Requests/sec:  10083.90
+Transfer/sec:      2.02MB
+
+---------------------------------------------------------
+ Running Warmup luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/dbraw/2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/dbraw/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.57ms   15.96ms 141.09ms   84.77%
+    Req/Sec     1.94k   203.32     3.04k    70.48%
+  230554 requests in 15.00s, 46.08MB read
+Requests/sec:  15369.35
+Transfer/sec:      3.07MB
+
+---------------------------------------------------------
+ Queries: 1 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/dbraw/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.32ms   14.29ms 154.08ms   87.15%
+    Req/Sec     3.15k   451.67     4.90k    68.98%
+  372747 requests in 15.00s, 63.20MB read
+Requests/sec:  24849.82
+Transfer/sec:      4.21MB
+
+---------------------------------------------------------
+ Queries: 5 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/dbraw/5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/dbraw/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.88ms   23.78ms 171.17ms   71.82%
+    Req/Sec     0.86k    77.45     1.42k    71.60%
+  102876 requests in 15.00s, 30.01MB read
+Requests/sec:   6857.47
+Transfer/sec:      2.00MB
+
+---------------------------------------------------------
+ Queries: 10 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/dbraw/10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/dbraw/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    76.39ms   35.33ms 324.88ms   69.67%
+    Req/Sec   420.03     28.03   530.00     66.39%
+  50515 requests in 15.01s, 22.39MB read
+Requests/sec:   3366.45
+Transfer/sec:      1.49MB
+
+---------------------------------------------------------
+ Queries: 15 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/dbraw/15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/dbraw/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   114.25ms   44.72ms 348.91ms   69.92%
+    Req/Sec   276.42     20.34   412.00     71.35%
+  33254 requests in 15.01s, 19.78MB read
+Requests/sec:   2215.95
+Transfer/sec:      1.32MB
+
+---------------------------------------------------------
+ Queries: 20 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/dbraw/20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/dbraw/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   154.49ms   52.79ms 404.32ms   69.93%
+    Req/Sec   206.35     13.92   290.00     70.80%
+  24834 requests in 15.01s, 18.53MB read
+Requests/sec:   1654.63
+Transfer/sec:      1.23MB

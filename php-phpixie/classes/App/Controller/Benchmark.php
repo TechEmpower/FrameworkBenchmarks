@@ -34,10 +34,8 @@ class Benchmark extends \PHPixie\Controller {
 		$fortunes[] = $fortune;
 		
 		usort($fortunes, function($a, $b) { 
-			$am = $a->message;
-			$bm = $b->message;
-			if ($am==$bm) return 0;
-			return ($am<$bm)?-1:1;
+			if ($a->message===$b->message) return 0;
+			return ($a->message<$b->message)?-1:1;
 		} );
 		
 		$view = $this->pixie->view('fortunes');

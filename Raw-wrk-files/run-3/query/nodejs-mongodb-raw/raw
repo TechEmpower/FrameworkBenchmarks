@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 14:19:58 PDT 2013
+
+  System load:  0.07               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/mongodbdriver?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mongodbdriver?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   843.79us  227.33us   5.75ms   88.54%
+    Req/Sec     1.22k   149.05     1.55k    78.32%
+  46371 requests in 5.00s, 14.71MB read
+Requests/sec:   9273.01
+Transfer/sec:      2.94MB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongodbdriver?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.34ms    4.66ms  59.63ms   74.08%
+    Req/Sec     2.43k   227.50     3.16k    70.08%
+  285522 requests in 15.00s, 90.55MB read
+Requests/sec:  19035.29
+Transfer/sec:      6.04MB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongodbdriver?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.78ms    2.92ms  54.86ms   77.67%
+    Req/Sec     3.33k   283.16     4.38k    65.91%
+  389760 requests in 15.00s, 92.84MB read
+Requests/sec:  25980.10
+Transfer/sec:      6.19MB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongodbdriver?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.13ms    9.31ms  80.35ms   63.56%
+    Req/Sec     1.39k   189.02     1.97k    72.33%
+  165733 requests in 15.00s, 91.97MB read
+Requests/sec:  11048.38
+Transfer/sec:      6.13MB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongodbdriver?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.92ms   30.14ms 253.16ms   90.66%
+    Req/Sec   819.82    128.74     1.51k    71.09%
+  97437 requests in 15.00s, 92.53MB read
+Requests/sec:   6494.80
+Transfer/sec:      6.17MB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongodbdriver?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    54.81ms   21.18ms 180.56ms   85.05%
+    Req/Sec   582.76     38.98   735.00     69.42%
+  69601 requests in 15.02s, 93.57MB read
+Requests/sec:   4634.11
+Transfer/sec:      6.23MB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongodbdriver?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodbdriver?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    72.22ms   67.87ms 367.61ms   90.93%
+    Req/Sec   449.06    104.54   766.00     80.16%
+  53451 requests in 15.01s, 92.96MB read
+Requests/sec:   3560.44
+Transfer/sec:      6.19MB

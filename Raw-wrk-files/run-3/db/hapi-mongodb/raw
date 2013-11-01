@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 11:54:44 PDT 2013
+
+  System load:  0.03               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/mongoose/
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mongoose/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.25ms    2.17ms  17.95ms   95.62%
+    Req/Sec   628.42    292.61     1.33k    56.91%
+  23508 requests in 5.00s, 6.05MB read
+Requests/sec:   4700.23
+Transfer/sec:      1.21MB
+
+---------------------------------------------------------
+ Running Warmup hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.80ms   15.05ms 135.04ms   71.03%
+    Req/Sec     1.14k   158.71     1.64k    68.81%
+  135168 requests in 15.00s, 34.78MB read
+Requests/sec:   9009.67
+Transfer/sec:      2.32MB
+
+---------------------------------------------------------
+ Concurrency: 8 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.81ms    2.31ms  26.75ms   97.50%
+    Req/Sec   710.90    203.24     1.22k    73.95%
+  80629 requests in 15.00s, 20.74MB read
+Requests/sec:   5374.91
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Concurrency: 16 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.93ms    2.91ms  31.86ms   89.94%
+    Req/Sec     0.92k   403.92     2.00k    61.60%
+  98639 requests in 15.00s, 25.38MB read
+Requests/sec:   6575.57
+Transfer/sec:      1.69MB
+
+---------------------------------------------------------
+ Concurrency: 32 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.53ms    3.54ms  39.04ms   89.36%
+    Req/Sec     1.02k   329.17     2.18k    64.99%
+  113375 requests in 15.00s, 29.17MB read
+Requests/sec:   7557.70
+Transfer/sec:      1.94MB
+
+---------------------------------------------------------
+ Concurrency: 64 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.54ms    7.90ms  56.66ms   85.83%
+    Req/Sec     1.05k   304.67     1.96k    65.14%
+  119891 requests in 15.00s, 30.85MB read
+Requests/sec:   7992.18
+Transfer/sec:      2.06MB
+
+---------------------------------------------------------
+ Concurrency: 128 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.05ms    8.17ms  65.01ms   67.70%
+    Req/Sec     1.10k   180.98     1.59k    66.13%
+  130061 requests in 15.00s, 33.46MB read
+Requests/sec:   8670.03
+Transfer/sec:      2.23MB
+
+---------------------------------------------------------
+ Concurrency: 256 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongoose/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.59ms   12.88ms 100.43ms   75.47%
+    Req/Sec     1.18k   147.14     1.56k    70.96%
+  141250 requests in 15.00s, 36.34MB read
+Requests/sec:   9415.41
+Transfer/sec:      2.42MB

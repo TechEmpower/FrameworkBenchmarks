@@ -1,0 +1,140 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct  1 11:37:42 PDT 2013
+
+  System load:  1.68               Processes:           138
+  Usage of /:   35.2% of 58.69GB   Users logged in:     1
+  Memory usage: 10%                IP address for eth0: 172.16.98.181
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/json/jsonnet
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   482.47ms  739.50ms   1.62s    70.22%
+    Req/Sec    51.45    110.48   416.00     82.24%
+  2096 requests in 6.01s, 658.53KB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+  Non-2xx or 3xx responses: 18
+Requests/sec:    348.55
+Transfer/sec:    109.51KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/jsonnet
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.41s   649.30ms   1.89s    78.86%
+    Req/Sec    22.24     41.82   158.00     79.08%
+  3256 requests in 16.04s, 1.01MB read
+  Socket errors: connect 0, read 47, write 0, timeout 1552
+  Non-2xx or 3xx responses: 337
+Requests/sec:    203.01
+Transfer/sec:     64.50KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/jsonnet
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  39 requests in 16.01s, 12.23KB read
+  Socket errors: connect 0, read 0, write 0, timeout 56
+  Non-2xx or 3xx responses: 1
+Requests/sec:      2.44
+Transfer/sec:     782.62B
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/jsonnet
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  43 requests in 16.01s, 13.48KB read
+  Socket errors: connect 0, read 0, write 0, timeout 121
+Requests/sec:      2.69
+Transfer/sec:     861.97B
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/jsonnet
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  119 requests in 16.01s, 37.92KB read
+  Socket errors: connect 0, read 0, write 0, timeout 228
+  Non-2xx or 3xx responses: 5
+Requests/sec:      7.43
+Transfer/sec:      2.37KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/jsonnet
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  110 requests in 16.01s, 35.11KB read
+  Socket errors: connect 0, read 4, write 0, timeout 454
+  Non-2xx or 3xx responses: 14
+Requests/sec:      6.87
+Transfer/sec:      2.19KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/jsonnet
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  200 requests in 16.01s, 63.38KB read
+  Socket errors: connect 0, read 2, write 0, timeout 903
+  Non-2xx or 3xx responses: 15
+Requests/sec:     12.49
+Transfer/sec:      3.96KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json/jsonnet
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  242 requests in 16.01s, 76.81KB read
+  Socket errors: connect 0, read 3, write 0, timeout 1820
+  Non-2xx or 3xx responses: 19
+Requests/sec:     15.11
+Transfer/sec:      4.80KB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 22:14:01 PDT 2013
+
+  System load:  0.07               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.33ms    5.93ms 204.46ms   99.67%
+    Req/Sec     0.93k   117.98     1.22k    70.12%
+  35186 requests in 5.00s, 6.39MB read
+Requests/sec:   7036.01
+Transfer/sec:      1.28MB
+
+---------------------------------------------------------
+ Running Warmup falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.99ms    8.77ms 237.11ms   93.05%
+    Req/Sec     2.69k   505.07     3.73k    83.45%
+  317328 requests in 15.00s, 57.67MB read
+Requests/sec:  21155.01
+Transfer/sec:      3.84MB
+
+---------------------------------------------------------
+ Queries: 1 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.11ms    3.44ms  42.70ms   71.33%
+    Req/Sec     5.53k   797.52     8.19k    70.61%
+  643042 requests in 15.00s, 96.14MB read
+Requests/sec:  42870.83
+Transfer/sec:      6.41MB
+
+---------------------------------------------------------
+ Queries: 5 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.64ms    6.67ms  87.03ms   70.98%
+    Req/Sec     1.09k   120.59     1.47k    74.72%
+  130023 requests in 15.00s, 35.58MB read
+Requests/sec:   8667.96
+Transfer/sec:      2.37MB
+
+---------------------------------------------------------
+ Queries: 10 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    58.71ms    9.43ms 113.23ms   68.96%
+    Req/Sec   548.88     39.50   666.00     69.68%
+  65373 requests in 15.00s, 27.79MB read
+Requests/sec:   4357.40
+Transfer/sec:      1.85MB
+
+---------------------------------------------------------
+ Queries: 15 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    88.00ms   11.65ms 150.52ms   68.48%
+    Req/Sec   363.79     30.95   483.00     77.82%
+  43540 requests in 15.01s, 25.11MB read
+Requests/sec:   2901.14
+Transfer/sec:      1.67MB
+
+---------------------------------------------------------
+ Queries: 20 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   116.95ms   13.59ms 171.14ms   69.37%
+    Req/Sec   271.73     27.83   334.00     84.97%
+  32603 requests in 15.01s, 23.74MB read
+Requests/sec:   2172.54
+Transfer/sec:      1.58MB

@@ -1,0 +1,144 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 17:47:10 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/mongodb
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mongodb
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   455.42ms  496.65ms   1.03s    65.23%
+    Req/Sec    36.24    103.63   466.00     88.98%
+  3445 requests in 6.00s, 1.08MB read
+  Socket errors: connect 0, read 2, write 0, timeout 10
+  Non-2xx or 3xx responses: 34
+Requests/sec:    573.94
+Transfer/sec:    183.42KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   839.15ms  815.24ms   2.51s    55.40%
+    Req/Sec   124.52    144.15   445.00     78.95%
+  16109 requests in 16.00s, 5.05MB read
+  Socket errors: connect 0, read 170, write 0, timeout 1488
+  Non-2xx or 3xx responses: 2389
+Requests/sec:   1006.50
+Transfer/sec:    323.41KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.88ms   12.61ms  38.01ms   74.48%
+    Req/Sec    51.63    130.93   555.00     86.12%
+  6206 requests in 16.00s, 1.94MB read
+  Socket errors: connect 0, read 3, write 0, timeout 49
+  Non-2xx or 3xx responses: 55
+Requests/sec:    387.86
+Transfer/sec:    123.87KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.09ms    2.50ms  41.15ms   82.72%
+    Req/Sec    69.57    167.15     1.00k    83.71%
+  6544 requests in 16.00s, 2.04MB read
+  Socket errors: connect 0, read 3, write 0, timeout 104
+  Non-2xx or 3xx responses: 116
+Requests/sec:    408.96
+Transfer/sec:    130.73KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.62ms   13.86ms  47.76ms   89.03%
+    Req/Sec    62.89    150.87   840.00     84.16%
+  7652 requests in 16.00s, 2.39MB read
+  Socket errors: connect 0, read 11, write 0, timeout 214
+  Non-2xx or 3xx responses: 267
+Requests/sec:    478.20
+Transfer/sec:    152.98KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    94.33ms   78.79ms 202.39ms   48.17%
+    Req/Sec    58.25    135.45     0.86k    84.26%
+  8234 requests in 16.00s, 2.58MB read
+  Socket errors: connect 0, read 31, write 0, timeout 433
+  Non-2xx or 3xx responses: 568
+Requests/sec:    514.57
+Transfer/sec:    164.93KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   215.81ms  102.50ms 294.87ms   81.09%
+    Req/Sec    72.47    169.72   723.00     86.82%
+  11047 requests in 16.00s, 3.46MB read
+  Socket errors: connect 0, read 77, write 0, timeout 862
+  Non-2xx or 3xx responses: 1118
+Requests/sec:    690.36
+Transfer/sec:    221.43KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mongodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   836.81ms  660.47ms   1.53s    46.78%
+    Req/Sec   103.85    138.74   543.00     79.87%
+  14598 requests in 16.00s, 4.59MB read
+  Socket errors: connect 0, read 172, write 0, timeout 1553
+  Non-2xx or 3xx responses: 3378
+Requests/sec:    912.18
+Transfer/sec:    293.57KB

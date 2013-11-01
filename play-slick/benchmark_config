@@ -11,14 +11,14 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "play-scala",
+      "framework": "play2",
       "language": "Scala",
       "orm": "Raw",
       "platform": "Netty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play-slick",
+      "display_name": "play-scala-slick",
       "notes": "",
       "versus": "netty"
     }

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 18:15:19 PDT 2013
+
+  System load:  0.3                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer compojure-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/compojure/dbraw/2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/compojure/dbraw/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   804.06us  167.73us   4.87ms   85.85%
+    Req/Sec     1.31k    90.80     1.55k    67.63%
+  49439 requests in 5.00s, 9.88MB read
+Requests/sec:   9887.40
+Transfer/sec:      1.98MB
+
+---------------------------------------------------------
+ Running Warmup compojure-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/dbraw/2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/dbraw/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.92ms   16.36ms 135.20ms   85.07%
+    Req/Sec     1.90k   177.14     2.65k    68.82%
+  226202 requests in 15.00s, 45.21MB read
+Requests/sec:  15080.36
+Transfer/sec:      3.01MB
+
+---------------------------------------------------------
+ Queries: 1 for compojure-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/dbraw/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.89ms   13.49ms 129.94ms   86.88%
+    Req/Sec     3.31k   431.30     4.82k    69.46%
+  393006 requests in 15.00s, 66.63MB read
+Requests/sec:  26200.67
+Transfer/sec:      4.44MB
+
+---------------------------------------------------------
+ Queries: 5 for compojure-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/dbraw/5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/dbraw/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.19ms   25.30ms 201.54ms   71.90%
+    Req/Sec   792.49     59.23     1.01k    71.44%
+  94588 requests in 15.00s, 27.59MB read
+Requests/sec:   6304.08
+Transfer/sec:      1.84MB
+
+---------------------------------------------------------
+ Queries: 10 for compojure-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/dbraw/10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/dbraw/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    82.20ms   37.85ms 252.69ms   69.75%
+    Req/Sec   385.26     23.62   467.00     71.90%
+  46170 requests in 15.00s, 20.46MB read
+Requests/sec:   3077.27
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Queries: 15 for compojure-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/dbraw/15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/dbraw/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   125.85ms   48.00ms 347.92ms   69.45%
+    Req/Sec   253.15     16.39   361.00     71.60%
+  30358 requests in 15.01s, 18.06MB read
+Requests/sec:   2022.18
+Transfer/sec:      1.20MB
+
+---------------------------------------------------------
+ Queries: 20 for compojure-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/compojure/dbraw/20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/compojure/dbraw/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   171.90ms   56.87ms 491.26ms   70.24%
+    Req/Sec   187.06      9.54   207.00     68.59%
+  22421 requests in 15.01s, 16.73MB read
+Requests/sec:   1493.63
+Transfer/sec:      1.11MB

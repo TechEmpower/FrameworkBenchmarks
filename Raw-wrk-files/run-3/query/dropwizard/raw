@@ -1,0 +1,116 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 21:24:51 PDT 2013
+
+  System load:  0.49               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:9000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:9000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.18ms   15.49ms 203.79ms   99.42%
+    Req/Sec     1.10k   148.38     1.44k    92.95%
+  41528 requests in 5.00s, 7.59MB read
+Requests/sec:   8304.74
+Transfer/sec:      1.52MB
+
+---------------------------------------------------------
+ Running Warmup dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.89ms  103.60ms   1.19s    97.84%
+    Req/Sec     3.23k     0.88k   12.27k    85.26%
+  368520 requests in 15.00s, 67.32MB read
+Requests/sec:  24567.21
+Transfer/sec:      4.49MB
+
+---------------------------------------------------------
+ Queries: 1 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.17ms  221.56ms   1.50s    97.48%
+    Req/Sec     4.09k     0.95k   10.20k    87.38%
+  465950 requests in 15.00s, 71.00MB read
+Requests/sec:  31063.59
+Transfer/sec:      4.73MB
+
+---------------------------------------------------------
+ Queries: 5 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.54ms   43.06ms 689.99ms   98.87%
+    Req/Sec     2.12k   433.27     5.28k    85.27%
+  247442 requests in 15.00s, 67.70MB read
+Requests/sec:  16495.68
+Transfer/sec:      4.51MB
+
+---------------------------------------------------------
+ Queries: 10 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.85ms   33.67ms   1.56s    95.34%
+    Req/Sec     1.35k   248.36     3.81k    81.69%
+  158786 requests in 15.00s, 67.65MB read
+Requests/sec:  10583.88
+Transfer/sec:      4.51MB
+
+---------------------------------------------------------
+ Queries: 15 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.03ms   33.57ms 730.40ms   91.76%
+    Req/Sec     0.99k   157.69     1.58k    76.52%
+  118410 requests in 15.00s, 68.39MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:   7893.40
+Transfer/sec:      4.56MB
+
+---------------------------------------------------------
+ Queries: 20 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.16ms   59.87ms   1.67s    96.69%
+    Req/Sec   773.66    137.99     2.00k    79.21%
+  91896 requests in 15.00s, 67.00MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:   6125.18
+Transfer/sec:      4.47MB

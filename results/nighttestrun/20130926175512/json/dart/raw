@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 20:56:48 PDT 2013
+
+  System load:  0.12               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   217.04ms  411.79ms   1.00s    78.30%
+    Req/Sec     3.03k     1.67k    5.55k    72.55%
+  112733 requests in 5.31s, 35.26MB read
+  Non-2xx or 3xx responses: 112733
+Requests/sec:  21223.08
+Transfer/sec:      6.64MB
+
+---------------------------------------------------------
+ Running Warmup dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.04ms    1.68ms  31.06ms   81.98%
+    Req/Sec     8.21k   572.03    10.75k    73.46%
+  937284 requests in 15.00s, 293.14MB read
+  Non-2xx or 3xx responses: 937284
+Requests/sec:  62498.36
+Transfer/sec:     19.55MB
+
+---------------------------------------------------------
+ Concurrency: 8 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   271.25us  106.02us   2.11ms   75.84%
+    Req/Sec     3.86k   542.17     5.78k    67.37%
+  436680 requests in 15.00s, 136.57MB read
+  Non-2xx or 3xx responses: 436680
+Requests/sec:  29112.94
+Transfer/sec:      9.11MB
+
+---------------------------------------------------------
+ Concurrency: 16 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   326.03us  158.91us   4.92ms   80.11%
+    Req/Sec     6.50k     1.08k   10.67k    70.49%
+  729758 requests in 15.00s, 228.24MB read
+  Non-2xx or 3xx responses: 729758
+Requests/sec:  48652.74
+Transfer/sec:     15.22MB
+
+---------------------------------------------------------
+ Concurrency: 32 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   505.21us  311.47us  13.29ms   88.18%
+    Req/Sec     8.46k     1.37k   14.00k    70.53%
+  941532 requests in 15.00s, 294.47MB read
+  Non-2xx or 3xx responses: 941532
+Requests/sec:  62772.08
+Transfer/sec:     19.63MB
+
+---------------------------------------------------------
+ Concurrency: 64 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.00ms  631.01us  17.70ms   89.76%
+    Req/Sec     8.70k     1.30k   13.20k    73.11%
+  964329 requests in 15.00s, 301.60MB read
+  Non-2xx or 3xx responses: 964329
+Requests/sec:  64291.99
+Transfer/sec:     20.11MB
+
+---------------------------------------------------------
+ Concurrency: 128 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.24ms    1.55ms  19.30ms   90.46%
+    Req/Sec     7.98k     1.47k   10.90k    87.55%
+  910346 requests in 15.00s, 284.72MB read
+  Non-2xx or 3xx responses: 910346
+Requests/sec:  60696.21
+Transfer/sec:     18.98MB
+
+---------------------------------------------------------
+ Concurrency: 256 for dart
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.94ms    3.59ms  35.50ms   90.23%
+    Req/Sec     7.47k     1.64k   15.63k    92.38%
+  861552 requests in 15.00s, 269.46MB read
+  Non-2xx or 3xx responses: 861552
+Requests/sec:  57439.51
+Transfer/sec:     17.96MB

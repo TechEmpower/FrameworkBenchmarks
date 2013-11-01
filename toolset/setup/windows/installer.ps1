@@ -1,3 +1,33 @@
+#
+# Versions of software (will need to be updated from time to time)
+#
+
+$node_installer_file      = "node-v0.10.13-x64.msi"
+$node_installer_path      = "v0.10.13/x64/$node_installer_file"
+$python_installer_file    = "python-2.7.5.amd64.msi"
+$python_installer_path    = "2.7.5/$python_installer_file"
+$python_version           = "27"
+$wincache_installer_file  = "wincache-1.3.4-5.4-nts-vc9-x86.exe"
+$wincache_installer_path  = "wincache-1.3.4/$wincache_installer_file"
+$go_installer_file        = "go1.2rc3.windows-amd64.msi"
+$jre_installer_file       = "jre-7u25-windows-x64.exe"
+$jdk_installer_file       = "jdk-7u45-windows-x64.exe"
+$jdk_master_hash          = "943527ed9111cbb746d4ab2bb2c31cd6" 
+# http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
+$resin_version            = "resin-4.0.36"
+$resin_installer_file     = "$resin_version.zip"
+$ant_version              = "apache-ant-1.9.2"
+$ant_installer_file       = "$ant_version-bin.zip"
+$maven_version            = "apache-maven-3.0.5"
+$maven_installer_file     = "$maven_version-bin.zip"
+$maven_installer_path     = "maven-3/3.0.5/binaries/$maven_installer_file"
+$scala_version            = "2.10.2"
+$play_version             = "2.2.0"
+$play_installer_file      = "play-$play_version.zip"
+$mercurial_installer_file = "mercurial-2.6.1-x64.msi"
+$cygwin_installer_file    = "setup-x86_64.exe"
+
+
 $basedir = "C:\FrameworkBenchmarks"
 $workdir = "$basedir\installs"
 New-Item -Path $workdir -Type directory -Force | Out-Null
@@ -14,6 +44,12 @@ function GetMd5FileHash($fileName) {
     $hash | % { [Void]$sb.Append($_.ToString("x2")) }
     $sb.ToString()
 }
+
+#
+# Chocolatey package manager
+#
+Write-Host "Installing Chocolatey package manager"
+Invoke-Expression ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
 
 #
 # ASP.NET
@@ -38,6 +74,10 @@ appcmd set config -section:httpProtocol /allowKeepAlive:true | Out-Null
 appcmd set config -section:httpLogging /dontLog:True | Out-Null
 # Enable detailed error pages
 #appcmd set config -section:system.webServer/httpErrors -errorMode:Detailed | Out-Null
+# Increase queue length for DefaultAppPool to avoid HTTP 503 errors coming from HTTP.SYS
+appcmd set apppool DefaultAppPool /queueLength:65535
+# Increase appConcurrentRequestLimit to avoid HTTP 503.2 errors from IIS http://support.microsoft.com/kb/943891
+appcmd set config -section:system.webServer/serverRuntime /appConcurrentRequestLimit:65535
 
 # URL Rewrite
 $rewrite_url = "http://download.microsoft.com/download/6/7/D/67D80164-7DD0-48AF-86E3-DE7A182D6815/rewrite_2.0_rtw_x64.msi"
@@ -67,8 +107,7 @@ Start-Process "msiexec" "/i $webdeploy_local /passive" -Wait
 # node.js
 #
 Write-Host "Installing node.js...`n"
-$node_installer_file = "node-v0.10.13-x64.msi"
-$node_installer_url = "http://nodejs.org/dist/v0.10.13/x64/$node_installer_file"
+$node_installer_url = "http://nodejs.org/dist/$node_installer_path"
 $node_installer_local = "$workdir\$node_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($node_installer_url, $node_installer_local)
 
@@ -79,13 +118,12 @@ $env:Path += ";C:\Program Files\nodejs"; [Environment]::SetEnvironmentVariable("
 # Python
 #
 Write-Host "Installing Python...`n"
-$python_installer_file = "python-2.7.5.amd64.msi"
-$python_installer_url = "http://www.python.org/ftp/python/2.7.5/$python_installer_file"
+$python_installer_url = "http://www.python.org/ftp/python/$python_installer_path"
 $python_installer_local = "$workdir\$python_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($python_installer_url, $python_installer_local)
 
 Start-Process $python_installer_local '/passive' -Wait
-$env:Path += ";C:\Python27"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+$env:Path += ";C:\Python$python_version"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # PHP
@@ -156,8 +194,8 @@ appcmd set config -section:system.webServer/handlers /+"[name='PHP FastCGI', pat
 Set-Content "c:\inetpub\wwwroot\phpinfo.php" "<?php phpinfo(); ?>"
 
 # wincache
-$wincache_url = "http://heanet.dl.sourceforge.net/project/wincache/wincache-1.3.4/wincache-1.3.4-5.4-nts-vc9-x86.exe"
-$wincache_local = "$workdir\wincache-1.3.4-5.4-nts-vc9-x86.exe"
+$wincache_url = "http://heanet.dl.sourceforge.net/project/wincache/$wincache_installer_path"
+$wincache_local = "$workdir\$wincache_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($wincache_url, $wincache_local)
 Start-Process $wincache_local "/q /T:$php\ext" -Wait
 Move-Item "$php\ext\wincache*" "c:\inetpub\wwwroot"
@@ -179,8 +217,8 @@ Write-Host ""
 # Go
 #
 Write-Host "Installing Go...`n"
-$go_url = "http://go.googlecode.com/files/go1.1.1.windows-amd64.msi"
-$go_local = "$workdir\go1.1.1.windows-amd64.msi"
+$go_url = "http://go.googlecode.com/files/$go_installer_file"
+$go_local = "$workdir\$go_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($go_url, $go_local)
 Start-Process $go_local "/passive" -Wait
 $env:Path += ";C:\Go\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
@@ -191,8 +229,9 @@ $env:Path += ";C:\Go\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Pa
 Write-Host "Installing Java...`n"
 
 # jre
-#$jre_url = "http://img.cs.montana.edu/windows/jre-7u21-windows-x64.exe"
-#$jre_local = "$workdir\jre-7u21-windows-x64.exe"
+#Write-Host "Installing JRE...`n"
+#$jre_url = "http://img.cs.montana.edu/windows/$jre_installer_file"
+#$jre_local = "$workdir\$jre_installer_file"
 #$jre_dir = "C:\Java\jre"
 #(New-Object System.Net.WebClient).DownloadFile($jre_url, $jre_local)
 #Start-Process $jre_local "/s INSTALLDIR=$jre_dir" -Wait
@@ -200,9 +239,9 @@ Write-Host "Installing Java...`n"
 #$env:JAVA_HOME = $jre_dir; [Environment]::SetEnvironmentVariable("JAVA_HOME", $jre_dir, [System.EnvironmentVariableTarget]::Machine)
 
 # jdk
-$jdk_master_hash = "81bf3218a2eec7963b979187fb4109f3" # http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
-$jdk_url = "http://ghaffarian.net/downloads/Java/JDK/jdk-7u25-windows-x64.exe"
-$jdk_local = "$workdir\jdk-7u21-windows-x64.exe"
+Write-Host "Installing JDK...`n"
+$jdk_url = "http://ghaffarian.net/downloads/Java/JDK/$jdk_installer_file"
+$jdk_local = "$workdir\$jdk_installer_file"
 $jdk_dir = "C:\Java\jdk"
 (New-Object System.Net.WebClient).DownloadFile($jdk_url, $jdk_local)
 
@@ -220,36 +259,52 @@ $env:Path += ";$jdk_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env
 $env:JAVA_HOME = $jdk_dir; [Environment]::SetEnvironmentVariable("JAVA_HOME", $jdk_dir, [System.EnvironmentVariableTarget]::Machine)
 
 # resin
-$resin_url = "http://www.caucho.com/download/resin-4.0.36.zip"
-$resin_local = "$workdir\resin-4.0.36.zip"
+Write-Host "Installing Resin...`n"
+$resin_url = "http://www.caucho.com/download/$resin_installer_file"
+$resin_local = "$workdir\$resin_installer_file"
 $resin_dir = "C:\Java\resin"
 (New-Object System.Net.WebClient).DownloadFile($resin_url, $resin_local)
 [System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
 [System.IO.Compression.ZipFile]::ExtractToDirectory($resin_local, $workdir) | Out-Null
-Move-Item "$workdir\resin-4.0.36" $resin_dir
+Move-Item "$workdir\$resin_version" $resin_dir
 Copy-Item "$basedir\config\resin.properties" "$resin_dir\conf\resin.properties"
 [Environment]::SetEnvironmentVariable("RESIN_HOME", $resin_dir, [System.EnvironmentVariableTarget]::Machine)
 #$env:Path += ";$resin_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 # ant
-#$ant_url = "http://apache.mirrors.hoobly.com//ant/binaries/apache-ant-1.9.0-bin.zip"
-#$ant_local = "$workdir\apache-ant-1.9.0-bin.zip"
+#Write-Host "Installing Ant...`n"
+#$ant_url = "http://apache.mirrors.hoobly.com//ant/binaries/$ant_installer_file"
+#$ant_local = "$workdir\$ant_installer_file"
 #$ant_dir = "C:\Java\ant"
 #(New-Object System.Net.WebClient).DownloadFile($ant_url, $ant_local)
 #[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
 #[System.IO.Compression.ZipFile]::ExtractToDirectory($ant_local, $workdir) | Out-Null
-#Move-Item "$workdir\apache-ant-1.9.0" $ant_dir
+#Move-Item "$workdir\$ant_version" $ant_dir
 #$env:Path += ";$ant_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 # maven
-$maven_url = "http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.zip"
-$maven_local = "$workdir\apache-maven-3.0.5-bin.zip"
+Write-Host "Installing Maven...`n"
+$maven_url = "http://mirror.cc.columbia.edu/pub/software/apache/maven/$maven_installer_path"
+$maven_local = "$workdir\$maven_installer_file"
 $maven_dir = "C:\Java\maven"
 (New-Object System.Net.WebClient).DownloadFile($maven_url, $maven_local)
 [System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
 [System.IO.Compression.ZipFile]::ExtractToDirectory($maven_local, $workdir) | Out-Null
-Move-Item "$workdir\apache-maven-3.0.5" $maven_dir
+Move-Item "$workdir\$maven_version" $maven_dir
 $env:Path += ";$maven_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+# scala
+cinst scala -version $scala_version
+
+# play
+$play_url = "http://downloads.typesafe.com/play/$play_version/$play_installer_file"
+$play_local = "$workdir\$play_installer_file"
+$play_dir = "C:\Java\play"
+(New-Object System.Net.WebClient).DownloadFile($play_url, $play_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($play_local, $workdir) | Out-Null
+Move-Item "$workdir\play-$play_version" $play_dir
+$env:Path += ";$play_dir"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # Firewall
@@ -261,10 +316,8 @@ New-NetFirewallRule -DisplayName "HTTP 8080" -Action Allow -Direction Inbound -L
 # Mercurial
 #
 Write-Host "Installing Mercurial...`n"
-
-$hg_installer_file = "mercurial-2.6.1-x64.msi"
-$hg_installer_url = "https://bitbucket.org/tortoisehg/files/downloads/$hg_installer_file"
-$hg_installer_local = "$workdir\$hg_installer_file"
+$hg_installer_url = "https://bitbucket.org/tortoisehg/files/downloads/$mercurial_installer_file"
+$hg_installer_local = "$workdir\$mercurial_installer_file"
 (New-Object System.Net.WebClient).DownloadFile($hg_installer_url, $hg_installer_local)
 
 Start-Process $hg_installer_local '/passive' -Wait
@@ -274,7 +327,6 @@ $env:Path += ";C:\Program Files\Mercurial"; [Environment]::SetEnvironmentVariabl
 # Cygwin (including sftp)
 #
 Write-Host "Installing Cygwin...`n"
-$cygwin_installer_file = "setup-x86_64.exe"
 $cygwin_installer_url = "http://cygwin.com/$cygwin_installer_file"
 $cygwin_installer_dir = $workdir + "\cygwin-installer"
 New-Item -Path $cygwin_installer_dir -Type directory -Force | Out-Null

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 01:49:29 PDT 2013
+
+  System load:  0.0                Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   182.13us   39.08us 365.00us   71.19%
+    Req/Sec     5.56k   376.40     6.89k    69.08%
+  209695 requests in 5.00s, 41.79MB read
+Requests/sec:  41941.45
+Transfer/sec:      8.36MB
+
+---------------------------------------------------------
+ Running Warmup openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.32ms  591.76us  17.47ms   97.59%
+    Req/Sec    25.38k     1.51k   42.89k    66.30%
+  2872639 requests in 15.00s, 572.43MB read
+Requests/sec: 191560.89
+Transfer/sec:     38.17MB
+
+---------------------------------------------------------
+ Concurrency: 8 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   182.84us   38.75us 393.00us   70.83%
+    Req/Sec     5.54k   368.90     6.78k    69.50%
+  629332 requests in 15.00s, 125.41MB read
+Requests/sec:  41956.65
+Transfer/sec:      8.36MB
+
+---------------------------------------------------------
+ Concurrency: 16 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   183.89us   51.85us   1.63ms   68.56%
+    Req/Sec    10.87k   664.32    13.44k    60.61%
+  1233372 requests in 15.00s, 245.77MB read
+Requests/sec:  82225.93
+Transfer/sec:     16.39MB
+
+---------------------------------------------------------
+ Concurrency: 32 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   188.34us   88.35us   3.12ms   86.55%
+    Req/Sec    21.54k     1.74k   28.33k    68.41%
+  2430839 requests in 15.00s, 484.39MB read
+Requests/sec: 162066.02
+Transfer/sec:     32.29MB
+
+---------------------------------------------------------
+ Concurrency: 64 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   328.96us  181.63us  13.22ms   93.98%
+    Req/Sec    25.14k     1.84k   35.78k    67.17%
+  2826464 requests in 15.00s, 563.23MB read
+Requests/sec: 188435.74
+Transfer/sec:     37.55MB
+
+---------------------------------------------------------
+ Concurrency: 128 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   666.26us  457.24us  22.77ms   97.00%
+    Req/Sec    25.29k     2.00k   46.33k    78.99%
+  2809910 requests in 15.00s, 559.93MB read
+Requests/sec: 187335.20
+Transfer/sec:     37.33MB
+
+---------------------------------------------------------
+ Concurrency: 256 for openresty
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.31ms  604.92us  80.09ms   97.16%
+    Req/Sec    25.38k     1.87k   39.33k    78.82%
+  2819147 requests in 15.00s, 561.77MB read
+Requests/sec: 187954.95
+Transfer/sec:     37.45MB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 10:35:52 PDT 2013
+
+  System load:  0.0                Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer HttpListener
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   828.07us    1.62ms  25.98ms   99.00%
+    Req/Sec     1.52k   243.49     1.89k    79.37%
+  56465 requests in 5.00s, 14.92MB read
+Requests/sec:  11292.15
+Transfer/sec:      2.98MB
+
+---------------------------------------------------------
+ Running Warmup HttpListener
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.00ms    4.15ms 112.05ms   76.25%
+    Req/Sec     3.60k   195.28     4.10k    83.77%
+  421628 requests in 15.00s, 111.38MB read
+Requests/sec:  28108.43
+Transfer/sec:      7.43MB
+
+---------------------------------------------------------
+ Concurrency: 8 for HttpListener
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   789.27us    1.84ms  32.35ms   99.28%
+    Req/Sec     1.59k   204.42     2.00k    94.05%
+  179710 requests in 15.00s, 47.47MB read
+Requests/sec:  11980.75
+Transfer/sec:      3.16MB
+
+---------------------------------------------------------
+ Concurrency: 16 for HttpListener
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   649.85us  753.83us  31.24ms   99.01%
+    Req/Sec     3.31k   402.45     4.55k    79.89%
+  371366 requests in 15.00s, 98.10MB read
+Requests/sec:  24757.95
+Transfer/sec:      6.54MB
+
+---------------------------------------------------------
+ Concurrency: 32 for HttpListener
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.17ms  620.23us  28.65ms   95.29%
+    Req/Sec     3.65k   353.69     5.67k    84.51%
+  409726 requests in 15.00s, 108.24MB read
+Requests/sec:  27314.82
+Transfer/sec:      7.22MB
+
+---------------------------------------------------------
+ Concurrency: 64 for HttpListener
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.37ms    2.09ms  60.11ms   92.51%
+    Req/Sec     3.65k   448.16     4.80k    80.80%
+  417191 requests in 15.00s, 110.21MB read
+Requests/sec:  27811.77
+Transfer/sec:      7.35MB
+
+---------------------------------------------------------
+ Concurrency: 128 for HttpListener
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.48ms    2.06ms  98.39ms   83.52%
+    Req/Sec     3.67k   253.56     4.55k    74.05%
+  424103 requests in 15.00s, 112.03MB read
+Requests/sec:  28272.44
+Transfer/sec:      7.47MB
+
+---------------------------------------------------------
+ Concurrency: 256 for HttpListener
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.13ms    4.58ms 107.04ms   81.47%
+    Req/Sec     3.57k   317.95     4.28k    89.69%
+  418235 requests in 15.00s, 110.48MB read
+Requests/sec:  27881.96
+Transfer/sec:      7.37MB

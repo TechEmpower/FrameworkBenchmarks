@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 23 10:07:36 PDT 2013
+
+  System load:  0.71               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.90ms  500.14us  12.14ms   94.96%
+    Req/Sec     1.23k   251.15     1.67k    72.72%
+  44611 requests in 5.00s, 7.31MB read
+Requests/sec:   8921.25
+Transfer/sec:      1.46MB
+
+---------------------------------------------------------
+ Running Warmup grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.38ms    4.69ms  81.97ms   99.34%
+    Req/Sec     2.95k   238.99     3.38k    90.52%
+  345394 requests in 15.00s, 56.61MB read
+Requests/sec:  23021.76
+Transfer/sec:      3.77MB
+
+---------------------------------------------------------
+ Concurrency: 8 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   749.01us  136.95us   5.88ms   80.55%
+    Req/Sec     1.40k    90.86     1.67k    62.84%
+  159477 requests in 15.00s, 26.14MB read
+Requests/sec:  10631.55
+Transfer/sec:      1.74MB
+
+---------------------------------------------------------
+ Concurrency: 16 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   763.49us  234.41us  10.51ms   86.11%
+    Req/Sec     2.74k   210.05     3.44k    69.46%
+  312179 requests in 15.00s, 51.16MB read
+Requests/sec:  20812.28
+Transfer/sec:      3.41MB
+
+---------------------------------------------------------
+ Concurrency: 32 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.64ms    3.60ms  58.69ms   99.46%
+    Req/Sec     3.00k   318.49     3.67k    83.05%
+  340980 requests in 15.00s, 55.88MB read
+Requests/sec:  22732.51
+Transfer/sec:      3.73MB
+
+---------------------------------------------------------
+ Concurrency: 64 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.84ms  753.56us  14.63ms   95.71%
+    Req/Sec     3.00k   287.29     3.56k    77.82%
+  340980 requests in 15.00s, 55.88MB read
+Requests/sec:  22731.66
+Transfer/sec:      3.73MB
+
+---------------------------------------------------------
+ Concurrency: 128 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.77ms    2.81ms  54.54ms   99.21%
+    Req/Sec     2.97k   278.34     3.73k    81.99%
+  341300 requests in 15.00s, 55.93MB read
+Requests/sec:  22753.11
+Transfer/sec:      3.73MB
+
+---------------------------------------------------------
+ Concurrency: 256 for grizzly-jersey
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.82ms   29.38ms 632.54ms   99.28%
+    Req/Sec     2.91k   289.83     3.40k    93.57%
+  340994 requests in 15.00s, 55.88MB read
+Requests/sec:  22732.04
+Transfer/sec:      3.73MB

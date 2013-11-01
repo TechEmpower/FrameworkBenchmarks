@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 00:20:44 PDT 2013
+
+  System load:  0.36               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/grails/hello/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/grails/hello/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.19ms  260.53us   6.01ms   87.80%
+    Req/Sec     0.89k    86.13     1.11k    75.02%
+  33353 requests in 5.00s, 8.73MB read
+Requests/sec:   6669.51
+Transfer/sec:      1.75MB
+
+---------------------------------------------------------
+ Running Warmup grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/grails/hello/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.78ms  128.20ms   1.54s    97.55%
+    Req/Sec     1.65k   555.09     6.41k    74.78%
+  192311 requests in 15.00s, 50.36MB read
+Requests/sec:  12820.84
+Transfer/sec:      3.36MB
+
+---------------------------------------------------------
+ Queries: 1 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/grails/hello/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.23ms  117.69ms 659.63ms   96.18%
+    Req/Sec     1.93k   466.05     3.74k    87.49%
+  229036 requests in 15.00s, 48.22MB read
+Requests/sec:  15269.31
+Transfer/sec:      3.22MB
+
+---------------------------------------------------------
+ Queries: 5 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/grails/hello/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.36ms   92.49ms 563.88ms   96.60%
+    Req/Sec     0.97k   206.85     1.59k    88.52%
+  115837 requests in 15.00s, 48.16MB read
+Requests/sec:   7721.81
+Transfer/sec:      3.21MB
+
+---------------------------------------------------------
+ Queries: 10 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/grails/hello/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    70.47ms  106.37ms 636.70ms   96.34%
+    Req/Sec   610.57    125.70     0.90k    93.99%
+  72996 requests in 15.00s, 49.07MB read
+Requests/sec:   4865.92
+Transfer/sec:      3.27MB
+
+---------------------------------------------------------
+ Queries: 15 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/grails/hello/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.20ms   27.32ms 304.37ms   76.41%
+    Req/Sec   463.86     38.06   597.00     69.79%
+  55327 requests in 15.00s, 51.38MB read
+Requests/sec:   3688.10
+Transfer/sec:      3.42MB
+
+---------------------------------------------------------
+ Queries: 20 for grails
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/grails/hello/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/grails/hello/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.45ms   35.35ms 368.95ms   76.02%
+    Req/Sec   363.71     27.65   533.00     69.57%
+  43498 requests in 15.00s, 51.55MB read
+Requests/sec:   2899.24
+Transfer/sec:      3.44MB

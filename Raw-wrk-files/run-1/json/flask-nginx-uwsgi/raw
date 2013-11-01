@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 20:41:19 PDT 2013
+
+  System load:  0.01               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   651.00us  203.75us   2.53ms   83.64%
+    Req/Sec     1.61k   146.98     2.00k    62.63%
+  61061 requests in 5.00s, 10.54MB read
+Requests/sec:  12212.09
+Transfer/sec:      2.11MB
+
+---------------------------------------------------------
+ Running Warmup flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.05ms    7.21ms  82.05ms   84.70%
+    Req/Sec     9.11k     2.97k   21.55k    66.35%
+  1050195 requests in 15.00s, 300.16MB read
+  Non-2xx or 3xx responses: 848362
+Requests/sec:  70015.69
+Transfer/sec:     20.01MB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   653.85us  206.12us   3.14ms   83.58%
+    Req/Sec     1.60k   145.59     2.00k    64.33%
+  182536 requests in 15.00s, 31.50MB read
+Requests/sec:  12169.18
+Transfer/sec:      2.10MB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.01ms  408.97us   6.98ms   79.25%
+    Req/Sec     2.09k   221.53     3.00k    71.28%
+  236990 requests in 15.00s, 40.90MB read
+Requests/sec:  15799.72
+Transfer/sec:      2.73MB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.89ms    1.43ms  33.31ms   89.57%
+    Req/Sec     2.31k   467.85     5.67k    77.13%
+  263229 requests in 15.00s, 45.42MB read
+Requests/sec:  17548.97
+Transfer/sec:      3.03MB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.68ms    3.77ms  62.95ms   87.93%
+    Req/Sec     2.39k   564.79     5.33k    71.40%
+  271802 requests in 15.00s, 46.90MB read
+Requests/sec:  18120.03
+Transfer/sec:      3.13MB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.85ms    3.97ms  60.49ms   90.17%
+    Req/Sec     2.44k   359.48     3.77k    66.58%
+  282135 requests in 15.00s, 48.69MB read
+Requests/sec:  18807.40
+Transfer/sec:      3.25MB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.01ms    7.12ms  92.73ms   84.24%
+    Req/Sec     9.28k     3.13k   20.67k    66.55%
+  1064312 requests in 15.00s, 304.62MB read
+  Non-2xx or 3xx responses: 862805
+Requests/sec:  70948.91
+Transfer/sec:     20.31MB

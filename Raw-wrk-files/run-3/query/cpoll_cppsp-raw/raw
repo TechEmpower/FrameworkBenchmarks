@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 20:28:33 PDT 2013
+
+  System load:  0.48               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:16969/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:16969/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   591.61us   70.78us   1.05ms   78.57%
+    Req/Sec     1.76k    90.09     2.11k    67.42%
+  66717 requests in 5.00s, 13.78MB read
+Requests/sec:  13342.77
+Transfer/sec:      2.76MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.83ms    1.27ms  40.16ms   87.19%
+    Req/Sec     8.81k   685.75    12.33k    68.08%
+  1000578 requests in 15.00s, 206.65MB read
+Requests/sec:  66706.46
+Transfer/sec:     13.78MB
+
+---------------------------------------------------------
+ Queries: 1 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.49ms  586.54us  32.49ms   89.39%
+    Req/Sec    13.46k     1.15k   23.11k    70.81%
+  1529422 requests in 15.00s, 269.51MB read
+Requests/sec: 101962.53
+Transfer/sec:     17.97MB
+
+---------------------------------------------------------
+ Queries: 5 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.87ms   10.55ms 271.25ms   93.56%
+    Req/Sec     3.67k   405.39     5.95k    72.67%
+  430506 requests in 15.00s, 128.46MB read
+Requests/sec:  28699.37
+Transfer/sec:      8.56MB
+
+---------------------------------------------------------
+ Queries: 10 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.54ms   15.40ms 263.32ms   90.22%
+    Req/Sec     1.82k   169.40     2.71k    71.72%
+  215878 requests in 15.00s, 97.13MB read
+Requests/sec:  14391.27
+Transfer/sec:      6.48MB
+
+---------------------------------------------------------
+ Queries: 15 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.68ms   21.46ms 353.25ms   83.46%
+    Req/Sec     1.21k   122.03     1.74k    72.70%
+  144148 requests in 15.00s, 86.70MB read
+Requests/sec:   9608.03
+Transfer/sec:      5.78MB
+
+---------------------------------------------------------
+ Queries: 20 for cpoll_cppsp-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:16969/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:16969/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.77ms   27.68ms 297.03ms   82.71%
+    Req/Sec     0.91k    79.50     1.21k    70.41%
+  108471 requests in 15.00s, 81.68MB read
+Requests/sec:   7230.48
+Transfer/sec:      5.44MB

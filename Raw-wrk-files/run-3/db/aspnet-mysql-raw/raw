@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 11:15:41 PDT 2013
+
+  System load:  0.0                Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/ado/mysql
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/ado/mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.83ms    4.88ms  43.06ms   98.18%
+    Req/Sec   470.90     87.13   666.00     94.19%
+  17860 requests in 5.00s, 4.82MB read
+Requests/sec:   3571.03
+Transfer/sec:      0.96MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.43ms   12.62ms 246.85ms   88.99%
+    Req/Sec     1.39k   162.38     1.66k    73.09%
+  163714 requests in 15.00s, 44.15MB read
+Requests/sec:  10913.02
+Transfer/sec:      2.94MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/ado/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.27ms    0.87ms  16.46ms   98.99%
+    Req/Sec   475.22     71.04   666.00     53.62%
+  54038 requests in 15.00s, 14.57MB read
+Requests/sec:   3602.11
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/ado/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.05ms  740.98us  14.77ms   97.23%
+    Req/Sec     1.06k   198.74     1.55k    72.06%
+  119813 requests in 15.00s, 32.31MB read
+Requests/sec:   7987.34
+Transfer/sec:      2.15MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/ado/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.96ms    1.60ms  20.73ms   94.57%
+    Req/Sec     1.43k   228.06     1.88k    75.24%
+  163925 requests in 15.00s, 44.21MB read
+Requests/sec:  10927.63
+Transfer/sec:      2.95MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/ado/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.94ms    3.86ms  74.48ms   90.15%
+    Req/Sec     1.39k   223.18     1.89k    69.77%
+  162736 requests in 15.00s, 43.89MB read
+Requests/sec:  10848.83
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/ado/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.79ms    7.70ms 145.83ms   90.94%
+    Req/Sec     1.39k   199.99     1.79k    69.56%
+  163199 requests in 15.00s, 44.01MB read
+Requests/sec:  10878.62
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.52ms    9.50ms 197.18ms   88.59%
+    Req/Sec     1.44k   139.84     1.67k    76.81%
+  169400 requests in 15.00s, 45.68MB read
+Requests/sec:  11291.80
+Transfer/sec:      3.05MB

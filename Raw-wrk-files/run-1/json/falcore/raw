@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 20:12:33 PDT 2013
+
+  System load:  0.03               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   265.89us   81.42us   0.94ms   93.28%
+    Req/Sec     3.92k   182.66     4.44k    50.01%
+  147263 requests in 5.00s, 21.49MB read
+Requests/sec:  29456.23
+Transfer/sec:      4.30MB
+
+---------------------------------------------------------
+ Running Warmup falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.81ms  797.50us  15.25ms   78.31%
+    Req/Sec    18.53k     1.56k   26.78k    78.84%
+  2100844 requests in 15.00s, 306.54MB read
+Requests/sec: 140061.69
+Transfer/sec:     20.44MB
+
+---------------------------------------------------------
+ Concurrency: 8 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   262.03us   79.18us   1.13ms   95.75%
+    Req/Sec     3.98k   237.69     5.11k    38.49%
+  447388 requests in 15.00s, 65.28MB read
+Requests/sec:  29826.54
+Transfer/sec:      4.35MB
+
+---------------------------------------------------------
+ Concurrency: 16 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   262.13us  106.76us   1.36ms   91.25%
+    Req/Sec     7.78k   443.50     9.89k    63.12%
+  885209 requests in 15.00s, 129.16MB read
+Requests/sec:  59016.36
+Transfer/sec:      8.61MB
+
+---------------------------------------------------------
+ Concurrency: 32 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   247.72us  163.20us   7.89ms   94.51%
+    Req/Sec    16.50k     1.36k   20.33k    68.79%
+  1873178 requests in 15.00s, 273.32MB read
+Requests/sec: 124884.22
+Transfer/sec:     18.22MB
+
+---------------------------------------------------------
+ Concurrency: 64 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   453.65us  286.16us   8.13ms   89.62%
+    Req/Sec    18.40k     1.41k   22.67k    68.35%
+  2089638 requests in 15.00s, 304.90MB read
+Requests/sec: 139314.55
+Transfer/sec:     20.33MB
+
+---------------------------------------------------------
+ Concurrency: 128 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms  516.41us  10.60ms   80.70%
+    Req/Sec    18.39k     1.54k   23.11k    67.73%
+  2088577 requests in 15.00s, 304.75MB read
+Requests/sec: 139243.83
+Transfer/sec:     20.32MB
+
+---------------------------------------------------------
+ Concurrency: 256 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.82ms  816.46us  14.85ms   77.70%
+    Req/Sec    18.42k     1.19k   22.89k    65.72%
+  2094889 requests in 15.00s, 305.67MB read
+Requests/sec: 139663.82
+Transfer/sec:     20.38MB

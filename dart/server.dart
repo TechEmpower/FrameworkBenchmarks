@@ -28,11 +28,12 @@ main() {
 /// The entity used in the database query and update tests.
 class World {
   int id;
-  int randomNumber;
 
-  World(this.id, this.randomNumber);
+  int randomnumber;
 
-  toJson() => { 'id': id, 'randomNumber': randomNumber };
+  World(this.id, this.randomnumber);
+
+  toJson() => { 'id': id, 'randomnumber': randomnumber };
 }
 
 /// The entity used in the fortunes test.
@@ -167,7 +168,7 @@ _queryRandom() {
   return _connectionPool.connect()
       .then((connection) {
         return connection.query(
-            'SELECT id, randomNumber FROM world WHERE id = @id;',
+            'SELECT id, randomnumber FROM world WHERE id = @id;',
             { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
             //
             // The benchmark's constraints tell us there is exactly one row.
@@ -216,11 +217,11 @@ _updatesTest(request) {
   Future.wait(new List.generate(queries, (_) {
     return _queryRandom()
         .then((world) {
-          world.randomNumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
+          world.randomnumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
           return _connectionPool.connect().then((connection) {
             return connection.execute(
-                'UPDATE world SET randomNumber = @randomNumber WHERE id = @id;',
-                { 'randomNumber': world.randomNumber, 'id': world.id })
+                'UPDATE world SET randomnumber = @randomnumber WHERE id = @id;',
+                { 'randomnumber': world.randomnumber, 'id': world.id })
                 .whenComplete(() { connection.close(); });
           }).then((_) => world);
         });

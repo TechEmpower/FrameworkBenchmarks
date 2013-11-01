@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 21:19:32 PDT 2013
+
+  System load:  0.2                Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer gemini
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   190.11us   37.66us   2.99ms   72.35%
+    Req/Sec     5.32k   269.19     6.78k    77.04%
+  203320 requests in 5.00s, 29.67MB read
+Requests/sec:  40667.23
+Transfer/sec:      5.93MB
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.18ms  399.62us  19.71ms   96.21%
+    Req/Sec    28.56k     1.79k   35.56k    71.07%
+  3230893 requests in 15.00s, 471.43MB read
+Requests/sec: 215446.47
+Transfer/sec:     31.44MB
+
+---------------------------------------------------------
+ Concurrency: 256 for gemini
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.95ms   15.87ms 469.54ms   97.64%
+    Req/Sec    39.74k     3.33k   49.85k    68.12%
+  4641141 requests in 15.00s, 677.20MB read
+  Socket errors: connect 0, read 0, write 0, timeout 25
+Requests/sec: 309415.34
+Transfer/sec:     45.15MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for gemini
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.44ms  225.13ms   6.19s    96.07%
+    Req/Sec    49.59k     9.31k   74.63k    80.24%
+  5746578 requests in 15.00s, 838.51MB read
+  Socket errors: connect 0, read 36, write 0, timeout 1043
+Requests/sec: 383102.80
+Transfer/sec:     55.90MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for gemini
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.57ms  311.79ms  13.15s    94.39%
+    Req/Sec    51.21k     7.47k   74.52k    70.07%
+  6171663 requests in 15.00s, 0.88GB read
+  Socket errors: connect 0, read 315, write 0, timeout 13015
+Requests/sec: 411371.88
+Transfer/sec:     60.03MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for gemini
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.55s     6.73s   14.57s    64.66%
+    Req/Sec    44.94k    17.95k   92.63k    61.53%
+  5623975 requests in 15.01s, 820.62MB read
+  Socket errors: connect 11, read 2952, write 0, timeout 92183
+Requests/sec: 374639.95
+Transfer/sec:     54.67MB

@@ -1,16 +1,24 @@
-
+import setup_util
 import subprocess
 import sys
 import time
 import os
 
-def start(args=None):
+def start(args):
+  setup_util.replace_text("plain/src/main/resources/application.conf", "127.0.0.1", args.database_host)
+  if os.name == 'nt':
+    subprocess.check_call("./sbt.bat assembly", shell=True, cwd="plain")
+  else:
     subprocess.check_call("./sbt assembly", shell=True, cwd="plain")
-    subprocess.Popen("java -server -Xnoclassgc -XX:MaxPermSize=1g -XX:ReservedCodeCacheSize=384m -Xmx8g -Xss8m -Xmn4g -jar target/scala-2.10/plain-benchmark-assembly-1.0.1.jar", cwd="plain", shell=True)
-    time.sleep(10)
-    return 0
+     
+  subprocess.Popen("java -server -Xnoclassgc -XX:MaxPermSize=1g -XX:ReservedCodeCacheSize=384m -Xmx8g -Xss8m -Xmn4g -Xms6g -XX:+AggressiveOpts -XX:+UseBiasedLocking -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -jar target/scala-2.10/plain-benchmark-assembly-1.0.1.jar", cwd="plain", shell=True)
+  time.sleep(10)
+  return 0
 
 def stop():
+  if os.name == 'nt':
+    subprocess.call("taskkill /f /im *plain-benchmark* > NUL", shell=True)
+    return 0
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():

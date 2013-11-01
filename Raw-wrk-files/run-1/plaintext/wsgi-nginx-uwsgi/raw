@@ -1,0 +1,108 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 09:02:00 PDT 2013
+
+  System load:  0.95               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   258.00us   43.76us 472.00us   68.53%
+    Req/Sec     3.96k   209.78     4.67k    64.63%
+  148721 requests in 5.00s, 22.69MB read
+Requests/sec:  29746.62
+Transfer/sec:      4.54MB
+
+---------------------------------------------------------
+ Running Warmup wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.00ms    9.90ms   1.18s    98.97%
+    Req/Sec    16.85k     2.05k   29.30k    72.27%
+  1883336 requests in 15.00s, 314.83MB read
+  Non-2xx or 3xx responses: 171903
+Requests/sec: 125559.67
+Transfer/sec:     20.99MB
+
+---------------------------------------------------------
+ Concurrency: 256 for wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.00ms   12.44ms 126.68ms   72.92%
+    Req/Sec    17.12k     1.22k   21.52k    71.12%
+  2036081 requests in 15.00s, 368.04MB read
+  Non-2xx or 3xx responses: 358627
+Requests/sec: 135741.83
+Transfer/sec:     24.54MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   135.20ms  264.95ms  13.55s    97.70%
+    Req/Sec    15.09k     2.94k   19.61k    89.92%
+  1770149 requests in 15.00s, 311.45MB read
+  Socket errors: connect 0, read 7, write 0, timeout 453
+  Non-2xx or 3xx responses: 258589
+Requests/sec: 118008.33
+Transfer/sec:     20.76MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   166.66ms  674.97ms  14.48s    99.00%
+    Req/Sec    16.69k     3.64k   22.24k    75.29%
+  1863113 requests in 15.00s, 329.16MB read
+  Socket errors: connect 0, read 784, write 0, timeout 16892
+  Non-2xx or 3xx responses: 280637
+Requests/sec: 124184.24
+Transfer/sec:     21.94MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for wsgi-nginx-uwsgi
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.28s     6.44s   14.92s    71.22%
+    Req/Sec    15.92k     6.87k   52.62k    75.00%
+  1795415 requests in 15.01s, 317.97MB read
+  Socket errors: connect 11, read 2764, write 0, timeout 89336
+  Non-2xx or 3xx responses: 275219
+Requests/sec: 119607.96
+Transfer/sec:     21.18MB

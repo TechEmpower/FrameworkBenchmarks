@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 18:55:57 PDT 2013
+
+  System load:  0.6                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.00ms    1.13ms  16.77ms   89.13%
+    Req/Sec   364.39     76.20   555.00     67.25%
+  13774 requests in 5.00s, 19.15MB read
+Requests/sec:   2753.89
+Transfer/sec:      3.83MB
+
+---------------------------------------------------------
+ Running Warmup bottle-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.69ms   12.63ms 159.73ms   97.13%
+    Req/Sec    13.83k     5.10k   37.33k    68.30%
+  1544182 requests in 15.00s, 513.32MB read
+  Non-2xx or 3xx responses: 1516005
+Requests/sec: 102922.85
+Transfer/sec:     34.21MB
+
+---------------------------------------------------------
+ Concurrency: 8 for bottle-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.97ms    1.06ms  23.24ms   88.58%
+    Req/Sec   364.61     74.04   555.00     68.94%
+  41538 requests in 15.00s, 57.75MB read
+Requests/sec:   2768.70
+Transfer/sec:      3.85MB
+
+---------------------------------------------------------
+ Concurrency: 16 for bottle-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.32ms    4.64ms  89.69ms   90.07%
+    Req/Sec   417.23    123.25   800.00     70.26%
+  48391 requests in 15.00s, 67.28MB read
+Requests/sec:   3225.54
+Transfer/sec:      4.48MB
+
+---------------------------------------------------------
+ Concurrency: 32 for bottle-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.71ms    4.61ms  65.26ms   83.06%
+    Req/Sec   423.96     59.10   666.00     70.98%
+  50046 requests in 15.00s, 69.58MB read
+Requests/sec:   3335.47
+Transfer/sec:      4.64MB
+
+---------------------------------------------------------
+ Concurrency: 64 for bottle-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.28ms    4.57ms  55.70ms   82.43%
+    Req/Sec   421.55     33.04   531.00     68.71%
+  50123 requests in 15.01s, 69.69MB read
+Requests/sec:   3340.20
+Transfer/sec:      4.64MB
+
+---------------------------------------------------------
+ Concurrency: 128 for bottle-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.21ms    4.15ms  78.41ms   83.12%
+    Req/Sec   421.46     19.86   488.00     67.64%
+  50299 requests in 15.00s, 69.94MB read
+Requests/sec:   3352.25
+Transfer/sec:      4.66MB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.47ms   11.78ms 140.88ms   97.28%
+    Req/Sec    13.26k     2.79k   22.94k    73.05%
+  1539089 requests in 15.00s, 511.85MB read
+  Non-2xx or 3xx responses: 1510801
+Requests/sec: 102588.19
+Transfer/sec:     34.12MB

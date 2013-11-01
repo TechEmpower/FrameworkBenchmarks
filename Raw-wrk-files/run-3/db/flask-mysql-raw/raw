@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 22:40:47 PDT 2013
+
+  System load:  0.03               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/dbsraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.05ms  273.15us   2.67ms   81.97%
+    Req/Sec     1.01k   116.55     1.33k    76.48%
+  38220 requests in 5.00s, 7.43MB read
+Requests/sec:   7642.98
+Transfer/sec:      1.49MB
+
+---------------------------------------------------------
+ Running Warmup flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.42ms   10.19ms 160.71ms   74.13%
+    Req/Sec     0.99k    60.82     1.18k    69.31%
+  116859 requests in 15.00s, 22.71MB read
+Requests/sec:   7789.80
+Transfer/sec:      1.51MB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.04ms  260.93us   2.99ms   81.20%
+    Req/Sec     1.01k   115.47     1.33k    76.84%
+  115265 requests in 15.00s, 22.40MB read
+Requests/sec:   7684.23
+Transfer/sec:      1.49MB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.03ms    0.97ms   8.55ms   83.31%
+    Req/Sec     1.09k   239.97     1.89k    72.42%
+  124501 requests in 15.00s, 24.19MB read
+Requests/sec:   8299.68
+Transfer/sec:      1.61MB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.22ms    2.18ms  17.72ms   79.37%
+    Req/Sec     1.04k   259.90     2.11k    68.94%
+  116130 requests in 15.00s, 22.57MB read
+Requests/sec:   7741.55
+Transfer/sec:      1.50MB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.37ms    3.88ms  36.17ms   75.90%
+    Req/Sec     1.00k   171.65     1.76k    69.42%
+  116879 requests in 15.00s, 22.71MB read
+Requests/sec:   7791.19
+Transfer/sec:      1.51MB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.36ms    6.71ms  73.34ms   73.49%
+    Req/Sec     0.99k    92.71     1.36k    71.12%
+  117022 requests in 15.00s, 22.74MB read
+Requests/sec:   7800.86
+Transfer/sec:      1.52MB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/dbsraw
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbsraw
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.03ms   10.51ms 119.05ms   74.96%
+    Req/Sec     1.01k    72.64     1.23k    77.48%
+  116780 requests in 15.00s, 22.69MB read
+Requests/sec:   7784.30
+Transfer/sec:      1.51MB

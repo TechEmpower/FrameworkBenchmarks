@@ -22,19 +22,19 @@ information "Benchmark Suite Deployment: Linux server setup"
 information "******************************************************************************"
 
 BENCHMARK_REMOTE_CONFIGURATION_FILE="$BENCHMARK_WORKING_DIR/benchmark-configuration.sh"
-BENCHMARK_REMOTE_KEY_FILE="~/.ssh/benchmark-key"
+BENCHMARK_REMOTE_KEY_FILE="/home/$BENCHMARK_LINUX_USER/.ssh/benchmark-key"
 
 # Create Linux host configuration script.
 echo ""
 echo "Creating Linux host configuration script at $BENCHMARK_REMOTE_CONFIGURATION_FILE"
 cat >$BENCHMARK_REMOTE_CONFIGURATION_FILE <<_EOF_
 #!/bin/bash
-export BENCHMARK_HOME=~/FrameworkBenchmarks
-export BENCHMARK_SERVER_IP=$BENCHMARK_LINUX_SERVER_IP
-export BENCHMARK_CLIENT_IP=$BENCHMARK_LINUX_CLIENT_IP
-export BENCHMARK_KEY_PATH=$BENCHMARK_REMOTE_KEY_FILE
-export BENCHMARK_REPOSITORY=$BENCHMARK_REPOSITORY
-export BENCHMARK_BRANCH=$BENCHMARK_BRANCH
+export BENCHMARK_HOME="/home/$BENCHMARK_LINUX_USER/FrameworkBenchmarks"
+export BENCHMARK_SERVER_IP="$BENCHMARK_LINUX_SERVER_IP"
+export BENCHMARK_CLIENT_IP="$BENCHMARK_LINUX_CLIENT_IP"
+export BENCHMARK_KEY_PATH="$BENCHMARK_REMOTE_KEY_FILE"
+export BENCHMARK_REPOSITORY="$BENCHMARK_REPOSITORY"
+export BENCHMARK_BRANCH="$BENCHMARK_BRANCH"
 _EOF_
 
 # Upload Linux host configuration script.

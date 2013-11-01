@@ -1,0 +1,108 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer revel-qbs
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://localhost:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.26ms  121.63ms 428.88ms   86.58%
+    Req/Sec    98.39     46.83   208.00     74.47%
+  3931 requests in 5.01s, 662.52KB read
+Requests/sec:    784.83
+Transfer/sec:    132.27KB
+
+---------------------------------------------------------
+ Running Warmup revel-qbs
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   248.06ms  146.79ms   1.19s    81.63%
+    Req/Sec   132.14     21.83   172.00     76.79%
+  15669 requests in 15.01s, 2.58MB read
+Requests/sec:   1044.11
+Transfer/sec:    175.95KB
+
+---------------------------------------------------------
+ Queries: 1 for revel-qbs
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   156.51ms   74.41ms 690.05ms   81.92%
+    Req/Sec   207.99     30.28   275.00     83.67%
+  24822 requests in 15.00s, 3.29MB read
+Requests/sec:   1654.65
+Transfer/sec:    224.25KB
+
+---------------------------------------------------------
+ Queries: 5 for revel-qbs
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   622.72ms  225.67ms   1.83s    77.76%
+    Req/Sec    51.57      6.42    64.00     50.94%
+  6073 requests in 15.04s, 1.56MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:    403.81
+Transfer/sec:    106.03KB
+
+---------------------------------------------------------
+ Queries: 10 for revel-qbs
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14s   244.37ms   2.27s    80.78%
+    Req/Sec    28.13      3.28    33.00     69.09%
+  3231 requests in 15.04s, 1.32MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:    214.76
+Transfer/sec:     89.72KB
+
+---------------------------------------------------------
+ Queries: 15 for revel-qbs
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.66s   417.46ms   4.86s    86.16%
+    Req/Sec    18.03      2.12    22.00     68.75%
+  2211 requests in 15.28s, 1.24MB read
+  Socket errors: connect 0, read 0, write 0, timeout 52
+Requests/sec:    144.70
+Transfer/sec:     82.91KB
+
+---------------------------------------------------------
+ Queries: 20 for revel-qbs
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.41s   472.42ms   3.91s    69.64%
+    Req/Sec    13.21      1.32    16.00     75.00%
+  1493 requests in 15.43s, 1.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 367
+Requests/sec:     96.78
+Transfer/sec:     70.46KB

@@ -52,7 +52,7 @@
       "framework": "tornado",
       "language": "Python",
       "orm": "Raw",
-      "platform": "Tornado",
+      "platform": "pypy",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",

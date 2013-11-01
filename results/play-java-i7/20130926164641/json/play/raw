@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 16:48:02 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   650.93us    1.45ms  19.58ms   98.25%
+    Req/Sec     2.44k     0.95k    3.89k    67.54%
+  84868 requests in 5.00s, 9.06MB read
+Requests/sec:  16975.29
+Transfer/sec:      1.81MB
+
+---------------------------------------------------------
+ Running Warmup play
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.28ms    6.71ms 643.22ms   97.84%
+    Req/Sec     7.89k     1.12k   15.56k    79.01%
+  891422 requests in 15.00s, 95.21MB read
+Requests/sec:  59430.24
+Transfer/sec:      6.35MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   337.33us  444.14us  15.56ms   99.54%
+    Req/Sec     3.21k   321.39     4.00k    87.29%
+  363707 requests in 15.00s, 38.85MB read
+Requests/sec:  24247.50
+Transfer/sec:      2.59MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   390.03us  666.12us  20.10ms   99.28%
+    Req/Sec     5.72k   720.91     7.00k    86.07%
+  649910 requests in 15.00s, 69.42MB read
+Requests/sec:  43328.53
+Transfer/sec:      4.63MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   581.66us  675.24us  16.37ms   98.06%
+    Req/Sec     7.54k     0.97k   10.11k    78.36%
+  856028 requests in 15.00s, 91.43MB read
+Requests/sec:  57069.87
+Transfer/sec:      6.10MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms    1.26ms  24.48ms   97.74%
+    Req/Sec     7.74k     1.12k   11.22k    84.67%
+  882360 requests in 15.00s, 94.25MB read
+Requests/sec:  58826.76
+Transfer/sec:      6.28MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.52ms    4.94ms  71.72ms   98.48%
+    Req/Sec     7.82k     1.21k   12.20k    84.10%
+  888642 requests in 15.00s, 94.92MB read
+Requests/sec:  59245.17
+Transfer/sec:      6.33MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.38ms    9.31ms 636.79ms   99.14%
+    Req/Sec     7.87k     1.12k   12.11k    76.03%
+  893698 requests in 15.00s, 95.46MB read
+Requests/sec:  59582.44
+Transfer/sec:      6.36MB

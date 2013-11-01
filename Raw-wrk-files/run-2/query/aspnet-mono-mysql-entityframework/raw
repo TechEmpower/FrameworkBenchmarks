@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 17:57:26 PDT 2013
+
+  System load:  0.0                Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/entityframework/mysql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/entityframework/mysql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.34ms   37.15ms 109.02ms   84.60%
+    Req/Sec    57.36     89.52   294.00     72.19%
+  2112 requests in 6.00s, 744.11KB read
+  Socket errors: connect 0, read 2, write 0, timeout 11
+  Non-2xx or 3xx responses: 39
+Requests/sec:    351.87
+Transfer/sec:    123.97KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/mysql?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   416.38ms  699.96ms   4.69s    76.85%
+    Req/Sec   105.31     74.92   365.00     64.71%
+  13405 requests in 16.00s, 4.62MB read
+  Socket errors: connect 0, read 265, write 0, timeout 1241
+  Non-2xx or 3xx responses: 2415
+Requests/sec:    837.75
+Transfer/sec:    295.61KB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/mysql?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   515.37ms  526.78ms   1.23s    56.90%
+    Req/Sec   100.52     94.97   300.00     35.39%
+  12699 requests in 16.00s, 4.06MB read
+  Socket errors: connect 0, read 232, write 0, timeout 1431
+  Non-2xx or 3xx responses: 2135
+Requests/sec:    793.45
+Transfer/sec:    259.57KB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/mysql?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   461.74ms    1.26s    7.64s    95.22%
+    Req/Sec    82.57     38.94   308.00     75.73%
+  9616 requests in 15.03s, 4.06MB read
+  Socket errors: connect 0, read 162, write 0, timeout 588
+  Non-2xx or 3xx responses: 1398
+Requests/sec:    639.73
+Transfer/sec:    276.40KB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/mysql?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   653.45ms    1.01s    6.20s    84.15%
+    Req/Sec    41.03     16.56    82.00     65.85%
+  4966 requests in 15.09s, 2.65MB read
+  Socket errors: connect 0, read 28, write 0, timeout 522
+  Non-2xx or 3xx responses: 1016
+Requests/sec:    329.11
+Transfer/sec:    179.63KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/mysql?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   825.14ms    1.62s   10.45s    87.29%
+    Req/Sec    33.48     15.81   108.00     75.17%
+  4000 requests in 15.05s, 2.72MB read
+  Socket errors: connect 0, read 25, write 0, timeout 936
+  Non-2xx or 3xx responses: 541
+Requests/sec:    265.76
+Transfer/sec:    185.20KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-mono-mysql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/mysql?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/mysql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.62s     2.84s    9.72s    76.39%
+    Req/Sec    18.42     11.06    54.00     72.11%
+  2379 requests in 15.05s, 1.83MB read
+  Socket errors: connect 0, read 16, write 0, timeout 787
+  Non-2xx or 3xx responses: 508
+Requests/sec:    158.10
+Transfer/sec:    124.29KB

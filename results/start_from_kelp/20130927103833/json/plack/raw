@@ -1,0 +1,120 @@
+Welcome to Ubuntu 13.04 (GNU/Linux 3.8.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+ System information disabled due to load higher than 1.0
+
+
+---------------------------------------------------------
+ Running Primer plack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.35ms   31.37ms  76.20ms   72.57%
+    Req/Sec   568.50    435.33     1.55k    55.05%
+  21994 requests in 5.00s, 3.96MB read
+Requests/sec:   4398.23
+Transfer/sec:    811.78KB
+
+---------------------------------------------------------
+ Running Warmup plack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.08s     1.78s    5.14s    84.42%
+    Req/Sec   607.16      1.47k    8.44k    86.95%
+  68492 requests in 15.06s, 12.35MB read
+  Socket errors: connect 0, read 0, write 0, timeout 539
+Requests/sec:   4549.26
+Transfer/sec:    839.66KB
+
+---------------------------------------------------------
+ Concurrency: 8 for plack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.46ms   29.05ms  71.28ms   74.00%
+    Req/Sec   606.84    463.78     1.67k    47.17%
+  69166 requests in 15.00s, 12.47MB read
+Requests/sec:   4610.77
+Transfer/sec:    851.01KB
+
+---------------------------------------------------------
+ Concurrency: 16 for plack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.25ms   79.54ms 174.15ms   61.80%
+    Req/Sec   610.25    629.64     3.22k    88.32%
+  69407 requests in 15.00s, 12.51MB read
+Requests/sec:   4626.55
+Transfer/sec:    853.92KB
+
+---------------------------------------------------------
+ Concurrency: 32 for plack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   167.36ms  178.73ms 371.38ms   56.78%
+    Req/Sec   588.97    645.51     4.11k    88.14%
+  67033 requests in 15.00s, 12.08MB read
+Requests/sec:   4468.33
+Transfer/sec:    824.72KB
+
+---------------------------------------------------------
+ Concurrency: 64 for plack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   513.21ms  477.53ms   1.06s    28.92%
+    Req/Sec   598.80    806.95     7.55k    86.86%
+  68538 requests in 15.01s, 12.35MB read
+Requests/sec:   4567.44
+Transfer/sec:    843.01KB
+
+---------------------------------------------------------
+ Concurrency: 128 for plack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.92s   631.10ms   2.43s    90.45%
+    Req/Sec   546.79      1.05k    8.22k    85.76%
+  63210 requests in 15.01s, 11.39MB read
+Requests/sec:   4209.84
+Transfer/sec:    777.01KB
+
+---------------------------------------------------------
+ Concurrency: 256 for plack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://localhost:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://localhost:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.09s     1.38s    4.99s    90.13%
+    Req/Sec   588.56      1.38k    9.11k    87.02%
+  67298 requests in 15.04s, 12.13MB read
+  Socket errors: connect 0, read 0, write 0, timeout 543
+Requests/sec:   4474.37
+Transfer/sec:    825.84KB

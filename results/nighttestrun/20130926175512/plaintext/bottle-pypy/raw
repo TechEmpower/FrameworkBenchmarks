@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Sep 26 19:30:40 PDT 2013
+
+  System load:  0.01               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+36 packages can be updated.
+11 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   108.44ms  301.55ms   1.20s    88.17%
+    Req/Sec     4.03k     1.50k    5.44k    88.02%
+  125542 requests in 5.00s, 12.57MB read
+Requests/sec:  25110.18
+Transfer/sec:      2.51MB
+
+---------------------------------------------------------
+ Running Warmup bottle-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.15ms   18.67ms   2.45s    96.94%
+    Req/Sec    11.04k     4.07k   30.11k    70.90%
+  1236800 requests in 15.00s, 123.85MB read
+Requests/sec:  82469.17
+Transfer/sec:      8.26MB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   102.16ms  263.25ms   1.67s    94.51%
+    Req/Sec    11.38k     7.40k   30.27k    71.43%
+  1339121 requests in 15.00s, 134.09MB read
+Requests/sec:  89276.36
+Transfer/sec:      8.94MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for bottle-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.77s     2.60s    6.11s    73.55%
+    Req/Sec     8.19k     5.64k   22.72k    58.39%
+  1001900 requests in 15.00s, 100.33MB read
+  Socket errors: connect 0, read 63, write 0, timeout 655
+Requests/sec:  66793.54
+Transfer/sec:      6.69MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for bottle-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.03s     3.26s    7.48s    65.11%
+    Req/Sec     9.04k     4.85k   21.39k    67.74%
+  1069946 requests in 15.00s, 107.14MB read
+  Socket errors: connect 0, read 87, write 0, timeout 8758
+Requests/sec:  71315.53
+Transfer/sec:      7.14MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for bottle-pypy
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.11s     1.94s    7.33s    74.62%
+    Req/Sec    10.00k     1.78k   13.48k    72.25%
+  1197301 requests in 15.01s, 119.89MB read
+  Socket errors: connect 11, read 1056, write 0, timeout 44835
+Requests/sec:  79759.92
+Transfer/sec:      7.99MB

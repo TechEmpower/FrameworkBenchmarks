@@ -22,9 +22,10 @@ def start(args):
     return 0
 
 def stop():
-    global proc
-    if proc is None:
-        return 0
-    proc.terminate()
-    proc = None
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'FrameworkBenchmarks/installs/py2/bin/' in line:
+        pid = int(line.split(None,2)[1])
+        os.kill(pid, 9)
     return 0

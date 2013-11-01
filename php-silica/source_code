@@ -1,0 +1,4 @@
+./php-silica/web
+./php-silica/web/.htaccess
+./php-silica/web/app.php
+./php-silica/deploy/php-silica

@@ -1,0 +1,16 @@
+./php-yaf/app/Bootstrap.php
+./php-yaf/app/controllers/
+./php-yaf/app/controllers/Index.php
+./php-yaf/app/modules/
+./php-yaf/app/modules/Bench
+./php-yaf/app/modules/Bench/controllers
+./php-yaf/app/modules/Bench/controllers/Raw.php
+./php-yaf/app/modules/Bench/views
+./php-yaf/app/modules/Bench/views/raw
+./php-yaf/app/modules/Bench/views/raw/fortunes.phtml
+./php-yaf/app/views/
+./php-yaf/app/views/layouts
+./php-yaf/app/views/layouts/fortunes.phtml
+./php-yaf/public/
+./php-yaf/public/index.php
+./php-yaf/public/favicon.ico

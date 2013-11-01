@@ -1,0 +1,5 @@
+./bottle/app.py
+./bottle/views/
+./bottle/views/fortune.tpl
+./bottle/views/fortune-obj.tpl
+./bottle/views/layout.tpl

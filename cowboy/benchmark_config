@@ -19,6 +19,7 @@
       "database_os": "Linux",
       "display_name": "cowboy",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "skip": "true"
   }}]
 }

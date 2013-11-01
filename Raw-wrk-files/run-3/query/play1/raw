@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 16:40:32 PDT 2013
+
+  System load:  0.25               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.24ms  232.87us   3.72ms   82.88%
+    Req/Sec   848.60     89.74     1.11k    76.07%
+  31925 requests in 5.00s, 12.93MB read
+Requests/sec:   6383.72
+Transfer/sec:      2.58MB
+
+---------------------------------------------------------
+ Running Warmup play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.99ms   20.24ms   1.51s    99.76%
+    Req/Sec     1.06k   126.22     1.89k    81.25%
+  124757 requests in 15.00s, 50.51MB read
+Requests/sec:   8316.15
+Transfer/sec:      3.37MB
+
+---------------------------------------------------------
+ Queries: 1 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.66ms   85.32ms   1.65s    99.67%
+    Req/Sec     1.41k   234.70     2.28k    78.60%
+  165012 requests in 15.00s, 61.81MB read
+Requests/sec:  10999.95
+Transfer/sec:      4.12MB
+
+---------------------------------------------------------
+ Queries: 5 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    58.24ms   26.61ms   1.62s    98.52%
+    Req/Sec   552.62     85.03     0.94k    78.92%
+  65695 requests in 15.00s, 32.64MB read
+Requests/sec:   4378.67
+Transfer/sec:      2.18MB
+
+---------------------------------------------------------
+ Queries: 10 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   116.45ms   40.14ms   1.57s    95.86%
+    Req/Sec   274.44     47.21   459.00     68.45%
+  32831 requests in 15.03s, 21.28MB read
+Requests/sec:   2184.83
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Queries: 15 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   172.89ms   27.68ms 705.33ms   92.66%
+    Req/Sec   183.02     26.58   340.00     77.35%
+  21937 requests in 15.02s, 17.55MB read
+Requests/sec:   1460.92
+Transfer/sec:      1.17MB
+
+---------------------------------------------------------
+ Queries: 20 for play1
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   230.17ms   36.10ms 761.72ms   94.90%
+    Req/Sec   136.85     16.19   193.00     71.71%
+  16398 requests in 15.05s, 15.60MB read
+Requests/sec:   1089.64
+Transfer/sec:      1.04MB

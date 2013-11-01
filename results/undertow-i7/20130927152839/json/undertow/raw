@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 15:30:08 PDT 2013
+
+  System load:  0.01               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+40 packages can be updated.
+12 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer undertow
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   192.43us  134.04us  10.39ms   99.86%
+    Req/Sec     5.29k   417.19     6.78k    92.83%
+  194615 requests in 5.00s, 35.64MB read
+Requests/sec:  38926.26
+Transfer/sec:      7.13MB
+
+---------------------------------------------------------
+ Running Warmup undertow
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.29ms    3.65ms 624.08ms   99.77%
+    Req/Sec    26.45k     2.43k   38.44k    94.29%
+  2987918 requests in 15.00s, 547.10MB read
+Requests/sec: 199228.16
+Transfer/sec:     36.48MB
+
+---------------------------------------------------------
+ Concurrency: 8 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   190.71us   46.10us   6.28ms   76.82%
+    Req/Sec     5.27k   274.51     6.78k    64.03%
+  607520 requests in 15.00s, 111.24MB read
+Requests/sec:  40502.32
+Transfer/sec:      7.42MB
+
+---------------------------------------------------------
+ Concurrency: 16 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   188.97us   88.84us   8.71ms   94.42%
+    Req/Sec    10.71k   726.55    13.56k    72.21%
+  1216913 requests in 15.00s, 222.82MB read
+Requests/sec:  81129.97
+Transfer/sec:     14.86MB
+
+---------------------------------------------------------
+ Concurrency: 32 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   191.46us  181.03us   9.43ms   98.22%
+    Req/Sec    21.47k     2.13k   26.22k    82.80%
+  2436221 requests in 15.00s, 446.09MB read
+Requests/sec: 162423.15
+Transfer/sec:     29.74MB
+
+---------------------------------------------------------
+ Concurrency: 64 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   320.73us  177.06us   9.25ms   95.37%
+    Req/Sec    26.04k     2.14k   30.78k    79.17%
+  2947756 requests in 15.00s, 539.75MB read
+Requests/sec: 196538.14
+Transfer/sec:     35.99MB
+
+---------------------------------------------------------
+ Concurrency: 128 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   643.71us  291.10us  11.52ms   97.01%
+    Req/Sec    26.21k     2.28k   34.33k    93.62%
+  2964360 requests in 15.00s, 542.79MB read
+Requests/sec: 197633.47
+Transfer/sec:     36.19MB
+
+---------------------------------------------------------
+ Concurrency: 256 for undertow
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.35ms    4.42ms 621.32ms   99.78%
+    Req/Sec    26.51k     2.62k   42.00k    94.91%
+  2992743 requests in 15.00s, 547.99MB read
+Requests/sec: 199556.58
+Transfer/sec:     36.54MB

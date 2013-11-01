@@ -1,0 +1,144 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 18:44:33 PDT 2013
+
+  System load:  0.05               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servicestack-nginx-default
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   697.28ms  871.09ms   1.79s    61.07%
+    Req/Sec    36.36    145.02   800.00     93.94%
+  4413 requests in 6.00s, 1.17MB read
+  Socket errors: connect 0, read 1, write 0, timeout 8
+  Non-2xx or 3xx responses: 45
+Requests/sec:    735.34
+Transfer/sec:    199.50KB
+
+---------------------------------------------------------
+ Running Warmup servicestack-nginx-default
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   385.25ms  638.98ms   2.32s    90.51%
+    Req/Sec   147.86    227.03   771.00     75.69%
+  20100 requests in 16.00s, 5.41MB read
+  Socket errors: connect 0, read 127, write 0, timeout 1614
+  Non-2xx or 3xx responses: 1342
+Requests/sec:   1255.99
+Transfer/sec:    346.34KB
+
+---------------------------------------------------------
+ Concurrency: 8 for servicestack-nginx-default
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.94ms    2.16ms  37.26ms   88.08%
+    Req/Sec    83.60    213.77   777.00     86.51%
+  10382 requests in 16.00s, 2.75MB read
+  Socket errors: connect 0, read 1, write 0, timeout 48
+  Non-2xx or 3xx responses: 36
+Requests/sec:    648.77
+Transfer/sec:    175.67KB
+
+---------------------------------------------------------
+ Concurrency: 16 for servicestack-nginx-default
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.61ms   10.89ms  35.56ms   86.42%
+    Req/Sec    94.67    226.76   777.00     84.95%
+  10385 requests in 16.00s, 2.75MB read
+  Socket errors: connect 0, read 9, write 0, timeout 104
+  Non-2xx or 3xx responses: 102
+Requests/sec:    648.96
+Transfer/sec:    175.95KB
+
+---------------------------------------------------------
+ Concurrency: 32 for servicestack-nginx-default
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.19ms    9.73ms  45.42ms   87.99%
+    Req/Sec   110.50    244.03     1.36k    82.61%
+  11836 requests in 16.00s, 3.14MB read
+  Socket errors: connect 0, read 12, write 0, timeout 214
+  Non-2xx or 3xx responses: 283
+Requests/sec:    739.64
+Transfer/sec:    201.17KB
+
+---------------------------------------------------------
+ Concurrency: 64 for servicestack-nginx-default
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    94.66ms   41.03ms 124.89ms   83.77%
+    Req/Sec    98.59    233.90     1.08k    85.52%
+  13894 requests in 16.00s, 3.75MB read
+  Socket errors: connect 0, read 52, write 0, timeout 434
+  Non-2xx or 3xx responses: 1533
+Requests/sec:    868.30
+Transfer/sec:    240.17KB
+
+---------------------------------------------------------
+ Concurrency: 128 for servicestack-nginx-default
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   116.35ms   56.77ms 161.68ms   80.90%
+    Req/Sec    97.15    213.34     1.25k    84.72%
+  13505 requests in 16.00s, 3.67MB read
+  Socket errors: connect 0, read 67, write 0, timeout 873
+  Non-2xx or 3xx responses: 1900
+Requests/sec:    843.98
+Transfer/sec:    235.14KB
+
+---------------------------------------------------------
+ Concurrency: 256 for servicestack-nginx-default
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.81s     1.41s    3.09s    62.43%
+    Req/Sec   138.07    221.67   704.00     81.03%
+  17440 requests in 16.00s, 4.84MB read
+  Socket errors: connect 0, read 162, write 0, timeout 1452
+  Non-2xx or 3xx responses: 4103
+Requests/sec:   1089.66
+Transfer/sec:    309.48KB

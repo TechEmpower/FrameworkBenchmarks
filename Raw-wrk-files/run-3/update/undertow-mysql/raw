@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 23:08:53 PDT 2013
+
+  System load:  0.68               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer undertow-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/updates/mysql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/updates/mysql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.08ms  725.53us  21.75ms   99.19%
+    Req/Sec     1.00k   127.82     1.33k    87.90%
+  37992 requests in 5.00s, 8.32MB read
+Requests/sec:   7597.50
+Transfer/sec:      1.66MB
+
+---------------------------------------------------------
+ Running Warmup undertow-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/mysql?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/mysql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.81ms    8.20ms 214.07ms   78.29%
+    Req/Sec     2.77k   362.69     4.11k    70.95%
+  324659 requests in 15.00s, 71.08MB read
+Requests/sec:  21643.12
+Transfer/sec:      4.74MB
+
+---------------------------------------------------------
+ Queries: 1 for undertow-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/mysql?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/mysql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.67ms   80.55ms   1.52s    99.25%
+    Req/Sec     5.47k     1.38k   10.56k    79.79%
+  626781 requests in 15.00s, 118.22MB read
+Requests/sec:  41786.22
+Transfer/sec:      7.88MB
+
+---------------------------------------------------------
+ Queries: 5 for undertow-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/mysql?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/mysql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.99ms   32.71ms   1.50s    97.97%
+    Req/Sec     1.11k   125.61     2.19k    80.03%
+  131728 requests in 15.00s, 40.94MB read
+Requests/sec:   8781.09
+Transfer/sec:      2.73MB
+
+---------------------------------------------------------
+ Queries: 10 for undertow-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/mysql?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/mysql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.96ms   30.55ms 692.97ms   88.33%
+    Req/Sec   543.04     48.54   645.00     85.29%
+  64967 requests in 15.00s, 30.04MB read
+Requests/sec:   4330.64
+Transfer/sec:      2.00MB
+
+---------------------------------------------------------
+ Queries: 15 for undertow-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/mysql?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/mysql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    89.39ms   47.68ms 782.86ms   91.63%
+    Req/Sec   364.76     43.84   460.00     85.61%
+  43714 requests in 15.01s, 26.83MB read
+Requests/sec:   2912.54
+Transfer/sec:      1.79MB
+
+---------------------------------------------------------
+ Queries: 20 for undertow-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/mysql?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/mysql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   119.65ms   49.04ms 871.77ms   90.50%
+    Req/Sec   272.33     25.62   372.00     87.76%
+  32700 requests in 15.01s, 25.03MB read
+Requests/sec:   2178.78
+Transfer/sec:      1.67MB

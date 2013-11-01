@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 10:56:33 PDT 2013
+
+  System load:  0.01               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/dbraw?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/dbraw?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.57ms   21.21ms 130.14ms   95.33%
+    Req/Sec   544.04    162.91   800.00     87.20%
+  20165 requests in 5.00s, 3.49MB read
+Requests/sec:   4032.19
+Transfer/sec:    714.95KB
+
+---------------------------------------------------------
+ Running Warmup flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/dbraw?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbraw?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    58.17ms   65.59ms 868.35ms   89.38%
+    Req/Sec   610.89    182.21     1.21k    68.78%
+  72129 requests in 15.01s, 12.49MB read
+Requests/sec:   4806.42
+Transfer/sec:    852.20KB
+
+---------------------------------------------------------
+ Queries: 1 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/dbraw?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbraw?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    37.99ms   36.27ms 541.36ms   89.39%
+    Req/Sec     0.90k   245.12     2.06k    66.79%
+  105810 requests in 15.01s, 14.71MB read
+Requests/sec:   7051.23
+Transfer/sec:      0.98MB
+
+---------------------------------------------------------
+ Queries: 5 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/dbraw?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbraw?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    89.46ms  109.55ms   1.03s    92.06%
+    Req/Sec   385.93     99.69   715.00     75.44%
+  45662 requests in 15.00s, 12.62MB read
+Requests/sec:   3043.25
+Transfer/sec:    861.58KB
+
+---------------------------------------------------------
+ Queries: 10 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/dbraw?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbraw?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   138.18ms  109.94ms 852.16ms   62.69%
+    Req/Sec   238.35     68.69   460.00     72.04%
+  28144 requests in 15.01s, 12.58MB read
+Requests/sec:   1874.87
+Transfer/sec:    858.32KB
+
+---------------------------------------------------------
+ Queries: 15 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/dbraw?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbraw?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   192.01ms  156.70ms   1.00s    69.93%
+    Req/Sec   176.57     42.41   276.00     65.40%
+  20413 requests in 15.01s, 12.61MB read
+Requests/sec:   1359.52
+Transfer/sec:    859.94KB
+
+---------------------------------------------------------
+ Queries: 20 for flask-pypy-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/dbraw?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dbraw?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   247.96ms  179.38ms 859.04ms   57.84%
+    Req/Sec   138.63     42.48   248.00     61.41%
+  15942 requests in 15.01s, 12.57MB read
+Requests/sec:   1062.07
+Transfer/sec:    857.32KB

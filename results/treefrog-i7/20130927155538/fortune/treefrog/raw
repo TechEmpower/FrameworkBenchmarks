@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 16:03:25 PDT 2013
+
+  System load:  0.04               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+40 packages can be updated.
+12 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer treefrog
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/fortune/index
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/fortune/index
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.33ms  294.54us   5.25ms   76.40%
+    Req/Sec   450.50     56.54   600.00     85.35%
+  17116 requests in 5.00s, 25.76MB read
+Requests/sec:   3422.44
+Transfer/sec:      5.15MB
+
+---------------------------------------------------------
+ Running Warmup treefrog
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/fortune/index
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune/index
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    92.75ms   30.52ms 703.84ms   76.80%
+    Req/Sec   345.57     41.41   468.00     81.45%
+  41395 requests in 15.01s, 62.30MB read
+Requests/sec:   2758.29
+Transfer/sec:      4.15MB
+
+---------------------------------------------------------
+ Concurrency: 8 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/fortune/index
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune/index
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.82ms   14.73ms 148.48ms   98.96%
+    Req/Sec   450.87     74.30   666.00     82.49%
+  51365 requests in 15.00s, 77.30MB read
+Requests/sec:   3424.15
+Transfer/sec:      5.15MB
+
+---------------------------------------------------------
+ Concurrency: 16 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/fortune/index
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune/index
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.30ms    1.48ms  22.81ms   94.07%
+    Req/Sec   398.89     66.64   545.00     86.77%
+  45867 requests in 15.00s, 69.03MB read
+Requests/sec:   3057.29
+Transfer/sec:      4.60MB
+
+---------------------------------------------------------
+ Concurrency: 32 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/fortune/index
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune/index
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.01ms   11.80ms 142.41ms   98.45%
+    Req/Sec   368.12     53.63   533.00     79.02%
+  43480 requests in 15.00s, 65.43MB read
+Requests/sec:   2897.78
+Transfer/sec:      4.36MB
+
+---------------------------------------------------------
+ Concurrency: 64 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/fortune/index
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune/index
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.79ms    5.96ms  71.24ms   71.15%
+    Req/Sec   371.98     30.13   462.00     68.15%
+  44304 requests in 15.00s, 66.67MB read
+Requests/sec:   2952.65
+Transfer/sec:      4.44MB
+
+---------------------------------------------------------
+ Concurrency: 128 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/fortune/index
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune/index
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.90ms   15.03ms 199.76ms   79.69%
+    Req/Sec   359.64     37.76   439.00     82.22%
+  43037 requests in 15.01s, 64.77MB read
+Requests/sec:   2866.51
+Transfer/sec:      4.31MB
+
+---------------------------------------------------------
+ Concurrency: 256 for treefrog
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/fortune/index
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/fortune/index
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    92.13ms   33.63ms 712.67ms   80.16%
+    Req/Sec   349.61     48.05   556.00     71.91%
+  41622 requests in 15.01s, 62.64MB read
+Requests/sec:   2773.34
+Transfer/sec:      4.17MB

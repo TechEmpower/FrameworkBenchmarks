@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 09:05:09 PDT 2013
+
+  System load:  0.28               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/bench/raw/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/bench/raw/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   384.62us   73.39us   0.99ms   73.85%
+    Req/Sec     2.69k   171.54     3.22k    60.62%
+  100914 requests in 5.00s, 21.55MB read
+Requests/sec:  20183.58
+Transfer/sec:      4.31MB
+
+---------------------------------------------------------
+ Running Warmup yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/bench/raw/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.67ms   23.11ms   1.80s    99.55%
+    Req/Sec     3.30k   319.89     5.11k    77.08%
+  387657 requests in 15.00s, 82.79MB read
+Requests/sec:  25843.27
+Transfer/sec:      5.52MB
+
+---------------------------------------------------------
+ Concurrency: 8 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/bench/raw/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   384.39us   83.39us   7.94ms   79.97%
+    Req/Sec     2.70k   158.30     3.22k    62.40%
+  306584 requests in 15.00s, 65.48MB read
+Requests/sec:  20439.11
+Transfer/sec:      4.37MB
+
+---------------------------------------------------------
+ Concurrency: 16 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/bench/raw/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   586.19us  307.24us   7.94ms   89.37%
+    Req/Sec     3.59k   385.47     5.00k    70.04%
+  407676 requests in 15.00s, 87.07MB read
+Requests/sec:  27179.45
+Transfer/sec:      5.80MB
+
+---------------------------------------------------------
+ Concurrency: 32 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/bench/raw/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.14ms  527.17us  14.13ms   74.96%
+    Req/Sec     3.75k   614.48     6.78k    70.38%
+  425602 requests in 15.00s, 90.90MB read
+Requests/sec:  28374.82
+Transfer/sec:      6.06MB
+
+---------------------------------------------------------
+ Concurrency: 64 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/bench/raw/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.37ms    1.12ms  34.25ms   79.51%
+    Req/Sec     3.57k   419.20     6.55k    68.62%
+  404232 requests in 15.00s, 86.33MB read
+Requests/sec:  26950.13
+Transfer/sec:      5.76MB
+
+---------------------------------------------------------
+ Concurrency: 128 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/bench/raw/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.97ms    3.67ms 137.19ms   89.08%
+    Req/Sec     3.33k   367.97     7.45k    77.43%
+  386645 requests in 15.00s, 82.58MB read
+Requests/sec:  25776.85
+Transfer/sec:      5.51MB
+
+---------------------------------------------------------
+ Concurrency: 256 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/bench/raw/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.76ms   39.33ms 750.51ms   99.61%
+    Req/Sec     3.30k   439.75     7.11k    86.21%
+  382541 requests in 15.00s, 81.70MB read
+Requests/sec:  25504.20
+Transfer/sec:      5.45MB

@@ -1,5 +1,5 @@
 {
-  "framework": "kohana",
+  "framework": "php-kohana",
   "tests": [{
     "default": {
       "setup_file": "setup",

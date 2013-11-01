@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 20:25:02 PDT 2013
+
+  System load:  0.01               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms  724.57us  15.87ms   99.49%
+    Req/Sec     1.19k   147.02     2.00k    87.79%
+  44722 requests in 5.00s, 8.62MB read
+Requests/sec:   8944.53
+Transfer/sec:      1.72MB
+
+---------------------------------------------------------
+ Running Warmup django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.16ms   18.89ms 116.55ms   63.51%
+    Req/Sec     1.11k   322.76     2.67k    73.86%
+  134660 requests in 15.00s, 25.94MB read
+Requests/sec:   8975.45
+Transfer/sec:      1.73MB
+
+---------------------------------------------------------
+ Concurrency: 8 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms  749.07us  19.83ms   99.49%
+    Req/Sec     1.20k   139.67     2.11k    89.75%
+  136941 requests in 15.00s, 26.38MB read
+Requests/sec:   9129.23
+Transfer/sec:      1.76MB
+
+---------------------------------------------------------
+ Concurrency: 16 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.79ms    1.54ms  29.88ms   98.18%
+    Req/Sec     1.23k   310.62     2.33k    72.00%
+  139508 requests in 15.00s, 26.88MB read
+Requests/sec:   9300.34
+Transfer/sec:      1.79MB
+
+---------------------------------------------------------
+ Concurrency: 32 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.30ms    4.53ms  33.99ms   88.72%
+    Req/Sec     1.32k   624.90     3.89k    75.14%
+  136372 requests in 15.00s, 26.27MB read
+Requests/sec:   9091.10
+Transfer/sec:      1.75MB
+
+---------------------------------------------------------
+ Concurrency: 64 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.63ms    9.08ms  52.43ms   81.03%
+    Req/Sec     1.19k   374.04     2.22k    63.68%
+  135583 requests in 15.00s, 26.12MB read
+Requests/sec:   9038.34
+Transfer/sec:      1.74MB
+
+---------------------------------------------------------
+ Concurrency: 128 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.86ms   16.46ms 100.09ms   81.39%
+    Req/Sec     1.15k   470.65     2.60k    77.35%
+  134625 requests in 15.00s, 25.93MB read
+Requests/sec:   8974.69
+Transfer/sec:      1.73MB
+
+---------------------------------------------------------
+ Concurrency: 256 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.41ms   17.58ms 109.94ms   60.71%
+    Req/Sec     1.17k   232.10     2.06k    76.01%
+  136049 requests in 15.00s, 26.21MB read
+Requests/sec:   9068.59
+Transfer/sec:      1.75MB

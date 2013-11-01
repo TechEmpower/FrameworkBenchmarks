@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 03:38:28 PDT 2013
+
+  System load:  0.44               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/restexpress/mongodb?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/restexpress/mongodb?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   749.87us  124.87us   2.86ms   77.82%
+    Req/Sec     1.39k    82.99     1.67k    67.84%
+  52545 requests in 5.00s, 4.86MB read
+Requests/sec:  10508.48
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Running Warmup restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/restexpress/mongodb?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.90ms  114.81ms 661.49ms   96.71%
+    Req/Sec     5.17k     1.63k   11.67k    79.78%
+  586356 requests in 15.00s, 54.24MB read
+Requests/sec:  39091.33
+Transfer/sec:      3.62MB
+
+---------------------------------------------------------
+ Queries: 1 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/restexpress/mongodb?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.21ms   44.86ms 665.95ms   99.28%
+    Req/Sec     9.02k     1.93k   17.56k    80.97%
+  1021778 requests in 15.00s, 88.67MB read
+Requests/sec:  68119.95
+Transfer/sec:      5.91MB
+
+---------------------------------------------------------
+ Queries: 5 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/restexpress/mongodb?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.39ms   40.68ms 664.98ms   98.52%
+    Req/Sec     2.12k   541.38     3.82k    74.29%
+  247289 requests in 15.00s, 26.41MB read
+Requests/sec:  16487.72
+Transfer/sec:      1.76MB
+
+---------------------------------------------------------
+ Queries: 10 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/restexpress/mongodb?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.96ms   25.01ms 709.35ms   84.05%
+    Req/Sec     1.05k   194.31     1.94k    73.65%
+  124072 requests in 15.00s, 16.21MB read
+Requests/sec:   8271.76
+Transfer/sec:      1.08MB
+
+---------------------------------------------------------
+ Queries: 15 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/restexpress/mongodb?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.45ms   30.97ms 838.55ms   84.48%
+    Req/Sec   634.49    122.73     1.29k    78.08%
+  75543 requests in 15.00s, 11.67MB read
+Requests/sec:   5035.59
+Transfer/sec:    796.65KB
+
+---------------------------------------------------------
+ Queries: 20 for restexpress-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/restexpress/mongodb?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/restexpress/mongodb?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.22ms   32.68ms 744.08ms   80.85%
+    Req/Sec   465.38     77.26   842.00     75.82%
+  55598 requests in 15.00s, 9.97MB read
+Requests/sec:   3705.83
+Transfer/sec:    680.37KB

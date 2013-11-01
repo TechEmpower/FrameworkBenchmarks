@@ -1,5 +1,5 @@
 {
-  "framework": "silex",
+  "framework": "silex-orm",
   "tests": [{
     "default": {
       "setup_file": "setup",

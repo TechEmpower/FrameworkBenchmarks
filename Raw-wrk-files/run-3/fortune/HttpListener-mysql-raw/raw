@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 13:19:35 PDT 2013
+
+  System load:  0.04               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer HttpListener-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.72ms  593.03us   8.20ms   92.88%
+    Req/Sec   616.85     91.83   800.00     72.22%
+  23308 requests in 5.00s, 30.56MB read
+Requests/sec:   4660.83
+Transfer/sec:      6.11MB
+
+---------------------------------------------------------
+ Running Warmup HttpListener-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.17ms   28.85ms 285.30ms   82.66%
+    Req/Sec   795.29    209.32     1.33k    66.50%
+  94451 requests in 15.02s, 123.85MB read
+Requests/sec:   6289.15
+Transfer/sec:      8.25MB
+
+---------------------------------------------------------
+ Concurrency: 8 for HttpListener-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.73ms  788.29us  23.35ms   93.56%
+    Req/Sec   617.91     91.19     0.89k    73.23%
+  70302 requests in 15.00s, 92.19MB read
+Requests/sec:   4685.95
+Transfer/sec:      6.14MB
+
+---------------------------------------------------------
+ Concurrency: 16 for HttpListener-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.40ms    2.10ms  29.56ms   94.67%
+    Req/Sec     0.96k   189.93     1.44k    80.27%
+  108833 requests in 15.00s, 142.71MB read
+Requests/sec:   7255.14
+Transfer/sec:      9.51MB
+
+---------------------------------------------------------
+ Concurrency: 32 for HttpListener-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.89ms    5.76ms  34.62ms   92.15%
+    Req/Sec     1.15k   395.69     2.10k    76.01%
+  132291 requests in 15.00s, 173.47MB read
+Requests/sec:   8819.02
+Transfer/sec:     11.56MB
+
+---------------------------------------------------------
+ Concurrency: 64 for HttpListener-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.22ms   11.00ms  91.51ms   87.19%
+    Req/Sec     1.01k   432.82     2.20k    63.29%
+  119051 requests in 15.01s, 156.11MB read
+Requests/sec:   7932.60
+Transfer/sec:     10.40MB
+
+---------------------------------------------------------
+ Concurrency: 128 for HttpListener-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.13ms   20.38ms 186.67ms   84.69%
+    Req/Sec   824.93    316.44     1.66k    65.14%
+  97464 requests in 15.00s, 127.80MB read
+Requests/sec:   6497.28
+Transfer/sec:      8.52MB
+
+---------------------------------------------------------
+ Concurrency: 256 for HttpListener-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.61ms   28.01ms 161.02ms   83.04%
+    Req/Sec   802.14    238.86     1.51k    67.83%
+  95423 requests in 15.04s, 125.13MB read
+Requests/sec:   6343.90
+Transfer/sec:      8.32MB

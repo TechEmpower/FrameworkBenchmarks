@@ -1,5 +1,5 @@
-host: localhost
+host: tfbdata
 port: 5432
-user: postgres
-password: postgres
+user: benchmarkdbuser
+password: benchmarkdbpass
 database: hello_world

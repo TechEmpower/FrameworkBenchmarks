@@ -1,0 +1,11 @@
+./play-scala/app/
+./play-scala/app/controllers
+./play-scala/app/controllers/Application.scala
+./play-scala/app/views
+./play-scala/app/views/main.scala.html
+./play-scala/app/views/fortune.scala.html
+./play-scala/app/utils
+./play-scala/app/utils/PredicatedAction.scala
+./play-scala/app/models
+./play-scala/app/models/Fortune.scala
+./play-scala/app/models/World.scala

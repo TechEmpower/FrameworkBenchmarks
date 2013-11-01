@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 13:12:01 PDT 2013
+
+  System load:  0.13               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/ado/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/ado/sqlserver/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.87ms  616.70us  13.86ms   99.16%
+    Req/Sec   568.73     76.65   777.00     75.49%
+  21534 requests in 5.00s, 36.00MB read
+Requests/sec:   4305.91
+Transfer/sec:      7.20MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.46ms   15.00ms 409.78ms   89.28%
+    Req/Sec     1.50k   151.55     1.98k    69.15%
+  176966 requests in 15.00s, 295.85MB read
+Requests/sec:  11797.37
+Transfer/sec:     19.72MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/ado/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.86ms  530.40us  19.40ms   98.82%
+    Req/Sec   568.88     74.29   800.00     76.33%
+  64774 requests in 15.00s, 108.29MB read
+Requests/sec:   4317.97
+Transfer/sec:      7.22MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/ado/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.50ms    0.93ms  30.44ms   98.52%
+    Req/Sec     1.44k   201.58     2.00k    74.08%
+  162128 requests in 15.00s, 271.04MB read
+Requests/sec:  10808.42
+Transfer/sec:     18.07MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/ado/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.68ms    2.01ms  47.40ms   92.89%
+    Req/Sec     1.63k   319.91     2.55k    74.48%
+  183678 requests in 15.00s, 307.07MB read
+Requests/sec:  12244.89
+Transfer/sec:     20.47MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/ado/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.39ms    5.05ms 103.13ms   93.50%
+    Req/Sec     1.57k   282.68     2.22k    71.80%
+  181782 requests in 15.00s, 303.90MB read
+Requests/sec:  12118.43
+Transfer/sec:     20.26MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/ado/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.88ms    9.35ms 199.76ms   93.82%
+    Req/Sec     1.52k   247.23     2.00k    75.84%
+  178368 requests in 15.00s, 298.19MB read
+Requests/sec:  11891.08
+Transfer/sec:     19.88MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/sqlserver/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.94ms   14.11ms 368.76ms   86.78%
+    Req/Sec     1.49k   168.92     1.91k    69.34%
+  175705 requests in 15.00s, 293.74MB read
+Requests/sec:  11713.92
+Transfer/sec:     19.58MB

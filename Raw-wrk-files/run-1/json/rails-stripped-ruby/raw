@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 03:24:24 PDT 2013
+
+  System load:  0.0                Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/hello_world/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/hello_world/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.97ms    9.33ms  41.33ms   92.43%
+    Req/Sec   745.97    268.70     1.22k    83.47%
+  28204 requests in 5.00s, 10.38MB read
+Requests/sec:   5640.41
+Transfer/sec:      2.08MB
+
+---------------------------------------------------------
+ Running Warmup rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.75ms   10.05ms 476.17ms   97.53%
+    Req/Sec    20.49k     4.90k   39.56k    68.12%
+  2314030 requests in 15.00s, 712.64MB read
+  Non-2xx or 3xx responses: 2278798
+Requests/sec: 154300.10
+Transfer/sec:     47.52MB
+
+---------------------------------------------------------
+ Concurrency: 8 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.02ms    9.67ms  42.39ms   92.72%
+    Req/Sec   738.79    258.35     1.22k    72.75%
+  84149 requests in 15.00s, 30.97MB read
+Requests/sec:   5608.64
+Transfer/sec:      2.06MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.93ms    4.74ms  88.95ms   98.50%
+    Req/Sec   812.09    219.92     1.33k    74.33%
+  92494 requests in 15.00s, 34.04MB read
+Requests/sec:   6166.02
+Transfer/sec:      2.27MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.41ms    3.13ms  78.08ms   96.45%
+    Req/Sec   804.10    172.84     1.27k    66.20%
+  92413 requests in 15.00s, 34.01MB read
+Requests/sec:   6160.19
+Transfer/sec:      2.27MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.61ms    3.18ms  59.28ms   91.84%
+    Req/Sec   785.83    133.09     1.12k    62.01%
+  92491 requests in 15.00s, 34.04MB read
+Requests/sec:   6165.08
+Transfer/sec:      2.27MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.05ms    4.16ms 109.69ms   82.58%
+    Req/Sec   778.02    102.50     1.05k    63.91%
+  92432 requests in 15.00s, 34.02MB read
+Requests/sec:   6160.95
+Transfer/sec:      2.27MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rails-stripped-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/hello_world/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/hello_world/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.75ms   10.78ms 651.51ms   97.80%
+    Req/Sec    20.70k     4.96k   39.78k    68.31%
+  2333315 requests in 15.00s, 718.42MB read
+  Non-2xx or 3xx responses: 2300346
+Requests/sec: 155561.31
+Transfer/sec:     47.90MB

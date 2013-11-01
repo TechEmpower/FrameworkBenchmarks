@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Sep 27 14:35:16 PDT 2013
+
+  System load:  0.75               Processes:           116
+  Usage of /:   6.0% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+40 packages can be updated.
+12 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/wicket/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/wicket/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   632.47us  477.33us  11.61ms   95.94%
+    Req/Sec     1.81k   392.91     2.44k    70.22%
+  64941 requests in 5.00s, 20.11MB read
+Requests/sec:  12988.54
+Transfer/sec:      4.02MB
+
+---------------------------------------------------------
+ Running Warmup wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/wicket/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/wicket/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.31ms   17.26ms 468.85ms   96.18%
+    Req/Sec     5.48k     1.24k   13.45k    75.04%
+  634836 requests in 15.00s, 196.66MB read
+Requests/sec:  42331.11
+Transfer/sec:     13.11MB
+
+---------------------------------------------------------
+ Concurrency: 8 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/wicket/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/wicket/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   518.75us  161.95us   9.05ms   89.69%
+    Req/Sec     2.02k   168.92     2.56k    73.76%
+  229234 requests in 15.00s, 71.00MB read
+Requests/sec:  15282.26
+Transfer/sec:      4.73MB
+
+---------------------------------------------------------
+ Concurrency: 16 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/wicket/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/wicket/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   575.01us  687.26us  16.26ms   99.43%
+    Req/Sec     3.83k   438.89     4.78k    86.30%
+  434700 requests in 15.00s, 134.64MB read
+Requests/sec:  28980.65
+Transfer/sec:      8.98MB
+
+---------------------------------------------------------
+ Concurrency: 32 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/wicket/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/wicket/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   715.79us  741.55us  24.05ms   94.26%
+    Req/Sec     6.14k     1.04k    8.44k    74.51%
+  698097 requests in 15.00s, 216.23MB read
+Requests/sec:  46542.51
+Transfer/sec:     14.42MB
+
+---------------------------------------------------------
+ Concurrency: 64 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/wicket/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/wicket/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.57ms    3.10ms  43.47ms   98.44%
+    Req/Sec     6.46k     1.24k   10.89k    83.02%
+  732799 requests in 15.00s, 226.98MB read
+Requests/sec:  48856.05
+Transfer/sec:     15.13MB
+
+---------------------------------------------------------
+ Concurrency: 128 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/wicket/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/wicket/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.98ms    4.84ms  64.62ms   97.42%
+    Req/Sec     6.27k     1.16k   14.22k    85.64%
+  712586 requests in 15.00s, 220.73MB read
+Requests/sec:  47494.86
+Transfer/sec:     14.71MB
+
+---------------------------------------------------------
+ Concurrency: 256 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/wicket/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/wicket/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.76ms    7.61ms 161.82ms   95.20%
+    Req/Sec     5.80k     1.05k   13.00k    83.90%
+  675507 requests in 15.00s, 209.26MB read
+Requests/sec:  45033.86
+Transfer/sec:     13.95MB

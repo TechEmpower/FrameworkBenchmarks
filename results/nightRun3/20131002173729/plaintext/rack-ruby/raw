@@ -1,0 +1,108 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct  3 04:49:33 PDT 2013
+
+  System load:  0.41               Processes:           119
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rack-ruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   290.63us  259.64us   6.42ms   99.62%
+    Req/Sec     3.61k   447.86     4.55k    84.27%
+  136913 requests in 5.00s, 25.32MB read
+Requests/sec:  27384.81
+Transfer/sec:      5.07MB
+
+---------------------------------------------------------
+ Running Warmup rack-ruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.00ms    2.73ms  39.48ms   78.52%
+    Req/Sec    11.30k     2.20k   21.50k    71.07%
+  1298803 requests in 15.00s, 284.28MB read
+  Non-2xx or 3xx responses: 360800
+Requests/sec:  86590.53
+Transfer/sec:     18.95MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rack-ruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    49.04ms   19.40ms 111.92ms   65.40%
+    Req/Sec    10.60k     0.91k   14.46k    70.49%
+  1264427 requests in 15.00s, 263.79MB read
+  Non-2xx or 3xx responses: 245033
+Requests/sec:  84304.78
+Transfer/sec:     17.59MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for rack-ruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   113.41ms  110.73ms   6.73s    95.68%
+    Req/Sec    15.94k     1.91k   20.15k    74.08%
+  1872238 requests in 15.00s, 480.48MB read
+  Socket errors: connect 0, read 39, write 0, timeout 294
+  Non-2xx or 3xx responses: 1099177
+Requests/sec: 124817.97
+Transfer/sec:     32.03MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for rack-ruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   136.38ms  420.34ms  14.30s    98.80%
+    Req/Sec    17.87k     5.48k   32.31k    68.79%
+  1915390 requests in 15.00s, 495.37MB read
+  Socket errors: connect 0, read 572, write 0, timeout 16548
+  Non-2xx or 3xx responses: 1155780
+Requests/sec: 127662.68
+Transfer/sec:     33.02MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for rack-ruby
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.50s     7.00s   14.95s    63.46%
+    Req/Sec    14.53k     5.49k   45.46k    81.29%
+  1867644 requests in 15.01s, 479.58MB read
+  Socket errors: connect 11, read 1910, write 0, timeout 89159
+  Non-2xx or 3xx responses: 1098771
+Requests/sec: 124412.58
+Transfer/sec:     31.95MB

@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct  2 15:53:41 PDT 2013
+
+  System load:  0.59               Processes:           118
+  Usage of /:   5.9% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+43 packages can be updated.
+15 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://tfbapp:8080/dborm.php
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/dborm.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.43ms  502.96us   6.54ms   70.16%
+    Req/Sec   308.45     52.96   444.00     75.03%
+  11674 requests in 5.00s, 2.64MB read
+Requests/sec:   2334.26
+Transfer/sec:    539.64KB
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/dborm.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dborm.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   230.10ms  515.77ms   6.41s    98.33%
+    Req/Sec   218.89    161.27   740.00     78.84%
+  27017 requests in 15.04s, 5.84MB read
+  Socket errors: connect 0, read 0, write 0, timeout 109
+  Non-2xx or 3xx responses: 10422
+Requests/sec:   1796.20
+Transfer/sec:    397.85KB
+
+---------------------------------------------------------
+ Concurrency: 8 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/dborm.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dborm.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.39ms    3.36ms  23.17ms   61.03%
+    Req/Sec    90.71     21.19   166.00     58.46%
+  10769 requests in 15.01s, 2.17MB read
+  Non-2xx or 3xx responses: 10769
+Requests/sec:    717.58
+Transfer/sec:    147.83KB
+
+---------------------------------------------------------
+ Concurrency: 16 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/dborm.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dborm.php
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.45ms    4.95ms  39.71ms   66.30%
+    Req/Sec    94.52     15.29   150.00     54.04%
+  11297 requests in 15.01s, 2.27MB read
+  Non-2xx or 3xx responses: 11297
+Requests/sec:    752.60
+Transfer/sec:    155.04KB
+
+---------------------------------------------------------
+ Concurrency: 32 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/dborm.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dborm.php
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.50ms    7.26ms  66.08ms   72.65%
+    Req/Sec   110.83     12.45   150.00     68.41%
+  13294 requests in 15.02s, 2.67MB read
+  Non-2xx or 3xx responses: 13294
+Requests/sec:    885.11
+Transfer/sec:    182.34KB
+
+---------------------------------------------------------
+ Concurrency: 64 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/dborm.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dborm.php
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.25ms   22.13ms 174.99ms   73.56%
+    Req/Sec   164.53    100.25   533.00     89.08%
+  19554 requests in 15.01s, 4.08MB read
+  Non-2xx or 3xx responses: 13495
+Requests/sec:   1302.89
+Transfer/sec:    278.57KB
+
+---------------------------------------------------------
+ Concurrency: 128 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/dborm.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dborm.php
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   115.83ms   59.74ms 567.65ms   73.42%
+    Req/Sec   163.46    103.70   524.00     89.19%
+  19414 requests in 15.01s, 4.05MB read
+  Non-2xx or 3xx responses: 13510
+Requests/sec:   1293.07
+Transfer/sec:    276.30KB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/dborm.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/dborm.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   202.99ms  159.64ms   2.11s    80.09%
+    Req/Sec   228.63    159.37   572.00     71.04%
+  26737 requests in 15.06s, 5.78MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+  Non-2xx or 3xx responses: 10397
+Requests/sec:   1775.22
+Transfer/sec:    393.06KB

@@ -40,6 +40,26 @@
       "display_name": "nancy",
       "notes": "",
       "versus": ""
+    },
+    "libevent2": {
+      "setup_file": "setup_libevent",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db/",
+      "port": 8080,
+	        "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "nancy",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": "Mono",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nancy-libevent",
+      "notes": "",
+      "versus": ""
     }
   }]
 }
