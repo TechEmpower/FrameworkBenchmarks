@@ -15,18 +15,12 @@ class FunctionalTests(unittest.TestCase):
     def _get(self, url, content_type='application/json'):
         res = self.testapp.get(url, status=200)
         self.assertTrue('Content-Length' in res.headers)
-        # apparently these are all set by waitress, and so not
-        # available for testing here...
-        # self.assertTrue('Server' in res.headers)
-        # self.assertTrue('Date' in res.headers)
-        # self.assertTrue(content_type in res.headers['Content-Type'])
         return res
 
     def _str_compat(self, obj):
         if self.py3k:
             return obj.decode('utf-8')
         return obj
-
 
     def _test_obj(self, obj):
         self.assertTrue('id' in obj)
@@ -126,7 +120,7 @@ fortunes = """
     </tr>
     <tr>
         <td>8</td>
-        <td>A list is only as strong as its weakest link. â€” Donald Knuth</td>
+        <td>A list is only as strong as its weakest link. — Donald Knuth</td>
     </tr>
     <tr>
         <td>0</td>
@@ -146,7 +140,7 @@ fortunes = """
     </tr>
     <tr>
         <td>6</td>
-        <td>Emacs is a nice operating system, but I prefer UNIX. â€” Tom Christaensen</td>
+        <td>Emacs is a nice operating system, but I prefer UNIX. — Tom Christaensen</td>
     </tr>
     <tr>
         <td>9</td>

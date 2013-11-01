@@ -1,7 +1,7 @@
 # Pyramid benchmark test
 
 [Pyramid](http://www.pylonsproject.org/) is a flexible Python 2/3 framework.
-It uses [SQLAlchemy](http://www.sqlalchemy.org/) as its ORM, the default
+This test uses [SQLAlchemy](http://www.sqlalchemy.org/) as its ORM, the default
 [Chameleon](http://www.pylonsproject.org/) for its templating, and
 [Gunicorn](https://github.com/benoitc/gunicorn) for the application server.
 

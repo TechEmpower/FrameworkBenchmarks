@@ -48,20 +48,20 @@ class SQLAlchemyEncoder(json.JSONEncoder):
 
 
 class World(DatabaseBase):
-    __tablename__ = 'world'
+    __tablename__ = 'World'
 
     id = Column('id', Integer, primary_key=True)
-    randomNumber = Column('randomNumber', Integer)
+    randomNumber = Column('randomNumber', Integer, nullable=False, server_default='0')
 
     def __json__(self):
         return {'id': self.id, 'randomNumber': self.randomNumber}
 
 
 class Fortune(DatabaseBase):
-    __tablename__ = 'fortune'
+    __tablename__ = 'Fortune'
 
     id = Column('id', Integer, primary_key=True)
-    message = Column('message', String)
+    message = Column('message', String, nullable=False)
 
     def __json__(self):
         return {'id': self.id, 'message': self.message}
