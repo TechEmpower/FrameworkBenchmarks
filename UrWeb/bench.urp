@@ -1,0 +1,12 @@
+library meta
+database dbname=hello_world user=benchmarkdbuser password=benchmarkdbpass host=localhost
+rewrite url Bench/*
+allow responseHeader Date
+allow responseHeader Server
+allow mime application/json
+allow mime text/plain
+safeGet updates
+
+$/list
+$/string
+bench
