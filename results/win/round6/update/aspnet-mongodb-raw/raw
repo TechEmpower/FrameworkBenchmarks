@@ -1,0 +1,118 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 20:56:30 UTC 2013
+
+  System load:  0.16               Processes:           71
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 10%                IP address for eth0: 10.254.22.217
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer aspnet-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://10.252.47.47:8080/mongodb/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.47.47:8080/mongodb/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  3888 requests in 5.09s, 1.17MB read
+Requests/sec:    763.71
+Transfer/sec:    236.13KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/mongodb/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongodb/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  12332 requests in 15.01s, 3.72MB read
+Requests/sec:    821.72
+Transfer/sec:    254.05KB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/mongodb/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongodb/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  14993 requests in 15.03s, 4.07MB read
+Requests/sec:    997.43
+Transfer/sec:    277.41KB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/mongodb/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongodb/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  7207 requests in 15.12s, 2.84MB read
+Requests/sec:    476.66
+Transfer/sec:    192.21KB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/mongodb/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongodb/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  4360 requests in 15.17s, 2.38MB read
+Requests/sec:    287.36
+Transfer/sec:    160.47KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/mongodb/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongodb/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  3109 requests in 15.54s, 2.17MB read
+Requests/sec:    200.02
+Transfer/sec:    142.73KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/mongodb/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongodb/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2449 requests in 15.57s, 2.08MB read
+Requests/sec:    157.32
+Transfer/sec:    136.65KB
