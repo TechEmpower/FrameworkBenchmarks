@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 21:27:51 PDT 2013
+
+  System load:  0.28               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.90ms  293.99us   7.16ms   94.01%
+    Req/Sec     1.17k   102.56     1.44k    74.83%
+  44233 requests in 5.00s, 75.97MB read
+Requests/sec:   8846.48
+Transfer/sec:     15.19MB
+
+---------------------------------------------------------
+ Running Warmup falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.84ms    6.64ms  47.21ms   67.55%
+    Req/Sec     1.63k    77.01     1.87k    69.29%
+  193748 requests in 15.00s, 332.78MB read
+Requests/sec:  12918.16
+Transfer/sec:     22.19MB
+
+---------------------------------------------------------
+ Concurrency: 8 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms  290.14us   2.68ms   94.46%
+    Req/Sec     1.15k   108.97     1.44k    67.74%
+  131212 requests in 15.00s, 225.37MB read
+Requests/sec:   8747.38
+Transfer/sec:     15.02MB
+
+---------------------------------------------------------
+ Concurrency: 16 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.30ms  557.56us  16.21ms   89.31%
+    Req/Sec     1.62k   161.72     2.22k    72.61%
+  184416 requests in 15.00s, 316.75MB read
+Requests/sec:  12294.21
+Transfer/sec:     21.12MB
+
+---------------------------------------------------------
+ Concurrency: 32 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.48ms  682.77us  12.82ms   73.47%
+    Req/Sec     1.70k   168.52     2.22k    65.21%
+  193035 requests in 15.00s, 331.55MB read
+Requests/sec:  12869.12
+Transfer/sec:     22.10MB
+
+---------------------------------------------------------
+ Concurrency: 64 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.93ms    1.31ms  14.86ms   67.00%
+    Req/Sec     1.69k   152.38     2.33k    69.45%
+  195256 requests in 15.00s, 335.37MB read
+Requests/sec:  13017.45
+Transfer/sec:     22.36MB
+
+---------------------------------------------------------
+ Concurrency: 128 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.85ms    2.98ms  22.41ms   67.67%
+    Req/Sec     1.65k   106.41     2.00k    67.17%
+  194788 requests in 15.00s, 334.56MB read
+Requests/sec:  12985.76
+Transfer/sec:     22.30MB
+
+---------------------------------------------------------
+ Concurrency: 256 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortune
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortune
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.82ms    6.56ms  49.36ms   67.69%
+    Req/Sec     1.63k    79.74     1.90k    67.30%
+  193555 requests in 15.00s, 332.44MB read
+Requests/sec:  12903.64
+Transfer/sec:     22.16MB

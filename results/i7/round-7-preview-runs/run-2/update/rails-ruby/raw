@@ -1,0 +1,126 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 04:29:24 PDT 2013
+
+  System load:  0.46               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.67ms    6.10ms  67.28ms   88.16%
+    Req/Sec    58.56     14.23   102.00     72.04%
+  2342 requests in 5.01s, 1.00MB read
+Requests/sec:    467.27
+Transfer/sec:    203.75KB
+
+---------------------------------------------------------
+ Running Warmup rails-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.38ms   63.81ms   7.39s    99.99%
+    Req/Sec    22.89k     4.89k   42.33k    69.83%
+  2586494 requests in 15.00s, 794.19MB read
+  Socket errors: connect 0, read 0, write 0, timeout 580
+  Non-2xx or 3xx responses: 2586158
+Requests/sec: 172437.66
+Transfer/sec:     52.95MB
+
+---------------------------------------------------------
+ Queries: 1 for rails-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.37ms   46.65ms   4.54s    99.97%
+    Req/Sec    22.89k     4.13k   38.22k    69.88%
+  2585197 requests in 15.00s, 793.81MB read
+  Socket errors: connect 0, read 0, write 0, timeout 305
+  Non-2xx or 3xx responses: 2584476
+Requests/sec: 172352.82
+Transfer/sec:     52.92MB
+
+---------------------------------------------------------
+ Queries: 5 for rails-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.26ms   77.35ms  14.91s    99.99%
+    Req/Sec    22.92k     6.14k   47.33k    73.37%
+  2589225 requests in 15.00s, 795.01MB read
+  Socket errors: connect 0, read 0, write 0, timeout 736
+  Non-2xx or 3xx responses: 2589092
+Requests/sec: 172656.91
+Transfer/sec:     53.01MB
+
+---------------------------------------------------------
+ Queries: 10 for rails-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.58ms  222.62ms  12.96s    99.97%
+    Req/Sec    22.90k     7.78k   55.67k    76.92%
+  2587238 requests in 15.00s, 794.40MB read
+  Socket errors: connect 0, read 0, write 0, timeout 769
+  Non-2xx or 3xx responses: 2587155
+Requests/sec: 172489.96
+Transfer/sec:     52.96MB
+
+---------------------------------------------------------
+ Queries: 15 for rails-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   831.11us   41.40ms  13.64s   100.00%
+    Req/Sec    22.89k     9.31k   56.11k    69.69%
+  2587398 requests in 15.00s, 794.44MB read
+  Socket errors: connect 0, read 0, write 0, timeout 797
+  Non-2xx or 3xx responses: 2587358
+Requests/sec: 172500.63
+Transfer/sec:     52.97MB
+
+---------------------------------------------------------
+ Queries: 20 for rails-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   704.35us   14.69ms   8.27s   100.00%
+    Req/Sec    22.90k     5.81k   38.11k    66.34%
+  2586021 requests in 15.00s, 794.03MB read
+  Socket errors: connect 0, read 0, write 0, timeout 797
+  Non-2xx or 3xx responses: 2585974
+Requests/sec: 172408.83
+Transfer/sec:     52.94MB

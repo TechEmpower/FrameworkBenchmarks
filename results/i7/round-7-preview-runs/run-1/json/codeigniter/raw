@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 17:49:23 PDT 2013
+
+  System load:  0.22               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/index.php/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.17ms  733.57us   5.94ms   71.49%
+    Req/Sec   495.44     92.17   777.00     59.98%
+  18802 requests in 5.00s, 4.02MB read
+Requests/sec:   3759.56
+Transfer/sec:    822.22KB
+
+---------------------------------------------------------
+ Running Warmup codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.36ms   39.82ms   1.04s    81.47%
+    Req/Sec   528.73     35.74   646.00     69.90%
+  63392 requests in 15.00s, 13.54MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+  Non-2xx or 3xx responses: 2
+Requests/sec:   4225.83
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Concurrency: 8 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.13ms  726.40us   6.23ms   73.67%
+    Req/Sec   501.92     92.79   777.00     58.85%
+  57120 requests in 15.00s, 12.20MB read
+Requests/sec:   3807.77
+Transfer/sec:    832.76KB
+
+---------------------------------------------------------
+ Concurrency: 16 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.95ms    1.76ms  13.74ms   64.75%
+    Req/Sec   546.63    119.16     1.20k    67.63%
+  62630 requests in 15.00s, 13.38MB read
+Requests/sec:   4175.09
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Concurrency: 32 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.48ms    3.34ms  32.65ms   72.01%
+    Req/Sec   555.25     92.64     1.05k    67.98%
+  64995 requests in 15.00s, 13.88MB read
+Requests/sec:   4332.12
+Transfer/sec:      0.93MB
+
+---------------------------------------------------------
+ Concurrency: 64 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.97ms    8.13ms  64.64ms   73.95%
+    Req/Sec   547.73     76.85     1.00k    70.36%
+  64982 requests in 15.00s, 13.88MB read
+Requests/sec:   4331.61
+Transfer/sec:      0.93MB
+
+---------------------------------------------------------
+ Concurrency: 128 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.68ms   17.81ms 166.23ms   75.26%
+    Req/Sec   541.07     55.71   745.00     70.65%
+  64601 requests in 15.00s, 13.80MB read
+Requests/sec:   4305.30
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Concurrency: 256 for codeigniter
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/index.php/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/index.php/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.70ms  136.63ms   3.81s    99.48%
+    Req/Sec   539.06    115.02     0.93k    80.93%
+  64061 requests in 15.01s, 13.68MB read
+  Socket errors: connect 0, read 0, write 0, timeout 56
+Requests/sec:   4268.62
+Transfer/sec:      0.91MB

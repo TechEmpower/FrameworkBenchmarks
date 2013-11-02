@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 21:30:03 PDT 2013
+
+  System load:  0.38               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.05ms    4.13ms  28.60ms   84.26%
+    Req/Sec    80.93     19.67   125.00     70.74%
+  3186 requests in 5.01s, 592.89KB read
+Requests/sec:    635.38
+Transfer/sec:    118.24KB
+
+---------------------------------------------------------
+ Running Warmup falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.83ms   46.01ms 662.48ms   94.41%
+    Req/Sec     0.99k   409.04     1.79k    64.29%
+  119144 requests in 15.06s, 21.65MB read
+Requests/sec:   7912.73
+Transfer/sec:      1.44MB
+
+---------------------------------------------------------
+ Queries: 1 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.63ms   26.87ms 364.00ms   91.82%
+    Req/Sec     2.00k   823.72     3.55k    64.39%
+  237733 requests in 15.00s, 35.54MB read
+Requests/sec:  15849.01
+Transfer/sec:      2.37MB
+
+---------------------------------------------------------
+ Queries: 5 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.17ms   53.03ms 615.44ms   91.08%
+    Req/Sec   405.17    125.02   661.00     66.42%
+  48663 requests in 15.01s, 13.31MB read
+Requests/sec:   3242.47
+Transfer/sec:      0.89MB
+
+---------------------------------------------------------
+ Queries: 10 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   197.18ms  156.29ms   1.18s    93.91%
+    Req/Sec   194.16     66.25   318.00     73.35%
+  23469 requests in 15.00s, 9.98MB read
+Requests/sec:   1564.44
+Transfer/sec:    681.05KB
+
+---------------------------------------------------------
+ Queries: 15 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   243.22ms   93.36ms 885.46ms   90.79%
+    Req/Sec   135.53     29.30   193.00     72.80%
+  16297 requests in 15.02s, 9.40MB read
+Requests/sec:   1085.30
+Transfer/sec:    640.86KB
+
+---------------------------------------------------------
+ Queries: 20 for falcore
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   322.28ms   96.19ms   1.04s    89.40%
+    Req/Sec    99.83     19.16   129.00     89.06%
+  11815 requests in 15.01s, 8.60MB read
+Requests/sec:    787.37
+Transfer/sec:    587.14KB

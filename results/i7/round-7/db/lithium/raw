@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 00:19:59 PDT 2013
+
+  System load:  0.06               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.50ms    1.18ms  12.95ms   72.29%
+    Req/Sec   160.29     34.63   250.00     52.44%
+  6212 requests in 5.00s, 1.48MB read
+Requests/sec:   1241.60
+Transfer/sec:    302.79KB
+
+---------------------------------------------------------
+ Running Warmup lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   178.69ms   61.47ms 457.35ms   69.53%
+    Req/Sec   180.21     15.50   213.00     85.71%
+  21563 requests in 15.02s, 5.14MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec:   1435.87
+Transfer/sec:    350.24KB
+
+---------------------------------------------------------
+ Concurrency: 8 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.49ms    1.15ms  12.68ms   72.88%
+    Req/Sec   160.26     34.53   266.00     57.81%
+  18635 requests in 15.00s, 4.44MB read
+Requests/sec:   1242.09
+Transfer/sec:    302.92KB
+
+---------------------------------------------------------
+ Concurrency: 16 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.44ms    3.14ms  25.43ms   68.36%
+    Req/Sec   180.03     29.80   296.00     65.15%
+  21306 requests in 15.00s, 5.07MB read
+Requests/sec:   1420.01
+Transfer/sec:    346.31KB
+
+---------------------------------------------------------
+ Concurrency: 32 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.96ms    6.15ms  62.06ms   71.96%
+    Req/Sec   182.22     20.01   245.00     68.16%
+  21720 requests in 15.01s, 5.17MB read
+Requests/sec:   1447.34
+Transfer/sec:    352.97KB
+
+---------------------------------------------------------
+ Concurrency: 64 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.01ms   19.03ms 166.20ms   76.52%
+    Req/Sec   181.14     19.54   265.00     69.16%
+  21693 requests in 15.01s, 5.17MB read
+Requests/sec:   1445.67
+Transfer/sec:    352.57KB
+
+---------------------------------------------------------
+ Concurrency: 128 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    88.16ms   33.83ms 236.71ms   71.00%
+    Req/Sec   181.35     13.74   223.00     72.81%
+  21702 requests in 15.02s, 5.17MB read
+Requests/sec:   1444.74
+Transfer/sec:    352.35KB
+
+---------------------------------------------------------
+ Concurrency: 256 for lithium
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   176.71ms   68.87ms 451.43ms   70.38%
+    Req/Sec   179.22     13.19   212.00     84.88%
+  21491 requests in 15.01s, 5.12MB read
+Requests/sec:   1431.66
+Transfer/sec:    349.20KB

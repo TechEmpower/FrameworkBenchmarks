@@ -10,6 +10,7 @@ import pprint
 import csv
 import sys
 import logging
+import socket
 from multiprocessing import Process
 from datetime import datetime
 
@@ -333,8 +334,9 @@ class Benchmarker:
       if os.name == 'nt':
         return True
       subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
-      subprocess.check_call("sudo sysctl -w net.core.somaxconn=5000".rsplit(" "))
-      subprocess.check_call("sudo -s ulimit -n 16384".rsplit(" "))
+      subprocess.check_call("sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535".rsplit(" "))
+      subprocess.check_call("sudo sysctl -w net.core.somaxconn=65535".rsplit(" "))
+      subprocess.check_call("sudo -s ulimit -n 65535".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
       subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_recycle=1".rsplit(" "))
       subprocess.check_call("sudo sysctl -w kernel.shmmax=134217728".rsplit(" "))
@@ -354,8 +356,9 @@ class Benchmarker:
   def __setup_database(self):
     p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
-      sudo sysctl -w net.core.somaxconn=5000
-      sudo -s ulimit -n 16384
+      sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
+      sudo sysctl -w net.core.somaxconn=65535
+      sudo -s ulimit -n 65535
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
       sudo sysctl -w kernel.shmmax=2147483648
@@ -374,8 +377,9 @@ class Benchmarker:
   def __setup_client(self):
     p = subprocess.Popen(self.client_ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
-      sudo sysctl -w net.core.somaxconn=5000
-      sudo -s ulimit -n 16384
+      sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
+      sudo sysctl -w net.core.somaxconn=65535
+      sudo -s ulimit -n 65535
       sudo sysctl net.ipv4.tcp_tw_reuse=1
       sudo sysctl net.ipv4.tcp_tw_recycle=1
       sudo sysctl -w kernel.shmmax=2147483648
@@ -399,15 +403,23 @@ class Benchmarker:
   def __run_tests(self, tests):
     logging.debug("Start __run_tests.")
     logging.debug("__name__ = %s",__name__)
-    for test in tests:
-      if __name__ == 'benchmark.benchmarker':
-        test_process = Process(target=self.__run_test, args=(test,))
-        test_process.start()
-        test_process.join(self.run_test_timeout_seconds)
-        if(test_process.is_alive()):
-          logging.debug("Child process for %s is still alive. Terminating.",test.name)
-          self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
-          test_process.terminate()
+
+    if self.os.lower() == 'windows':
+      logging.debug("Executing __run_tests on Windows")
+      for test in tests:
+        self.__run_test(test)
+    else:
+      logging.debug("Executing __run_tests on Linux")
+      # These features do not work on Windows
+      for test in tests:
+        if __name__ == 'benchmark.benchmarker':
+          test_process = Process(target=self.__run_test, args=(test,))
+          test_process.start()
+          test_process.join(self.run_test_timeout_seconds)
+          if(test_process.is_alive()):
+            logging.debug("Child process for %s is still alive. Terminating.",test.name)
+            self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
+            test_process.terminate()
     logging.debug("End __run_tests.")
 
   ############################################################
@@ -429,6 +441,11 @@ class Benchmarker:
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
         return
+
+      if hasattr(test, 'skip'):
+        if test.skip.lower() == "true":
+          logging.info("Test %s benchmark_config specifies to skip this test. Skipping.", test.name)
+          return
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
@@ -477,7 +494,16 @@ class Benchmarker:
 		      sudo /etc/init.d/postgresql restart
         """)
         time.sleep(10)
-        
+
+        if self.__is_port_bound(test.port):
+          self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
+          print textwrap.dedent("""
+            ---------------------------------------------------------
+              Error: Port {port} is not available before start {name}
+            ---------------------------------------------------------
+            """.format(name=test.name, port=str(test.port)))
+          return
+
         result = test.start()
         if result != 0: 
           test.stop()
@@ -519,6 +545,16 @@ class Benchmarker:
         ##########################
         test.stop()
         time.sleep(5)
+
+        if self.__is_port_bound(test.port):
+          self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+          print textwrap.dedent("""
+            -----------------------------------------------------
+              Error: Port {port} was not released by stop {name}
+            -----------------------------------------------------
+            """.format(name=test.name, port=str(test.port)))
+          return
+
         print textwrap.dedent("""
         -----------------------------------------------------
           Stopped {name}
@@ -564,6 +600,43 @@ class Benchmarker:
 
   ############################################################
   # End __run_tests
+  ############################################################
+
+  ############################################################
+  # __is_port_bound
+  # Check if the requested port is available. If it
+  # isn't available, then a previous test probably didn't
+  # shutdown properly.
+  ############################################################
+  def __is_port_bound(self, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+      # Try to bind to all IP addresses, this port
+      s.bind(("", port))
+      # If we get here, we were able to bind successfully,
+      # which means the port is free.
+    except:
+      # If we get an exception, it might be because the port is still bound
+      # which would be bad, or maybe it is a privileged port (<1024) and we
+      # are not running as root, or maybe the server is gone, but sockets are
+      # still in TIME_WAIT (SO_REUSEADDR). To determine which scenario, try to
+      # connect.
+      try:
+        s.connect(("127.0.0.1", port))
+        # If we get here, we were able to connect to something, which means
+        # that the port is still bound.
+        return True
+      except:
+        # An exception means that we couldn't connect, so a server probably
+        # isn't still running on the port.
+        pass
+    finally:
+      s.close()
+
+    return False
+
+  ############################################################
+  # End __is_port_bound
   ############################################################
 
   ############################################################
@@ -754,7 +827,7 @@ class Benchmarker:
       self.results['rawData']['query'] = dict()
       self.results['rawData']['fortune'] = dict()
       self.results['rawData']['update'] = dict()
-      self.results['rawData']['plainteat'] = dict()
+      self.results['rawData']['plaintext'] = dict()
       self.results['completed'] = dict()
     else:
       #for x in self.__gather_tests():

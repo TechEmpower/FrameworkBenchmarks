@@ -1,0 +1,144 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 17:11:30 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/json/servicestack
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json/servicestack
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   276.65ms  473.51ms   1.14s    76.89%
+    Req/Sec   126.00    236.46   800.00     78.15%
+  5418 requests in 6.00s, 1.66MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+  Non-2xx or 3xx responses: 49
+Requests/sec:    902.89
+Transfer/sec:    283.34KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json/servicestack
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   784.33ms  616.72ms   2.76s    63.42%
+    Req/Sec   151.44    239.83     1.21k    84.94%
+  19870 requests in 16.00s, 6.14MB read
+  Socket errors: connect 0, read 132, write 0, timeout 1564
+  Non-2xx or 3xx responses: 2021
+Requests/sec:   1241.52
+Transfer/sec:    393.10KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json/servicestack
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.00ms    2.09ms  20.47ms   73.74%
+    Req/Sec    96.25    221.15   777.00     83.83%
+  10806 requests in 16.00s, 3.31MB read
+  Socket errors: connect 0, read 3, write 0, timeout 49
+  Non-2xx or 3xx responses: 41
+Requests/sec:    675.24
+Transfer/sec:    211.77KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json/servicestack
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.01ms    2.54ms  44.91ms   78.19%
+    Req/Sec   115.65    231.33   777.00     79.74%
+  12234 requests in 16.00s, 3.75MB read
+  Socket errors: connect 0, read 8, write 0, timeout 101
+  Non-2xx or 3xx responses: 100
+Requests/sec:    764.56
+Transfer/sec:    239.83KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json/servicestack
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.93ms    1.59ms   4.81ms   81.76%
+    Req/Sec    63.64    181.81     1.32k    88.94%
+  9535 requests in 16.00s, 2.92MB read
+  Socket errors: connect 0, read 23, write 0, timeout 214
+  Non-2xx or 3xx responses: 250
+Requests/sec:    595.87
+Transfer/sec:    187.03KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json/servicestack
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.11ms   11.51ms  56.62ms   71.15%
+    Req/Sec    82.68    202.67     1.25k    85.60%
+  10692 requests in 16.00s, 3.29MB read
+  Socket errors: connect 0, read 38, write 0, timeout 435
+  Non-2xx or 3xx responses: 520
+Requests/sec:    668.12
+Transfer/sec:    210.21KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json/servicestack
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   148.92ms   65.21ms 200.50ms   83.23%
+    Req/Sec    76.87    180.02   635.00     85.06%
+  12441 requests in 16.00s, 3.84MB read
+  Socket errors: connect 0, read 51, write 0, timeout 874
+  Non-2xx or 3xx responses: 785
+Requests/sec:    777.47
+Transfer/sec:    245.47KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json/servicestack
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   932.96ms  556.13ms   1.33s    72.76%
+    Req/Sec   113.74    203.02   750.00     80.69%
+  16218 requests in 16.00s, 5.02MB read
+  Socket errors: connect 0, read 128, write 0, timeout 1667
+  Non-2xx or 3xx responses: 2374
+Requests/sec:   1013.37
+Transfer/sec:    321.40KB

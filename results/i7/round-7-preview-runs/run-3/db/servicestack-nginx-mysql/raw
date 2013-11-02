@@ -1,0 +1,142 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 19:00:30 PDT 2013
+
+  System load:  0.0                Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/mysql/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/mysql/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  0 requests in 6.00s, 2.03KB read
+  Socket errors: connect 0, read 0, write 0, timeout 23
+Requests/sec:      0.00
+Transfer/sec:     346.57B
+
+---------------------------------------------------------
+ Running Warmup servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/mysql/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  557 requests in 16.00s, 4.79MB read
+  Socket errors: connect 0, read 4, write 0, timeout 1831
+  Non-2xx or 3xx responses: 57
+Requests/sec:     34.81
+Transfer/sec:    306.34KB
+
+---------------------------------------------------------
+ Concurrency: 8 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/mysql/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16 requests in 16.01s, 155.75KB read
+  Socket errors: connect 0, read 0, write 0, timeout 58
+Requests/sec:      1.00
+Transfer/sec:      9.73KB
+
+---------------------------------------------------------
+ Concurrency: 16 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/mysql/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  22 requests in 16.00s, 206.14KB read
+  Socket errors: connect 0, read 0, write 0, timeout 114
+  Non-2xx or 3xx responses: 1
+Requests/sec:      1.37
+Transfer/sec:     12.88KB
+
+---------------------------------------------------------
+ Concurrency: 32 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/mysql/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  39 requests in 16.00s, 364.23KB read
+  Socket errors: connect 0, read 1, write 0, timeout 224
+  Non-2xx or 3xx responses: 2
+Requests/sec:      2.44
+Transfer/sec:     22.76KB
+
+---------------------------------------------------------
+ Concurrency: 64 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/mysql/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  71 requests in 16.00s, 473.76KB read
+  Socket errors: connect 0, read 0, write 0, timeout 465
+  Non-2xx or 3xx responses: 26
+Requests/sec:      4.44
+Transfer/sec:     29.61KB
+
+---------------------------------------------------------
+ Concurrency: 128 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/mysql/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  162 requests in 16.00s, 1.21MB read
+  Socket errors: connect 0, read 1, write 0, timeout 925
+  Non-2xx or 3xx responses: 39
+Requests/sec:     10.12
+Transfer/sec:     77.13KB
+
+---------------------------------------------------------
+ Concurrency: 256 for servicestack-nginx-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/mysql/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/mysql/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.93ms    7.57ms  15.60ms   62.08%
+    Req/Sec     0.90     20.10   450.00     99.80%
+  263 requests in 16.00s, 1.71MB read
+  Socket errors: connect 0, read 5, write 0, timeout 1864
+  Non-2xx or 3xx responses: 94
+Requests/sec:     16.43
+Transfer/sec:    109.24KB

@@ -15,7 +15,7 @@
       "database": "MySQL",
       "framework": "plain",
       "language": "Scala",
-      "orm": "Full",
+      "orm": "Micro",
       "platform": "Plain",
       "webserver": "None",
       "os": "Linux",

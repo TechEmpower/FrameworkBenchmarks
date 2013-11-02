@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 20:36:39 PDT 2013
+
+  System load:  0.29               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   482.69us  178.01us   3.35ms   93.16%
+    Req/Sec     2.18k   270.56     3.33k    75.49%
+  82740 requests in 5.00s, 12.86MB read
+Requests/sec:  16549.02
+Transfer/sec:      2.57MB
+
+---------------------------------------------------------
+ Running Warmup flask
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.84ms   12.85ms  66.15ms   66.51%
+    Req/Sec     2.34k   265.86     3.38k    70.74%
+  277482 requests in 15.00s, 43.13MB read
+Requests/sec:  18498.95
+Transfer/sec:      2.88MB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   215.99ms   71.12ms 615.54ms   73.43%
+    Req/Sec     2.40k   228.90     2.91k    78.95%
+  283150 requests in 15.02s, 44.02MB read
+Requests/sec:  18850.98
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for flask
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   832.97ms  259.80ms   3.20s    88.83%
+    Req/Sec     2.42k   284.70     3.02k    87.07%
+  282616 requests in 15.02s, 43.93MB read
+  Socket errors: connect 0, read 103, write 0, timeout 184
+Requests/sec:  18817.52
+Transfer/sec:      2.93MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for flask
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.69s     1.07s    8.73s    89.07%
+    Req/Sec     2.60k   747.11     4.12k    70.97%
+  280996 requests in 15.01s, 43.71MB read
+  Socket errors: connect 0, read 1134, write 0, timeout 13673
+Requests/sec:  18718.75
+Transfer/sec:      2.91MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for flask
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.81s     5.12s   14.86s    41.29%
+    Req/Sec     2.52k     1.78k   10.44k    75.83%
+  278406 requests in 15.01s, 43.52MB read
+  Socket errors: connect 11, read 3361, write 0, timeout 93333
+Requests/sec:  18546.36
+Transfer/sec:      2.90MB

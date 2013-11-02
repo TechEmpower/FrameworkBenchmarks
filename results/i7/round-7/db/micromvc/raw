@@ -1,0 +1,135 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 00:43:55 PDT 2013
+
+  System load:  0.32               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.52ms  225.53us   2.90ms   73.55%
+    Req/Sec   689.25     67.50     0.89k    50.95%
+  26117 requests in 5.00s, 5.85MB read
+Requests/sec:   5222.26
+Transfer/sec:      1.17MB
+
+---------------------------------------------------------
+ Running Warmup micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   254.77ms  156.06ms   1.01s    67.12%
+    Req/Sec   125.32     33.32   264.00     70.14%
+  16834 requests in 15.03s, 105.36MB read
+  Non-2xx or 3xx responses: 14697
+Requests/sec:   1120.31
+Transfer/sec:      7.01MB
+
+---------------------------------------------------------
+ Concurrency: 8 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.01ms    8.71ms 118.73ms   98.74%
+    Req/Sec   124.44     32.06   227.00     57.44%
+  14665 requests in 15.01s, 104.65MB read
+  Non-2xx or 3xx responses: 14665
+Requests/sec:    977.15
+Transfer/sec:      6.97MB
+
+---------------------------------------------------------
+ Concurrency: 16 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.49ms    6.42ms  54.78ms   65.30%
+    Req/Sec   131.11     24.56   227.00     64.92%
+  15610 requests in 15.01s, 111.39MB read
+  Non-2xx or 3xx responses: 15610
+Requests/sec:   1039.73
+Transfer/sec:      7.42MB
+
+---------------------------------------------------------
+ Concurrency: 32 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.99ms   15.77ms 121.37ms   71.32%
+    Req/Sec   128.80     20.63   200.00     73.23%
+  15399 requests in 15.01s, 109.89MB read
+  Non-2xx or 3xx responses: 15399
+Requests/sec:   1025.71
+Transfer/sec:      7.32MB
+
+---------------------------------------------------------
+ Concurrency: 64 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.00ms   36.65ms 215.46ms   69.68%
+    Req/Sec   126.66     15.64   179.00     69.31%
+  15205 requests in 15.02s, 108.50MB read
+  Non-2xx or 3xx responses: 15205
+Requests/sec:   1012.54
+Transfer/sec:      7.23MB
+
+---------------------------------------------------------
+ Concurrency: 128 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   101.19ms   86.23ms 512.68ms   68.06%
+    Req/Sec   338.25    364.27     1.08k    75.31%
+  39398 requests in 15.02s, 86.12MB read
+  Non-2xx or 3xx responses: 11184
+Requests/sec:   2622.68
+Transfer/sec:      5.73MB
+
+---------------------------------------------------------
+ Concurrency: 256 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   274.42ms  164.72ms   1.00s    64.38%
+    Req/Sec   112.64     16.72   164.00     81.17%
+  13281 requests in 15.03s, 93.27MB read
+  Non-2xx or 3xx responses: 13063
+Requests/sec:    883.58
+Transfer/sec:      6.20MB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 16:41:46 PDT 2013
+
+  System load:  0.31               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongodbupdates?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.71ms  339.88us   9.17ms   87.30%
+    Req/Sec   387.47     54.24   500.00     38.82%
+  14675 requests in 5.00s, 4.07MB read
+Requests/sec:   2933.69
+Transfer/sec:    832.52KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.70ms   16.29ms 157.47ms   89.38%
+    Req/Sec   540.14     58.41   620.00     71.13%
+  64401 requests in 15.00s, 17.85MB read
+Requests/sec:   4292.89
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.45ms    7.45ms  81.25ms   86.57%
+    Req/Sec     1.10k   113.78     1.26k    77.39%
+  130785 requests in 15.00s, 32.03MB read
+Requests/sec:   8718.86
+Transfer/sec:      2.13MB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   144.69ms   22.26ms 252.01ms   83.88%
+    Req/Sec   221.71     20.53   258.00     73.82%
+  26578 requests in 15.00s, 9.81MB read
+Requests/sec:   1771.30
+Transfer/sec:    669.25KB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   286.56ms   28.83ms 399.14ms   72.86%
+    Req/Sec   111.46      6.09   125.00     67.84%
+  13415 requests in 15.02s, 6.98MB read
+Requests/sec:    893.14
+Transfer/sec:    476.16KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   423.95ms   36.13ms 572.22ms   73.33%
+    Req/Sec    74.99      3.96    87.00     62.50%
+  8931 requests in 15.01s, 6.00MB read
+Requests/sec:    594.84
+Transfer/sec:    409.35KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbupdates?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbupdates?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   562.44ms   32.19ms 668.89ms   67.38%
+    Req/Sec    56.46      3.62    65.00     75.59%
+  6763 requests in 15.03s, 5.57MB read
+Requests/sec:    450.08
+Transfer/sec:    379.51KB

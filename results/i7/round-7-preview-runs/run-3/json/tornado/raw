@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 22:20:47 PDT 2013
+
+  System load:  0.06               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tornado
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   419.48us   62.33us   1.10ms   80.85%
+    Req/Sec     2.46k   275.79     3.78k    67.81%
+  93488 requests in 5.00s, 15.87MB read
+Requests/sec:  18697.92
+Transfer/sec:      3.17MB
+
+---------------------------------------------------------
+ Running Warmup tornado
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.84ms    5.32ms  33.72ms   65.36%
+    Req/Sec     3.03k   340.07     5.07k    69.47%
+  349268 requests in 15.00s, 59.29MB read
+Requests/sec:  23282.57
+Transfer/sec:      3.95MB
+
+---------------------------------------------------------
+ Concurrency: 8 for tornado
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   433.08us  143.27us   3.57ms   90.37%
+    Req/Sec     2.43k   262.76     3.44k    73.72%
+  277585 requests in 15.00s, 47.12MB read
+Requests/sec:  18505.44
+Transfer/sec:      3.14MB
+
+---------------------------------------------------------
+ Concurrency: 16 for tornado
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   766.33us  264.33us   3.59ms   50.47%
+    Req/Sec     2.81k   787.69     5.44k    61.89%
+  321021 requests in 15.00s, 54.49MB read
+Requests/sec:  21400.99
+Transfer/sec:      3.63MB
+
+---------------------------------------------------------
+ Concurrency: 32 for tornado
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.43ms  399.84us   2.02ms   67.57%
+    Req/Sec     2.99k   525.89     4.55k    71.99%
+  343333 requests in 15.00s, 58.28MB read
+Requests/sec:  22888.75
+Transfer/sec:      3.89MB
+
+---------------------------------------------------------
+ Concurrency: 64 for tornado
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.74ms  661.79us   5.14ms   52.60%
+    Req/Sec     3.07k   290.36     4.11k    69.84%
+  350059 requests in 15.00s, 59.42MB read
+Requests/sec:  23337.51
+Transfer/sec:      3.96MB
+
+---------------------------------------------------------
+ Concurrency: 128 for tornado
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.50ms    1.45ms  14.76ms   48.14%
+    Req/Sec     3.05k   353.65     4.09k    66.71%
+  351317 requests in 15.00s, 59.64MB read
+Requests/sec:  23420.93
+Transfer/sec:      3.98MB
+
+---------------------------------------------------------
+ Concurrency: 256 for tornado
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.00ms    3.94ms  30.47ms   73.98%
+    Req/Sec     2.96k   208.65     3.65k    68.14%
+  347281 requests in 15.00s, 58.95MB read
+Requests/sec:  23150.52
+Transfer/sec:      3.93MB

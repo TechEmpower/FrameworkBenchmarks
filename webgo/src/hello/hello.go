@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"github.com/hoisie/web"
+	"io/ioutil"
 	"log"
-	"os"
 	"runtime"
 )
 
@@ -19,8 +19,7 @@ func hello(val string) string {
 }
 
 func main() {
-	f, _ := os.Create("server.log")
-	logger := log.New(f, "", log.Ldate|log.Ltime)
+	logger := log.New(ioutil.Discard, "", 0)
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	web.Get("/(.*)", hello)
 	web.SetLogger(logger)

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 19:52:52 PDT 2013
+
+  System load:  0.08               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer django
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.12ms  831.45us  18.40ms   80.11%
+    Req/Sec   344.30     68.07   600.00     75.72%
+  13071 requests in 5.00s, 2.99MB read
+Requests/sec:   2612.98
+Transfer/sec:    611.29KB
+
+---------------------------------------------------------
+ Running Warmup django
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    88.99ms   29.81ms 233.21ms   72.17%
+    Req/Sec   360.93     22.99   433.00     74.94%
+  42674 requests in 15.01s, 9.75MB read
+Requests/sec:   2843.39
+Transfer/sec:    665.20KB
+
+---------------------------------------------------------
+ Queries: 1 for django
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.29ms   22.56ms 210.86ms   70.56%
+    Req/Sec   500.52     33.60   644.00     79.81%
+  59644 requests in 15.00s, 11.82MB read
+Requests/sec:   3975.24
+Transfer/sec:    806.60KB
+
+---------------------------------------------------------
+ Queries: 5 for django
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   160.94ms   48.97ms 510.07ms   72.37%
+    Req/Sec   198.12     14.71   239.00     79.34%
+  23495 requests in 15.01s, 7.50MB read
+Requests/sec:   1565.39
+Transfer/sec:    511.95KB
+
+---------------------------------------------------------
+ Queries: 10 for django
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   279.11ms   84.75ms 817.80ms   72.66%
+    Req/Sec   112.65      6.83   137.00     73.62%
+  13465 requests in 15.02s, 6.35MB read
+Requests/sec:    896.20
+Transfer/sec:    433.04KB
+
+---------------------------------------------------------
+ Queries: 15 for django
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   404.21ms  137.19ms   1.14s    72.15%
+    Req/Sec    78.67      8.81   108.00     83.54%
+  9438 requests in 15.04s, 5.88MB read
+Requests/sec:    627.32
+Transfer/sec:    400.44KB
+
+---------------------------------------------------------
+ Queries: 20 for django
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   516.77ms  185.57ms   1.53s    75.57%
+    Req/Sec    61.02      8.95    82.00     77.86%
+  7269 requests in 15.04s, 5.63MB read
+Requests/sec:    483.27
+Transfer/sec:    383.48KB

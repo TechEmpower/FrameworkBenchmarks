@@ -21,7 +21,7 @@ except ImportError:
 # setup
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@localhost:3306/hello_world?charset=utf8'
+app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world?charset=utf8'
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])

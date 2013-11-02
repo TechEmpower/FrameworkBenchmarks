@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 08:28:05 PDT 2013
+
+  System load:  0.58               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   722.83us  410.29us  10.33ms   92.88%
+    Req/Sec     1.56k   361.63     2.22k    73.25%
+  56222 requests in 5.00s, 9.85MB read
+Requests/sec:  11243.77
+Transfer/sec:      1.97MB
+
+---------------------------------------------------------
+ Running Warmup spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.80ms   24.51ms 374.78ms   94.48%
+    Req/Sec     3.75k     0.97k    7.87k    70.41%
+  439501 requests in 15.01s, 77.03MB read
+Requests/sec:  29285.89
+Transfer/sec:      5.13MB
+
+---------------------------------------------------------
+ Concurrency: 8 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   599.74us  199.12us   7.31ms   93.63%
+    Req/Sec     1.76k   157.38     2.22k    84.20%
+  199779 requests in 15.00s, 35.01MB read
+Requests/sec:  13318.73
+Transfer/sec:      2.33MB
+
+---------------------------------------------------------
+ Concurrency: 16 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   647.39us  360.39us  12.15ms   94.29%
+    Req/Sec     3.30k   375.72     4.22k    81.04%
+  374988 requests in 15.00s, 65.72MB read
+Requests/sec:  24999.05
+Transfer/sec:      4.38MB
+
+---------------------------------------------------------
+ Concurrency: 32 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.01ms    1.00ms  18.60ms   94.14%
+    Req/Sec     4.47k   843.91     6.78k    74.48%
+  508726 requests in 15.00s, 89.16MB read
+Requests/sec:  33916.30
+Transfer/sec:      5.94MB
+
+---------------------------------------------------------
+ Concurrency: 64 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.08ms    2.41ms  30.36ms   95.99%
+    Req/Sec     4.46k     0.93k    7.00k    81.39%
+  507816 requests in 15.00s, 89.00MB read
+Requests/sec:  33854.24
+Transfer/sec:      5.93MB
+
+---------------------------------------------------------
+ Concurrency: 128 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.21ms    5.23ms  64.41ms   95.93%
+    Req/Sec     4.26k     0.90k    8.73k    83.79%
+  487534 requests in 15.00s, 85.45MB read
+Requests/sec:  32502.74
+Transfer/sec:      5.70MB
+
+---------------------------------------------------------
+ Concurrency: 256 for spring
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/spring/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/spring/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.81ms   14.63ms 208.45ms   95.21%
+    Req/Sec     4.11k     0.98k    9.45k    79.74%
+  471651 requests in 15.00s, 82.66MB read
+Requests/sec:  31443.34
+Transfer/sec:      5.51MB

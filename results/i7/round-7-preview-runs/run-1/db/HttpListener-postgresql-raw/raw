@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 14 14:14:53 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer HttpListener-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.38ms    1.40ms  20.55ms   87.15%
+    Req/Sec   325.38     76.01   555.00     70.35%
+  12159 requests in 5.00s, 2.14MB read
+Requests/sec:   2431.33
+Transfer/sec:    438.67KB
+
+---------------------------------------------------------
+ Running Warmup HttpListener-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   220.03ms  176.74ms   2.21s    97.31%
+    Req/Sec   149.42     15.48   193.00     66.23%
+  17664 requests in 15.00s, 3.11MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:   1177.40
+Transfer/sec:    212.43KB
+
+---------------------------------------------------------
+ Concurrency: 8 for HttpListener-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.33ms    1.03ms  10.42ms   74.81%
+    Req/Sec   322.35     67.50   500.00     67.84%
+  36731 requests in 15.00s, 6.47MB read
+Requests/sec:   2448.47
+Transfer/sec:    441.80KB
+
+---------------------------------------------------------
+ Concurrency: 16 for HttpListener-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.73ms    2.98ms  20.13ms   73.92%
+    Req/Sec   361.48     66.19   575.00     66.33%
+  42152 requests in 15.00s, 7.43MB read
+Requests/sec:   2809.52
+Transfer/sec:    506.96KB
+
+---------------------------------------------------------
+ Concurrency: 32 for HttpListener-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.53ms   10.58ms  69.87ms   71.22%
+    Req/Sec   223.56     39.35   340.00     68.24%
+  26383 requests in 15.01s, 4.65MB read
+Requests/sec:   1757.39
+Transfer/sec:    317.14KB
+
+---------------------------------------------------------
+ Concurrency: 64 for HttpListener-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.15ms  116.39ms   2.09s    99.06%
+    Req/Sec   184.99     40.91   334.00     69.17%
+  21657 requests in 15.01s, 3.82MB read
+Requests/sec:   1442.63
+Transfer/sec:    260.30KB
+
+---------------------------------------------------------
+ Concurrency: 128 for HttpListener-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   104.31ms  134.87ms   1.25s    97.88%
+    Req/Sec   149.91     19.56   212.00     69.49%
+  17687 requests in 15.01s, 3.12MB read
+  Socket errors: connect 0, read 0, write 0, timeout 1
+Requests/sec:   1178.25
+Transfer/sec:    212.60KB
+
+---------------------------------------------------------
+ Concurrency: 256 for HttpListener-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   212.49ms  169.70ms   2.30s    97.46%
+    Req/Sec   153.18     15.12   190.00     70.37%
+  18025 requests in 15.04s, 3.18MB read
+  Socket errors: connect 0, read 0, write 0, timeout 7
+Requests/sec:   1198.56
+Transfer/sec:    216.27KB

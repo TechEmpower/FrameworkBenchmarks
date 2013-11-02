@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 16:37:39 PDT 2013
+
+  System load:  0.27               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongodbdb?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongodbdb?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.72ms  510.20us  17.58ms   99.36%
+    Req/Sec   617.38     60.47   777.00     76.88%
+  23440 requests in 5.00s, 6.49MB read
+Requests/sec:   4686.92
+Transfer/sec:      1.30MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbdb?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbdb?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.99ms   19.29ms 120.79ms   75.56%
+    Req/Sec     1.08k   180.52     1.53k    66.79%
+  126876 requests in 15.01s, 35.15MB read
+Requests/sec:   8452.79
+Transfer/sec:      2.34MB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbdb?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbdb?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.24ms   18.31ms 255.85ms   82.18%
+    Req/Sec     1.53k   441.08     2.80k    69.03%
+  181624 requests in 15.00s, 44.48MB read
+Requests/sec:  12105.40
+Transfer/sec:      2.96MB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbdb?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbdb?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.65ms   18.01ms 206.84ms   85.97%
+    Req/Sec     1.00k   107.00     1.22k    73.76%
+  116391 requests in 15.00s, 42.95MB read
+Requests/sec:   7757.34
+Transfer/sec:      2.86MB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbdb?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbdb?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.86ms   18.49ms 145.08ms   82.98%
+    Req/Sec   625.58     59.30   728.00     69.17%
+  73295 requests in 15.00s, 38.15MB read
+Requests/sec:   4885.49
+Transfer/sec:      2.54MB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbdb?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbdb?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    71.87ms   26.95ms 385.26ms   88.49%
+    Req/Sec   452.27     28.79   510.00     62.50%
+  52955 requests in 15.01s, 35.59MB read
+Requests/sec:   3529.04
+Transfer/sec:      2.37MB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbdb?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbdb?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    92.68ms   26.16ms 242.44ms   82.16%
+    Req/Sec   348.98     37.50   418.00     71.37%
+  41147 requests in 15.00s, 33.89MB read
+Requests/sec:   2742.66
+Transfer/sec:      2.26MB

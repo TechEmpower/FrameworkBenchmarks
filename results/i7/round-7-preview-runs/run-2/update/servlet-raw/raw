@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 06:42:08 PDT 2013
+
+  System load:  0.86               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/servlet/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/servlet/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.22ms    4.22ms  33.16ms   81.95%
+    Req/Sec    78.80     19.23   121.00     56.43%
+  3125 requests in 5.01s, 593.75KB read
+Requests/sec:    623.41
+Transfer/sec:    118.45KB
+
+---------------------------------------------------------
+ Running Warmup servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.89ms   74.43ms   1.04s    97.20%
+    Req/Sec     1.09k   499.17     2.00k    62.29%
+  130730 requests in 15.00s, 24.26MB read
+Requests/sec:   8714.77
+Transfer/sec:      1.62MB
+
+---------------------------------------------------------
+ Queries: 1 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.64ms  129.33ms 971.15ms   94.87%
+    Req/Sec     2.13k     1.14k    4.78k    63.62%
+  254423 requests in 15.01s, 39.50MB read
+Requests/sec:  16949.16
+Transfer/sec:      2.63MB
+
+---------------------------------------------------------
+ Queries: 5 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    79.46ms   43.47ms 458.98ms   83.97%
+    Req/Sec   442.78    136.71   716.00     65.52%
+  52746 requests in 15.00s, 14.63MB read
+Requests/sec:   3515.25
+Transfer/sec:      0.98MB
+
+---------------------------------------------------------
+ Queries: 10 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   180.73ms  128.24ms   1.01s    93.17%
+    Req/Sec   209.88     78.68   380.00     65.35%
+  25324 requests in 15.01s, 10.86MB read
+Requests/sec:   1686.96
+Transfer/sec:    740.98KB
+
+---------------------------------------------------------
+ Queries: 15 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   261.29ms  166.12ms   1.32s    90.10%
+    Req/Sec   137.88     45.01   213.00     73.31%
+  16545 requests in 15.09s, 9.60MB read
+Requests/sec:   1096.63
+Transfer/sec:    651.85KB
+
+---------------------------------------------------------
+ Queries: 20 for servlet-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/servlet/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/servlet/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   289.52ms   94.75ms 966.75ms   85.65%
+    Req/Sec   113.74     23.34   158.00     74.36%
+  13725 requests in 15.01s, 10.05MB read
+Requests/sec:    914.44
+Transfer/sec:    685.44KB

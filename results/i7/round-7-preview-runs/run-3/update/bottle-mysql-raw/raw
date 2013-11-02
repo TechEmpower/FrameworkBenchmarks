@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 18:46:10 PDT 2013
+
+  System load:  0.23               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/raw-updates?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/raw-updates?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.62ms  694.87us  26.69ms   99.25%
+    Req/Sec   661.57     70.54   800.00     81.69%
+  25061 requests in 5.00s, 5.27MB read
+Requests/sec:   5010.32
+Transfer/sec:      1.05MB
+
+---------------------------------------------------------
+ Running Warmup bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/raw-updates?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/raw-updates?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.97ms   14.08ms 138.24ms   80.08%
+    Req/Sec     0.92k    84.66     1.20k    83.48%
+  109611 requests in 15.00s, 23.06MB read
+Requests/sec:   7306.18
+Transfer/sec:      1.54MB
+
+---------------------------------------------------------
+ Queries: 1 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/raw-updates?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/raw-updates?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.11ms   12.13ms 153.14ms   77.68%
+    Req/Sec     1.29k   124.06     1.69k    66.62%
+  150847 requests in 15.00s, 27.16MB read
+Requests/sec:  10054.99
+Transfer/sec:      1.81MB
+
+---------------------------------------------------------
+ Queries: 5 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/raw-updates?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/raw-updates?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.60ms   27.24ms 249.46ms   75.44%
+    Req/Sec   494.31     76.90   664.00     84.67%
+  59257 requests in 15.00s, 17.91MB read
+Requests/sec:   3949.53
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Queries: 10 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/raw-updates?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/raw-updates?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   106.61ms   27.14ms 290.92ms   71.25%
+    Req/Sec   299.30     18.64   362.00     74.51%
+  35519 requests in 15.02s, 16.12MB read
+Requests/sec:   2365.25
+Transfer/sec:      1.07MB
+
+---------------------------------------------------------
+ Queries: 15 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/raw-updates?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/raw-updates?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   152.19ms   42.70ms 365.13ms   68.68%
+    Req/Sec   209.66     17.05   250.00     75.27%
+  24897 requests in 15.01s, 15.07MB read
+Requests/sec:   1658.77
+Transfer/sec:      1.00MB
+
+---------------------------------------------------------
+ Queries: 20 for bottle-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/raw-updates?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/raw-updates?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   195.84ms   51.29ms 521.27ms   70.30%
+    Req/Sec   162.34      8.86   190.00     71.35%
+  19285 requests in 15.01s, 14.60MB read
+Requests/sec:   1284.74
+Transfer/sec:      0.97MB

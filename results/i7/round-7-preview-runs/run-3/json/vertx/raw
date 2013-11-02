@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 23:35:30 PDT 2013
+
+  System load:  0.05               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer vertx
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/j
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/j
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   235.76us  490.85us  15.22ms   99.78%
+    Req/Sec     4.81k   466.22     6.00k    86.61%
+  173892 requests in 5.00s, 18.74MB read
+Requests/sec:  34779.33
+Transfer/sec:      3.75MB
+
+---------------------------------------------------------
+ Running Warmup vertx
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/j
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/j
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.12ms  335.14us  18.81ms   91.48%
+    Req/Sec    30.04k     3.03k   48.22k    92.33%
+  3372331 requests in 15.00s, 363.42MB read
+Requests/sec: 224825.11
+Transfer/sec:     24.23MB
+
+---------------------------------------------------------
+ Concurrency: 8 for vertx
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/j
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/j
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   210.24us   48.39us   2.66ms   81.82%
+    Req/Sec     4.91k   305.88     6.78k    58.68%
+  558468 requests in 15.00s, 60.18MB read
+Requests/sec:  37231.29
+Transfer/sec:      4.01MB
+
+---------------------------------------------------------
+ Concurrency: 16 for vertx
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/j
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/j
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   202.10us   81.39us   5.93ms   87.35%
+    Req/Sec    10.21k   693.56    12.44k    69.17%
+  1160133 requests in 15.00s, 125.02MB read
+Requests/sec:  77343.60
+Transfer/sec:      8.33MB
+
+---------------------------------------------------------
+ Concurrency: 32 for vertx
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/j
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/j
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   189.50us  125.62us   9.28ms   95.33%
+    Req/Sec    21.98k     1.84k   27.22k    71.85%
+  2496213 requests in 15.00s, 269.00MB read
+Requests/sec: 166419.04
+Transfer/sec:     17.93MB
+
+---------------------------------------------------------
+ Concurrency: 64 for vertx
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/j
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/j
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   289.23us  357.53us  13.79ms   98.61%
+    Req/Sec    29.57k     3.28k   39.56k    78.72%
+  3342370 requests in 15.00s, 360.19MB read
+Requests/sec: 222826.38
+Transfer/sec:     24.01MB
+
+---------------------------------------------------------
+ Concurrency: 128 for vertx
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/j
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/j
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   573.31us  355.70us  18.55ms   97.71%
+    Req/Sec    29.78k     2.79k   38.00k    85.87%
+  3363697 requests in 15.00s, 362.49MB read
+Requests/sec: 224255.08
+Transfer/sec:     24.17MB
+
+---------------------------------------------------------
+ Concurrency: 256 for vertx
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/j
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/j
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.13ms  378.91us  18.92ms   91.28%
+    Req/Sec    29.98k     2.60k   39.67k    88.47%
+  3386380 requests in 15.00s, 364.93MB read
+Requests/sec: 225762.55
+Transfer/sec:     24.33MB

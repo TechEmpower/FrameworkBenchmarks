@@ -1,0 +1,106 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 15:29:02 PDT 2013
+
+  System load:  0.13               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.88ms    2.69ms  42.28ms   99.12%
+    Req/Sec     1.58k   214.72     1.89k    93.49%
+  59467 requests in 5.00s, 14.69MB read
+Requests/sec:  11892.34
+Transfer/sec:      2.94MB
+
+---------------------------------------------------------
+ Running Warmup aspnet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.57ms    4.03ms 132.51ms   79.97%
+    Req/Sec     3.76k   185.78     4.29k    80.87%
+  439388 requests in 15.00s, 108.53MB read
+Requests/sec:  29292.47
+Transfer/sec:      7.24MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   140.51ms   21.68ms 369.56ms   88.88%
+    Req/Sec     3.66k   107.87     3.79k    81.25%
+  432795 requests in 15.00s, 106.90MB read
+Requests/sec:  28851.95
+Transfer/sec:      7.13MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for aspnet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   557.56ms   65.87ms   1.35s    87.93%
+    Req/Sec     3.64k   123.53     4.00k    85.19%
+  427596 requests in 15.00s, 105.63MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+  Non-2xx or 3xx responses: 43
+Requests/sec:  28506.16
+Transfer/sec:      7.04MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for aspnet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.12s   478.42ms   2.92s    71.71%
+    Req/Sec     4.20k   287.06     4.72k    75.44%
+  492496 requests in 15.00s, 142.11MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2490
+  Non-2xx or 3xx responses: 84460
+Requests/sec:  32829.22
+Transfer/sec:      9.47MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for aspnet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.91s   151.53ms   3.27s    86.63%
+    Req/Sec     5.64k   495.16     6.50k    64.71%
+  650918 requests in 15.01s, 215.35MB read
+  Socket errors: connect 11, read 0, write 0, timeout 32931
+  Non-2xx or 3xx responses: 339713
+Requests/sec:  43372.80
+Transfer/sec:     14.35MB

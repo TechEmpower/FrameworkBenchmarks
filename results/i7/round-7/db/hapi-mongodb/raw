@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 23:19:47 PDT 2013
+
+  System load:  0.06               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongoose/
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongoose/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.89ms    2.02ms  19.88ms   96.68%
+    Req/Sec   682.55    223.74     1.22k    70.80%
+  25578 requests in 5.00s, 6.58MB read
+Requests/sec:   5113.50
+Transfer/sec:      1.32MB
+
+---------------------------------------------------------
+ Running Warmup hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.60ms   11.13ms  86.80ms   71.58%
+    Req/Sec     1.18k   166.55     1.80k    76.85%
+  139675 requests in 15.01s, 35.94MB read
+Requests/sec:   9308.55
+Transfer/sec:      2.39MB
+
+---------------------------------------------------------
+ Concurrency: 8 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.85ms    2.27ms  22.63ms   97.15%
+    Req/Sec   720.38    235.17     1.33k    67.07%
+  82211 requests in 15.00s, 21.15MB read
+Requests/sec:   5479.79
+Transfer/sec:      1.41MB
+
+---------------------------------------------------------
+ Concurrency: 16 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.98ms    2.61ms  33.92ms   89.59%
+    Req/Sec   844.68    360.82     2.11k    68.66%
+  96231 requests in 15.00s, 24.76MB read
+Requests/sec:   6414.77
+Transfer/sec:      1.65MB
+
+---------------------------------------------------------
+ Concurrency: 32 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.98ms    3.46ms  31.27ms   78.71%
+    Req/Sec     1.03k   549.46     3.11k    77.30%
+  110637 requests in 15.00s, 28.46MB read
+Requests/sec:   7375.19
+Transfer/sec:      1.90MB
+
+---------------------------------------------------------
+ Concurrency: 64 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.70ms    5.32ms  44.44ms   73.78%
+    Req/Sec     1.02k   327.77     2.05k    67.56%
+  117976 requests in 15.00s, 30.35MB read
+Requests/sec:   7863.97
+Transfer/sec:      2.02MB
+
+---------------------------------------------------------
+ Concurrency: 128 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.70ms    7.03ms  66.86ms   76.63%
+    Req/Sec     1.11k   172.89     1.77k    71.60%
+  131245 requests in 15.00s, 33.77MB read
+Requests/sec:   8748.19
+Transfer/sec:      2.25MB
+
+---------------------------------------------------------
+ Concurrency: 256 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongoose/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.94ms   16.41ms 120.14ms   71.26%
+    Req/Sec     1.16k   214.69     1.90k    74.31%
+  138108 requests in 15.00s, 35.53MB read
+Requests/sec:   9206.43
+Transfer/sec:      2.37MB

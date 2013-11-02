@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 18:40:30 PDT 2013
+
+  System load:  0.41               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/scalatra/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/scalatra/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   675.42us  200.37us   5.28ms   93.84%
+    Req/Sec     1.56k   139.70     2.00k    75.79%
+  58880 requests in 5.00s, 15.64MB read
+Requests/sec:  11775.38
+Transfer/sec:      3.13MB
+
+---------------------------------------------------------
+ Running Warmup scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/scalatra/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/scalatra/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.06ms    2.61ms 101.48ms   91.61%
+    Req/Sec     3.65k   356.83     5.08k    83.04%
+  420513 requests in 15.00s, 111.71MB read
+Requests/sec:  28036.15
+Transfer/sec:      7.45MB
+
+---------------------------------------------------------
+ Queries: 1 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/scalatra/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/scalatra/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.50ms    6.16ms 136.58ms   95.94%
+    Req/Sec     6.35k     1.09k   13.33k    86.81%
+  722134 requests in 15.00s, 153.42MB read
+Requests/sec:  48141.66
+Transfer/sec:     10.23MB
+
+---------------------------------------------------------
+ Queries: 5 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/scalatra/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/scalatra/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.52ms    7.01ms 227.14ms   97.30%
+    Req/Sec     1.57k   109.32     2.06k    75.89%
+  185530 requests in 15.00s, 78.89MB read
+Requests/sec:  12368.23
+Transfer/sec:      5.26MB
+
+---------------------------------------------------------
+ Queries: 10 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/scalatra/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/scalatra/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.70ms   13.33ms 248.15ms   98.88%
+    Req/Sec     0.87k    62.06     1.15k    67.69%
+  104190 requests in 15.00s, 72.03MB read
+Requests/sec:   6944.43
+Transfer/sec:      4.80MB
+
+---------------------------------------------------------
+ Queries: 15 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/scalatra/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/scalatra/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.20ms   15.52ms 262.71ms   95.55%
+    Req/Sec   632.87     44.07     0.85k    74.14%
+  75882 requests in 15.00s, 72.64MB read
+Requests/sec:   5057.93
+Transfer/sec:      4.84MB
+
+---------------------------------------------------------
+ Queries: 20 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/scalatra/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/scalatra/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    63.47ms   15.86ms 278.78ms   95.39%
+    Req/Sec   506.55     48.55   813.00     78.88%
+  61058 requests in 15.00s, 74.69MB read
+Requests/sec:   4069.56
+Transfer/sec:      4.98MB

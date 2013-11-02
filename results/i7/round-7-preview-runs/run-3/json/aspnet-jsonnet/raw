@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 10:51:44 PDT 2013
+
+  System load:  0.03               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json/jsonnet
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   761.52us    1.59ms  32.05ms   99.10%
+    Req/Sec     1.61k   219.73     1.89k    93.44%
+  60113 requests in 5.00s, 15.88MB read
+Requests/sec:  12016.58
+Transfer/sec:      3.17MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/jsonnet
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.93ms    4.10ms 135.49ms   74.71%
+    Req/Sec     3.64k   192.37     5.04k    75.15%
+  426109 requests in 15.00s, 112.56MB read
+Requests/sec:  28407.04
+Transfer/sec:      7.50MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/jsonnet
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.88ms    2.59ms  38.19ms   99.00%
+    Req/Sec     1.60k   227.30     2.00k    92.59%
+  181143 requests in 15.00s, 47.85MB read
+Requests/sec:  12075.91
+Transfer/sec:      3.19MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/jsonnet
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   647.06us  840.15us  30.72ms   99.06%
+    Req/Sec     3.36k   424.83     4.44k    83.29%
+  377523 requests in 15.00s, 99.73MB read
+Requests/sec:  25168.96
+Transfer/sec:      6.65MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/jsonnet
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms    0.88ms  30.42ms   97.58%
+    Req/Sec     3.72k   438.76     7.55k    83.62%
+  417327 requests in 15.00s, 110.24MB read
+Requests/sec:  27821.50
+Transfer/sec:      7.35MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/jsonnet
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.23ms    1.37ms  58.19ms   89.93%
+    Req/Sec     3.81k   397.83     6.10k    79.62%
+  430354 requests in 15.00s, 113.69MB read
+Requests/sec:  28690.28
+Transfer/sec:      7.58MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/jsonnet
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.36ms    2.09ms  55.67ms   80.58%
+    Req/Sec     3.75k   214.47     5.48k    76.18%
+  434825 requests in 15.00s, 114.87MB read
+Requests/sec:  28987.93
+Transfer/sec:      7.66MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-jsonnet
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json/jsonnet
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/jsonnet
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.77ms    4.50ms 185.02ms   83.68%
+    Req/Sec     3.70k   169.21     4.30k    75.84%
+  432891 requests in 15.00s, 114.36MB read
+Requests/sec:  28859.44
+Transfer/sec:      7.62MB

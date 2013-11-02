@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 02:44:43 PDT 2013
+
+  System load:  0.08               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/queries?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/queries?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.89ms    4.02ms  28.48ms   65.70%
+    Req/Sec    68.13     15.38   119.00     65.04%
+  2714 requests in 5.02s, 22.48MB read
+  Non-2xx or 3xx responses: 2714
+Requests/sec:    541.13
+Transfer/sec:      4.48MB
+
+---------------------------------------------------------
+ Running Warmup phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/queries?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/queries?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   316.63ms  124.69ms   1.60s    77.28%
+    Req/Sec   102.37      7.50   125.00     77.18%
+  12267 requests in 15.03s, 101.58MB read
+  Non-2xx or 3xx responses: 12267
+Requests/sec:    815.93
+Transfer/sec:      6.76MB
+
+---------------------------------------------------------
+ Queries: 1 for phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/queries?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/queries?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   309.11ms  114.68ms   1.13s    74.23%
+    Req/Sec   102.81      9.56   133.00     74.23%
+  12280 requests in 15.02s, 101.68MB read
+  Non-2xx or 3xx responses: 12280
+Requests/sec:    817.56
+Transfer/sec:      6.77MB
+
+---------------------------------------------------------
+ Queries: 5 for phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/queries?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/queries?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   185.93ms  144.34ms 818.09ms   69.32%
+    Req/Sec   273.44    159.60   470.00     46.80%
+  32216 requests in 15.01s, 59.42MB read
+  Non-2xx or 3xx responses: 6037
+Requests/sec:   2146.65
+Transfer/sec:      3.96MB
+
+---------------------------------------------------------
+ Queries: 10 for phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/queries?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/queries?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   306.10ms  113.86ms 959.12ms   76.56%
+    Req/Sec   106.41     20.78   236.00     89.08%
+  13492 requests in 15.03s, 97.58MB read
+  Non-2xx or 3xx responses: 11667
+Requests/sec:    897.88
+Transfer/sec:      6.49MB
+
+---------------------------------------------------------
+ Queries: 15 for phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/queries?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/queries?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   318.53ms  105.38ms   1.02s    75.22%
+    Req/Sec   101.43     11.37   140.00     79.71%
+  12132 requests in 15.03s, 100.45MB read
+  Non-2xx or 3xx responses: 12132
+Requests/sec:    807.23
+Transfer/sec:      6.68MB
+
+---------------------------------------------------------
+ Queries: 20 for phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/queries?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/queries?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   306.59ms   99.45ms 988.75ms   75.14%
+    Req/Sec   101.79     11.98   130.00     89.60%
+  12211 requests in 15.02s, 101.11MB read
+  Non-2xx or 3xx responses: 12211
+Requests/sec:    812.72
+Transfer/sec:      6.73MB

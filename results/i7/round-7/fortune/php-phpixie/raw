@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 02:53:57 PDT 2013
+
+  System load:  0.01               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.35ms    3.69ms  26.79ms   78.03%
+    Req/Sec    98.09     22.24   178.00     60.67%
+  3851 requests in 5.01s, 29.62MB read
+  Non-2xx or 3xx responses: 3851
+Requests/sec:    769.16
+Transfer/sec:      5.92MB
+
+---------------------------------------------------------
+ Running Warmup php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   230.13ms  186.19ms   1.12s    67.94%
+    Req/Sec   210.41    178.88   579.00     78.63%
+  24128 requests in 15.00s, 94.14MB read
+  Non-2xx or 3xx responses: 9614
+Requests/sec:   1608.15
+Transfer/sec:      6.27MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.13ms    4.73ms  28.66ms   52.59%
+    Req/Sec   191.65    148.91   517.00     71.65%
+  22280 requests in 15.01s, 85.47MB read
+  Non-2xx or 3xx responses: 8647
+Requests/sec:   1484.18
+Transfer/sec:      5.69MB
+
+---------------------------------------------------------
+ Concurrency: 16 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.14ms    7.98ms  60.80ms   66.32%
+    Req/Sec   106.73     22.59   298.00     70.79%
+  12742 requests in 15.01s, 97.30MB read
+  Non-2xx or 3xx responses: 12627
+Requests/sec:    849.04
+Transfer/sec:      6.48MB
+
+---------------------------------------------------------
+ Concurrency: 32 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.51ms   20.18ms 163.62ms   73.55%
+    Req/Sec   107.86     16.81   161.00     66.06%
+  12937 requests in 15.02s, 99.52MB read
+  Non-2xx or 3xx responses: 12937
+Requests/sec:    861.60
+Transfer/sec:      6.63MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    74.00ms   45.77ms 309.78ms   73.51%
+    Req/Sec   107.53     14.38   151.00     64.46%
+  12918 requests in 15.02s, 99.38MB read
+  Non-2xx or 3xx responses: 12918
+Requests/sec:    860.26
+Transfer/sec:      6.62MB
+
+---------------------------------------------------------
+ Concurrency: 128 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   116.28ms  104.54ms 727.59ms   75.55%
+    Req/Sec   208.50    181.45   604.00     79.39%
+  24506 requests in 15.02s, 97.06MB read
+  Non-2xx or 3xx responses: 9993
+Requests/sec:   1631.74
+Transfer/sec:      6.46MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   240.61ms  175.38ms 830.64ms   60.97%
+    Req/Sec   203.40    173.49   571.00     78.99%
+  23475 requests in 15.03s, 94.54MB read
+  Non-2xx or 3xx responses: 9821
+Requests/sec:   1562.17
+Transfer/sec:      6.29MB

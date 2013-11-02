@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 02:15:48 PDT 2013
+
+  System load:  0.64               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:9000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:9000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.88ms    1.44ms  27.61ms   98.91%
+    Req/Sec     1.33k   187.43     1.67k    85.47%
+  50003 requests in 5.00s, 7.18MB read
+Requests/sec:  10000.38
+Transfer/sec:      1.44MB
+
+---------------------------------------------------------
+ Running Warmup play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.96ms   23.85ms 660.74ms   99.14%
+    Req/Sec     3.06k   567.71     5.60k    78.21%
+  349444 requests in 15.00s, 50.17MB read
+Requests/sec:  23296.03
+Transfer/sec:      3.34MB
+
+---------------------------------------------------------
+ Queries: 1 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.06ms   11.36ms 224.90ms   99.21%
+    Req/Sec     3.95k   675.92     6.67k    81.57%
+  449247 requests in 15.00s, 50.89MB read
+Requests/sec:  29950.73
+Transfer/sec:      3.39MB
+
+---------------------------------------------------------
+ Queries: 5 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.60ms   26.16ms 693.38ms   97.21%
+    Req/Sec     1.64k   246.85     2.75k    75.55%
+  192316 requests in 15.00s, 45.28MB read
+Requests/sec:  12821.80
+Transfer/sec:      3.02MB
+
+---------------------------------------------------------
+ Queries: 10 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.15ms   25.04ms 700.44ms   91.63%
+    Req/Sec   834.89    103.37     1.53k    77.11%
+  99183 requests in 15.00s, 38.38MB read
+Requests/sec:   6610.59
+Transfer/sec:      2.56MB
+
+---------------------------------------------------------
+ Queries: 15 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.42ms   28.92ms 743.81ms   90.97%
+    Req/Sec   555.37     72.40     0.89k    79.91%
+  66076 requests in 15.00s, 35.58MB read
+Requests/sec:   4404.03
+Transfer/sec:      2.37MB
+
+---------------------------------------------------------
+ Queries: 20 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    75.37ms   33.59ms 697.47ms   89.00%
+    Req/Sec   418.04     50.34   677.00     77.18%
+  49860 requests in 15.01s, 34.41MB read
+Requests/sec:   3321.91
+Transfer/sec:      2.29MB

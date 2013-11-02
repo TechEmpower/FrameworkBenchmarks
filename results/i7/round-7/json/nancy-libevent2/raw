@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 00:59:02 PDT 2013
+
+  System load:  0.08               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   664.59us  233.31us   4.10ms   91.29%
+    Req/Sec     1.59k   153.54     2.00k    73.23%
+  58690 requests in 5.00s, 11.14MB read
+Requests/sec:  11737.42
+Transfer/sec:      2.23MB
+
+---------------------------------------------------------
+ Running Warmup nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.52ms   14.00ms  98.13ms   84.61%
+    Req/Sec     2.23k   210.23     3.24k    70.28%
+  265392 requests in 15.00s, 50.35MB read
+Requests/sec:  17691.42
+Transfer/sec:      3.36MB
+
+---------------------------------------------------------
+ Concurrency: 8 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   667.28us  245.14us   5.61ms   92.05%
+    Req/Sec     1.58k   164.65     2.00k    72.60%
+  179743 requests in 15.00s, 34.10MB read
+Requests/sec:  11982.86
+Transfer/sec:      2.27MB
+
+---------------------------------------------------------
+ Concurrency: 16 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.67ms    7.59ms 103.60ms   99.40%
+    Req/Sec     1.95k   288.58     2.89k    83.04%
+  221963 requests in 15.00s, 42.11MB read
+Requests/sec:  14797.44
+Transfer/sec:      2.81MB
+
+---------------------------------------------------------
+ Concurrency: 32 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.00ms    1.19ms  10.33ms   76.07%
+    Req/Sec     2.12k   309.23     3.33k    66.01%
+  241434 requests in 15.00s, 45.81MB read
+Requests/sec:  16094.89
+Transfer/sec:      3.05MB
+
+---------------------------------------------------------
+ Concurrency: 64 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.41ms    7.62ms 109.59ms   97.06%
+    Req/Sec     2.19k   414.82     4.11k    74.12%
+  249893 requests in 15.00s, 47.41MB read
+Requests/sec:  16659.18
+Transfer/sec:      3.16MB
+
+---------------------------------------------------------
+ Concurrency: 128 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.48ms    6.64ms  46.50ms   82.62%
+    Req/Sec     2.20k   312.69     3.80k    70.52%
+  256362 requests in 15.00s, 48.64MB read
+Requests/sec:  17090.00
+Transfer/sec:      3.24MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.57ms   14.27ms 106.18ms   85.39%
+    Req/Sec     2.22k   210.83     3.04k    68.33%
+  263437 requests in 15.00s, 49.98MB read
+Requests/sec:  17560.36
+Transfer/sec:      3.33MB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 14:58:56 PDT 2013
+
+  System load:  0.0                Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   361.06us   68.19us   0.93ms   72.85%
+    Req/Sec     2.88k   170.43     3.44k    60.28%
+  108347 requests in 5.00s, 23.14MB read
+Requests/sec:  21669.62
+Transfer/sec:      4.63MB
+
+---------------------------------------------------------
+ Running Warmup phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.00ms   17.57ms   1.29s    99.16%
+    Req/Sec     3.60k   303.63     5.78k    74.26%
+  423456 requests in 15.00s, 90.44MB read
+Requests/sec:  28227.99
+Transfer/sec:      6.03MB
+
+---------------------------------------------------------
+ Concurrency: 8 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   359.39us   64.76us 829.00us   72.01%
+    Req/Sec     2.89k   165.69     3.44k    62.03%
+  328101 requests in 15.00s, 70.07MB read
+Requests/sec:  21873.55
+Transfer/sec:      4.67MB
+
+---------------------------------------------------------
+ Concurrency: 16 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   541.61us  264.14us   4.58ms   88.59%
+    Req/Sec     3.88k   385.44     5.44k    70.66%
+  441466 requests in 15.00s, 94.29MB read
+Requests/sec:  29430.85
+Transfer/sec:      6.29MB
+
+---------------------------------------------------------
+ Concurrency: 32 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.05ms  471.93us   7.30ms   74.42%
+    Req/Sec     4.11k   637.85     7.33k    70.06%
+  466125 requests in 15.00s, 99.55MB read
+Requests/sec:  31075.26
+Transfer/sec:      6.64MB
+
+---------------------------------------------------------
+ Concurrency: 64 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.14ms    1.32ms  54.88ms   87.88%
+    Req/Sec     3.98k   489.17     8.22k    74.81%
+  450446 requests in 15.00s, 96.20MB read
+Requests/sec:  30029.89
+Transfer/sec:      6.41MB
+
+---------------------------------------------------------
+ Concurrency: 128 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.50ms    2.75ms  93.99ms   83.37%
+    Req/Sec     3.73k   444.29     7.18k    71.93%
+  426443 requests in 15.00s, 91.08MB read
+Requests/sec:  28428.43
+Transfer/sec:      6.07MB
+
+---------------------------------------------------------
+ Concurrency: 256 for phalcon-micro
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.14ms    9.15ms 501.10ms   96.36%
+    Req/Sec     3.65k   483.67    11.69k    84.85%
+  422182 requests in 15.00s, 90.17MB read
+Requests/sec:  28142.06
+Transfer/sec:      6.01MB

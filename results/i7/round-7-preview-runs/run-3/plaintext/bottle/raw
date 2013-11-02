@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 18:36:41 PDT 2013
+
+  System load:  0.03               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.31ms   14.78ms 204.07ms   99.47%
+    Req/Sec     4.45k   492.59     5.67k    82.02%
+  168697 requests in 5.00s, 26.22MB read
+Requests/sec:  33740.74
+Transfer/sec:      5.24MB
+
+---------------------------------------------------------
+ Running Warmup bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.37ms    8.75ms  58.25ms   85.12%
+    Req/Sec     6.23k     1.27k   11.80k    68.84%
+  698868 requests in 15.00s, 108.64MB read
+Requests/sec:  46591.39
+Transfer/sec:      7.24MB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    81.26ms   30.00ms 288.05ms   73.61%
+    Req/Sec     6.31k   590.38     8.27k    73.80%
+  733346 requests in 15.01s, 114.00MB read
+Requests/sec:  48862.84
+Transfer/sec:      7.60MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   334.17ms  151.59ms   2.35s    91.13%
+    Req/Sec     6.12k   556.43     8.76k    79.52%
+  730358 requests in 15.01s, 113.53MB read
+  Socket errors: connect 0, read 60, write 0, timeout 8
+Requests/sec:  48659.66
+Transfer/sec:      7.56MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   861.04ms  481.56ms   4.10s    88.81%
+    Req/Sec     6.63k     1.39k    7.90k    94.49%
+  724443 requests in 15.10s, 112.61MB read
+  Socket errors: connect 0, read 1015, write 0, timeout 10233
+Requests/sec:  47962.75
+Transfer/sec:      7.46MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.88s     5.14s   14.09s    83.50%
+    Req/Sec     5.33k     2.24k    7.74k    77.71%
+  700911 requests in 15.01s, 108.98MB read
+  Socket errors: connect 11, read 1573, write 0, timeout 82765
+Requests/sec:  46691.58
+Transfer/sec:      7.26MB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 17:57:05 PDT 2013
+
+  System load:  0.11               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.32ms    0.86ms  17.00ms   80.81%
+    Req/Sec   325.19     66.64   500.00     61.23%
+  12335 requests in 5.00s, 2.59MB read
+Requests/sec:   2465.58
+Transfer/sec:    531.06KB
+
+---------------------------------------------------------
+ Running Warmup bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.44ms   24.09ms 284.57ms   71.36%
+    Req/Sec   322.80     16.67   396.00     78.57%
+  38532 requests in 15.01s, 8.10MB read
+Requests/sec:   2567.47
+Transfer/sec:    552.99KB
+
+---------------------------------------------------------
+ Queries: 1 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    65.01ms   19.76ms 174.68ms   69.96%
+    Req/Sec   495.97     36.16   608.00     76.41%
+  58543 requests in 15.00s, 10.54MB read
+Requests/sec:   3901.59
+Transfer/sec:    719.27KB
+
+---------------------------------------------------------
+ Queries: 5 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   195.94ms   46.47ms 499.76ms   71.74%
+    Req/Sec   162.34     14.52   202.00     81.47%
+  19140 requests in 15.02s, 5.78MB read
+Requests/sec:   1274.52
+Transfer/sec:    394.41KB
+
+---------------------------------------------------------
+ Queries: 10 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   363.90ms  165.86ms   1.23s    70.87%
+    Req/Sec    90.48     15.58   134.00     63.89%
+  10440 requests in 15.04s, 4.74MB read
+Requests/sec:    694.13
+Transfer/sec:    322.51KB
+
+---------------------------------------------------------
+ Queries: 15 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   534.17ms  140.77ms   1.42s    80.13%
+    Req/Sec    59.62      6.17    74.00     78.12%
+  7180 requests in 15.02s, 4.35MB read
+Requests/sec:    477.94
+Transfer/sec:    296.22KB
+
+---------------------------------------------------------
+ Queries: 20 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   694.51ms  191.61ms   2.14s    82.12%
+    Req/Sec    45.34      5.51    62.00     75.57%
+  5482 requests in 15.04s, 4.15MB read
+Requests/sec:    364.44
+Transfer/sec:    282.43KB

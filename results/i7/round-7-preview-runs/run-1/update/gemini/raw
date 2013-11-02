@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 21:17:36 PDT 2013
+
+  System load:  0.82               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.77ms    5.19ms  43.78ms   88.92%
+    Req/Sec    77.03     19.93   129.00     79.81%
+  3076 requests in 5.01s, 632.54KB read
+Requests/sec:    613.87
+Transfer/sec:    126.23KB
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.38ms   64.54ms 982.37ms   95.75%
+    Req/Sec     1.10k   516.40     2.32k    61.33%
+  130876 requests in 15.02s, 26.28MB read
+Requests/sec:   8715.25
+Transfer/sec:      1.75MB
+
+---------------------------------------------------------
+ Queries: 1 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.93ms   76.62ms 758.52ms   96.21%
+    Req/Sec     2.18k     1.15k    4.82k    59.67%
+  258990 requests in 15.01s, 44.16MB read
+Requests/sec:  17259.32
+Transfer/sec:      2.94MB
+
+---------------------------------------------------------
+ Queries: 5 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    78.00ms   44.00ms 582.64ms   84.60%
+    Req/Sec   454.83    149.44   754.00     65.21%
+  54238 requests in 15.01s, 15.87MB read
+Requests/sec:   3612.57
+Transfer/sec:      1.06MB
+
+---------------------------------------------------------
+ Queries: 10 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   175.34ms  122.39ms 788.64ms   92.10%
+    Req/Sec   214.00     73.42   342.00     68.55%
+  25707 requests in 15.01s, 11.42MB read
+Requests/sec:   1713.14
+Transfer/sec:    779.25KB
+
+---------------------------------------------------------
+ Queries: 15 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   234.03ms  144.03ms   1.19s    92.07%
+    Req/Sec   149.87     40.51   224.00     76.84%
+  17794 requests in 15.01s, 10.60MB read
+Requests/sec:   1185.48
+Transfer/sec:    723.21KB
+
+---------------------------------------------------------
+ Queries: 20 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   330.94ms  171.99ms   1.23s    90.51%
+    Req/Sec   106.07     28.07   144.00     83.58%
+  12654 requests in 15.01s, 9.46MB read
+Requests/sec:    843.12
+Transfer/sec:    645.17KB

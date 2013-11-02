@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 17:13:27 PDT 2013
+
+  System load:  0.05               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/rails/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/rails/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.88ms    1.97ms  22.52ms   84.02%
+    Req/Sec   154.02     36.32   266.00     64.64%
+  5849 requests in 5.00s, 2.27MB read
+Requests/sec:   1168.83
+Transfer/sec:    465.20KB
+
+---------------------------------------------------------
+ Running Warmup rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   207.11ms   62.49ms 455.21ms   67.99%
+    Req/Sec   153.94      8.80   186.00     69.80%
+  18437 requests in 15.01s, 7.17MB read
+Requests/sec:   1228.53
+Transfer/sec:    488.97KB
+
+---------------------------------------------------------
+ Queries: 1 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   151.71ms   52.76ms 353.07ms   67.74%
+    Req/Sec   208.26     10.86   240.00     68.99%
+  24952 requests in 15.01s, 8.94MB read
+Requests/sec:   1662.44
+Transfer/sec:    610.06KB
+
+---------------------------------------------------------
+ Queries: 5 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   343.86ms   81.32ms 635.78ms   69.07%
+    Req/Sec    90.68      5.20   112.00     68.68%
+  10879 requests in 15.02s, 5.23MB read
+Requests/sec:    724.48
+Transfer/sec:    356.50KB
+
+---------------------------------------------------------
+ Queries: 10 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   579.88ms  111.01ms   1.00s    67.86%
+    Req/Sec    53.87      4.32    66.00     79.69%
+  6464 requests in 15.05s, 4.09MB read
+Requests/sec:    429.56
+Transfer/sec:    278.03KB
+
+---------------------------------------------------------
+ Queries: 15 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   802.88ms  133.42ms   1.13s    67.58%
+    Req/Sec    38.70      3.09    46.00     67.83%
+  4614 requests in 15.08s, 3.62MB read
+Requests/sec:    306.03
+Transfer/sec:    245.55KB
+
+---------------------------------------------------------
+ Queries: 20 for rails-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rails/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rails/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.06s   215.09ms   1.90s    74.74%
+    Req/Sec    29.03      4.13    37.00     83.16%
+  3482 requests in 15.07s, 3.26MB read
+Requests/sec:    231.01
+Transfer/sec:    221.23KB

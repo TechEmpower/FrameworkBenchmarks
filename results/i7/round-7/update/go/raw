@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 22:55:21 PDT 2013
+
+  System load:  0.12               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.20ms    1.45ms  42.78ms   99.58%
+    Req/Sec     0.92k   115.53     1.22k    71.70%
+  34928 requests in 5.00s, 5.78MB read
+Requests/sec:   6984.61
+Transfer/sec:      1.16MB
+
+---------------------------------------------------------
+ Running Warmup go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.28ms    9.46ms 327.29ms   93.75%
+    Req/Sec     2.62k   545.10     4.03k    82.46%
+  309726 requests in 15.00s, 51.27MB read
+Requests/sec:  20648.28
+Transfer/sec:      3.42MB
+
+---------------------------------------------------------
+ Queries: 1 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.14ms    3.09ms  61.97ms   72.70%
+    Req/Sec     5.52k   848.58     8.89k    68.54%
+  635358 requests in 15.00s, 84.70MB read
+Requests/sec:  42357.56
+Transfer/sec:      5.65MB
+
+---------------------------------------------------------
+ Queries: 5 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.48ms    7.13ms  73.04ms   70.51%
+    Req/Sec     1.06k   114.36     1.49k    71.73%
+  126030 requests in 15.00s, 32.44MB read
+Requests/sec:   8400.81
+Transfer/sec:      2.16MB
+
+---------------------------------------------------------
+ Queries: 10 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    61.23ms   15.73ms 749.12ms   89.17%
+    Req/Sec   526.35     38.80   641.00     69.31%
+  62883 requests in 15.00s, 25.71MB read
+Requests/sec:   4191.13
+Transfer/sec:      1.71MB
+
+---------------------------------------------------------
+ Queries: 15 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    92.30ms   13.26ms 159.77ms   68.86%
+    Req/Sec   347.31     30.76   428.00     79.88%
+  41664 requests in 15.00s, 23.35MB read
+Requests/sec:   2776.90
+Transfer/sec:      1.56MB
+
+---------------------------------------------------------
+ Queries: 20 for go
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   121.48ms   14.77ms 183.94ms   68.23%
+    Req/Sec   262.24     25.62   342.00     85.45%
+  31399 requests in 15.01s, 22.36MB read
+Requests/sec:   2092.20
+Transfer/sec:      1.49MB

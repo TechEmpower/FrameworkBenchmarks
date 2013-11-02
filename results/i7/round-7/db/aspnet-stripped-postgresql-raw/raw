@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 16:55:04 PDT 2013
+
+  System load:  0.02               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.24ms  700.65us   8.22ms   70.07%
+    Req/Sec   329.29     64.67   555.00     62.38%
+  12324 requests in 5.00s, 3.02MB read
+Requests/sec:   2463.95
+Transfer/sec:    617.97KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   190.57ms  319.83ms   4.28s    97.21%
+    Req/Sec   178.00     28.62   261.00     71.01%
+  21059 requests in 15.02s, 5.16MB read
+  Socket errors: connect 0, read 0, write 0, timeout 37
+Requests/sec:   1402.47
+Transfer/sec:    351.69KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.16ms  690.83us   9.18ms   69.87%
+    Req/Sec   340.07     65.42   555.00     77.26%
+  38561 requests in 15.00s, 9.44MB read
+Requests/sec:   2570.39
+Transfer/sec:    644.55KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.85ms    2.75ms  21.97ms   71.49%
+    Req/Sec   351.77     56.39   529.00     66.39%
+  40986 requests in 15.00s, 10.04MB read
+Requests/sec:   2732.10
+Transfer/sec:    685.06KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.70ms   12.46ms 103.12ms   83.85%
+    Req/Sec   244.19     46.04   383.00     66.70%
+  28740 requests in 15.00s, 7.04MB read
+Requests/sec:   1915.66
+Transfer/sec:    480.41KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.49ms  140.24ms   2.10s    98.90%
+    Req/Sec   212.54     43.90   324.00     70.34%
+  25065 requests in 15.01s, 6.14MB read
+Requests/sec:   1669.98
+Transfer/sec:    418.79KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.42ms  149.08ms   1.27s    97.87%
+    Req/Sec   171.38     30.39   270.00     73.93%
+  20221 requests in 15.02s, 4.95MB read
+  Socket errors: connect 0, read 0, write 0, timeout 8
+Requests/sec:   1346.46
+Transfer/sec:    337.65KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-stripped-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   188.44ms  172.83ms   2.42s    97.53%
+    Req/Sec   172.90     19.36   219.00     66.91%
+  20623 requests in 15.02s, 5.05MB read
+Requests/sec:   1372.64
+Transfer/sec:    344.20KB

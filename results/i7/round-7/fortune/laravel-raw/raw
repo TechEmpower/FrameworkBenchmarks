@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 00:05:43 PDT 2013
+
+  System load:  0.0                Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.62ms    6.82ms  40.73ms   73.73%
+    Req/Sec    87.62     28.22   195.00     61.62%
+  3467 requests in 5.01s, 5.95MB read
+  Non-2xx or 3xx responses: 3467
+Requests/sec:    692.30
+Transfer/sec:      1.19MB
+
+---------------------------------------------------------
+ Running Warmup laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   325.51ms  303.62ms   1.74s    71.91%
+    Req/Sec   104.91     32.38   198.00     79.73%
+  12576 requests in 15.00s, 21.77MB read
+  Non-2xx or 3xx responses: 11044
+Requests/sec:    838.15
+Transfer/sec:      1.45MB
+
+---------------------------------------------------------
+ Concurrency: 8 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.61ms    8.80ms  64.50ms   61.92%
+    Req/Sec   137.94     69.31   400.00     70.49%
+  16424 requests in 15.01s, 24.92MB read
+  Non-2xx or 3xx responses: 10302
+Requests/sec:   1094.25
+Transfer/sec:      1.66MB
+
+---------------------------------------------------------
+ Concurrency: 16 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.16ms   18.60ms 253.40ms   76.03%
+    Req/Sec   120.86     58.29   423.00     75.84%
+  14352 requests in 15.01s, 23.05MB read
+  Non-2xx or 3xx responses: 11093
+Requests/sec:    956.37
+Transfer/sec:      1.54MB
+
+---------------------------------------------------------
+ Concurrency: 32 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.89ms   32.57ms 289.60ms   72.59%
+    Req/Sec   120.56     49.58   345.00     75.71%
+  14372 requests in 15.01s, 23.97MB read
+  Non-2xx or 3xx responses: 10920
+Requests/sec:    957.45
+Transfer/sec:      1.60MB
+
+---------------------------------------------------------
+ Concurrency: 64 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.30ms   60.63ms 403.75ms   72.24%
+    Req/Sec    93.07     12.45   123.00     65.03%
+  11171 requests in 15.02s, 21.01MB read
+  Non-2xx or 3xx responses: 11171
+Requests/sec:    743.97
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Concurrency: 128 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   171.04ms  153.20ms   1.29s    82.14%
+    Req/Sec    92.88     13.24   137.00     73.89%
+  11135 requests in 15.03s, 21.03MB read
+  Non-2xx or 3xx responses: 11135
+Requests/sec:    740.98
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Concurrency: 256 for laravel-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   322.77ms  270.72ms   1.75s    67.05%
+    Req/Sec   103.15     28.27   194.00     84.68%
+  12364 requests in 15.01s, 21.57MB read
+  Non-2xx or 3xx responses: 11026
+Requests/sec:    823.76
+Transfer/sec:      1.44MB

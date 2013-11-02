@@ -1,0 +1,141 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 06:27:16 PDT 2013
+
+  System load:  0.01               Processes:           126
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongodb/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongodb/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  0 requests in 6.00s, 2.03KB read
+  Socket errors: connect 0, read 0, write 0, timeout 22
+Requests/sec:      0.00
+Transfer/sec:     346.52B
+
+---------------------------------------------------------
+ Running Warmup servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodb/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  153 requests in 16.01s, 1.28MB read
+  Socket errors: connect 0, read 2, write 0, timeout 1879
+  Non-2xx or 3xx responses: 24
+Requests/sec:      9.56
+Transfer/sec:     82.01KB
+
+---------------------------------------------------------
+ Concurrency: 8 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/mongodb/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  1 requests in 16.00s, 11.65KB read
+  Socket errors: connect 0, read 0, write 0, timeout 63
+Requests/sec:      0.06
+Transfer/sec:     745.68B
+
+---------------------------------------------------------
+ Concurrency: 16 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/mongodb/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  2 requests in 16.01s, 23.31KB read
+  Socket errors: connect 0, read 0, write 0, timeout 125
+Requests/sec:      0.12
+Transfer/sec:      1.46KB
+
+---------------------------------------------------------
+ Concurrency: 32 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/mongodb/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  7 requests in 16.01s, 47.58KB read
+  Socket errors: connect 0, read 0, write 0, timeout 243
+  Non-2xx or 3xx responses: 3
+Requests/sec:      0.44
+Transfer/sec:      2.97KB
+
+---------------------------------------------------------
+ Concurrency: 64 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/mongodb/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  16 requests in 16.00s, 67.63KB read
+  Socket errors: connect 0, read 0, write 0, timeout 486
+  Non-2xx or 3xx responses: 11
+Requests/sec:      1.00
+Transfer/sec:      4.23KB
+
+---------------------------------------------------------
+ Concurrency: 128 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/mongodb/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  48 requests in 16.00s, 353.30KB read
+  Socket errors: connect 0, read 1, write 0, timeout 933
+  Non-2xx or 3xx responses: 15
+Requests/sec:      3.00
+Transfer/sec:     22.08KB
+
+---------------------------------------------------------
+ Concurrency: 256 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodb/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us  100.00%
+    Req/Sec     0.00      0.00     0.00    100.00%
+  64 requests in 16.00s, 290.16KB read
+  Socket errors: connect 0, read 0, write 0, timeout 1915
+  Non-2xx or 3xx responses: 42
+Requests/sec:      4.00
+Transfer/sec:     18.13KB

@@ -3,10 +3,10 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "json_url": "/j",
-      "db_url": "/d",
-      "plaintext_url": "/p",
-      "query_url": "/d?queries=",
+      "json_url": "/json",
+      "db_url": "/db",
+      "plaintext_url": "/plaintext",
+      "query_url": "/db?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -14,7 +14,7 @@
       "framework": "vertx",
       "language": "Java",
       "orm": "Raw",
-      "platform": "Netty",
+      "platform": "vertx",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",

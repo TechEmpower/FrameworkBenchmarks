@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 23:24:36 PDT 2013
+
+  System load:  1.04               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   706.46us  211.87us   7.90ms   92.52%
+    Req/Sec     1.50k   173.36     1.89k    85.29%
+  54786 requests in 5.00s, 7.46MB read
+Requests/sec:  10956.32
+Transfer/sec:      1.49MB
+
+---------------------------------------------------------
+ Running Warmup unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.03ms  839.66us  19.24ms   89.83%
+    Req/Sec     4.76k   449.10     5.91k    82.17%
+  544335 requests in 15.00s, 74.12MB read
+Requests/sec:  36289.08
+Transfer/sec:      4.94MB
+
+---------------------------------------------------------
+ Concurrency: 8 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   676.11us  146.26us   7.30ms   85.15%
+    Req/Sec     1.55k   111.63     2.00k    62.04%
+  176168 requests in 15.00s, 23.99MB read
+Requests/sec:  11744.21
+Transfer/sec:      1.60MB
+
+---------------------------------------------------------
+ Concurrency: 16 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   550.98us  192.43us   9.80ms   92.63%
+    Req/Sec     3.82k   275.06     4.55k    66.82%
+  433739 requests in 15.00s, 59.06MB read
+Requests/sec:  28916.67
+Transfer/sec:      3.94MB
+
+---------------------------------------------------------
+ Concurrency: 32 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.88ms  349.19us  10.68ms   93.32%
+    Req/Sec     4.82k   374.81     5.67k    71.12%
+  548689 requests in 15.00s, 74.71MB read
+Requests/sec:  36579.41
+Transfer/sec:      4.98MB
+
+---------------------------------------------------------
+ Concurrency: 64 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.76ms  454.65us  12.54ms   94.20%
+    Req/Sec     4.82k   405.06     5.67k    85.28%
+  547764 requests in 15.00s, 74.58MB read
+Requests/sec:  36518.07
+Transfer/sec:      4.97MB
+
+---------------------------------------------------------
+ Concurrency: 128 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.52ms  615.18us  14.34ms   93.90%
+    Req/Sec     4.81k   388.62     5.55k    75.22%
+  548291 requests in 15.00s, 74.66MB read
+Requests/sec:  36551.66
+Transfer/sec:      4.98MB
+
+---------------------------------------------------------
+ Concurrency: 256 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.99ms  581.19us  17.54ms   90.16%
+    Req/Sec     4.77k   323.48     5.69k    81.41%
+  548806 requests in 15.00s, 74.73MB read
+Requests/sec:  36587.47
+Transfer/sec:      4.98MB

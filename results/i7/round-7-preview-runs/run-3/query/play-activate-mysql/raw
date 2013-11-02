@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 16:09:52 PDT 2013
+
+  System load:  0.07               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-activate-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:9000/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:9000/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.10ms  733.06us  21.38ms   98.58%
+    Req/Sec     0.99k   148.53     1.33k    83.04%
+  37106 requests in 5.00s, 5.33MB read
+Requests/sec:   7420.54
+Transfer/sec:      1.07MB
+
+---------------------------------------------------------
+ Running Warmup play-activate-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.34ms   41.30ms 658.91ms   99.32%
+    Req/Sec     1.27k   297.25     2.32k    80.02%
+  148531 requests in 15.01s, 21.33MB read
+Requests/sec:   9897.60
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Queries: 1 for play-activate-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    54.26ms  184.26ms   1.59s    95.62%
+    Req/Sec     1.80k   775.30     3.73k    62.84%
+  205858 requests in 15.00s, 23.32MB read
+Requests/sec:  13724.47
+Transfer/sec:      1.55MB
+
+---------------------------------------------------------
+ Queries: 5 for play-activate-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.03ms   43.96ms 715.97ms   98.87%
+    Req/Sec   654.91    132.05     1.15k    80.69%
+  77661 requests in 15.01s, 18.29MB read
+Requests/sec:   5175.54
+Transfer/sec:      1.22MB
+
+---------------------------------------------------------
+ Queries: 10 for play-activate-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.09ms   77.89ms 709.26ms   97.77%
+    Req/Sec   356.93    109.70   648.00     79.91%
+  42488 requests in 15.02s, 16.44MB read
+Requests/sec:   2828.44
+Transfer/sec:      1.09MB
+
+---------------------------------------------------------
+ Queries: 15 for play-activate-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   136.89ms   71.30ms   1.73s    97.59%
+    Req/Sec   234.45     51.95   480.00     79.91%
+  28006 requests in 15.01s, 15.08MB read
+Requests/sec:   1865.78
+Transfer/sec:      1.00MB
+
+---------------------------------------------------------
+ Queries: 20 for play-activate-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   185.90ms   48.31ms 835.65ms   86.34%
+    Req/Sec   172.77     45.45   299.00     78.91%
+  20775 requests in 15.06s, 14.34MB read
+Requests/sec:   1379.58
+Transfer/sec:      0.95MB

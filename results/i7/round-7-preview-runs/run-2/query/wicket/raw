@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 13:10:09 PDT 2013
+
+  System load:  0.89               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/wicket/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/wicket/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.89ms  232.94us   6.55ms   91.35%
+    Req/Sec     1.18k   100.23     1.55k    79.95%
+  44518 requests in 5.00s, 15.14MB read
+Requests/sec:   8902.97
+Transfer/sec:      3.03MB
+
+---------------------------------------------------------
+ Running Warmup wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/wicket/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/wicket/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.71ms   71.33ms 926.61ms   99.16%
+    Req/Sec     3.85k   806.82    16.33k    84.50%
+  438185 requests in 15.00s, 149.06MB read
+Requests/sec:  29213.27
+Transfer/sec:      9.94MB
+
+---------------------------------------------------------
+ Queries: 1 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/wicket/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/wicket/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.36ms    9.84ms 169.55ms   96.65%
+    Req/Sec     5.53k     1.09k   12.00k    84.88%
+  640544 requests in 15.00s, 198.44MB read
+Requests/sec:  42706.11
+Transfer/sec:     13.23MB
+
+---------------------------------------------------------
+ Queries: 5 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/wicket/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/wicket/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.97ms    6.74ms  86.91ms   83.66%
+    Req/Sec     1.91k   197.63     5.09k    85.87%
+  226660 requests in 15.00s, 97.74MB read
+Requests/sec:  15110.09
+Transfer/sec:      6.52MB
+
+---------------------------------------------------------
+ Queries: 10 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/wicket/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/wicket/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.70ms    9.23ms 112.50ms   84.41%
+    Req/Sec     1.05k    57.15     1.29k    73.01%
+  125376 requests in 15.00s, 73.09MB read
+Requests/sec:   8357.47
+Transfer/sec:      4.87MB
+
+---------------------------------------------------------
+ Queries: 15 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/wicket/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/wicket/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.87ms   11.83ms 146.95ms   83.94%
+    Req/Sec   725.08     43.46     0.88k    70.22%
+  86510 requests in 15.00s, 63.57MB read
+Requests/sec:   5766.29
+Transfer/sec:      4.24MB
+
+---------------------------------------------------------
+ Queries: 20 for wicket
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/wicket/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/wicket/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.64ms   14.15ms 186.70ms   84.90%
+    Req/Sec   554.48     30.37   701.00     69.17%
+  66297 requests in 15.00s, 58.78MB read
+Requests/sec:   4418.86
+Transfer/sec:      3.92MB

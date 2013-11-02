@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 02:19:54 PDT 2013
+
+  System load:  0.04               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/bench/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/bench/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.03ms  633.64us  52.20ms   93.63%
+    Req/Sec    20.52      2.63    31.00     91.69%
+  852 requests in 5.04s, 34.30MB read
+  Non-2xx or 3xx responses: 852
+Requests/sec:    168.96
+Transfer/sec:      6.80MB
+
+---------------------------------------------------------
+ Running Warmup php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/db/2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   311.03ms  234.75ms   1.30s    68.51%
+    Req/Sec   165.03    111.32   359.00     61.70%
+  20498 requests in 15.01s, 187.89MB read
+  Non-2xx or 3xx responses: 4566
+Requests/sec:   1365.67
+Transfer/sec:     12.52MB
+
+---------------------------------------------------------
+ Queries: 1 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   346.61ms  219.20ms   1.07s    57.48%
+    Req/Sec   141.94    112.50   452.00     71.86%
+  17481 requests in 15.02s, 221.44MB read
+  Non-2xx or 3xx responses: 5402
+Requests/sec:   1164.22
+Transfer/sec:     14.75MB
+
+---------------------------------------------------------
+ Queries: 5 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/db/5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   468.68ms  200.58ms   1.32s    67.33%
+    Req/Sec    67.17      6.31    88.00     77.87%
+  8040 requests in 15.01s, 325.61MB read
+  Non-2xx or 3xx responses: 8040
+Requests/sec:    535.66
+Transfer/sec:     21.69MB
+
+---------------------------------------------------------
+ Queries: 10 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/db/10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   427.15ms  203.92ms   1.14s    64.53%
+    Req/Sec    88.76     51.62   254.00     85.34%
+  11187 requests in 15.02s, 282.29MB read
+  Non-2xx or 3xx responses: 6956
+Requests/sec:    745.01
+Transfer/sec:     18.80MB
+
+---------------------------------------------------------
+ Queries: 15 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/db/15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   269.69ms  193.92ms   1.14s    77.29%
+    Req/Sec   148.83     64.82   230.00     55.19%
+  17984 requests in 15.02s, 130.44MB read
+  Non-2xx or 3xx responses: 2936
+Requests/sec:   1197.00
+Transfer/sec:      8.68MB
+
+---------------------------------------------------------
+ Queries: 20 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/db/20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   348.08ms  200.19ms   1.11s    64.69%
+    Req/Sec   113.50     54.40   243.00     76.80%
+  13426 requests in 15.02s, 199.98MB read
+  Non-2xx or 3xx responses: 4770
+Requests/sec:    893.66
+Transfer/sec:     13.31MB

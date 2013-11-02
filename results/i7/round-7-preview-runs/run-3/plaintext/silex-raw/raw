@@ -1,0 +1,107 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 19:57:24 PDT 2013
+
+  System load:  0.0                Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer silex-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.17ms    1.35ms  13.41ms   73.13%
+    Req/Sec   349.02     90.51   666.00     62.04%
+  13227 requests in 5.00s, 3.06MB read
+Requests/sec:   2644.25
+Transfer/sec:    627.37KB
+
+---------------------------------------------------------
+ Running Warmup silex-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    86.49ms  122.70ms   1.33s    92.10%
+    Req/Sec   362.61     51.75   604.00     74.60%
+  43248 requests in 15.00s, 10.02MB read
+Requests/sec:   2882.79
+Transfer/sec:    684.01KB
+
+---------------------------------------------------------
+ Concurrency: 256 for silex-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.41s   446.59ms   3.05s    69.43%
+    Req/Sec   364.48     20.48   429.00     71.03%
+  43529 requests in 15.01s, 10.09MB read
+  Socket errors: connect 0, read 0, write 0, timeout 39
+Requests/sec:   2900.52
+Transfer/sec:    688.22KB
+
+---------------------------------------------------------
+ Concurrency: 1024 for silex-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.69s     3.29s   14.21s    86.00%
+    Req/Sec   369.56     50.67   499.00     65.62%
+  43620 requests in 15.01s, 10.11MB read
+  Socket errors: connect 0, read 388, write 0, timeout 4370
+  Non-2xx or 3xx responses: 24
+Requests/sec:   2905.61
+Transfer/sec:    689.63KB
+
+---------------------------------------------------------
+ Concurrency: 4096 for silex-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.41s     4.27s   14.83s    80.48%
+    Req/Sec   320.04     59.74   430.00     76.36%
+  39186 requests in 15.01s, 9.09MB read
+  Socket errors: connect 0, read 362870, write 0, timeout 21992
+  Non-2xx or 3xx responses: 80
+Requests/sec:   2611.08
+Transfer/sec:    620.06KB
+
+---------------------------------------------------------
+ Concurrency: 16384 for silex-raw
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.07s     2.46s   14.39s    93.79%
+    Req/Sec   296.15     51.48   486.00     81.48%
+  35469 requests in 15.02s, 8.23MB read
+  Socket errors: connect 11, read 617413, write 0, timeout 39608
+  Non-2xx or 3xx responses: 130
+Requests/sec:   2361.39
+Transfer/sec:    561.11KB

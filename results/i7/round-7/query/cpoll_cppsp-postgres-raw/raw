@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 19:06:36 PDT 2013
+
+  System load:  0.82               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:16969/db_pg_async?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:16969/db_pg_async?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   732.85us  172.44us   1.58ms   60.88%
+    Req/Sec     1.41k   328.61     2.22k    62.53%
+  53547 requests in 5.00s, 11.06MB read
+Requests/sec:  10708.37
+Transfer/sec:      2.21MB
+
+---------------------------------------------------------
+ Running Warmup cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_async?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_async?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.11ms    3.34ms  70.78ms   73.80%
+    Req/Sec     4.05k   355.46     5.54k    71.00%
+  468051 requests in 15.00s, 96.67MB read
+Requests/sec:  31203.52
+Transfer/sec:      6.44MB
+
+---------------------------------------------------------
+ Queries: 1 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_async?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_async?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.41ms    2.89ms  35.95ms   95.49%
+    Req/Sec    10.54k     1.87k   17.44k    83.88%
+  1200446 requests in 15.00s, 211.55MB read
+Requests/sec:  80031.89
+Transfer/sec:     14.10MB
+
+---------------------------------------------------------
+ Queries: 5 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_async?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_async?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.29ms   21.61ms 182.78ms   86.46%
+    Req/Sec     1.20k   152.62     1.62k    62.75%
+  143825 requests in 15.01s, 42.92MB read
+Requests/sec:   9583.10
+Transfer/sec:      2.86MB
+
+---------------------------------------------------------
+ Queries: 10 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_async?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_async?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.19ms   30.10ms 187.66ms   75.86%
+    Req/Sec   571.34     79.33     1.00k    74.00%
+  67128 requests in 15.01s, 30.20MB read
+Requests/sec:   4473.13
+Transfer/sec:      2.01MB
+
+---------------------------------------------------------
+ Queries: 15 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_async?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_async?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.22ms   66.70ms 438.35ms   87.96%
+    Req/Sec   372.50     68.71   593.00     72.47%
+  43612 requests in 15.04s, 26.23MB read
+Requests/sec:   2899.18
+Transfer/sec:      1.74MB
+
+---------------------------------------------------------
+ Queries: 20 for cpoll_cppsp-postgres-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:16969/db_pg_async?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:16969/db_pg_async?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   115.99ms   68.50ms 362.15ms   79.31%
+    Req/Sec   270.72     23.61   329.00     66.75%
+  32300 requests in 15.01s, 24.32MB read
+Requests/sec:   2151.55
+Transfer/sec:      1.62MB

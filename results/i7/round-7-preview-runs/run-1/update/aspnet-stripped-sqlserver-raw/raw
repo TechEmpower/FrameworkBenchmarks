@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 13:24:12 PDT 2013
+
+  System load:  0.2                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-stripped-sqlserver-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/updates?provider=sqlserver
+Running 5s test @ http://172.16.98.122:8080/updates?provider=sqlserver&queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.56ms   22.34ms 134.10ms   81.23%
+    Req/Sec   186.46    149.79   362.00     39.41%
+  6817 requests in 5.03s, 1.89MB read
+Requests/sec:   1355.30
+Transfer/sec:    384.52KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-stripped-sqlserver-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=sqlserver
+Running 15s test @ http://172.16.98.122:8080/updates?provider=sqlserver&queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.53ms   12.17ms 128.12ms   86.22%
+    Req/Sec   816.82    136.01     1.09k    69.17%
+  97440 requests in 15.00s, 27.00MB read
+Requests/sec:   6494.63
+Transfer/sec:      1.80MB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-stripped-sqlserver-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=sqlserver
+Running 15s test @ http://172.16.98.122:8080/updates?provider=sqlserver&queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    31.76ms   17.06ms 205.66ms   96.04%
+    Req/Sec     1.08k   162.34     1.29k    92.51%
+  128557 requests in 15.00s, 31.48MB read
+Requests/sec:   8569.76
+Transfer/sec:      2.10MB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-stripped-sqlserver-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=sqlserver
+Running 15s test @ http://172.16.98.122:8080/updates?provider=sqlserver&queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.98ms   18.23ms 198.52ms   89.53%
+    Req/Sec   483.54     82.34   693.00     73.44%
+  57664 requests in 15.00s, 21.28MB read
+Requests/sec:   3843.32
+Transfer/sec:      1.42MB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-stripped-sqlserver-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=sqlserver
+Running 15s test @ http://172.16.98.122:8080/updates?provider=sqlserver&queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   117.63ms   22.15ms 232.16ms   76.86%
+    Req/Sec   275.31     37.77   360.00     66.13%
+  32992 requests in 15.00s, 17.18MB read
+Requests/sec:   2198.86
+Transfer/sec:      1.14MB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-stripped-sqlserver-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=sqlserver
+Running 15s test @ http://172.16.98.122:8080/updates?provider=sqlserver&queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   151.81ms   21.56ms 241.45ms   68.56%
+    Req/Sec   212.65     23.07   288.00     67.42%
+  25466 requests in 15.01s, 17.11MB read
+Requests/sec:   1696.91
+Transfer/sec:      1.14MB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-stripped-sqlserver-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=sqlserver
+Running 15s test @ http://172.16.98.122:8080/updates?provider=sqlserver&queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   196.78ms   30.87ms 326.84ms   74.77%
+    Req/Sec   164.16     19.08   217.00     69.27%
+  19663 requests in 15.01s, 16.20MB read
+Requests/sec:   1310.12
+Transfer/sec:      1.08MB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Fri Oct 18 19:07:40 PDT 2013
+
+  System load:  0.05               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 2%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+63 packages can be updated.
+23 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.31ms    0.94ms  20.73ms   83.81%
+    Req/Sec   325.09     68.12   555.00     60.30%
+  12328 requests in 5.00s, 2.59MB read
+Requests/sec:   2464.26
+Transfer/sec:    530.77KB
+
+---------------------------------------------------------
+ Running Warmup bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    98.06ms   25.68ms 246.87ms   68.73%
+    Req/Sec   326.62     24.45   410.00     70.39%
+  38382 requests in 15.01s, 8.07MB read
+Requests/sec:   2556.62
+Transfer/sec:    550.65KB
+
+---------------------------------------------------------
+ Queries: 1 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.69ms   19.74ms 187.24ms   70.32%
+    Req/Sec   493.66     29.67   586.00     74.51%
+  58453 requests in 15.01s, 10.52MB read
+Requests/sec:   3895.12
+Transfer/sec:    718.08KB
+
+---------------------------------------------------------
+ Queries: 5 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   200.37ms   42.42ms 534.79ms   71.83%
+    Req/Sec   159.38      9.12   186.00     70.56%
+  19023 requests in 15.01s, 5.75MB read
+Requests/sec:   1267.03
+Transfer/sec:    392.11KB
+
+---------------------------------------------------------
+ Queries: 10 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   368.72ms  108.34ms   1.15s    75.44%
+    Req/Sec    86.21      7.57   104.00     66.01%
+  10383 requests in 15.03s, 4.71MB read
+Requests/sec:    690.79
+Transfer/sec:    320.96KB
+
+---------------------------------------------------------
+ Queries: 15 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   525.70ms  133.55ms   1.46s    79.42%
+    Req/Sec    60.05      8.19    85.00     82.09%
+  7138 requests in 15.04s, 4.32MB read
+Requests/sec:    474.45
+Transfer/sec:    294.05KB
+
+---------------------------------------------------------
+ Queries: 20 for bottle-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   704.63ms  211.50ms   1.87s    77.49%
+    Req/Sec    44.91      5.74    58.00     80.80%
+  5449 requests in 15.08s, 4.12MB read
+Requests/sec:    361.24
+Transfer/sec:    279.95KB

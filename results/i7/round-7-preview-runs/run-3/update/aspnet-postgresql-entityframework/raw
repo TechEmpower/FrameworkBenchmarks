@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 11:32:02 PDT 2013
+
+  System load:  0.05               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/entityframework/postgresql/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/entityframework/postgresql/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.01ms    5.51ms  51.76ms   95.66%
+    Req/Sec   141.06     37.97   235.00     83.82%
+  5476 requests in 5.01s, 1.65MB read
+Requests/sec:   1093.51
+Transfer/sec:    338.03KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    85.57ms   86.15ms   1.11s    99.28%
+    Req/Sec   350.54     26.00   413.00     69.87%
+  41307 requests in 15.01s, 12.47MB read
+  Socket errors: connect 0, read 0, write 0, timeout 11
+Requests/sec:   2752.15
+Transfer/sec:    850.83KB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    61.99ms   89.94ms   1.08s    99.21%
+    Req/Sec   504.28     45.16   601.00     68.70%
+  59534 requests in 15.00s, 16.17MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:   3968.09
+Transfer/sec:      1.08MB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   194.45ms  341.96ms   9.25s    98.76%
+    Req/Sec   159.29     17.34   195.00     73.99%
+  18863 requests in 15.02s, 7.43MB read
+  Socket errors: connect 0, read 0, write 0, timeout 69
+Requests/sec:   1256.21
+Transfer/sec:    506.56KB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   395.70ms  471.15ms   5.30s    96.29%
+    Req/Sec    81.81     11.91   110.00     68.50%
+  9717 requests in 15.04s, 5.30MB read
+  Socket errors: connect 0, read 0, write 0, timeout 131
+Requests/sec:    646.04
+Transfer/sec:    360.70KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   536.93ms  672.34ms   8.57s    95.74%
+    Req/Sec    60.22      8.02    85.00     68.42%
+  7198 requests in 15.05s, 5.02MB read
+  Socket errors: connect 0, read 0, write 0, timeout 155
+Requests/sec:    478.37
+Transfer/sec:    341.35KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   707.61ms  889.18ms  13.33s    95.24%
+    Req/Sec    45.89      7.33    63.00     71.97%
+  5507 requests in 15.04s, 4.67MB read
+  Socket errors: connect 0, read 0, write 0, timeout 192
+Requests/sec:    366.07
+Transfer/sec:    317.96KB

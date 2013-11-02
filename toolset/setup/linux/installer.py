@@ -42,7 +42,7 @@ class Installer:
     self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
     self.__run_command("source ../../.profile")
-    self.__run_command("sudo sh -c \"echo '*               -    nofile          16384' >> /etc/security/limits.conf\"")
+    self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
 
     ##############################################################
     # System Tools
@@ -118,8 +118,8 @@ class Installer:
     # go
     #
 
-    self.__download("http://go.googlecode.com/files/go1.1.1.linux-amd64.tar.gz");
-    self.__run_command("tar xzf go1.1.1.linux-amd64.tar.gz")
+    self.__download("http://go.googlecode.com/files/go1.2rc3.linux-amd64.tar.gz");
+    self.__run_command("tar xzf go1.2rc3.linux-amd64.tar.gz")
 
     #
     # Perl
@@ -248,16 +248,16 @@ class Installer:
     #
     # Grails
     #
-    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.1.1.zip")
-    self.__run_command("unzip -o grails-2.1.1.zip")
-    self.__run_command("rm grails-2.1.1.zip")
+    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.1.zip")
+    self.__run_command("unzip -o grails-2.3.1.zip")
+    self.__run_command("rm grails-2.3.1.zip")
 
     #
     # Play 2
     #
-    self.__download("http://downloads.typesafe.com/play/2.1.2-RC1/play-2.1.2-RC1.zip")
-    self.__run_command("unzip -o play-2.1.2-RC1.zip")
-    self.__run_command("rm play-2.1.2-RC1.zip")
+    self.__download("http://downloads.typesafe.com/play/2.2.0/play-2.2.0.zip")
+    self.__run_command("unzip -o play-2.2.0.zip")
+    self.__run_command("rm play-2.2.0.zip")
 
     #
     # Play 1
@@ -274,19 +274,19 @@ class Installer:
     # TreeFrog Framework
     #
     self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql g++", True)
-    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.tar.gz")
-    self.__run_command("tar xzf treefrog-1.7.tar.gz")
-    self.__run_command("rm treefrog-1.7.tar.gz")
-    self.__run_command("./configure", cwd="treefrog-1.7")
-    self.__run_command("make", cwd="treefrog-1.7/src")
-    self.__run_command("sudo make install", cwd="treefrog-1.7/src")
-    self.__run_command("make", cwd="treefrog-1.7/tools")
-    self.__run_command("sudo make install", cwd="treefrog-1.7/tools")
+    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.2.tar.gz")
+    self.__run_command("tar xzf treefrog-1.7.2.tar.gz")
+    self.__run_command("rm treefrog-1.7.2.tar.gz")
+    self.__run_command("./configure", cwd="treefrog-1.7.2")
+    self.__run_command("make", cwd="treefrog-1.7.2/src")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.2/src")
+    self.__run_command("make", cwd="treefrog-1.7.2/tools")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.2/tools")
 
     #
     # Vert.x
     #
-    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.0.2-final.tar.gz?direct=true")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.0.2-final.tar.gz?direct=true", "vert.x-2.0.2-final.tar.gz")
     self.__run_command("tar xzf vert.x-2.0.2-final.tar.gz")
 
     #
@@ -401,7 +401,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
-    sudo sh -c "echo '*               -    nofile          16384' >> /etc/security/limits.conf"
+    sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
     sudo mkdir -p /ssd/log
@@ -485,7 +485,7 @@ class Installer:
     ##############################
     yes | sudo apt-get update
     yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
-    sudo sh -c "echo '*               -    nofile          16384' >> /etc/security/limits.conf"
+    sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
     sudo mkdir -p /ssd/log

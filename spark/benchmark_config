@@ -6,6 +6,7 @@
       "json_url": "/spark/json",
       "db_url": "/spark/db",
       "query_url": "/spark/db?queries=",
+      "plaintext_url": "/spark/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

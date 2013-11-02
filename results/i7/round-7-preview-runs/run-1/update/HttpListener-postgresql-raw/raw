@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 14 14:21:13 PDT 2013
+
+  System load:  0.03               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer HttpListener-postgresql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/updates?provider=postgresql
+Running 5s test @ http://172.16.98.122:8080/updates?provider=postgresql&queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.81ms    8.20ms  45.62ms   71.94%
+    Req/Sec    61.36     17.04   107.00     64.89%
+  2443 requests in 5.02s, 521.32KB read
+Requests/sec:    486.96
+Transfer/sec:    103.91KB
+
+---------------------------------------------------------
+ Running Warmup HttpListener-postgresql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=postgresql
+Running 15s test @ http://172.16.98.122:8080/updates?provider=postgresql&queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   276.93ms  461.69ms   9.17s    99.03%
+    Req/Sec    94.08     13.80   131.00     67.54%
+  11274 requests in 15.03s, 2.35MB read
+  Socket errors: connect 0, read 0, write 0, timeout 357
+Requests/sec:    750.30
+Transfer/sec:    160.14KB
+
+---------------------------------------------------------
+ Queries: 1 for HttpListener-postgresql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=postgresql
+Running 15s test @ http://172.16.98.122:8080/updates?provider=postgresql&queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  0 requests in 16.01s, 0.00B read
+  Socket errors: connect 0, read 0, write 0, timeout 1905
+Requests/sec:      0.00
+Transfer/sec:       0.00B
+
+---------------------------------------------------------
+ Queries: 5 for HttpListener-postgresql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=postgresql
+Running 15s test @ http://172.16.98.122:8080/updates?provider=postgresql&queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  0 requests in 16.01s, 0.00B read
+  Socket errors: connect 0, read 0, write 0, timeout 1860
+Requests/sec:      0.00
+Transfer/sec:       0.00B
+
+---------------------------------------------------------
+ Queries: 10 for HttpListener-postgresql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=postgresql
+Running 15s test @ http://172.16.98.122:8080/updates?provider=postgresql&queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  0 requests in 16.01s, 0.00B read
+  Socket errors: connect 0, read 0, write 0, timeout 1847
+Requests/sec:      0.00
+Transfer/sec:       0.00B
+
+---------------------------------------------------------
+ Queries: 15 for HttpListener-postgresql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=postgresql
+Running 15s test @ http://172.16.98.122:8080/updates?provider=postgresql&queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  0 requests in 16.01s, 0.00B read
+  Socket errors: connect 0, read 27200, write 0, timeout 1690
+Requests/sec:      0.00
+Transfer/sec:       0.00B
+
+---------------------------------------------------------
+ Queries: 20 for HttpListener-postgresql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates?provider=postgresql
+Running 15s test @ http://172.16.98.122:8080/updates?provider=postgresql&queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  0 requests in 16.00s, 0.00B read
+  Socket errors: connect 0, read 558982, write 0, timeout 0
+Requests/sec:      0.00
+Transfer/sec:       0.00B

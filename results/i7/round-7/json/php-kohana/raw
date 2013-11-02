@@ -1,0 +1,129 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 02:13:58 PDT 2013
+
+  System load:  0.01               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php-kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/bench/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.39ms  840.51us  11.80ms   69.92%
+    Req/Sec   452.67     92.18   777.00     62.07%
+  17164 requests in 5.00s, 3.67MB read
+Requests/sec:   3431.66
+Transfer/sec:    750.51KB
+
+---------------------------------------------------------
+ Running Warmup php-kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.48ms   41.77ms 901.02ms   72.21%
+    Req/Sec   471.86     32.14   601.00     70.60%
+  56510 requests in 15.01s, 12.07MB read
+Requests/sec:   3766.05
+Transfer/sec:    823.67KB
+
+---------------------------------------------------------
+ Concurrency: 8 for php-kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.37ms  823.55us   8.10ms   69.52%
+    Req/Sec   453.56     91.93   800.00     62.15%
+  51640 requests in 15.00s, 11.03MB read
+Requests/sec:   3442.23
+Transfer/sec:    752.82KB
+
+---------------------------------------------------------
+ Concurrency: 16 for php-kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.33ms    1.80ms  23.19ms   71.54%
+    Req/Sec   493.92    103.98     1.00k    70.30%
+  56731 requests in 15.00s, 12.12MB read
+Requests/sec:   3781.41
+Transfer/sec:    827.00KB
+
+---------------------------------------------------------
+ Concurrency: 32 for php-kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.73ms    5.08ms  39.17ms   76.81%
+    Req/Sec   484.89     97.21     0.90k    68.52%
+  57275 requests in 15.00s, 12.23MB read
+Requests/sec:   3817.64
+Transfer/sec:    834.93KB
+
+---------------------------------------------------------
+ Concurrency: 64 for php-kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    16.63ms    9.14ms  77.78ms   72.59%
+    Req/Sec   487.46     60.47   763.00     71.04%
+  58013 requests in 15.00s, 12.39MB read
+Requests/sec:   3866.50
+Transfer/sec:    845.62KB
+
+---------------------------------------------------------
+ Concurrency: 128 for php-kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.38ms   18.86ms 134.90ms   69.04%
+    Req/Sec   473.37     56.63     0.97k    76.99%
+  56572 requests in 15.00s, 12.08MB read
+Requests/sec:   3770.95
+Transfer/sec:    824.73KB
+
+---------------------------------------------------------
+ Concurrency: 256 for php-kohana
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    67.23ms   57.88ms   2.69s    89.03%
+    Req/Sec   473.31     35.97   607.00     74.21%
+  56450 requests in 15.01s, 12.06MB read
+  Socket errors: connect 0, read 0, write 0, timeout 8
+Requests/sec:   3762.05
+Transfer/sec:    822.79KB

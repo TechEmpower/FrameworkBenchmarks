@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 02:17:43 PDT 2013
+
+  System load:  0.13               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.61ms    0.93ms   8.64ms   88.13%
+    Req/Sec   755.58    263.23     1.25k    62.47%
+  26963 requests in 5.00s, 60.50MB read
+Requests/sec:   5392.84
+Transfer/sec:     12.10MB
+
+---------------------------------------------------------
+ Running Warmup play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.19ms   29.76ms 646.65ms   99.34%
+    Req/Sec     1.97k   524.21     3.56k    70.36%
+  229181 requests in 15.00s, 514.28MB read
+Requests/sec:  15274.94
+Transfer/sec:     34.28MB
+
+---------------------------------------------------------
+ Concurrency: 8 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.98ms  293.31us   7.84ms   93.20%
+    Req/Sec     1.07k   113.74     1.44k    69.72%
+  122148 requests in 15.00s, 274.10MB read
+Requests/sec:   8143.12
+Transfer/sec:     18.27MB
+
+---------------------------------------------------------
+ Concurrency: 16 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.41ms  610.39us  15.75ms   95.40%
+    Req/Sec     1.52k   181.50     2.00k    76.43%
+  172437 requests in 15.00s, 386.95MB read
+Requests/sec:  11495.73
+Transfer/sec:     25.80MB
+
+---------------------------------------------------------
+ Concurrency: 32 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.41ms    2.12ms  42.74ms   95.80%
+    Req/Sec     1.83k   291.52     2.70k    78.43%
+  208545 requests in 15.00s, 467.97MB read
+Requests/sec:  13903.45
+Transfer/sec:     31.20MB
+
+---------------------------------------------------------
+ Concurrency: 64 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.46ms    3.50ms  74.05ms   95.53%
+    Req/Sec     1.96k   357.29     3.00k    76.69%
+  222203 requests in 15.00s, 498.62MB read
+Requests/sec:  14813.34
+Transfer/sec:     33.24MB
+
+---------------------------------------------------------
+ Concurrency: 128 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.48ms    3.76ms  77.12ms   80.72%
+    Req/Sec     1.96k   319.30     2.94k    73.43%
+  228583 requests in 15.00s, 512.94MB read
+Requests/sec:  15238.37
+Transfer/sec:     34.19MB
+
+---------------------------------------------------------
+ Concurrency: 256 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:9000/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:9000/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.55ms   25.19ms 638.64ms   99.42%
+    Req/Sec     1.97k   479.12     3.50k    72.48%
+  229885 requests in 15.00s, 515.86MB read
+Requests/sec:  15321.61
+Transfer/sec:     34.38MB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 12:02:21 PDT 2013
+
+  System load:  0.5                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer undertow-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/updates/mongodb?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/updates/mongodb?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.58ms  699.41us  11.73ms   89.35%
+    Req/Sec   414.53     68.93   666.00     65.60%
+  15681 requests in 5.00s, 3.43MB read
+Requests/sec:   3135.34
+Transfer/sec:    702.88KB
+
+---------------------------------------------------------
+ Running Warmup undertow-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/mongodb?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/mongodb?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    77.31ms   18.32ms 150.09ms   67.50%
+    Req/Sec   407.63     27.62   631.00     78.83%
+  48645 requests in 15.01s, 10.65MB read
+Requests/sec:   3241.53
+Transfer/sec:    726.66KB
+
+---------------------------------------------------------
+ Queries: 1 for undertow-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/mongodb?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/mongodb?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.87ms   11.38ms 271.97ms   78.16%
+    Req/Sec   817.71     58.83     1.03k    73.59%
+  97304 requests in 15.00s, 18.35MB read
+Requests/sec:   6486.16
+Transfer/sec:      1.22MB
+
+---------------------------------------------------------
+ Queries: 5 for undertow-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/mongodb?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/mongodb?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   192.86ms   41.08ms 422.64ms   70.64%
+    Req/Sec   161.54     13.04   205.00     82.32%
+  19391 requests in 15.01s, 6.03MB read
+Requests/sec:   1291.72
+Transfer/sec:    411.10KB
+
+---------------------------------------------------------
+ Queries: 10 for undertow-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/mongodb?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/mongodb?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   391.87ms   64.44ms 904.26ms   70.76%
+    Req/Sec    80.32      3.47    89.00     75.33%
+  9625 requests in 15.03s, 4.45MB read
+Requests/sec:    640.29
+Transfer/sec:    303.14KB
+
+---------------------------------------------------------
+ Queries: 15 for undertow-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/mongodb?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/mongodb?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   584.47ms   80.05ms 823.01ms   70.71%
+    Req/Sec    53.55      3.81    72.00     75.47%
+  6378 requests in 15.04s, 3.92MB read
+Requests/sec:    424.09
+Transfer/sec:    266.58KB
+
+---------------------------------------------------------
+ Queries: 20 for undertow-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/mongodb?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/mongodb?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   769.37ms  107.47ms   1.03s    74.25%
+    Req/Sec    39.82      3.64    48.00     82.31%
+  4764 requests in 15.05s, 3.65MB read
+Requests/sec:    316.55
+Transfer/sec:    248.09KB

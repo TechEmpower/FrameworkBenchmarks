@@ -1,0 +1,102 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 22:23:00 PDT 2013
+
+  System load:  0.4                Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer tornado
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   407.92us  105.54us   2.83ms   91.29%
+    Req/Sec     2.56k   331.64     3.78k    81.78%
+  96697 requests in 5.00s, 13.09MB read
+Requests/sec:  19338.96
+Transfer/sec:      2.62MB
+
+---------------------------------------------------------
+ Running Warmup tornado
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.43ms    2.99ms  24.12ms   73.59%
+    Req/Sec     3.15k   310.05     5.12k    68.13%
+  364226 requests in 15.00s, 49.32MB read
+Requests/sec:  24281.27
+Transfer/sec:      3.29MB
+
+---------------------------------------------------------
+ Concurrency: 256 for tornado
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   147.11ms   63.12ms 277.86ms   50.34%
+    Req/Sec     3.44k   329.77     4.22k    73.08%
+  408216 requests in 15.00s, 55.28MB read
+Requests/sec:  27211.44
+Transfer/sec:      3.69MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for tornado
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   608.83ms  280.81ms   1.47s    75.61%
+    Req/Sec     3.27k   247.70     3.99k    70.53%
+  390952 requests in 15.00s, 52.94MB read
+Requests/sec:  26062.30
+Transfer/sec:      3.53MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for tornado
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.33s   628.58ms   3.60s    65.06%
+    Req/Sec     3.16k   533.19     3.78k    90.70%
+  378011 requests in 15.00s, 51.19MB read
+  Socket errors: connect 0, read 216, write 0, timeout 6355
+Requests/sec:  25198.54
+Transfer/sec:      3.41MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for tornado
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.88s     4.65s   14.64s    75.77%
+    Req/Sec     3.41k   259.11     4.05k    79.78%
+  365756 requests in 15.01s, 49.53MB read
+  Socket errors: connect 11, read 1091, write 0, timeout 86351
+Requests/sec:  24375.53
+Transfer/sec:      3.30MB

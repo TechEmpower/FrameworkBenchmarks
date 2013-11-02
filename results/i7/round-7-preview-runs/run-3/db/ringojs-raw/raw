@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 18:24:12 PDT 2013
+
+  System load:  0.05               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.42ms    0.90ms  12.65ms   86.63%
+    Req/Sec     0.91k   439.42     2.11k    75.19%
+  32159 requests in 5.00s, 5.70MB read
+Requests/sec:   6431.58
+Transfer/sec:      1.14MB
+
+---------------------------------------------------------
+ Running Warmup ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.46ms   24.96ms 712.23ms   92.10%
+    Req/Sec     3.34k     0.90k    6.20k    68.37%
+  387344 requests in 15.00s, 68.63MB read
+Requests/sec:  25822.64
+Transfer/sec:      4.58MB
+
+---------------------------------------------------------
+ Concurrency: 8 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   571.21us  240.31us   6.10ms   97.61%
+    Req/Sec     1.84k   169.18     2.22k    92.14%
+  209252 requests in 15.00s, 37.07MB read
+Requests/sec:  13949.78
+Transfer/sec:      2.47MB
+
+---------------------------------------------------------
+ Concurrency: 16 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   709.86us  371.42us   6.61ms   95.68%
+    Req/Sec     2.99k   334.01     3.67k    80.32%
+  340480 requests in 15.00s, 60.32MB read
+Requests/sec:  22698.97
+Transfer/sec:      4.02MB
+
+---------------------------------------------------------
+ Concurrency: 32 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21ms    1.47ms  25.29ms   95.18%
+    Req/Sec     3.61k   670.71     5.78k    72.94%
+  410829 requests in 15.00s, 72.79MB read
+Requests/sec:  27388.79
+Transfer/sec:      4.85MB
+
+---------------------------------------------------------
+ Concurrency: 64 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.26ms    3.57ms  83.85ms   94.58%
+    Req/Sec     4.04k     0.90k    8.20k    74.78%
+  459443 requests in 15.00s, 81.40MB read
+Requests/sec:  30629.43
+Transfer/sec:      5.43MB
+
+---------------------------------------------------------
+ Concurrency: 128 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.38ms    7.87ms 156.47ms   92.16%
+    Req/Sec     4.15k     1.03k    8.56k    73.97%
+  471556 requests in 15.00s, 83.55MB read
+Requests/sec:  31436.77
+Transfer/sec:      5.57MB
+
+---------------------------------------------------------
+ Concurrency: 256 for ringojs-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.71ms   48.43ms   1.46s    96.45%
+    Req/Sec     4.17k     1.13k    9.89k    71.76%
+  477142 requests in 15.00s, 84.54MB read
+Requests/sec:  31808.78
+Transfer/sec:      5.64MB

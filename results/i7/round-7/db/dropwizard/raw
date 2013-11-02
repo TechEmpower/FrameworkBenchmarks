@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 20:11:56 PDT 2013
+
+  System load:  0.86               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.91ms  366.24us   5.07ms   84.47%
+    Req/Sec     1.26k   335.80     1.89k    55.61%
+  45433 requests in 5.00s, 6.92MB read
+Requests/sec:   9086.05
+Transfer/sec:      1.38MB
+
+---------------------------------------------------------
+ Running Warmup dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.77ms   71.72ms 673.99ms   97.15%
+    Req/Sec     3.51k     1.05k    7.41k    76.22%
+  407577 requests in 15.00s, 62.10MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:  27170.44
+Transfer/sec:      4.14MB
+
+---------------------------------------------------------
+ Concurrency: 8 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   732.87us    0.99ms  14.82ms   99.50%
+    Req/Sec     1.56k   167.05     1.89k    90.92%
+  177237 requests in 15.00s, 27.01MB read
+Requests/sec:  11815.62
+Transfer/sec:      1.80MB
+
+---------------------------------------------------------
+ Concurrency: 16 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.24ms    5.37ms  52.41ms   98.64%
+    Req/Sec     3.16k   499.46     4.00k    90.27%
+  359324 requests in 15.00s, 54.75MB read
+Requests/sec:  23954.91
+Transfer/sec:      3.65MB
+
+---------------------------------------------------------
+ Concurrency: 32 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.81ms    6.50ms  56.54ms   98.02%
+    Req/Sec     4.39k     0.99k    6.22k    78.16%
+  499124 requests in 15.00s, 76.05MB read
+Requests/sec:  33275.42
+Transfer/sec:      5.07MB
+
+---------------------------------------------------------
+ Concurrency: 64 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.15ms    9.08ms  71.89ms   97.02%
+    Req/Sec     4.60k     1.06k    7.33k    82.19%
+  523293 requests in 15.00s, 79.74MB read
+Requests/sec:  34886.55
+Transfer/sec:      5.32MB
+
+---------------------------------------------------------
+ Concurrency: 128 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.96ms   55.11ms 626.53ms   97.79%
+    Req/Sec     4.45k     0.99k   11.78k    87.07%
+  505537 requests in 15.00s, 77.03MB read
+Requests/sec:  33702.12
+Transfer/sec:      5.14MB
+
+---------------------------------------------------------
+ Concurrency: 256 for dropwizard
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:9000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.15ms   90.74ms 663.32ms   97.40%
+    Req/Sec     4.17k     1.07k   15.89k    88.39%
+  475300 requests in 15.00s, 72.42MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:  31686.84
+Transfer/sec:      4.83MB

@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 23:09:34 PDT 2013
+
+  System load:  0.01               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/luminus/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/luminus/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   376.83us    1.07ms  15.31ms   99.28%
+    Req/Sec     3.78k     1.03k    5.22k    79.77%
+  132600 requests in 5.00s, 21.75MB read
+Requests/sec:  26521.85
+Transfer/sec:      4.35MB
+
+---------------------------------------------------------
+ Running Warmup luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    34.92ms  229.85ms   2.34s    98.15%
+    Req/Sec     9.30k     3.11k   25.40k    73.22%
+  1039512 requests in 15.00s, 170.51MB read
+Requests/sec:  69315.78
+Transfer/sec:     11.37MB
+
+---------------------------------------------------------
+ Concurrency: 8 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   240.59us  136.72us   9.66ms   97.01%
+    Req/Sec     4.30k   337.65     5.33k    72.36%
+  488891 requests in 15.00s, 80.19MB read
+Requests/sec:  32593.22
+Transfer/sec:      5.35MB
+
+---------------------------------------------------------
+ Concurrency: 16 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   291.49us  381.33us  22.92ms   97.42%
+    Req/Sec     7.32k   815.83     9.22k    73.93%
+  832484 requests in 15.00s, 136.55MB read
+Requests/sec:  55500.47
+Transfer/sec:      9.10MB
+
+---------------------------------------------------------
+ Concurrency: 32 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   469.07us    0.89ms  25.00ms   98.94%
+    Req/Sec    10.00k     1.86k   14.22k    77.43%
+  1136884 requests in 15.00s, 186.49MB read
+Requests/sec:  75789.34
+Transfer/sec:     12.43MB
+
+---------------------------------------------------------
+ Concurrency: 64 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.97ms    1.79ms  32.81ms   98.07%
+    Req/Sec     9.87k     2.05k   17.67k    81.78%
+  1119525 requests in 15.00s, 183.64MB read
+Requests/sec:  74641.13
+Transfer/sec:     12.24MB
+
+---------------------------------------------------------
+ Concurrency: 128 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.00ms    3.61ms  60.84ms   96.62%
+    Req/Sec     9.43k     2.14k   22.78k    83.56%
+  1071919 requests in 15.00s, 175.83MB read
+Requests/sec:  71464.32
+Transfer/sec:     11.72MB
+
+---------------------------------------------------------
+ Concurrency: 256 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/luminus/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.20ms   19.68ms 207.26ms   96.82%
+    Req/Sec     9.40k     2.97k   46.70k    75.71%
+  1067115 requests in 15.00s, 175.04MB read
+Requests/sec:  71142.28
+Transfer/sec:     11.67MB

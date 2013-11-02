@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 20:10:12 PDT 2013
+
+  System load:  0.0                Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer sinatra-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.21ms   10.87ms  35.25ms   80.69%
+    Req/Sec   359.99    270.65     1.90k    65.06%
+  16897 requests in 6.00s, 3.90MB read
+Requests/sec:   2815.95
+Transfer/sec:    665.35KB
+
+---------------------------------------------------------
+ Running Warmup sinatra-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.22ms   41.74ms   5.34s    99.98%
+    Req/Sec    23.07k     4.28k   39.67k    67.66%
+  2599134 requests in 15.00s, 797.96MB read
+  Socket errors: connect 0, read 0, write 0, timeout 348
+  Non-2xx or 3xx responses: 2598313
+Requests/sec: 173277.09
+Transfer/sec:     53.20MB
+
+---------------------------------------------------------
+ Concurrency: 8 for sinatra-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.12ms   15.84ms  84.11ms   89.54%
+    Req/Sec   167.31     91.40   478.00     65.38%
+  20908 requests in 16.00s, 4.82MB read
+Requests/sec:   1306.62
+Transfer/sec:    308.73KB
+
+---------------------------------------------------------
+ Concurrency: 16 for sinatra-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.72ms    7.48ms  42.84ms   83.78%
+    Req/Sec   274.50     93.02   533.00     69.48%
+  33265 requests in 16.00s, 7.68MB read
+Requests/sec:   2079.05
+Transfer/sec:    491.24KB
+
+---------------------------------------------------------
+ Concurrency: 32 for sinatra-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.10ms    7.39ms  62.83ms   80.16%
+    Req/Sec   280.82     67.45   425.00     63.57%
+  33356 requests in 15.01s, 7.70MB read
+Requests/sec:   2222.92
+Transfer/sec:    525.23KB
+
+---------------------------------------------------------
+ Concurrency: 64 for sinatra-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    29.66ms    9.32ms  76.16ms   85.29%
+    Req/Sec   278.93     54.00   413.00     62.44%
+  33298 requests in 15.01s, 7.68MB read
+Requests/sec:   2218.76
+Transfer/sec:    524.25KB
+
+---------------------------------------------------------
+ Concurrency: 128 for sinatra-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    58.96ms   12.99ms 123.77ms   64.38%
+    Req/Sec   275.76     38.99   372.00     67.62%
+  33021 requests in 15.01s, 7.62MB read
+Requests/sec:   2199.69
+Transfer/sec:    519.76KB
+
+---------------------------------------------------------
+ Concurrency: 256 for sinatra-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.50ms   63.13ms   7.23s    99.98%
+    Req/Sec    23.06k     3.87k   38.56k    69.18%
+  2597639 requests in 15.00s, 797.51MB read
+  Socket errors: connect 0, read 0, write 0, timeout 450
+  Non-2xx or 3xx responses: 2596840
+Requests/sec: 173178.88
+Transfer/sec:     53.17MB

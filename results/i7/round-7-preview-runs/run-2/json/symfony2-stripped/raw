@@ -1,0 +1,136 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 10:54:17 PDT 2013
+
+  System load:  0.0                Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer symfony2-stripped
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.56ms   12.57ms  63.58ms   84.07%
+    Req/Sec   102.98     38.68   232.00     69.76%
+  4040 requests in 5.01s, 1.11MB read
+  Non-2xx or 3xx responses: 2007
+Requests/sec:    806.17
+Transfer/sec:    226.89KB
+
+---------------------------------------------------------
+ Running Warmup symfony2-stripped
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   314.38ms  314.77ms   1.89s    84.70%
+    Req/Sec    99.94     13.71   146.00     71.55%
+  12094 requests in 15.04s, 3.32MB read
+  Non-2xx or 3xx responses: 5965
+Requests/sec:    804.35
+Transfer/sec:    226.20KB
+
+---------------------------------------------------------
+ Concurrency: 8 for symfony2-stripped
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.08ms   13.53ms  96.05ms   86.64%
+    Req/Sec   103.80     43.47   232.00     69.65%
+  12370 requests in 15.01s, 3.40MB read
+  Non-2xx or 3xx responses: 6159
+Requests/sec:    824.17
+Transfer/sec:    232.03KB
+
+---------------------------------------------------------
+ Concurrency: 16 for symfony2-stripped
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.41ms   33.84ms 549.35ms   91.04%
+    Req/Sec   103.88     46.32   294.00     73.72%
+  12433 requests in 15.01s, 3.42MB read
+  Non-2xx or 3xx responses: 6196
+Requests/sec:    828.56
+Transfer/sec:    233.29KB
+
+---------------------------------------------------------
+ Concurrency: 32 for symfony2-stripped
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.15ms   95.37ms   1.80s    94.56%
+    Req/Sec   102.68     32.92   266.00     72.96%
+  12303 requests in 15.02s, 3.38MB read
+  Non-2xx or 3xx responses: 6111
+Requests/sec:    819.12
+Transfer/sec:    230.53KB
+
+---------------------------------------------------------
+ Concurrency: 64 for symfony2-stripped
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    75.91ms  120.85ms 987.98ms   87.11%
+    Req/Sec   104.19     32.06   230.00     70.22%
+  12561 requests in 15.02s, 3.45MB read
+  Non-2xx or 3xx responses: 6192
+Requests/sec:    836.17
+Transfer/sec:    235.10KB
+
+---------------------------------------------------------
+ Concurrency: 128 for symfony2-stripped
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   145.21ms  157.39ms   1.05s    83.82%
+    Req/Sec   104.62     15.86   163.00     69.12%
+  12691 requests in 15.02s, 3.49MB read
+  Non-2xx or 3xx responses: 6317
+Requests/sec:    844.71
+Transfer/sec:    237.82KB
+
+---------------------------------------------------------
+ Concurrency: 256 for symfony2-stripped
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   300.32ms  295.00ms   1.69s    46.65%
+    Req/Sec   103.73     13.35   142.00     79.10%
+  12636 requests in 15.04s, 3.48MB read
+  Non-2xx or 3xx responses: 6298
+Requests/sec:    840.34
+Transfer/sec:    236.65KB

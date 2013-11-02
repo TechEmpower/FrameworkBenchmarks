@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 02:39:32 PDT 2013
+
+  System load:  0.01               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/rack/json
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/rack/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.46ms    3.30ms  31.03ms   97.16%
+    Req/Sec     1.45k     0.89k    3.54k    62.43%
+  51227 requests in 5.00s, 8.65MB read
+Requests/sec:  10245.66
+Transfer/sec:      1.73MB
+
+---------------------------------------------------------
+ Running Warmup rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rack/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    60.84ms  277.75ms   1.74s    96.75%
+    Req/Sec     3.56k     1.53k   10.56k    71.56%
+  404324 requests in 15.00s, 68.25MB read
+Requests/sec:  26960.57
+Transfer/sec:      4.55MB
+
+---------------------------------------------------------
+ Concurrency: 8 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rack/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.04ms    3.82ms  23.90ms   96.93%
+    Req/Sec     2.80k   753.21     4.00k    83.12%
+  316487 requests in 15.00s, 53.42MB read
+Requests/sec:  21099.31
+Transfer/sec:      3.56MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rack/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.71ms    5.17ms  27.29ms   95.17%
+    Req/Sec     3.68k     1.30k    6.11k    73.95%
+  419262 requests in 15.00s, 70.77MB read
+Requests/sec:  27951.71
+Transfer/sec:      4.72MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rack/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.91ms    7.39ms  35.31ms   93.72%
+    Req/Sec     3.77k     1.30k    7.78k    79.28%
+  427589 requests in 15.00s, 72.18MB read
+Requests/sec:  28506.84
+Transfer/sec:      4.81MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rack/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.72ms   10.45ms  57.19ms   92.87%
+    Req/Sec     3.72k     1.24k    8.78k    82.73%
+  423142 requests in 15.00s, 71.43MB read
+Requests/sec:  28209.65
+Transfer/sec:      4.76MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rack/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.05ms   26.07ms 147.70ms   93.78%
+    Req/Sec     3.61k     1.46k    9.20k    73.83%
+  415378 requests in 15.00s, 70.12MB read
+Requests/sec:  27691.84
+Transfer/sec:      4.67MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rack-jruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/rack/json
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/rack/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.55ms   51.91ms 499.53ms   95.74%
+    Req/Sec     3.49k     1.24k    8.75k    73.97%
+  409215 requests in 15.00s, 69.08MB read
+Requests/sec:  27280.80
+Transfer/sec:      4.61MB

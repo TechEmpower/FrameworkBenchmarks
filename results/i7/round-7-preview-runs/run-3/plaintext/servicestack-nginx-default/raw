@@ -1,0 +1,112 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 18:46:53 PDT 2013
+
+  System load:  0.01               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.70ms   28.84ms  90.07ms   80.42%
+    Req/Sec   181.52    289.36     1.00k    75.40%
+  8166 requests in 6.00s, 2.44MB read
+  Socket errors: connect 0, read 10, write 0, timeout 11
+  Non-2xx or 3xx responses: 509
+Requests/sec:   1360.69
+Transfer/sec:    415.82KB
+
+---------------------------------------------------------
+ Running Warmup servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.97s     1.49s    4.99s    62.54%
+    Req/Sec   361.26    294.32     2.56k    66.12%
+  41340 requests in 15.01s, 12.67MB read
+  Socket errors: connect 0, read 282, write 0, timeout 314
+  Non-2xx or 3xx responses: 22531
+Requests/sec:   2755.00
+Transfer/sec:    864.54KB
+
+---------------------------------------------------------
+ Concurrency: 256 for servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.64s     1.70s    6.90s    84.88%
+    Req/Sec   336.07    140.68   693.00     74.42%
+  40652 requests in 15.20s, 12.52MB read
+  Socket errors: connect 0, read 242, write 0, timeout 525
+  Non-2xx or 3xx responses: 26099
+Requests/sec:   2674.93
+Transfer/sec:    843.57KB
+
+---------------------------------------------------------
+ Concurrency: 1024 for servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.00s     2.41s   13.95s    74.63%
+    Req/Sec   397.13     34.58   454.00     67.31%
+  47867 requests in 15.01s, 14.86MB read
+  Socket errors: connect 0, read 249, write 0, timeout 4214
+  Non-2xx or 3xx responses: 38783
+Requests/sec:   3188.68
+Transfer/sec:      0.99MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.94s     2.37s   14.94s    89.33%
+    Req/Sec   376.14     63.79   578.00     70.13%
+  44586 requests in 15.01s, 13.86MB read
+  Socket errors: connect 0, read 188, write 0, timeout 23475
+  Non-2xx or 3xx responses: 38337
+Requests/sec:   2969.55
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  28603 requests in 15.01s, 8.92MB read
+  Socket errors: connect 11, read 13336, write 0, timeout 97493
+  Non-2xx or 3xx responses: 26880
+Requests/sec:   1905.43
+Transfer/sec:    608.60KB

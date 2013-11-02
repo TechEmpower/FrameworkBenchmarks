@@ -1,0 +1,144 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 16:35:59 PDT 2013
+
+  System load:  0.01               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongodb
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongodb
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.22ms   47.52ms 106.70ms   62.91%
+    Req/Sec    92.95    159.06   500.00     75.11%
+  4354 requests in 6.00s, 1.36MB read
+  Socket errors: connect 0, read 0, write 0, timeout 12
+  Non-2xx or 3xx responses: 46
+Requests/sec:    725.49
+Transfer/sec:    231.74KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   605.34ms  568.89ms   1.48s    48.64%
+    Req/Sec   140.86    162.49   482.00     72.32%
+  13640 requests in 16.00s, 4.30MB read
+  Socket errors: connect 0, read 137, write 0, timeout 1600
+  Non-2xx or 3xx responses: 1843
+Requests/sec:    852.36
+Transfer/sec:    274.86KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.93ms    4.83ms  14.84ms   87.91%
+    Req/Sec    55.14    133.43   555.00     84.97%
+  6502 requests in 16.00s, 2.03MB read
+  Socket errors: connect 0, read 2, write 0, timeout 48
+  Non-2xx or 3xx responses: 53
+Requests/sec:    406.33
+Transfer/sec:    129.77KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.06ms    2.79ms  32.44ms   74.55%
+    Req/Sec    59.77    136.18   466.00     83.53%
+  6688 requests in 16.00s, 2.09MB read
+  Socket errors: connect 0, read 7, write 0, timeout 104
+  Non-2xx or 3xx responses: 88
+Requests/sec:    417.98
+Transfer/sec:    133.53KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.77ms    3.37ms   8.28ms   28.37%
+    Req/Sec    57.82    132.67     0.87k    83.93%
+  7603 requests in 16.00s, 2.38MB read
+  Socket errors: connect 0, read 8, write 0, timeout 212
+  Non-2xx or 3xx responses: 215
+Requests/sec:    475.15
+Transfer/sec:    152.05KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.26ms   15.03ms  54.47ms   73.30%
+    Req/Sec    59.57    155.59     1.02k    85.97%
+  7993 requests in 16.00s, 2.50MB read
+  Socket errors: connect 0, read 41, write 0, timeout 434
+  Non-2xx or 3xx responses: 454
+Requests/sec:    499.48
+Transfer/sec:    159.99KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   713.87ms    2.15s    9.58s    94.47%
+    Req/Sec    70.32    136.93   583.00     79.86%
+  10454 requests in 16.00s, 3.27MB read
+  Socket errors: connect 0, read 110, write 0, timeout 870
+  Non-2xx or 3xx responses: 1182
+Requests/sec:    653.33
+Transfer/sec:    209.53KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-mono-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodb
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.38s     2.64s    8.75s    88.76%
+    Req/Sec    89.27    139.43   519.00     77.51%
+  13358 requests in 16.00s, 4.21MB read
+  Socket errors: connect 0, read 162, write 0, timeout 1627
+  Non-2xx or 3xx responses: 2858
+Requests/sec:    834.66
+Transfer/sec:    269.11KB

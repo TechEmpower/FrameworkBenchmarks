@@ -10,14 +10,14 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "play1-siena",
+      "framework": "play1",
       "language": "Java",
       "orm": "Full",
       "platform": "Netty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play1-seina",
+      "display_name": "play1-siena",
       "notes": "Siena alternate",
       "versus": "netty"
     }

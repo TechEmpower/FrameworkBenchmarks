@@ -1,0 +1,104 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 04:37:25 PDT 2013
+
+  System load:  0.99               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servlet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/servlet/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/servlet/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   190.41us   28.96us 309.00us   71.74%
+    Req/Sec     5.30k   255.94     6.78k    78.70%
+  204147 requests in 5.00s, 29.59MB read
+Requests/sec:  40832.09
+Transfer/sec:      5.92MB
+
+---------------------------------------------------------
+ Running Warmup servlet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/servlet/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21ms  148.66us   6.06ms   90.44%
+    Req/Sec    27.89k     1.51k   36.44k    59.09%
+  3158668 requests in 15.00s, 457.88MB read
+Requests/sec: 210592.06
+Transfer/sec:     30.53MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servlet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/servlet/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.10ms   16.40ms 471.03ms   97.61%
+    Req/Sec    39.55k     3.16k   49.25k    67.59%
+  4615035 requests in 14.99s, 668.99MB read
+  Socket errors: connect 0, read 0, write 0, timeout 4
+Requests/sec: 307776.52
+Transfer/sec:     44.61MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for servlet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/servlet/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    66.50ms  275.98ms   3.50s    96.76%
+    Req/Sec    49.00k    12.61k   91.79k    76.38%
+  5668232 requests in 15.00s, 821.68MB read
+  Socket errors: connect 0, read 16, write 0, timeout 1168
+Requests/sec: 377878.86
+Transfer/sec:     54.78MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for servlet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/servlet/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.39s     4.15s   14.64s    91.02%
+    Req/Sec    47.05k    19.21k  100.13k    67.75%
+  6081651 requests in 15.00s, 0.86GB read
+  Socket errors: connect 0, read 972, write 0, timeout 12127
+Requests/sec: 405367.41
+Transfer/sec:     58.77MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for servlet
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/servlet/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/servlet/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.26s     6.51s   14.83s    71.07%
+    Req/Sec    54.34k    15.55k  104.11k    69.41%
+  6060267 requests in 15.01s, 0.86GB read
+  Socket errors: connect 11, read 1007, write 0, timeout 91583
+Requests/sec: 403703.56
+Transfer/sec:     58.53MB

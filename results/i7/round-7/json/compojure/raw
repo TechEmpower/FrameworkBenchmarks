@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 18:41:30 PDT 2013
+
+  System load:  0.01               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/compojure/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/compojure/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   271.52us  547.71us  12.32ms   99.57%
+    Req/Sec     4.23k   605.08     5.33k    83.30%
+  151850 requests in 5.00s, 24.91MB read
+Requests/sec:  30370.35
+Transfer/sec:      4.98MB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.98ms  122.31ms   2.01s    99.47%
+    Req/Sec    13.70k     3.40k   36.33k    78.98%
+  1536153 requests in 15.00s, 251.98MB read
+Requests/sec: 102414.09
+Transfer/sec:     16.80MB
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   234.12us   71.28us   1.86ms   79.89%
+    Req/Sec     4.42k   283.24     5.55k    68.82%
+  503210 requests in 15.00s, 82.54MB read
+Requests/sec:  33547.41
+Transfer/sec:      5.50MB
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   246.80us  195.35us   8.70ms   92.54%
+    Req/Sec     8.48k     0.85k   11.11k    72.60%
+  964481 requests in 15.00s, 158.21MB read
+Requests/sec:  64299.50
+Transfer/sec:     10.55MB
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   312.66us  549.83us  17.27ms   98.61%
+    Req/Sec    14.27k     2.33k   19.22k    77.14%
+  1622928 requests in 15.00s, 266.21MB read
+Requests/sec: 108197.05
+Transfer/sec:     17.75MB
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   622.98us    1.09ms  23.45ms   98.44%
+    Req/Sec    15.09k     2.77k   22.44k    80.95%
+  1713479 requests in 15.00s, 281.07MB read
+Requests/sec: 114233.08
+Transfer/sec:     18.74MB
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.29ms    2.02ms  40.08ms   97.37%
+    Req/Sec    14.30k     2.81k   22.60k    84.64%
+  1624937 requests in 15.00s, 266.54MB read
+Requests/sec: 108313.32
+Transfer/sec:     17.77MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/compojure/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.34ms   12.35ms 215.29ms   97.89%
+    Req/Sec    13.70k     3.01k   34.56k    80.27%
+  1555249 requests in 15.00s, 255.11MB read
+Requests/sec: 103684.21
+Transfer/sec:     17.01MB

@@ -1,0 +1,18 @@
+@(fortunes: List[ActivateFortune])
+
+@main("Testcase 4 :: Fortune :: FrameworkBenchmark") {
+    <table>
+        <tr>
+            <th>id</th>
+            <th>message</th>
+        </tr>
+
+        @fortunes.sortBy(_.message).map { fortune => 
+            <tr>
+                <td>@fortune.legacyId</td>
+                <td>@fortune.message</td>
+            </tr>
+        }
+
+    </table>
+}

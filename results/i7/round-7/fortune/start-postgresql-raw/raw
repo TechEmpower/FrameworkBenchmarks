@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 08:44:08 PDT 2013
+
+  System load:  0.05               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.13ms    2.22ms  20.41ms   95.26%
+    Req/Sec   653.19    304.95     1.33k    56.75%
+  23722 requests in 5.00s, 43.25MB read
+Requests/sec:   4743.74
+Transfer/sec:      8.65MB
+
+---------------------------------------------------------
+ Running Warmup start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.42ms   66.02ms   1.24s    94.68%
+    Req/Sec     1.52k   267.24     2.33k    72.56%
+  180125 requests in 15.00s, 328.44MB read
+Requests/sec:  12006.41
+Transfer/sec:     21.89MB
+
+---------------------------------------------------------
+ Concurrency: 8 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.05ms  758.73us  13.82ms   98.96%
+    Req/Sec     1.04k   135.71     1.33k    69.41%
+  119017 requests in 15.00s, 217.01MB read
+Requests/sec:   7934.21
+Transfer/sec:     14.47MB
+
+---------------------------------------------------------
+ Concurrency: 16 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.63ms    1.11ms  19.12ms   91.52%
+    Req/Sec     1.33k   222.89     2.10k    76.85%
+  151839 requests in 15.00s, 276.86MB read
+Requests/sec:  10122.32
+Transfer/sec:     18.46MB
+
+---------------------------------------------------------
+ Concurrency: 32 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.20ms    2.95ms  28.10ms   86.19%
+    Req/Sec     1.39k   301.31     2.91k    66.98%
+  160139 requests in 15.00s, 292.00MB read
+Requests/sec:  10674.32
+Transfer/sec:     19.46MB
+
+---------------------------------------------------------
+ Concurrency: 64 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.99ms    7.71ms 120.43ms   88.03%
+    Req/Sec     1.40k   269.92     2.36k    70.30%
+  165130 requests in 15.00s, 301.09MB read
+Requests/sec:  11008.32
+Transfer/sec:     20.07MB
+
+---------------------------------------------------------
+ Concurrency: 128 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.39ms   21.07ms 309.74ms   93.80%
+    Req/Sec     1.47k   280.21     2.51k    69.69%
+  174982 requests in 15.00s, 319.06MB read
+Requests/sec:  11664.43
+Transfer/sec:     21.27MB
+
+---------------------------------------------------------
+ Concurrency: 256 for start-postgresql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.99ms   58.84ms   1.55s    94.86%
+    Req/Sec     1.51k   285.40     2.40k    68.74%
+  179297 requests in 15.00s, 326.93MB read
+Requests/sec:  11950.98
+Transfer/sec:     21.79MB

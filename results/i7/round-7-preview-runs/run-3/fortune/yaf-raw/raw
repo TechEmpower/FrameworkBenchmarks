@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 00:27:12 PDT 2013
+
+  System load:  0.11               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/bench/raw/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.86ms  135.29us   1.95ms   75.45%
+    Req/Sec     1.23k    96.59     1.50k    54.57%
+  46506 requests in 5.00s, 79.43MB read
+Requests/sec:   9300.69
+Transfer/sec:     15.89MB
+
+---------------------------------------------------------
+ Running Warmup yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.09ms   17.64ms 339.30ms   82.36%
+    Req/Sec     1.55k   173.57     2.85k    71.27%
+  184173 requests in 15.00s, 314.57MB read
+Requests/sec:  12277.42
+Transfer/sec:     20.97MB
+
+---------------------------------------------------------
+ Concurrency: 8 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://tfbapp:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.85ms  132.10us   1.90ms   74.81%
+    Req/Sec     1.23k    96.05     1.55k    55.32%
+  139911 requests in 15.00s, 238.97MB read
+Requests/sec:   9327.13
+Transfer/sec:     15.93MB
+
+---------------------------------------------------------
+ Concurrency: 16 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://tfbapp:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.31ms  567.42us   6.46ms   85.36%
+    Req/Sec     1.62k   206.72     2.44k    68.32%
+  184628 requests in 15.00s, 315.34MB read
+Requests/sec:  12308.45
+Transfer/sec:     21.02MB
+
+---------------------------------------------------------
+ Concurrency: 32 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://tfbapp:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.40ms    2.13ms  44.76ms   93.95%
+    Req/Sec     1.80k   339.36     3.10k    69.66%
+  205050 requests in 15.00s, 350.22MB read
+Requests/sec:  13669.82
+Transfer/sec:     23.35MB
+
+---------------------------------------------------------
+ Concurrency: 64 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://tfbapp:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.17ms    5.34ms 126.04ms   92.91%
+    Req/Sec     1.66k   324.26     3.12k    70.31%
+  193330 requests in 15.00s, 330.20MB read
+Requests/sec:  12887.19
+Transfer/sec:     22.01MB
+
+---------------------------------------------------------
+ Concurrency: 128 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://tfbapp:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.37ms    8.04ms 104.37ms   84.85%
+    Req/Sec     1.58k   165.22     2.37k    69.79%
+  188104 requests in 15.00s, 321.28MB read
+Requests/sec:  12539.25
+Transfer/sec:     21.42MB
+
+---------------------------------------------------------
+ Concurrency: 256 for yaf-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://tfbapp:8080/bench/raw/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/bench/raw/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.74ms   16.01ms 223.38ms   80.32%
+    Req/Sec     1.56k   210.80     6.00k    88.53%
+  185868 requests in 15.00s, 317.46MB read
+Requests/sec:  12391.01
+Transfer/sec:     21.16MB

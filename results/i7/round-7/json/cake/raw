@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 18:20:09 PDT 2013
+
+  System load:  0.11               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json.json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.96ms    1.57ms  13.03ms   73.29%
+    Req/Sec   209.36     40.42   352.00     55.74%
+  7962 requests in 5.00s, 1.68MB read
+Requests/sec:   1591.22
+Transfer/sec:    343.34KB
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   146.46ms  108.17ms   1.41s    84.03%
+    Req/Sec   220.08     19.02   265.00     75.21%
+  26391 requests in 15.01s, 5.56MB read
+Requests/sec:   1758.71
+Transfer/sec:    379.51KB
+
+---------------------------------------------------------
+ Concurrency: 8 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.03ms    1.68ms  21.40ms   73.92%
+    Req/Sec   212.67     52.00   384.00     65.90%
+  24589 requests in 15.00s, 5.18MB read
+Requests/sec:   1638.96
+Transfer/sec:    353.64KB
+
+---------------------------------------------------------
+ Concurrency: 16 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.59ms    5.86ms  54.44ms   85.98%
+    Req/Sec   223.50     52.67   413.00     71.10%
+  26419 requests in 15.00s, 5.57MB read
+Requests/sec:   1760.99
+Transfer/sec:    379.97KB
+
+---------------------------------------------------------
+ Concurrency: 32 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.32ms   21.71ms 306.89ms   90.06%
+    Req/Sec   222.79     50.89   432.00     70.48%
+  26600 requests in 15.00s, 5.61MB read
+Requests/sec:   1772.84
+Transfer/sec:    382.53KB
+
+---------------------------------------------------------
+ Concurrency: 64 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.78ms   56.46ms 784.03ms   91.28%
+    Req/Sec   222.31     51.88   397.00     69.66%
+  26606 requests in 15.01s, 5.61MB read
+Requests/sec:   1772.97
+Transfer/sec:    382.57KB
+
+---------------------------------------------------------
+ Concurrency: 128 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    73.45ms   92.56ms 800.86ms   87.66%
+    Req/Sec   221.61     34.93   327.00     69.47%
+  26531 requests in 15.01s, 5.59MB read
+Requests/sec:   1767.91
+Transfer/sec:    381.48KB
+
+---------------------------------------------------------
+ Concurrency: 256 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json.json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json.json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   144.73ms  107.30ms 724.33ms   63.86%
+    Req/Sec   217.61     23.86   260.00     76.07%
+  26267 requests in 15.01s, 5.54MB read
+Requests/sec:   1750.20
+Transfer/sec:    377.67KB

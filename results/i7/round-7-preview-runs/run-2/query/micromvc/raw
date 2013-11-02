@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Thu Oct 17 00:40:39 PDT 2013
+
+  System load:  0.02               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.20ms    3.73ms  27.60ms   77.79%
+    Req/Sec   103.00     24.36   172.00     57.60%
+  4039 requests in 5.00s, 28.82MB read
+  Non-2xx or 3xx responses: 4039
+Requests/sec:    807.62
+Transfer/sec:      5.76MB
+
+---------------------------------------------------------
+ Running Warmup micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   301.14ms  174.59ms   1.13s    67.61%
+    Req/Sec   108.92     16.10   201.00     82.35%
+  12939 requests in 15.03s, 92.33MB read
+  Non-2xx or 3xx responses: 12939
+Requests/sec:    860.83
+Transfer/sec:      6.14MB
+
+---------------------------------------------------------
+ Queries: 1 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   288.08ms  175.59ms 947.14ms   65.61%
+    Req/Sec   108.64      9.34   133.00     71.43%
+  12944 requests in 15.02s, 92.37MB read
+  Non-2xx or 3xx responses: 12944
+Requests/sec:    861.66
+Transfer/sec:      6.15MB
+
+---------------------------------------------------------
+ Queries: 5 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   289.74ms  147.07ms 824.62ms   67.24%
+    Req/Sec   108.81     11.72   153.00     75.33%
+  12972 requests in 15.02s, 92.57MB read
+  Non-2xx or 3xx responses: 12972
+Requests/sec:    863.79
+Transfer/sec:      6.16MB
+
+---------------------------------------------------------
+ Queries: 10 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   163.51ms  142.24ms 867.51ms   76.33%
+    Req/Sec   286.89    153.15   635.00     53.14%
+  32932 requests in 15.01s, 54.86MB read
+  Non-2xx or 3xx responses: 5654
+Requests/sec:   2194.16
+Transfer/sec:      3.66MB
+
+---------------------------------------------------------
+ Queries: 15 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   292.45ms  161.40ms 880.28ms   67.02%
+    Req/Sec   108.54     14.58   166.00     72.61%
+  13642 requests in 15.03s, 90.41MB read
+  Non-2xx or 3xx responses: 12563
+Requests/sec:    907.91
+Transfer/sec:      6.02MB
+
+---------------------------------------------------------
+ Queries: 20 for micromvc
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   288.69ms  164.66ms 965.36ms   67.25%
+    Req/Sec   108.67     10.25   145.00     70.76%
+  12930 requests in 15.03s, 92.27MB read
+  Non-2xx or 3xx responses: 12930
+Requests/sec:    860.46
+Transfer/sec:      6.14MB

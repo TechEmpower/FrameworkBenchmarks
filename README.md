@@ -46,50 +46,108 @@ For descriptions of the test types that we run against each framework, see the [
 
 ## The benchmark_config File
 
-The benchmark_config file is used by our run script to identify the available tests to be run. This file should exist at the root of the test directory. Here is its basic structure:
+The benchmark_config file is used by our scripts to both identify the available tests and to extract metadata describing each test.
+
+This file should exist at the root of the test directory.
+
+Here is the basic structure of benchmark_config, using the Compojure framework as an example.  Compojure has two test *permutations*, which are identified as the "tests" list in the JSON structure below.
 
 	{
-      "framework": "my-framework",
-      "tests": [{
-        "default": {
-          "setup_file": "setup.py"
-          "json_url": "/json",
-          "db_url": "/db",
-          "query_url": "/db?queries=",
-          "port": 8080,
-          "sort": 32
-      }, {
-        "alternative": {
-          "setup_file": "alternate_setup.py"
-          "json_url": "/json",
-          "db_url": "/db",
-          "query_url": "/db?queries=",
-          "port": 8080,
-          "sort": 33
-        }
-      }]
+	  "framework": "compojure",
+	  "tests": [{
+	    "default": {
+	      "setup_file": "setup",
+	      "json_url": "/compojure/json",
+	      "db_url": "/compojure/db/1",
+	      "query_url": "/compojure/db/",
+	      "fortune_url": "/compojure/fortune-hiccup",
+	      "plaintext_url": "/compojure/plaintext",
+	      "port": 8080,
+	      "approach": "Realistic",
+	      "classification": "Micro",
+	      "database": "MySQL",
+	      "framework": "compojure",
+	      "language": "Clojure",
+	      "orm": "Micro",
+	      "platform": "Servlet",
+	      "webserver": "Resin",
+	      "os": "Linux",
+	      "database_os": "Linux",
+	      "display_name": "compojure",
+	      "notes": "",
+	      "versus": "servlet"
+	    },
+	    "raw": {
+	      "setup_file": "setup",
+	      "db_url": "/compojure/dbraw/1",
+	      "query_url": "/compojure/dbraw/",
+	      "port": 8080,
+	      "approach": "Realistic",
+	      "classification": "Micro",
+	      "database": "MySQL",
+	      "framework": "compojure",
+	      "language": "Clojure",
+	      "orm": "Raw",
+	      "platform": "Servlet",
+	      "webserver": "Resin",
+	      "os": "Linux",
+	      "database_os": "Linux",
+	      "display_name": "compojure-raw",
+	      "notes": "",
+	      "versus": "servlet"
+	    }
+	  }]
 	}
 
 * framework: Specifies the framework name.
-* tests: An array of tests that can be run for this framework. In most cases, this contains a single element for the "default" test, but additional tests can be specified.
+* tests: An list of tests that can be run for this framework. In many cases, this contains a single element for the "default" test, but additional tests can be specified.  Each test name must be unique when concatenated with the framework name.
   * setup_file: The location of the [setup file](#setup-files) that can start and stop the test. By convention this is just setup.py.
-  * json_url (optional): The relative URL path to the JSON test
-  * db_url (optional): The relative URL path to the database test
-  * query_url (optional): The relative URL path to the variable query test. The URL must be set up so that an integer can be applied to the end of the url to specify the number of queries to run, i.e. /db?queries= or /db/
-  * port: The port the server is listneing on
-  * sort: The sort order. This is important for our own blog post which relies on consistent ordering of the frameworks. You can get the next available sort order by running:
-    ./run-tests.py --next-sort
+  * json_url (optional): The URI to the JSON test, typically `/json`
+  * db_url (optional): The URI to the database test, typically `/db`
+  * query_url (optional): The URI to the variable query test. The URI must be set up so that an integer can be applied to the end of the URI to specify the number of queries to run.  For example, "/query?queries=" (to yield /query?queries=20" or "/query/" to yield "/query/20".
+  * fortune_url (optional): the URI to the fortunes test, typically `/fortune`
+  * update_url (optional): the URI to the updates test, setup in a manner similar to the query_url described above.
+  * plaintext_url (optional): the URI of the plaintext test, typically `/plaintext`
+  * port: The port the server is listening on
+  * approach (metadata): `Realistic` or `Stripped` (see results web site for description of all metadata attributes)
+  * classification (metadata): `Full`, `Micro`, or `Platform`
+  * database (metadata): `MySQL`, `Postgres`, `MongoDB`, `SQLServer`, or `None`
+  * framework (metadata): name of the framework
+  * language (metadata): name of the language
+  * orm (metadata): `Full`, `Micro`, or `Raw`
+  * platform (metadata): name of the platform
+  * webserver (metadata): name of the web-server (also referred to as the "front-end server")
+  * os (metadata): The application server's operating system, `Linux` or `Windows`
+  * database_os (metadata): The database server's operating system, `Linux` or `Windows`
+  * display_name (metadata): How to render this test permutation's name in the results web site.  Some permutation names can be really long, so the display_name is provided in order to provide something more succinct.
+  * versus (optional): The name of another test (elsewhere in this project) that is a subset of this framework.  This allows for the generation of the framework efficiency chart in the results web site.  For example, Compojure is compared to "servlet" since Compojure is built on the Servlets platform.
 
 ## Setup Files
 
 The setup file is responsible for starting and stopping the test. This script is responsible for (among other things):
 
-* Setting the database host to the correct IP
-* Compiling/packaging the code
+* Modifying the framework's configuration to point to the correct database host
+* Compiling and/or packaging the code
 * Starting the server
 * Stopping the server
 
-The setup file is a python file that contains a start() and a stop() function. Here is an example of Wicket's setup file.
+The setup file is a python script that contains a start() and a stop() function.  The start function should build the source, make any necessary changes to the framework's configuration, and then start the server.  The stop function should shutdown the server, including all sub-processes as applicable.
+
+### Configuring database connectivity in start()
+
+By convention, the configuration files used by a framework should specify the database server as `localhost` so that developing tests in a single-machine environment can be done in an ad hoc fashion, without using the benchmark scripts.
+
+When running a benchmark script, the script needs to modify each framework's configuration so that the framework connects to a database host provided as a command line argument.  In order to do this, use setup_util.replace_text() to make necessary modifications prior to starting the server.
+
+For example:
+
+    setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+
+Using `localhost` in the raw configuration file is not a requirement as long as the `replace_text` call properly injects the database host provided to the benchmarker toolset as a command line argument.
+
+### A full example
+
+Here is an example of Wicket's setup file.
 
 	import subprocess
 	import sys

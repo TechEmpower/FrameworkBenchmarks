@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 08:02:59 PDT 2013
+
+  System load:  0.72               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/updates/postgresql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/updates/postgresql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.05ms    3.11ms  25.44ms   76.73%
+    Req/Sec   133.05     31.67   208.00     54.18%
+  5190 requests in 5.00s, 1.14MB read
+Requests/sec:   1037.06
+Transfer/sec:    232.47KB
+
+---------------------------------------------------------
+ Running Warmup undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/postgresql?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/postgresql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    77.90ms   28.22ms 683.78ms   88.67%
+    Req/Sec   419.07     65.10   644.00     84.87%
+  50293 requests in 15.01s, 11.01MB read
+Requests/sec:   3351.49
+Transfer/sec:    751.33KB
+
+---------------------------------------------------------
+ Queries: 1 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/postgresql?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/postgresql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    50.60ms   66.15ms 379.57ms   95.82%
+    Req/Sec   837.59    225.11     1.81k    83.05%
+  100379 requests in 15.01s, 18.93MB read
+Requests/sec:   6689.06
+Transfer/sec:      1.26MB
+
+---------------------------------------------------------
+ Queries: 5 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/postgresql?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/postgresql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   189.20ms   34.05ms 439.44ms   78.47%
+    Req/Sec   166.01     20.39   232.00     84.14%
+  20066 requests in 15.01s, 6.24MB read
+Requests/sec:   1336.59
+Transfer/sec:    425.39KB
+
+---------------------------------------------------------
+ Queries: 10 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/postgresql?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/postgresql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   398.52ms   47.29ms 913.53ms   74.56%
+    Req/Sec    78.37      6.60   105.00     76.47%
+  9412 requests in 15.04s, 4.35MB read
+Requests/sec:    625.71
+Transfer/sec:    296.24KB
+
+---------------------------------------------------------
+ Queries: 15 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/postgresql?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/postgresql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   604.42ms   62.03ms 784.66ms   70.88%
+    Req/Sec    51.86      4.32    62.00     70.00%
+  6199 requests in 15.03s, 3.81MB read
+Requests/sec:    412.31
+Transfer/sec:    259.18KB
+
+---------------------------------------------------------
+ Queries: 20 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/updates/postgresql?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/updates/postgresql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   807.04ms   90.05ms   1.28s    76.11%
+    Req/Sec    38.05      4.37    50.00     88.24%
+  4594 requests in 15.02s, 3.52MB read
+Requests/sec:    305.78
+Transfer/sec:    239.65KB

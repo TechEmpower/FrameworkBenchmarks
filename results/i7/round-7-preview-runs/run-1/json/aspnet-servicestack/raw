@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 14 15:23:07 PDT 2013
+
+  System load:  0.01               Processes:           116
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json/servicestack
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json/servicestack
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   756.60us    1.65ms  32.96ms   99.29%
+    Req/Sec     1.63k   191.16     1.89k    94.66%
+  60856 requests in 5.00s, 16.08MB read
+Requests/sec:  12171.60
+Transfer/sec:      3.22MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/servicestack
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.72ms    3.77ms  98.82ms   75.93%
+    Req/Sec     3.71k   173.56     4.14k    85.17%
+  433604 requests in 15.00s, 114.54MB read
+Requests/sec:  28906.43
+Transfer/sec:      7.64MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/servicestack
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   796.65us    2.00ms  32.96ms   99.24%
+    Req/Sec     1.62k   204.25     2.00k    92.12%
+  182815 requests in 15.00s, 48.29MB read
+Requests/sec:  12187.58
+Transfer/sec:      3.22MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/servicestack
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   650.98us    0.88ms  32.71ms   98.90%
+    Req/Sec     3.35k   433.44     4.44k    82.19%
+  376189 requests in 15.00s, 99.38MB read
+Requests/sec:  25079.76
+Transfer/sec:      6.63MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/servicestack
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.13ms  646.98us  25.56ms   95.95%
+    Req/Sec     3.76k   371.01     6.50k    81.92%
+  421124 requests in 15.00s, 111.25MB read
+Requests/sec:  28075.43
+Transfer/sec:      7.42MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/servicestack
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.27ms    1.93ms 106.43ms   96.58%
+    Req/Sec     3.79k   382.00     5.20k    71.71%
+  427944 requests in 15.00s, 113.05MB read
+Requests/sec:  28529.89
+Transfer/sec:      7.54MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/servicestack
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.35ms    2.03ms  66.86ms   80.51%
+    Req/Sec     3.76k   241.87     4.59k    80.11%
+  434460 requests in 15.00s, 114.77MB read
+Requests/sec:  28964.41
+Transfer/sec:      7.65MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-servicestack
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json/servicestack
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json/servicestack
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.79ms    4.51ms 150.09ms   83.71%
+    Req/Sec     3.71k   181.54     4.32k    78.86%
+  432983 requests in 15.00s, 114.38MB read
+Requests/sec:  28866.22
+Transfer/sec:      7.63MB

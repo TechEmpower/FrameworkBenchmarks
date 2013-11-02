@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 20:27:14 PDT 2013
+
+  System load:  0.12               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.13ms  607.94us   6.27ms   76.75%
+    Req/Sec   506.46     97.21   800.00     71.25%
+  19124 requests in 5.00s, 3.79MB read
+Requests/sec:   3824.04
+Transfer/sec:    775.94KB
+
+---------------------------------------------------------
+ Running Warmup django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    60.47ms   20.82ms 262.09ms   74.05%
+    Req/Sec   530.22     47.09   674.00     80.93%
+  63205 requests in 15.01s, 12.52MB read
+Requests/sec:   4211.92
+Transfer/sec:    854.66KB
+
+---------------------------------------------------------
+ Concurrency: 8 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.15ms  731.90us  18.39ms   84.14%
+    Req/Sec   503.38     96.42   800.00     59.48%
+  57224 requests in 15.00s, 11.34MB read
+Requests/sec:   3814.57
+Transfer/sec:    774.02KB
+
+---------------------------------------------------------
+ Concurrency: 16 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.91ms    1.48ms  25.05ms   66.61%
+    Req/Sec   554.94    123.13     1.00k    71.25%
+  63322 requests in 15.00s, 12.55MB read
+Requests/sec:   4221.26
+Transfer/sec:    856.54KB
+
+---------------------------------------------------------
+ Concurrency: 32 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.73ms    4.56ms  50.81ms   86.22%
+    Req/Sec   542.55    111.22     0.95k    68.52%
+  62773 requests in 15.00s, 12.44MB read
+Requests/sec:   4184.69
+Transfer/sec:    849.12KB
+
+---------------------------------------------------------
+ Concurrency: 64 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.89ms    8.23ms  67.24ms   70.54%
+    Req/Sec   543.65    148.27     1.13k    72.25%
+  63133 requests in 15.00s, 12.51MB read
+Requests/sec:   4208.53
+Transfer/sec:    853.97KB
+
+---------------------------------------------------------
+ Concurrency: 128 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    30.60ms   11.74ms 106.52ms   71.91%
+    Req/Sec   530.91     48.39   687.00     70.07%
+  63134 requests in 15.00s, 12.51MB read
+Requests/sec:   4207.77
+Transfer/sec:    853.80KB
+
+---------------------------------------------------------
+ Concurrency: 256 for django-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.37ms   21.51ms 263.94ms   71.66%
+    Req/Sec   540.43     47.96   701.00     73.88%
+  63115 requests in 15.00s, 12.51MB read
+Requests/sec:   4207.27
+Transfer/sec:    853.70KB

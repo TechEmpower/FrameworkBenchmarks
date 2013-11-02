@@ -61,8 +61,13 @@ app.get('/updates/:queries?', function(request, queries) {
    for (var i = 0; i < queries; i++) {
       randId = ((Math.random() * 10000) | 0) + 1;
       world = models.store.query('select World.* from World where World.id = :id', {id: randId})[0];
-      world.randomId = ((Math.random() * 10000) | 0) + 1;
-      world.save();
+      world.randomNumber = ((Math.random() * 10000) | 0) + 1;
+      try {
+         world.save();
+      } catch (e) {
+         models.store.abortTransaction();
+         return response.error('SQL error');
+      }
       worlds.push(world.toJSON());
    }
    models.store.commitTransaction();

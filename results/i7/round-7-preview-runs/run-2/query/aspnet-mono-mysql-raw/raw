@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 18:07:38 PDT 2013
+
+  System load:  0.0                Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/ado/mysql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/ado/mysql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.99ms   10.71ms  40.17ms   91.98%
+    Req/Sec    98.03    167.42   555.00     76.21%
+  3157 requests in 6.00s, 4.71MB read
+  Socket errors: connect 0, read 6, write 0, timeout 13
+  Non-2xx or 3xx responses: 42
+Requests/sec:    526.14
+Transfer/sec:    804.07KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.20s     3.50s    9.84s    82.81%
+    Req/Sec    80.60    127.39   495.00     78.22%
+  11341 requests in 16.01s, 14.39MB read
+  Socket errors: connect 0, read 157, write 0, timeout 1643
+  Non-2xx or 3xx responses: 2032
+Requests/sec:    708.59
+Transfer/sec:      0.90MB
+
+---------------------------------------------------------
+ Queries: 1 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   734.83ms  473.76ms   1.09s    69.67%
+    Req/Sec    91.59    156.72     0.86k    79.70%
+  11923 requests in 16.00s, 13.49MB read
+  Socket errors: connect 0, read 152, write 0, timeout 1683
+  Non-2xx or 3xx responses: 2030
+Requests/sec:    745.02
+Transfer/sec:    863.03KB
+
+---------------------------------------------------------
+ Queries: 5 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   771.97ms  633.49ms   1.42s    60.82%
+    Req/Sec    93.03    127.33   556.00     77.89%
+  12083 requests in 16.00s, 20.34MB read
+  Socket errors: connect 0, read 208, write 0, timeout 1589
+  Non-2xx or 3xx responses: 3161
+Requests/sec:    755.00
+Transfer/sec:      1.27MB
+
+---------------------------------------------------------
+ Queries: 10 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.68s     1.75s    6.26s    89.66%
+    Req/Sec    90.18    172.13     2.50k    88.62%
+  10992 requests in 16.00s, 7.94MB read
+  Socket errors: connect 0, read 81, write 0, timeout 1434
+  Non-2xx or 3xx responses: 3812
+Requests/sec:    686.86
+Transfer/sec:    508.33KB
+
+---------------------------------------------------------
+ Queries: 15 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   786.96ms  851.36ms   2.14s    79.55%
+    Req/Sec    74.57     82.59   326.00     81.45%
+  10014 requests in 16.00s, 7.93MB read
+  Socket errors: connect 0, read 76, write 0, timeout 1471
+  Non-2xx or 3xx responses: 4255
+Requests/sec:    625.70
+Transfer/sec:    507.35KB
+
+---------------------------------------------------------
+ Queries: 20 for aspnet-mono-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/ado/mysql?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/ado/mysql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   694.44ms  698.83ms   2.28s    70.43%
+    Req/Sec    75.14     76.03   311.00     82.24%
+  10011 requests in 16.00s, 12.22MB read
+  Socket errors: connect 0, read 60, write 0, timeout 1393
+  Non-2xx or 3xx responses: 3334
+Requests/sec:    625.69
+Transfer/sec:    782.03KB

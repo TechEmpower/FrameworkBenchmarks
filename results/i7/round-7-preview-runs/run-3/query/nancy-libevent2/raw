@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 13:50:04 PDT 2013
+
+  System load:  0.43               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/db/2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/db/2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.98ms    6.28ms 102.29ms   96.43%
+    Req/Sec   331.77     83.20   555.00     79.59%
+  12545 requests in 5.00s, 261.98MB read
+  Non-2xx or 3xx responses: 12545
+Requests/sec:   2507.89
+Transfer/sec:     52.37MB
+
+---------------------------------------------------------
+ Running Warmup nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db/2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db/2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    70.92ms   49.70ms 874.13ms   90.53%
+    Req/Sec   458.66     39.23   613.00     69.91%
+  54633 requests in 15.01s, 1.12GB read
+  Non-2xx or 3xx responses: 54633
+Requests/sec:   3640.96
+Transfer/sec:     76.10MB
+
+---------------------------------------------------------
+ Queries: 1 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db/1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    64.71ms   45.51ms 394.82ms   91.20%
+    Req/Sec   497.56     45.65   666.00     71.54%
+  59261 requests in 15.01s, 1.21GB read
+  Non-2xx or 3xx responses: 59261
+Requests/sec:   3949.16
+Transfer/sec:     82.52MB
+
+---------------------------------------------------------
+ Queries: 5 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db/5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db/5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    83.26ms   56.62ms 519.00ms   87.87%
+    Req/Sec   383.34     31.12   478.00     69.52%
+  45811 requests in 15.00s, 0.94GB read
+  Non-2xx or 3xx responses: 45811
+Requests/sec:   3053.23
+Transfer/sec:     63.88MB
+
+---------------------------------------------------------
+ Queries: 10 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db/10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db/10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.54ms   55.55ms 524.68ms   79.57%
+    Req/Sec   313.02     26.39   398.00     67.84%
+  37279 requests in 15.02s, 778.97MB read
+  Non-2xx or 3xx responses: 37279
+Requests/sec:   2481.66
+Transfer/sec:     51.86MB
+
+---------------------------------------------------------
+ Queries: 15 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db/15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db/15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   122.47ms   74.38ms 705.42ms   79.72%
+    Req/Sec   261.32     22.08   326.00     69.23%
+  31350 requests in 15.01s, 654.94MB read
+  Non-2xx or 3xx responses: 31350
+Requests/sec:   2088.73
+Transfer/sec:     43.64MB
+
+---------------------------------------------------------
+ Queries: 20 for nancy-libevent2
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/db/20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/db/20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   140.52ms   80.75ms 672.24ms   77.19%
+    Req/Sec   224.71     22.37   282.00     79.41%
+  26937 requests in 15.00s, 563.03MB read
+  Non-2xx or 3xx responses: 26937
+Requests/sec:   1795.39
+Transfer/sec:     37.53MB

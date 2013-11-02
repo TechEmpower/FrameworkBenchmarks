@@ -1,0 +1,133 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 21:35:59 UTC 2013
+
+  System load:  0.01               Processes:           71
+  Usage of /:   25.9% of 19.69GB   Users logged in:     0
+  Memory usage: 10%                IP address for eth0: 10.254.22.217
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.252.47.47:8080/mongoose/
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.47.47:8080/mongoose/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  4472 requests in 5.00s, 1.15MB read
+Requests/sec:    894.24
+Transfer/sec:    235.48KB
+
+---------------------------------------------------------
+ Running Warmup hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongoose/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  19654 requests in 15.02s, 5.05MB read
+  Socket errors: connect 0, read 0, write 0, timeout 68
+Requests/sec:   1308.94
+Transfer/sec:    344.70KB
+
+---------------------------------------------------------
+ Concurrency: 8 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.252.47.47:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongoose/
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  15047 requests in 15.05s, 3.87MB read
+Requests/sec:    999.56
+Transfer/sec:    263.21KB
+
+---------------------------------------------------------
+ Concurrency: 16 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.252.47.47:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongoose/
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  16512 requests in 15.01s, 4.25MB read
+Requests/sec:   1100.30
+Transfer/sec:    289.76KB
+
+---------------------------------------------------------
+ Concurrency: 32 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.252.47.47:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongoose/
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  18290 requests in 15.01s, 4.70MB read
+Requests/sec:   1218.93
+Transfer/sec:    321.00KB
+
+---------------------------------------------------------
+ Concurrency: 64 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.252.47.47:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongoose/
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  18719 requests in 15.05s, 4.81MB read
+Requests/sec:   1243.73
+Transfer/sec:    327.50KB
+
+---------------------------------------------------------
+ Concurrency: 128 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.252.47.47:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongoose/
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  20221 requests in 15.02s, 5.20MB read
+Requests/sec:   1346.25
+Transfer/sec:    354.53KB
+
+---------------------------------------------------------
+ Concurrency: 256 for hapi-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.252.47.47:8080/mongoose/
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/mongoose/
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  20089 requests in 15.03s, 5.17MB read
+Requests/sec:   1336.87
+Transfer/sec:    352.06KB

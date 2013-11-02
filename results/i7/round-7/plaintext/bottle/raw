@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 17:26:07 PDT 2013
+
+  System load:  0.02               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   230.68us   73.06us   1.42ms   82.14%
+    Req/Sec     4.49k   368.16     5.67k    65.08%
+  170066 requests in 5.00s, 26.44MB read
+Requests/sec:  34012.70
+Transfer/sec:      5.29MB
+
+---------------------------------------------------------
+ Running Warmup bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.53ms    8.52ms  44.90ms   83.81%
+    Req/Sec     6.36k     2.18k   14.65k    79.44%
+  692050 requests in 15.00s, 107.58MB read
+Requests/sec:  46137.19
+Transfer/sec:      7.17MB
+
+---------------------------------------------------------
+ Concurrency: 256 for bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    80.78ms   34.10ms 367.90ms   75.79%
+    Req/Sec     6.34k   608.93     7.52k    79.22%
+  733370 requests in 15.01s, 114.00MB read
+Requests/sec:  48874.45
+Transfer/sec:      7.60MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   325.26ms  150.94ms   2.36s    92.98%
+    Req/Sec     6.20k   792.21     7.83k    88.39%
+  730761 requests in 15.01s, 113.60MB read
+  Socket errors: connect 0, read 64, write 0, timeout 200
+Requests/sec:  48683.38
+Transfer/sec:      7.57MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   819.40ms  323.78ms   4.22s    85.74%
+    Req/Sec     6.31k     0.99k    7.80k    78.81%
+  724455 requests in 15.01s, 112.62MB read
+  Socket errors: connect 0, read 1131, write 0, timeout 9650
+Requests/sec:  48263.13
+Transfer/sec:      7.50MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for bottle
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.79s     4.52s   13.79s    55.74%
+    Req/Sec     5.35k     3.13k   14.80k    68.56%
+  707752 requests in 15.02s, 110.03MB read
+  Socket errors: connect 11, read 2197, write 0, timeout 81521
+Requests/sec:  47131.24
+Transfer/sec:      7.33MB

@@ -19,7 +19,8 @@
       "database_os": "Linux",
       "display_name": "grails",
       "notes": "",
-      "versus": "servlet"
+      "versus": "servlet",
+      "skip": "true"
     }
   }]
 }

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 04:09:32 PDT 2013
+
+  System load:  0.18               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:9000/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.36ms    0.94ms  21.66ms   85.72%
+    Req/Sec   463.00    103.31   727.00     71.93%
+  16895 requests in 5.00s, 2.67MB read
+Requests/sec:   3377.60
+Transfer/sec:    546.06KB
+
+---------------------------------------------------------
+ Running Warmup play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    42.75ms   29.90ms 715.80ms   89.23%
+    Req/Sec   745.11    210.13     1.42k    68.89%
+  88276 requests in 15.00s, 13.94MB read
+Requests/sec:   5883.95
+Transfer/sec:      0.93MB
+
+---------------------------------------------------------
+ Queries: 1 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.29ms   43.87ms   1.62s    99.03%
+    Req/Sec     1.36k   327.05     2.74k    73.98%
+  159680 requests in 15.00s, 20.37MB read
+Requests/sec:  10644.34
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Queries: 5 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   102.42ms   44.93ms   1.69s    93.28%
+    Req/Sec   309.82     39.04   453.00     80.38%
+  37173 requests in 15.01s, 9.28MB read
+Requests/sec:   2477.04
+Transfer/sec:    633.51KB
+
+---------------------------------------------------------
+ Queries: 10 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   203.48ms   91.31ms   1.66s    96.96%
+    Req/Sec   159.67     16.73   263.00     87.44%
+  19086 requests in 15.02s, 7.66MB read
+Requests/sec:   1271.06
+Transfer/sec:    522.30KB
+
+---------------------------------------------------------
+ Queries: 15 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   297.29ms   80.15ms   1.77s    94.86%
+    Req/Sec   106.61      9.63   160.00     89.78%
+  12775 requests in 15.03s, 7.06MB read
+Requests/sec:    849.88
+Transfer/sec:    481.10KB
+
+---------------------------------------------------------
+ Queries: 20 for play-slick
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   384.59ms   67.85ms   1.02s    89.42%
+    Req/Sec    80.50      8.76   139.00     83.96%
+  9659 requests in 15.04s, 6.80MB read
+Requests/sec:    642.39
+Transfer/sec:    463.32KB

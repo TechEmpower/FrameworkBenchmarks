@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 19:14:43 PDT 2013
+
+  System load:  0.12               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 1%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+58 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/compojure/fortune-hiccup
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   668.07us  295.94us  10.58ms   98.25%
+    Req/Sec     1.58k   156.40     1.89k    78.99%
+  58656 requests in 5.00s, 74.62MB read
+Requests/sec:  11731.65
+Transfer/sec:     14.93MB
+
+---------------------------------------------------------
+ Running Warmup compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/fortune-hiccup
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.34ms   50.46ms   1.18s    95.81%
+    Req/Sec     2.45k   579.59     6.12k    70.13%
+  292223 requests in 15.00s, 371.77MB read
+Requests/sec:  19482.40
+Transfer/sec:     24.79MB
+
+---------------------------------------------------------
+ Concurrency: 8 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/fortune-hiccup
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   658.63us  238.44us   8.93ms   97.29%
+    Req/Sec     1.59k   137.00     1.89k    79.60%
+  181336 requests in 15.00s, 230.70MB read
+Requests/sec:  12088.99
+Transfer/sec:     15.38MB
+
+---------------------------------------------------------
+ Concurrency: 16 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/fortune-hiccup
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.89ms  544.60us  12.50ms   95.51%
+    Req/Sec     2.42k   322.59     3.11k    77.48%
+  275126 requests in 15.00s, 350.02MB read
+Requests/sec:  18342.11
+Transfer/sec:     23.33MB
+
+---------------------------------------------------------
+ Concurrency: 32 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/fortune-hiccup
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.57ms    1.30ms  27.46ms   92.87%
+    Req/Sec     2.82k   512.82     4.33k    79.35%
+  321024 requests in 15.00s, 408.41MB read
+Requests/sec:  21401.76
+Transfer/sec:     27.23MB
+
+---------------------------------------------------------
+ Concurrency: 64 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/fortune-hiccup
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.11ms    3.20ms  35.88ms   87.90%
+    Req/Sec     2.80k   616.33     4.92k    77.07%
+  322867 requests in 15.00s, 410.75MB read
+Requests/sec:  21524.85
+Transfer/sec:     27.38MB
+
+---------------------------------------------------------
+ Concurrency: 128 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/fortune-hiccup
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.45ms   13.85ms 237.23ms   90.39%
+    Req/Sec     2.61k   535.61     4.97k    68.63%
+  309440 requests in 15.00s, 393.67MB read
+Requests/sec:  20629.88
+Transfer/sec:     26.25MB
+
+---------------------------------------------------------
+ Concurrency: 256 for compojure
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/compojure/fortune-hiccup
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/compojure/fortune-hiccup
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.47ms   48.83ms 942.20ms   95.58%
+    Req/Sec     2.46k   558.68     4.43k    68.63%
+  292563 requests in 15.00s, 372.20MB read
+Requests/sec:  19507.18
+Transfer/sec:     24.82MB

@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 15 21:33:13 PDT 2013
+
+  System load:  0.24               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer go
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   229.44us   78.39us   1.61ms   94.69%
+    Req/Sec     4.46k   284.96     4.89k    58.49%
+  168943 requests in 5.00s, 18.53MB read
+Requests/sec:  33791.41
+Transfer/sec:      3.71MB
+
+---------------------------------------------------------
+ Running Warmup go
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.21ms    1.21ms 623.01ms   97.18%
+    Req/Sec    28.00k     2.41k   36.67k    57.69%
+  3172054 requests in 15.00s, 347.89MB read
+Requests/sec: 211479.15
+Transfer/sec:     23.19MB
+
+---------------------------------------------------------
+ Concurrency: 256 for go
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.81ms    7.82ms 261.30ms   96.39%
+    Req/Sec    35.14k     1.61k   41.00k    68.34%
+  4160390 requests in 15.00s, 456.28MB read
+Requests/sec: 277417.26
+Transfer/sec:     30.43MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for go
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.65ms   23.32ms 745.26ms   89.63%
+    Req/Sec    35.20k     1.79k   48.28k    82.74%
+  4192520 requests in 15.00s, 459.81MB read
+  Socket errors: connect 0, read 99, write 0, timeout 10
+Requests/sec: 279504.00
+Transfer/sec:     30.65MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for go
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   180.47ms  196.75ms   4.40s    98.43%
+    Req/Sec    35.11k     4.53k   55.18k    81.09%
+  4184351 requests in 15.00s, 458.91MB read
+  Socket errors: connect 0, read 332, write 0, timeout 6625
+Requests/sec: 278922.07
+Transfer/sec:     30.59MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for go
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   620.67ms    1.68s   10.17s    96.38%
+    Req/Sec    34.40k     5.68k   73.92k    75.17%
+  4155455 requests in 15.01s, 455.74MB read
+  Socket errors: connect 11, read 573, write 0, timeout 72960
+Requests/sec: 276777.27
+Transfer/sec:     30.35MB

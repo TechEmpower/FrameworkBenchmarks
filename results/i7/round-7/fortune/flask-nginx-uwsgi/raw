@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 21:38:40 PDT 2013
+
+  System load:  0.92               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.20ms    1.04ms  14.38ms   85.84%
+    Req/Sec   337.66     72.11   555.00     73.02%
+  12751 requests in 5.00s, 17.52MB read
+Requests/sec:   2548.95
+Transfer/sec:      3.50MB
+
+---------------------------------------------------------
+ Running Warmup flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.30ms   12.65ms 173.41ms   98.21%
+    Req/Sec    17.36k     4.81k   36.11k    70.18%
+  1917206 requests in 15.00s, 626.32MB read
+  Non-2xx or 3xx responses: 1892048
+Requests/sec: 127816.70
+Transfer/sec:     41.76MB
+
+---------------------------------------------------------
+ Concurrency: 8 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.22ms    1.11ms  21.00ms   88.64%
+    Req/Sec   336.19     70.80   555.00     74.51%
+  38281 requests in 15.00s, 52.61MB read
+Requests/sec:   2551.72
+Transfer/sec:      3.51MB
+
+---------------------------------------------------------
+ Concurrency: 16 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.68ms    3.93ms  55.53ms   89.54%
+    Req/Sec   382.92     98.43   714.00     70.48%
+  44553 requests in 15.00s, 61.22MB read
+Requests/sec:   2969.75
+Transfer/sec:      4.08MB
+
+---------------------------------------------------------
+ Concurrency: 32 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.59ms    4.10ms  35.98ms   77.66%
+    Req/Sec   387.25     48.15   571.00     68.18%
+  45767 requests in 15.00s, 62.89MB read
+Requests/sec:   3050.27
+Transfer/sec:      4.19MB
+
+---------------------------------------------------------
+ Concurrency: 64 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.92ms    3.79ms  88.91ms   79.31%
+    Req/Sec   385.65     27.37   489.00     69.95%
+  45881 requests in 15.00s, 63.05MB read
+Requests/sec:   3057.77
+Transfer/sec:      4.20MB
+
+---------------------------------------------------------
+ Concurrency: 128 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.89ms    4.19ms  70.07ms   80.18%
+    Req/Sec   383.70     18.57   451.00     67.77%
+  45854 requests in 15.00s, 63.01MB read
+Requests/sec:   3055.98
+Transfer/sec:      4.20MB
+
+---------------------------------------------------------
+ Concurrency: 256 for flask-nginx-uwsgi
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.99ms   11.43ms 169.53ms   98.49%
+    Req/Sec    18.06k     5.00k   40.56k    69.27%
+  2004615 requests in 15.00s, 652.74MB read
+  Non-2xx or 3xx responses: 1980323
+Requests/sec: 133642.06
+Transfer/sec:     43.52MB

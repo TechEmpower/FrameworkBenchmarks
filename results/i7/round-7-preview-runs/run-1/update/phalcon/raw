@@ -1,0 +1,121 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 16 00:50:25 PDT 2013
+
+  System load:  0.02               Processes:           118
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 0%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+52 packages can be updated.
+19 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer phalcon
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/update?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/update?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.93ms    4.25ms  28.19ms   74.55%
+    Req/Sec    75.71     21.17   151.00     88.17%
+  3028 requests in 5.01s, 603.12KB read
+  Non-2xx or 3xx responses: 3028
+Requests/sec:    604.22
+Transfer/sec:    120.35KB
+
+---------------------------------------------------------
+ Running Warmup phalcon
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   266.02ms  150.03ms   1.68s    79.61%
+    Req/Sec   122.46      9.77   151.00     66.85%
+  14615 requests in 15.01s, 2.84MB read
+  Non-2xx or 3xx responses: 14615
+Requests/sec:    973.42
+Transfer/sec:    193.92KB
+
+---------------------------------------------------------
+ Queries: 1 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   262.97ms  141.84ms   1.32s    76.22%
+    Req/Sec   122.42     10.06   144.00     73.78%
+  14664 requests in 15.01s, 2.85MB read
+  Non-2xx or 3xx responses: 14664
+Requests/sec:    977.15
+Transfer/sec:    194.67KB
+
+---------------------------------------------------------
+ Queries: 5 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   180.61ms  116.86ms   1.16s    77.43%
+    Req/Sec   209.64     87.36   344.00     52.23%
+  24596 requests in 15.01s, 7.56MB read
+  Non-2xx or 3xx responses: 7842
+Requests/sec:   1638.78
+Transfer/sec:    516.02KB
+
+---------------------------------------------------------
+ Queries: 10 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   214.10ms   93.63ms 803.68ms   75.61%
+    Req/Sec   150.72     25.83   199.00     63.27%
+  17880 requests in 15.04s, 7.37MB read
+  Non-2xx or 3xx responses: 6347
+Requests/sec:   1189.08
+Transfer/sec:    501.87KB
+
+---------------------------------------------------------
+ Queries: 15 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   255.11ms  124.60ms   1.62s    74.89%
+    Req/Sec   121.49      9.39   140.00     71.52%
+  14610 requests in 15.02s, 2.84MB read
+  Non-2xx or 3xx responses: 14610
+Requests/sec:    972.45
+Transfer/sec:    193.73KB
+
+---------------------------------------------------------
+ Queries: 20 for phalcon
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/update?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/update?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   262.74ms  142.67ms   1.58s    77.90%
+    Req/Sec   121.98      8.79   150.00     68.23%
+  14615 requests in 15.00s, 2.84MB read
+  Non-2xx or 3xx responses: 14615
+Requests/sec:    974.08
+Transfer/sec:    194.05KB

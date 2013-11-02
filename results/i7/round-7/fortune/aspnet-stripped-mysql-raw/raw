@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 16:49:23 PDT 2013
+
+  System load:  0.12               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.92ms  784.60us  11.35ms   99.14%
+    Req/Sec   560.36     77.36   777.00     77.71%
+  20880 requests in 5.00s, 28.81MB read
+Requests/sec:   4175.19
+Transfer/sec:      5.76MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.86ms    6.83ms  85.72ms   88.54%
+    Req/Sec     2.21k   288.84     2.69k    64.42%
+  259327 requests in 15.00s, 357.86MB read
+Requests/sec:  17287.64
+Transfer/sec:     23.86MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.90ms  721.36us  18.65ms   99.47%
+    Req/Sec   563.71     76.43   777.00     77.41%
+  64170 requests in 15.00s, 88.55MB read
+Requests/sec:   4277.78
+Transfer/sec:      5.90MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.05ms    1.20ms  25.24ms   98.83%
+    Req/Sec     1.07k   147.75     1.44k    77.07%
+  121585 requests in 15.00s, 167.78MB read
+Requests/sec:   8105.45
+Transfer/sec:     11.19MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.44ms    1.31ms  23.37ms   97.42%
+    Req/Sec     1.80k   287.66     2.67k    82.39%
+  202534 requests in 15.00s, 279.49MB read
+Requests/sec:  13502.01
+Transfer/sec:     18.63MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.96ms    4.57ms  48.21ms   88.94%
+    Req/Sec     1.92k   631.56     2.88k    70.57%
+  222368 requests in 15.00s, 306.86MB read
+Requests/sec:  14824.01
+Transfer/sec:     20.46MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.21ms    3.54ms  82.78ms   91.70%
+    Req/Sec     2.32k   353.62     2.78k    84.94%
+  271096 requests in 15.00s, 374.10MB read
+Requests/sec:  18071.94
+Transfer/sec:     24.94MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.88ms    4.13ms  71.00ms   89.37%
+    Req/Sec     2.34k   230.62     2.65k    80.98%
+  274712 requests in 15.00s, 379.09MB read
+Requests/sec:  18313.77
+Transfer/sec:     25.27MB

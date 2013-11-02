@@ -1,0 +1,105 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 21 15:15:19 PDT 2013
+
+  System load:  0.04               Processes:           119
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+64 packages can be updated.
+24 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://tfbapp:8080/plaintext.php
+---------------------------------------------------------
+
+Running 5s test @ http://tfbapp:8080/plaintext.php
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   293.23us   57.46us 564.00us   68.16%
+    Req/Sec     3.54k   244.65     4.33k    77.67%
+  133608 requests in 5.00s, 25.99MB read
+Requests/sec:  26721.47
+Transfer/sec:      5.20MB
+
+---------------------------------------------------------
+ Running Warmup php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.34ms    2.94ms 210.77ms   90.15%
+    Req/Sec     7.65k   585.18    11.50k    70.38%
+  881574 requests in 15.00s, 171.47MB read
+Requests/sec:  58774.26
+Transfer/sec:     11.43MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://tfbapp:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext.php
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    68.90ms   23.49ms 259.18ms   73.84%
+    Req/Sec     7.46k   270.75     8.55k    69.69%
+  893382 requests in 15.00s, 173.77MB read
+Requests/sec:  59559.05
+Transfer/sec:     11.58MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://tfbapp:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext.php
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   178.00ms  420.72ms  11.35s    96.66%
+    Req/Sec     7.37k     1.22k    9.62k    78.48%
+  878021 requests in 15.00s, 170.78MB read
+  Socket errors: connect 0, read 18, write 0, timeout 2530
+Requests/sec:  58532.59
+Transfer/sec:     11.38MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://tfbapp:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext.php
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.48s     5.60s   14.52s    77.10%
+    Req/Sec     1.52k     2.84k    9.76k    82.28%
+  196319 requests in 15.14s, 39.69MB read
+  Socket errors: connect 0, read 5744, write 0, timeout 22738
+  Non-2xx or 3xx responses: 12697
+Requests/sec:  12969.38
+Transfer/sec:      2.62MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for php
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://tfbapp:8080/plaintext.php
+---------------------------------------------------------
+
+Running 15s test @ http://tfbapp:8080/plaintext.php
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.77s   969.22ms  14.98s    99.28%
+    Req/Sec   165.72    311.03     4.06k    97.20%
+  32005 requests in 15.01s, 8.07MB read
+  Socket errors: connect 11, read 2172, write 0, timeout 109152
+  Non-2xx or 3xx responses: 15583
+Requests/sec:   2132.63
+Transfer/sec:    550.58KB

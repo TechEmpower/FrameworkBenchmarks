@@ -9,10 +9,10 @@ $python_installer_path    = "2.7.5/$python_installer_file"
 $python_version           = "27"
 $wincache_installer_file  = "wincache-1.3.4-5.4-nts-vc9-x86.exe"
 $wincache_installer_path  = "wincache-1.3.4/$wincache_installer_file"
-$go_installer_file        = "go1.1.1.windows-amd64.msi"
+$go_installer_file        = "go1.2rc3.windows-amd64.msi"
 $jre_installer_file       = "jre-7u25-windows-x64.exe"
-$jdk_installer_file       = "jdk-7u40-windows-x64.exe"
-$jdk_master_hash          = "7412ccc2ac8a0f418eb58c5f170742a3" 
+$jdk_installer_file       = "jdk-7u45-windows-x64.exe"
+$jdk_master_hash          = "943527ed9111cbb746d4ab2bb2c31cd6" 
 # http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
 $resin_version            = "resin-4.0.36"
 $resin_installer_file     = "$resin_version.zip"
@@ -74,6 +74,10 @@ appcmd set config -section:httpProtocol /allowKeepAlive:true | Out-Null
 appcmd set config -section:httpLogging /dontLog:True | Out-Null
 # Enable detailed error pages
 #appcmd set config -section:system.webServer/httpErrors -errorMode:Detailed | Out-Null
+# Increase queue length for DefaultAppPool to avoid HTTP 503 errors coming from HTTP.SYS
+appcmd set apppool DefaultAppPool /queueLength:65535
+# Increase appConcurrentRequestLimit to avoid HTTP 503.2 errors from IIS http://support.microsoft.com/kb/943891
+appcmd set config -section:system.webServer/serverRuntime /appConcurrentRequestLimit:65535
 
 # URL Rewrite
 $rewrite_url = "http://download.microsoft.com/download/6/7/D/67D80164-7DD0-48AF-86E3-DE7A182D6815/rewrite_2.0_rtw_x64.msi"

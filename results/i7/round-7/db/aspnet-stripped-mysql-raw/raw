@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 16:45:15 PDT 2013
+
+  System load:  0.03               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?provider=mysql
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db?provider=mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.09ms    3.20ms  32.81ms   98.66%
+    Req/Sec   596.80     90.13   777.00     83.20%
+  22677 requests in 5.00s, 5.55MB read
+Requests/sec:   4534.35
+Transfer/sec:      1.11MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.41ms    5.34ms 153.21ms   91.16%
+    Req/Sec     2.62k   250.61     2.96k    64.52%
+  306446 requests in 15.00s, 75.04MB read
+Requests/sec:  20428.49
+Transfer/sec:      5.00MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.85ms    1.21ms  15.15ms   99.15%
+    Req/Sec   595.90     79.60   777.00     82.87%
+  67968 requests in 15.00s, 16.64MB read
+Requests/sec:   4530.90
+Transfer/sec:      1.11MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.23ms    1.56ms  22.40ms   98.70%
+    Req/Sec     1.03k   212.98     1.55k    71.80%
+  117046 requests in 15.00s, 28.66MB read
+Requests/sec:   7802.63
+Transfer/sec:      1.91MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.41ms    1.48ms  29.59ms   97.64%
+    Req/Sec     1.85k   318.90     2.89k    86.89%
+  208722 requests in 15.00s, 51.11MB read
+Requests/sec:  13914.28
+Transfer/sec:      3.41MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.55ms    4.88ms  44.86ms   89.92%
+    Req/Sec     2.14k   702.75     3.19k    68.14%
+  247082 requests in 15.00s, 60.51MB read
+Requests/sec:  16472.66
+Transfer/sec:      4.03MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.19ms    3.09ms  32.51ms   93.76%
+    Req/Sec     2.67k   370.07     3.22k    84.72%
+  311511 requests in 15.00s, 76.28MB read
+Requests/sec:  20767.78
+Transfer/sec:      5.09MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-stripped-mysql-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=mysql
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.26ms    4.49ms 111.84ms   91.13%
+    Req/Sec     2.66k   304.21     3.04k    83.09%
+  312128 requests in 15.00s, 76.44MB read
+Requests/sec:  20808.74
+Transfer/sec:      5.10MB

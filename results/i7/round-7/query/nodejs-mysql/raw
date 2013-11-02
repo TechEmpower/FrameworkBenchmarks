@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 01:40:57 PDT 2013
+
+  System load:  0.24               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mysql-orm?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mysql-orm?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.87ms  263.12us   5.88ms   84.79%
+    Req/Sec     1.18k   240.58     1.55k    55.24%
+  44645 requests in 5.00s, 9.18MB read
+Requests/sec:   8928.26
+Transfer/sec:      1.84MB
+
+---------------------------------------------------------
+ Running Warmup nodejs-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.44ms    6.11ms  72.12ms   80.95%
+    Req/Sec     2.24k   190.27     2.97k    73.66%
+  264728 requests in 15.00s, 54.42MB read
+Requests/sec:  17646.10
+Transfer/sec:      3.63MB
+
+---------------------------------------------------------
+ Queries: 1 for nodejs-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.01ms    3.14ms  30.62ms   68.20%
+    Req/Sec     3.25k   236.24     4.04k    70.39%
+  381538 requests in 15.00s, 66.87MB read
+Requests/sec:  25434.12
+Transfer/sec:      4.46MB
+
+---------------------------------------------------------
+ Queries: 5 for nodejs-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.77ms   13.72ms  86.25ms   67.30%
+    Req/Sec     1.04k   300.89     1.96k    86.56%
+  122538 requests in 15.00s, 36.33MB read
+Requests/sec:   8167.73
+Transfer/sec:      2.42MB
+
+---------------------------------------------------------
+ Queries: 10 for nodejs-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.52ms   16.45ms 125.05ms   67.47%
+    Req/Sec   537.04     35.01   682.00     72.06%
+  64027 requests in 15.01s, 28.74MB read
+Requests/sec:   4267.02
+Transfer/sec:      1.92MB
+
+---------------------------------------------------------
+ Queries: 15 for nodejs-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    88.69ms   37.84ms 230.00ms   54.30%
+    Req/Sec   357.08     29.70   454.00     64.11%
+  42604 requests in 15.01s, 25.58MB read
+Requests/sec:   2837.92
+Transfer/sec:      1.70MB
+
+---------------------------------------------------------
+ Queries: 20 for nodejs-mysql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mysql-orm?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mysql-orm?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   117.49ms   30.44ms 288.80ms   67.71%
+    Req/Sec   268.96     15.55   370.00     73.76%
+  32114 requests in 15.01s, 24.15MB read
+Requests/sec:   2139.50
+Transfer/sec:      1.61MB

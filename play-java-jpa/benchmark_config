@@ -9,7 +9,7 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "play-java",
+      "framework": "play2",
       "language": "Java",
       "orm": "Full",
       "platform": "Netty",

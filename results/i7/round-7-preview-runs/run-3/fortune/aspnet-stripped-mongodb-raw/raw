@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 22 11:58:51 PDT 2013
+
+  System load:  0.03               Processes:           120
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+70 packages can be updated.
+30 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongodbfortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongodbfortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.36ms  348.47us  17.81ms   98.63%
+    Req/Sec   774.94     76.00     1.00k    78.23%
+  29232 requests in 5.00s, 40.34MB read
+Requests/sec:   5846.00
+Transfer/sec:      8.07MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbfortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbfortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.04ms   16.59ms 306.74ms   87.72%
+    Req/Sec     1.68k   363.07     2.50k    67.75%
+  197701 requests in 15.00s, 272.82MB read
+Requests/sec:  13179.62
+Transfer/sec:     18.19MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/mongodbfortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbfortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.38ms  495.49us  19.70ms   99.40%
+    Req/Sec   775.05     78.56     1.11k    78.50%
+  88020 requests in 15.00s, 121.46MB read
+Requests/sec:   5867.69
+Transfer/sec:      8.10MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/mongodbfortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbfortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.03ms  559.20us  21.36ms   98.32%
+    Req/Sec     2.07k   249.82     2.67k    80.30%
+  231519 requests in 15.00s, 319.49MB read
+Requests/sec:  15434.55
+Transfer/sec:     21.30MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/mongodbfortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbfortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.61ms    2.67ms  39.94ms   89.92%
+    Req/Sec     1.77k   524.81     3.80k    66.34%
+  202787 requests in 15.00s, 279.84MB read
+Requests/sec:  13516.28
+Transfer/sec:     18.65MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/mongodbfortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbfortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.84ms    6.62ms 122.19ms   90.24%
+    Req/Sec     1.63k   561.01     3.15k    65.70%
+  189864 requests in 15.00s, 262.01MB read
+Requests/sec:  12655.77
+Transfer/sec:     17.46MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/mongodbfortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbfortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.98ms   11.39ms 205.47ms   89.74%
+    Req/Sec     1.60k   453.23     2.55k    65.89%
+  187680 requests in 15.00s, 258.99MB read
+Requests/sec:  12511.80
+Transfer/sec:     17.27MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-stripped-mongodb-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodbfortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodbfortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.44ms   16.09ms 197.60ms   84.72%
+    Req/Sec     1.63k   322.99     2.39k    67.24%
+  192674 requests in 15.00s, 265.88MB read
+Requests/sec:  12844.26
+Transfer/sec:     17.72MB

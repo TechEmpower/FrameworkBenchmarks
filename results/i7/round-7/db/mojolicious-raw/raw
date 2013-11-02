@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 00:53:17 PDT 2013
+
+  System load:  0.09               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.24ms    2.88ms  22.95ms   89.08%
+    Req/Sec   426.32    192.09     0.90k    61.58%
+  15924 requests in 5.00s, 2.59MB read
+Requests/sec:   3182.72
+Transfer/sec:    529.27KB
+
+---------------------------------------------------------
+ Running Warmup mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.60ms    8.96ms  65.43ms   94.79%
+    Req/Sec     9.43k     1.97k   15.88k    67.33%
+  1096879 requests in 15.00s, 334.12MB read
+  Non-2xx or 3xx responses: 1043005
+Requests/sec:  73126.36
+Transfer/sec:     22.27MB
+
+---------------------------------------------------------
+ Concurrency: 8 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.59ms   67.60ms 404.69ms   97.09%
+    Req/Sec   575.70    169.04     1.00k    72.29%
+  65608 requests in 15.00s, 9.63MB read
+Requests/sec:   4373.89
+Transfer/sec:    657.58KB
+
+---------------------------------------------------------
+ Concurrency: 16 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.26ms    1.31ms  31.17ms   94.94%
+    Req/Sec   656.71    102.24     1.33k    71.77%
+  74824 requests in 15.00s, 10.99MB read
+Requests/sec:   4987.55
+Transfer/sec:    749.84KB
+
+---------------------------------------------------------
+ Concurrency: 32 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.42ms    0.97ms  29.55ms   93.02%
+    Req/Sec   649.84     66.66     0.92k    73.96%
+  74930 requests in 15.00s, 11.00MB read
+Requests/sec:   4994.49
+Transfer/sec:    750.89KB
+
+---------------------------------------------------------
+ Concurrency: 64 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.78ms    1.14ms  31.88ms   90.94%
+    Req/Sec   639.16     42.66   807.00     80.20%
+  75279 requests in 15.00s, 11.05MB read
+Requests/sec:   5017.46
+Transfer/sec:    754.35KB
+
+---------------------------------------------------------
+ Concurrency: 128 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.52ms    1.38ms  45.72ms   87.28%
+    Req/Sec   633.20     29.95   750.00     74.73%
+  74217 requests in 15.00s, 10.90MB read
+Requests/sec:   4947.00
+Transfer/sec:    743.77KB
+
+---------------------------------------------------------
+ Concurrency: 256 for mojolicious-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.66ms    9.05ms  64.62ms   94.66%
+    Req/Sec     9.43k     1.69k   15.59k    69.18%
+  1094862 requests in 15.00s, 333.41MB read
+  Non-2xx or 3xx responses: 1040510
+Requests/sec:  72991.44
+Transfer/sec:     22.23MB

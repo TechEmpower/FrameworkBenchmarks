@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 02:47:37 PDT 2013
+
+  System load:  0.02               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   809.20us  252.04us   2.74ms   82.63%
+    Req/Sec     1.30k   138.11     1.78k    63.61%
+  49090 requests in 5.00s, 10.53MB read
+Requests/sec:   9816.65
+Transfer/sec:      2.11MB
+
+---------------------------------------------------------
+ Running Warmup php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.21ms   90.25ms   1.72s    99.06%
+    Req/Sec     1.56k   224.55     2.42k    71.10%
+  185630 requests in 15.00s, 39.82MB read
+  Socket errors: connect 0, read 0, write 0, timeout 14
+Requests/sec:  12374.78
+Transfer/sec:      2.65MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   822.48us  587.50us  19.31ms   95.66%
+    Req/Sec     1.30k   145.10     1.78k    77.71%
+  148157 requests in 15.00s, 31.78MB read
+Requests/sec:   9877.25
+Transfer/sec:      2.12MB
+
+---------------------------------------------------------
+ Concurrency: 16 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.39ms  547.41us  11.50ms   74.10%
+    Req/Sec     1.52k   192.58     2.44k    72.03%
+  173155 requests in 15.00s, 37.15MB read
+Requests/sec:  11543.32
+Transfer/sec:      2.48MB
+
+---------------------------------------------------------
+ Concurrency: 32 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.65ms    1.50ms  50.11ms   86.75%
+    Req/Sec     1.62k   225.24     3.11k    74.24%
+  184435 requests in 15.00s, 39.57MB read
+Requests/sec:  12295.29
+Transfer/sec:      2.64MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.19ms    5.45ms 199.76ms   95.59%
+    Req/Sec     1.60k   246.60     3.93k    70.43%
+  184336 requests in 15.00s, 39.55MB read
+Requests/sec:  12287.69
+Transfer/sec:      2.64MB
+
+---------------------------------------------------------
+ Concurrency: 128 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.52ms    7.58ms 215.96ms   94.88%
+    Req/Sec     1.56k   139.47     2.73k    78.04%
+  183661 requests in 15.00s, 39.40MB read
+Requests/sec:  12243.23
+Transfer/sec:      2.63MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php-phpixie
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.88ms   94.34ms   3.02s    99.02%
+    Req/Sec     1.55k   251.14     2.31k    69.41%
+  184586 requests in 15.00s, 39.60MB read
+  Socket errors: connect 0, read 0, write 0, timeout 6
+Requests/sec:  12304.67
+Transfer/sec:      2.64MB
