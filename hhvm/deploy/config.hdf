@@ -1,0 +1,29 @@
+PidFile = /tmp/hhvm.pid
+
+Server {
+  Port = 8080
+  SourceRoot = /tmp/FrameworkBenchmarks
+  DefaultDocument = index.php
+}
+
+Log {
+  Level = None
+  NoSilencer = true
+  AlwaysLogUnhandledExceptions = true
+  RuntimeErrorReportingLevel = 8191
+  UseLogFile = true
+  UseSyslog = false
+  File = /tmp/hhvm-error.log
+  Access {
+    * {
+      File = /tmp/hhvm-access.log
+      Format = %h %l %u % t \”%r\” %>s %b
+    }
+  }
+}
+
+Repo {
+  Central {
+    Path = /tmp/.hhvm.hhbc
+  }
+}
