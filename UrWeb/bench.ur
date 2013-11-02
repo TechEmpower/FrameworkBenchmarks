@@ -4,39 +4,8 @@ fun addHeaders () =
   n <- now;
   setHeader (blessResponseHeader "Date") (timef "%a, %d %b %Y %H:%M:%S GMT" n);
   setHeader (blessResponseHeader "Server") "Ur/Web"
-
-
-val hello = "Hello, World!"
-fun plaintext () =
-  addHeaders ();
-  returnBlob (textBlob hello) (blessMime "text/plain")
-
-
-type json_t = {Message : string}
-fun json () =
-  let
-    val json_conversion : json json_t = json_record {Message = "message"}
-    val hello_json : json_t = {Message = hello}
-  in
-    addHeaders ();
-    returnBlob (textBlob (toJson hello_json)) (blessMime "application/json")
-  end
-
-table world : {Id : int, RandomNumber : int} PRIMARY KEY Id
-type world_t = {Id : int, RandomNumber : int}
-val world_conversion : json world_t = json_record {Id = "id", RandomNumber = "randomNumber"}
-fun world_find n =
-  oneRow1 (SELECT World.Id, World.RandomNumber FROM world WHERE World.Id = {[n]})
-
 fun clamp n =
   (mod n 10000) + 1
-
-fun db () =
-  addHeaders ();
-  n <- rand;
-  row <- world_find (clamp n);
-  returnBlob (textBlob (toJson row)) (blessMime "application/json")
-
 fun parseQueries oqs =
   let
     val qt = case oqs of
@@ -53,11 +22,37 @@ fun parseQueries oqs =
                 else if x < 1 then 1
                 else x
   end
-
 fun range n acc =
   case n of
       0 => acc
     | _ => range (n-1) (n :: acc)
+
+val hello = "Hello, World!"
+fun plaintext () =
+  addHeaders ();
+  returnBlob (textBlob hello) (blessMime "text/plain")
+
+type json_t = {Message : string}
+fun json () =
+  let
+    val json_conversion : json json_t = json_record {Message = "message"}
+    val hello_json = {Message = hello}
+  in
+    addHeaders ();
+    returnBlob (textBlob (toJson hello_json)) (blessMime "application/json")
+  end
+
+table world : {Id : int, RandomNumber : int} PRIMARY KEY Id
+type world_t = {Id : int, RandomNumber : int}
+val world_conversion : json world_t = json_record {Id = "id", RandomNumber = "randomNumber"}
+fun world_find n =
+  oneRow1 (SELECT World.Id, World.RandomNumber FROM world WHERE World.Id = {[n]})
+
+fun db () =
+  addHeaders ();
+  n <- rand;
+  row <- world_find (clamp n);
+  returnBlob (textBlob (toJson row)) (blessMime "application/json")
 
 fun queries oqs =
   addHeaders ();
