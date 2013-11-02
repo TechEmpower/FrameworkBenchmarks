@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 10:57:59 PDT 2013
+
+  System load:  0.02               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   300.25us  191.73us   4.77ms   93.35%
+    Req/Sec     3.76k   797.41     4.89k    83.78%
+  131310 requests in 5.00s, 16.91MB read
+Requests/sec:  26262.72
+Transfer/sec:      3.38MB
+
+---------------------------------------------------------
+ Running Warmup unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.63ms    1.03ms  22.35ms   92.23%
+    Req/Sec    21.30k     3.60k   36.00k    70.90%
+  2396435 requests in 15.00s, 308.53MB read
+Requests/sec: 159762.64
+Transfer/sec:     20.57MB
+
+---------------------------------------------------------
+ Concurrency: 8 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   526.57us    4.14ms  64.91ms   99.57%
+    Req/Sec     4.02k   365.44     5.00k    94.29%
+  450863 requests in 15.00s, 58.05MB read
+Requests/sec:  30057.80
+Transfer/sec:      3.87MB
+
+---------------------------------------------------------
+ Concurrency: 16 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   249.75us  224.21us   9.23ms   99.35%
+    Req/Sec     8.42k   771.52    10.56k    83.20%
+  956552 requests in 15.00s, 123.15MB read
+Requests/sec:  63770.58
+Transfer/sec:      8.21MB
+
+---------------------------------------------------------
+ Concurrency: 32 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   328.73us  355.19us  23.65ms   98.77%
+    Req/Sec    12.91k     1.61k   17.78k    70.49%
+  1467838 requests in 15.00s, 188.98MB read
+Requests/sec:  97858.05
+Transfer/sec:     12.60MB
+
+---------------------------------------------------------
+ Concurrency: 64 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   559.83us  584.93us  23.39ms   98.07%
+    Req/Sec    15.29k     2.11k   24.78k    72.47%
+  1736991 requests in 15.00s, 223.63MB read
+Requests/sec: 115801.52
+Transfer/sec:     14.91MB
+
+---------------------------------------------------------
+ Concurrency: 128 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.98ms  841.30us  24.22ms   96.67%
+    Req/Sec    17.72k     2.95k   28.11k    71.96%
+  2011614 requests in 15.00s, 258.99MB read
+Requests/sec: 134110.19
+Transfer/sec:     17.27MB
+
+---------------------------------------------------------
+ Concurrency: 256 for unfiltered
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:9000/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:9000/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.63ms    0.96ms  20.93ms   90.52%
+    Req/Sec    21.12k     3.29k   34.67k    69.89%
+  2392869 requests in 15.00s, 308.07MB read
+Requests/sec: 159525.84
+Transfer/sec:     20.54MB

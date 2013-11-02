@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 18:15:22 PDT 2013
+
+  System load:  0.02               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/fortunes?provider=sqlserver
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/fortunes?provider=sqlserver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.10ms  259.35us   5.27ms   90.37%
+    Req/Sec     0.96k    92.18     1.22k    76.26%
+  36364 requests in 5.00s, 47.68MB read
+Requests/sec:   7271.77
+Transfer/sec:      9.54MB
+
+---------------------------------------------------------
+ Running Warmup HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=sqlserver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.58ms   14.16ms 523.32ms   95.43%
+    Req/Sec     1.93k   376.02     3.02k    72.58%
+  228517 requests in 15.00s, 299.65MB read
+Requests/sec:  15233.09
+Transfer/sec:     19.98MB
+
+---------------------------------------------------------
+ Concurrency: 8 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/fortunes?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=sqlserver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.11ms  294.00us   3.81ms   92.62%
+    Req/Sec     0.95k    96.35     1.22k    74.08%
+  108324 requests in 15.00s, 142.05MB read
+Requests/sec:   7221.25
+Transfer/sec:      9.47MB
+
+---------------------------------------------------------
+ Concurrency: 16 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/fortunes?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=sqlserver
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.31ms  763.44us  22.78ms   92.65%
+    Req/Sec     1.63k   181.63     2.11k    75.47%
+  185470 requests in 15.00s, 243.21MB read
+Requests/sec:  12364.33
+Transfer/sec:     16.21MB
+
+---------------------------------------------------------
+ Concurrency: 32 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/fortunes?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=sqlserver
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.78ms    4.59ms  33.17ms   95.81%
+    Req/Sec     2.09k   557.17     3.22k    79.11%
+  237319 requests in 15.00s, 311.20MB read
+Requests/sec:  15820.05
+Transfer/sec:     20.74MB
+
+---------------------------------------------------------
+ Concurrency: 64 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/fortunes?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=sqlserver
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.61ms    4.79ms  41.54ms   93.32%
+    Req/Sec     2.17k   629.97     3.85k    73.68%
+  249703 requests in 15.00s, 327.44MB read
+Requests/sec:  16646.39
+Transfer/sec:     21.83MB
+
+---------------------------------------------------------
+ Concurrency: 128 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/fortunes?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=sqlserver
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.71ms   12.50ms 404.42ms   95.95%
+    Req/Sec     2.11k   512.97     3.57k    72.62%
+  247468 requests in 15.00s, 324.51MB read
+Requests/sec:  16496.49
+Transfer/sec:     21.63MB
+
+---------------------------------------------------------
+ Concurrency: 256 for HttpListener-sqlserver-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/fortunes?provider=sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/fortunes?provider=sqlserver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.32ms    7.86ms 176.30ms   89.35%
+    Req/Sec     1.91k   314.53     2.77k    67.13%
+  227281 requests in 15.00s, 298.03MB read
+Requests/sec:  15149.20
+Transfer/sec:     19.87MB

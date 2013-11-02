@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 18:25:34 PDT 2013
+
+  System load:  0.02               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.55ms    9.33ms  38.48ms   91.82%
+    Req/Sec   529.80    172.22   777.00     88.25%
+  19612 requests in 5.00s, 32.79MB read
+Requests/sec:   3921.45
+Transfer/sec:      6.56MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.93ms   25.11ms 453.65ms   78.23%
+    Req/Sec     0.88k   104.49     1.12k    64.31%
+  103705 requests in 15.00s, 173.37MB read
+Requests/sec:   6912.90
+Transfer/sec:     11.56MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.80ms    9.80ms  41.91ms   90.98%
+    Req/Sec   540.51    182.34   777.00     87.12%
+  61194 requests in 15.02s, 102.30MB read
+Requests/sec:   4073.62
+Transfer/sec:      6.81MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.69ms   15.40ms  53.23ms   88.32%
+    Req/Sec     0.93k   398.43     1.55k    77.19%
+  104844 requests in 15.00s, 175.28MB read
+Requests/sec:   6989.02
+Transfer/sec:     11.68MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.45ms   13.53ms 105.04ms   89.30%
+    Req/Sec     0.91k   378.01     1.82k    69.86%
+  104804 requests in 15.00s, 175.21MB read
+Requests/sec:   6986.30
+Transfer/sec:     11.68MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.80ms   10.75ms 200.45ms   90.31%
+    Req/Sec     0.87k   213.38     1.38k    66.23%
+  101750 requests in 15.00s, 170.10MB read
+Requests/sec:   6783.12
+Transfer/sec:     11.34MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.51ms   14.88ms 191.30ms   85.95%
+    Req/Sec     0.88k   165.77     1.27k    69.77%
+  103794 requests in 15.00s, 173.52MB read
+Requests/sec:   6919.37
+Transfer/sec:     11.57MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.71ms   25.30ms 341.99ms   78.98%
+    Req/Sec     0.88k    81.86     1.05k    69.65%
+  103813 requests in 15.01s, 173.55MB read
+Requests/sec:   6918.54
+Transfer/sec:     11.57MB

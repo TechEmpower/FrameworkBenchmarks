@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 15:09:05 PDT 2013
+
+  System load:  0.35               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer HttpListener-mysql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/db?provider=mysql
+Running 5s test @ http://172.16.98.122:8080/db?provider=mysql&queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.18ms    0.97ms  21.46ms   93.99%
+    Req/Sec   492.95     82.01   666.00     68.62%
+  18669 requests in 5.00s, 3.89MB read
+Requests/sec:   3732.87
+Transfer/sec:    796.76KB
+
+---------------------------------------------------------
+ Running Warmup HttpListener-mysql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=mysql
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql&queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    41.22ms   25.70ms 227.79ms   87.36%
+    Req/Sec   811.51    180.12     1.27k    71.79%
+  95898 requests in 15.01s, 19.99MB read
+Requests/sec:   6390.60
+Transfer/sec:      1.33MB
+
+---------------------------------------------------------
+ Queries: 1 for HttpListener-mysql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=mysql
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql&queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    35.41ms   25.93ms 179.89ms   85.62%
+    Req/Sec     1.00k   280.62     1.66k    66.72%
+  118919 requests in 15.00s, 20.95MB read
+Requests/sec:   7925.79
+Transfer/sec:      1.40MB
+
+---------------------------------------------------------
+ Queries: 5 for HttpListener-mysql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=mysql
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql&queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.74ms   18.53ms 198.06ms   86.21%
+    Req/Sec   567.19     97.37   808.00     75.80%
+  67876 requests in 15.01s, 20.38MB read
+Requests/sec:   4523.20
+Transfer/sec:      1.36MB
+
+---------------------------------------------------------
+ Queries: 10 for HttpListener-mysql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=mysql
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql&queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    88.60ms   21.01ms 230.83ms   84.07%
+    Req/Sec   364.78     48.34   508.00     80.26%
+  43663 requests in 15.01s, 19.73MB read
+Requests/sec:   2909.15
+Transfer/sec:      1.31MB
+
+---------------------------------------------------------
+ Queries: 15 for HttpListener-mysql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=mysql
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql&queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   113.65ms   13.85ms 207.78ms   78.36%
+    Req/Sec   280.41     15.80   338.00     74.26%
+  33544 requests in 15.01s, 20.24MB read
+Requests/sec:   2234.53
+Transfer/sec:      1.35MB
+
+---------------------------------------------------------
+ Queries: 20 for HttpListener-mysql-raw
+---------------------------------------------------------
+
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/db?provider=mysql
+Running 15s test @ http://172.16.98.122:8080/db?provider=mysql&queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   142.09ms   12.30ms 223.25ms   74.42%
+    Req/Sec   225.11     11.87   275.00     70.92%
+  27015 requests in 15.02s, 20.39MB read
+Requests/sec:   1798.52
+Transfer/sec:      1.36MB

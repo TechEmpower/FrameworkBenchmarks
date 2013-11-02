@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 06:17:35 PDT 2013
+
+  System load:  0.54               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/scalatra/db?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/scalatra/db?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   678.52us  193.66us   5.30ms   92.60%
+    Req/Sec     1.55k   136.16     1.89k    72.73%
+  58749 requests in 5.00s, 15.61MB read
+Requests/sec:  11749.75
+Transfer/sec:      3.12MB
+
+---------------------------------------------------------
+ Running Warmup scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/scalatra/db?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/db?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.07ms    2.39ms  37.64ms   93.61%
+    Req/Sec     3.63k   309.18     6.78k    84.69%
+  420152 requests in 15.00s, 111.62MB read
+Requests/sec:  28011.35
+Transfer/sec:      7.44MB
+
+---------------------------------------------------------
+ Queries: 1 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/scalatra/db?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/db?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.68ms    9.66ms 213.76ms   96.78%
+    Req/Sec     6.35k     1.09k   15.44k    85.06%
+  721390 requests in 15.00s, 153.27MB read
+Requests/sec:  48094.59
+Transfer/sec:     10.22MB
+
+---------------------------------------------------------
+ Queries: 5 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/scalatra/db?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/db?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    20.58ms    7.08ms 227.12ms   97.29%
+    Req/Sec     1.57k   101.10     2.32k    73.77%
+  185266 requests in 15.00s, 78.78MB read
+Requests/sec:  12349.87
+Transfer/sec:      5.25MB
+
+---------------------------------------------------------
+ Queries: 10 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/scalatra/db?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/db?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.41ms   12.42ms 276.14ms   98.45%
+    Req/Sec     0.88k    67.78     1.35k    74.39%
+  104736 requests in 15.00s, 72.40MB read
+Requests/sec:   6982.02
+Transfer/sec:      4.83MB
+
+---------------------------------------------------------
+ Queries: 15 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/scalatra/db?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/db?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.04ms   15.00ms 264.05ms   95.58%
+    Req/Sec   622.70     54.30     0.90k    80.00%
+  74766 requests in 15.01s, 71.57MB read
+Requests/sec:   4981.92
+Transfer/sec:      4.77MB
+
+---------------------------------------------------------
+ Queries: 20 for scalatra-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/scalatra/db?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/scalatra/db?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    62.19ms   15.07ms 274.86ms   94.89%
+    Req/Sec   511.03     45.44     0.87k    76.22%
+  61643 requests in 15.01s, 75.40MB read
+Requests/sec:   4107.78
+Transfer/sec:      5.02MB

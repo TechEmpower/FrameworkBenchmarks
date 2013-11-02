@@ -1,0 +1,103 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 23:02:43 PDT 2013
+
+  System load:  0.84               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer grizzly
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   192.65us   31.90us 709.00us   71.19%
+    Req/Sec     5.29k   256.75     6.67k    57.82%
+  200795 requests in 5.00s, 29.11MB read
+Requests/sec:  40161.34
+Transfer/sec:      5.82MB
+
+---------------------------------------------------------
+ Running Warmup grizzly
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.19ms  451.20us  20.82ms   97.22%
+    Req/Sec    28.42k     2.72k   41.56k    92.84%
+  3209983 requests in 15.00s, 465.31MB read
+Requests/sec: 213999.42
+Transfer/sec:     31.02MB
+
+---------------------------------------------------------
+ Concurrency: 256 for grizzly
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    13.16ms   19.12ms 635.28ms   97.62%
+    Req/Sec    40.07k     3.10k   55.22k    69.53%
+  4617199 requests in 15.00s, 669.30MB read
+Requests/sec: 307812.79
+Transfer/sec:     44.62MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for grizzly
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    38.83ms  104.16ms   1.11s    93.77%
+    Req/Sec    47.75k    10.10k   78.27k    70.52%
+  5646952 requests in 15.00s, 818.59MB read
+  Socket errors: connect 0, read 4, write 0, timeout 1435
+Requests/sec: 376459.45
+Transfer/sec:     54.57MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for grizzly
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   358.83ms    1.24s    6.45s    95.37%
+    Req/Sec    52.16k     7.79k   74.32k    69.63%
+  6210829 requests in 15.00s, 0.88GB read
+  Socket errors: connect 0, read 312, write 0, timeout 7717
+Requests/sec: 414004.59
+Transfer/sec:     60.02MB
+
+---------------------------------------------------------
+ Concurrency: 16384 for grizzly
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.10s     6.12s   14.65s    71.66%
+    Req/Sec    53.39k     8.21k  102.39k    76.93%
+  6290906 requests in 15.01s, 0.89GB read
+  Socket errors: connect 11, read 637, write 0, timeout 66099
+Requests/sec: 419149.90
+Transfer/sec:     60.78MB

@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 10:54:19 PDT 2013
+
+  System load:  0.33               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/updates/postgresql?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/updates/postgresql?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.14ms   36.98ms 189.62ms   95.95%
+    Req/Sec   651.84    153.67     1.00k    93.75%
+  24801 requests in 5.00s, 4.86MB read
+Requests/sec:   4959.46
+Transfer/sec:      0.97MB
+
+---------------------------------------------------------
+ Running Warmup undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/postgresql?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/postgresql?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.73ms  119.64ms 645.29ms   94.78%
+    Req/Sec     1.64k   461.40     2.66k    85.60%
+  194195 requests in 15.00s, 38.07MB read
+Requests/sec:  12945.72
+Transfer/sec:      2.54MB
+
+---------------------------------------------------------
+ Queries: 1 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/postgresql?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/postgresql?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    43.98ms  147.87ms 751.43ms   94.37%
+    Req/Sec     3.24k     1.00k    5.33k    84.59%
+  383802 requests in 15.00s, 63.61MB read
+Requests/sec:  25582.75
+Transfer/sec:      4.24MB
+
+---------------------------------------------------------
+ Queries: 5 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/postgresql?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/postgresql?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    51.72ms   48.77ms 713.50ms   96.10%
+    Req/Sec   671.22    112.41     0.90k    84.70%
+  79792 requests in 15.00s, 22.97MB read
+Requests/sec:   5317.93
+Transfer/sec:      1.53MB
+
+---------------------------------------------------------
+ Queries: 10 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/postgresql?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/postgresql?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    81.98ms   35.97ms 772.20ms   78.02%
+    Req/Sec   398.30     68.57   601.00     84.19%
+  47611 requests in 15.06s, 20.92MB read
+Requests/sec:   3162.03
+Transfer/sec:      1.39MB
+
+---------------------------------------------------------
+ Queries: 15 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/postgresql?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/postgresql?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   118.02ms   56.68ms 749.40ms   86.15%
+    Req/Sec   281.21     56.48   380.00     87.19%
+  33866 requests in 15.01s, 20.01MB read
+Requests/sec:   2256.66
+Transfer/sec:      1.33MB
+
+---------------------------------------------------------
+ Queries: 20 for undertow-postgresql
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/updates/postgresql?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/updates/postgresql?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   157.55ms   76.50ms 753.43ms   85.92%
+    Req/Sec   214.42     51.47   299.00     83.87%
+  25743 requests in 15.01s, 19.11MB read
+Requests/sec:   1715.22
+Transfer/sec:      1.27MB

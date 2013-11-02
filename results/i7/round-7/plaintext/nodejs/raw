@@ -1,0 +1,87 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 01:22:52 PDT 2013
+
+  System load:  0.81               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   241.55us   63.33us   2.57ms   76.02%
+    Req/Sec     4.30k   277.00     5.33k    66.22%
+  162678 requests in 5.00s, 26.68MB read
+Requests/sec:  32536.90
+Transfer/sec:      5.34MB
+
+---------------------------------------------------------
+ Running Warmup nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.50ms    1.57ms  13.54ms   85.56%
+    Req/Sec     9.61k     1.10k   12.33k    70.35%
+  1084183 requests in 15.00s, 177.84MB read
+Requests/sec:  72279.57
+Transfer/sec:     11.86MB
+
+---------------------------------------------------------
+ Concurrency: 256 for nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    56.23ms   30.56ms 219.97ms   86.30%
+    Req/Sec     9.27k   688.26    10.94k    67.14%
+  1096509 requests in 15.00s, 179.86MB read
+Requests/sec:  73093.94
+Transfer/sec:     11.99MB
+
+---------------------------------------------------------
+ Concurrency: 1024 for nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   243.86ms  119.17ms 966.12ms   84.72%
+    Req/Sec     8.63k     1.46k   12.35k    88.97%
+  1054756 requests in 15.00s, 173.01MB read
+  Socket errors: connect 0, read 6, write 0, timeout 0
+Requests/sec:  70304.86
+Transfer/sec:     11.53MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+unable to connect to 172.16.98.122:8080 Connection refused
+
+---------------------------------------------------------
+ Concurrency: 16384 for nodejs
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+unable to connect to 172.16.98.122:8080 Connection refused

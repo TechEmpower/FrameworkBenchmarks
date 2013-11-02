@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 20:44:02 PDT 2013
+
+  System load:  0.03               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   236.05us  111.43us   3.54ms   94.36%
+    Req/Sec     4.40k   423.97     5.44k    71.19%
+  166684 requests in 5.00s, 31.63MB read
+Requests/sec:  33337.50
+Transfer/sec:      6.33MB
+
+---------------------------------------------------------
+ Running Warmup falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.60ms    9.01ms  43.05ms   84.75%
+    Req/Sec     5.94k     1.61k   12.44k    74.43%
+  647085 requests in 15.00s, 122.80MB read
+Requests/sec:  43141.10
+Transfer/sec:      8.19MB
+
+---------------------------------------------------------
+ Concurrency: 8 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   235.31us  107.47us   4.24ms   93.48%
+    Req/Sec     4.40k   439.29     5.55k    70.45%
+  500505 requests in 15.00s, 94.99MB read
+Requests/sec:  33367.24
+Transfer/sec:      6.33MB
+
+---------------------------------------------------------
+ Concurrency: 16 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   375.72us  283.33us  16.13ms   96.10%
+    Req/Sec     5.62k   672.14     9.80k    75.62%
+  639265 requests in 15.00s, 121.32MB read
+Requests/sec:  42618.20
+Transfer/sec:      8.09MB
+
+---------------------------------------------------------
+ Concurrency: 32 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   802.51us    1.52ms  28.75ms   96.93%
+    Req/Sec     5.62k     1.86k   13.11k    66.07%
+  639033 requests in 15.00s, 121.28MB read
+Requests/sec:  42602.48
+Transfer/sec:      8.09MB
+
+---------------------------------------------------------
+ Concurrency: 64 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.69ms    4.34ms  48.61ms   94.00%
+    Req/Sec     5.59k     2.15k   15.78k    71.83%
+  635447 requests in 15.00s, 120.60MB read
+Requests/sec:  42363.40
+Transfer/sec:      8.04MB
+
+---------------------------------------------------------
+ Concurrency: 128 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.33ms    7.37ms  51.17ms   90.53%
+    Req/Sec     5.77k     1.86k   14.00k    71.17%
+  644754 requests in 15.00s, 122.36MB read
+Requests/sec:  42983.33
+Transfer/sec:      8.16MB
+
+---------------------------------------------------------
+ Concurrency: 256 for falcon-py3
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.59ms    8.97ms  47.02ms   84.12%
+    Req/Sec     6.44k     2.66k   17.56k    82.37%
+  643591 requests in 15.00s, 122.14MB read
+Requests/sec:  42906.49
+Transfer/sec:      8.14MB

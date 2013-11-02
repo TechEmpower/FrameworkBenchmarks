@@ -1,0 +1,114 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 22:37:34 PDT 2013
+
+  System load:  1.22               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/query?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/query?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   685.34us   97.14us   2.97ms   79.62%
+    Req/Sec     1.53k    72.28     1.78k    72.14%
+  57900 requests in 5.00s, 11.63MB read
+Requests/sec:  11579.16
+Transfer/sec:      2.33MB
+
+---------------------------------------------------------
+ Running Warmup gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/query?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/query?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.46ms    3.33ms 212.35ms   91.29%
+    Req/Sec     7.53k   818.99    14.11k    82.02%
+  855579 requests in 15.00s, 171.81MB read
+Requests/sec:  57031.97
+Transfer/sec:     11.45MB
+
+---------------------------------------------------------
+ Queries: 1 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/query?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/query?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.88ms    3.52ms 167.09ms   96.09%
+    Req/Sec    12.00k     1.40k   24.11k    87.29%
+  1363628 requests in 15.00s, 232.50MB read
+Requests/sec:  90910.04
+Transfer/sec:     15.50MB
+
+---------------------------------------------------------
+ Queries: 5 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/query?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/query?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     9.45ms   10.97ms 249.57ms   92.08%
+    Req/Sec     3.49k   541.74     5.48k    77.02%
+  409458 requests in 15.00s, 119.85MB read
+Requests/sec:  27296.99
+Transfer/sec:      7.99MB
+
+---------------------------------------------------------
+ Queries: 10 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/query?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/query?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    18.31ms   14.37ms 292.33ms   87.65%
+    Req/Sec     1.76k   151.96     2.58k    71.84%
+  209134 requests in 15.00s, 92.91MB read
+Requests/sec:  13941.48
+Transfer/sec:      6.19MB
+
+---------------------------------------------------------
+ Queries: 15 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/query?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/query?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    27.50ms   19.71ms 283.06ms   85.33%
+    Req/Sec     1.17k   111.50     1.82k    72.78%
+  139252 requests in 15.00s, 82.97MB read
+Requests/sec:   9281.25
+Transfer/sec:      5.53MB
+
+---------------------------------------------------------
+ Queries: 20 for gemini
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/query?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/query?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    36.61ms   20.76ms 295.45ms   81.40%
+    Req/Sec     0.87k    68.23     1.12k    72.12%
+  104281 requests in 15.00s, 77.94MB read
+Requests/sec:   6951.31
+Transfer/sec:      5.20MB

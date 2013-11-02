@@ -1,0 +1,144 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 06:31:38 PDT 2013
+
+  System load:  0.0                Processes:           126
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/mongodb/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   507.01us    1.05ms  13.92ms   77.82%
+    Req/Sec   104.32    199.67   666.00     78.92%
+  4825 requests in 6.00s, 6.66MB read
+  Socket errors: connect 0, read 1, write 0, timeout 12
+  Non-2xx or 3xx responses: 54
+Requests/sec:    804.09
+Transfer/sec:      1.11MB
+
+---------------------------------------------------------
+ Running Warmup servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   790.28ms  540.65ms   1.18s    66.82%
+    Req/Sec   138.34    208.79   780.00     72.70%
+  17805 requests in 16.00s, 21.16MB read
+  Socket errors: connect 0, read 41, write 0, timeout 1612
+  Non-2xx or 3xx responses: 3370
+Requests/sec:   1112.59
+Transfer/sec:      1.32MB
+
+---------------------------------------------------------
+ Concurrency: 8 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   309.93us    1.11ms  40.76ms   87.85%
+    Req/Sec    52.44    143.31   600.00     87.87%
+  6425 requests in 16.00s, 8.92MB read
+  Socket errors: connect 0, read 1, write 0, timeout 49
+  Non-2xx or 3xx responses: 28
+Requests/sec:    401.55
+Transfer/sec:    570.66KB
+
+---------------------------------------------------------
+ Concurrency: 16 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.97ms    2.62ms  41.72ms   71.07%
+    Req/Sec    74.38    178.37   727.00     84.80%
+  8999 requests in 16.00s, 12.28MB read
+  Socket errors: connect 0, read 6, write 0, timeout 104
+  Non-2xx or 3xx responses: 230
+Requests/sec:    562.41
+Transfer/sec:    785.61KB
+
+---------------------------------------------------------
+ Concurrency: 32 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.85ms    2.58ms  55.08ms   70.13%
+    Req/Sec    69.45    171.17     1.14k    85.01%
+  7961 requests in 16.00s, 10.76MB read
+  Socket errors: connect 0, read 5, write 0, timeout 214
+  Non-2xx or 3xx responses: 305
+Requests/sec:    497.50
+Transfer/sec:    688.25KB
+
+---------------------------------------------------------
+ Concurrency: 64 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    93.94ms   59.00ms 245.93ms   72.31%
+    Req/Sec    85.54    175.78   816.00     81.38%
+  11402 requests in 16.00s, 14.86MB read
+  Socket errors: connect 0, read 20, write 0, timeout 433
+  Non-2xx or 3xx responses: 925
+Requests/sec:    712.44
+Transfer/sec:      0.93MB
+
+---------------------------------------------------------
+ Concurrency: 128 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.26ms   54.58ms 142.54ms   75.45%
+    Req/Sec   107.03    192.23   837.00     78.12%
+  12929 requests in 16.00s, 16.14MB read
+  Socket errors: connect 0, read 29, write 0, timeout 865
+  Non-2xx or 3xx responses: 1720
+Requests/sec:    807.87
+Transfer/sec:      1.01MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servicestack-nginx-mongodb
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/mongodb/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/mongodb/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   609.59ms  519.36ms   1.67s    62.82%
+    Req/Sec   121.52    198.53     0.87k    76.32%
+  14954 requests in 16.00s, 18.02MB read
+  Socket errors: connect 0, read 71, write 0, timeout 1676
+  Non-2xx or 3xx responses: 2556
+Requests/sec:    934.41
+Transfer/sec:      1.13MB

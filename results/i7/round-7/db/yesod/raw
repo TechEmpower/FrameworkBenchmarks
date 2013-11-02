@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 12:09:07 PDT 2013
+
+  System load:  0.45               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer yesod
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   699.48us  601.98us  15.97ms   99.57%
+    Req/Sec     1.54k   137.32     1.89k    78.18%
+  58480 requests in 5.00s, 8.91MB read
+Requests/sec:  11695.20
+Transfer/sec:      1.78MB
+
+---------------------------------------------------------
+ Running Warmup yesod
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.91ms    9.36ms  86.87ms   79.77%
+    Req/Sec     3.05k   476.89     4.61k    69.63%
+  358091 requests in 15.00s, 54.56MB read
+Requests/sec:  23871.99
+Transfer/sec:      3.64MB
+
+---------------------------------------------------------
+ Concurrency: 8 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/db
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   669.14us  131.62us   8.42ms   82.69%
+    Req/Sec     1.56k   102.08     1.89k    79.74%
+  178023 requests in 15.00s, 27.13MB read
+Requests/sec:  11867.92
+Transfer/sec:      1.81MB
+
+---------------------------------------------------------
+ Concurrency: 16 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/db
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.86ms  610.52us  22.00ms   96.17%
+    Req/Sec     2.49k   339.03     3.44k    79.09%
+  283045 requests in 15.00s, 43.13MB read
+Requests/sec:  18869.48
+Transfer/sec:      2.88MB
+
+---------------------------------------------------------
+ Concurrency: 32 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/db
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.56ms    1.92ms  39.35ms   93.56%
+    Req/Sec     2.80k   652.38     5.00k    70.51%
+  318252 requests in 15.00s, 48.49MB read
+Requests/sec:  21216.28
+Transfer/sec:      3.23MB
+
+---------------------------------------------------------
+ Concurrency: 64 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/db
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.99ms    3.83ms  55.93ms   89.98%
+    Req/Sec     3.06k     0.88k    6.00k    67.92%
+  340055 requests in 15.00s, 51.82MB read
+Requests/sec:  22671.10
+Transfer/sec:      3.45MB
+
+---------------------------------------------------------
+ Concurrency: 128 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/db
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.32ms    5.82ms  75.61ms   87.23%
+    Req/Sec     3.14k   590.22     5.05k    68.45%
+  364137 requests in 15.00s, 55.49MB read
+Requests/sec:  24276.23
+Transfer/sec:      3.70MB
+
+---------------------------------------------------------
+ Concurrency: 256 for yesod
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8000/db
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8000/db
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.85ms    9.36ms  97.61ms   79.52%
+    Req/Sec     3.01k   490.37     4.90k    71.71%
+  355510 requests in 15.00s, 54.17MB read
+Requests/sec:  23698.87
+Transfer/sec:      3.61MB
