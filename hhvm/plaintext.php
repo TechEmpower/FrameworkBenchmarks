@@ -1,10 +1,6 @@
 <?php
 //
-// Plaintext Test
+// 6. Plaintext Test
 //
-
-// Set content type
-header("Content-type: text/plain");
-
-?>
-Hello, World!
+header('Content-Type: text/plain; charset=utf-8');
+echo 'Hello, World!';

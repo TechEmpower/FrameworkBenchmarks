@@ -1,17 +1,7 @@
 <?php
 //
-// JSON Encoding Test
+// 1. JSON Test
 //
-
-// Set content type
-header("Content-type: application/json");
-
-// Create an array with the response string.
-$arr = array(
-    "message" => "Hello, World!"
-);
-
-// Use the PHP standard JSON encoder.
-// http://www.php.net/manual/en/function.json-encode.php
-echo json_encode($arr);
-?>
+$data = json_encode(array('message' => 'Hello, World!'));
+header('Content-Type: application/json');
+echo $data;

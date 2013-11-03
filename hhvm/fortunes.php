@@ -1,12 +1,12 @@
 <?php
 //
-// Database Test
+// 4. Fortunes
 //
 
 // Database connection
-// http://www.php.net/manual/en/ref.pdo-mysql.php
 $pdo = new PDO('mysql:host=localhost;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass', array(
-    PDO::ATTR_PERSISTENT => true
+    PDO::ATTR_PERSISTENT => true,
+    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"
 ));
 
 // Define query
@@ -17,11 +17,11 @@ $arr = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
 $arr[0] = 'Additional fortune added at request time.';
 
 asort($arr);
+header("Content-Type: text/html; charset=utf-8");
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Fortunes</title>
 </head>
 <body>

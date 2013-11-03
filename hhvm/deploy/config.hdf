@@ -1,29 +1,40 @@
-PidFile = /tmp/hhvm.pid
+# Application PID File
+PidFile = /tmp/FrameworkBenchmarks/hhvm/hhvm.pid
 
+# Server settings
 Server {
   Port = 8080
-  SourceRoot = /tmp/FrameworkBenchmarks
+  SourceRoot = /tmp/FrameworkBenchmarks/hhvm
   DefaultDocument = index.php
 }
 
+# Disable logging completely
 Log {
   Level = None
   NoSilencer = true
-  AlwaysLogUnhandledExceptions = true
+  AlwaysLogUnhandledExceptions = false
   RuntimeErrorReportingLevel = 8191
-  UseLogFile = true
+  UseLogFile = false
   UseSyslog = false
-  File = /tmp/hhvm-error.log
-  Access {
-    * {
-      File = /tmp/hhvm-access.log
-      Format = %h %l %u % t \”%r\” %>s %b
-    }
+}
+
+# Repo file
+Repo {
+  Central {
+    Path = /tmp/FrameworkBenchmarks/hhvm/.hhvm.hhbc
   }
 }
 
-Repo {
-  Central {
-    Path = /tmp/.hhvm.hhbc
-  }
+# Setup basic rewrite
+VirtualHost {
+    * {
+        Pattern = .*
+        RewriteRules {
+            * {
+                pattern = ^(.*)$
+                to = $1.php
+                qsa = true
+            }
+        }
+    }
 }

@@ -1,48 +1,44 @@
 #HHVM Benchmarking Test
 
-This is the [HHVM](http://github.com/facebook/hhvm) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the [HHVM](http://github.com/facebook/hhvm) portion of a [benchmarking test suite](../)
 
-### Plaintext Test
+Supports the Following Benmarking URLs
 
-* [Plaintext test source](plaintext.php)
+* http://localhost:8080/json
+* http://localhost:8080/db
+* http://localhost:8080/db?queries=10
+* http://localhost:8080/queries
+* http://localhost:8080/queries?queries=10
+* http://localhost:8080/fortunes
+* http://localhost:8080/updates
+* http://localhost:8080/updates?queries=10
+* http://localhost:8080/plaintext
 
-### Fortune Test
+### 1. Plaintext Test
 
-* [Fortune test source](fortune.php)
+* [Plaintext - source](plaintext.php)
 
+### 2. Single database query
 
-### JSON Encoding Test
-Use the built-in JSON Encoder
+* [Single database query - source](db.php)
 
-* [JSON test source](json.php)
+### 3. Multiple database queries
 
-### Data-Store/Database Mapping Test
+* [Multiple database queries - source](queries.php)
 
-* [Database test source Raw](dbraw.php)
-* [Database test source ORM](dborm.php)
+### 4. Fortune test
+
+* [Fortunes - source](fortunes.php)
+
+### 5. Database updates test
+
+* [Database updates - source](updates.php)
+
+### 6. Plaintext test
+
+* [Plaintext - source](plaintext.php)
 
 ## Infrastructure Software Versions
 The tests were run with:
 
 * [HHVM v2.2.0](http://github.com/facebook/hhvm)
-
-## Test URLs
-### JSON Encoding Test
-
-http://localhost/json.php
-
-### Data-Store/Database Mapping Test
-
-Raw:
-http://localhost/dbraw.php
-
-ORM:
-http://localhost/dborm.php
-
-### Variable Query Test
-
-Raw:
-http://localhost/dbraw.php?queries=5
-
-ORM:
-http://localhost/dborm.php?queries=5
