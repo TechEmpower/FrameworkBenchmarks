@@ -1,0 +1,20 @@
+{
+  "framework": "Ur/Web",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Full",
+      "database": "Postgres",
+      "framework": "Ur/Web",
+      "language": "Ur",
+      "orm": "Micro",
+      "platform": "Ur/Web",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Ur/Web",
+    }
+  }]
+}
