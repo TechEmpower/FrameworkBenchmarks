@@ -9,6 +9,6 @@ To compile a standalone executable running on port 8080, run `urweb bench`.
 
 `fortune.sql` and `world.sql` are for the creation and population of the `uw_Bench_fortune` and `uw_Bench_world` tables. As part of its strong security guarantees, Ur/Web follows a certain naming convention for SQL tables which is incompatible with the default table names of `fortune` and `world`.
 
-`benchmark\_config` and `source\_code` include metadata for the framework comparison.
+`benchmark_config` and `source_code` include metadata for the framework comparison.
 
-`\_\_init\_\_.py` and `setup.py` are for starting and stopping the Ur/Web server.
+`__init__.py` and `setup.py` are for starting and stopping the Ur/Web server.
