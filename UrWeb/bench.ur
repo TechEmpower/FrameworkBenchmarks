@@ -5,16 +5,15 @@ fun addHeaders () =
   setHeader (blessResponseHeader "Date") (timef "%a, %d %b %Y %H:%M:%S GMT" n);
   setHeader (blessResponseHeader "Server") "Ur/Web"
 fun clamp n =
-  (mod n 10000) + 1
-fun parseQueries oqs =
+  (n % 10000) + 1
+fun parseQueries oqs : int =
   let
     val qt = case oqs of
         None => Some ("queries", "1")
       | Some qs => String.split (show qs) #"="
     val on = case qt of
-        None => Some 1
-      | Some ("queries", x) => read x
-      | Some _ => Some 1
+        Some ("queries", x) => read x
+      | _ => Some 1
   in
     case on of
       None => 1
@@ -22,25 +21,22 @@ fun parseQueries oqs =
                 else if x < 1 then 1
                 else x
   end
-fun range n acc =
-  case n of
-      0 => acc
-    | _ => range (n-1) (n :: acc)
+fun returnJson [a] (_ : json a) (j : a) : transaction page =
+  addHeaders ();
+  returnBlob (textBlob (toJson j)) (blessMime "application/json")
+fun returnText (t : string) : transaction page =
+  addHeaders ();
+  returnBlob (textBlob t) (blessMime "text/plain")
 
 val hello = "Hello, World!"
 fun plaintext () =
-  addHeaders ();
-  returnBlob (textBlob hello) (blessMime "text/plain")
+  returnText hello
 
 type json_t = {Message : string}
+val json_conversion : json json_t = json_record {Message = "message"}
+val hello_json = {Message = hello}
 fun json () =
-  let
-    val json_conversion : json json_t = json_record {Message = "message"}
-    val hello_json = {Message = hello}
-  in
-    addHeaders ();
-    returnBlob (textBlob (toJson hello_json)) (blessMime "application/json")
-  end
+    returnJson hello_json
 
 table world : {Id : int, RandomNumber : int} PRIMARY KEY Id
 type world_t = {Id : int, RandomNumber : int}
@@ -49,61 +45,37 @@ fun world_find n =
   oneRow1 (SELECT World.Id, World.RandomNumber FROM world WHERE World.Id = {[n]})
 
 fun db () =
-  addHeaders ();
   n <- rand;
   row <- world_find (clamp n);
-  returnBlob (textBlob (toJson row)) (blessMime "application/json")
+  returnJson row
 
 fun queries oqs =
-  addHeaders ();
-  let
-    val rq = range (parseQueries oqs) []
-  in
-    rands <- List.mapM (fn _ => rand) rq;
-    rows <- List.mapM (fn r => world_find (clamp r)) rands;
-    returnBlob (textBlob (toJson rows)) (blessMime "application/json")
-  end
+  rows <- List.tabulateM (fn _ => n <- rand; world_find (clamp n)) (parseQueries oqs);
+  returnJson rows
+
+fun updates oqs =
+  rows <- List.tabulateM (fn _ => n <- rand; world_find (clamp n)) (parseQueries oqs);
+  rows' <- List.mapM (fn r => n <- rand; return (r -- #RandomNumber ++ {RandomNumber = clamp n})) rows;
+  u <- List.mapM (fn r => dml (UPDATE world SET RandomNumber = {[r.RandomNumber]} WHERE Id = {[r.Id]})) rows';
+  returnJson rows'
 
 table fortune : {Id : int, Message : string} PRIMARY KEY Id
 type fortune_t = {Id : int, Message : string}
+val fortune_conversion : json fortune_t = json_record {Id = "id", Message = "message"}
+val new_fortune : fortune_t = {Id = 0, Message = "Additional fortune added at request time"}
 fun fortunes () =
-  addHeaders ();
   fs <- queryL1 (SELECT Fortune.Id, Fortune.Message FROM fortune);
   let
-    val fortune_conversion : json fortune_t = json_record {Id = "id", Message = "message"}
-    val new_fortune : fortune_t = {Id = 0, Message = "Additional fortune added at request time"}
     val fs' = List.sort (fn x y => x.Message > y.Message ) (new_fortune :: fs)
-    val tabled = List.mapX (fn row =>
-      <xml>
-        <tr><td>{[row.Id]}</td><td>{[row.Message]}</td></tr>
-      </xml>) fs'
   in
+    addHeaders ();
     return <xml>
              <head><title>Fortunes</title></head>
              <body><table>
                <tr><th>id</th><th>message</th></tr>
-               {tabled}
+               {List.mapX (fn f => <xml><tr>
+                 <td>{[f.Id]}</td><td>{[f.Message]}</td>
+               </tr></xml>) fs'}
              </table></body>
            </xml>
-  end
-
-fun updates oqs =
-  addHeaders ();
-  let
-    fun map2 f ls1 ls2 =
-      case (ls1, ls2) of
-        ([], []) => []
-      | (x1 :: ls1, x2 :: ls2) => (f x1 x2) :: map2 f ls1 ls2
-      | _ => error <xml>map2: Unequal list lengths</xml>
-    val rq = range (parseQueries oqs) []
-  in
-    rands <- List.mapM (fn _ => rand) rq;
-    rows <- List.mapM (fn r => world_find (clamp r)) rands;
-    rands' <- List.mapM (fn _ => rand) rq;
-    let
-      val rows' = map2 (fn x y => x -- #RandomNumber ++ {RandomNumber = clamp y}) rows rands'
-    in
-      u <- List.mapM (fn r => dml (UPDATE world SET RandomNumber = {[r.RandomNumber]} WHERE Id = {[r.Id]})) rows';
-      returnBlob (textBlob (toJson rows')) (blessMime "application/json")
-    end
   end
