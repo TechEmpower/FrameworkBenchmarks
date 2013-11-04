@@ -1,0 +1,120 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 18:24:33 PDT 2013
+
+  System load:  0.0                Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/world.json?queries=2
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/world.json?queries=2
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.95ms    1.82ms  18.32ms   74.05%
+    Req/Sec   131.07     29.92   222.00     73.20%
+  5120 requests in 5.01s, 1.36MB read
+Requests/sec:   1022.73
+Transfer/sec:    278.17KB
+
+---------------------------------------------------------
+ Running Warmup cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=2
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/world.json?queries=2
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   368.85ms  279.30ms   1.37s    71.03%
+    Req/Sec   101.02     44.35   199.00     62.36%
+  12175 requests in 15.02s, 3.33MB read
+  Non-2xx or 3xx responses: 4241
+Requests/sec:    810.61
+Transfer/sec:    226.97KB
+
+---------------------------------------------------------
+ Queries: 1 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/world.json?queries=1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   495.26ms  278.88ms   1.77s    67.76%
+    Req/Sec    64.93      7.03    85.00     67.38%
+  7687 requests in 15.03s, 2.21MB read
+  Non-2xx or 3xx responses: 7687
+Requests/sec:    511.40
+Transfer/sec:    150.82KB
+
+---------------------------------------------------------
+ Queries: 5 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=5
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/world.json?queries=5
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   508.51ms  289.57ms   1.93s    70.00%
+    Req/Sec    64.96      4.94    78.00     62.50%
+  7679 requests in 15.04s, 2.21MB read
+  Non-2xx or 3xx responses: 7679
+Requests/sec:    510.55
+Transfer/sec:    150.57KB
+
+---------------------------------------------------------
+ Queries: 10 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=10
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/world.json?queries=10
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   429.25ms  258.81ms   1.46s    68.38%
+    Req/Sec    80.71     20.18   121.00     57.26%
+  9583 requests in 15.02s, 3.96MB read
+  Non-2xx or 3xx responses: 4836
+Requests/sec:    637.97
+Transfer/sec:    269.87KB
+
+---------------------------------------------------------
+ Queries: 15 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=15
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/world.json?queries=15
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   417.02ms  243.18ms   1.46s    69.68%
+    Req/Sec    78.05     14.71   107.00     63.36%
+  9399 requests in 15.01s, 5.25MB read
+  Non-2xx or 3xx responses: 3373
+Requests/sec:    626.21
+Transfer/sec:    358.45KB
+
+---------------------------------------------------------
+ Queries: 20 for cake
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/world.json?queries=20
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/world.json?queries=20
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   428.68ms  247.66ms   1.97s    79.27%
+    Req/Sec    77.43      6.29    97.00     70.49%
+  9170 requests in 15.02s, 7.98MB read
+  Non-2xx or 3xx responses: 157
+Requests/sec:    610.62
+Transfer/sec:    544.37KB

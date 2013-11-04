@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 00:36:03 PDT 2013
+
+  System load:  0.09               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/luminus/dbraw/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   843.53us    1.25ms  15.72ms   97.94%
+    Req/Sec     1.57k   512.76     2.33k    61.08%
+  55460 requests in 5.00s, 9.40MB read
+Requests/sec:  11091.07
+Transfer/sec:      1.88MB
+
+---------------------------------------------------------
+ Running Warmup luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/dbraw/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.11ms   14.89ms 555.10ms   87.95%
+    Req/Sec     3.15k   384.69     4.68k    69.58%
+  370114 requests in 15.00s, 62.75MB read
+Requests/sec:  24674.74
+Transfer/sec:      4.18MB
+
+---------------------------------------------------------
+ Concurrency: 8 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/dbraw/1
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   515.84us  204.16us   9.93ms   97.86%
+    Req/Sec     2.04k   147.04     2.44k    78.18%
+  231268 requests in 15.00s, 39.21MB read
+Requests/sec:  15417.77
+Transfer/sec:      2.61MB
+
+---------------------------------------------------------
+ Concurrency: 16 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/dbraw/1
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   629.73us  368.96us  11.32ms   93.96%
+    Req/Sec     3.38k   326.48     4.33k    76.00%
+  384153 requests in 15.00s, 65.13MB read
+Requests/sec:  25609.95
+Transfer/sec:      4.34MB
+
+---------------------------------------------------------
+ Concurrency: 32 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/dbraw/1
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.08ms    0.87ms  16.69ms   91.43%
+    Req/Sec     4.00k   544.83     5.55k    75.23%
+  454860 requests in 15.00s, 77.12MB read
+Requests/sec:  30323.92
+Transfer/sec:      5.14MB
+
+---------------------------------------------------------
+ Concurrency: 64 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/dbraw/1
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.98ms    2.30ms  33.47ms   87.84%
+    Req/Sec     4.39k   838.70     7.44k    73.14%
+  497478 requests in 15.00s, 84.34MB read
+Requests/sec:  33165.86
+Transfer/sec:      5.62MB
+
+---------------------------------------------------------
+ Concurrency: 128 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/dbraw/1
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.54ms    5.88ms  68.91ms   87.05%
+    Req/Sec     3.67k   687.75     6.71k    70.07%
+  425846 requests in 15.00s, 72.20MB read
+Requests/sec:  28390.01
+Transfer/sec:      4.81MB
+
+---------------------------------------------------------
+ Concurrency: 256 for luminus-raw
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/luminus/dbraw/1
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/dbraw/1
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.23ms   14.24ms 151.74ms   87.33%
+    Req/Sec     3.15k   488.56     5.10k    69.04%
+  372838 requests in 15.00s, 63.21MB read
+Requests/sec:  24855.78
+Transfer/sec:      4.21MB

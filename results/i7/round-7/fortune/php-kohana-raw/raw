@@ -1,0 +1,137 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 02:21:49 PDT 2013
+
+  System load:  0.01               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.95ms    3.40ms  55.63ms   94.39%
+    Req/Sec    20.53      2.29    31.00     95.45%
+  854 requests in 5.05s, 34.77MB read
+  Non-2xx or 3xx responses: 854
+Requests/sec:    169.22
+Transfer/sec:      6.89MB
+
+---------------------------------------------------------
+ Running Warmup php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   471.00ms  190.92ms   1.10s    65.12%
+    Req/Sec    66.82      4.82    78.00     66.67%
+  7949 requests in 15.03s, 325.13MB read
+  Non-2xx or 3xx responses: 7949
+Requests/sec:    529.00
+Transfer/sec:     21.64MB
+
+---------------------------------------------------------
+ Concurrency: 8 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    32.03ms   21.16ms  56.03ms   62.98%
+    Req/Sec    93.88     97.38   262.00     64.69%
+  10953 requests in 15.04s, 86.67MB read
+  Non-2xx or 3xx responses: 1662
+Requests/sec:    728.26
+Transfer/sec:      5.76MB
+
+---------------------------------------------------------
+ Concurrency: 16 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    33.90ms   20.95ms  66.54ms   57.90%
+    Req/Sec   117.50    103.95   317.00     67.32%
+  13760 requests in 15.04s, 165.47MB read
+  Non-2xx or 3xx responses: 3544
+Requests/sec:    915.05
+Transfer/sec:     11.00MB
+
+---------------------------------------------------------
+ Concurrency: 32 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    47.07ms   30.09ms 260.97ms   64.55%
+    Req/Sec   125.13     91.68   309.00     71.86%
+  14755 requests in 15.02s, 263.26MB read
+  Non-2xx or 3xx responses: 6012
+Requests/sec:    982.24
+Transfer/sec:     17.52MB
+
+---------------------------------------------------------
+ Concurrency: 64 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   117.49ms   43.67ms 296.65ms   72.79%
+    Req/Sec    69.47      6.57    92.00     73.44%
+  8354 requests in 15.01s, 340.51MB read
+  Non-2xx or 3xx responses: 8354
+Requests/sec:    556.48
+Transfer/sec:     22.68MB
+
+---------------------------------------------------------
+ Concurrency: 128 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   221.70ms  124.26ms 750.84ms   72.89%
+    Req/Sec    86.79     58.68   295.00     88.42%
+  10760 requests in 15.00s, 304.95MB read
+  Non-2xx or 3xx responses: 7318
+Requests/sec:    717.21
+Transfer/sec:     20.33MB
+
+---------------------------------------------------------
+ Concurrency: 256 for php-kohana-raw
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/bench/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/bench/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   335.54ms  283.70ms   3.98s    83.99%
+    Req/Sec   143.62     99.46   354.00     66.11%
+  18117 requests in 15.01s, 224.42MB read
+  Socket errors: connect 0, read 0, write 0, timeout 9
+  Non-2xx or 3xx responses: 4846
+Requests/sec:   1207.03
+Transfer/sec:     14.95MB

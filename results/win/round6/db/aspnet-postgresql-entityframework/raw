@@ -1,0 +1,132 @@
+Welcome to Ubuntu 12.04.2 LTS (GNU/Linux 3.2.0-40-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Jun 19 21:10:29 UTC 2013
+
+  System load:  0.12               Processes:           72
+  Usage of /:   25.8% of 19.69GB   Users logged in:     0
+  Memory usage: 10%                IP address for eth0: 10.254.22.217
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+  Use Juju to deploy your cloud instances and workloads:
+    https://juju.ubuntu.com/#cloud-precise
+
+*** System restart required ***
+
+---------------------------------------------------------
+ Running Primer aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 60 -c 8 -t 8 http://10.252.47.47:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 5s test @ http://10.252.47.47:8080/entityframework/postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  2349 requests in 5.01s, 648.76KB read
+Requests/sec:    468.86
+Transfer/sec:    129.49KB
+
+---------------------------------------------------------
+ Running Warmup aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://10.252.47.47:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  6997 requests in 15.05s, 1.89MB read
+Requests/sec:    465.00
+Transfer/sec:    128.40KB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://10.252.47.47:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/postgresql
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  6878 requests in 15.01s, 1.85MB read
+Requests/sec:    458.24
+Transfer/sec:    126.54KB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://10.252.47.47:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/postgresql
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  6655 requests in 15.02s, 1.79MB read
+Requests/sec:    443.05
+Transfer/sec:    122.35KB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://10.252.47.47:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/postgresql
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  6571 requests in 15.01s, 1.77MB read
+Requests/sec:    437.77
+Transfer/sec:    120.89KB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://10.252.47.47:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/postgresql
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  6469 requests in 15.01s, 1.74MB read
+Requests/sec:    430.84
+Transfer/sec:    118.97KB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://10.252.47.47:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/postgresql
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  7068 requests in 15.02s, 1.91MB read
+Requests/sec:    470.48
+Transfer/sec:    129.93KB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://10.252.47.47:8080/entityframework/postgresql
+---------------------------------------------------------
+
+Running 15s test @ http://10.252.47.47:8080/entityframework/postgresql
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  7128 requests in 15.05s, 1.92MB read
+Requests/sec:    473.71
+Transfer/sec:    130.81KB

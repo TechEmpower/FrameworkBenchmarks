@@ -1,0 +1,112 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 06:23:56 PDT 2013
+
+  System load:  0.03               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.18ms    5.45ms  75.40ms   99.56%
+    Req/Sec   161.50    278.53     1.00k    75.78%
+  7044 requests in 6.00s, 2.11MB read
+  Socket errors: connect 0, read 12, write 0, timeout 12
+  Non-2xx or 3xx responses: 545
+Requests/sec:   1173.68
+Transfer/sec:    359.87KB
+
+---------------------------------------------------------
+ Running Warmup servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    54.23ms  127.54ms   1.23s    95.34%
+    Req/Sec   372.24    122.97     0.88k    72.81%
+  45069 requests in 15.00s, 13.80MB read
+  Socket errors: connect 0, read 360, write 0, timeout 646
+  Non-2xx or 3xx responses: 24150
+Requests/sec:   3003.66
+Transfer/sec:      0.92MB
+
+---------------------------------------------------------
+ Concurrency: 256 for servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 256 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.38s     1.31s    7.16s    85.02%
+    Req/Sec   351.18    124.08   604.00     71.95%
+  41036 requests in 15.01s, 12.69MB read
+  Socket errors: connect 0, read 171, write 0, timeout 596
+  Non-2xx or 3xx responses: 29624
+Requests/sec:   2734.68
+Transfer/sec:    865.65KB
+
+---------------------------------------------------------
+ Concurrency: 1024 for servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 1024 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 1024 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.95s     3.12s   13.72s    75.10%
+    Req/Sec   379.39     46.54   494.00     70.18%
+  46060 requests in 15.01s, 14.30MB read
+  Socket errors: connect 0, read 226, write 0, timeout 4312
+  Non-2xx or 3xx responses: 37882
+Requests/sec:   3069.38
+Transfer/sec:      0.95MB
+
+---------------------------------------------------------
+ Concurrency: 4096 for servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 4096 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 4096 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.23s     3.54s   14.99s    78.64%
+    Req/Sec   340.56     30.48   390.00     68.75%
+  40432 requests in 15.01s, 12.58MB read
+  Socket errors: connect 0, read 233, write 0, timeout 23879
+  Non-2xx or 3xx responses: 35603
+Requests/sec:   2694.52
+Transfer/sec:    858.79KB
+
+---------------------------------------------------------
+ Concurrency: 16384 for servicestack-nginx-default
+ wrk-pipeline -H 'Host: localhost' -H 'Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' --pipeline 16 -d 15 -c 16384 -t 8 http://172.16.98.122:8080/plaintext
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/plaintext
+  8 threads and 16384 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     0.00us    0.00us   0.00us    -nan%
+    Req/Sec     0.00      0.00     0.00      -nan%
+  24787 requests in 15.04s, 7.75MB read
+  Socket errors: connect 11, read 14712, write 0, timeout 96991
+  Non-2xx or 3xx responses: 24441
+Requests/sec:   1648.30
+Transfer/sec:    527.87KB

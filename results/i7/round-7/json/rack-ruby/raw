@@ -1,0 +1,130 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 04:34:45 PDT 2013
+
+  System load:  0.03               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer rack-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   324.15us  533.74us   7.93ms   98.98%
+    Req/Sec     3.50k   693.17     4.78k    78.85%
+  132630 requests in 5.00s, 27.06MB read
+Requests/sec:  26526.13
+Transfer/sec:      5.41MB
+
+---------------------------------------------------------
+ Running Warmup rack-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.29ms    3.16ms  45.11ms   83.47%
+    Req/Sec    10.68k     2.72k   25.77k    71.43%
+  1222101 requests in 15.00s, 296.96MB read
+  Non-2xx or 3xx responses: 462155
+Requests/sec:  81474.37
+Transfer/sec:     19.80MB
+
+---------------------------------------------------------
+ Concurrency: 8 for rack-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   309.94us  449.45us  11.33ms   99.32%
+    Req/Sec     3.53k   632.28     4.78k    81.82%
+  401991 requests in 15.00s, 82.02MB read
+Requests/sec:  26795.36
+Transfer/sec:      5.47MB
+
+---------------------------------------------------------
+ Concurrency: 16 for rack-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   378.95us  475.38us  14.31ms   98.61%
+    Req/Sec     5.67k     0.93k    8.11k    70.58%
+  644211 requests in 15.00s, 131.44MB read
+Requests/sec:  42948.08
+Transfer/sec:      8.76MB
+
+---------------------------------------------------------
+ Concurrency: 32 for rack-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   632.16us    1.02ms  32.78ms   96.92%
+    Req/Sec     6.88k     1.47k   12.11k    69.01%
+  782960 requests in 15.00s, 159.75MB read
+Requests/sec:  52199.59
+Transfer/sec:     10.65MB
+
+---------------------------------------------------------
+ Concurrency: 64 for rack-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.15ms    1.60ms  37.68ms   93.17%
+    Req/Sec     7.70k     1.65k   15.89k    69.32%
+  875219 requests in 15.00s, 178.58MB read
+Requests/sec:  58348.48
+Transfer/sec:     11.91MB
+
+---------------------------------------------------------
+ Concurrency: 128 for rack-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.18ms    1.73ms  36.52ms   85.75%
+    Req/Sec     7.92k     1.36k   14.44k    67.46%
+  900120 requests in 15.00s, 183.66MB read
+Requests/sec:  60008.60
+Transfer/sec:     12.24MB
+
+---------------------------------------------------------
+ Concurrency: 256 for rack-ruby
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.20ms    2.94ms  37.29ms   76.57%
+    Req/Sec    10.77k     2.26k   20.75k    69.92%
+  1235298 requests in 15.00s, 293.41MB read
+  Non-2xx or 3xx responses: 401618
+Requests/sec:  82354.08
+Transfer/sec:     19.56MB

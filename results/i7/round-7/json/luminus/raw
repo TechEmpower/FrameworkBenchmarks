@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Tue Oct 29 00:25:49 PDT 2013
+
+  System load:  0.01               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/luminus/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/luminus/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   407.57us    1.24ms  15.08ms   99.11%
+    Req/Sec     3.75k     1.02k    5.22k    77.46%
+  131710 requests in 5.00s, 21.60MB read
+Requests/sec:  26342.16
+Transfer/sec:      4.32MB
+
+---------------------------------------------------------
+ Running Warmup luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.29ms  181.09ms   1.82s    98.52%
+    Req/Sec     9.15k     3.02k   22.70k    72.81%
+  1024738 requests in 15.00s, 168.09MB read
+Requests/sec:  68315.85
+Transfer/sec:     11.21MB
+
+---------------------------------------------------------
+ Concurrency: 8 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   285.83us    1.38ms  45.99ms   99.76%
+    Req/Sec     4.24k   364.52     5.11k    79.95%
+  482284 requests in 15.00s, 79.11MB read
+Requests/sec:  32152.99
+Transfer/sec:      5.27MB
+
+---------------------------------------------------------
+ Concurrency: 16 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   295.22us  360.93us  14.94ms   97.08%
+    Req/Sec     7.28k     0.91k    9.67k    75.86%
+  827898 requests in 15.00s, 135.80MB read
+Requests/sec:  55193.76
+Transfer/sec:      9.05MB
+
+---------------------------------------------------------
+ Concurrency: 32 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   489.43us    1.03ms  20.30ms   98.93%
+    Req/Sec     9.90k     1.92k   14.11k    78.33%
+  1125190 requests in 15.00s, 184.57MB read
+Requests/sec:  75013.69
+Transfer/sec:     12.30MB
+
+---------------------------------------------------------
+ Concurrency: 64 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.02ms    2.12ms  36.65ms   98.16%
+    Req/Sec     9.82k     1.98k   16.67k    82.39%
+  1115677 requests in 15.00s, 183.01MB read
+Requests/sec:  74379.95
+Transfer/sec:     12.20MB
+
+---------------------------------------------------------
+ Concurrency: 128 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     1.92ms    3.31ms  81.22ms   96.89%
+    Req/Sec     9.48k     1.86k   19.44k    83.15%
+  1076875 requests in 15.00s, 176.64MB read
+Requests/sec:  71792.71
+Transfer/sec:     11.78MB
+
+---------------------------------------------------------
+ Concurrency: 256 for luminus
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/luminus/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/luminus/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     4.71ms   16.53ms 230.95ms   96.64%
+    Req/Sec     9.24k     2.65k   24.50k    75.07%
+  1050360 requests in 15.00s, 172.29MB read
+Requests/sec:  70025.12
+Transfer/sec:     11.49MB

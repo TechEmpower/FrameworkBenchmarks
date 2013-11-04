@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Mon Oct 28 20:49:24 PDT 2013
+
+  System load:  0.07               Processes:           121
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer falcon-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.35ms   16.70ms  72.78ms   90.64%
+    Req/Sec   537.70    265.32     1.33k    76.42%
+  20504 requests in 5.00s, 2.76MB read
+Requests/sec:   4099.52
+Transfer/sec:    564.49KB
+
+---------------------------------------------------------
+ Running Warmup falcon-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    57.82ms   48.48ms 367.86ms   69.89%
+    Req/Sec   574.24    124.38     0.98k    65.21%
+  68187 requests in 15.01s, 9.17MB read
+Requests/sec:   4544.11
+Transfer/sec:    625.70KB
+
+---------------------------------------------------------
+ Concurrency: 8 for falcon-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.33ms    5.70ms  51.11ms   97.48%
+    Req/Sec   723.04    188.23     1.33k    83.20%
+  81958 requests in 15.00s, 11.02MB read
+Requests/sec:   5463.66
+Transfer/sec:    752.32KB
+
+---------------------------------------------------------
+ Concurrency: 16 for falcon-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     3.02ms    2.57ms  53.17ms   96.86%
+    Req/Sec   748.31    221.15     1.44k    68.32%
+  84811 requests in 15.00s, 11.40MB read
+Requests/sec:   5653.75
+Transfer/sec:    778.50KB
+
+---------------------------------------------------------
+ Concurrency: 32 for falcon-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.92ms    5.57ms 124.19ms   90.42%
+    Req/Sec   754.43    219.40     1.82k    69.72%
+  84618 requests in 15.00s, 11.38MB read
+Requests/sec:   5640.55
+Transfer/sec:    776.68KB
+
+---------------------------------------------------------
+ Concurrency: 64 for falcon-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    11.27ms    6.07ms 122.41ms   82.32%
+    Req/Sec   737.56    130.73     1.30k    75.16%
+  86634 requests in 15.00s, 11.65MB read
+Requests/sec:   5774.56
+Transfer/sec:    795.13KB
+
+---------------------------------------------------------
+ Concurrency: 128 for falcon-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    23.26ms   19.91ms 222.27ms   69.55%
+    Req/Sec   717.91    150.32     1.16k    67.84%
+  84728 requests in 15.00s, 11.39MB read
+Requests/sec:   5648.06
+Transfer/sec:    777.71KB
+
+---------------------------------------------------------
+ Concurrency: 256 for falcon-pypy
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/json
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/json
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    48.61ms   38.77ms 283.12ms   54.06%
+    Req/Sec   732.69    218.73     1.20k    61.38%
+  85589 requests in 15.00s, 11.51MB read
+Requests/sec:   5704.58
+Transfer/sec:    785.49KB

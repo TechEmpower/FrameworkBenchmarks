@@ -1,0 +1,128 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 18:21:27 PDT 2013
+
+  System load:  0.01               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/entityframework/sqlserver
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/entityframework/sqlserver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.12ms   13.38ms  64.72ms   94.78%
+    Req/Sec   510.14    147.29   777.00     77.60%
+  18931 requests in 5.00s, 5.11MB read
+Requests/sec:   3785.47
+Transfer/sec:      1.02MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.80ms   29.66ms 469.47ms   83.81%
+    Req/Sec   783.34     78.82     1.00k    66.15%
+  92748 requests in 15.01s, 25.01MB read
+Requests/sec:   6178.86
+Transfer/sec:      1.67MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/entityframework/sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.48ms    2.95ms  28.10ms   95.97%
+    Req/Sec   525.91    121.41   777.00     79.97%
+  59487 requests in 15.00s, 16.04MB read
+Requests/sec:   3965.44
+Transfer/sec:      1.07MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/entityframework/sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     2.93ms    3.75ms  34.26ms   94.05%
+    Req/Sec     0.90k   256.71     1.33k    80.48%
+  101577 requests in 15.00s, 27.39MB read
+Requests/sec:   6771.29
+Transfer/sec:      1.83MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/entityframework/sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.17ms    4.67ms  55.47ms   90.53%
+    Req/Sec   841.73    201.30     1.33k    68.65%
+  97889 requests in 15.00s, 26.40MB read
+Requests/sec:   6525.65
+Transfer/sec:      1.76MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/entityframework/sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    10.19ms   10.06ms 198.96ms   92.11%
+    Req/Sec   825.55    152.29     1.21k    66.67%
+  97006 requests in 15.00s, 26.16MB read
+Requests/sec:   6466.28
+Transfer/sec:      1.74MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/entityframework/sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    21.37ms   18.10ms 259.54ms   87.81%
+    Req/Sec   786.46    149.31     1.15k    65.72%
+  92802 requests in 15.00s, 25.02MB read
+Requests/sec:   6185.57
+Transfer/sec:      1.67MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-sqlserver-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/sqlserver
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/sqlserver
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    39.66ms   25.96ms 317.82ms   81.29%
+    Req/Sec   812.43     68.99     0.97k    68.83%
+  95881 requests in 15.00s, 25.86MB read
+Requests/sec:   6391.29
+Transfer/sec:      1.72MB

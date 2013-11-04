@@ -1,0 +1,131 @@
+Welcome to Ubuntu 12.04.3 LTS (GNU/Linux 3.9.0-030900-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Wed Oct 30 16:10:29 PDT 2013
+
+  System load:  0.03               Processes:           122
+  Usage of /:   5.8% of 129.62GB   Users logged in:     0
+  Memory usage: 3%                 IP address for eth1: 172.16.98.98
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+
+74 packages can be updated.
+35 updates are security updates.
+
+
+---------------------------------------------------------
+ Running Primer aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 5 -c 8 -t 8 http://172.16.98.122:8080/entityframework/postgresql/fortunes
+---------------------------------------------------------
+
+Running 5s test @ http://172.16.98.122:8080/entityframework/postgresql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     7.21ms   14.84ms  64.04ms   91.98%
+    Req/Sec   322.99    107.09   444.00     75.90%
+  12162 requests in 5.00s, 20.33MB read
+Requests/sec:   2431.34
+Transfer/sec:      4.06MB
+
+---------------------------------------------------------
+ Running Warmup aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    59.42ms   81.74ms   2.16s    98.49%
+    Req/Sec   536.90     59.22   700.00     69.46%
+  63628 requests in 15.05s, 106.37MB read
+  Socket errors: connect 0, read 0, write 0, timeout 2
+Requests/sec:   4228.22
+Transfer/sec:      7.07MB
+
+---------------------------------------------------------
+ Concurrency: 8 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 8 -t 8 http://172.16.98.122:8080/entityframework/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/fortunes
+  8 threads and 8 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.10ms    7.70ms  39.84ms   92.61%
+    Req/Sec   330.49    103.55   500.00     73.53%
+  37364 requests in 15.00s, 62.46MB read
+Requests/sec:   2490.66
+Transfer/sec:      4.16MB
+
+---------------------------------------------------------
+ Concurrency: 16 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 16 -t 8 http://172.16.98.122:8080/entityframework/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/fortunes
+  8 threads and 16 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     5.42ms    8.39ms  46.09ms   90.87%
+    Req/Sec   612.74    210.66     0.93k    82.46%
+  70053 requests in 15.00s, 117.11MB read
+Requests/sec:   4669.67
+Transfer/sec:      7.81MB
+
+---------------------------------------------------------
+ Concurrency: 32 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 32 -t 8 http://172.16.98.122:8080/entityframework/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/fortunes
+  8 threads and 32 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.45ms   21.63ms   1.06s    96.95%
+    Req/Sec   547.75    149.88     1.02k    64.97%
+  64040 requests in 15.00s, 107.06MB read
+Requests/sec:   4268.66
+Transfer/sec:      7.14MB
+
+---------------------------------------------------------
+ Concurrency: 64 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 64 -t 8 http://172.16.98.122:8080/entityframework/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/fortunes
+  8 threads and 64 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    15.82ms   63.05ms   1.13s    99.44%
+    Req/Sec   523.67    156.94     1.22k    68.77%
+  61730 requests in 15.01s, 103.20MB read
+Requests/sec:   4113.84
+Transfer/sec:      6.88MB
+
+---------------------------------------------------------
+ Concurrency: 128 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 128 -t 8 http://172.16.98.122:8080/entityframework/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/fortunes
+  8 threads and 128 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.34ms   68.01ms   2.26s    98.74%
+    Req/Sec   523.57     93.39     0.89k    71.02%
+  61816 requests in 15.00s, 103.34MB read
+  Socket errors: connect 0, read 0, write 0, timeout 3
+Requests/sec:   4119.72
+Transfer/sec:      6.89MB
+
+---------------------------------------------------------
+ Concurrency: 256 for aspnet-postgresql-entityframework
+ wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive'  -d 15 -c 256 -t 8 http://172.16.98.122:8080/entityframework/postgresql/fortunes
+---------------------------------------------------------
+
+Running 15s test @ http://172.16.98.122:8080/entityframework/postgresql/fortunes
+  8 threads and 256 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    58.95ms   91.84ms   2.25s    98.83%
+    Req/Sec   540.64     61.85   760.00     68.45%
+  63701 requests in 15.02s, 106.49MB read
+  Socket errors: connect 0, read 0, write 0, timeout 10
+Requests/sec:   4241.38
+Transfer/sec:      7.09MB
