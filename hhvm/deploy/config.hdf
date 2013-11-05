@@ -18,6 +18,12 @@ Log {
   UseSyslog = false
 }
 
+# Enable jit for production mode
+Eval {
+    Jit = true
+    CheckSymLink = false
+}
+
 # Repo file
 Repo {
   Central {
