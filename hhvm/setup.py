@@ -22,7 +22,7 @@ def start(args):
   try:
     if os.name == 'nt':
       # Not supported !
-      return 1
+      return 0
     subprocess.check_call("sudo hhvm --config " + home + "/FrameworkBenchmarks/hhvm/deploy/config.hdf -m daemon", shell=True)
     return 0
   except subprocess.CalledProcessError:
@@ -30,12 +30,9 @@ def start(args):
 def stop():
   try:
     if os.name == 'nt':
-      subprocess.check_call('appcmd delete site PHP', shell=True)
+      # Not Supported !
       return 0
-
-    subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
-    subprocess.call("sudo kill -QUIT $( cat php/deploy/php-fpm.pid )", shell=True)
-
+    subprocess.call("sudo kill -QUIT $( cat hhvm/hhvm.pid )", shell=True)
     return 0
   except subprocess.CalledProcessError:
     return 1
