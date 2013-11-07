@@ -13,6 +13,8 @@
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
+grails.app.context = '/grails'
+
 // The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
 grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
 grails.mime.types = [
