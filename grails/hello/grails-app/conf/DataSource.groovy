@@ -11,7 +11,7 @@ dataSource {
     password = "benchmarkdbpass"
     properties {
         fairQueue = false
-        maxActive = 256
+        maxActive = 512
         maxIdle = 25
         minIdle = 5
         initialSize = 5
