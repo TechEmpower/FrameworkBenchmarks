@@ -3,6 +3,8 @@ package hello
 import grails.converters.JSON
 import grails.transaction.Transactional
 import groovy.transform.CompileStatic
+import groovy.transform.TypeCheckingMode;
+
 import java.util.concurrent.ThreadLocalRandom
 
 import org.springframework.transaction.annotation.Isolation;
@@ -43,18 +45,30 @@ class HelloController {
     private List<World> fetchRandomWorlds(int queries, boolean updateAlso) {
         if(queries < 1) queries=1
         if(queries > 500) queries=500
-        List<World> worlds = new ArrayList<World>(queries)
         def random = ThreadLocalRandom.current()
 
+        List<Integer> worldIds = new ArrayList<Integer>(queries)
         for (int i = 0; i < queries; i++) {
-            int randomId = random.nextInt(10000) + 1
-            def world = updateAlso ? World.lock(randomId) : World.read(randomId)
-            if(updateAlso) {
+            worldIds.add(random.nextInt(10000) + 1)
+        }
+        List<World> worlds
+        if (updateAlso) {
+            worlds = getAllLocked(worldIds as Serializable[])
+            for (World world : worlds) {
                 world.randomNumber = random.nextInt(10000) + 1
             }
-            worlds.add(world)
+        } else {
+            worlds = World.getAll(worldIds as Serializable[])
         }
         return worlds
+    }
+    
+    @CompileStatic(TypeCheckingMode.SKIP)
+    private List<World> getAllLocked(Serializable[] worldIds) {
+        World.withCriteria {
+            'in'('id', worldIds as Serializable[])
+            lock true
+        }
     }
     
     // Test type 4: Fortunes
