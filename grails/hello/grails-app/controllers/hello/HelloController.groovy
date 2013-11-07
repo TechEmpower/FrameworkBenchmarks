@@ -34,15 +34,25 @@ class HelloController {
     // Test type 3: Multiple database queries
     @Transactional(readOnly=true)
     def queries(int queries) {
+        def worlds = fetchRandomWorlds(queries, false)
+        render worlds as JSON
+    }
+
+    private List<World> fetchRandomWorlds(int queries, boolean updateAlso) {
         if(queries < 1) queries=1
         if(queries > 500) queries=500
-        def worlds = new ArrayList(queries)
+        List<World> worlds = new ArrayList<World>(queries)
         def random = ThreadLocalRandom.current()
 
         for (int i = 0; i < queries; i++) {
-            worlds.add(World.read(random.nextInt(10000) + 1))
+            int randomId = random.nextInt(10000) + 1
+            def world = updateAlso ? World.get(randomId) : World.read(randomId)
+            if(updateAlso) {
+                world.randomNumber = random.nextInt(10000) + 1
+            }
+            worlds.add(world)
         }
-        render worlds as JSON
+        return worlds
     }
     
     // Test type 4: Fortunes
@@ -52,6 +62,13 @@ class HelloController {
         fortunes << new Fortune(message: 'Additional fortune added at request time.')
         fortunes.sort(true){Fortune it -> it.message}
         [fortunes: fortunes]
+    }
+    
+    // Test type 5: Database updates
+    @Transactional
+    def updates(int queries) {
+        def worlds = fetchRandomWorlds(queries, true)
+        render worlds as JSON
     }
     
     // Test type 6: Plaintext
