@@ -11,10 +11,27 @@ The tests were run with:
 
 
 ## Test URLs
-### JSON Encoding Test
+
+### Test type 1: JSON serialization
 
 http://localhost:8080/grails/hello/json
 
-### Data-Store/Database Mapping Test
+### Test type 2: Single database query
 
-http://localhost:8080/grails/hello/queries?queries=5
+http://localhost:8080/grails/hello/db
+
+### Test type 3: Multiple database queries
+
+http://localhost:8080/grails/hello/queries?queries=10
+
+### Test type 4: Fortunes
+
+http://localhost:8080/grails/hello/fortunes
+
+### Test type 5: Database updates
+
+http://localhost:8080/grails/hello/updates?queries=10
+
+### Test type 6: Plaintext
+
+http://localhost:8080/grails/hello/plaintext
