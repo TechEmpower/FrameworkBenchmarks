@@ -45,6 +45,15 @@ class HelloController {
         render worlds as JSON
     }
     
+    // Test type 4: Fortunes
+    @Transactional(readOnly=true)
+    def fortunes() {
+        def fortunes = Fortune.getAll()
+        fortunes << new Fortune(message: 'Additional fortune added at request time.')
+        fortunes.sort(true){Fortune it -> it.message}
+        [fortunes: fortunes]
+    }
+    
     // Test type 6: Plaintext
     def plaintext() {
         render text:'Hello, world', contentType:'text/plain'
