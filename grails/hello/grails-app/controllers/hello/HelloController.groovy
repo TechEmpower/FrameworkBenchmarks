@@ -58,7 +58,10 @@ class HelloController {
                 world.randomNumber = random.nextInt(10000) + 1
             }
         } else {
-            worlds = World.getAll(worldIds as Serializable[])
+            worlds = new ArrayList<World>(queries)
+            for (Integer id : worldIds) {
+                worlds.add(World.read(id))
+            }
         }
         return worlds
     }
