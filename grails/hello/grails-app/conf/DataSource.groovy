@@ -36,6 +36,9 @@ hibernate {
     cache.use_second_level_cache = false
     cache.use_query_cache = false
     cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory'
+    default_batch_fetch_size=256
+    jdbc.fetch_size=256
+    jdbc.batch_size=500
 }
 
 static Properties loadProperties(String path) {
