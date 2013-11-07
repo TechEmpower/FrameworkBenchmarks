@@ -5,35 +5,35 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Fortune
-		implements Comparable<Fortune> {
-	@Id
-	@GeneratedValue
-	public int id;
-	public String message;
+public final class Fortune implements Comparable<Fortune> {
 
-	public Fortune() {
+    @Id
+    @GeneratedValue
+    private volatile Integer id;
 
-	}
+    public volatile String message;
 
-	public Fortune(int id, String message) {
-		this.id = id;
-		this.message = message;
-	}
+    Fortune() {
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    public Fortune(Integer id, String message) {
+        this.id = id;
+        this.message = message;
+    }
 
-	public String getMessage() {
-		return this.message;
-	}
+    public Integer getId() {
+        return this.id;
+    }
 
-	/**
-	 * For our purposes, Fortunes sort by their message text.
-	 */
-	@Override
-	public int compareTo(Fortune other) {
-		return message.compareTo(other.message);
-	}
+    public String getMessage() {
+        return this.message;
+    }
+
+    /**
+     * For our purposes, Fortunes sort by their message text.
+     */
+    @Override
+    public int compareTo(Fortune other) {
+        return message.compareTo(other.message);
+    }
 }

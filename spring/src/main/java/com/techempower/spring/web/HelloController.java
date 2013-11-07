@@ -1,36 +1,33 @@
 package com.techempower.spring.web;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-public class HelloController {
+@RestController
+final class HelloController {
 
-	@RequestMapping(value = "/json", produces = "application/json")
-	@ResponseBody
-	public Message json() {
-		return new Message("Hello, world");
-	}
+    @RequestMapping(value = "/json", produces = "application/json")
+    Message json() {
+        return new Message("Hello, world");
+    }
 
-	@RequestMapping(value = "/plaintext", produces = "text/plain")
-	@ResponseBody
-	public String plaintext() {
-		return "Hello, World!";
-	}
+    @RequestMapping(value = "/plaintext", produces = "text/plain")
+    String plaintext() {
+        return "Hello, World!";
+    }
 
-	public static class Message {
+    public static final class Message {
 
-		private final String message;
+        private final String message;
 
-		public Message(String message) {
-			this.message = message;
-		}
+        private Message(String message) {
+            this.message = message;
+        }
 
-		public String getMessage() {
-			return message;
-		}
+        public String getMessage() {
+            return message;
+        }
 
-	}
+    }
 
 }

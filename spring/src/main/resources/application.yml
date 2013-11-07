@@ -1,12 +1,12 @@
+---
 spring:
-  application.name: spring
-  profiles:
-    active: bench
+  datasource:
+    initialize: false
+  jpa:
+    show_sql: false
 
 ---
-
 spring:
-  profiles: bench
-  jpa:
-    open-in-view: false
-    show-sql: false
+  profiles: local
+  datasource:
+    initialize: false

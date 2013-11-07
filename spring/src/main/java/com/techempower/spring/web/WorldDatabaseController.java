@@ -1,69 +1,68 @@
 package com.techempower.spring.web;
 
 import com.techempower.spring.domain.World;
-import com.techempower.spring.service.WorldRepository;
+import com.techempower.spring.repository.WorldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Controller
-public class WorldDatabaseController {
+@RestController
+final class WorldDatabaseController {
 
-	private static final int DB_ROWS = 10000;
-	@Autowired
-	private WorldRepository worldRepository;
+    private static final int DB_ROWS = 10000;
 
-	@RequestMapping(value = "/db", produces = "application/json")
-	@ResponseBody
-	public World singleQuery() {
-		final Random random = ThreadLocalRandom.current();
-		return worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
-	}
+    @Autowired
+    private WorldRepository worldRepository;
 
-	@RequestMapping(value = "/queries", produces = "application/json")
-	@ResponseBody
-	public World[] multipleQueries(Integer queries) {
-		if (queries == null || queries < 1) {
-			queries = 1;
-		}
-		else if (queries > 500) {
-			queries = 500;
-		}
+    @RequestMapping(value = "/db", produces = "application/json")
+    World singleQuery() {
+        final Random random = ThreadLocalRandom.current();
+        return this.worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
+    }
 
-		final World[] worlds = new World[queries];
-		final Random random = ThreadLocalRandom.current();
+    @RequestMapping(value = "/queries", produces = "application/json")
+    List<World> multipleQueries(@RequestParam("queries") Integer rawQueryCount) {
+        Integer queryCount = boundQueryCount(rawQueryCount);
 
-		for (int i = 0; i < queries; i++) {
-			worlds[i] = worldRepository.findOne(random.nextInt(DB_ROWS) + 1);
-		}
+        List<World> worlds = new ArrayList<>(queryCount);
+        Random random = ThreadLocalRandom.current();
 
-		return worlds;
-	}
+        for (int i = 0; i < queryCount; i++) {
+            worlds.add(this.worldRepository.findOne(random.nextInt(DB_ROWS) + 1));
+        }
 
-	@RequestMapping(value = "/updates", produces = "application/json")
-	@ResponseBody
-	public World[] updateQueries(Integer queries) {
-		if (queries == null || queries < 1) {
-			queries = 1;
-		}
-		else if (queries > 500) {
-			queries = 500;
-		}
+        return worlds;
+    }
 
-		final World[] worlds = multipleQueries(queries);
-		final Random random = ThreadLocalRandom.current();
+    @RequestMapping(value = "/updates", produces = "application/json")
+    List<World> updateQueries(@RequestParam("queries") Integer rawQueryCount) {
+        Integer queryCount = boundQueryCount(rawQueryCount);
 
-		for (int i = 0; i < queries; i++) {
-			World world = worlds[i];
-			world.randomNumber = random.nextInt(DB_ROWS) + 1;
-		}
-		worldRepository.save(Arrays.asList(worlds));
+        List<World> worlds = multipleQueries(queryCount);
+        Random random = ThreadLocalRandom.current();
 
-		return worlds;
-	}
+        for (World world : worlds) {
+            world.setRandomNumber(random.nextInt(DB_ROWS) + 1);
+        }
+
+        this.worldRepository.save(worlds);
+        return worlds;
+    }
+
+    private Integer boundQueryCount(Integer raw) {
+        if (raw == null || raw < 1) {
+            return 1;
+        } else if (raw > 500) {
+            return 500;
+        }
+
+        return raw;
+    }
+
 }
