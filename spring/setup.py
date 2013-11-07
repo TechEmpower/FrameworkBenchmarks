@@ -12,11 +12,11 @@ def start(args):
     if os.name == 'nt':
       subprocess.check_call('rmdir /S /Q "%RESIN_HOME%\\webapps\\"', shell=True)
       subprocess.check_call('mkdir "%RESIN_HOME%\\webapps\\"', shell=True)
-      subprocess.check_call('copy spring\\target\\spring.war "%RESIN_HOME%\\webapps\\spring.war"', shell=True)
+      subprocess.check_call('copy spring\\target\\spring-1.0.0-SNAPSHOT.war "%RESIN_HOME%\\webapps\\spring.war"', shell=True)
       subprocess.check_call('"%RESIN_HOME%\\bin\\start.bat"', shell=True)
     else:
       subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
-      subprocess.check_call("cp spring/target/spring.war $RESIN_HOME/webapps/spring.war", shell=True)
+      subprocess.check_call("cp spring/target/spring-1.0.0-SNAPSHOT.war $RESIN_HOME/webapps/spring.war", shell=True)
       subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
     return 0
   except subprocess.CalledProcessError:

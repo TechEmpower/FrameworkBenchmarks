@@ -1,0 +1,12 @@
+spring:
+  application.name: spring
+  profiles:
+    active: bench
+
+---
+
+spring:
+  profiles: bench
+  jpa:
+    open-in-view: false
+    show-sql: false

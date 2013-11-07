@@ -2,37 +2,71 @@
 
 This is the Spring portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-### JSON Encoding Test
-* [JSON test source](src/main/java/hello/web/HelloJsonController.java)
+This is using several [Spring projects](https://spring.io/projects) to build an application.
 
-### Data-Store/Database Mapping Test
-Use [Hibernate](http://www.hibernate.org/) for interaction with MySQL database.
+## How to run this app locally
 
-* [Database test source](src/main/java/hello/web/HelloDbController.java)
-* [Database Entity](src/main/java/hello/domain/World.java)
-* [Hibernate Configuration](src/main/resources/hibernate.cfg.xml)
+You can easily run this sample application with an embedded H2 database.
+For that, simply edit the [application.yml](src/main/resources/application.yml) and change the
+active profile from 'bench' to 'local'. You can also rename the
+[sample.sql file](src/main/resources/sample.sql) to 'import.sql'; sample data will be imported.
 
-TODO add links to code
+Then run:
+
+    mvn spring-boot:run
+
+## Guides
+* [Building a REST service](https://spring.io/guides/gs/rest-service/)
+* [Building an application with Spring Boot](https://spring.io/guides/gs/spring-boot/)
+* [Accessing data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+
+## Documentation
+See [Spring projects documentation](https://spring.io/docs).
+
+## Application Endpoints
+
+When deployed locally, the application uses the 'ROOT' context; for the benchmark, all
+URLs are prefixed with "/spring".
+Check out [SampleApplication, the main Application file](src/main/java/com/techempower/spring/SampleApplication.java)
+
+### JSON serialization
+
+* http://localhost:8080/json
+* [JSON Controller](src/main/java/com/techempower/spring/web/HelloController.java)
+
+### Single database query
+
+* http://localhost:8080/db
+* [Database Controller](src/main/java/com/techempower/spring/web/WorldDatabaseController.java)
+* [Database Entity](src/main/java/com/techempower/spring/domain/World.java)
+* [Database Repository](src/main/java/com/techempower/spring/service/WorldRepository.java)
+
+### Multiple database queries
+
+* http://localhost:8080/queries?queries=5
+* [Database Controller](src/main/java/com/techempower/spring/web/WorldDatabaseController.java)
+
+### Fortunes
+
+* http://localhost:8080/fortunes
+* [Fortune Controller](src/main/java/com/techempower/spring/web/FortuneController.java)
+
+### Database updates
+
+* http://localhost:8080/updates?queries=5
+* [Database Controller](src/main/java/com/techempower/spring/web/WorldDatabaseController.java)
+
+### Plaintext
+
+* http://localhost:8080/plaintext
+* [Controller](src/main/java/com/techempower/spring/web/HelloController.java)
+
 
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Spring 3.2.1.RELEASE](http://www.springsource.org/)
+* [Spring 4.0.0.RC1](http://projects.spring.io/spring-framework/)
+* [Spring Boot 0.5.0M5](http://projects.spring.io/spring-boot/)
+* [Spring Data JPA 1.4.1.RELEASE](http://projects.spring.io/spring-data-jpa/)
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
 * [Resin 4.0.34](http://www.caucho.com/)
-
-## Resources
-* http://blog.springsource.org/2011/01/04/green-beans-getting-started-with-spring-mvc/
-* http://static.springsource.org/spring/docs/3.2.1.RELEASE/spring-framework-reference/html
-* http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/orm.html#orm-hibernate
-
-## Test URLs
-### JSON Encoding Test
-
-http://localhost:8080/spring/json
-
-### Data-Store/Database Mapping Test
-
-http://localhost:8080/spring/db?queries=5
-
-
