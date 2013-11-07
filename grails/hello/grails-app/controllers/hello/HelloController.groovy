@@ -5,6 +5,8 @@ import grails.transaction.Transactional
 import groovy.transform.CompileStatic
 import java.util.concurrent.ThreadLocalRandom
 
+import org.springframework.transaction.annotation.Isolation;
+
 @CompileStatic
 class HelloController {
 
@@ -46,7 +48,7 @@ class HelloController {
 
         for (int i = 0; i < queries; i++) {
             int randomId = random.nextInt(10000) + 1
-            def world = updateAlso ? World.get(randomId) : World.read(randomId)
+            def world = updateAlso ? World.lock(randomId) : World.read(randomId)
             if(updateAlso) {
                 world.randomNumber = random.nextInt(10000) + 1
             }
@@ -65,10 +67,14 @@ class HelloController {
     }
     
     // Test type 5: Database updates
-    @Transactional
     def updates(int queries) {
-        def worlds = fetchRandomWorlds(queries, true)
+        def worlds = updateWorlds(queries)
         render worlds as JSON
+    }
+
+    @Transactional(isolation=Isolation.READ_COMMITTED)
+    private List updateWorlds(int queries) {
+        fetchRandomWorlds(queries, true)
     }
     
     // Test type 6: Plaintext
