@@ -25,7 +25,7 @@ dataSource {
         testOnReturn=false
         validationQuery="/* ping */"
         validationInterval=15000
-        jdbcInterceptors="ConnectionState"
+        jdbcInterceptors="ConnectionState;StatementCache"
         defaultTransactionIsolation = java.sql.Connection.TRANSACTION_READ_UNCOMMITTED
         dbProperties = this.loadProperties("classpath:mysql-connection.properties")
     }
