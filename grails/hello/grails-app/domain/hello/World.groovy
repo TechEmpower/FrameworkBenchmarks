@@ -1,6 +1,7 @@
 package hello
 
 class World {
+    Integer id
     Integer randomNumber
 
     static constraints = {
