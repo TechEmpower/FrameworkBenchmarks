@@ -23,6 +23,29 @@
       "display_name": "plain",
       "notes": "",
       "versus": ""
+    },
+    "win": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "update_url": "/update?queries=",
+      "fortune_url": "/fortunes",
+      "port": 9080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "plain",
+      "language": "Scala",
+      "orm": "Full",
+      "platform": "Plain",
+      "webserver": "None",
+      "os": "Windows",
+      "database_os": "Linux",
+      "display_name": "plain-win",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

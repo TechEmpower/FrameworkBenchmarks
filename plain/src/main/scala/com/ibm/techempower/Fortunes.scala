@@ -14,12 +14,12 @@ final class Fortunes
 
   Get {
     val list = new ListBuffer[(Int, String)]
-    withConnection(datasource) { implicit c => for (row <- sql <<! asRow) { list += row } }
+    withConnection(datasource) { implicit c => for (row <- sql ! asRow) { list += row } }
     list += ((0, "Additional fortune added at request time."))
     html(rows(list.sortBy(_._2))).toString
   }
 
-  @inline private[this] final def asRow = (r: RichResultSet) => (r.nextInt.get, r.nextString.get)
+  @inline private[this] final def asRow = (r: RichResultSet) => (r.nextInt, r.nextString)
 
   @inline private[this] final def rows(list: ListBuffer[(Int, String)]) = list.map { e => row(e._1, e._2) }
 
