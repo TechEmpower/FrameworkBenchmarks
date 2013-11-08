@@ -7,13 +7,9 @@ This is using several [Spring projects](https://spring.io/projects) to build an 
 ## How to run this app locally
 
 You can easily run this sample application with an embedded H2 database.
-For that, simply edit the [application.yml](src/main/resources/application.yml) and change the
-active profile from 'bench' to 'local'. You can also rename the
-[sample.sql file](src/main/resources/sample.sql) to 'import.sql'; sample data will be imported.
+For that, simply run:
 
-Then run:
-
-    mvn spring-boot:run
+    SPRING_PROFILES_ACTIVE=local mvn spring-boot:run
 
 ## Guides
 * [Building a REST service](https://spring.io/guides/gs/rest-service/)
@@ -66,7 +62,7 @@ Check out [SampleApplication, the main Application file](src/main/java/com/teche
 The tests were run with:
 
 * [Spring 4.0.0.RC1](http://projects.spring.io/spring-framework/)
-* [Spring Boot 0.5.0M5](http://projects.spring.io/spring-boot/)
-* [Spring Data JPA 1.4.1.RELEASE](http://projects.spring.io/spring-data-jpa/)
+* [Spring Boot 0.5.0M6](http://projects.spring.io/spring-boot/)
+* [Spring Data JPA 1.4.2.RELEASE](http://projects.spring.io/spring-data-jpa/)
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Resin 4.0.34](http://www.caucho.com/)
+* [Tomcat 8.0.0-RC5](https://tomcat.apache.org/)

@@ -8,18 +8,16 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>0.5.0.BUILD-SNAPSHOT</version>
+        <version>0.5.0.M6</version>
     </parent>
 
     <groupId>com.techempower</groupId>
     <artifactId>spring</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>war</packaging>
     <name>Spring MVC sample project</name>
 
     <properties>
         <mysql.version>5.1.23</mysql.version>
-
         <jackson.version>2.1.1</jackson.version>
         <java.version>1.7</java.version>
         <spring.version>4.0.0.RC1</spring.version>

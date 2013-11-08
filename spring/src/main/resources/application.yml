@@ -2,6 +2,10 @@
 spring:
   datasource:
     initialize: false
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${database.host:localhost}:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true
+    username: benchmarkdbuser
+    password: benchmarkdbpass
   jpa:
     show_sql: false
 
@@ -9,4 +13,5 @@ spring:
 spring:
   profiles: local
   datasource:
-    initialize: false
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:framework_benchmark

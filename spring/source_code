@@ -1,14 +1,12 @@
-./spring/src/main/java/com/techempower/spring/config/BenchConfiguration.java
-./spring/src/main/java/com/techempower/spring/config/LocalConfiguration.java
 ./spring/src/main/java/com/techempower/spring/domain/Fortune.java
 ./spring/src/main/java/com/techempower/spring/domain/World.java
+./spring/src/main/java/com/techempower/spring/repository/FortuneRepository.java
+./spring/src/main/java/com/techempower/spring/repository/WorldRepository.java
 ./spring/src/main/java/com/techempower/spring/SampleApplication.java
-./spring/src/main/java/com/techempower/spring/service/FortuneRepository.java
-./spring/src/main/java/com/techempower/spring/service/WorldRepository.java
 ./spring/src/main/java/com/techempower/spring/web/FortuneController.java
 ./spring/src/main/java/com/techempower/spring/web/HelloController.java
 ./spring/src/main/java/com/techempower/spring/web/WorldDatabaseController.java
 ./spring/src/main/resources/application.yml
 ./spring/src/main/resources/logback.xml
+./spring/src/main/resources/schema.sql
 ./spring/src/main/resources/templates/fortunes.html
-./spring/src/main/webapp/WEB-INF/resin-web.xml
