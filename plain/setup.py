@@ -5,7 +5,7 @@ import time
 import os
 
 def start(args):
-  setup_util.replace_text("plain/src/main/resources/application.conf", "X127.0.0.1", args.database_host)
+  setup_util.replace_text("plain/src/main/resources/application.conf", "127.0.0.1", args.database_host)
   if os.name == 'nt':
     subprocess.check_call(".\sbt.bat assembly && del /f /s /q target\scala-2.10\cache", shell=True, cwd="plain")
   else:
