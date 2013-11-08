@@ -110,9 +110,9 @@ class Benchmarker:
     self.__setup_database()
     self.__setup_client()
 
-    # Check if wrk (and wrk-pipeline) is installed and executable, if not, raise an exception
-    if not (os.access("/usr/local/bin/wrk", os.X_OK) and os.access("/usr/local/bin/wrk-pipeline", os.X_OK)):
-      raise Exception("wrk and/or wrk-pipeline are not properly installed. Not running tests.")
+    ## Check if wrk (and wrk-pipeline) is installed and executable, if not, raise an exception
+    #if not (os.access("/usr/local/bin/wrk", os.X_OK) and os.access("/usr/local/bin/wrk-pipeline", os.X_OK)):
+    #  raise Exception("wrk and/or wrk-pipeline are not properly installed. Not running tests.")
 
     ##########################
     # Run tests
