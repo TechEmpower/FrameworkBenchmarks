@@ -4,7 +4,7 @@ import scala.collection.mutable.ListBuffer
 import scala.language.implicitConversions
 import scala.xml._
 
-import com.ibm.plain.rest.Resource
+import com.ibm.plain.rest.{ Resource, Html }
 import com.ibm.plain.jdbc.withConnection
 import com.ibm.plain.jdbc.ConnectionHelper._
 
@@ -16,7 +16,7 @@ final class Fortunes
     val list = new ListBuffer[(Int, String)]
     withConnection(datasource) { implicit c => for (row <- sql ! asRow) { list += row } }
     list += ((0, "Additional fortune added at request time."))
-    html(rows(list.sortBy(_._2))).toString
+    html(rows(list.sortBy(_._2)))
   }
 
   @inline private[this] final def asRow = (r: RichResultSet) => (r.nextInt, r.nextString)
@@ -25,7 +25,7 @@ final class Fortunes
 
   @inline private[this] final def row(id: Int, message: String) = <tr><td>{ id }</td><td>{ message }</td></tr>
 
-  @inline private[this] final def html(rows: ListBuffer[Elem]) =
+  @inline private[this] final def html(rows: ListBuffer[Elem]): Html =
     <html>
       <head><title>Fortunes</title></head>
       <body>  <table>
