@@ -111,8 +111,12 @@ class Benchmarker:
     self.__setup_client()
 
     # Check if wrk (and wrk-pipeline) is installed and executable, if not, raise an exception
-    if not (os.access("/usr/local/bin/wrk", os.X_OK) and os.access("/usr/local/bin/wrk-pipeline", os.X_OK)):
+    checkWrk = "hash wrk 2>/dev/null"
+    checkWrkPipeline = "hash wrk-pipeline 2>/dev/null"
+    host = self.client_user + "@" + self.client_host
+    if subprocess.call(['ssh', host, checkWrk]) or subprocess.call(['ssh', host, checkWrkPipeline]):
       raise Exception("wrk and/or wrk-pipeline are not properly installed. Not running tests.")
+
 
     ##########################
     # Run tests
