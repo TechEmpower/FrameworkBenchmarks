@@ -4,7 +4,7 @@ import sys
 import time
 import os
 
-def start(args=None, logfile):
+def start(args, logfile):
 
 
     if os.name == 'nt':
