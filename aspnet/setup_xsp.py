@@ -11,9 +11,9 @@ def start(args, logfile):
 
   try:
     subprocess.check_call("rm -rf bin obj", shell=True, cwd="aspnet/src")
-    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="aspnet/src", strerr=logfile, stdout=logout)
+    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="aspnet/src", strerr=logfile, stdout=logfile)
     subprocess.check_call("sudo chown -R ubuntu:ubuntu /usr/local/etc/mono", shell=True)
-    subprocess.Popen("MONO_OPTIONS=--gc=sgen xsp4 --nonstop", shell=True, cwd="aspnet/src", strerr=logfile, stdout=logout)
+    subprocess.Popen("MONO_OPTIONS=--gc=sgen xsp4 --nonstop", shell=True, cwd="aspnet/src", strerr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
