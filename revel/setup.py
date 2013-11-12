@@ -13,9 +13,9 @@ def start(args, logfile):
     subprocess.call(r"go build -o bin\revel.exe github.com/robfig/revel/revel", shell=True, cwd="revel", env=env, stderr=logfile, stdout=logfile)
     subprocess.Popen(r"bin\revel.exe run benchmark prod".rsplit(" "), shell=True, cwd="revel", env=env, stderr=logfile, stdout=logfile)
     return 0
-  subprocess.call("go get -u github.com/robfig/revel/revel", shell=True, cwd="revel", stderr=logfile, stdout=logfile, stderr=logfile, stdout=logfile)
-  subprocess.call("go build -o bin/revel github.com/robfig/revel/revel", shell=True, cwd="revel", stderr=logfile, stdout=logfile, stderr=logfile, stdout=logfile)
-  subprocess.Popen("bin/revel run benchmark prod".rsplit(" "), cwd="revel", stderr=logfile, stdout=logfile, stderr=logfile, stdout=logfile)
+  subprocess.call("go get -u github.com/robfig/revel/revel", shell=True, cwd="revel", stderr=logfile, stdout=logfile)
+  subprocess.call("go build -o bin/revel github.com/robfig/revel/revel", shell=True, cwd="revel", stderr=logfile, stdout=logfile)
+  subprocess.Popen("bin/revel run benchmark prod".rsplit(" "), cwd="revel", stderr=logfile, stdout=logfile)
   return 0
 
 def stop(logfile):

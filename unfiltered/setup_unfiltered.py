@@ -16,7 +16,7 @@ def start(args, logfile):
     DEVNULL = open(os.devnull, 'wb')
 
   subprocess.check_call("../sbt/sbt assembly", shell=True, cwd="unfiltered", stderr=logfile, stdout=logfile)
-  subprocess.Popen("java -jar bench-assembly-1.0.0.jar", stderr=DEVNULL, shell=True, cwd="unfiltered/target/scala-2.10", stderr=logfile, stdout=logfile)
+  subprocess.Popen("java -jar bench-assembly-1.0.0.jar", shell=True, cwd="unfiltered/target/scala-2.10", stderr=logfile, stdout=logfile)
 
   return 0
 def stop(logfile):
