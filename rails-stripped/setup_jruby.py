@@ -3,7 +3,7 @@ import subprocess
 import sys
 import setup_util
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("rails-stripped/config/database-jruby.yml", "host: .*", "host: " + args.database_host)
   setup_util.replace_text("rails-stripped/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 
@@ -19,7 +19,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
     subprocess.check_call("rm Gemfile", shell=True, cwd="rails-stripped")

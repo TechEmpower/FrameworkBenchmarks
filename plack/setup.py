@@ -3,7 +3,7 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("plack/app.psgi", "localhost", ""+ args.database_host +"")
   try:
     subprocess.check_call("curl -L http://cpanmin.us | perl - App::cpanminus", shell=True, cwd="plack")
@@ -13,7 +13,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     subprocess.Popen("kill -TERM $(ps --ppid `cat app.pid` -o pid --no-header)", shell=True, cwd="plack")
     return 0

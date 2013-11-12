@@ -7,7 +7,7 @@ from os.path import expanduser
 
 home = expanduser("~")
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("cake/app/Config/database.php", "'host' => '.*',", "'host' => '" + args.database_host + "',")
   setup_util.replace_text("cake/deploy/cake", "\".*\/FrameworkBenchmarks", "\"" + home + "/FrameworkBenchmarks")
   setup_util.replace_text("cake/deploy/cake", "Directory .*\/FrameworkBenchmarks", "Directory " + home + "/FrameworkBenchmarks")
@@ -28,7 +28,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     if os.name == 'nt':
       subprocess.call('appcmd delete site PHP', shell=True)

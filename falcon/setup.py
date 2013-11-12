@@ -9,7 +9,7 @@ NCPU = multiprocessing.cpu_count()
 proc = None
 
 
-def start(args):
+def start(args, logfile):
     global proc
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
@@ -21,7 +21,7 @@ def start(args):
         cwd="falcon")
     return 0
 
-def stop():
+def stop(logfile):
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():

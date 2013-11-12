@@ -9,7 +9,7 @@ home = expanduser("~")
 ##############
 # start(args)
 ##############
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("treefrog/config/database.ini", "HostName=.*", "HostName=" + args.database_host)
 
   # 1. Generate Makefile
@@ -29,7 +29,7 @@ def start(args):
 ##############
 # stop()
 ##############
-def stop():
+def stop(logfile):
   try:
     subprocess.call("treefrog -k abort " + home + "/FrameworkBenchmarks/treefrog", shell=True)
     return 0

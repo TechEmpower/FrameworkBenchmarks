@@ -4,7 +4,7 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("unfiltered/src/main/resources/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
   setup_util.replace_text("unfiltered/src/main/resources/application.conf", "maxThreads = \\d+", "maxThreads = " + str(args.max_threads))
 
@@ -19,7 +19,7 @@ def start(args):
   subprocess.Popen("java -jar bench-assembly-1.0.0.jar", stderr=DEVNULL, shell=True, cwd="unfiltered/target/scala-2.10")
 
   return 0
-def stop():
+def stop(logfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():

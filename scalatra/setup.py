@@ -5,7 +5,7 @@ import setup_util
 import os
 import glob
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("scalatra/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 
   try:
@@ -26,7 +26,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     if os.name == 'nt':
       subprocess.check_call('"%RESIN_HOME%\\bin\\stop.bat"', shell=True)

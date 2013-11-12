@@ -6,7 +6,7 @@ from os.path import expanduser
 
 home = expanduser("~")
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("php-slim/index.php", "localhost", ""+ args.database_host +"")
   setup_util.replace_text("php-slim/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
 
@@ -21,7 +21,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     if os.name == 'nt':
       subprocess.call('appcmd delete site PHP', shell=True)

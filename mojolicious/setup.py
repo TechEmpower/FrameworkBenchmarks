@@ -7,7 +7,7 @@ import getpass
 
 home = expanduser("~")
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("mojolicious/app.pl", "localhost", ""+ args.database_host +"")
   setup_util.replace_text("mojolicious/nginx.conf", "USR", getpass.getuser())
   setup_util.replace_text("mojolicious/nginx.conf", "server unix:.*\/FrameworkBenchmarks", "server unix:" + home + "/FrameworkBenchmarks")
@@ -18,7 +18,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)

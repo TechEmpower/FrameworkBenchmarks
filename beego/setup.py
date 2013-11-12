@@ -3,7 +3,7 @@ import subprocess
 import sys
 import os
 
-def start(args):
+def start(args, logfile):
   if os.name == 'nt':
     subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\beego&&go get ./...", shell=True, cwd="beego")
     subprocess.Popen("setup.bat", shell=True, cwd="beego")
@@ -11,7 +11,7 @@ def start(args):
   subprocess.call("go get ./...", shell=True, cwd="beego")
   subprocess.Popen("go run src/hello/hello.go".rsplit(" "), cwd="beego")
   return 0
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     subprocess.call("taskkill /f /im go.exe > NUL", shell=True)
     subprocess.call("taskkill /f /im hello.exe > NUL", shell=True)

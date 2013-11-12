@@ -5,7 +5,7 @@ from os.path import expanduser
 
 home = expanduser("~")
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("php-senthot/app/Conf/config.php", "'DB_HOST' => 'localhost'", "'DB_HOST' => '" + args.database_host +"'")
   setup_util.replace_text("php-senthot/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
 
@@ -17,7 +17,7 @@ def start(args):
   except subprocess.CalledProcessError:
     return 1
 
-def stop():
+def stop(logfile):
   try:
     subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
     subprocess.call("sudo kill -QUIT $( cat php-senthot/deploy/php-fpm.pid )", shell=True)

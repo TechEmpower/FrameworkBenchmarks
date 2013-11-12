@@ -3,7 +3,7 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile):
   try:
     subprocess.check_call("mvn clean package", shell=True, cwd="grizzly-jersey")
     subprocess.Popen(("java -jar target/grizzly-jersey-example.jar -dbhost " + args.database_host).rsplit(" "), cwd="grizzly-jersey")
@@ -11,7 +11,7 @@ def start(args):
   except subprocess.CalledProcessError:
     return 1
 
-def stop():
+def stop(logfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():

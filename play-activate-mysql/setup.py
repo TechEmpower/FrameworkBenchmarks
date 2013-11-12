@@ -5,7 +5,7 @@ import setup_util
 import os
 from zipfile import ZipFile
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("play-activate-mysql/conf/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
 
   subprocess.check_call("play clean dist", shell=True, cwd="play-activate-mysql")
@@ -21,7 +21,7 @@ def start(args):
     subprocess.Popen("./play-activate-mysql", shell=True, cwd="play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/bin")
 
   return 0
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     with open("./play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/RUNNING_PID") as f:
       pid = int(f.read())

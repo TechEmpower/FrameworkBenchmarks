@@ -4,7 +4,7 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("nodejs/hello.js", "mongodb:\/\/.*\/hello_world", "mongodb://" + args.database_host + "/hello_world")
   setup_util.replace_text("nodejs/hello.js", "localhost", args.database_host)
 
@@ -28,7 +28,7 @@ def npm():
       subprocess.check_call("del package.json", shell=True, cwd="nodejs")
       subprocess.check_call("ren package.json.dist package.json", shell=True, cwd="nodejs")
 
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     subprocess.Popen("taskkill /f /im node.exe > NUL", shell=True)
     return 0

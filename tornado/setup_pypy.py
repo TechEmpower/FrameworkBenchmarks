@@ -7,7 +7,7 @@ cwd = expanduser('~/FrameworkBenchmarks/tornado')
 proc = None
 
 
-def start(args):
+def start(args, logfile):
     global proc
     setup_util.replace_text(
         cwd + "/server.py", "localhost", args.database_host)
@@ -17,7 +17,7 @@ def start(args):
         shell=True, cwd=cwd)
     return 0
 
-def stop():
+def stop(logfile):
     global proc
     if proc:
         proc.terminate()

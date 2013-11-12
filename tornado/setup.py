@@ -6,7 +6,7 @@ from os import kill
 python = expanduser('~/FrameworkBenchmarks/installs/py2/bin/python')
 cwd = expanduser('~/FrameworkBenchmarks/tornado')
 
-def start(args):
+def start(args, logfile):
     setup_util.replace_text(
         cwd + "/server.py", "localhost", args.database_host)
 
@@ -15,7 +15,7 @@ def start(args):
         shell=True, cwd=cwd)
     return 0
 
-def stop():
+def stop(logfile):
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():

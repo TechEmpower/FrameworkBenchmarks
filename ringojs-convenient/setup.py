@@ -4,7 +4,7 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("ringojs-convenient/app/models.js", "dbHost = '.*';", "dbHost = '" + args.database_host + "';")
 
   try:
@@ -21,7 +21,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():

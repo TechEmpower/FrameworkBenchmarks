@@ -3,7 +3,7 @@ import sys
 import os
 import setup_util
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("falcore/src/framework_benchmarks/falcore.go", "tcp\(.*:3306\)", "tcp(" + args.database_host + ":3306)")
   if os.name == 'nt':
     #subprocess.call("rmdir /s /q pkg\\windows_amd64", shell=True, cwd="go")
@@ -15,7 +15,7 @@ def start(args):
   subprocess.call("go get ./...", shell=True, cwd="falcore") 
   subprocess.Popen("go run src/framework_benchmarks/falcore.go".rsplit(" "), cwd="falcore")
   return 0
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     subprocess.call("taskkill /f /im go.exe > NUL", shell=True)
     subprocess.call("taskkill /f /im falcore.exe > NUL", shell=True)

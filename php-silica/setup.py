@@ -6,7 +6,7 @@ from os.path import expanduser
 
 home = expanduser("~")
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("php-silica/web/app.php", "192.168.100.102", "" + args.database_host + "")
   setup_util.replace_text("php-silica/deploy/php-silica", "\".*\/FrameworkBenchmarks", "\"" + home + "/FrameworkBenchmarks")
   setup_util.replace_text("php-silica/deploy/php-silica", "Directory .*\/FrameworkBenchmarks", "Directory " + home + "/FrameworkBenchmarks")
@@ -23,7 +23,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
     subprocess.call("sudo kill -QUIT $( cat php-silica/deploy/php-fpm.pid )", shell=True)

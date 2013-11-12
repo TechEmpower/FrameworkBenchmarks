@@ -5,7 +5,7 @@ import setup_util
 import os
 from zipfile import ZipFile
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("play-scala-mongodb/conf/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
 
   subprocess.check_call("play clean dist", shell=True, cwd="play-scala-mongodb")
@@ -21,7 +21,7 @@ def start(args):
     subprocess.Popen("./play-scala-mongodb", shell=True, cwd="play-scala-mongodb/target/universal/play-scala-mongodb-1.0-SNAPSHOT/bin")
 
   return 0
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     with open("./play-scala-mongodb/target/universal/play-scala-mongodb-1.0-SNAPSHOT/RUNNING_PID") as f:
       pid = int(f.read())

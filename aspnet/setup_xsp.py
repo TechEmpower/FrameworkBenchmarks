@@ -3,7 +3,7 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile):
   if os.name == 'nt':
     return 1
   
@@ -18,7 +18,7 @@ def start(args):
   except subprocess.CalledProcessError:
     return 1
 
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     return 0
   

@@ -8,7 +8,7 @@ import time
 uwsgi = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin/uwsgi')
 PROCS = multiprocessing.cpu_count()
 
-def start(args):
+def start(args, logfile):
     # --http and --http-processes create http router processes that process the
     # incoming connections and pass them to the worker processes (-p). We use
     # PROCS number of http router processes so that a single router process
@@ -22,7 +22,7 @@ def start(args):
     return 0
 
 
-def stop():
+def stop(logfile):
     try:
         subprocess.Popen(uwsgi + ' --stop /tmp/uwsgi.pid', shell=True, cwd="uwsgi")
     except OSError:

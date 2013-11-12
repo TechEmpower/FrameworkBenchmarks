@@ -8,7 +8,7 @@ from os.path import expanduser
 
 home = expanduser("~")
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("rails/config/database-ruby.yml", "host: .*", "host: " + args.database_host)
   try:
     subprocess.check_call("rvm ruby-2.0.0-p0 do bundle install --gemfile=Gemfile-ruby", shell=True, cwd="rails")
@@ -20,7 +20,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
   try:
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)

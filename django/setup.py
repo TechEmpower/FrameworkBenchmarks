@@ -10,7 +10,7 @@ NCPU = multiprocessing.cpu_count()
 proc = None
 
 
-def start(args):
+def start(args, logfile):
     global proc
     setup_util.replace_text("django/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
     setup_util.replace_text("django/hello/hello/settings.py", "\/home\/ubuntu",  home)
@@ -27,7 +27,7 @@ def start(args):
         env=env)
     return 0
 
-def stop():
+def stop(logfile):
     global proc
     if proc is None:
         return 0

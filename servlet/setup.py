@@ -4,7 +4,7 @@ import sys
 import os
 import setup_util
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("servlet/src/main/webapp/WEB-INF/resin-web.xml", "localhost", args.database_host)
 
   try:
@@ -21,7 +21,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     if os.name == 'nt':
       subprocess.check_call("C:\\Java\\resin\\bin\\stop.bat", shell=True)

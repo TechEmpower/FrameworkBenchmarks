@@ -9,7 +9,7 @@ NCPU = multiprocessing.cpu_count()
 proc = None
 
 
-def start(args):
+def start(args, logfile):
     global proc
     setup_util.replace_text("flask/app.py", "DBHOSTNAME", args.database_host)
     proc = subprocess.Popen([
@@ -22,7 +22,7 @@ def start(args):
         cwd="flask")
     return 0
 
-def stop():
+def stop(logfile):
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():

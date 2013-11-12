@@ -4,7 +4,7 @@ import sys
 import time
 import os
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("plain/src/main/resources/application.conf", "127.0.0.1", args.database_host)
   if os.name == 'nt':
     subprocess.check_call("./sbt.bat assembly", shell=True, cwd="plain")
@@ -15,7 +15,7 @@ def start(args):
   time.sleep(10)
   return 0
 
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     subprocess.call("taskkill /f /im *plain-benchmark* > NUL", shell=True)
     return 0

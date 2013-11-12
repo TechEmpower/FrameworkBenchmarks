@@ -4,7 +4,7 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("play1siena/conf/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
   
   subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
@@ -12,7 +12,7 @@ def start(args):
   subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
 
   return 0
-def stop():
+def stop(logfile):
   try:
     subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
     subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)

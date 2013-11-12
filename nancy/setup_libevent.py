@@ -6,7 +6,7 @@ import os
 root = os.getcwd() + "/nancy"
 app = root + "/src"
 
-def start(args):
+def start(args, logfile):
   if os.name == 'nt':
     return 1
   
@@ -30,7 +30,7 @@ def start(args):
   except subprocess.CalledProcessError:
     return 1
 
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     return 0
   

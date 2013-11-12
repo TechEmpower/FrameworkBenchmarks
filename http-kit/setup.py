@@ -3,7 +3,7 @@ import subprocess
 import sys
 import setup_util
 
-def start(args):
+def start(args, logfile):
 
   try:
     subprocess.check_call("lein deps", shell=True, cwd="http-kit/hello")
@@ -18,7 +18,7 @@ def start(args):
   except subprocess.CalledProcessError:
     return 1
 
-def stop():
+def stop(logfile):
   try:
     # listen on 8080
     subprocess.check_call("lsof -t -sTCP:LISTEN -i:8080 | xargs kill", shell=True)

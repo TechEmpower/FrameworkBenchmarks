@@ -3,7 +3,7 @@ import subprocess
 import sys
 import setup_util
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("grails/hello/grails-app/conf/DataSource.groovy", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
   
   try:
@@ -15,7 +15,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
     subprocess.check_call("rm -rf $RESIN_HOME/resin-data/*", shell=True)

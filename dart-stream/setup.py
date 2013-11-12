@@ -3,7 +3,7 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text('dart-stream/postgresql.yaml', 'host: .*', 'host: ' + args.database_host)
   setup_util.replace_text('dart-stream/mongodb.yaml', 'host: .*', 'host: ' + args.database_host)
   try:
@@ -57,7 +57,7 @@ def start(args):
   except subprocess.CalledProcessError:
     return 1
 
-def stop():
+def stop(logfile):
   #
   # stop nginx
   #

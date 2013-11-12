@@ -6,7 +6,7 @@ import time
 
 CWD = 'revel-qbs'
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text(CWD + "/src/benchmark/conf/app.conf", "tcp\(.*:3306\)", "tcp(" + args.database_host + ":3306)")
   if os.name == 'nt':
     env = os.environ.copy()
@@ -20,7 +20,7 @@ def start(args):
   subprocess.Popen("bin/revel run benchmark prod".rsplit(" "), cwd=CWD)
   return 0
 
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     subprocess.call("taskkill /f /im benchmark.exe > NUL", shell=True)
     subprocess.call("taskkill /f /im revel.exe > NUL", shell=True)

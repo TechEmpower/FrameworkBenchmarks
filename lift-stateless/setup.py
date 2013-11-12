@@ -5,7 +5,7 @@ import setup_util
 import os
 import time
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("lift-stateless/src/main/scala/Main.scala", "> \".*:3306", "> \"" + args.database_host + ":3306")
 
   if os.name == 'nt':
@@ -17,7 +17,7 @@ def start(args):
 
   time.sleep(5)
   return 0
-def stop():
+def stop(logfile):
   if os.name == 'nt':
     subprocess.check_call("wmic process where \"CommandLine LIKE '%lift-stateless-assembly%'\" call terminate")
   else:

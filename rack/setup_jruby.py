@@ -3,7 +3,7 @@ import subprocess
 import sys
 import re
 
-def start(args):
+def start(args, logfile):
 
   try:
     subprocess.check_call("rvm jruby-1.7.4 do bundle install --gemfile=Gemfile-jruby", shell=True, cwd="rack")
@@ -16,7 +16,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   try:
     subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
     subprocess.check_call("rm Gemfile", shell=True, cwd="rack")

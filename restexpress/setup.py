@@ -4,7 +4,7 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile):
   setup_util.replace_text("restexpress/config/dev/environment.properties", "mongodb:\/\/.*\/hello_world", "mongodb://" + args.database_host + "/hello_world")
   setup_util.replace_text("restexpress/config/dev/environment.properties", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 
@@ -16,7 +16,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
