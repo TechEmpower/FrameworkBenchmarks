@@ -4,29 +4,20 @@ import setup_util
 import os
 
 def start(args):
-  setup_util.replace_text("spring/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
-  
   try:
-    subprocess.check_call("mvn clean compile war:war", shell=True, cwd="spring")
-
-    if os.name == 'nt':
-      subprocess.check_call('rmdir /S /Q "%RESIN_HOME%\\webapps\\"', shell=True)
-      subprocess.check_call('mkdir "%RESIN_HOME%\\webapps\\"', shell=True)
-      subprocess.check_call('copy spring\\target\\spring.war "%RESIN_HOME%\\webapps\\spring.war"', shell=True)
-      subprocess.check_call('"%RESIN_HOME%\\bin\\start.bat"', shell=True)
-    else:
-      subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
-      subprocess.check_call("cp spring/target/spring.war $RESIN_HOME/webapps/spring.war", shell=True)
-      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
+    subprocess.check_call("mvn clean package", shell=True, cwd="spring")
+    subprocess.Popen("java -Ddatabase.host=" + args.database_host + " -jar spring.jar".rsplit(" "), cwd="spring/target")
     return 0
   except subprocess.CalledProcessError:
     return 1
 def stop():
-  try:
-    if os.name == 'nt':
-      subprocess.check_call('"%RESIN_HOME%\\bin\\stop.bat"', shell=True)
-    else:
-      subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
-    return 0
-  except subprocess.CalledProcessError:
-    return 1
+  if os.name == 'nt':
+    subprocess.check_call("wmic process where \"CommandLine LIKE '%spring%'\" call terminate")
+  else:
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'spring' in line:
+        pid = int(line.split(None, 2)[1])
+        os.kill(pid, 9)
+  return 0
