@@ -9,7 +9,7 @@ def start(args, logfile):
   
   try:
     setup_util.replace_text("servicestack/svc/SelfHost/App.config", "localhost", args.database_host)
-    subprocess.check_call("powershell -Command .\\setup_self.ps1 start", cwd="servicestack")
+    subprocess.check_call("powershell -Command .\\setup_self.ps1 start", cwd="servicestack", stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -18,5 +18,5 @@ def stop(logfile):
   if os.name != 'nt':
     return 0
   
-  subprocess.check_call("powershell -Command .\\setup_self.ps1 stop", cwd="servicestack")
+  subprocess.check_call("powershell -Command .\\setup_self.ps1 stop", cwd="servicestack", stderr=logfile, stdout=logfile)
   return 0

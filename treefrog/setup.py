@@ -17,11 +17,11 @@ def start(args, logfile):
   # 3. Clean log files
   # 4. Start TreeFrog
   try:
-    subprocess.check_call("qmake -r CONFIG+=release", shell=True, cwd="treefrog")
-    subprocess.check_call("make clean", shell=True, cwd="treefrog")
-    subprocess.check_call("make -j8", shell=True, cwd="treefrog")
-    subprocess.check_call("rm -f log/*.log", shell=True, cwd="treefrog")
-    subprocess.check_call("treefrog -d " + home + "/FrameworkBenchmarks/treefrog", shell=True)
+    subprocess.check_call("qmake -r CONFIG+=release", shell=True, cwd="treefrog", stderr=logfile, stdout=logfile)
+    subprocess.check_call("make clean", shell=True, cwd="treefrog", stderr=logfile, stdout=logfile)
+    subprocess.check_call("make -j8", shell=True, cwd="treefrog", stderr=logfile, stdout=logfile)
+    subprocess.check_call("rm -f log/*.log", shell=True, cwd="treefrog", stderr=logfile, stdout=logfile)
+    subprocess.check_call("treefrog -d " + home + "/FrameworkBenchmarks/treefrog", shell=True, stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -31,7 +31,7 @@ def start(args, logfile):
 ##############
 def stop(logfile):
   try:
-    subprocess.call("treefrog -k abort " + home + "/FrameworkBenchmarks/treefrog", shell=True)
+    subprocess.call("treefrog -k abort " + home + "/FrameworkBenchmarks/treefrog", shell=True, stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1

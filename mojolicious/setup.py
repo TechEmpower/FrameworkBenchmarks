@@ -13,14 +13,14 @@ def start(args, logfile):
   setup_util.replace_text("mojolicious/nginx.conf", "server unix:.*\/FrameworkBenchmarks", "server unix:" + home + "/FrameworkBenchmarks")
 
   try:
-    subprocess.Popen("plackup -E production -s Starman --workers=" + str(args.max_threads) + " -l " + home + "/FrameworkBenchmarks/mojolicious/frameworks-benchmark.sock -a ./app.pl", shell=True, cwd="mojolicious")
-    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/mojolicious/nginx.conf", shell=True)
+    subprocess.Popen("plackup -E production -s Starman --workers=" + str(args.max_threads) + " -l " + home + "/FrameworkBenchmarks/mojolicious/frameworks-benchmark.sock -a ./app.pl", shell=True, cwd="mojolicious", stderr=logfile, stdout=logfile)
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/mojolicious/nginx.conf", shell=True, stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
 def stop(logfile):
   try:
-    subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
+    subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True, stderr=logfile, stdout=logfile)
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():

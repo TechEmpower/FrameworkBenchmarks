@@ -21,7 +21,7 @@ def start(args, logfile):
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU*3),
         "--log-level=critical"],
-        cwd="django/hello")
+        cwd="django/hello", stderr=logfile, stdout=logfile)
     return 0
 
 def stop(logfile):

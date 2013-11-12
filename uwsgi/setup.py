@@ -18,13 +18,13 @@ def start(args, logfile):
         ' --http-processes ' + str(PROCS) + ' -p ' + str(PROCS) + ' -w hello ' +
         ' --add-header "Connection: keep-alive" ' +
         ' --pidfile /tmp/uwsgi.pid',
-        shell=True, cwd="uwsgi")
+        shell=True, cwd="uwsgi", stderr=logfile, stdout=logfile)
     return 0
 
 
 def stop(logfile):
     try:
-        subprocess.Popen(uwsgi + ' --stop /tmp/uwsgi.pid', shell=True, cwd="uwsgi")
+        subprocess.Popen(uwsgi + ' --stop /tmp/uwsgi.pid', shell=True, cwd="uwsgi", stderr=logfile, stdout=logfile)
     except OSError:
         pass
     time.sleep(1)

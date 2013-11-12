@@ -17,16 +17,16 @@ def start(args, logfile):
     #subprocess.check_call("sudo a2ensite cake", shell=True)
     #subprocess.check_call("sudo chown -R www-data:www-data cake", shell=True)
     #subprocess.check_call("sudo /etc/init.d/apache2 start", shell=True)
-    subprocess.check_call("composer.phar install", shell=True, cwd="php-silex-orm")
-    subprocess.check_call("sudo php-fpm --fpm-config config/php-fpm.conf -g " + home + "/FrameworkBenchmarks/php-silex-orm/deploy/php-fpm.pid", shell=True)
-    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php-silex-orm/deploy/nginx.conf", shell=True)
+    subprocess.check_call("composer.phar install", shell=True, cwd="php-silex-orm", stderr=logfile, stdout=logfile)
+    subprocess.check_call("sudo php-fpm --fpm-config config/php-fpm.conf -g " + home + "/FrameworkBenchmarks/php-silex-orm/deploy/php-fpm.pid", shell=True, stderr=logfile, stdout=logfile)
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php-silex-orm/deploy/nginx.conf", shell=True, stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
 def stop(logfile):
   try:
-    subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True)
-    subprocess.call("sudo kill -QUIT $( cat php-silex-orm/deploy/php-fpm.pid )", shell=True)
+    subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True, stderr=logfile, stdout=logfile)
+    subprocess.call("sudo kill -QUIT $( cat php-silex-orm/deploy/php-fpm.pid )", shell=True, stderr=logfile, stdout=logfile)
     #subprocess.check_call("sudo a2dissite cake", shell=True)
     #subprocess.check_call("sudo /etc/init.d/apache2 stop", shell=True)
     #subprocess.check_call("sudo chown -R $USER:$USER cake", shell=True)

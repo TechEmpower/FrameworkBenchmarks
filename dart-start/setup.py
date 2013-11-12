@@ -10,12 +10,12 @@ def start(args, logfile):
     #
     # install dart dependencies
     #
-    subprocess.check_call('pub install', shell=True, cwd='dart-start')
+    subprocess.check_call('pub install', shell=True, cwd='dart-start', stderr=logfile, stdout=logfile)
     #
     # start dart servers
     #
     for port in range(9001, 9001 + args.max_threads):
-      subprocess.Popen('dart server.dart -a 127.0.0.1 -p ' + str(port) + ' -d ' + str(args.max_concurrency / args.max_threads), shell=True, cwd='dart-start')
+      subprocess.Popen('dart server.dart -a 127.0.0.1 -p ' + str(port) + ' -d ' + str(args.max_concurrency / args.max_threads), shell=True, cwd='dart-start', stderr=logfile, stdout=logfile)
     #
     # create nginx configuration
     #
@@ -52,7 +52,7 @@ def start(args, logfile):
     #
     # start nginx
     #
-    subprocess.Popen('sudo /usr/sbin/nginx -c `pwd`/nginx.conf', shell=True, cwd='dart-start');
+    subprocess.Popen('sudo /usr/sbin/nginx -c `pwd`/nginx.conf', shell=True, cwd='dart-start', stderr=logfile, stdout=logfile);
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -61,7 +61,7 @@ def stop(logfile):
   #
   # stop nginx
   #
-  subprocess.check_call('sudo /usr/sbin/nginx -c `pwd`/nginx.conf -s stop', shell=True, cwd='dart-start')
+  subprocess.check_call('sudo /usr/sbin/nginx -c `pwd`/nginx.conf -s stop', shell=True, cwd='dart-start', stderr=logfile, stdout=logfile)
   os.remove('dart-start/nginx.conf')
   #
   # stop dart servers

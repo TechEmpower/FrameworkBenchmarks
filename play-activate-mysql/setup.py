@@ -14,11 +14,11 @@ def start(args, logfile):
     ZipFile("./play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT.zip").extractall("./play-activate-mysql/target/universal")
     with open("./play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/bin/play-activate-mysql.bat", "w+") as f:
       f.write("java %1 -cp \"./lib/*;\" play.core.server.NettyServer .")
-    subprocess.Popen("play-activate-mysql.bat", shell=True, cwd="play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/bin")
+    subprocess.Popen("play-activate-mysql.bat", shell=True, cwd="play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/bin", stderr=logfile, stdout=logfile)
   else:
-    subprocess.check_call("unzip play-activate-mysql-1.0-SNAPSHOT.zip", shell=True, cwd="play-activate-mysql/target/universal")
-    subprocess.check_call("chmod +x play-activate-mysql", shell=True, cwd="play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/bin")
-    subprocess.Popen("./play-activate-mysql", shell=True, cwd="play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/bin")
+    subprocess.check_call("unzip play-activate-mysql-1.0-SNAPSHOT.zip", shell=True, cwd="play-activate-mysql/target/universal", stderr=logfile, stdout=logfile)
+    subprocess.check_call("chmod +x play-activate-mysql", shell=True, cwd="play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/bin", stderr=logfile, stdout=logfile)
+    subprocess.Popen("./play-activate-mysql", shell=True, cwd="play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/bin", stderr=logfile, stdout=logfile)
 
   return 0
 def stop(logfile):

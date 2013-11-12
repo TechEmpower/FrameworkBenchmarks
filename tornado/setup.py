@@ -12,7 +12,7 @@ def start(args, logfile):
 
     subprocess.Popen(
         python + " server.py --port=8080 --logging=error",
-        shell=True, cwd=cwd)
+        shell=True, cwd=cwd, stderr=logfile, stdout=logfile)
     return 0
 
 def stop(logfile):

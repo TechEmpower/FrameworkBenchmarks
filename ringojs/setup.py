@@ -8,9 +8,9 @@ def start(args, logfile):
   setup_util.replace_text("ringojs/ringo-main.js", "dbHost = '.*';", "dbHost = '" + args.database_host + "';")
 
   try:
-    subprocess.check_call("sudo rm -rf /usr/share/ringojs/packages/*", shell=True)
-    subprocess.check_call("sudo ringo-admin install oberhamsi/sql-ringojs-client", shell=True)
-    subprocess.Popen("ringo --production -Dserver -DXmx=512m -DXms=512m ringo-main.js", shell=True, cwd="ringojs")
+    subprocess.check_call("sudo rm -rf /usr/share/ringojs/packages/*", shell=True, stderr=logfile, stdout=logfile)
+    subprocess.check_call("sudo ringo-admin install oberhamsi/sql-ringojs-client", shell=True, stderr=logfile, stdout=logfile)
+    subprocess.Popen("ringo --production -Dserver -DXmx=512m -DXms=512m ringo-main.js", shell=True, cwd="ringojs", stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1

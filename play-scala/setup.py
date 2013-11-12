@@ -12,7 +12,7 @@ def start(args, logfile):
     play_cmd = "play.bat"
   
   setup_util.replace_text("play-scala/conf/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
-  subprocess.Popen([play_cmd,"start"], stdin=subprocess.PIPE, cwd="play-scala")
+  subprocess.Popen([play_cmd,"start"], stdin=subprocess.PIPE, cwd="play-scala", stderr=logfile, stdout=logfile)
   return 0
 
 def stop(logfile):

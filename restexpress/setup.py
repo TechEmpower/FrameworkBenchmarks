@@ -9,10 +9,10 @@ def start(args, logfile):
   setup_util.replace_text("restexpress/config/dev/environment.properties", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 
   try:
-    subprocess.check_call("mvn clean package", shell=True, cwd="restexpress")
-    subprocess.check_call("mvn assembly:single", shell=True, cwd="restexpress")
-    subprocess.check_call("unzip world-1.0-SNAPSHOT-zip-with-dependencies.zip", shell=True, cwd="restexpress/target")
-    subprocess.Popen("java -jar world-1.0-SNAPSHOT.jar".rsplit(" "), cwd="restexpress/target/world-1.0-SNAPSHOT")
+    subprocess.check_call("mvn clean package", shell=True, cwd="restexpress", stderr=logfile, stdout=logfile)
+    subprocess.check_call("mvn assembly:single", shell=True, cwd="restexpress", stderr=logfile, stdout=logfile)
+    subprocess.check_call("unzip world-1.0-SNAPSHOT-zip-with-dependencies.zip", shell=True, cwd="restexpress/target", stderr=logfile, stdout=logfile)
+    subprocess.Popen("java -jar world-1.0-SNAPSHOT.jar".rsplit(" "), cwd="restexpress/target/world-1.0-SNAPSHOT", stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1

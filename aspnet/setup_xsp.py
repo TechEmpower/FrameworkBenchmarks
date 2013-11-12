@@ -10,9 +10,9 @@ def start(args, logfile):
   setup_util.replace_text("aspnet/src/Web.config", "localhost", args.database_host)
 
   try:
-    subprocess.check_call("rm -rf bin obj", shell=True, cwd="aspnet/src")
+    subprocess.check_call("rm -rf bin obj", shell=True, cwd="aspnet/src", stderr=logfile, stdout=logfile)
     subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="aspnet/src", stderr=logfile, stdout=logfile)
-    subprocess.check_call("sudo chown -R ubuntu:ubuntu /usr/local/etc/mono", shell=True)
+    subprocess.check_call("sudo chown -R ubuntu:ubuntu /usr/local/etc/mono", shell=True, stderr=logfile, stdout=logfile)
     subprocess.Popen("MONO_OPTIONS=--gc=sgen xsp4 --nonstop", shell=True, cwd="aspnet/src", stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:

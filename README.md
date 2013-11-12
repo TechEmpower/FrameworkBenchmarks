@@ -154,12 +154,12 @@ Here is an example of Wicket's setup file.
 	import setup_util
 
 	##################################################
-	# start(args)
+	# start(args, logfile)
 	#
 	# Starts the server for Wicket
 	# returns 0 if everything completes, 1 otherwise
 	##################################################
-	def start(args):
+	def start(args, logfile):
 
     # setting the database url
     setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
@@ -169,23 +169,23 @@ Here is an example of Wicket's setup file.
     # 3. Copy package to Resin's webapp directory
     # 4. Start resin
     try:
-      subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket")
-      subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
-      subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True)
-      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
+      subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket", stderr=logfile, stdout=logfile)
+      subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=logfile, stdout=logfile)
+      subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True, stderr=logfile, stdout=logfile)
+      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=logfile, stdout=logfile)
       return 0
     except subprocess.CalledProcessError:
       return 1
 
 	##################################################
-	# stop()
+	# stop(logfile)
 	#
 	# Stops the server for Wicket
 	# returns 0 if everything completes, 1 otherwise
 	##################################################
-	def stop():
+	def stop(logfile):
     try:
-      subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
+      subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True, stderr=logfile, stdout=logfile)
       return 0
     except subprocess.CalledProcessError:
       return 1

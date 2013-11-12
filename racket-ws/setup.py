@@ -7,7 +7,7 @@ import os
 def start(args, logfile):
   db_host = args.database_host
   threads = str(args.max_threads)
-  subprocess.Popen("racket -t bench.rkt -- " + db_host + " > /dev/null", shell=True, cwd="racket-ws/bench")
+  subprocess.Popen("racket -t bench.rkt -- " + db_host + " > /dev/null", shell=True, cwd="racket-ws/bench", stderr=logfile, stdout=logfile)
   return 0
 
 def stop(logfile):

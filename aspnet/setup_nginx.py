@@ -16,7 +16,7 @@ def start(args, logfile):
     # build
     subprocess.check_call("rm -rf bin obj", shell=True, cwd=app, stderr=logfile, stdout=logfile)
     subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd=app, stderr=logfile, stdout=logfile)
-    subprocess.check_call("sudo chown -R $USER:$USER /usr/local/etc/mono", shell=True)
+    subprocess.check_call("sudo chown -R $USER:$USER /usr/local/etc/mono", shell=True, stderr=logfile, stdout=logfile)
     
     # nginx
     workers = 'worker_processes ' + str(args.max_threads) + ';'
@@ -35,7 +35,7 @@ def stop(logfile):
     return 0
   
   subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + root + "/nginx.conf -s stop", shell=True, stderr=logfile, stdout=logfile)
-  subprocess.check_call("rm -f " + root + "/nginx.upstream.conf", shell=True)
+  subprocess.check_call("rm -f " + root + "/nginx.upstream.conf", shell=True, stderr=logfile, stdout=logfile)
   #
   # stop mono
   #

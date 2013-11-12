@@ -9,7 +9,7 @@ nCpu = multiprocessing.cpu_count()
 def start(args, logfile):
   setup_util.replace_text("vertx/app.js", "host: '.*'", "host: '" + args.database_host + "'")
   try:
-    subprocess.Popen("vertx run app.js", shell=True, cwd="vertx")
+    subprocess.Popen("vertx run app.js", shell=True, cwd="vertx", stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1

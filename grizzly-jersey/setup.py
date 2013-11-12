@@ -5,8 +5,8 @@ import os
 
 def start(args, logfile):
   try:
-    subprocess.check_call("mvn clean package", shell=True, cwd="grizzly-jersey")
-    subprocess.Popen(("java -jar target/grizzly-jersey-example.jar -dbhost " + args.database_host).rsplit(" "), cwd="grizzly-jersey")
+    subprocess.check_call("mvn clean package", shell=True, cwd="grizzly-jersey", stderr=logfile, stdout=logfile)
+    subprocess.Popen(("java -jar target/grizzly-jersey-example.jar -dbhost " + args.database_host).rsplit(" "), cwd="grizzly-jersey", stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1

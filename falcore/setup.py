@@ -9,16 +9,16 @@ def start(args, logfile):
     #subprocess.call("rmdir /s /q pkg\\windows_amd64", shell=True, cwd="go")
     #subprocess.call("rmdir /s /q src\\github.com", shell=True, cwd="go")
     #subprocess.call("del /s /q /f bin\\hello.exe", shell=True, cwd="go")
-    subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\falcore&& go get ./...", shell=True, cwd="falcore")
-    subprocess.Popen("setup.bat", shell=True, cwd="falcore") 
+    subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\falcore&& go get ./...", shell=True, cwd="falcore", stderr=logfile, stdout=logfile)
+    subprocess.Popen("setup.bat", shell=True, cwd="falcore", stderr=logfile, stdout=logfile) 
     return 0
-  subprocess.call("go get ./...", shell=True, cwd="falcore") 
-  subprocess.Popen("go run src/framework_benchmarks/falcore.go".rsplit(" "), cwd="falcore")
+  subprocess.call("go get ./...", shell=True, cwd="falcore", stderr=logfile, stdout=logfile) 
+  subprocess.Popen("go run src/framework_benchmarks/falcore.go".rsplit(" "), cwd="falcore", stderr=logfile, stdout=logfile)
   return 0
 def stop(logfile):
   if os.name == 'nt':
-    subprocess.call("taskkill /f /im go.exe > NUL", shell=True)
-    subprocess.call("taskkill /f /im falcore.exe > NUL", shell=True)
+    subprocess.call("taskkill /f /im go.exe > NUL", shell=True, stderr=logfile, stdout=logfile)
+    subprocess.call("taskkill /f /im falcore.exe > NUL", shell=True, stderr=logfile, stdout=logfile)
     return 0
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()

@@ -24,7 +24,7 @@ def start(args, logfile):
         '-w', str(NCPU*3),
         "--log-level=critical"],
         cwd="django/hello",
-        env=env)
+        env=env, stderr=logfile, stdout=logfile)
     return 0
 
 def stop(logfile):

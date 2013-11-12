@@ -13,8 +13,8 @@ def start(args, logfile):
   setup_util.replace_text("dancer/nginx.conf", "server unix:.*\/FrameworkBenchmarks", "server unix:" + home + "/FrameworkBenchmarks")
 
   try:
-    subprocess.Popen("plackup -E production -s Starman --workers=" + str(args.max_threads) + " -l " + home + "/FrameworkBenchmarks/dancer/frameworks-benchmark.sock -a ./app.pl", shell=True, cwd="dancer")
-    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/dancer/nginx.conf", shell=True)
+    subprocess.Popen("plackup -E production -s Starman --workers=" + str(args.max_threads) + " -l " + home + "/FrameworkBenchmarks/dancer/frameworks-benchmark.sock -a ./app.pl", shell=True, cwd="dancer", stderr=logfile, stdout=logfile)
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/dancer/nginx.conf", shell=True, stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
