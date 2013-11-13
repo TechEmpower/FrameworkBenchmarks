@@ -536,6 +536,9 @@ class FrameworkTest:
     # the first curl invocation.
     subprocess.check_output(["curl", "-fsS", url], stderr=out)
     out.flush()
+    # HTTP output may not end in a newline, so add that here.
+    out.write( "\n" )
+    out.flush()
   ##############################################################
   # End __curl_url
   ##############################################################
