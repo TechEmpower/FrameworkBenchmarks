@@ -34,6 +34,8 @@ def stop(logfile):
     #    pid = int(line.split(None, 2)[1])
     #    os.kill(pid, 9)
     with open("./play-slick/target/universal/play-slick-1.0-SNAPSHOT/play-slick-1.0-SNAPSHOT/RUNNING_PID")
+      pid = int(f.read())
+      os.kill(pid, 9)
 
   try:
     #os.remove("play-slick/target/universal/play-slick-1.0-SNAPSHOT/RUNNING_PID")
