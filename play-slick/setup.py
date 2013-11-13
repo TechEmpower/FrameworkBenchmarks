@@ -33,7 +33,7 @@ def stop(logfile):
     #  if 'NettyServer' in line:
     #    pid = int(line.split(None, 2)[1])
     #    os.kill(pid, 9)
-    with open("./play-slick/target/universal/play-slick-1.0-SNAPSHOT/play-slick-1.0-SNAPSHOT/RUNNING_PID") as f
+    with open("./play-slick/target/universal/play-slick-1.0-SNAPSHOT/play-slick-1.0-SNAPSHOT/RUNNING_PID") as f:
       pid = int(f.read())
       os.kill(pid, 9)
 
