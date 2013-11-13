@@ -13,7 +13,7 @@ def start(args, logfile):
   try:
     subprocess.call("mkdir classes", shell=True, cwd="gemini/Docroot/WEB-INF", stderr=logfile, stdout=logfile)
     subprocess.check_call("ant compile", shell=True, cwd="gemini", stderr=logfile, stdout=logfile)
-    subprocess.check_call("$RESIN_HOME/bin/resinctl -conf $HOME/FrameworkBenchmarks/gemini/Docroot/WEB-INF/resin.xml start", shell=True, stderr=out, stdout=out)
+    subprocess.check_call("$RESIN_HOME/bin/resinctl -conf $HOME/FrameworkBenchmarks/gemini/Docroot/WEB-INF/resin.xml start", shell=True, stderr=logfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1

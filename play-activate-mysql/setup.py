@@ -8,7 +8,7 @@ from zipfile import ZipFile
 def start(args, logfile):
   setup_util.replace_text("play-activate-mysql/conf/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
 
-  subprocess.check_call("play clean dist", shell=True, cwd="play-activate-mysql")
+  subprocess.check_call("play clean dist", shell=True, cwd="play-activate-mysql", stderr=logfile, stdout=logfile)
 
   if os.name == 'nt':
     ZipFile("./play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT.zip").extractall("./play-activate-mysql/target/universal")

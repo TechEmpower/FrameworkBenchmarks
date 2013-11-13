@@ -27,15 +27,17 @@ def stop(logfile):
       pid = int(f.read())
       os.kill(pid, 9)
   else:
-    p = subprocess.Popen(['ps', 'ef'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    for line in out.splitlines():
-      if 'NettyServer' in line:
-        pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+    #p = subprocess.Popen(['ps', 'ef'], stdout=subprocess.PIPE)
+    #out, err = p.communicate()
+    #for line in out.splitlines():
+    #  if 'NettyServer' in line:
+    #    pid = int(line.split(None, 2)[1])
+    #    os.kill(pid, 9)
+    with open("./play-slick/target/universal/play-slick-1.0-SNAPSHOT/play-slick-1.0-SNAPSHOT/RUNNING_PID")
 
   try:
-    os.remove("play-slick/target/universal/play-slick-1.0-SNAPSHOT/RUNNING_PID")
+    #os.remove("play-slick/target/universal/play-slick-1.0-SNAPSHOT/RUNNING_PID")
+    os.remove("play-slick/target/universal/play-slick-1.0-SNAPSHOT/play-slick-1.0-SNAPSHOT/RUNNING_PID")
   except OSError:
     pass
 
