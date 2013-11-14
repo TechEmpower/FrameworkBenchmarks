@@ -524,7 +524,7 @@ class FrameworkTest:
     # Use --stderr - to redirect stderr to stdout so we get
     # error output for sure in stdout.
     # Use -sS to hide progress bar, but show errors.
-    subprocess.check_call(["curl", "-i", "-", "-sS", url], stderr=err, stdout=out)
+    subprocess.check_call(["curl", "-i", "-sS", url], stderr=err, stdout=out)
     out.flush()
     err.flush()
     # HTTP output may not end in a newline, so add that here.
