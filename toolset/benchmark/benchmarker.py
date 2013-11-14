@@ -443,7 +443,8 @@ class Benchmarker:
   ############################################################
   def __run_test(self, test):
     try:
-      os.makedirs(os.path.join(self.latest_results_directory, 'logs'))
+      os.makedirs(os.path.join(self.latest_results_directory, 'logs', 'out'))
+      os.makedirs(os.path.join(self.latest_results_directory, 'logs', 'err'))
     except:
       pass
     with open(os.path.join(self.latest_results_directory, 'logs', 'out', "{name}.txt".format(name=test.name)), 'w') as out, \
