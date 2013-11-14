@@ -422,7 +422,7 @@ class Benchmarker:
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
           if(test_process.is_alive()):
-            out.write("Child process for {name} is still alive. Terminating.".format(name=test.name))
+            logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
             test_process.terminate()
     logging.debug("End __run_tests.")
@@ -446,8 +446,8 @@ class Benchmarker:
       os.makedirs(os.path.join(self.latest_results_directory, 'logs'))
     except:
       pass
-    with open(os.path.join(self.latest_results_directory, 'logs', "{name}.log".format(name=test.name)), 'w') as out, \
-         open(os.path.join(self.latest_results_directory, 'logs', "{name}.err".format(name=test.name)), 'w') as err:
+    with open(os.path.join(self.latest_results_directory, 'logs', 'out', "{name}.txt".format(name=test.name)), 'w') as out, \
+         open(os.path.join(self.latest_results_directory, 'logs', 'err', "{name}.txt".format(name=test.name)), 'w') as err:
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
@@ -502,7 +502,7 @@ class Benchmarker:
       """.format(name=test.name)) )
       out.flush()
       try:
-        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=out, shell=True)
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=err, shell=True)
         p.communicate("""
           sudo restart mysql
           sudo restart mongodb
@@ -512,7 +512,7 @@ class Benchmarker:
 
         if self.__is_port_bound(test.port):
           self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-          out.write( textwrap.dedent("""
+          err.write( textwrap.dedent("""
             ---------------------------------------------------------
               Error: Port {port} is not available before start {name}
             ---------------------------------------------------------
@@ -524,13 +524,13 @@ class Benchmarker:
         if result != 0: 
           test.stop(out)
           time.sleep(5)
-          out.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
-          out.write( textwrap.dedent("""
+          err.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
+          err.write( textwrap.dedent("""
             -----------------------------------------------------
               Stopped {name}
             -----------------------------------------------------
             """.format(name=test.name)) )
-          out.flush()
+          err.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
           return
         
@@ -573,7 +573,7 @@ class Benchmarker:
 
         if self.__is_port_bound(test.port):
           self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-          out.write( textwrap.dedent("""
+          err.write( textwrap.dedent("""
             -----------------------------------------------------
               Error: Port {port} was not released by stop {name}
             -----------------------------------------------------
