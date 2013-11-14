@@ -446,7 +446,8 @@ class Benchmarker:
       os.makedirs(os.path.join(self.latest_results_directory, 'logs'))
     except:
       pass
-    with open(os.path.join(self.latest_results_directory, 'logs', "{name}.log".format(name=test.name)), 'w') as out:
+    with open(os.path.join(self.latest_results_directory, 'logs', "{name}.log".format(name=test.name)), 'w') as out, \
+         open(os.path.join(self.latest_results_directory, 'logs', "{name}.err".format(name=test.name)), 'w') as err:
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
