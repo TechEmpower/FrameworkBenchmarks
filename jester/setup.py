@@ -6,16 +6,16 @@ from os.path import expanduser
 
 home = expanduser("~")
 
-def start(args, logfile):
-  subprocess.check_call("nimrod c -d:release --path:../installs/jester/jester hello.nim", shell=True, cwd="jester", stderr=logfile, stdout=logfile)
-  subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/jester/config/nginx.conf", shell=True, stderr=logfile, stdout=logfile)
+def start(args, logfile, errfile):
+  subprocess.check_call("nimrod c -d:release --path:../installs/jester/jester hello.nim", shell=True, cwd="jester", stderr=errfile, stdout=logfile)
+  subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/jester/config/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
   
   for i in range(0, 8):
-    subprocess.Popen("./hello 900" + str(i), shell=True, cwd="jester", stderr=logfile, stdout=logfile)
+    subprocess.Popen("./hello 900" + str(i), shell=True, cwd="jester", stderr=errfile, stdout=logfile)
   return 0
 
-def stop(logfile):
-  subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True, stderr=logfile, stdout=logfile)
+def stop(logfile, errfile):
+  subprocess.call("sudo /usr/local/nginx/sbin/nginx -s stop", shell=True, stderr=errfile, stdout=logfile)
 
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()

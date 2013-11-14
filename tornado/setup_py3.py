@@ -7,17 +7,17 @@ cwd = expanduser('~/FrameworkBenchmarks/tornado')
 proc = None
 
 
-def start(args, logfile):
+def start(args, logfile, errfile):
     global proc
     setup_util.replace_text(
         cwd + "/server.py", "localhost", args.database_host)
 
     proc = subprocess.Popen(
         python + " server.py --port=8080 --logging=error",
-        shell=True, cwd=cwd, stderr=logfile, stdout=logfile)
+        shell=True, cwd=cwd, stderr=errfile, stdout=logfile)
     return 0
 
-def stop(logfile):
+def stop(logfile, errfile):
     global proc
     if proc:
         proc.terminate()

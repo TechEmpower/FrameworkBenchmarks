@@ -105,7 +105,7 @@ class FrameworkTest:
   # Start the test using it's setup file
   ############################################################
   def start(self, out, err):
-    return self.setup_module.start(self.benchmarker, out)
+    return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
   # End start
   ############################################################
@@ -115,7 +115,7 @@ class FrameworkTest:
   # Stops the test using it's setup file
   ############################################################
   def stop(self, out, err):
-    return self.setup_module.stop(out)
+    return self.setup_module.stop(out, err)
   ############################################################
   # End stop
   ############################################################

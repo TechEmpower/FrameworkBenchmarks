@@ -4,24 +4,24 @@ import sys
 import time
 import os
 
-def start(args, logfile):
+def start(args, logfile, errfile):
 
 
     if os.name == 'nt':
-      subprocess.check_call("..\\sbt\\sbt.bat update compile", shell=True, cwd="finagle", stderr=logfile, stdout=logfile)
-      subprocess.Popen("..\\sbt\\sbt.bat -Ddb.host=" + args.database_host + " run", cwd="finagle", shell=True, stderr=logfile, stdout=logfile)
+      subprocess.check_call("..\\sbt\\sbt.bat update compile", shell=True, cwd="finagle", stderr=errfile, stdout=logfile)
+      subprocess.Popen("..\\sbt\\sbt.bat -Ddb.host=" + args.database_host + " run", cwd="finagle", shell=True, stderr=errfile, stdout=logfile)
     else:
-      subprocess.check_call("../sbt/sbt update compile", shell=True, cwd="finagle", stderr=logfile, stdout=logfile)
-      subprocess.Popen("../sbt/sbt -Ddb.host=" + args.database_host + " run", cwd="finagle", shell=True, stderr=logfile, stdout=logfile)
+      subprocess.check_call("../sbt/sbt update compile", shell=True, cwd="finagle", stderr=errfile, stdout=logfile)
+      subprocess.Popen("../sbt/sbt -Ddb.host=" + args.database_host + " run", cwd="finagle", shell=True, stderr=errfile, stdout=logfile)
 
     time.sleep(5)
     return 0
 
 
 
-def stop(logfile):
+def stop(logfile, errfile):
   if os.name == 'nt':
-    subprocess.check_call("wmic process where \"CommandLine LIKE '%\\\\sbt\\\\sbt%'\" call terminate", stderr=logfile, stdout=logfile)
+    subprocess.check_call("wmic process where \"CommandLine LIKE '%\\\\sbt\\\\sbt%'\" call terminate", stderr=errfile, stdout=logfile)
   else:
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()

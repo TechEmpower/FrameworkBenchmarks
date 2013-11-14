@@ -4,13 +4,13 @@ import sys
 import setup_util
 import os
 
-def start(args, logfile):
+def start(args, logfile, errfile):
   db_host = args.database_host
   threads = str(args.max_threads)
-  subprocess.Popen("racket -t bench.rkt -- " + db_host + " > /dev/null", shell=True, cwd="racket-ws/bench", stderr=logfile, stdout=logfile)
+  subprocess.Popen("racket -t bench.rkt -- " + db_host + " > /dev/null", shell=True, cwd="racket-ws/bench", stderr=errfile, stdout=logfile)
   return 0
 
-def stop(logfile):
+def stop(logfile, errfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():

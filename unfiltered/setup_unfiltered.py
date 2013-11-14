@@ -4,7 +4,7 @@ import sys
 import setup_util
 import os
 
-def start(args, logfile):
+def start(args, logfile, errfile):
   setup_util.replace_text("unfiltered/src/main/resources/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
   setup_util.replace_text("unfiltered/src/main/resources/application.conf", "maxThreads = \\d+", "maxThreads = " + str(args.max_threads))
 
@@ -15,11 +15,11 @@ def start(args, logfile):
     import os
     DEVNULL = open(os.devnull, 'wb')
 
-  subprocess.check_call("../sbt/sbt assembly", shell=True, cwd="unfiltered", stderr=logfile, stdout=logfile)
-  subprocess.Popen("java -jar bench-assembly-1.0.0.jar", shell=True, cwd="unfiltered/target/scala-2.10", stderr=logfile, stdout=logfile)
+  subprocess.check_call("../sbt/sbt assembly", shell=True, cwd="unfiltered", stderr=errfile, stdout=logfile)
+  subprocess.Popen("java -jar bench-assembly-1.0.0.jar", shell=True, cwd="unfiltered/target/scala-2.10", stderr=errfile, stdout=logfile)
 
   return 0
-def stop(logfile):
+def stop(logfile, errfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():

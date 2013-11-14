@@ -3,18 +3,18 @@ import subprocess
 import sys
 import os
 
-def start(args, logfile):
+def start(args, logfile, errfile):
   if os.name == 'nt':
-    subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\webgo&&go get ./...", shell=True, cwd="webgo", stderr=logfile, stdout=logfile)
-    subprocess.Popen("setup.bat", shell=True, cwd="webgo", stderr=logfile, stdout=logfile) 
+    subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\webgo&&go get ./...", shell=True, cwd="webgo", stderr=errfile, stdout=logfile)
+    subprocess.Popen("setup.bat", shell=True, cwd="webgo", stderr=errfile, stdout=logfile) 
     return 0
-  subprocess.call("go get ./...", shell=True, cwd="webgo", stderr=logfile, stdout=logfile)
-  subprocess.Popen("go run src/hello/hello.go".rsplit(" "), cwd="webgo", stderr=logfile, stdout=logfile)
+  subprocess.call("go get ./...", shell=True, cwd="webgo", stderr=errfile, stdout=logfile)
+  subprocess.Popen("go run src/hello/hello.go".rsplit(" "), cwd="webgo", stderr=errfile, stdout=logfile)
   return 0
-def stop(logfile):
+def stop(logfile, errfile):
   if os.name == 'nt':
-    subprocess.call("taskkill /f /im go.exe > NUL", shell=True, stderr=logfile, stdout=logfile)
-    subprocess.call("taskkill /f /im hello.exe > NUL", shell=True, stderr=logfile, stdout=logfile)
+    subprocess.call("taskkill /f /im go.exe > NUL", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.call("taskkill /f /im hello.exe > NUL", shell=True, stderr=errfile, stdout=logfile)
     return 0
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
