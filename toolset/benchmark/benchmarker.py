@@ -517,12 +517,12 @@ class Benchmarker:
               Error: Port {port} is not available before start {name}
             ---------------------------------------------------------
             """.format(name=test.name, port=str(test.port))) )
-          out.flush()
+          err.flush()
           return
 
-        result = test.start(out)
+        result = test.start(out, err)
         if result != 0: 
-          test.stop(out)
+          test.stop(out, err)
           time.sleep(5)
           err.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           err.write( textwrap.dedent("""
@@ -544,8 +544,9 @@ class Benchmarker:
           Verifying URLs for {name}
         -----------------------------------------------------
         """.format(name=test.name)) )
-        test.verify_urls(out)
+        test.verify_urls(out, err)
         out.flush()
+        err.flush()
 
         ##########################
         # Benchmark this test
@@ -557,7 +558,9 @@ class Benchmarker:
             -----------------------------------------------------
             """.format(name=test.name)) )
           out.flush()
-          test.benchmark(out)
+          test.benchmark(out, err)
+          out.flush()
+          err.flush()
 
         ##########################
         # Stop this test
@@ -568,7 +571,9 @@ class Benchmarker:
         -----------------------------------------------------
         """.format(name=test.name)) )
         out.flush()
-        test.stop(out)
+        test.stop(out, err)
+        out.flush()
+        err.flush()
         time.sleep(5)
 
         if self.__is_port_bound(test.port):
@@ -578,7 +583,7 @@ class Benchmarker:
               Error: Port {port} was not released by stop {name}
             -----------------------------------------------------
             """.format(name=test.name, port=str(test.port))) )
-          out.flush()
+          err.flush()
           return
 
         out.write( textwrap.dedent("""
@@ -602,33 +607,35 @@ class Benchmarker:
         self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
       except (OSError, IOError, subprocess.CalledProcessError):
         self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
-        out.write( textwrap.dedent("""
+        err.write( textwrap.dedent("""
         -----------------------------------------------------
           Subprocess Error {name}
         -----------------------------------------------------
         """.format(name=test.name)) )
-        out.flush()
+        err.flush()
         try:
-          test.stop(out)
+          test.stop(out, err)
         except (subprocess.CalledProcessError):
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
-          out.write( textwrap.dedent("""
+          err.write( textwrap.dedent("""
           -----------------------------------------------------
             Subprocess Error: Test .stop() raised exception {name}
           -----------------------------------------------------
           """.format(name=test.name)) )
-          out.flush()
+          err.flush()
       except (KeyboardInterrupt, SystemExit):
         test.stop(out)
-        out.write( """
+        err.write( """
         -----------------------------------------------------
           Cleaning up....
         -----------------------------------------------------
         """ )
-        out.flush()
-        out.close()
+        err.flush()
         self.__finish()
         sys.exit()
+
+      out.close()
+      err.close()
 
   ############################################################
   # End __run_tests
