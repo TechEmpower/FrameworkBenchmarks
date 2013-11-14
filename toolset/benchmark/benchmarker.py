@@ -443,12 +443,11 @@ class Benchmarker:
   ############################################################
   def __run_test(self, test):
     try:
-      os.makedirs(os.path.join(self.latest_results_directory, 'logs', 'out'))
-      os.makedirs(os.path.join(self.latest_results_directory, 'logs', 'err'))
+      os.makedirs(os.path.join(self.latest_results_directory, 'logs'))
     except:
       pass
-    with open(os.path.join(self.latest_results_directory, 'logs', 'out', "{name}.txt".format(name=test.name)), 'w') as out, \
-         open(os.path.join(self.latest_results_directory, 'logs', 'err', "{name}.txt".format(name=test.name)), 'w') as err:
+    with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
+         open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
       # If the user specified which tests to run, then 
       # we can skip over tests that are not in that list
       if self.test != None and test.name not in self.test:
