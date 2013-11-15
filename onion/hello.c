@@ -222,6 +222,12 @@ void free_connection(struct test_data *data, MYSQL *db){
 	}
 }
 
+onion_connection_status return_plaintext(onion_request *req, onion_response *res){
+	onion_response_set_header(res, "Content-Type","text/plain");
+	onion_response_write0(res, "Hello, World!");
+	return OCS_PROCESSED;
+}
+
 /// Multiplexes to the proper handler depending on the path.
 /// As there is no proper database connection pool, take one connection randomly, and uses it.
 onion_connection_status muxer(struct test_data *data, onion_request *req, onion_response *res){
@@ -242,6 +248,9 @@ onion_connection_status muxer(struct test_data *data, onion_request *req, onion_
 		int ret=return_fortune(db, req, res);
 		free_connection(data, db);
 		return ret;
+	}
+	if (strcmp(path, "plaintext")==0){
+		return return_plaintext(req, res);
 	}
 	
 	return OCS_INTERNAL_ERROR;
