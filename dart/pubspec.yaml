@@ -1,8 +1,10 @@
 name: dartbenchmark
 description: A benchmark of dart
+environment:
+  sdk: '>=0.8.10+6 <2.0.0'
 dependencies:
-  args: 0.8.7
-  crypto: 0.8.7
-  mustache: 0.1.5
-  postgresql: 0.2.9
-  yaml: 0.8.7
+  args: 0.9.0
+  crypto: 0.9.0
+  mustache: 0.1.6
+  postgresql: 0.2.11
+  yaml: 0.9.0
