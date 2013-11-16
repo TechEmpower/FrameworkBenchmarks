@@ -53,13 +53,13 @@ class World {
   toJson() => { "id": id, "randomnumber": randomnumber };
 }
 
-main() {
+main(List<String> args) {
   var parser = new ArgParser();
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
   parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
   
-  var arguments = parser.parse(new Options().arguments);
+  var arguments = parser.parse(args);
   
   Future.wait([
     new File("postgresql.yaml").readAsString().then((config){
@@ -74,8 +74,8 @@ main() {
       var mongoConfig = yaml.loadYaml(config);
       _mongoDb = new Db("mongodb://${mongoConfig["host"]}/${mongoConfig["database"]}");
       return _mongoDb.open().then((_) {
-        _worldCollection = _mongoDb.collection("World");
-        _fortuneCollection = _mongoDb.collection("Fortune");
+        _worldCollection = _mongoDb.collection("world");
+        _fortuneCollection = _mongoDb.collection("fortune");
       });
     }),
     new File('fortunes.mustache').readAsString().then((template) {
@@ -129,7 +129,7 @@ main() {
           _setHtmlHeaders(request.response);
           
           _connectionPool.connect().then((connection) {
-            return connection.query('SELECT "id", "message" FROM "Fortune";')
+            return connection.query('SELECT id, message FROM fortune;')
                 .map((row) => new Fortune(row[0], row[1]))
                 .toList()
                 .whenComplete(() { connection.close(); });
@@ -159,7 +159,7 @@ main() {
                   return _connectionPool.connect()
                       .then((connection) {
                         return connection.execute(
-                              'UPDATE "World" SET "randomnumber" = @randomnumber WHERE "id" = @id;',
+                              'UPDATE world SET randomnumber = @randomnumber WHERE id = @id;',
                               { 
                                 'randomnumber': world.randomnumber,
                                 'id': world.id 
@@ -342,7 +342,7 @@ _parseQueriesParam(param) {
 _query() {
   return _connectionPool.connect().then((connection) {
     return connection
-      .query('SELECT "id", "randomnumber" FROM "World" WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
+      .query('SELECT id, randomnumber FROM world WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
       .single
       .then((row) =>new World(row[0], row[1]))
       .whenComplete(() {
