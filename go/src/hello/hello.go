@@ -28,11 +28,9 @@ type Fortune struct {
 	Message string `json:"message"`
 }
 
-// TODO: remove ?charset=utf8 from DSN after the next Go-MySQL-Driver release
-// https://github.com/go-sql-driver/mysql#unicode-support
 const (
 	// Database
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?charset=utf8"
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world"
 	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect      = "SELECT id, message FROM Fortune;"
