@@ -2,7 +2,7 @@ import subprocess
 import setup_util
 from os.path import expanduser
 
-python = expanduser('~/FrameworkBenchmarks/installs/py3/bin/python')
+python = expanduser('~/FrameworkBenchmarks/installs/py3/bin/python3')
 cwd = expanduser('~/FrameworkBenchmarks/tornado')
 proc = None
 

@@ -9,6 +9,9 @@ import tornado.options
 from tornado.options import options
 import tornado.httpserver
 
+if sys.version_info[0] == 3:
+    xrange = range
+
 tornado.options.define('port', default=8888, type=int, help="Server port")
 
 
