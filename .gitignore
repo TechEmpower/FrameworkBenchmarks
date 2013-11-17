@@ -18,3 +18,4 @@ mods/
 azure.err
 php-kohana/application/logs/
 php-fuel/fuel/app/logs/
+benchmark.cfg
