@@ -43,6 +43,7 @@ class Installer:
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
     self.__run_command("source ../../.profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
+    self.__run_command("sudo sysctl -w net.core.somaxconn=1024")
 
     ##############################################################
     # System Tools
