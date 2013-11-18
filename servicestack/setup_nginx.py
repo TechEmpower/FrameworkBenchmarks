@@ -14,7 +14,7 @@ def start(args, logfile, errfile):
 
   try:
     # build
-    subprocess.check_call("rm -rf bin obj", shell=True, cwd=app stderr=errfile, stdout=logfile)
+    subprocess.check_call("rm -rf bin obj", shell=True, cwd=app, stderr=errfile, stdout=logfile)
     subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd=app, stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo chown -R $USER:$USER /usr/local/etc/mono", shell=True, stderr=errfile, stdout=logfile)
     
