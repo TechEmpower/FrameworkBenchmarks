@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-import sys
 import json
 
 import falcon
+
 
 # resource endpoints
 
@@ -20,12 +20,8 @@ class PlaintextResource(object):
 # setup
 
 app = falcon.API()
-
-json_resource = JSONResource()
-plaintext_resource = PlaintextResource()
-
-app.add_route("/json", json_resource)
-app.add_route("/plaintext", plaintext_resource)
+app.add_route("/json", JSONResource())
+app.add_route("/plaintext", PlaintextResource())
 
 # entry point for debugging
 if __name__ == "__main__":

@@ -1,5 +1,4 @@
 import subprocess
-import setup_util
 import multiprocessing
 import os
 

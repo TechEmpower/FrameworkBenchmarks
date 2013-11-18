@@ -1,5 +1,4 @@
 import subprocess
-import setup_util
 import multiprocessing
 import os
 
@@ -20,6 +19,7 @@ def start(args):
         "--log-level=critical"],
         cwd="falcon")
     return 0
+
 
 def stop():
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
