@@ -39,7 +39,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "tornado",
+      "display_name": "tornado-py3",
       "notes": "CPython 3.3",
       "versus": ""
     },
