@@ -9,7 +9,7 @@ NCPU = multiprocessing.cpu_count()
 proc = None
 
 
-def start(args):
+def start(args, logfile, errfile):
     global proc
     setup_util.replace_text("bottle/app.py", "DBHOSTNAME", args.database_host)
     proc = subprocess.Popen([
@@ -19,10 +19,10 @@ def start(args):
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU*3),
         "--log-level=critical"],
-        cwd="bottle")
+        cwd="bottle", stderr=errfile, stdout=logfile)
     return 0
 
-def stop():
+def stop(logfile, errfile):
     global proc
     if proc is None:
         return 0
