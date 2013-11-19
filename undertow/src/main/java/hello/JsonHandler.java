@@ -6,6 +6,7 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 
+import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -25,8 +26,8 @@ final class JsonHandler implements HttpHandler {
   public void handleRequest(HttpServerExchange exchange) throws Exception {
     exchange.getResponseHeaders().put(
         Headers.CONTENT_TYPE, JSON_UTF8);
-    exchange.getResponseSender().send(
-        objectMapper.writeValueAsString(
-            Collections.singletonMap("message", "Hello, World!")));
+    exchange.getResponseSender().send(ByteBuffer.wrap(
+            objectMapper.writeValueAsBytes(
+                    Collections.singletonMap("message", "Hello, World!"))));
   }
 }
