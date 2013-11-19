@@ -54,13 +54,6 @@
             <version>5.1.22</version>
         </dependency>
 
-        <!-- CGLIB, only required and used for @Configuration usage -->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>2.2</version>
-        </dependency>
- 
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
