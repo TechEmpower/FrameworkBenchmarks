@@ -1,0 +1,27 @@
+{
+    "framework": "dart-express",
+    "tests": [
+        {
+            "postgresql-raw": {
+                "setup_file": "setup",
+                "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/queries?queries=",
+                "fortune_url": "/fortunes",
+                "update_url": "/updates?queries=",
+                "plaintext_url": "/plaintext",
+                "port": 8080,
+                "sort": 245
+            },
+            "mongodb-raw": {
+                "setup_file": "setup",
+                "db_url": "/db-mongo",
+                "query_url": "/queries-mongo?queries=",
+                "fortune_url": "/fortunes-mongo",
+                "update_url": "/updates-mongo?queries=",
+                "port": 8080,
+                "sort": 246
+            }
+        }
+    ]
+}
