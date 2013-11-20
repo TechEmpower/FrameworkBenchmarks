@@ -153,7 +153,7 @@ _updatesTest(HttpConnect connect) {
             return _connectionPool.connect()
               .then((connection) {
                 return connection.execute(
-                      'UPDATE "World" SET "randomnumber" = @randomnumber WHERE "id" = @id;',
+                      'UPDATE world SET randomnumber = @randomnumber WHERE id = @id;',
                       { 
                         'randomnumber': world.randomnumber,
                         'id': world.id 
@@ -170,7 +170,7 @@ _updatesTest(HttpConnect connect) {
 _fortunesTest(HttpConnect connect) {
   
   return _connectionPool.connect().then((connection) {
-    return connection.query('SELECT "id", "message" FROM "Fortune";')
+    return connection.query('SELECT id, message FROM fortune;')
         .map((row) => new Fortune(row[0], row[1]))
           .toList()
             .whenComplete(() { connection.close(); });
@@ -284,14 +284,14 @@ _htmlHeadersFilter(HttpConnect connect, Future chain(HttpConnect conn)) {
 
 // parse queries param
 _parseQueriesParam(param) {
-  return param.isEmpty ? 1 : int.parse(param, radix: 10, onError: (_) => 1).clamp(1, 500);
+  return (param == null || param.isEmpty) ? 1 : int.parse(param, radix: 10, onError: (_) => 1).clamp(1, 500);
 }
 
 // runs a query and returns a promise
 _query() {
   return _connectionPool.connect().then((connection) {
     return connection
-      .query('SELECT "id", "randomnumber" FROM "World" WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
+      .query('SELECT id, randomnumber FROM world WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
       .single
       .then((row) =>new World(row[0], row[1]))
       .whenComplete(() {
