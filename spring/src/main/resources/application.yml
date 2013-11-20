@@ -9,9 +9,16 @@ spring:
   jpa:
     show_sql: false
 
+tomcat:
+  connector:
+    maxThreads: 10000
+    connectionTimeout: 20000
+    maxConnections: -1
+
 ---
 spring:
   profiles: local
   datasource:
+    initialize: true
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:framework_benchmark

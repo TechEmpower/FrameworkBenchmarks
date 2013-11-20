@@ -3,12 +3,12 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "json_url": "/spring/json",
-      "db_url": "/spring/db",
-      "query_url": "/spring/queries?queries=",
-      "fortune_url": "/spring/fortunes",
-      "plaintext_url": "/spring/plaintext",
-      "update_url": "/spring/updates?queries=",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
