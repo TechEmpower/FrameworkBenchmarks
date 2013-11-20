@@ -13,7 +13,7 @@ def start(args, logfile, errfile):
   try:
     # build
     subprocess.check_call("rm -rf bin obj", shell=True, cwd=app, stdout=logfile, stderr=errfile)
-    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd=app stdout=logfile, stderr=errfile)
+    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd=app, stdout=logfile, stderr=errfile)
     
     subprocess.Popen("mono -O=all bin/Release/EvHttpSharpBenchmark.exe 127.0.0.1 8085 " + str(args.max_threads) + " &", shell=True, cwd=app, stdout=logfile, stderr=errfile)
     return 0
