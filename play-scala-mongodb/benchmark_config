@@ -1,7 +1,7 @@
 {
   "framework": "play-scala-mongodb",
   "tests": [{
-    "mongodb": {
+    "default": {
       "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/db?queries=",

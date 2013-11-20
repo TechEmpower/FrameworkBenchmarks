@@ -81,7 +81,7 @@ class World {
 
   World(this.id, this.randomnumber);
 
-  toJson() => { "id": id, "randomnumber": randomnumber };
+  toJson() => { "id": id, "randomNumber": randomnumber };
 }
 
 main(List<String> args) {
@@ -190,8 +190,8 @@ _dbMongoTest(HttpConnect connect) {
   
   return _mongoQuery().then((data) {
     connect.response.write(JSON.encode({
-      "id": data["id"],
-      "randomnumber": data["randomnumber"]
+      "id": data["_id"],
+      "randomNumber": data["randomNumber"]
     }));
   });
 }
@@ -209,8 +209,8 @@ _queriesMongoTest(HttpConnect connect) {
     .then((response) {
       var results = response.map((world) {
         return {
-          "id": world["id"],
-          "randomnumber": world["randomnumber"]
+          "id": world["_id"],
+          "randomNumber": world["randomNumber"]
         };
       });
       connect.response.write(JSON.encode(results.toList()));
@@ -223,7 +223,7 @@ _updatesMongoTest(HttpConnect connect) {
   return Future.wait(new List.generate(queries, (index) {
       return _mongoQuery()
           .then((world) {
-            world["randomnumber"] = _RANDOM.nextInt(_WORLD_TABLE_SIZE);
+            world["randomNumber"] = _RANDOM.nextInt(_WORLD_TABLE_SIZE);
             return _worldCollection.update( { "_id": world["_id"] }, world)
                 .then((_) => world);
           });
@@ -231,8 +231,8 @@ _updatesMongoTest(HttpConnect connect) {
     .then((worlds) {
       var result = worlds.map((world) {
         return {
-          "id": world["id"],
-          "randomnumber": world["randomnumber"]
+          "id": world["_id"],
+          "randomNumber": world["randomNumber"]
         };
       });
       connect.response.write(JSON.encode(result.toList()));
@@ -243,7 +243,7 @@ _fortunesMongoTest(HttpConnect connect) {
   
   return _fortuneCollection.find().toList().then((fortunes) {
     fortunes = fortunes.map((fortune) {
-      return new Fortune(fortune["id"], fortune["message"]);
+      return new Fortune(fortune["_id"], fortune["message"]);
     }).toList();
     fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
@@ -303,6 +303,6 @@ _query() {
 // runs a mongo query and returns a promise
 _mongoQuery() {
   return _worldCollection.findOne({
-    "id": _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1
+    "_id": _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1
   });
 }

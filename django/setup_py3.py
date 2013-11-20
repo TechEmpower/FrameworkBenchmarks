@@ -10,7 +10,7 @@ NCPU = multiprocessing.cpu_count()
 proc = None
 
 
-def start(args):
+def start(args, logfile, errfile):
     global proc
     setup_util.replace_text("django/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
     setup_util.replace_text("django/hello/hello/settings.py", "\/home\/ubuntu",  home)
@@ -21,10 +21,10 @@ def start(args):
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU*3),
         "--log-level=critical"],
-        cwd="django/hello")
+        cwd="django/hello", stderr=errfile, stdout=logfile)
     return 0
 
-def stop():
+def stop(logfile, errfile):
     global proc
     if proc is None:
         return 0
