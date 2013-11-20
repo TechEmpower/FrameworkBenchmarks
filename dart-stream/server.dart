@@ -84,13 +84,15 @@ class World {
   toJson() => { "id": id, "randomnumber": randomnumber };
 }
 
-main() {
+main(List<String> args) {
+  
   var parser = new ArgParser();
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
   parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
   
-  var arguments = parser.parse(new Options().arguments);
+  var arguments = parser.parse(args);
+  
   Future.wait([
      new File("postgresql.yaml").readAsString().then((config){
        _connectionPool = new pgpool.Pool(
