@@ -13,6 +13,7 @@ if sys.version_info[0] == 3:
     xrange = range
 
 tornado.options.define('port', default=8888, type=int, help="Server port")
+tornado.options.define('mongo', default='localhost', type=str, help="MongoDB host")
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -64,5 +65,5 @@ if __name__ == "__main__":
     server = tornado.httpserver.HTTPServer(application)
     server.bind(options.port)
     server.start(0)
-    db = motor.MotorClient("localhost").open_sync().hello_world
+    db = motor.MotorClient(options.mongo).open_sync().hello_world
     tornado.ioloop.IOLoop.instance().start()
