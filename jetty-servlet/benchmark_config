@@ -1,0 +1,25 @@
+{
+  "framework": "undertow",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "cache_url": "/cache",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "Servlet-3.1",
+      "language": "Java",
+      "orm": "None",
+      "platform": "Jetty-9",
+      "webserver": "Jetty-9",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Jetty-9-servlet",
+      "notes": "Jetty with servlet context",
+      "versus": ""
+    }
+  }]
+}
