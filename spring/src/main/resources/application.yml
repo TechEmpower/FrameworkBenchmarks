@@ -8,6 +8,9 @@ spring:
     password: benchmarkdbpass
   jpa:
     show_sql: false
+    hibernate:
+      naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+      ddl-auto: validate
 
 tomcat:
   connector:
@@ -22,3 +25,7 @@ spring:
     initialize: true
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:framework_benchmark
+  jpa:
+    show_sql: true
+    hibernate:
+      ddl-auto: create-drop
