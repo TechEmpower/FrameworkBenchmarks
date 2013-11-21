@@ -6,13 +6,10 @@ import os
 bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
 NCPU = multiprocessing.cpu_count()
 
-proc = None
-
 
 def start(args):
-    global proc
     setup_util.replace_text("flask/app.py", "DBHOSTNAME", args.database_host)
-    proc = subprocess.Popen([
+    subprocess.Popen([
         bin_dir + "/gunicorn",
         "app:app",
         "-k", "meinheld.gmeinheld.MeinheldWorker",
