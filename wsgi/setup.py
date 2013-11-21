@@ -9,7 +9,7 @@ NCPU = multiprocessing.cpu_count()
 proc = None
 
 
-def start(args):
+def start(args, logfile, errfile):
     global proc
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
@@ -18,10 +18,10 @@ def start(args):
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU),
         "--log-level=critical"],
-        cwd="wsgi")
+        cwd="wsgi", stderr=errfile, stdout=logfile)
     return 0
 
-def stop():
+def stop(logfile):
     global proc
     if proc is None:
         return 0

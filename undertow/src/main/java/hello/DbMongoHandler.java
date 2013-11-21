@@ -34,14 +34,14 @@ final class DbMongoHandler implements HttpHandler {
     int queries = Helper.getQueries(exchange);
     World[] worlds = new World[queries];
     for (int i = 0; i < queries; i++) {
-      DBObject object = database.getCollection("world").findOne(
-          new BasicDBObject("id", Helper.randomWorld()));
+      DBObject object = database.getCollection("World").findOne(
+          new BasicDBObject("_id", Helper.randomWorld()));
       worlds[i] = new World(
           //
           // The creation script for the Mongo database inserts these numbers as
           // JavaScript numbers, which resolve to Doubles in Java.
           //
-          ((Number) object.get("id")).intValue(),
+          ((Number) object.get("_id")).intValue(),
           ((Number) object.get("randomNumber")).intValue());
     }
     exchange.getResponseHeaders().put(

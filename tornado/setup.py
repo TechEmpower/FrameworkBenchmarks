@@ -6,16 +6,16 @@ from os import kill
 python = expanduser('~/FrameworkBenchmarks/installs/py2/bin/python')
 cwd = expanduser('~/FrameworkBenchmarks/tornado')
 
-def start(args):
+def start(args, logfile, errfile):
     setup_util.replace_text(
         cwd + "/server.py", "localhost", args.database_host)
 
     subprocess.Popen(
         python + " server.py --port=8080 --logging=error",
-        shell=True, cwd=cwd)
+        shell=True, cwd=cwd, stderr=errfile, stdout=logfile)
     return 0
 
-def stop():
+def stop(logfile, errfile):
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():
