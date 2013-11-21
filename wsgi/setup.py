@@ -21,7 +21,7 @@ def start(args, logfile, errfile):
         cwd="wsgi", stderr=errfile, stdout=logfile)
     return 0
 
-def stop(logfile):
+def stop(logfile, errfile):
     global proc
     if proc is None:
         return 0
