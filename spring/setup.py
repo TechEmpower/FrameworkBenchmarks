@@ -17,7 +17,7 @@ def stop(logfile, errfile):
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():
-      if 'spring' in line:
+      if 'spring.jar' in line:
         pid = int(line.split(None, 2)[1])
         os.kill(pid, 9)
   return 0
