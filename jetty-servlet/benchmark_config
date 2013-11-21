@@ -5,7 +5,6 @@
       "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
-      "cache_url": "/cache",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -13,12 +12,12 @@
       "framework": "Servlet-3.1",
       "language": "Java",
       "orm": "None",
-      "platform": "Jetty-9",
-      "webserver": "Jetty-9",
+      "platform": "Jetty",
+      "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Jetty-9-servlet",
-      "notes": "Jetty with servlet context",
+      "display_name": "jetty-servlet",
+      "notes": "Jetty 9.1 with ServletContext",
       "versus": ""
     }
   }]
