@@ -11,5 +11,5 @@ Vagrant.configure("2") do |config|
   end
   config.vm.synced_folder "../../..", "/FrameworkBenchmarks"
   config.vm.network "private_network", ip: "172.16.16.16"
-  # config.vm.provision :shell, :path => "bootstrap.sh"
+  config.vm.provision :shell, :path => "bootstrap.sh"
 end
