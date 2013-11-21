@@ -20,7 +20,7 @@ def start(args, logfile, errfile):
     
     # nginx
     workers = 'worker_processes ' + str(args.max_threads) + ';'
-    #subprocess.check_call('echo "upstream mono {\n' + ';\n'.join('\tserver 127.0.0.1:' + str(port) for port in range(9001, 9001 + args.max_threads)) + ';\n}" > ' + root + '/nginx.upstream.conf', shell=True, stderr=errfile, stdout=logfile);
+    subprocess.check_call('echo "upstream mono {\n' + ';\n'.join('\tserver 127.0.0.1:' + str(port) for port in range(9001, 9001 + args.max_threads)) + ';\n}" > ' + root + '/nginx.upstream.conf', shell=True, stderr=errfile, stdout=logfile);
     subprocess.check_call('/usr/local/nginx/sbin/nginx -c ' + root + '/nginx.conf -g "' + workers + '"', shell=True, stderr=errfile, stdout=logfile)
     
     # fastcgi
