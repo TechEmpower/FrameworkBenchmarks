@@ -20,8 +20,8 @@ def start(args, logfile, errfile):
     
     # nginx
     workers = 'worker_processes ' + str(args.max_threads) + ';'
-    subprocess.check_call('echo "upstream mono {\n' + ';\n'.join('\tserver 127.0.0.1:' + str(port) for port in range(9001, 9001 + args.max_threads)) + ';\n}" > ' + root + '/nginx.upstream.conf', shell=True, stderr=errfile, stdout=logfile);
-    subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c ' + root + '/nginx.conf -g "' + workers + '"', shell=True, stderr=errfile, stdout=logfile)
+    #subprocess.check_call('echo "upstream mono {\n' + ';\n'.join('\tserver 127.0.0.1:' + str(port) for port in range(9001, 9001 + args.max_threads)) + ';\n}" > ' + root + '/nginx.upstream.conf', shell=True, stderr=errfile, stdout=logfile);
+    subprocess.check_call('/usr/local/nginx/sbin/nginx -c ' + root + '/nginx.conf -g "' + workers + '"', shell=True, stderr=errfile, stdout=logfile)
     
     # fastcgi
     for port in range(9001, 9001 + args.max_threads):
@@ -43,5 +43,16 @@ def stop(logfile, errfile):
     if 'mono-server' in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 9)
+
+  #
+  # stop nginx
+  #
+  p2 = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+  out, err = p2.communicate()
+  for line in out.splitlines():
+    if 'sbin/nginx' in line:
+      pid = int(line.split(None, 2)[1])
+      os.kill(pid, 15)
+
   return 0
 
