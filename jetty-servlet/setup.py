@@ -1,6 +1,5 @@
 import subprocess
 import sys
-import setup_util
 import os
 
 def start(args, logfile, errfile):
