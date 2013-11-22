@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/astaxie/beego"
-	"runtime"
+	//"runtime"
 )
 
 type MessageStruct struct {
