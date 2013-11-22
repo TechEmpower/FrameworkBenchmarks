@@ -82,8 +82,8 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
         "hello.persistor",
         new JsonObject()
             .putString("action", "findone")
-            .putString("collection", "world")
-            .putObject("matcher", new JsonObject().putNumber("id", (random.nextInt(10000) + 1))),
+            .putString("collection", "World")
+            .putObject("matcher", new JsonObject().putNumber("_id", (random.nextInt(10000) + 1))),
         new Handler<Message<JsonObject>>() {
           @Override
           public void handle(Message<JsonObject> reply) {
@@ -117,8 +117,8 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
           "hello.persistor",
           new JsonObject()
               .putString("action", "findone")
-              .putString("collection", "world")
-              .putObject("matcher", new JsonObject().putNumber("id", (random.nextInt(10000) + 1))),
+              .putString("collection", "World")
+              .putObject("matcher", new JsonObject().putNumber("_id", (random.nextInt(10000) + 1))),
           dbh);
     }
   }
