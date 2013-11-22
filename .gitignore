@@ -40,3 +40,6 @@ bin/
 #maven
 *.versionsBackup
 *.releaseBackup
+
+#python-isms
+*.pyc
