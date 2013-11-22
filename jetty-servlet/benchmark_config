@@ -1,5 +1,5 @@
 {
-  "framework": "undertow",
+  "framework": "jetty-servlet",
   "tests": [{
     "default": {
       "setup_file": "setup",
