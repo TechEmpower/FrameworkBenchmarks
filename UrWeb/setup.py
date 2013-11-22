@@ -1,8 +1,8 @@
 import subprocess
 import os
 
-def start(args):
-  subprocess.check_call("urweb bench", shell=True, cwd="UrWeb")
+def start(args, logfile, errfile):
+  subprocess.check_call("urweb bench", shell=True, cwd="UrWeb", stderr=errfile, stdout=logfile)
 
   threads = str(args.max_threads)
   conn_string = ('dbname=hello_world '
@@ -10,11 +10,11 @@ def start(args):
                 'password=benchmarkdbpass '
                 'host=' + args.database_host)
   env = {'URWEB_PQ_CON': conn_string}
-  subprocess.Popen("./bench.exe -t " + threads + " > /dev/null",
-                   env=env, shell=True, cwd="UrWeb")
+  subprocess.Popen("./bench.exe -t " + threads,
+                   env=env, shell=True, cwd="UrWeb", stderr=errfile, stdout=logfile)
   return 0
 
-def stop():
+def stop(logfile, errfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
