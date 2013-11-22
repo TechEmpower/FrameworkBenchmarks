@@ -9,16 +9,16 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "None",
-      "framework": "grizzly-bm",
+      "framework": "grizzly",
       "language": "Java",
       "orm": "Raw",
       "platform": "Servlet",
       "webserver": "Grizzly",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grizzly-bm",
+      "display_name": "grizzly",
       "notes": "",
-      "versus": "servlet"
+      "versus": ""
     }
   }]
 }

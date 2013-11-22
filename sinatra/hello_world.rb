@@ -20,6 +20,11 @@ get '/json' do
   json :message => 'Hello World!'
 end
 
+get '/plaintext' do
+  content_type 'text/plain'
+  'Hello, World!'
+end
+
 get '/db' do
   queries = (params[:queries] || 1).to_i
 

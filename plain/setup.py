@@ -4,21 +4,22 @@ import sys
 import time
 import os
 
-def start(args):
+def start(args, logfile, errfile):
   setup_util.replace_text("plain/src/main/resources/application.conf", "127.0.0.1", args.database_host)
   if os.name == 'nt':
-    subprocess.check_call("./sbt.bat assembly", shell=True, cwd="plain")
+    subprocess.check_call(".\sbt.bat assembly && del /f /s /q target\scala-2.10\cache", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
   else:
-    subprocess.check_call("./sbt assembly", shell=True, cwd="plain")
-     
-  subprocess.Popen("java -server -Xnoclassgc -XX:MaxPermSize=1g -XX:ReservedCodeCacheSize=384m -Xmx8g -Xss8m -Xmn4g -Xms6g -XX:+AggressiveOpts -XX:+UseBiasedLocking -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -jar target/scala-2.10/plain-benchmark-assembly-1.0.1.jar", cwd="plain", shell=True)
+    subprocess.check_call("./sbt assembly && rm -rf target/scala-2.10/cache", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
+
+  subprocess.Popen("java -server -da -dsa -Xrs -Xmx6g -Xmn4g -Xss8m -Xnoclassgc -XX:MaxPermSize=1g -XX:ReservedCodeCacheSize=384m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -jar target/scala-2.10/plain-benchmark-assembly-1.0.1.jar", cwd="plain", shell=True, stderr=errfile, stdout=logfile)
   time.sleep(10)
   return 0
 
-def stop():
+def stop(logfile, errfile):
   if os.name == 'nt':
-    subprocess.call("taskkill /f /im *plain-benchmark* > NUL", shell=True)
+    subprocess.call("taskkill /f /im *plain-benchmark* > NUL", shell=True, stderr=errfile, stdout=logfile)
     return 0
+
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
