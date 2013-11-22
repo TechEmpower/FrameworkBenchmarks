@@ -37,9 +37,13 @@ bin/
 # merge tooling
 *.orig
 
-#maven
+# maven
 *.versionsBackup
 *.releaseBackup
 
-#python-isms
+# python-isms
 *.pyc
+
+# java / ruby stuff
+*.lock
+*.war
