@@ -609,31 +609,34 @@ class Benchmarker:
         """.format(name=test.name)) )
         out.flush()
         self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
-      except (OSError, IOError, subprocess.CalledProcessError):
+      except (OSError, IOError, subprocess.CalledProcessError) as e:
         self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
         err.write( textwrap.dedent("""
         -----------------------------------------------------
           Subprocess Error {name}
         -----------------------------------------------------
-        """.format(name=test.name)) )
+        {err}
+        """.format(name=test.name, err=e)) )
         err.flush()
         try:
           test.stop(out, err)
-        except (subprocess.CalledProcessError):
+        except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           err.write( textwrap.dedent("""
           -----------------------------------------------------
             Subprocess Error: Test .stop() raised exception {name}
           -----------------------------------------------------
-          """.format(name=test.name)) )
+          {err}
+          """.format(name=test.name, err=e)) )
           err.flush()
-      except (KeyboardInterrupt, SystemExit):
+      except (KeyboardInterrupt, SystemExit) as e:
         test.stop(out)
         err.write( """
         -----------------------------------------------------
           Cleaning up....
         -----------------------------------------------------
-        """ )
+        {err}
+        """.format(err=e) )
         err.flush()
         self.__finish()
         sys.exit()
