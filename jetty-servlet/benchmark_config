@@ -1,0 +1,24 @@
+{
+  "framework": "jetty-servlet",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "Servlet-3.1",
+      "language": "Java",
+      "orm": "None",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "jetty-servlet",
+      "notes": "Jetty 9.1 with ServletContext",
+      "versus": ""
+    }
+  }]
+}
