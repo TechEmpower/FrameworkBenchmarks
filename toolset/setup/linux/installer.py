@@ -105,14 +105,8 @@ class Installer:
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler")
-    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.4")
-    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install bundler")
-
-    # We need a newer version of jruby-rack
-    self.__run_command("git clone git://github.com/jruby/jruby-rack.git", retry=True);
-    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do bundle install")
-    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true")
-    self.__bash_from_string("cd jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.8")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.8 do gem install bundler")
 
     #
     # go
