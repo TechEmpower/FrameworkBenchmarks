@@ -1,6 +1,7 @@
 
 import subprocess
 import sys
+import os
 import setup_util
 
 def start(args, logfile, errfile):
@@ -9,7 +10,7 @@ def start(args, logfile, errfile):
     subprocess.check_call("rvm jruby-1.7.8 do bundle install --gemfile=Gemfile-jruby", shell=True, cwd="sinatra", stderr=errfile, stdout=logfile)
     subprocess.check_call("cp Gemfile-jruby Gemfile", shell=True, cwd="sinatra", stderr=errfile, stdout=logfile)
     subprocess.check_call("cp Gemfile-jruby.lock Gemfile.lock", shell=True, cwd="sinatra", stderr=errfile, stdout=logfile)
-    subprocess.Popen("rvm jruby-1.7.8 do bundle exec torqbox -E production", shell=True, cwd="sinatra", stderr=errfile, stdout=logfile)
+    subprocess.Popen("rvm jruby-1.7.8 do bundle exec torqbox -b 0.0.0.0 -E production", shell=True, cwd="sinatra", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
