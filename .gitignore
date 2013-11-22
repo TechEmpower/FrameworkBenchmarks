@@ -1,3 +1,8 @@
+.DS_Store
+installs
+*.log
+node_modules/
+
 # eclipse
 .classpath
 .project
@@ -5,6 +10,12 @@
 
 # maven
 target/
+*.out
+*.class
+mods/
+/.settings
+/.buildpath
+/.project
 */src/main/java/META-INF/
 *.versionsBackup
 bin/
@@ -20,6 +31,12 @@ bin/
 *.ipr
 *.iws
 .idea/
+.hsenv/
+azure.err
+php-kohana/application/logs/
+php-fuel/fuel/app/logs/
+results/
+benchmark.cfg
 
 # Mac filesystem dust
 .DS_Store
