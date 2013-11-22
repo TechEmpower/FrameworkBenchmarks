@@ -1,5 +1,5 @@
 {
-  "framework": "Ur/Web",
+  "framework": "urweb",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -14,7 +14,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Ur/Web",
+      "display_name": "Ur/Web"
     }
   }]
 }
