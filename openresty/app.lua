@@ -7,7 +7,7 @@ local insert = table.insert
 
 
 local mysqlconn = {
-	host = "127.0.0.1",
+	host = "DBHOSTNAME",
 	port = 3306,
 	database = "hello_world",
 	user = "benchmarkdbuser",
