@@ -422,6 +422,11 @@ class Benchmarker:
       # These features do not work on Windows
       for test in tests:
         if __name__ == 'benchmark.benchmarker':
+          print textwrap.dedent("""
+            -----------------------------------------------------
+              Running Test: {name} ...
+            -----------------------------------------------------
+            """.format(name=test.name))
           test_process = Process(target=self.__run_test, args=(test,))
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
