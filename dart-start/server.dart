@@ -74,8 +74,8 @@ main(List<String> args) {
       var mongoConfig = yaml.loadYaml(config);
       _mongoDb = new Db("mongodb://${mongoConfig["host"]}/${mongoConfig["database"]}");
       return _mongoDb.open().then((_) {
-        _worldCollection = _mongoDb.collection("world");
-        _fortuneCollection = _mongoDb.collection("fortune");
+        _worldCollection = _mongoDb.collection("World");
+        _fortuneCollection = _mongoDb.collection("Fortune");
       });
     }),
     new File('fortunes.mustache').readAsString().then((template) {
@@ -186,8 +186,8 @@ main(List<String> args) {
             .then((_) {
               var collectionData = new List.generate(_WORLD_TABLE_SIZE, (index) {
                 return {
-                  "id": index + 1,
-                  "randomnumber": _RANDOM.nextInt(_WORLD_TABLE_SIZE)
+                  "_id": index + 1,
+                  "randomNumber": _RANDOM.nextInt(_WORLD_TABLE_SIZE)
                 };
               });
               return _worldCollection.insertAll(collectionData); 
@@ -205,7 +205,7 @@ main(List<String> args) {
                 var hash = new MD5();
                 hash.add(_RANDOM.nextInt(_FORTUNE_TABLE_SIZE).toString().codeUnits);
                 return {
-                  "id": index + 1,
+                  "_id": index + 1,
                   "message": CryptoUtils.bytesToHex(hash.close())
                 };
               });
@@ -224,8 +224,8 @@ main(List<String> args) {
 
           _mongoQuery().then((data) {
             request.response.json({
-              "id": data["id"],
-              "randomnumber": data["randomnumber"]
+              "id": data["_id"],
+              "randomnumber": data["randomNumber"]
             });
           });
         });
@@ -247,8 +247,8 @@ main(List<String> args) {
             .then((response) {
               var results = response.map((world) {
                 return {
-                  "id": world["id"],
-                  "randomnumber": world["randomnumber"]
+                  "id": world["_id"],
+                  "randomnumber": world["randomNumber"]
                 };
               });
               request.response.send(JSON.encode(results.toList()));
@@ -264,7 +264,7 @@ main(List<String> args) {
           Future.wait(new List.generate(queries, (index) {
             return _mongoQuery()
                 .then((world) {
-                  world["randomnumber"] = _RANDOM.nextInt(_WORLD_TABLE_SIZE);
+                  world["randomNumber"] = _RANDOM.nextInt(_WORLD_TABLE_SIZE);
                   return _worldCollection.update( { "_id": world["_id"] }, world)
                       .then((_) => world);
                 });
@@ -272,8 +272,8 @@ main(List<String> args) {
           .then((worlds) {
             var result = worlds.map((world) {
               return {
-                "id": world["id"],
-                "randomnumber": world["randomnumber"]
+                "id": world["_id"],
+                "randomNumber": world["randomNumber"]
               };
             });
             request.response.send(JSON.encode(result.toList()));
@@ -288,7 +288,7 @@ main(List<String> args) {
           
           _fortuneCollection.find().toList().then((fortunes) {
             fortunes = fortunes.map((fortune) {
-              return new Fortune(fortune["id"], fortune["message"]);
+              return new Fortune(fortune["_id"], fortune["message"]);
             }).toList();
             fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
             fortunes.sort();
@@ -354,6 +354,6 @@ _query() {
 // runs a mongo query and returns a promise
 _mongoQuery() {
   return _worldCollection.findOne({
-    "id": _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1
+    "_id": _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1
   });
 }
