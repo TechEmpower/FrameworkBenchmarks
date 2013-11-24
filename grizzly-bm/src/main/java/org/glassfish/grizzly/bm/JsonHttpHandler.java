@@ -27,14 +27,7 @@ public class JsonHttpHandler extends HttpHandler {
         response.setHeader(Header.Server, Server.SERVER_VERSION);
 
         // Write JSON encoded message to the response.
-        try
-        {
-          MAPPER.writeValue(response.getOutputStream(), new HelloMessage());
-        }
-        catch (IOException ioe) 
-        {
-          // do nothing
-        }
+        MAPPER.writeValue(response.getOutputStream(), new HelloMessage());
     }
 
     @Override
