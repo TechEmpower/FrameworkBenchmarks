@@ -1,7 +1,7 @@
 {
   "framework": "plain",
   "tests": [{
-    "linux": {
+    "default": {
       "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
