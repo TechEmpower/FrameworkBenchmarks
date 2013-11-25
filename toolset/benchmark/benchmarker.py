@@ -284,7 +284,15 @@ class Benchmarker:
         if config == None:
           continue
 
-        tests = tests + framework_test.parse_config(config, dirname[2:], self)
+        test = framework_test.parse_config(config, dirname[2:], self)
+        # If the user specified which tests to run, then 
+        # we can skip over tests that are not in that list
+        if self.test == None:
+          tests = tests + test
+        else:
+          for atest in test:
+            if atest.name in self.test:
+              tests.append(atest)
 
     tests.sort(key=lambda x: x.name)
     return tests
@@ -457,11 +465,6 @@ class Benchmarker:
       pass
     with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
          open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
-      # If the user specified which tests to run, then 
-      # we can skip over tests that are not in that list
-      if self.test != None and test.name not in self.test:
-        return
-
       if hasattr(test, 'skip'):
         if test.skip.lower() == "true":
           out.write("Test {name} benchmark_config specifies to skip this test. Skipping.\n".format(name=test.name))
