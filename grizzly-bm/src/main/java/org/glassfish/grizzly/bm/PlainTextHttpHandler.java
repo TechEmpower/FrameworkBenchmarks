@@ -1,8 +1,8 @@
 package org.glassfish.grizzly.bm;
 
-import java.util.concurrent.ExecutorService;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
+import org.glassfish.grizzly.http.server.RequestExecutorProvider;
 import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.grizzly.http.util.Header;
 
@@ -21,7 +21,7 @@ public class PlainTextHttpHandler extends HttpHandler {
     }
 
     @Override
-    protected ExecutorService getThreadPool(Request request) {
-        return null;
+    public RequestExecutorProvider getRequestExecutorProvider() {
+        return Server.EXECUTOR_PROVIDER;
     }
 }

@@ -1,9 +1,9 @@
 package org.glassfish.grizzly.bm;
 
-import java.io.IOException;
 import org.glassfish.grizzly.Grizzly;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
+import org.glassfish.grizzly.http.server.RequestExecutorProvider;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 
 /**
@@ -11,6 +11,11 @@ import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
  */
 public class Server {
     public static final String SERVER_VERSION = "Grizzly/" + Grizzly.getDotedVersion();
+    
+    // The RequestExecutorProvider, which will run HTTP request processing
+    // in the same thread
+    static final RequestExecutorProvider EXECUTOR_PROVIDER =
+            new RequestExecutorProvider.SameThreadProvider();
     
     public static void main(String[] args) throws Exception {
         final int port = args.length > 0
@@ -23,6 +28,7 @@ public class Server {
         
         // force to not initialize worker thread pool
         transport.setWorkerThreadPoolConfig(null);
+        transport.setSelectorRunnersCount(Runtime.getRuntime().availableProcessors());
         
         networkListener.getKeepAlive().setIdleTimeoutInSeconds(-1);
         networkListener.getKeepAlive().setMaxRequestsCount(-1);
@@ -44,7 +50,7 @@ public class Server {
 		Server.class.wait();
             }
         } finally {
-            httpServer.stop();
+            httpServer.shutdown();
         }
     }
 }
