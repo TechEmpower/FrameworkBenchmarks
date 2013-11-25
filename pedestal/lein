@@ -1,0 +1,139 @@
+#!/bin/bash
+
+# This variant of the lein script is meant for downstream packagers.
+# It has all the cross-platform stuff stripped out as well as the
+# logic for running from checkouts and self-upgrading.
+
+echo "You're running the proper lein!"
+
+export LEIN_VERSION="1.7.1"
+
+if [ `whoami` = "root" ] && [ "$LEIN_ROOT" = "" ]; then
+    echo "WARNING: You're currently running as root; probably by accident."
+    echo "Press control-C to abort or Enter to continue as root."
+    echo "Set LEIN_ROOT to disable this warning."
+    read _
+fi
+
+# cd to the project root, if applicable
+NOT_FOUND=1
+ORIGINAL_PWD="$PWD"
+while [ ! -r "$PWD/project.clj" ] && [ "$PWD" != "/" ] && [ $NOT_FOUND -ne 0 ]; do
+    cd ..
+    if [ "$(dirname "$PWD")" = "/" ]; then
+        NOT_FOUND=0
+        cd "$ORIGINAL_PWD"
+    fi
+done
+
+# Support $JAVA_OPTS for backwards-compatibility.
+export JAVA_CMD=${JAVA_CMD:-"java"}
+export JVM_OPTS="${JVM_OPTS:-"$JAVA_OPTS"}"
+export LEIN_JAVA_CMD=${LEIN_JAVA_CMD:-$JAVA_CMD}
+export LEIN_JVM_OPTS="${LEIN_JVM_OPTS:-"$JVM_OPTS"}"
+
+if [ "$LEIN_HOME" = "" ]; then
+  if [ -d "$PWD/.lein" ] && [ "$PWD" != "$HOME" ]; then
+    echo "Leiningen is running in bundled mode."
+    export LEIN_HOME="$PWD/.lein"
+  else
+    export LEIN_HOME="$HOME/.lein"
+  fi
+fi
+
+DEV_PLUGINS="$(ls -1 lib/dev/*jar .lein-plugins/*jar 2> /dev/null)"
+USER_PLUGINS="$(ls -1 "$LEIN_HOME"/plugins/*jar 2> /dev/null)"
+
+artifact_name () {
+    echo "$1" | sed -e "s/.*\/\(.*\)/\1/" | \
+        rev | sed -e "s/raj[-[:digit:].]*-\(.*\)/\1/" | rev
+}
+
+unique_user_plugins () {
+    saveIFS="$IFS"
+    IFS="$(printf '\n\t')"
+
+    plugins="$(echo "$DEV_PLUGINS"; echo "$USER_PLUGINS")"
+    artifacts="$(for i in $plugins; do echo "$(artifact_name "$i")"; done)"
+    duplicates="$(echo "$artifacts" | sort | uniq -d)"
+
+    if [ -z "$duplicates" ]; then
+        echo "$USER_PLUGINS"
+    else
+        for i in $USER_PLUGINS; do
+            artifact="$(artifact_name "$i")"
+            if ! echo "$duplicates" | grep -xq "$artifact"; then
+                echo "$i"
+            fi
+        done
+    fi
+    IFS="$saveIFS"
+}
+
+LEIN_PLUGIN_PATH="$(echo "$DEV_PLUGINS" | tr \\n :)"
+LEIN_USER_PLUGIN_PATH="$(echo "$(unique_user_plugins)" | tr \\n :)"
+CLASSPATH="$CLASSPATH:$LEIN_PLUGIN_PATH:$LEIN_USER_PLUGIN_PATH:test/:src/:resources/"
+CLOJURE_JAR="/usr/share/java/clojure-1.2.jar:/usr/share/java/asm3.jar:/usr/share/java/asm3-commons.jar"
+
+# apply context specific CLASSPATH entries
+if [ -f .lein-classpath ]; then
+    CLASSPATH="`cat .lein-classpath`:$CLASSPATH"
+fi
+
+SHARE_JARS="ant ant-launcher classworlds clojure-1.2 clojure-contrib \
+lucene-memory maven-ant-tasks maven-artifact maven-artifact-manager \
+maven-error-diagnostics maven-model maven-settings maven-project maven-profile \
+maven-repository-metadata plexus-container-default-alpha plexus-interpolation \
+plexus-utils wagon-file wagon-http-lightweight wagon-http-shared wagon-provider-api \
+xml-apis lucene-core lucene-highlighter clucy robert-hooke lancet \
+backport-util-concurrent" # NFI why that last one is necessary
+for JAR in $SHARE_JARS; do
+    CLASSPATH="$CLASSPATH":"/usr/share/java/$JAR.jar"
+done
+
+# Do not use installed leiningen jar during self-compilation
+if ! { [ "$1" = "compile" ] &&
+        grep -qsE 'defproject leiningen[[:space:]]+"[[:digit:].]+"' \
+            project.clj ;}; then
+    CLASSPATH="$CLASSPATH":/usr/share/java/leiningen-$LEIN_VERSION.jar
+fi
+
+if [ $DEBUG ]; then
+    echo $CLASSPATH
+    echo $CLOJURE_JAR
+fi
+
+# Use rlwrap if appropriate
+if ([ -z $INSIDE_EMACS ] && [ "$TERM" != "dumb" ]); then
+    which rlwrap > /dev/null
+    if [ $? -eq 0 ]; then
+        RLWRAP="rlwrap -r -m -q '\"'" # custom quote chars
+    fi
+    RLWRAP_CLJ_WORDS_FILE=${RLWRAP_CLJ_WORDS_FILE:-"${HOME}/.clj_completions"}
+    RLWRAP_CLJ_WORDS_OPTION=""
+    if [ -r "${RLWRAP_CLJ_WORDS_FILE}" ]; then
+        RLWRAP_CLJ_WORDS_OPTION="-f ${RLWRAP_CLJ_WORDS_FILE}";
+    fi
+    RLWRAP="${RLWRAP} $RLWRAP_OPTIONS -b \"(){}[],^%$#@\";:'\" ${RLWRAP_CLJ_WORDS_OPTION}"
+fi
+
+TRAMPOLINE_FILE="/tmp/lein-trampoline-$$"
+
+$RLWRAP $LEIN_JAVA_CMD \
+    -Xbootclasspath/a:"$CLOJURE_JAR" \
+    -client $LEIN_JVM_OPTS \
+    -XX:+TieredCompilation \
+    -Dleiningen.original.pwd="$ORIGINAL_PWD" \
+    -Dleiningen.trampoline-file=$TRAMPOLINE_FILE \
+    -cp "$CLASSPATH" \
+    clojure.main -e "(use 'leiningen.core)(-main)" /dev/null "$@"
+
+EXIT_CODE=$?
+
+if [ -r $TRAMPOLINE_FILE ]; then
+    TRAMPOLINE="$(cat $TRAMPOLINE_FILE)"
+    rm $TRAMPOLINE_FILE
+    exec sh -c "exec $TRAMPOLINE"
+else
+    exit $EXIT_CODE
+fi
