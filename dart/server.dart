@@ -1,7 +1,6 @@
 import 'dart:async' show Future;
 import 'dart:io';
-import 'dart:utf';
-import 'dart:json' as json;
+import 'dart:convert';
 import 'dart:math' show Random;
 import 'package:args/args.dart' show ArgParser;
 import 'package:mustache/mustache.dart' as mustache;
@@ -13,12 +12,12 @@ import 'package:yaml/yaml.dart' as yaml;
 /// address and port for incoming connections is configurable via command line
 /// arguments, as is the number of database connections to be maintained in the
 /// connection pool.
-main() {
+main(List<String> args) {
   var parser = new ArgParser();
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
   parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
-  var arguments = parser.parse(new Options().arguments);
+  var arguments = parser.parse(args);
   _startServer(
       arguments['address'],
       int.parse(arguments['port']),
@@ -135,7 +134,7 @@ _sendResponse(request, statusCode, [ type, response ]) {
     request.response.headers.contentType = type;
   }
   if (response != null) {
-    var data = encodeUtf8(response);
+    var data = UTF8.encode(response);
     request.response.contentLength = data.length;
     request.response.add(data);
   } else {
@@ -151,7 +150,7 @@ _sendHtml(request, response) {
 
 /// Completes the given [request] by writing the [response] as JSON.
 _sendJson(request, response) {
-  _sendResponse(request, HttpStatus.OK, _TYPE_JSON, json.stringify(response));
+  _sendResponse(request, HttpStatus.OK, _TYPE_JSON, JSON.encode(response));
 }
 
 /// Completes the given [request] by writing the [response] as plain text.
