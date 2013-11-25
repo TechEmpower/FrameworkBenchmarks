@@ -4,18 +4,18 @@ import sys
 import setup_util
 import os
 
-def start(args):
-  subprocess.check_call("cabal update", shell=True, cwd="wai/bench")
-  subprocess.check_call("cabal install --only-dependencies", shell=True, cwd="wai/bench")
-  subprocess.check_call("cabal configure", shell=True, cwd="wai/bench")
-  subprocess.check_call("cabal build", shell=True, cwd="wai/bench")
+def start(args, logfile, errfile):
+  subprocess.check_call("cabal update", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
+  subprocess.check_call("cabal install --only-dependencies", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
+  subprocess.check_call("cabal configure", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
+  subprocess.check_call("cabal build", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
 
   db_host = args.database_host
   threads = str(args.max_threads)
-  subprocess.Popen("dist/build/bench/bench " + threads + " " + db_host + " +RTS -A4M -N -qg2 -I0 -G2 > /dev/null", shell=True, cwd="wai/bench")
+  subprocess.Popen("dist/build/bench/bench " + threads + " " + db_host + " +RTS -A4M -N -qg2 -I0 -G2 > /dev/null", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
   return 0
 
-def stop():
+def stop(logfile, errfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():

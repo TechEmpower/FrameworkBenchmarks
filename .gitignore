@@ -1,10 +1,14 @@
 .DS_Store
-*.pyc
-installs/
+installs
 *.log
-*.lock
 node_modules/
-*.war
+
+# eclipse
+.classpath
+.project
+.settings
+
+# maven
 target/
 *.out
 *.class
@@ -12,9 +16,51 @@ mods/
 /.settings
 /.buildpath
 /.project
+*/src/main/java/META-INF/
+*.versionsBackup
+bin/
+
+# common junk
+*.log
+*.swp
+*.diff
+*.patch
+
+# intellij
 *.iml
+*.ipr
+*.iws
 .idea/
 .hsenv/
 azure.err
 php-kohana/application/logs/
 php-fuel/fuel/app/logs/
+results/
+benchmark.cfg
+
+# Mac filesystem dust
+.DS_Store
+
+# pmd
+.pmdruleset
+.pmd
+
+# netbeans
+/nbproject
+
+# vim
+.*.sw[a-p]
+
+# merge tooling
+*.orig
+
+# maven
+*.versionsBackup
+*.releaseBackup
+
+# python-isms
+*.pyc
+
+# java / ruby stuff
+*.lock
+*.war
