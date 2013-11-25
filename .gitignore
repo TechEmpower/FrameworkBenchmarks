@@ -25,6 +25,7 @@ bin/
 *.swp
 *.diff
 *.patch
+*/bin/
 
 # intellij
 *.iml
