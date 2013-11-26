@@ -347,7 +347,7 @@ class Installer:
 
     easy_install('simplejson==3.3.1', two=True, three=True, pypy=False)
     easy_install('ujson==1.33', three=True)
-    easy_install('https://github.com/surfly/gevent/releases/download/1.0rc3/gevent-1.0rc3.tar.gz', three=False)
+    easy_install('gevent==1.0')
     easy_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
 
     # Gunicorn
