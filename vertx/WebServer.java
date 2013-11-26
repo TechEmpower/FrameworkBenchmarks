@@ -1,17 +1,20 @@
-import java.nio.charset.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
-import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.HttpServerResponse;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.impl.Json;
 import org.vertx.java.platform.Verticle;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
@@ -21,6 +24,7 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
   private static DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyyy HH:mm:ss z");
 
   private String dateString;
+  private DB mongodb;
 
   @Override
   public void start() {
@@ -32,6 +36,14 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
       }
     });
     formatDate();
+
+    final String mongoHost = "localhost:27017";
+    final String mongoDBName = "hello_world";
+    try {
+      mongodb = new MongoClient(mongoHost).getDB(mongoDBName);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private void formatDate() {
@@ -55,50 +67,33 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
         handleQueriesMongo(req);
         break;
       default:
-        req.response().setStatusCode(404);
-        req.response().end();
+        req.response().setStatusCode(404).end();
     }
   }
 
   private void handlePlainText(HttpServerRequest req) {
-    HttpServerResponse resp = req.response();
-    resp.putHeader("Content-Type", "application/json; charset=UTF-8");
-    resp.putHeader("Content-Length", helloWorldContentLength);
-    resp.putHeader("Server", "vert.x");
-    resp.putHeader("Date", dateString);
-    resp.end(helloWorldBuffer);
+    req.response()
+       .putHeader("Content-Type", "application/json; charset=UTF-8")
+       .putHeader("Content-Length", helloWorldContentLength)
+       .putHeader("Server", "vert.x")
+       .putHeader("Date", dateString)
+       .end(helloWorldBuffer);
   }
 
   private void handleJson(HttpServerRequest req) {
-    String result = Json.encode(Collections.singletonMap("message", "Hello, world!"));
-    sendResponse(req, result);
+    sendResponse(req, Json.encode(Collections.singletonMap("message", "Hello, world!")));
+  }
+
+  private Entry getMongoEntry() {
+    Random random = ThreadLocalRandom.current();
+    int id = (random.nextInt(10000) + 1);
+    DBObject doc = mongodb.getCollection("World").findOne(new BasicDBObject("_id", id));
+    return new Entry(((Number)doc.get("_id")).intValue(),
+                     ((Number)doc.get("randomNumber")).intValue());
   }
 
   private void handleDbMongo(final HttpServerRequest req) {
-
-    final Random random = ThreadLocalRandom.current();
-
-    vertx.eventBus().send(
-        "hello.persistor",
-        new JsonObject()
-            .putString("action", "findone")
-            .putString("collection", "World")
-            .putObject("matcher", new JsonObject().putNumber("_id", (random.nextInt(10000) + 1))),
-        new Handler<Message<JsonObject>>() {
-          @Override
-          public void handle(Message<JsonObject> reply) {
-            JsonObject body = reply.body();
-
-            if ("ok".equals(body.getString("status"))) {
-              JsonObject world = body.getObject("result");
-              world.removeField("_id");
-              String result = world.encode();
-              sendResponse(req, result);
-            } else {
-              System.err.println("Failed to execute query");
-            }
-          }
-        });
+    sendResponse(req, Json.encode(getMongoEntry()));
   }
 
   private void handleQueriesMongo(final HttpServerRequest req) {
@@ -108,58 +103,30 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     } catch (NumberFormatException e) {
       e.printStackTrace();
     }
-
-    final MongoHandler dbh = new MongoHandler(req, queriesParam);
-    final Random random = ThreadLocalRandom.current();
-
+    Entry[] entries = new Entry[queriesParam];
     for (int i = 0; i < queriesParam; i++) {
-      vertx.eventBus().send(
-          "hello.persistor",
-          new JsonObject()
-              .putString("action", "findone")
-              .putString("collection", "World")
-              .putObject("matcher", new JsonObject().putNumber("_id", (random.nextInt(10000) + 1))),
-          dbh);
+      entries[i] = getMongoEntry();
     }
+    sendResponse(req, Json.encode(entries));
   }
 
-  private class MongoHandler implements Handler<Message<JsonObject>> {
-    private final HttpServerRequest req;
-    private final int queries;
-    private final JsonArray worlds;
-
-    public MongoHandler(HttpServerRequest request, int queriesParam) {
-      req = request;
-      queries = queriesParam;
-      worlds = new JsonArray();
-    }
-
-    @Override
-    public void handle(Message<JsonObject> reply) {
-      JsonObject body = reply.body();
-
-      if ("ok".equals(body.getString("status"))) {
-        body.getObject("result").removeField("_id");
-        worlds.add(body.getObject("result"));
-        if (worlds.size() == this.queries) {
-          // All queries have completed; send the response.
-          String result = worlds.encode();
-          sendResponse(req, result);
-        }
-      } else {
-        System.err.println("Failed to execute query");
-      }
-    }
-  }
-  
   private void sendResponse(HttpServerRequest req, String result) {
-      int contentLength = result.getBytes(StandardCharsets.UTF_8).length;
-      HttpServerResponse resp = req.response();
-      resp.putHeader("Content-Type", "application/json; charset=UTF-8");
-      resp.putHeader("Content-Length", String.valueOf(contentLength));
-      resp.putHeader("Server", "vert.x");
-      resp.putHeader("Date", dateString);
-      resp.end(result);
+    Buffer buff = new Buffer(result);
+    HttpServerResponse resp = req.response();
+    resp.putHeader("Content-Type", "application/json; charset=UTF-8")
+        .putHeader("Content-Length", String.valueOf(buff.length()))
+        .putHeader("Server", "vert.x")
+        .putHeader("Date", dateString)
+        .end(buff);
+  }
+
+  private static final class Entry {
+    public int id;
+    public int randomNumber;
+    public Entry(int id, int randomNumber) {
+      this.id = id;
+      this.randomNumber = randomNumber;
+    }
   }
 }
 

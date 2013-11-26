@@ -1,15 +1,6 @@
 var container = require('vertx/container')
 
-var persistorConf = {
-  address: 'hello.persistor',
-  db_name: 'hello_world',
-  host: 'localhost'
-}
+// The server uses the blocking MongoDB API directly so we deploy them as worker verticles
+container.deployWorkerVerticle('WebServer.java', 32);
 
-container.deployModule('io.vertx~mod-mongo-persistor~2.0.0-final', persistorConf, function (err, dep_id) {
-  if (!err) {
-    container.deployVerticle('WebServer.java', 8);
-  } else {
-    err.printStackTrace();
-  }
-});
+
