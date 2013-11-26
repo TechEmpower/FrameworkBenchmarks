@@ -14,6 +14,8 @@ def start(args, logfile, errfile):
     global proc
     setup_util.replace_text("django/hello/hello/settings.py", "HOST': '.*'", "HOST': '" + args.database_host + "'")
     setup_util.replace_text("django/hello/hello/settings.py", "\/home\/ubuntu",  home)
+    env = os.environ.copy()
+    env['DJANGO_DB'] = 'mysql'
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
         "hello.wsgi:application",
@@ -21,7 +23,8 @@ def start(args, logfile, errfile):
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU*3),
         "--log-level=critical"],
-        cwd="django/hello", stderr=errfile, stdout=logfile)
+        cwd="django/hello",
+        env=env, stderr=errfile, stdout=logfile)
     return 0
 
 def stop(logfile, errfile):

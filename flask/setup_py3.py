@@ -6,8 +6,6 @@ import os
 bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py3/bin')
 NCPU = multiprocessing.cpu_count()
 
-proc = None
-
 
 def start(args, logfile, errfile):
     global proc

@@ -12,12 +12,12 @@
       "framework": "falcon",
       "language": "Python",
       "orm": "Raw",
-      "platform": "wsgi",
-      "webserver": "Gunicorn",
+      "platform": "Gunicorn/Meinheld",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "falcon",
-      "notes": "",
+      "notes": "CPython 2",
       "versus": "wsgi"
     },
     "py3": {
@@ -31,12 +31,12 @@
       "framework": "falcon",
       "language": "Python",
       "orm": "Raw",
-      "platform": "wsgi",
-      "webserver": "Gunicorn",
+      "platform": "Gunicorn/Meinheld",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "falcon-py3",
-      "notes": "",
+      "notes": "CPython 3",
       "versus": "wsgi"
     },
     "pypy": {
@@ -50,12 +50,12 @@
       "framework": "falcon",
       "language": "Python",
       "orm": "Raw",
-      "platform": "pypy",
-      "webserver": "Gunicorn",
+      "platform": "Gunicorn/Tornado",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "falcon-pypy",
-      "notes": "",
+      "notes": "PyPy",
       "versus": "wsgi"
     }
   }]
