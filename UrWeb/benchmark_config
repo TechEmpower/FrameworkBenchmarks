@@ -11,16 +11,16 @@
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Full",
+      "classification": "Fullstack",
       "database": "Postgres",
-      "framework": "Ur/Web",
+      "framework": "ur/web",
       "language": "Ur",
       "orm": "Micro",
       "platform": "Ur/Web",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Ur/Web"
+      "display_name": "ur/web"
     }
   }]
 }

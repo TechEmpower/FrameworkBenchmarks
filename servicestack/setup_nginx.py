@@ -50,7 +50,7 @@ def stop(logfile, errfile):
   p2 = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p2.communicate()
   for line in out.splitlines():
-    if 'sbin/nginx' in line:
+    if 'nginx: master' in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 15)
 

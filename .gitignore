@@ -25,6 +25,7 @@ bin/
 *.swp
 *.diff
 *.patch
+*/bin/
 
 # intellij
 *.iml
@@ -64,3 +65,6 @@ benchmark.cfg
 # java / ruby stuff
 *.lock
 *.war
+
+# go
+go/pkg/

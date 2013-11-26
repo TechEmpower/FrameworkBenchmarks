@@ -13,7 +13,7 @@
       "language": "C#",
       "orm": "Raw",
       "platform": "Mono",
-      "webserver": "none",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "evhttp-sharp",

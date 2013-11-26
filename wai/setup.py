@@ -12,7 +12,7 @@ def start(args, logfile, errfile):
 
   db_host = args.database_host
   threads = str(args.max_threads)
-  subprocess.Popen("dist/build/bench/bench " + threads + " " + db_host + " +RTS -A4M -N -qg2 -I0 -G2 > /dev/null", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
+  subprocess.Popen("dist/build/bench/bench " + threads + " " + db_host + " +RTS -A4M -N -qg2 -I0 -G2", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
   return 0
 
 def stop(logfile, errfile):
@@ -22,7 +22,7 @@ def stop(logfile, errfile):
     if 'bench' in line:
       try:
         pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+        os.kill(pid, 15)
       except OSError:
         pass
 
