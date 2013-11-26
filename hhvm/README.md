@@ -42,3 +42,12 @@ Supports the Following Benmarking URLs
 The tests were run with:
 
 * [HHVM v2.2.0](http://github.com/facebook/hhvm)
+
+## Setting up a test environment
+
+1. Invoke the ./setup.sh script
+
+2. Invoke the ./run.sh script in another terminal
+
+3. Invoke the ./tests.sh script and see that you get a sample output from all
+    the urls mentions in the ./URLs file

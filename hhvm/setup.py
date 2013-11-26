@@ -7,14 +7,7 @@ from os.path import expanduser
 home = expanduser("~")
 
 def start(args):
-  if not args.database_host:
-    args.database_host = "localhost"
-
-  setup_util.replace_text("hhvm/db.php", "@.*\/hello_world", "@" + args.database_host + "/hello_world")
-  setup_util.replace_text("hhvm/queries.php", "@.*\/hello_world", "@" + args.database_host + "/hello_world")
-  setup_util.replace_text("hhvm/fortunes.php", "@.*\/hello_world", "@" + args.database_host + "/hello_world")
-  setup_util.replace_text("hhvm/updates.php", "@.*\/hello_world", "@" + args.database_host + "/hello_world")
-
+  setup_util.replace_text("hhvm/once.php.inc", "host=.*;", "host=" + args.database_host + ";")
   setup_util.replace_text("hhvm/deploy/config.hdf", "SourceRoot = .*\/FrameworkBenchmarks", "SourceRoot = " + home + "/FrameworkBenchmarks")
   setup_util.replace_text("hhvm/deploy/config.hdf", "Path = .*\/.hhvm.hhbc", "Path = " + home + "/FrameworkBenchmarks/hhvm/.hhvm.bbhc")
   setup_util.replace_text("hhvm/deploy/config.hdf", "PidFile = .*\/hhvm.pid", "Path = " + home + "/FrameworkBenchmarks/hhvm/hhvm.pid")

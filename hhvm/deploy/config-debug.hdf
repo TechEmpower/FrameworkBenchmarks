@@ -1,4 +1,4 @@
-# main configuration file
+# Debugging configuration file
 
 # Application PID File
 PidFile = /tmp/FrameworkBenchmarks/hhvm/hhvm.pid
@@ -12,10 +12,7 @@ Server {
 
 # Disable logging completely
 Log {
-  Level = None
-  NoSilencer = true
-  AlwaysLogUnhandledExceptions = false
-  RuntimeErrorReportingLevel = 8191
+  Level = Verbose
   UseLogFile = false
   UseSyslog = false
 }
