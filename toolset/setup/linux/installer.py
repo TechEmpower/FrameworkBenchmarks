@@ -33,7 +33,7 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev mercurial", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev mercurial mlton", True)
     self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test", True)
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get install gcc-4.8 g++-4.8", True)
@@ -43,7 +43,6 @@ class Installer:
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
     self.__run_command("source ../../.profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
-    self.__run_command("sudo sysctl -w net.core.somaxconn=1024")
 
     ##############################################################
     # System Tools
@@ -106,14 +105,8 @@ class Installer:
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler")
-    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.4")
-    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install bundler")
-
-    # We need a newer version of jruby-rack
-    self.__run_command("git clone git://github.com/jruby/jruby-rack.git", retry=True);
-    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do bundle install")
-    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true")
-    self.__bash_from_string("cd jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.8")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.8 do gem install bundler")
 
     #
     # go
@@ -205,6 +198,16 @@ class Installer:
 
     self.__run_command("sudo apt-get install racket", True)
 
+    #
+    # Ur/Web
+    #
+
+    self.__download("http://www.impredicative.com/ur/urweb-20130421.tgz")
+    self.__run_command("tar xzf urweb-20130421.tgz")
+    self.__run_command("./configure", cwd="urweb-20130421")
+    self.__run_command("make", cwd="urweb-20130421")
+    self.__run_command("sudo make install", cwd="urweb-20130421")
+
     #######################################
     # Webservers
     #######################################
@@ -249,9 +252,9 @@ class Installer:
     #
     # Grails
     #
-    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.1.zip")
-    self.__run_command("unzip -o grails-2.3.1.zip")
-    self.__run_command("rm grails-2.3.1.zip")
+    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.3.zip")
+    self.__run_command("unzip -o grails-2.3.3.zip")
+    self.__run_command("rm grails-2.3.3.zip")
 
     #
     # Play 2
@@ -287,8 +290,8 @@ class Installer:
     #
     # Vert.x
     #
-    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.0.2-final.tar.gz?direct=true", "vert.x-2.0.2-final.tar.gz")
-    self.__run_command("tar xzf vert.x-2.0.2-final.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1M1.tar.gz?direct=true", "vert.x-2.1M1.tar.gz")
+    self.__run_command("tar xzf vert.x-2.1M1.tar.gz")
 
     #
     # Yesod
@@ -436,6 +439,7 @@ class Installer:
     sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
+    sudo -u benchmarkdbuser psql hello_world < create-postgres-urweb.sql
 
     sudo -u postgres -H /etc/init.d/postgresql stop
     sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf

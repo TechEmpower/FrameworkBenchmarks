@@ -1,6 +1,7 @@
 import random
 import sys
 
+import json
 import motor
 import tornado.ioloop
 import tornado.web
@@ -9,7 +10,9 @@ import tornado.options
 from tornado.options import options
 import tornado.httpserver
 
+PY3 = False
 if sys.version_info[0] == 3:
+    PY3 = True
     xrange = range
 
 tornado.options.define('port', default=8888, type=int, help="Server port")
@@ -38,21 +41,19 @@ class QueryTestHandler(BaseHandler):
 
         if queries == 0:
             random_id = random.randint(1, 10000)
-            world = yield gen.Task(db.world.find_one,{"id": random_id}, fields={"_id": 0, "id": 1, "randomNumber": 1})
+            world = yield motor.Op(db.world.find_one,{"id": random_id}, fields={"_id": 0, "id": 1, "randomNumber": 1})
             # Get first postion on arguments, and so first postion in mongo return
-            world = world[0][0]
+            response = json.dumps(world)
         else:
             worlds = []
             for i in xrange(int(queries)):
                 random_id = random.randint(1, 10000)
-                world = yield gen.Task(db.world.find_one,{"id": random_id}, fields={"_id": 0, "id": 1, "randomNumber": 1})
+                world = yield motor.Op(db.world.find_one,{"id": random_id}, fields={"_id": 0, "id": 1, "randomNumber": 1})
                 # Get first postion on arguments, and so first postion in mongo return
-                worlds.append(world[0][0])
-
-            worlds = escape.json_encode(worlds)
-            self.set_header("Content-Type", "application/json; charset=UTF-8")
-
-        self.write(worlds if queries > 0 else world)
+                worlds.append(world)
+            response = json.dumps(worlds)
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
+        self.finish(response)
 
 application = tornado.web.Application([
     (r"/json", JsonSerializeTestHandler),

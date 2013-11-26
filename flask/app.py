@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 from functools import partial
+import json
 from operator import attrgetter
 from random import randint
 import sys
 
 import flask
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, request, render_template, make_response
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 
@@ -50,6 +51,14 @@ class Fortune(db.Model):
 
 # views
 
+# flask.jsonify doesn't allow array at top level for security concern.
+# So we should have oriiginal one.
+def json_response(obj):
+    res = make_response(json.dumps(obj))
+    res.mimetype = "application/json"
+    return res
+
+
 @app.route("/json")
 def hello():
     return jsonify(message='Hello, World!')
@@ -60,14 +69,14 @@ def get_random_world():
     num_queries = request.args.get("queries", 1, type=int)
     worlds = [World.query.get(randint(1, 10000)).serialize
               for _ in xrange(num_queries)]
-    return jsonify(worlds=worlds)
+    return json_response(worlds)
 
 
 @app.route("/dbs")
 def get_random_world_single():
     wid = randint(1, 10000)
     worlds = [World.query.get(wid).serialize]
-    return jsonify(worlds=worlds)
+    return json_response(worlds)
 
 
 @app.route("/dbraw")
@@ -80,7 +89,7 @@ def get_random_world_raw():
         result = connection.execute("SELECT * FROM World WHERE id = " + str(wid)).fetchone()
         worlds.append({'id': result[0], 'randomNumber': result[1]})
     connection.close()
-    return jsonify(worlds=worlds)
+    return json_response(worlds)
 
 
 @app.route("/dbsraw")
@@ -90,7 +99,7 @@ def get_random_world_single_raw():
     result = connection.execute("SELECT * FROM World WHERE id = " + str(wid)).fetchone()
     worlds = [{'id': result[0], 'randomNumber': result[1]}]
     connection.close()
-    return jsonify(worlds=worlds)
+    return json_response(worlds)
 
 @app.route("/fortunes")
 def get_fortunes():
@@ -123,7 +132,7 @@ def updates():
         world.randomNumber = rp()
         worlds.append(world.serialize)
     db.session.commit()
-    return jsonify(worlds)
+    return json_response(worlds)
 
 
 @app.route("/raw-updates")
@@ -141,13 +150,13 @@ def raw_updates():
         worlds.append({'id': world['id'], 'randomNumber': randomNumber})
         dbraw_engine.execute("UPDATE World SET randomNumber=%s WHERE id=%s",
                              (randomNumber, world['id']))
-    return jsonify(worlds=worlds)
+    return json_response(worlds)
 
 
 @app.route('/plaintext')
 def plaintext():
     """Test 6: Plaintext"""
-    response = flask.make_response(b'Hello, World!')
+    response = make_response(b'Hello, World!')
     response.content_type = 'text/plain'
     return response
 
