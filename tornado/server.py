@@ -41,15 +41,17 @@ class QueryTestHandler(BaseHandler):
 
         if queries == 0:
             random_id = random.randint(1, 10000)
-            world = yield motor.Op(db.World.find_one,{"_id": random_id}, fields={"_id": 1, "randomNumber": 1})
+            world = yield motor.Op(db.World.find_one, random_id)
             # Get first postion on arguments, and so first postion in mongo return
+            world['id'] = world.pop('_id')
             response = json.dumps(world)
         else:
             worlds = []
             for i in xrange(int(queries)):
                 random_id = random.randint(1, 10000)
-                world = yield motor.Op(db.World.find_one,{"_id": random_id}, fields={"_id": 1, "randomNumber": 1})
+                world = yield motor.Op(db.World.find_one, random_id)
                 # Get first postion on arguments, and so first postion in mongo return
+                world['id'] = world.pop('_id')
                 worlds.append(world)
             response = json.dumps(worlds)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
