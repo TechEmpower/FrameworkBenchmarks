@@ -12,12 +12,8 @@ Server {
 
 # Disable logging completely
 Log {
-  Level = None
-  NoSilencer = true
-  AlwaysLogUnhandledExceptions = false
-  RuntimeErrorReportingLevel = 8191
-  UseLogFile = false
   UseSyslog = false
+  Level = Error
 }
 
 # Enable jit for production mode

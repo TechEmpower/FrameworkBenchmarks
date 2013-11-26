@@ -10,11 +10,10 @@ Server {
   DefaultDocument = index.php
 }
 
-# Disable logging completely
+# Enable debug logging
 Log {
-  Level = Verbose
-  UseLogFile = false
   UseSyslog = false
+  Level = Verbose
 }
 
 # Enable jit for production mode
