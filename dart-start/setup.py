@@ -10,7 +10,7 @@ def start(args, logfile, errfile):
     #
     # install dart dependencies
     #
-    subprocess.check_call('pub get', shell=True, cwd='dart-start', stderr=errfile, stdout=logfile)
+    subprocess.check_call('pub upgrade', shell=True, cwd='dart-start', stderr=errfile, stdout=logfile)
     #
     # start dart servers
     #
