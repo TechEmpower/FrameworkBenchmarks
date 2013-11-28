@@ -15,12 +15,12 @@
       "framework": "django",
       "language": "Python",
       "orm": "Full",
-      "platform": "wsgi",
-      "webserver": "Gunicorn",
+      "platform": "Gunicorn/Meinheld",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "django",
-      "notes": "",
+      "notes": "CPython 2.7",
       "versus": "wsgi"
     },
     "py3": {
@@ -37,12 +37,12 @@
       "framework": "django",
       "language": "Python",
       "orm": "Full",
-      "platform": "wsgi",
-      "webserver": "Gunicorn",
+      "platform": "Gunicorn/Meinheld",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "django-py3",
-      "notes": "",
+      "notes": "CPython 3.3",
       "versus": "wsgi"
     },
     "postgresql": {
@@ -59,12 +59,12 @@
       "framework": "django",
       "language": "Python",
       "orm": "Full",
-      "platform": "wsgi",
-      "webserver": "Gunicorn",
+      "platform": "Gunicorn/Meinheld",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "django",
-      "notes": "",
+      "notes": "CPython 2.7",
       "versus": "wsgi"
     }
   }]

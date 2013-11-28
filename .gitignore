@@ -1,3 +1,8 @@
+.DS_Store
+installs
+*.log
+node_modules/
+
 # eclipse
 .classpath
 .project
@@ -5,6 +10,12 @@
 
 # maven
 target/
+*.out
+*.class
+mods/
+/.settings
+/.buildpath
+/.project
 */src/main/java/META-INF/
 *.versionsBackup
 bin/
@@ -14,12 +25,19 @@ bin/
 *.swp
 *.diff
 *.patch
+*/bin/
 
 # intellij
 *.iml
 *.ipr
 *.iws
 .idea/
+.hsenv/
+azure.err
+php-kohana/application/logs/
+php-fuel/fuel/app/logs/
+results/
+benchmark.cfg
 
 # Mac filesystem dust
 .DS_Store
@@ -37,6 +55,16 @@ bin/
 # merge tooling
 *.orig
 
-#maven
+# maven
 *.versionsBackup
 *.releaseBackup
+
+# python-isms
+*.pyc
+
+# java / ruby stuff
+*.lock
+*.war
+
+# go
+go/pkg/
