@@ -30,8 +30,12 @@ public class Server {
         transport.setWorkerThreadPoolConfig(null);
         transport.setSelectorRunnersCount(Runtime.getRuntime().availableProcessors());
         
+        // always keep-alive
         networkListener.getKeepAlive().setIdleTimeoutInSeconds(-1);
         networkListener.getKeepAlive().setMaxRequestsCount(-1);
+        
+        // disable file-cache
+        networkListener.getFileCache().setEnabled(false);
         
         httpServer.addListener(networkListener);
         
