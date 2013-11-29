@@ -56,7 +56,7 @@ fun queries oqs =
 fun updates oqs =
   rows <- List.tabulateM (fn _ => n <- rand; world_find (clamp n)) (parseQueries oqs);
   rows' <- List.mapM (fn r => n <- rand; return (r -- #RandomNumber ++ {RandomNumber = clamp n})) rows;
-  u <- List.mapM (fn r => dml (UPDATE world SET RandomNumber = {[r.RandomNumber]} WHERE Id = {[r.Id]})) rows';
+  List.app (fn r => dml (UPDATE world SET RandomNumber = {[r.RandomNumber]} WHERE Id = {[r.Id]})) rows';
   returnJson rows'
 
 table fortune : {Id : int, Message : string} PRIMARY KEY Id
