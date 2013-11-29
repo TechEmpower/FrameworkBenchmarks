@@ -90,10 +90,11 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
             JsonObject body = reply.body();
 
             if ("ok".equals(body.getString("status"))) {
-              JsonObject world = body.getObject("result");
-              world.removeField("_id");
-              String result = world.encode();
-              sendResponse(req, result);
+              JsonObject result = body.getObject("result");
+              Entry world = new Entry(result.getInteger("_id"),
+                                      result.getInteger("randomNumber"));
+
+              sendResponse(req, Json.encode(world));
             } else {
               System.err.println("Failed to execute query");
             }
@@ -126,12 +127,12 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
   private class MongoHandler implements Handler<Message<JsonObject>> {
     private final HttpServerRequest req;
     private final int queries;
-    private final JsonArray worlds;
+    private final List<Entry> worlds;
 
     public MongoHandler(HttpServerRequest request, int queriesParam) {
       req = request;
       queries = queriesParam;
-      worlds = new JsonArray();
+      worlds = new ArrayList<Entry>(queries);
     }
 
     @Override
@@ -139,12 +140,14 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
       JsonObject body = reply.body();
 
       if ("ok".equals(body.getString("status"))) {
-        body.getObject("result").removeField("_id");
-        worlds.add(body.getObject("result"));
+        JsonObject result = body.getObject("result");
+        Entry world = new Entry(result.getInteger("_id"),
+                               result.getInteger("randomNumber"));
+        worlds.add(world);
         if (worlds.size() == this.queries) {
+
           // All queries have completed; send the response.
-          String result = worlds.encode();
-          sendResponse(req, result);
+          sendResponse(req, Json.encode(worlds));
         }
       } else {
         System.err.println("Failed to execute query");
@@ -161,5 +164,15 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
       resp.putHeader("Date", dateString);
       resp.end(result);
   }
+
+  private static final class Entry {
+    public int id;
+    public int randomNumber;
+    public Entry(int id, int randomNumber) {
+      this.id = id;
+      this.randomNumber = randomNumber;
+    }
+  }
+
 }
 
