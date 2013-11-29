@@ -1,5 +1,4 @@
 local mysql = require "resty.mysql"
-local math = require "math"
 
 local encode = require("cjson").encode
 local random = math.random
@@ -14,7 +13,7 @@ local mysqlconn = {
 	password = "benchmarkdbpass"
 }
 local db = mysql:new()
-return function()
+return function(ngx)
 	db:connect(mysqlconn)
 	local num_queries = tonumber(ngx.var.arg_queries) or 1
 	local worlds = {}
