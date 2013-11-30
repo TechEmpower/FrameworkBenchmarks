@@ -29,5 +29,7 @@ public class WicketApplication extends WebApplication
 		// add your configuration here
     mountResource("/json", new HelloJsonReference());
     mountResource("/db", new HelloDbReference());
+
+    getRequestCycleSettings().setBufferResponse(false);
 	}
 }
