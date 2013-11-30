@@ -20,7 +20,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>6.5.0</wicket.version>
+		<wicket.version>6.12.0</wicket.version>
 		<jetty.version>7.5.0.v20110901</jetty.version>
 	</properties>
 	<dependencies>
