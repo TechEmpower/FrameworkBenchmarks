@@ -1,25 +1,25 @@
-import java.nio.charset.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.HttpServerResponse;
-import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 import org.vertx.java.platform.Verticle;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
-  private static String helloWorld = "Hello, World!";
-  private static Buffer helloWorldBuffer = new Buffer(helloWorld);
-  private static String helloWorldContentLength = String.valueOf(helloWorldBuffer.length());
-  private static DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyyy HH:mm:ss z");
-
+  private Buffer helloWorldBuffer = new Buffer("Hello, World!");
+  private String helloWorldContentLength = String.valueOf(helloWorldBuffer.length());
+  private DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyyy HH:mm:ss z");
   private String dateString;
 
   @Override
@@ -32,10 +32,6 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
       }
     });
     formatDate();
-  }
-
-  private void formatDate() {
-    dateString = DATE_FORMAT.format(new Date());
   }
 
   @Override
@@ -60,45 +56,33 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     }
   }
 
+  private void formatDate() {
+    dateString = DATE_FORMAT.format(new Date());
+  }
+
   private void handlePlainText(HttpServerRequest req) {
     HttpServerResponse resp = req.response();
-    resp.putHeader("Content-Type", "application/json; charset=UTF-8");
-    resp.putHeader("Content-Length", helloWorldContentLength);
-    resp.putHeader("Server", "vert.x");
-    resp.putHeader("Date", dateString);
+    setHeaders(resp, "text/plain", helloWorldContentLength);
     resp.end(helloWorldBuffer);
   }
 
   private void handleJson(HttpServerRequest req) {
-    String result = Json.encode(Collections.singletonMap("message", "Hello, world!"));
-    sendResponse(req, result);
+    Buffer buff = new Buffer(Json.encode(Collections.singletonMap("message", "Hello, world!")));
+    HttpServerResponse resp = req.response();
+    setHeaders(resp, "application/json", String.valueOf(buff.length()));
+    resp.end(buff);
   }
 
   private void handleDbMongo(final HttpServerRequest req) {
-
-    final Random random = ThreadLocalRandom.current();
-
-    vertx.eventBus().send(
-        "hello.persistor",
-        new JsonObject()
-            .putString("action", "findone")
-            .putString("collection", "World")
-            .putObject("matcher", new JsonObject().putNumber("_id", (random.nextInt(10000) + 1))),
-        new Handler<Message<JsonObject>>() {
-          @Override
-          public void handle(Message<JsonObject> reply) {
-            JsonObject body = reply.body();
-
-            if ("ok".equals(body.getString("status"))) {
-              JsonObject world = body.getObject("result");
-              world.removeField("_id");
-              String result = world.encode();
-              sendResponse(req, result);
-            } else {
-              System.err.println("Failed to execute query");
-            }
-          }
-        });
+    findRandom(ThreadLocalRandom.current(), new Handler<Message<JsonObject>>() {
+      @Override
+      public void handle(Message<JsonObject> reply) {
+        JsonObject body = reply.body();
+        JsonObject world = body.getObject("result");
+        String result = world.encode();
+        sendResponse(req, result);
+      }
+    });
   }
 
   private void handleQueriesMongo(final HttpServerRequest req) {
@@ -108,19 +92,35 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     } catch (NumberFormatException e) {
       e.printStackTrace();
     }
-
     final MongoHandler dbh = new MongoHandler(req, queriesParam);
     final Random random = ThreadLocalRandom.current();
-
     for (int i = 0; i < queriesParam; i++) {
-      vertx.eventBus().send(
-          "hello.persistor",
-          new JsonObject()
-              .putString("action", "findone")
-              .putString("collection", "World")
-              .putObject("matcher", new JsonObject().putNumber("_id", (random.nextInt(10000) + 1))),
-          dbh);
+      findRandom(random, dbh);
     }
+  }
+
+  private void findRandom(Random random, Handler<Message<JsonObject>> handler) {
+    vertx.eventBus().send(
+        "hello.persistor",
+        new JsonObject()
+            .putString("action", "findone")
+            .putString("collection", "World")
+            .putObject("matcher", new JsonObject().putNumber("_id", (random.nextInt(10000) + 1))),
+        handler);
+  }
+
+  private void sendResponse(HttpServerRequest req, String result) {
+    Buffer buff = new Buffer(result);
+    HttpServerResponse resp = req.response();
+    setHeaders(resp, "application/json", String.valueOf(buff.length()));
+    resp.end(buff);
+  }
+
+  private void setHeaders(HttpServerResponse resp, String contentType, String contentLength) {
+    resp.putHeader("Content-Type", contentType);
+    resp.putHeader("Content-Length", contentLength);
+    resp.putHeader("Server", "vert.x");
+    resp.putHeader("Date", dateString);
   }
 
   private class MongoHandler implements Handler<Message<JsonObject>> {
@@ -137,29 +137,14 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     @Override
     public void handle(Message<JsonObject> reply) {
       JsonObject body = reply.body();
-
-      if ("ok".equals(body.getString("status"))) {
-        body.getObject("result").removeField("_id");
-        worlds.add(body.getObject("result"));
-        if (worlds.size() == this.queries) {
-          // All queries have completed; send the response.
-          String result = worlds.encode();
-          sendResponse(req, result);
-        }
-      } else {
-        System.err.println("Failed to execute query");
+      worlds.add(body.getObject("result"));
+      if (worlds.size() == this.queries) {
+        // All queries have completed; send the response.
+        String result = worlds.encode();
+        sendResponse(req, result);
       }
     }
   }
-  
-  private void sendResponse(HttpServerRequest req, String result) {
-      int contentLength = result.getBytes(StandardCharsets.UTF_8).length;
-      HttpServerResponse resp = req.response();
-      resp.putHeader("Content-Type", "application/json; charset=UTF-8");
-      resp.putHeader("Content-Length", String.valueOf(contentLength));
-      resp.putHeader("Server", "vert.x");
-      resp.putHeader("Date", dateString);
-      resp.end(result);
-  }
+
 }
 
