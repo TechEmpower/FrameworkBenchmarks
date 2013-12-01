@@ -81,19 +81,6 @@
                 <artifactId>tomcat-maven-plugin</artifactId>
                 <version>1.1</version>
             </plugin>
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>7.5.0.v20110901</version>
-                <configuration>
-                    <connectors>
-                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                            <port>8080</port>
-                            <maxIdleTime>3600000</maxIdleTime>
-                        </connector>
-                    </connectors>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>
