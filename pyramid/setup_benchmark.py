@@ -23,7 +23,7 @@ def start(args):
         '-b', "0.0.0.0:6543",
         '-w', str(NCPU*3)],
         cwd='pyramid'
-    ])
+    )
     return 0
 
 def stop():

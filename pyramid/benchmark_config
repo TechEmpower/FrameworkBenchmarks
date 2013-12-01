@@ -23,7 +23,7 @@
       "display_name": "pyramid-py2",
       "notes": "",
       "versus": "wsgi"
-    }
+    },
     "py3": {
       "setup_file": "setup_benchmark",
       "json_url": "/json",

@@ -1,5 +1,3 @@
-import os
-
 from setuptools import setup, find_packages
 
 requires = [
@@ -8,11 +6,11 @@ requires = [
     'psycopg2',
     'sqlalchemy',
     'gunicorn'
-    ]
+]
 
 tests_require = [
-  'nose-cov',
-  'webtest'
+    'nose-cov',
+    'webtest'
 ]
 
 setup(name='frameworkbenchmarks',
