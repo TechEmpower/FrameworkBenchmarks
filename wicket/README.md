@@ -15,7 +15,7 @@ Use [Hibernate](http://www.hibernate.org/) for interaction with MySQL database.
 ## Versions
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Wicket 6.5.0](http://wicket.apache.org/)
+* [Wicket 6.12.0](http://wicket.apache.org/)
 * [Hibernate 4.1.1](http://www.hibernate.org/)
 * [MySQL 5.5.29](http://dev.mysql.com/)
 * [Maven 2.2.1](https://maven.apache.org/)
