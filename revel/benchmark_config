@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "revel",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "skip": "true"
     }
   }]
 }
