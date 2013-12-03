@@ -1,11 +1,19 @@
 package hello;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.ResourceLeakDetector;
+
 
 public class HelloWebServer {
+    static {
+        ResourceLeakDetector.setEnabled(false);
+    }
 
     private final int port;
 
@@ -15,17 +23,18 @@ public class HelloWebServer {
 
     public void run() throws Exception {
         // Configure the server.
-        ServerBootstrap b = new ServerBootstrap();
-
+        EventLoopGroup group = new NioEventLoopGroup();
         try {
-            b.group(new NioEventLoopGroup(), new NioEventLoopGroup())
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(group)
+             .childHandler(new HelloServerInitializer())
              .channel(NioServerSocketChannel.class)
-             .childHandler(new HelloServerInitializer());
-
+             .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+             
             Channel ch = b.bind(port).sync().channel();
             ch.closeFuture().sync();
         } finally {
-            b.shutdown();
+            group.shutdownGracefully().sync();
         }
     }
 
