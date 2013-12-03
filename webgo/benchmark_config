@@ -17,8 +17,7 @@
       "database_os": "Linux",
       "display_name": "webgo",
       "notes": "",
-      "versus": "go",
-      "skip": "true"
+      "versus": "go"
     }
   }]
 }

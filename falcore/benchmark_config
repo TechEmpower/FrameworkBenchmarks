@@ -22,8 +22,7 @@
       "database_os": "Linux",
       "display_name": "falcore",
       "notes": "",
-      "versus": "go",
-      "skip": "true"
+      "versus": "go"
     }
   }]
 }
