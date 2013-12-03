@@ -77,12 +77,19 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     findRandom(ThreadLocalRandom.current(), new Handler<Message<JsonObject>>() {
       @Override
       public void handle(Message<JsonObject> reply) {
-        JsonObject body = reply.body();
-        JsonObject world = body.getObject("result");
+        JsonObject world = getResultFromReply(reply);
         String result = world.encode();
         sendResponse(req, result);
       }
     });
+  }
+
+  private JsonObject getResultFromReply(Message<JsonObject> reply) {
+    JsonObject body = reply.body();
+    JsonObject world = body.getObject("result");
+    Object id = world.removeField("_id");
+    world.putValue("id", id);
+    return world;
   }
 
   private void handleQueriesMongo(final HttpServerRequest req) {
@@ -136,8 +143,8 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
 
     @Override
     public void handle(Message<JsonObject> reply) {
-      JsonObject body = reply.body();
-      worlds.add(body.getObject("result"));
+      JsonObject world = getResultFromReply(reply);
+      worlds.add(world);
       if (worlds.size() == this.queries) {
         // All queries have completed; send the response.
         String result = worlds.encode();
