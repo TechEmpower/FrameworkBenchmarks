@@ -10,7 +10,7 @@ def start(args, logfile, errfile):
                 'password=benchmarkdbpass '
                 'host=' + args.database_host)
   env = {'URWEB_PQ_CON': conn_string}
-  subprocess.Popen("./bench.exe -t " + threads,
+  subprocess.Popen("./bench.exe -k -t " + threads,
                    env=env, shell=True, cwd="UrWeb", stderr=errfile, stdout=logfile)
   return 0
 
