@@ -12,7 +12,7 @@ import 'package:yaml/yaml.dart' as yaml;
 /// address and port for incoming connections is configurable via command line
 /// arguments, as is the number of database connections to be maintained in the
 /// connection pool.
-main(args) {
+main(List<String> args) {
   var parser = new ArgParser();
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
