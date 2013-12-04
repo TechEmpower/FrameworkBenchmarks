@@ -20,7 +20,8 @@
       "database_os": "Linux",
       "display_name": "revel-jet",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "skip": "true"
     }
   }]
 }

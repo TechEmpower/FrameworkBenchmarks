@@ -6,7 +6,7 @@ import os
 def start(args, logfile, errfile):
   try:
     subprocess.check_call("mvn clean compile assembly:single", shell=True, cwd="netty", stderr=errfile, stdout=logfile)
-    subprocess.Popen("java -Dio.netty.noResourceLeakDetection=true -jar netty-example-0.1-jar-with-dependencies.jar".rsplit(" "), cwd="netty/target", stderr=errfile, stdout=logfile)
+    subprocess.Popen("java -jar netty-example-0.1-jar-with-dependencies.jar".rsplit(" "), cwd="netty/target", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1

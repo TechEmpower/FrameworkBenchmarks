@@ -16,7 +16,7 @@ The tests were run with:
 * [JRuby 1.7.8](http://jruby.org/)
 * [Rails 3.2.11](http://rubyonrails.org/)
 * [Unicorn 4.6.2](http://unicorn.bogomips.org/)
-* [TorqBox 0.1.2](http://torquebox.org/torqbox/)
+* [TorqBox 0.1.4](http://torquebox.org/torqbox/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## References

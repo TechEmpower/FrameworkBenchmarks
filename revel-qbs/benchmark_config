@@ -20,7 +20,8 @@
       "database_os": "Linux",
       "display_name": "revel-qbs",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "skip": "true"
     }
   }]
 }
