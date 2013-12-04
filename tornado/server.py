@@ -34,7 +34,6 @@ class PlaintextHandler(BaseHandler):
         self.write(b"Hello, World!")
 
 class QueryTestHandler(BaseHandler):
-    @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
         queries = int(self.get_argument("queries", 0))
@@ -55,7 +54,7 @@ class QueryTestHandler(BaseHandler):
                 worlds.append(world)
             response = json.dumps(worlds)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
-        self.finish(response)
+        self.write(response)
 
 application = tornado.web.Application([
     (r"/json", JsonSerializeTestHandler),
