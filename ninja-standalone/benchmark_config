@@ -21,7 +21,8 @@
       "database_os": "Linux",
       "display_name": "ninja-standalone",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "skip": "true"
     }
   }]
 }
