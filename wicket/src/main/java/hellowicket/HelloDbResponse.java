@@ -1,13 +1,12 @@
 package hellowicket;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.wicket.request.resource.AbstractResource;
-import com.fasterxml.jackson.databind.*;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HelloDbResponse extends AbstractResource
 {
@@ -21,7 +20,7 @@ public class HelloDbResponse extends AbstractResource
   {
     final int queries = attributes.getRequest().getQueryParameters().getParameterValue("queries").toInt(1);
     final World[] worlds = new World[queries];
-    final Random random = ThreadLocalRandom.current();
+    final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     final ResourceResponse response = new ResourceResponse();
     response.setContentType("application/json");
