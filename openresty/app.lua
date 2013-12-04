@@ -1,44 +1,32 @@
-local _M = {}
+local mysql = mysql
 
-local cjson = require "cjson"
-local mysql = require "resty.mysql"
-local math = require "math"
-
-local encode = cjson.encode
+local encode = encode
 local random = math.random
-local insert = table.insert
 
-
-function _M.handler(ngx)
-    ngx.header.content_type = 'application/json'
-    
-    if ngx.var.uri == '/json' then
-        local resp = {message = "Hello, World!"}
-        ngx.print( encode(resp) )
-    elseif ngx.var.uri == '/db' then
-
-        local mysqlconn = {
-            host = "DBHOSTNAME",
-            port = 3306,
-            database = "hello_world",
-            user = "benchmarkdbuser",
-            password = "benchmarkdbpass"
-        }
-
-        local db, err = mysql:new()
-        local ok, err = db:connect(mysqlconn)
-        local num_queries = tonumber(ngx.var.arg_queries) or 1
-        local worlds = {}
-        for i=1, num_queries do
-            local wid = random(1, 10000)
-            insert(worlds, db:query('SELECT * FROM World WHERE id = '..wid)[1])
-        end
-        ngx.print( encode(worlds) )
-        local ok, err = db:set_keepalive(0, 256)
-    elseif ngx.var.uri == '/plaintext' then
-        ngx.header.content_type = 'text/plain'
-        ngx.print('Hello, World!')
-    end
+local mysqlconn = {
+	host = "DBHOSTNAME",
+	port = 3306,
+	database = "hello_world",
+	user = "benchmarkdbuser",
+	password = "benchmarkdbpass"
+}
+return function(ngx)
+	local db = mysql:new()
+	assert(db:connect(mysqlconn))
+	local num_queries = tonumber(ngx.var.arg_queries) or 1
+	-- May seem like a stupid branch, but since we know that
+	-- at a benchmark it will always be taken one way,
+	-- it doesn't matter. For me, after a small warmup, the performance
+	-- is identical to a version without the branch
+	-- http://wiki.luajit.org/Numerical-Computing-Performance-Guide
+	if num_queries == 1 then
+		ngx.print(encode(db:query('SELECT * FROM World WHERE id = '..random(1,10000))[1]))
+	else
+		local worlds = {}
+		for i=1, num_queries do
+			worlds[#worlds+1] = db:query('SELECT * FROM World WHERE id = '..random(1,10000))[1]
+		end
+		ngx.print( encode(worlds) )
+	end
+	db:set_keepalive(0, 256)
 end
-
-return _M
