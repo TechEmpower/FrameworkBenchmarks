@@ -3,11 +3,13 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <!--<property name="hibernate.connection.datasource">java:comp/env/jdbc/hello_world</property>-->
-        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hello_world?jdbcCompliantTruncation=false&amp;elideSetAutoCommits=true&amp;useLocalSessionState=true&amp;cachePrepStmts=true&amp;cacheCallableStmts=true&amp;alwaysSendSetIsolation=false&amp;prepStmtCacheSize=4096&amp;cacheServerConfiguration=true&amp;prepStmtCacheSqlLimit=2048&amp;zeroDateTimeBehavior=convertToNull&amp;traceProtocol=false&amp;useUnbufferedInput=false&amp;useReadAheadInput=false&amp;maintainTimeStats=false&amp;useServerPrepStmts&amp;cacheRSMetadata=true</property>
-        <property name="hibernate.connection.username">benchmarkdbuser</property>
-        <property name="hibernate.connection.password">benchmarkdbpass</property>
+        <property name="hibernate.connection.datasource">java:comp/env/jdbc/hello_world</property>
+
+        <!-- FOR LOCAL RUNS -->
+        <!--<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>-->
+        <!--<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hello_world?jdbcCompliantTruncation=false&amp;elideSetAutoCommits=true&amp;useLocalSessionState=true&amp;cachePrepStmts=true&amp;cacheCallableStmts=true&amp;alwaysSendSetIsolation=false&amp;prepStmtCacheSize=4096&amp;cacheServerConfiguration=true&amp;prepStmtCacheSqlLimit=2048&amp;zeroDateTimeBehavior=convertToNull&amp;traceProtocol=false&amp;useUnbufferedInput=false&amp;useReadAheadInput=false&amp;maintainTimeStats=false&amp;useServerPrepStmts&amp;cacheRSMetadata=true</property>-->
+        <!--<property name="hibernate.connection.username">benchmarkdbuser</property>-->
+        <!--<property name="hibernate.connection.password">benchmarkdbpass</property>-->
  
         <!-- SQL dialect -->
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
