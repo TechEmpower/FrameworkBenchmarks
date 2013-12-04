@@ -28,7 +28,7 @@ public class Server {
         
         // force to not initialize worker thread pool
         transport.setWorkerThreadPoolConfig(null);
-        transport.setSelectorRunnersCount(Runtime.getRuntime().availableProcessors());
+        transport.setSelectorRunnersCount(Runtime.getRuntime().availableProcessors() * 2);
         
         // always keep-alive
         networkListener.getKeepAlive().setIdleTimeoutInSeconds(-1);
