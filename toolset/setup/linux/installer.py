@@ -112,8 +112,8 @@ class Installer:
     # go
     #
 
-    self.__download("http://go.googlecode.com/files/go1.2rc3.linux-amd64.tar.gz");
-    self.__run_command("tar xzf go1.2rc3.linux-amd64.tar.gz")
+    self.__download("http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz");
+    self.__run_command("tar xzf go1.2.linux-amd64.tar.gz")
 
     #
     # Perl
@@ -202,11 +202,11 @@ class Installer:
     # Ur/Web
     #
 
-    self.__download("http://www.impredicative.com/ur/urweb-20130421.tgz")
-    self.__run_command("tar xzf urweb-20130421.tgz")
-    self.__run_command("./configure", cwd="urweb-20130421")
-    self.__run_command("make", cwd="urweb-20130421")
-    self.__run_command("sudo make install", cwd="urweb-20130421")
+    self.__run_command("hg clone http://hg.impredicative.com/urweb/")
+    self.__run_command("./autogen.sh", cwd="urweb")
+    self.__run_command("./configure", cwd="urweb")
+    self.__run_command("make", cwd="urweb")
+    self.__run_command("sudo make install", cwd="urweb")
 
     #######################################
     # Webservers
@@ -290,8 +290,8 @@ class Installer:
     #
     # Vert.x
     #
-    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1M1.tar.gz?direct=true", "vert.x-2.1M1.tar.gz")
-    self.__run_command("tar xzf vert.x-2.1M1.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1M2.tar.gz?direct=true", "vert.x-2.1M2.tar.gz")
+    self.__run_command("tar xzf vert.x-2.1M2.tar.gz")
 
     #
     # Yesod
@@ -347,7 +347,7 @@ class Installer:
 
     easy_install('simplejson==3.3.1', two=True, three=True, pypy=False)
     easy_install('ujson==1.33', three=True)
-    easy_install('https://github.com/surfly/gevent/releases/download/1.0rc3/gevent-1.0rc3.tar.gz', three=False)
+    easy_install('gevent==1.0')
     easy_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
 
     # Gunicorn

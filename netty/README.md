@@ -8,7 +8,7 @@ This is the netty portion of a [benchmarking test suite](../) comparing a variet
 ## Versions
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Netty 4.0.0.Beta2](http://netty.io/)
+* [Netty 4.0.14.Beta1](http://netty.io/)
 
 ## References
 * https://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/http/snoop

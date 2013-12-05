@@ -15,6 +15,7 @@ def start(args, logfile, errfile):
     subprocess.call(r"go build -o bin\revel.exe github.com/robfig/revel/revel", shell=True, cwd=CWD, env=env, stderr=errfile, stdout=logfile)
     subprocess.Popen(r"bin\revel.exe run benchmark prod".rsplit(" "), shell=True, cwd=CWD, env=env, stderr=errfile, stdout=logfile)
     return 0
+  os.environ["GOPATH"] = os.path.expanduser('~/FrameworkBenchmarks/revel-qbs')
   subprocess.call("go get -u github.com/robfig/revel/revel github.com/coocood/qbs", shell=True, cwd=CWD, stderr=errfile, stdout=logfile)
   subprocess.call("go build -o bin/revel github.com/robfig/revel/revel", shell=True, cwd=CWD, stderr=errfile, stdout=logfile)
   subprocess.Popen("bin/revel run benchmark prod".rsplit(" "), cwd=CWD, stderr=errfile, stdout=logfile)
