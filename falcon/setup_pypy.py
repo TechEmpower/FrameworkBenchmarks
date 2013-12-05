@@ -1,5 +1,4 @@
 import subprocess
-import setup_util
 import multiprocessing
 import os
 
@@ -9,7 +8,7 @@ NCPU = multiprocessing.cpu_count()
 proc = None
 
 
-def start(args):
+def start(args, logfile, errfile):
     global proc
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
@@ -18,10 +17,10 @@ def start(args):
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU*3),
         "--log-level=critical"],
-        cwd="falcon")
+        cwd="falcon", stderr=errfile, stdout=logfile)
     return 0
 
-def stop():
+def stop(logfile, errfile):
     global proc
     if proc is None:
         return 0

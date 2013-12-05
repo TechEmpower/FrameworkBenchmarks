@@ -68,4 +68,4 @@ def update(request):
 
     worlds.append({'id' : r, 'randomNumber' : w.randomnumber})
 
-  return HttpResponse(worlds, mimetype="application/json")
+  return HttpResponse(uj_dumps(worlds), mimetype="application/json")

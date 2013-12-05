@@ -6,9 +6,9 @@ var persistorConf = {
   host: 'localhost'
 }
 
-container.deployModule('io.vertx~mod-mongo-persistor~2.0.0-final', persistorConf, function (err, dep_id) {
+container.deployModule('io.vertx~mod-mongo-persistor~2.1.1', persistorConf, function (err, dep_id) {
   if (!err) {
-    container.deployVerticle('WebServer.java', 8);
+    container.deployVerticle('WebServer.java', java.lang.Runtime.getRuntime().availableProcessors() * 2);
   } else {
     err.printStackTrace();
   }

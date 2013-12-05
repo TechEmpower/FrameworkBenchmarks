@@ -16,12 +16,12 @@
       "framework": "flask",
       "language": "Python",
       "orm": "Full",
-      "platform": "wsgi",
-      "webserver": "Meinheld",
+      "platform": "Gunicorn/Meinheld",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "flask",
-      "notes": "",
+      "notes": "CPython 2.7",
       "versus": "wsgi"
     },
     "mysql-raw": {
@@ -37,12 +37,12 @@
       "framework": "flask",
       "language": "Python",
       "orm": "Raw",
-      "platform": "wsgi",
-      "webserver": "Meinheld",
+      "platform": "Gunicorn/Meinheld",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "flask",
-      "notes": "",
+      "display_name": "flask-raw",
+      "notes": "CPython 2.7",
       "versus": "wsgi"
     },
     "py3": {
@@ -60,12 +60,12 @@
       "framework": "flask",
       "language": "Python",
       "orm": "Full",
-      "platform": "wsgi",
-      "webserver": "Meinheld",
+      "platform": "Gunicorn/Meinheld",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "flask-py3",
-      "notes": "",
+      "notes": "CPython 3.3",
       "versus": "wsgi"
     },
     "pypy": {
@@ -83,12 +83,12 @@
       "framework": "flask",
       "language": "Python",
       "orm": "Full",
-      "platform": "pypy",
-      "webserver": "Tornado",
+      "platform": "Gunicorn/Tornado",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "flask-pypy",
-      "notes": "",
+      "notes": "PyPy 2.2",
       "versus": "wsgi"
     },
     "pypy-mysql-raw": {
@@ -104,12 +104,12 @@
       "framework": "flask",
       "language": "Python",
       "orm": "Raw",
-      "platform": "pypy",
-      "webserver": "Tornado",
+      "platform": "Gunicorn/Tornado",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "flask-pypy",
-      "notes": "",
+      "display_name": "flask-pypy-raw",
+      "notes": "PyPy 2.2",
       "versus": "wsgi"
     },
     "nginx-uwsgi": {
@@ -127,12 +127,12 @@
       "framework": "flask",
       "language": "Python",
       "orm": "Full",
-      "platform": "wsgi",
-      "webserver": "nginx-uWSGI",
+      "platform": "uWSGI",
+      "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "flask-nginx-uWSGI",
-      "notes": "",
+      "notes": "CPython 2.7",
       "versus": "wsgi"
     }
   }]

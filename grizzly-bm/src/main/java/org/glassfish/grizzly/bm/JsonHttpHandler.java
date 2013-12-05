@@ -1,11 +1,10 @@
 package org.glassfish.grizzly.bm;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.*;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
+import org.glassfish.grizzly.http.server.RequestExecutorProvider;
 import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.grizzly.http.util.Header;
 
@@ -14,7 +13,12 @@ import org.glassfish.grizzly.http.util.Header;
  */
 public class JsonHttpHandler extends HttpHandler {
 
-    private final JsonFactory factory = new JsonFactory();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    
+    // Response message class.
+    public static class HelloMessage {
+      public final String message = "Hello, World!";
+    }
 
     @Override
     public void service(final Request request, final Response response)
@@ -22,27 +26,12 @@ public class JsonHttpHandler extends HttpHandler {
         response.setContentType("application/json");
         response.setHeader(Header.Server, Server.SERVER_VERSION);
 
-        JsonGenerator generator = null;
-
-        try {
-            generator = factory.createGenerator(response.getOutputStream());
-            generator.writeStartObject();
-            generator.writeStringField("message", "Hello, world");
-            generator.writeEndObject();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        } finally {
-            if (generator != null) {
-                try {
-                    generator.close();
-                } catch (IOException e) {
-                }
-            }
-        }
+        // Write JSON encoded message to the response.
+        MAPPER.writeValue(response.getOutputStream(), new HelloMessage());
     }
 
     @Override
-    protected ExecutorService getThreadPool(Request request) {
-        return null;
+    public RequestExecutorProvider getRequestExecutorProvider() {
+        return Server.EXECUTOR_PROVIDER;
     }
 }

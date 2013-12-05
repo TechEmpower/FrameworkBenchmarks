@@ -3,19 +3,19 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile, errfile):
   setup_util.replace_text('dart-stream/postgresql.yaml', 'host: .*', 'host: ' + args.database_host)
   setup_util.replace_text('dart-stream/mongodb.yaml', 'host: .*', 'host: ' + args.database_host)
   try:
     #
     # install dart dependencies
     #
-    subprocess.check_call('pub install', shell=True, cwd='dart-stream')
+    subprocess.check_call('pub upgrade', shell=True, cwd='dart-stream', stderr=errfile, stdout=logfile)
     #
     # start dart servers
     #
     for port in range(9001, 9001 + args.max_threads):
-      subprocess.Popen('dart server.dart -a 127.0.0.1 -p ' + str(port) + ' -d ' + str(args.max_concurrency / args.max_threads), shell=True, cwd='dart-stream')
+      subprocess.Popen('dart server.dart -a 127.0.0.1 -p ' + str(port) + ' -d ' + str(args.max_concurrency / args.max_threads), shell=True, cwd='dart-stream', stderr=errfile, stdout=logfile)
     #
     # create nginx configuration
     #
@@ -52,16 +52,16 @@ def start(args):
     #
     # start nginx
     #
-    subprocess.Popen('sudo /usr/sbin/nginx -c `pwd`/nginx.conf', shell=True, cwd='dart-stream');
+    subprocess.Popen('sudo /usr/sbin/nginx -c `pwd`/nginx.conf', shell=True, cwd='dart-stream', stderr=errfile, stdout=logfile);
     return 0
   except subprocess.CalledProcessError:
     return 1
 
-def stop():
+def stop(logfile, errfile):
   #
   # stop nginx
   #
-  subprocess.check_call('sudo /usr/sbin/nginx -c `pwd`/nginx.conf -s stop', shell=True, cwd='dart-stream')
+  subprocess.check_call('sudo /usr/sbin/nginx -c `pwd`/nginx.conf -s stop', shell=True, cwd='dart-stream', stderr=errfile, stdout=logfile)
   os.remove('dart-stream/nginx.conf')
   #
   # stop dart servers

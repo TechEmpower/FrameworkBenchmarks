@@ -122,6 +122,16 @@ Here is the basic structure of benchmark_config, using the Compojure framework a
   * display_name (metadata): How to render this test permutation's name in the results web site.  Some permutation names can be really long, so the display_name is provided in order to provide something more succinct.
   * versus (optional): The name of another test (elsewhere in this project) that is a subset of this framework.  This allows for the generation of the framework efficiency chart in the results web site.  For example, Compojure is compared to "servlet" since Compojure is built on the Servlets platform.
 
+### Testing on both Windows and Linux
+
+If your framework and platform can execute on both Windows and Linux, we encourage you to specify tests for both operating systems.  This increases the amount of testing you should do before submitting your pull-request, however, so we understand if you start with just one of the two.
+
+The steps involved are:
+
+* Assuming you have implemeneted the Linux test already, add a new test permutation to your `benchmark_config` file for the Windows test (or vice-versa).  When the benchmark script runs on Linux, it skips tests where the Application Operating System (`os` in the file) is specified as Linux.  When running on Windows, it skips tests where the `os` field is Linux.
+* Add the necessary tweaks to your [setup file](#setup-files) to start and stop on the new operating system.  See, for example, [the script for Go](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/go/setup.py).
+* Test on Windows and Linux to make sure everything works as expected.
+
 ## Setup Files
 
 The setup file is responsible for starting and stopping the test. This script is responsible for (among other things):
@@ -154,12 +164,12 @@ Here is an example of Wicket's setup file.
 	import setup_util
 
 	##################################################
-	# start(args)
+	# start(args, logfile, errfile)
 	#
 	# Starts the server for Wicket
 	# returns 0 if everything completes, 1 otherwise
 	##################################################
-	def start(args):
+	def start(args, logfile, errfile):
 
     # setting the database url
     setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
@@ -169,23 +179,23 @@ Here is an example of Wicket's setup file.
     # 3. Copy package to Resin's webapp directory
     # 4. Start resin
     try:
-      subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket")
-      subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
-      subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True)
-      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
+      subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket", stderr=errfile, stdout=logfile)
+      subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
+      subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True, stderr=errfile, stdout=logfile)
+      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
       return 0
     except subprocess.CalledProcessError:
       return 1
 
 	##################################################
-	# stop()
+	# stop(logfile, errfile)
 	#
 	# Stops the server for Wicket
 	# returns 0 if everything completes, 1 otherwise
 	##################################################
-	def stop():
+	def stop(logfile):
     try:
-      subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
+      subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True, stderr=errfile, stdout=logfile)
       return 0
     except subprocess.CalledProcessError:
       return 1

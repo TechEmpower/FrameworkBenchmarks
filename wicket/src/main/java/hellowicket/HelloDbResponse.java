@@ -40,7 +40,16 @@ public class HelloDbResponse extends AbstractResource
 
         try
         {
-          attributes.getResponse().write(HelloDbResponse.mapper.writeValueAsString(worlds));
+          String data;
+          if (queries == 1)
+          {
+              data = HelloDbResponse.mapper.writeValueAsString(worlds[0]);
+          }
+          else
+          {
+              data = HelloDbResponse.mapper.writeValueAsString(worlds);
+          }
+          attributes.getResponse().write(data);
         }
         catch (IOException ex)
         {

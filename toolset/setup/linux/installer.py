@@ -33,7 +33,7 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get upgrade", True)
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev mercurial", True)
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev mercurial mlton", True)
     self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test", True)
     self.__run_command("sudo apt-get update", True)
     self.__run_command("sudo apt-get install gcc-4.8 g++-4.8", True)
@@ -105,21 +105,15 @@ class Installer:
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler")
-    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.4")
-    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install bundler")
-
-    # We need a newer version of jruby-rack
-    self.__run_command("git clone git://github.com/jruby/jruby-rack.git", retry=True);
-    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do bundle install")
-    self.__bash_from_string("cd jruby-rack && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true")
-    self.__bash_from_string("cd jruby-rack/target && source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.8")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.8 do gem install bundler")
 
     #
     # go
     #
 
-    self.__download("http://go.googlecode.com/files/go1.1.1.linux-amd64.tar.gz");
-    self.__run_command("tar xzf go1.1.1.linux-amd64.tar.gz")
+    self.__download("http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz");
+    self.__run_command("tar xzf go1.2.linux-amd64.tar.gz")
 
     #
     # Perl
@@ -204,6 +198,16 @@ class Installer:
 
     self.__run_command("sudo apt-get install racket", True)
 
+    #
+    # Ur/Web
+    #
+
+    self.__run_command("hg clone http://hg.impredicative.com/urweb/")
+    self.__run_command("./autogen.sh", cwd="urweb")
+    self.__run_command("./configure", cwd="urweb")
+    self.__run_command("make", cwd="urweb")
+    self.__run_command("sudo make install", cwd="urweb")
+
     #######################################
     # Webservers
     #######################################
@@ -248,9 +252,9 @@ class Installer:
     #
     # Grails
     #
-    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.1.zip")
-    self.__run_command("unzip -o grails-2.3.1.zip")
-    self.__run_command("rm grails-2.3.1.zip")
+    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.3.zip")
+    self.__run_command("unzip -o grails-2.3.3.zip")
+    self.__run_command("rm grails-2.3.3.zip")
 
     #
     # Play 2
@@ -274,20 +278,20 @@ class Installer:
     # TreeFrog Framework
     #
     self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql g++", True)
-    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.2.tar.gz")
-    self.__run_command("tar xzf treefrog-1.7.2.tar.gz")
-    self.__run_command("rm treefrog-1.7.2.tar.gz")
-    self.__run_command("./configure", cwd="treefrog-1.7.2")
-    self.__run_command("make", cwd="treefrog-1.7.2/src")
-    self.__run_command("sudo make install", cwd="treefrog-1.7.2/src")
-    self.__run_command("make", cwd="treefrog-1.7.2/tools")
-    self.__run_command("sudo make install", cwd="treefrog-1.7.2/tools")
+    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.4.tar.gz")
+    self.__run_command("tar xzf treefrog-1.7.4.tar.gz")
+    self.__run_command("rm treefrog-1.7.4.tar.gz")
+    self.__run_command("./configure", cwd="treefrog-1.7.4")
+    self.__run_command("make", cwd="treefrog-1.7.4/src")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.4/src")
+    self.__run_command("make", cwd="treefrog-1.7.4/tools")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.4/tools")
 
     #
     # Vert.x
     #
-    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.0.2-final.tar.gz?direct=true", "vert.x-2.0.2-final.tar.gz")
-    self.__run_command("tar xzf vert.x-2.0.2-final.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1M2.tar.gz?direct=true", "vert.x-2.1M2.tar.gz")
+    self.__run_command("tar xzf vert.x-2.1M2.tar.gz")
 
     #
     # Yesod
@@ -316,17 +320,17 @@ class Installer:
       if three: self.__run_command(python3_bin + cmd, retry=True)
       if pypy:  self.__run_command(pypy_bin + cmd, retry=True)
 
-    self.__download("http://bitbucket.org/pypy/pypy/downloads/pypy-2.1-linux64.tar.bz2")
-    self.__run_command("tar xjf pypy-2.1-linux64.tar.bz2")
-    self.__run_command('ln -sf pypy-2.1 pypy')
-    self.__download("http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz")
-    self.__run_command("tar xzf Python-2.7.5.tgz")
+    self.__download("https://bitbucket.org/pypy/pypy/downloads/pypy-2.2-linux64.tar.bz2")
+    self.__run_command("tar xjf pypy-2.2-linux64.tar.bz2")
+    self.__run_command('ln -sf pypy-2.2-linux64 pypy')
+    self.__download("http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz")
+    self.__run_command("tar xzf Python-2.7.6.tgz")
     self.__download("http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz")
     self.__run_command("tar xJf Python-3.3.2.tar.xz")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.5")
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.6")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.3.2")
-    self.__run_command("make -j2", cwd="Python-2.7.5")
-    self.__run_command("make install", cwd="Python-2.7.5")
+    self.__run_command("make -j2", cwd="Python-2.7.6")
+    self.__run_command("make install", cwd="Python-2.7.6")
     self.__run_command("make -j2", cwd="Python-3.3.2")
     self.__run_command("make install", cwd="Python-3.3.2")
 
@@ -338,33 +342,34 @@ class Installer:
     easy_install('pip==1.4.1', two=True, three=True, pypy=True)
     easy_install('MySQL-python==1.2.4', two=True, three=False, pypy=True)
     easy_install('https://github.com/clelland/MySQL-for-Python-3/archive/master.zip', two=False, three=True, pypy=False)
-    easy_install('PyMySQL==0.5', pypy=True)
-    easy_install('PyMySQL3==0.5', two=False, three=True)
+    easy_install('PyMySQL==0.6.1', two=True, three=True, pypy=True)
     easy_install('psycopg2==2.5.1', three=True)
 
-    easy_install('simplejson==3.3.0', two=True, three=True, pypy=False)
+    easy_install('simplejson==3.3.1', two=True, three=True, pypy=False)
     easy_install('ujson==1.33', three=True)
-    easy_install('https://github.com/downloads/surfly/gevent/gevent-1.0rc2.tar.gz', three=True)
+    easy_install('gevent==1.0')
     easy_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
 
     # Gunicorn
-    easy_install('gunicorn==17.5', two=True, three=True, pypy=True)
+    easy_install('gunicorn==18', two=True, three=True, pypy=True)
     # meinheld HEAD supports gunicorn worker on Python 3
     easy_install('https://github.com/mopemope/meinheld/archive/master.zip', two=True, three=True, pypy=True)
 
     # Tornado
     easy_install('tornado==3.1', two=True, three=True, pypy=True)
-    easy_install('motor==0.1.1', two=True, three=True, pypy=True)
+    easy_install('motor==0.1.2', two=True, three=True, pypy=True)
     easy_install('pymongo==2.5.2', two=True, three=True, pypy=True)
 
     # Django
-    easy_install("https://www.djangoproject.com/download/1.6b2/tarball/", two=True, three=True, pypy=True)
+    easy_install("https://www.djangoproject.com/download/1.6/tarball/", two=True, three=True, pypy=True)
 
     # Flask
-    easy_install('Werkzeug==0.9.3', two=True, three=True, pypy=True)
+    easy_install('Werkzeug==0.9.4', two=True, three=True, pypy=True)
     easy_install('flask==0.10.1', two=True, three=True, pypy=True)
-    easy_install('sqlalchemy==0.8.2', two=True, three=True, pypy=True)
-    easy_install('Jinja2==2.7', two=True, three=True, pypy=True)
+    easy_install('sqlalchemy==0.8.3', two=True, three=False, pypy=True)
+    # SQLAlchemy 0.9 supports C extension for Python 3
+    easy_install('https://bitbucket.org/zzzeek/sqlalchemy/downloads/SQLAlchemy-0.9.0b1.tar.gz', two=False, three=True)
+    easy_install('Jinja2==2.7.1', two=True, three=True, pypy=True)
     easy_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
 
     # Bottle
@@ -372,8 +377,8 @@ class Installer:
     easy_install('bottle-sqlalchemy==0.4', two=True, three=True, pypy=True)
 
     # Falcon
-    easy_install('Cython==0.19.1', two=True, three=True, pypy=True)
-    easy_install('falcon==0.1.6post3', two=True, three=True, pypy=True)
+    easy_install('Cython==0.19.2', two=True, three=True, pypy=True)
+    easy_install('falcon==0.1.7', two=True, three=True, pypy=True)
 
   ############################################################
   # __install_error
@@ -434,6 +439,7 @@ class Installer:
     sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
+    sudo -u benchmarkdbuser psql hello_world < create-postgres-urweb.sql
 
     sudo -u postgres -H /etc/init.d/postgresql stop
     sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf

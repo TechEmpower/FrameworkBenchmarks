@@ -1,7 +1,7 @@
 import "dart:core";
 import "dart:io";
 import 'dart:async' show Future;
-import 'dart:json' as json;
+import 'dart:convert';
 import 'dart:math' show Random;
 import "package:start/start.dart";
 import "package:args/args.dart";
@@ -53,13 +53,13 @@ class World {
   toJson() => { "id": id, "randomnumber": randomnumber };
 }
 
-main() {
+main(List<String> args) {
   var parser = new ArgParser();
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
   parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
   
-  var arguments = parser.parse(new Options().arguments);
+  var arguments = parser.parse(args);
   
   Future.wait([
     new File("postgresql.yaml").readAsString().then((config){
@@ -93,7 +93,7 @@ main() {
           };
           
           _setJsonHeaders(request.response);
-          request.response.send(json.stringify(helloWorld));
+          request.response.send(JSON.encode(helloWorld));
         });
         
         
@@ -103,7 +103,7 @@ main() {
           _setJsonHeaders(request.response);
           
           _query().then((data) {
-            request.response.send(json.stringify(data));
+            request.response.send(JSON.encode(data));
           });
         });
         
@@ -121,7 +121,7 @@ main() {
                   growable: false
                 )
             )
-            .then((response) => request.response.send(json.stringify(response)));
+            .then((response) => request.response.send(JSON.encode(response)));
         });
         
         // Fortunes test
@@ -129,7 +129,7 @@ main() {
           _setHtmlHeaders(request.response);
           
           _connectionPool.connect().then((connection) {
-            return connection.query('SELECT "id", "message" FROM "Fortune";')
+            return connection.query('SELECT id, message FROM fortune;')
                 .map((row) => new Fortune(row[0], row[1]))
                 .toList()
                 .whenComplete(() { connection.close(); });
@@ -159,7 +159,7 @@ main() {
                   return _connectionPool.connect()
                       .then((connection) {
                         return connection.execute(
-                              'UPDATE "World" SET "randomnumber" = @randomnumber WHERE "id" = @id;',
+                              'UPDATE world SET randomnumber = @randomnumber WHERE id = @id;',
                               { 
                                 'randomnumber': world.randomnumber,
                                 'id': world.id 
@@ -170,7 +170,7 @@ main() {
                       .then((_) => world);
                 });
           }, growable: false))
-          .then((worlds) => request.response.send(json.stringify(worlds)));
+          .then((worlds) => request.response.send(JSON.encode(worlds)));
         });
         
         // Plain text test
@@ -186,8 +186,8 @@ main() {
             .then((_) {
               var collectionData = new List.generate(_WORLD_TABLE_SIZE, (index) {
                 return {
-                  "id": index + 1,
-                  "randomnumber": _RANDOM.nextInt(_WORLD_TABLE_SIZE)
+                  "_id": index + 1,
+                  "randomNumber": _RANDOM.nextInt(_WORLD_TABLE_SIZE)
                 };
               });
               return _worldCollection.insertAll(collectionData); 
@@ -205,7 +205,7 @@ main() {
                 var hash = new MD5();
                 hash.add(_RANDOM.nextInt(_FORTUNE_TABLE_SIZE).toString().codeUnits);
                 return {
-                  "id": index + 1,
+                  "_id": index + 1,
                   "message": CryptoUtils.bytesToHex(hash.close())
                 };
               });
@@ -224,8 +224,8 @@ main() {
 
           _mongoQuery().then((data) {
             request.response.json({
-              "id": data["id"],
-              "randomnumber": data["randomnumber"]
+              "id": data["_id"],
+              "randomnumber": data["randomNumber"]
             });
           });
         });
@@ -247,11 +247,11 @@ main() {
             .then((response) {
               var results = response.map((world) {
                 return {
-                  "id": world["id"],
-                  "randomnumber": world["randomnumber"]
+                  "id": world["_id"],
+                  "randomnumber": world["randomNumber"]
                 };
               });
-              request.response.send(json.stringify(results.toList()));
+              request.response.send(JSON.encode(results.toList()));
             });
         });
         
@@ -264,7 +264,7 @@ main() {
           Future.wait(new List.generate(queries, (index) {
             return _mongoQuery()
                 .then((world) {
-                  world["randomnumber"] = _RANDOM.nextInt(_WORLD_TABLE_SIZE);
+                  world["randomNumber"] = _RANDOM.nextInt(_WORLD_TABLE_SIZE);
                   return _worldCollection.update( { "_id": world["_id"] }, world)
                       .then((_) => world);
                 });
@@ -272,11 +272,11 @@ main() {
           .then((worlds) {
             var result = worlds.map((world) {
               return {
-                "id": world["id"],
-                "randomnumber": world["randomnumber"]
+                "id": world["_id"],
+                "randomNumber": world["randomNumber"]
               };
             });
-            request.response.send(json.stringify(result.toList()));
+            request.response.send(JSON.encode(result.toList()));
           });
         });
         
@@ -288,7 +288,7 @@ main() {
           
           _fortuneCollection.find().toList().then((fortunes) {
             fortunes = fortunes.map((fortune) {
-              return new Fortune(fortune["id"], fortune["message"]);
+              return new Fortune(fortune["_id"], fortune["message"]);
             }).toList();
             fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
             fortunes.sort();
@@ -342,7 +342,7 @@ _parseQueriesParam(param) {
 _query() {
   return _connectionPool.connect().then((connection) {
     return connection
-      .query('SELECT "id", "randomnumber" FROM "World" WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
+      .query('SELECT id, randomnumber FROM world WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
       .single
       .then((row) =>new World(row[0], row[1]))
       .whenComplete(() {
@@ -354,6 +354,6 @@ _query() {
 // runs a mongo query and returns a promise
 _mongoQuery() {
   return _worldCollection.findOne({
-    "id": _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1
+    "_id": _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1
   });
 }

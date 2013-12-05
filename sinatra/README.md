@@ -12,15 +12,14 @@ This is the Ruby Sinatra portion of a [benchmarking test suite](../) comparing a
 ## Infrastructure Software Versions
 The tests were run with:
 * [Ruby 2.0.0-p0](http://www.ruby-lang.org/)
-* [JRuby 1.7.4](http://jruby.org/)
+* [JRuby 1.7.8](http://jruby.org/)
 * [Sinatra 1.3.4](http://www.sinatrarb.com/)
 * [Unicorn 4.6.2](http://unicorn.bogomips.org/)
-* [Resin 4.0.34](http://www.caucho.com/)
+* [TorqBox 0.1.4](http://torquebox.org/torqbox/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## References
 * https://github.com/FooBarWidget/passenger/pull/71
-* https://github.com/jruby/jruby-rack/issues/146
 
 ## Test URLs
 
@@ -30,7 +29,7 @@ Ruby:
 localhost:8080/json
 
 JRuby:
-localhost:8080/sinatra/json
+localhost:8080/json
 
 ### Data-Store/Database Mapping Test
 
@@ -38,4 +37,4 @@ Ruby:
 localhost:8080/db?queries=5
 
 JRuby:
-localhost:8080/sinatra/db?queries=5
+localhost:8080/db?queries=5
