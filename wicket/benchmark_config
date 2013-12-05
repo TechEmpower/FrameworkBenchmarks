@@ -6,6 +6,7 @@
       "json_url": "/wicket/json",
       "db_url": "/wicket/db",
       "query_url": "/wicket/db?queries=",
+      "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
