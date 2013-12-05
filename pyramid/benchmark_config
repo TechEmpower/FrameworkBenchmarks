@@ -2,7 +2,7 @@
   "framework": "pyramid",
   "tests": [{
     "py2": {
-      "setup_file": "setup_benchmark",
+      "setup_file": "setup_py2",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -25,7 +25,7 @@
       "versus": "wsgi"
     },
     "py3": {
-      "setup_file": "setup_benchmark",
+      "setup_file": "setup_py3",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
