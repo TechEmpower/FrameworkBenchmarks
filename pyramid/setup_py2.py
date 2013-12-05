@@ -11,7 +11,7 @@ NCPU = multiprocessing.cpu_count()
 proc = None
 
 
-def start(args):
+def start(args, logfile, errfile):
     global proc
     setup_util.replace_text(
         pyramid_dir + "/frameworkbenchmarks/models.py",
