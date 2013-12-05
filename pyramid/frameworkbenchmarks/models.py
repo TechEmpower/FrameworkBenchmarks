@@ -51,10 +51,10 @@ class World(DatabaseBase):
     __tablename__ = 'World'
 
     id = Column('id', Integer, primary_key=True)
-    randomNumber = Column('randomNumber', Integer, nullable=False, server_default='0')
+    randomNumber = Column('randomnumber', Integer, nullable=False, server_default='0')
 
     def __json__(self):
-        return {'id': self.id, 'randomNumber': self.randomNumber}
+        return {'id': self.id, 'randomnumber': self.randomNumber}
 
 
 class Fortune(DatabaseBase):
