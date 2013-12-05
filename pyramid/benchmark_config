@@ -1,0 +1,51 @@
+{
+  "framework": "pyramid",
+  "tests": [{
+    "py2": {
+      "setup_file": "setup_py2",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 6543,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "PostgreSQL",
+      "framework": "Pyramid",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "wsgi",
+      "webserver": "gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "pyramid-py2",
+      "notes": "",
+      "versus": "wsgi"
+    },
+    "py3": {
+      "setup_file": "setup_py3",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 6543,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "PostgreSQL",
+      "framework": "Pyramid",
+      "language": "Python",
+      "orm": "Full",
+      "platform": "wsgi",
+      "webserver": "gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "pyramid-py3",
+      "notes": "",
+      "versus": "wsgi"
+    }
+  }]
+}
