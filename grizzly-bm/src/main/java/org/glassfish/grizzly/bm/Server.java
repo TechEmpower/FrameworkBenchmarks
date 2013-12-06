@@ -4,13 +4,15 @@ import org.glassfish.grizzly.Grizzly;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.http.server.RequestExecutorProvider;
+import org.glassfish.grizzly.http.util.HeaderValue;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 
 /**
  * HttpServer
  */
 public class Server {
-    public static final String SERVER_VERSION = "Grizzly/" + Grizzly.getDotedVersion();
+    public static final HeaderValue SERVER_VERSION =
+            HeaderValue.newHeaderValue("GRZLY").prepare();
     
     // The RequestExecutorProvider, which will run HTTP request processing
     // in the same thread
