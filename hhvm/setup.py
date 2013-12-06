@@ -16,7 +16,7 @@ def start(args, logfile, errfile):
     if os.name == 'nt':
       # Not supported !
       return 0
-    subprocess.check_call("sudo hhvm --config " + home + "/FrameworkBenchmarks/hhvm/deploy/config.hdf -m daemon", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("hhvm --config " + home + "/FrameworkBenchmarks/hhvm/deploy/config.hdf -m daemon", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -25,7 +25,12 @@ def stop(logfile, errfile):
     if os.name == 'nt':
       # Not Supported !
       return 0
-    subprocess.call("sudo kill -QUIT $( cat hhvm/hhvm.pid )", shell=True, stderr=errfile, stdout=logfile)
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'hhvm' in line and 'toolset' not in line:
+        pid = int(line.split(None,2)[1])
+        os.kill(pid,15)
     return 0
   except subprocess.CalledProcessError:
     return 1
