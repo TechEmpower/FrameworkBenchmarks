@@ -4,13 +4,15 @@ import org.glassfish.grizzly.Grizzly;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.http.server.RequestExecutorProvider;
+import org.glassfish.grizzly.http.util.HeaderValue;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 
 /**
  * HttpServer
  */
 public class Server {
-    public static final String SERVER_VERSION = "Grizzly/" + Grizzly.getDotedVersion();
+    public static final HeaderValue SERVER_VERSION =
+            HeaderValue.newHeaderValue("GRZLY").prepare();
     
     // The RequestExecutorProvider, which will run HTTP request processing
     // in the same thread
@@ -28,10 +30,14 @@ public class Server {
         
         // force to not initialize worker thread pool
         transport.setWorkerThreadPoolConfig(null);
-        transport.setSelectorRunnersCount(Runtime.getRuntime().availableProcessors());
+        transport.setSelectorRunnersCount(Runtime.getRuntime().availableProcessors() * 2);
         
+        // always keep-alive
         networkListener.getKeepAlive().setIdleTimeoutInSeconds(-1);
         networkListener.getKeepAlive().setMaxRequestsCount(-1);
+        
+        // disable file-cache
+        networkListener.getFileCache().setEnabled(false);
         
         httpServer.addListener(networkListener);
         
