@@ -8,6 +8,7 @@ def start(args, logfile, errfile):
     subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\webgo&&go get ./...", shell=True, cwd="webgo", stderr=errfile, stdout=logfile)
     subprocess.Popen("setup.bat", shell=True, cwd="webgo", stderr=errfile, stdout=logfile) 
     return 0
+  os.environ["GOPATH"] = os.path.expanduser('~/FrameworkBenchmarks/webgo')
   subprocess.call("go get ./...", shell=True, cwd="webgo", stderr=errfile, stdout=logfile)
   subprocess.Popen("go run src/hello/hello.go".rsplit(" "), cwd="webgo", stderr=errfile, stdout=logfile)
   return 0

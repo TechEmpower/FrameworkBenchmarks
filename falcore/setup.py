@@ -12,6 +12,7 @@ def start(args, logfile, errfile):
     subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\falcore&& go get ./...", shell=True, cwd="falcore", stderr=errfile, stdout=logfile)
     subprocess.Popen("setup.bat", shell=True, cwd="falcore", stderr=errfile, stdout=logfile) 
     return 0
+  os.environ["GOPATH"] = os.path.expanduser('~/FrameworkBenchmarks/falcore')
   subprocess.call("go get ./...", shell=True, cwd="falcore", stderr=errfile, stdout=logfile) 
   subprocess.Popen("go run src/framework_benchmarks/falcore.go".rsplit(" "), cwd="falcore", stderr=errfile, stdout=logfile)
   return 0
