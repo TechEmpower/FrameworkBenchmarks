@@ -199,3 +199,7 @@ Here is an example of Wicket's setup file.
       return 0
     except subprocess.CalledProcessError:
       return 1
+      
+### A tool to generate your setup file ###
+ 
+A contributor named [@kpacaha](https://github.com/kpacha) has built a pure JavaScript tool for generating the `setup.py` file for a new framework via an in-browser form.  Check out his [FrameworkBenchmarks Setup Builder](http://kpacha.github.io/FrameworkBenchmarks-setup-builder/).
