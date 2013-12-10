@@ -1,17 +1,22 @@
 package hellowicket.dbupdates;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.apache.wicket.request.resource.AbstractResource;
+import org.hibernate.CacheMode;
 import org.hibernate.Query;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hellowicket.HibernateUtil;
 import hellowicket.World;
+import org.hibernate.Transaction;
 
 /**
  * A resource that implements the requirements for
@@ -46,17 +51,31 @@ public class HelloDbUpdatesResource extends AbstractResource
       {
         Random random = new Random();
 
+        List<World> worldsForJson = new ArrayList<>();
+
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Query query = session
-          .createQuery("from World")
-          .setMaxResults(queries);
-        List<World> worlds = query.list();
-        for (World world : worlds)
+        Transaction tx = session.beginTransaction();
+
+        // update in batches. See http://docs.jboss.org/hibernate/core/3.3/reference/en/html/batch.html#batch-update
+        ScrollableResults worlds = session.createQuery("from World")
+           .setMaxResults(queries)
+           .setCacheMode(CacheMode.IGNORE)
+           .scroll(ScrollMode.FORWARD_ONLY);
+        int count=0;
+        while (worlds.next())
         {
+          World world = (World) worlds.get(0);
           world.randomNumber = random.nextInt(DB_ROWS) + 1;
-          session.update(world);
+          worldsForJson.add(world);
+          if ( ++count % 500 == 0 )
+          {
+            //flush a batch of updates and release memory
+            session.flush();
+            session.clear();
+          }
         }
 
+        tx.commit();
         session.close();
 
         try
@@ -64,11 +83,11 @@ public class HelloDbUpdatesResource extends AbstractResource
           String data;
           if (queries == 1)
           {
-              data = HelloDbUpdatesResource.mapper.writeValueAsString(worlds.get(0));
+              data = HelloDbUpdatesResource.mapper.writeValueAsString(worldsForJson.get(0));
           }
           else
           {
-              data = HelloDbUpdatesResource.mapper.writeValueAsString(worlds);
+              data = HelloDbUpdatesResource.mapper.writeValueAsString(worldsForJson);
           }
           attributes.getResponse().write(data);
         }
