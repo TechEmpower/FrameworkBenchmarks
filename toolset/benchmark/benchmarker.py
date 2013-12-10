@@ -624,7 +624,8 @@ class Benchmarker:
           Subprocess Error {name}
         -----------------------------------------------------
         {err}
-        """.format(name=test.name, err=e)) )
+        {trace}
+        """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
         err.flush()
         try:
           test.stop(out, err)
@@ -635,17 +636,17 @@ class Benchmarker:
             Subprocess Error: Test .stop() raised exception {name}
           -----------------------------------------------------
           {err}
-          """.format(name=test.name, err=e)) )
+          {trace}
+          """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
           err.flush()
       except (KeyboardInterrupt, SystemExit) as e:
         test.stop(out)
-        err.write( """
+        out.write( """
         -----------------------------------------------------
           Cleaning up....
         -----------------------------------------------------
-        {err}
-        """.format(err=e) )
-        err.flush()
+        """)
+        out.flush()
         self.__finish()
         sys.exit()
 

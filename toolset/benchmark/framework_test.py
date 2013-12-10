@@ -96,6 +96,16 @@ class FrameworkTest:
   notes = None
   versus = None
 
+  ############################################################
+  # Test Variables
+  ############################################################
+  JSON = "JSON"
+  DB = "DB"
+  QUERY = "QUERY"
+  FORTUNE = "FORTUNE"
+  UPDATE = "UPDATE"
+  PLAINTEXT = "PLAINTEXT"
+
   ##########################################################################################
   # Public Methods
   ##########################################################################################
@@ -133,7 +143,12 @@ class FrameworkTest:
       out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
       out.flush()
       url = self.benchmarker.generate_url(self.json_url, self.port)
-      self.__curl_url(url, out, err)
+      output = self.__curl_url(url, self.JSON, out, err)
+      print "\nTest Output Start"
+      print "\n"
+      print output
+      print "\n"
+      print "Test Output End\n"
       self.json_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.json_url_passed = False
@@ -143,7 +158,7 @@ class FrameworkTest:
       out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
       out.flush()
       url = self.benchmarker.generate_url(self.db_url, self.port)
-      self.__curl_url(url, out, err)
+      output = self.__curl_url(url, self.DB, out, err)
       self.db_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.db_url_passed = False
@@ -153,7 +168,7 @@ class FrameworkTest:
       out.write( "VERIFYING Query (" + self.query_url + "2) ...\n" )
       out.flush()
       url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-      self.__curl_url(url, out, err)
+      output = self.__curl_url(url, self.QUERY, out, err)
       self.query_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.query_url_passed = False
@@ -163,7 +178,7 @@ class FrameworkTest:
       out.write( "VERIFYING Fortune (" + self.fortune_url + ") ...\n" )
       out.flush()
       url = self.benchmarker.generate_url(self.fortune_url, self.port)
-      self.__curl_url(url, out, err)
+      output = self.__curl_url(url, self.FORTUNE, out, err)
       self.fortune_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.fortune_url_passed = False
@@ -173,7 +188,7 @@ class FrameworkTest:
       out.write( "VERIFYING Update (" + self.update_url + "2) ...\n" )
       out.flush()
       url = self.benchmarker.generate_url(self.update_url + "2", self.port)
-      self.__curl_url(url, out, err)
+      output = self.__curl_url(url, self.UPDATE, out, err)
       self.update_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.update_url_passed = False
@@ -183,7 +198,7 @@ class FrameworkTest:
       out.write( "VERIFYING Plaintext (" + self.plaintext_url + ") ...\n" )
       out.flush()
       url = self.benchmarker.generate_url(self.plaintext_url, self.port)
-      self.__curl_url(url, out, err)
+      output = self.__curl_url(url, self.PLAINTEXT, out, err)
       self.plaintext_url_passed = True
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.plaintext_url_passed = False
@@ -518,7 +533,7 @@ class FrameworkTest:
   # Dump HTTP response and headers. Throw exception if there
   # is an HTTP error.
   ############################################################
-  def __curl_url(self, url, out, err):
+  def __curl_url(self, url, testType, out, err):
     # Use -i to output response with headers.
     # Don't use -f so that the HTTP response code is ignored.
     # Use --stderr - to redirect stderr to stdout so we get
@@ -530,6 +545,11 @@ class FrameworkTest:
     # HTTP output may not end in a newline, so add that here.
     out.write( "\n" )
     out.flush()
+
+    # We need to get the respond body from the curl and return it.
+    p = subprocess.Popen(["curl", "-s", url], stdout=subprocess.PIPE)
+    output = p.communicate()
+
     # In the curl invocation above we could not use -f because
     # then the HTTP response would not be output, so use -f in
     # an additional invocation so that if there is an HTTP error,
@@ -543,6 +563,8 @@ class FrameworkTest:
     # HTTP output may not end in a newline, so add that here.
     out.write( "\n" )
     out.flush()
+    # We have the response body - return it
+    return output
   ##############################################################
   # End __curl_url
   ##############################################################
