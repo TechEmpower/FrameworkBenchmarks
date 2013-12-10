@@ -113,12 +113,12 @@ class FrameworkTest:
     obj = json.loads(jsonString)
 
     if not obj:
-      return false
+      return False
     if not obj.message:
-      return false
+      return False
     if not obj.message.lower() == "hello, world!":
-      return false
-  return true
+      return False
+    return True
 
   ############################################################
   # start(benchmarker)
