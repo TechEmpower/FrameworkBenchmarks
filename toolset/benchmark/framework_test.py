@@ -114,9 +114,9 @@ class FrameworkTest:
 
     if not obj:
       return false
-    else if not obj.message:
+    if not obj.message:
       return false
-    else if not obj.message.lower() == "hello, world!":
+    if not obj.message.lower() == "hello, world!":
       return false
   return true
 
