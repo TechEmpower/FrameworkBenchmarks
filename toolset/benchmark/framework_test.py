@@ -6,6 +6,7 @@ import re
 import pprint
 import sys
 import traceback
+import json
 
 class FrameworkTest:
   ##########################################################################################
@@ -249,12 +250,14 @@ class FrameworkTest:
   def benchmark(self, out, err):
     # JSON
     try:
-      if self.json_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "json"):
+      if self.benchmarker.type == "all" or self.benchmarker.type == "json":
         out.write("BENCHMARKING JSON ... ") 
         out.flush()
-        remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'json'), err)
-        results = self.__parse_test('json')
+        if self.json_url_passed:
+          remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
+          self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'json'), err)
+          results = self.__parse_test('json')
+        else:
         self.benchmarker.report_results(framework=self, test="json", results=results['results'])
         out.write( "Complete\n" )
         out.flush()
