@@ -109,6 +109,16 @@ class FrameworkTest:
   ##########################################################################################
   # Public Methods
   ##########################################################################################
+  def validateJson(self, jsonString):
+    obj = json.loads(jsonString)
+
+    if not obj
+      return false
+    else if not obj.message
+      return false
+    else if not obj.message.lower() == "hello, world!"
+      return false
+  return true
 
   ############################################################
   # start(benchmarker)
@@ -144,12 +154,10 @@ class FrameworkTest:
       out.flush()
       url = self.benchmarker.generate_url(self.json_url, self.port)
       output = self.__curl_url(url, self.JSON, out, err)
-      print "\nTest Output Start"
-      print "\n"
-      print output
-      print "\n"
-      print "Test Output End\n"
-      self.json_url_passed = True
+      if self.validateJson(output):
+        self.json_url_passed = True
+      else:
+        self.json_url_passed = False
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.json_url_passed = False
 
@@ -563,8 +571,9 @@ class FrameworkTest:
     # HTTP output may not end in a newline, so add that here.
     out.write( "\n" )
     out.flush()
-    # We have the response body - return it
-    return output
+    if output:
+      # We have the response body - return it
+      return output[0]
   ##############################################################
   # End __curl_url
   ##############################################################
