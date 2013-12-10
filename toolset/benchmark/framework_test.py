@@ -112,11 +112,11 @@ class FrameworkTest:
   def validateJson(self, jsonString):
     obj = json.loads(jsonString)
 
-    if not obj
+    if not obj:
       return false
-    else if not obj.message
+    else if not obj.message:
       return false
-    else if not obj.message.lower() == "hello, world!"
+    else if not obj.message.lower() == "hello, world!":
       return false
   return true
 
