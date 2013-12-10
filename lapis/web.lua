@@ -2,30 +2,38 @@ local lapis = require("lapis")
 local db = require("lapis.db")
 local Model
 do
-  local _table_0 = require("lapis.db.model")
-  Model = _table_0.Model
+  local _obj_0 = require("lapis.db.model")
+  Model = _obj_0.Model
 end
 local config
 do
-  local _table_0 = require("lapis.config")
-  config = _table_0.config
+  local _obj_0 = require("lapis.config")
+  config = _obj_0.config
 end
-local insert = table.insert
-local sort = table.sort
-local random = math.random
+local insert
+do
+  local _obj_0 = table
+  insert = _obj_0.insert
+end
+local sort
+do
+  local _obj_0 = table
+  sort = _obj_0.sort
+end
+local random
+do
+  local _obj_0 = math
+  random = _obj_0.random
+end
 local Fortune
 do
   local _parent_0 = Model
   local _base_0 = { }
   _base_0.__index = _base_0
-  if _parent_0 then
-    setmetatable(_base_0, _parent_0.__base)
-  end
+  setmetatable(_base_0, _parent_0.__base)
   local _class_0 = setmetatable({
     __init = function(self, ...)
-      if _parent_0 then
-        return _parent_0.__init(self, ...)
-      end
+      return _parent_0.__init(self, ...)
     end,
     __base = _base_0,
     __name = "Fortune",
@@ -33,7 +41,7 @@ do
   }, {
     __index = function(cls, name)
       local val = rawget(_base_0, name)
-      if val == nil and _parent_0 then
+      if val == nil then
         return _parent_0[name]
       else
         return val
@@ -46,7 +54,7 @@ do
     end
   })
   _base_0.__class = _class_0
-  if _parent_0 and _parent_0.__inherited then
+  if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
   Fortune = _class_0
@@ -56,14 +64,10 @@ do
   local _parent_0 = Model
   local _base_0 = { }
   _base_0.__index = _base_0
-  if _parent_0 then
-    setmetatable(_base_0, _parent_0.__base)
-  end
+  setmetatable(_base_0, _parent_0.__base)
   local _class_0 = setmetatable({
     __init = function(self, ...)
-      if _parent_0 then
-        return _parent_0.__init(self, ...)
-      end
+      return _parent_0.__init(self, ...)
     end,
     __base = _base_0,
     __name = "World",
@@ -71,7 +75,7 @@ do
   }, {
     __index = function(cls, name)
       local val = rawget(_base_0, name)
-      if val == nil and _parent_0 then
+      if val == nil then
         return _parent_0[name]
       else
         return val
@@ -84,7 +88,7 @@ do
     end
   })
   _base_0.__class = _class_0
-  if _parent_0 and _parent_0.__inherited then
+  if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
   World = _class_0
@@ -168,14 +172,10 @@ return lapis.serve((function()
       end
     }
     _base_0.__index = _base_0
-    if _parent_0 then
-      setmetatable(_base_0, _parent_0.__base)
-    end
+    setmetatable(_base_0, _parent_0.__base)
     local _class_0 = setmetatable({
       __init = function(self, ...)
-        if _parent_0 then
-          return _parent_0.__init(self, ...)
-        end
+        return _parent_0.__init(self, ...)
       end,
       __base = _base_0,
       __name = "Benchmark",
@@ -183,7 +183,7 @@ return lapis.serve((function()
     }, {
       __index = function(cls, name)
         local val = rawget(_base_0, name)
-        if val == nil and _parent_0 then
+        if val == nil then
           return _parent_0[name]
         else
           return val
@@ -196,7 +196,7 @@ return lapis.serve((function()
       end
     })
     _base_0.__class = _class_0
-    if _parent_0 and _parent_0.__inherited then
+    if _parent_0.__inherited then
       _parent_0.__inherited(_parent_0, _class_0)
     end
     Benchmark = _class_0
