@@ -164,6 +164,23 @@ class FrameworkTest:
       return False 
     return True
 
+  ############################################################
+  #
+  ############################################################
+  def validateFortune(self, htmlString):
+    pass
+
+  ############################################################
+  #
+  ############################################################
+  def validateUpdate(self, jsonString):
+    pass
+
+  ############################################################
+  #
+  ############################################################
+  def validatePlaintext(self, jsonString):
+    pass
 
   ############################################################
   # start(benchmarker)
@@ -194,70 +211,89 @@ class FrameworkTest:
   ############################################################
   def verify_urls(self, out, err):
     # JSON
-    try:
-      out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
-      out.flush()
-      url = self.benchmarker.generate_url(self.json_url, self.port)
-      output = self.__curl_url(url, self.JSON, out, err)
-      if self.validateJson(output):
-        self.json_url_passed = True
-      else:
+    if self.runTests[self.JSON]
+      try:
+        out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
+        out.flush()
+        url = self.benchmarker.generate_url(self.json_url, self.port)
+        output = self.__curl_url(url, self.JSON, out, err)
+        if self.validateJson(output):
+          self.json_url_passed = True
+        else:
+          self.json_url_passed = False
+      except (AttributeError, subprocess.CalledProcessError) as e:
         self.json_url_passed = False
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.json_url_passed = False
 
     # DB
-    try:
-      out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
-      out.flush()
-      url = self.benchmarker.generate_url(self.db_url, self.port)
-      output = self.__curl_url(url, self.DB, out, err)
-      if self.validateDb(output):
-        self.db_url_passed = True
-      else:
+    if self.runTests[self.DB]
+      try:
+        out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
+        out.flush()
+        url = self.benchmarker.generate_url(self.db_url, self.port)
+        output = self.__curl_url(url, self.DB, out, err)
+        if self.validateDb(output):
+          self.db_url_passed = True
+        else:
+          self.db_url_passed = False
+      except (AttributeError, subprocess.CalledProcessError) as e:
         self.db_url_passed = False
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.db_url_passed = False
 
     # Query
-    try:
-      out.write( "VERIFYING Query (" + self.query_url + "2) ...\n" )
-      out.flush()
-      url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-      output = self.__curl_url(url, self.QUERY, out, err)
-      self.query_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.query_url_passed = False
+    if self.runTests[self.QUERY]
+      try:
+        out.write( "VERIFYING Query (" + self.query_url + "2) ...\n" )
+        out.flush()
+        url = self.benchmarker.generate_url(self.query_url + "2", self.port)
+        output = self.__curl_url(url, self.QUERY, out, err)
+        if self.validateQuery(output):
+          self.query_url_passed = True
+        else:
+          self.query_url_passed = False
+      except (AttributeError, subprocess.CalledProcessError) as e:
+        self.query_url_passed = False
 
     # Fortune
-    try:
-      out.write( "VERIFYING Fortune (" + self.fortune_url + ") ...\n" )
-      out.flush()
-      url = self.benchmarker.generate_url(self.fortune_url, self.port)
-      output = self.__curl_url(url, self.FORTUNE, out, err)
-      self.fortune_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.fortune_url_passed = False
+    if self.runTests[self.FORTUNE]
+      try:
+        out.write( "VERIFYING Fortune (" + self.fortune_url + ") ...\n" )
+        out.flush()
+        url = self.benchmarker.generate_url(self.fortune_url, self.port)
+        output = self.__curl_url(url, self.FORTUNE, out, err)
+        if self.validateFortune(output):
+          self.fortune_url_passed = True
+        else:
+          self.fortune_url_passed = False
+      except (AttributeError, subprocess.CalledProcessError) as e:
+        self.fortune_url_passed = False
 
     # Update
-    try:
-      out.write( "VERIFYING Update (" + self.update_url + "2) ...\n" )
-      out.flush()
-      url = self.benchmarker.generate_url(self.update_url + "2", self.port)
-      output = self.__curl_url(url, self.UPDATE, out, err)
-      self.update_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.update_url_passed = False
+    if self.runTests[self.UPDATE]
+      try:
+        out.write( "VERIFYING Update (" + self.update_url + "2) ...\n" )
+        out.flush()
+        url = self.benchmarker.generate_url(self.update_url + "2", self.port)
+        output = self.__curl_url(url, self.UPDATE, out, err)
+        if self.validateUpdate(output):
+          self.update_url_passed = True
+        else:
+          self.update_url_passed = False
+      except (AttributeError, subprocess.CalledProcessError) as e:
+        self.update_url_passed = False
 
     # plaintext
-    try:
-      out.write( "VERIFYING Plaintext (" + self.plaintext_url + ") ...\n" )
-      out.flush()
-      url = self.benchmarker.generate_url(self.plaintext_url, self.port)
-      output = self.__curl_url(url, self.PLAINTEXT, out, err)
-      self.plaintext_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.plaintext_url_passed = False
+    if self.runTests[self.UPDATE]
+      try:
+        out.write( "VERIFYING Plaintext (" + self.plaintext_url + ") ...\n" )
+        out.flush()
+        url = self.benchmarker.generate_url(self.plaintext_url, self.port)
+        output = self.__curl_url(url, self.PLAINTEXT, out, err)
+        if self.validatePlaintext(output):
+          self.plaintext_url_passed = True
+        else:
+          self.plaintext_url_passed = False
+      except (AttributeError, subprocess.CalledProcessError) as e:
+        self.plaintext_url_passed = False
+
   ############################################################
   # End verify_urls
   ############################################################
@@ -296,99 +332,125 @@ class FrameworkTest:
   ############################################################
   def benchmark(self, out, err):
     # JSON
-    try:
-      if self.benchmarker.type == "all" or self.benchmarker.type == self.JSON:
-        out.write("BENCHMARKING JSON ... ") 
-        out.flush()
-        results = None
-        if self.json_url_passed:
-          remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
-          self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.JSON), err)
-          results = self.__parse_test(self.JSON)
-        else:
-          # This should report results with a mark of failed JSON.
-          results = dict()
-          results['results'] = []
-        self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'], passed=self.json_url_passed)
-        out.write( "Complete\n" )
-        out.flush()
-    except AttributeError:
-      pass
+    if self.runTests[self.JSON]:
+      try:
+        if self.benchmarker.type == "all" or self.benchmarker.type == self.JSON:
+          out.write("BENCHMARKING JSON ... ") 
+          out.flush()
+          results = None
+          if self.json_url_passed:
+            remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
+            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.JSON), err)
+            results = self.__parse_test(self.JSON)
+          else:
+            results = dict()
+            results['results'] = []
+          self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'], passed=self.json_url_passed)
+          out.write( "Complete\n" )
+          out.flush()
+      except AttributeError:
+        pass
 
     # DB
-    try:
-      if self.db_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.DB):
-        out.write("BENCHMARKING DB ... ") 
-        out.flush()
-        remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.DB), err)
-        results = self.__parse_test(self.DB)
-        self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'], passed=self.db_url_passed)
-        out.write( "Complete\n" )
-    except AttributeError:
-      traceback.print_exc()
-      pass
+    if self.runTests[self.DB]:
+      try:
+        if self.benchmarker.type == "all" or self.benchmarker.type == self.DB:
+          out.write("BENCHMARKING DB ... ") 
+          out.flush()
+          results = None
+          if self.db_url_passed:
+            remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
+            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.DB), err)
+            results = self.__parse_test(self.DB)
+          else:
+            results = dict()
+            results['results'] = []
+          self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'], passed=self.db_url_passed)
+          out.write( "Complete\n" )
+      except AttributeError:
+        pass
 
     # Query
-    try:
-      if self.query_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.QUERY):
-        out.write("BENCHMARKING Query ... ")
-        out.flush()
-        remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.QUERY), err)
-        results = self.__parse_test(self.QUERY)
-        self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'], passed=self.query_url_passed)
-        out.write( "Complete\n" )
-        out.flush()
-    except AttributeError:
-      traceback.print_exc()
-      pass
+    if self.runTests[self.QUERY]:
+      try:
+        if self.query_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.QUERY):
+          out.write("BENCHMARKING Query ... ")
+          out.flush()
+          results = None
+          if self.db_url_passed:
+            remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
+            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.QUERY), err)
+            results = self.__parse_test(self.QUERY)
+          else:
+            results = dict()
+            results['results'] = []
+          self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'], passed=self.query_url_passed)
+          out.write( "Complete\n" )
+          out.flush()
+      except AttributeError:
+        pass
 
     # fortune
-    try:
-      if self.fortune_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.FORTUNE):
-        out.write("BENCHMARKING Fortune ... ") 
-        out.flush()
-        remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.FORTUNE), err)
-        results = self.__parse_test(self.FORTUNE)
-        self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'], passed=self.fortune_url_passed)
-        out.write( "Complete\n" )
-        out.flush()
-    except AttributeError:
-      traceback.print_exc()
-      pass
+    if self.runTests[self.FORTUNE]:
+      try:
+        if self.fortune_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.FORTUNE):
+          out.write("BENCHMARKING Fortune ... ") 
+          out.flush()
+          results = None
+          if self.db_url_passed:
+            remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
+            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.FORTUNE), err)
+            results = self.__parse_test(self.FORTUNE)
+          else:
+            results = dict()
+            results['results'] = []
+          self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'], passed=self.fortune_url_passed)
+          out.write( "Complete\n" )
+          out.flush()
+      except AttributeError:
+        pass
 
     # update
-    try:
-      if self.update_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.UPDATE):
-        out.write("BENCHMARKING Update ... ") 
-        out.flush()
-        remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.UPDATE), err)
-        results = self.__parse_test(self.UPDATE)
-        self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'], passed=self.update_url_passed)
-        out.write( "Complete\n" )
-        out.flush()
-    except AttributeError:
-      # TODO - this needs to report some logging
-      traceback.print_exc()
-      pass
+    if self.runTests[self.UPDATE]:
+      try:
+        if self.update_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.UPDATE):
+          out.write("BENCHMARKING Update ... ") 
+          out.flush()
+          results = None
+          if self.db_url_passed:
+            remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
+            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.UPDATE), err)
+            results = self.__parse_test(self.UPDATE)
+          else:
+            results = dict()
+            results['results'] = []
+          self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'], passed=self.update_url_passed)
+          out.write( "Complete\n" )
+          out.flush()
+      except AttributeError:
+        pass
 
     # plaintext
-    try:
-      if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.PLAINTEXT):
-        out.write("BENCHMARKING Plaintext ... ")
-        out.flush()
-        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.PLAINTEXT), err)
-        results = self.__parse_test(self.PLAINTEXT)
-        self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'], passed=self.plaintext_url_passed)
-        out.write( "Complete\n" )
-        out.flush()
-    except AttributeError:
-      traceback.print_exc()
-      pass
+    if self.runTests[self.PLAINTEXT]:
+      try:
+        if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.PLAINTEXT):
+          out.write("BENCHMARKING Plaintext ... ")
+          out.flush()
+          results = None
+          if self.db_url_passed:
+            remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
+            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.PLAINTEXT), err)
+            results = self.__parse_test(self.PLAINTEXT)
+          else:
+            results = dict()
+            results['results'] = []
+          self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'], passed=self.plaintext_url_passed)
+          out.write( "Complete\n" )
+          out.flush()
+      except AttributeError:
+        traceback.print_exc()
+        pass
+
   ############################################################
   # End benchmark
   ############################################################
@@ -635,10 +697,11 @@ class FrameworkTest:
   ##########################################################################################
   # Constructor
   ##########################################################################################  
-  def __init__(self, name, directory, benchmarker, args):
+  def __init__(self, name, directory, benchmarker, runTests, args):
     self.name = name
     self.directory = directory
     self.benchmarker = benchmarker
+    self.runTests = runTests
     self.__dict__.update(args)
 
     # ensure directory has __init__.py file so that we can use it as a Python package
@@ -671,13 +734,21 @@ def parse_config(config, directory, benchmarker):
     for key, value in test.iteritems():
       test_name = config['framework']
       
+      runTests = dict()
+      runTests["json"] = True if test["json_url"] else False
+      runTests["db"] = True if test["db_url"] else False
+      runTests["query"] = True if test["query_url"] else False
+      runTests["fortune"] = True if test["fortune_url"] else False
+      runTests["update"] = True if test["update_url"] else False
+      runTests["plaintext"] = True if test["plaintext_url"] else False
+
       # if the test uses the 'defualt' keywork, then we don't 
       # append anything to it's name. All configs should only have 1 default
       if key != 'default':
         # we need to use the key in the test_name
         test_name = test_name + "-" + key
 
-      tests.append(FrameworkTest(test_name, directory, benchmarker, value))
+      tests.append(FrameworkTest(test_name, directory, benchmarker, runTests, value))
 
   return tests
 ##############################################################
