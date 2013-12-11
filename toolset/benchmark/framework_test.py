@@ -373,7 +373,7 @@ class FrameworkTest:
     # Query
     if self.runTests[self.QUERY]:
       try:
-        if self.query_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.QUERY):
+        if self.benchmarker.type == "all" or self.benchmarker.type == self.QUERY:
           out.write("BENCHMARKING Query ... ")
           out.flush()
           results = None
@@ -393,7 +393,7 @@ class FrameworkTest:
     # fortune
     if self.runTests[self.FORTUNE]:
       try:
-        if self.fortune_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.FORTUNE):
+        if self.benchmarker.type == "all" or self.benchmarker.type == self.FORTUNE:
           out.write("BENCHMARKING Fortune ... ") 
           out.flush()
           results = None
@@ -413,7 +413,7 @@ class FrameworkTest:
     # update
     if self.runTests[self.UPDATE]:
       try:
-        if self.update_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.UPDATE):
+        if self.benchmarker.type == "all" or self.benchmarker.type == self.UPDATE:
           out.write("BENCHMARKING Update ... ") 
           out.flush()
           results = None
@@ -433,7 +433,7 @@ class FrameworkTest:
     # plaintext
     if self.runTests[self.PLAINTEXT]:
       try:
-        if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == self.PLAINTEXT):
+        if self.benchmarker.type == "all" or self.benchmarker.type == self.PLAINTEXT:
           out.write("BENCHMARKING Plaintext ... ")
           out.flush()
           results = None
@@ -735,12 +735,12 @@ def parse_config(config, directory, benchmarker):
       test_name = config['framework']
       
       runTests = dict()
-      runTests["json"] = True if test["json_url"] else False
-      runTests["db"] = True if test["db_url"] else False
-      runTests["query"] = True if test["query_url"] else False
-      runTests["fortune"] = True if test["fortune_url"] else False
-      runTests["update"] = True if test["update_url"] else False
-      runTests["plaintext"] = True if test["plaintext_url"] else False
+      runTests["json"] = True if value.get("json_url", False) else False
+      runTests["db"] = True if value.get("db_url", False) else False
+      runTests["query"] = True if value.get("query_url", False) else False
+      runTests["fortune"] = True if value.get("fortune_url", False) else False
+      runTests["update"] = True if value.get("update_url", False) else False
+      runTests["plaintext"] = True if value.get("plaintext_url", False) else False
 
       # if the test uses the 'defualt' keywork, then we don't 
       # append anything to it's name. All configs should only have 1 default
