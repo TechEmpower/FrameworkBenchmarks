@@ -136,29 +136,15 @@ class FrameworkTest:
   def validateDb(self, jsonString):
     arr = json.loads(jsonString)
 
-    if not arr:
+    if not arr or len(arr) != 2 or type(arr[0]) != dict or type(arr[1]) != dict:
       return False
-    if not len(arr) == 2:
+    if not arr[0]["id"] or type(arr[0]["id"]) != int:
       return False
-    if type(arr[0]) != dict:
+    if not arr[0]["randomNumber"] or type(arr[0]["randomNumber"]) != int:
       return False
-    if type(arr[1]) != dict:
+    if not arr[1]["id"] or type(arr[1]["id"]) != int:
       return False
-    if not arr[0]["id"]:
-      return False
-    if not arr[0]["randomNumber"]:
-      return False
-    if type(arr[0]["id"]) != int:
-      return False
-    if type(arr[0]["randomNumber"]) != int:
-      return False
-    if not arr[1]["id"]:
-      return False
-    if not arr[1]["randomNumber"]:
-      return False
-    if type(arr[1]["id"]) != int:
-      return False
-    if type(arr[1]["randomNumber"]) != int:
+    if not arr[1]["randomNumber"] or type(arr[1]["randomNumber"]) != int:
       return False
     return True
 
