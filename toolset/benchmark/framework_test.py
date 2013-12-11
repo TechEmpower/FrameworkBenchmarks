@@ -296,7 +296,7 @@ class FrameworkTest:
         self.update_url_passed = False
 
     # plaintext
-    if self.runTests[self.UPDATE]:
+    if self.runTests[self.PLAINTEXT]:
       try:
         out.write( "VERIFYING Plaintext (" + self.plaintext_url + ") ...\n" )
         out.flush()
