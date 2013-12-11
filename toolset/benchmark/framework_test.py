@@ -110,6 +110,12 @@ class FrameworkTest:
   ##########################################################################################
   # Public Methods
   ##########################################################################################
+
+
+  ############################################################
+  # Validates the jsonString is a JSON object with a 'message'
+  # key with the value "hello, world!" (case-insensitive).
+  ############################################################
   def validateJson(self, jsonString):
     obj = json.loads(jsonString)
 
@@ -117,9 +123,35 @@ class FrameworkTest:
       return False
     if not obj["message"]:
       return False
-    if not obj["message"]lower() == "hello, world!":
+    if not obj["message"].lower() == "hello, world!":
       return False
     return True
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 2, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateDb(self, jsonString):
+    arr = json.loads(jsonString)
+
+    if not arr:
+      return False
+    if not len(arr) == 2:
+      return False
+    if type(arr[0]) is not dict or type(arr[1]) is not dict:
+      return False
+    if not arr[0]["id"] or not arr[0]["randomNumber"]:
+      return False
+    if type(arr[0]["id"]) is not int or type(arr[0]["randomNumber"]) is not int:
+      return False
+    if not arr[1]["id"] or not arr[1]["randomNumber"]:
+      return False
+    if type(arr[1]["id"]) is not int or type(arr[1]["randomNumber"]) is not int:
+      return False
+    return True
+
 
   ############################################################
   # start(benchmarker)
@@ -168,7 +200,10 @@ class FrameworkTest:
       out.flush()
       url = self.benchmarker.generate_url(self.db_url, self.port)
       output = self.__curl_url(url, self.DB, out, err)
-      self.db_url_passed = True
+      if self.validateDb(output):
+        self.db_url_passed = True
+      else:
+        self.db_url_passed = False
     except (AttributeError, subprocess.CalledProcessError) as e:
       self.db_url_passed = False
 
