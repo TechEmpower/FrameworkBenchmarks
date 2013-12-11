@@ -171,16 +171,31 @@ class FrameworkTest:
     pass
 
   ############################################################
-  #
+  # Validates the jsonString is an array with a length of
+  # 2, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
   ############################################################
   def validateUpdate(self, jsonString):
-    pass
+    arr = json.loads(jsonString)
+
+    if not arr or len(arr) != 2 or type(arr[0]) != dict or type(arr[1]) != dict:
+      return False
+    if not arr[0]["id"] or type(arr[0]["id"]) != int:
+      return False
+    if not arr[0]["randomNumber"] or type(arr[0]["randomNumber"]) != int:
+      return False
+    if not arr[1]["id"] or type(arr[1]["id"]) != int:
+      return False
+    if not arr[1]["randomNumber"] or type(arr[1]["randomNumber"]) != int:
+      return False 
+    return True
 
   ############################################################
   #
   ############################################################
   def validatePlaintext(self, jsonString):
-    pass
+    return jsonString.lower() == "hello, world!"
 
   ############################################################
   # start(benchmarker)
