@@ -233,11 +233,11 @@ class Benchmarker:
       self.results['rawData'][test] = dict()
 
     self.results['rawData'][test][framework.name] = results
-    
+
     if passed:
-      self.results['succeeded'].append(framework.name)
+      self.results['succeeded'][test].append(framework.name)
     else:
-      self.results['failed'].append(framework.name)
+      self.results['failed'][test].append(framework.name)
 
   ############################################################
   # End report_results
@@ -889,8 +889,20 @@ class Benchmarker:
       self.results['rawData']['update'] = dict()
       self.results['rawData']['plaintext'] = dict()
       self.results['completed'] = dict()
-      self.results['succeeded'] = []
-      self.results['failed'] = []
+      self.results['succeeded'] = dict()
+      self.results['succeeded']['json'] = []
+      self.results['succeeded']['db'] = []
+      self.results['succeeded']['query'] = []
+      self.results['succeeded']['fortune'] = []
+      self.results['succeeded']['update'] = []
+      self.results['succeeded']['plaintext'] = []
+      self.results['failed'] = dict()
+      self.results['failed']['json'] = []
+      self.results['failed']['db'] = []
+      self.results['failed']['query'] = []
+      self.results['failed']['fortune'] = []
+      self.results['failed']['update'] = []
+      self.results['failed']['plaintext'] = []
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:
