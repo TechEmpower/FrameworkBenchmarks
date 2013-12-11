@@ -377,7 +377,7 @@ class FrameworkTest:
           out.write("BENCHMARKING Query ... ")
           out.flush()
           results = None
-          if self.db_url_passed:
+          if self.query_url_passed:
             remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
             self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.QUERY), err)
             results = self.__parse_test(self.QUERY)
@@ -397,7 +397,7 @@ class FrameworkTest:
           out.write("BENCHMARKING Fortune ... ") 
           out.flush()
           results = None
-          if self.db_url_passed:
+          if self.fortune_url_passed:
             remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
             self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.FORTUNE), err)
             results = self.__parse_test(self.FORTUNE)
@@ -417,7 +417,7 @@ class FrameworkTest:
           out.write("BENCHMARKING Update ... ") 
           out.flush()
           results = None
-          if self.db_url_passed:
+          if self.update_url_passed:
             remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
             self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.UPDATE), err)
             results = self.__parse_test(self.UPDATE)
@@ -437,7 +437,7 @@ class FrameworkTest:
           out.write("BENCHMARKING Plaintext ... ")
           out.flush()
           results = None
-          if self.db_url_passed:
+          if self.plaintext_url_passed:
             remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
             self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.PLAINTEXT), err)
             results = self.__parse_test(self.PLAINTEXT)
