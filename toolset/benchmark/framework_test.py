@@ -140,25 +140,25 @@ class FrameworkTest:
       return False
     if not len(arr) == 2:
       return False
-    if type(arr[0]) is not dict:
+    if type(arr[0]) != dict:
       return False
-    if type(arr[1]) is not dict:
+    if type(arr[1]) != dict:
       return False
     if not arr[0]["id"]:
       return False
     if not arr[0]["randomNumber"]:
       return False
-    if type(arr[0]["id"]) is not int:
+    if type(arr[0]["id"]) != int:
       return False
-    if type(arr[0]["randomNumber"]) is not int:
+    if type(arr[0]["randomNumber"]) != int:
       return False
     if not arr[1]["id"]:
       return False
     if not arr[1]["randomNumber"]:
       return False
-    if type(arr[1]["id"]) is not int:
+    if type(arr[1]["id"]) != int:
       return False
-    if type(arr[1]["randomNumber"]) is not int:
+    if type(arr[1]["randomNumber"]) != int:
       return False
     return True
 
