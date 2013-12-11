@@ -253,13 +253,16 @@ class FrameworkTest:
       if self.benchmarker.type == "all" or self.benchmarker.type == self.JSON:
         out.write("BENCHMARKING JSON ... ") 
         out.flush()
+        results = None
         if self.json_url_passed:
           remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
           self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.JSON), err)
           results = self.__parse_test(self.JSON)
         else:
-          pass
-        self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
+          # This should report results with a mark of failed JSON.
+          results = dict()
+          results['results'] = []
+        self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'], self.json_url_passed)
         out.write( "Complete\n" )
         out.flush()
     except AttributeError:
@@ -273,7 +276,7 @@ class FrameworkTest:
         remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.DB), err)
         results = self.__parse_test(self.DB)
-        self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
+        self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'], self.db_url_passed)
         out.write( "Complete\n" )
     except AttributeError:
       traceback.print_exc()
@@ -287,7 +290,7 @@ class FrameworkTest:
         remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.QUERY), err)
         results = self.__parse_test(self.QUERY)
-        self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
+        self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'], self.query_url_passed)
         out.write( "Complete\n" )
         out.flush()
     except AttributeError:
@@ -302,7 +305,7 @@ class FrameworkTest:
         remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.FORTUNE), err)
         results = self.__parse_test(self.FORTUNE)
-        self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
+        self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'], self.fortune_url_passed)
         out.write( "Complete\n" )
         out.flush()
     except AttributeError:
@@ -317,7 +320,7 @@ class FrameworkTest:
         remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.UPDATE), err)
         results = self.__parse_test(self.UPDATE)
-        self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
+        self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'], self.update_url_passed)
         out.write( "Complete\n" )
         out.flush()
     except AttributeError:
@@ -333,7 +336,7 @@ class FrameworkTest:
         remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
         self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.PLAINTEXT), err)
         results = self.__parse_test(self.PLAINTEXT)
-        self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
+        self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'], self.plaintext_url_passed)
         out.write( "Complete\n" )
         out.flush()
     except AttributeError:

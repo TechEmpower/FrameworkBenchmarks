@@ -228,11 +228,16 @@ class Benchmarker:
   ############################################################
   # report_results
   ############################################################
-  def report_results(self, framework, test, results):
+  def report_results(self, framework, test, results, passed=True):
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
 
     self.results['rawData'][test][framework.name] = results
+    
+    if passed:
+      self.results['succeeded'].append(framework.name)
+    else:
+      self.results['failed'].append(framework.name)
 
   ############################################################
   # End report_results
@@ -884,6 +889,8 @@ class Benchmarker:
       self.results['rawData']['update'] = dict()
       self.results['rawData']['plaintext'] = dict()
       self.results['completed'] = dict()
+      self.results['succeeded'] = []
+      self.results['failed'] = []
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:
