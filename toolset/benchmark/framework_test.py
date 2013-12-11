@@ -132,7 +132,7 @@ class FrameworkTest:
   # and a "randomNumber" key, and that both keys map to 
   # integers.
   ############################################################
-  def validateJson(self, jsonString):
+  def validateDb(self, jsonString):
     obj = json.loads(jsonString)
 
     if not obj:
