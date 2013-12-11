@@ -211,7 +211,7 @@ class FrameworkTest:
   ############################################################
   def verify_urls(self, out, err):
     # JSON
-    if self.runTests[self.JSON]
+    if self.runTests[self.JSON]:
       try:
         out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
         out.flush()
@@ -225,7 +225,7 @@ class FrameworkTest:
         self.json_url_passed = False
 
     # DB
-    if self.runTests[self.DB]
+    if self.runTests[self.DB]:
       try:
         out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
         out.flush()
@@ -239,7 +239,7 @@ class FrameworkTest:
         self.db_url_passed = False
 
     # Query
-    if self.runTests[self.QUERY]
+    if self.runTests[self.QUERY]:
       try:
         out.write( "VERIFYING Query (" + self.query_url + "2) ...\n" )
         out.flush()
@@ -253,7 +253,7 @@ class FrameworkTest:
         self.query_url_passed = False
 
     # Fortune
-    if self.runTests[self.FORTUNE]
+    if self.runTests[self.FORTUNE]:
       try:
         out.write( "VERIFYING Fortune (" + self.fortune_url + ") ...\n" )
         out.flush()
@@ -267,7 +267,7 @@ class FrameworkTest:
         self.fortune_url_passed = False
 
     # Update
-    if self.runTests[self.UPDATE]
+    if self.runTests[self.UPDATE]:
       try:
         out.write( "VERIFYING Update (" + self.update_url + "2) ...\n" )
         out.flush()
@@ -281,7 +281,7 @@ class FrameworkTest:
         self.update_url_passed = False
 
     # plaintext
-    if self.runTests[self.UPDATE]
+    if self.runTests[self.UPDATE]:
       try:
         out.write( "VERIFYING Plaintext (" + self.plaintext_url + ") ...\n" )
         out.flush()
