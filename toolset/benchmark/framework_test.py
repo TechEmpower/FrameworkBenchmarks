@@ -128,12 +128,28 @@ class FrameworkTest:
     return True
 
   ############################################################
+  # Validates the jsonString is a JSON object that has an "id"
+  # and a "randomNumber" key, and that both keys map to 
+  # integers.
+  ############################################################
+  def validateJson(self, jsonString):
+    obj = json.loads(jsonString)
+
+    if not obj:
+      return False
+    if not obj["id"] or type(obj["id"]) != int:
+      return False
+    if not obj["randomNumber"] or type(obj["randomNumber"]) != int:
+      return False
+    return True
+
+  ############################################################
   # Validates the jsonString is an array with a length of
   # 2, that each entry in the array is a JSON object, that
   # each object has an "id" and a "randomNumber" key, and that
   # both keys map to integers.
   ############################################################
-  def validateDb(self, jsonString):
+  def validateQuery(self, jsonString):
     arr = json.loads(jsonString)
 
     if not arr or len(arr) != 2 or type(arr[0]) != dict or type(arr[1]) != dict:
@@ -145,7 +161,7 @@ class FrameworkTest:
     if not arr[1]["id"] or type(arr[1]["id"]) != int:
       return False
     if not arr[1]["randomNumber"] or type(arr[1]["randomNumber"]) != int:
-      return False
+      return False 
     return True
 
 
