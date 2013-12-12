@@ -168,7 +168,7 @@ class FrameworkTest:
   #
   ############################################################
   def validateFortune(self, htmlString):
-    pass
+    return True
 
   ############################################################
   # Validates the jsonString is an array with a length of
@@ -195,7 +195,7 @@ class FrameworkTest:
   #
   ############################################################
   def validatePlaintext(self, jsonString):
-    return jsonString.lower() == "hello, world!"
+    return jsonString.lower().strip() == "hello, world!"
 
   ############################################################
   # start(benchmarker)
