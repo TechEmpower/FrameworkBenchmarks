@@ -29,6 +29,7 @@ public class HelloWebServer {
             b.group(group)
              .childHandler(new HelloServerInitializer())
              .channel(NioServerSocketChannel.class)
+             .option(ChannelOption.SO_BACKLOG, 1024)
              .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
              
             Channel ch = b.bind(port).sync().channel();

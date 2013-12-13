@@ -51,7 +51,7 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
                     return;
                 case "/json":
                     byte[] json = MAPPER.writeValueAsBytes(Collections.singletonMap("message", "Hello, World!"));
-                    writeResponse(ctx, request, ctx.alloc().buffer(json.length).writeBytes(json), TYPE_JSON,
+                    writeResponse(ctx, request, Unpooled.wrappedBuffer(json), TYPE_JSON,
                             String.valueOf(json.length));
                     return;
             }
