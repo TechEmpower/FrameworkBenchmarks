@@ -168,7 +168,9 @@ class FrameworkTest:
   #
   ############################################################
   def validateFortune(self, htmlString):
-    return True
+    fortuneValidator = FortuneHTMLParser(htmlString)
+
+    return fortuneValidator.isValidFortune()
 
   ############################################################
   # Validates the jsonString is an array with a length of
