@@ -1,4 +1,4 @@
-from benchmark import FortuneHTMLParser
+from benchmark import fortune_html_parser
 
 import importlib
 import os
