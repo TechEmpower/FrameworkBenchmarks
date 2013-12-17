@@ -1,4 +1,4 @@
-from benchmark import fortune_html_parser
+from benchmark.fortune_html_parser import FortuneHTMLParser
 
 import importlib
 import os
@@ -173,7 +173,7 @@ class FrameworkTest:
     parser = FortuneHTMLParser()
     parser.feed(htmlString)
 
-    return fortuneValidator.isValidFortune()
+    return parser.isValidFortune()
 
   ############################################################
   # Validates the jsonString is an array with a length of
