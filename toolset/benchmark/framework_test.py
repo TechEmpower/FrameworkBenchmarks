@@ -170,7 +170,8 @@ class FrameworkTest:
   #
   ############################################################
   def validateFortune(self, htmlString):
-    fortuneValidator = FortuneHTMLParser(htmlString)
+    parser = FortuneHTMLParser()
+    parser.feed(htmlString)
 
     return fortuneValidator.isValidFortune()
 
