@@ -1,3 +1,5 @@
+from benchmark import FortuneHTMLParser
+
 import importlib
 import os
 import subprocess
