@@ -13,11 +13,15 @@ http://localhost:8080/ninja/db
 
 ### Multiple Queries Test
 
-http://localhost:8080/ninja/queries/5
+http://localhost:8080/ninja/queries?5
 
 ### Fortunes Test
 
 http://localhost:8080/ninja/fotunes
+
+### Update Test
+
+http://localhost:8080/ninja/update?5
 
 ### Plaintext Test
 

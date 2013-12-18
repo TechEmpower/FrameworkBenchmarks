@@ -12,16 +12,12 @@ public class HelloJsonController {
 	return Results.json().render(new Message("Hello, world"));
     }
 
-    public static class Message {
+    public final static class Message {
 
-	private final String message;
+	public final String message;
 
 	public Message(String message) {
 	    this.message = message;
-	}
-
-	public String getMessage() {
-	    return message;
 	}
     }
 }

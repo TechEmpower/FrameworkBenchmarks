@@ -12,15 +12,12 @@ public class Routes implements ApplicationRoutes {
     @Override
     public void init(Router router) {
 
-	router.GET().route("/").with(HelloPlaintextController.class, "index");
-	router.GET().route("/plaintext")
-		.with(HelloPlaintextController.class, "index");
+	router.GET().route("/plaintext").with(HelloPlaintextController.class, "index");
 	router.GET().route("/json").with(HelloJsonController.class, "index");
-	router.GET().route("/queries/{queries}")
-		.with(HelloDbController.class, "multiGet");
+	router.GET().route("/queries").with(HelloDbController.class, "multiGet");
 	router.GET().route("/db").with(HelloDbController.class, "singleGet");
-	router.GET().route("/fortunes")
-		.with(HelloFortuneController.class, "index");
+	router.GET().route("/fortunes").with(HelloFortuneController.class, "index");
+        router.GET().route("/update").with(HelloDbController.class, "update");
 
     }
 }
