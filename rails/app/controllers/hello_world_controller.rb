@@ -18,7 +18,7 @@ class HelloWorldController < ApplicationController
   def fortune
     @fortunes = Fortune.all
     @fortunes << Fortune.new(:message => "Additional fortune added at request time.")
-    @fortunes = @fortunes.sort { |x, y| x.message <=> y.message }
+    @fortunes = @fortunes.sort_by { |x| x.message }
   end
 
   def update
