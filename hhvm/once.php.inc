@@ -11,6 +11,18 @@ class Benchmark {
         ));
     }
 
+    public function bench_json()
+    {
+        header('Content-Type: application/json');
+        echo json_encode(array('message' => 'Hello, World!'));
+    }
+
+    public function bench_plaintext()
+    {
+        header('Content-Type: text/plain; charset=utf-8');
+        echo 'Hello, World!';
+    }
+
     public function bench_db()
     {
         $this->setup_db();
