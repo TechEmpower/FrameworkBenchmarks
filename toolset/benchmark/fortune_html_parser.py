@@ -9,7 +9,7 @@ class FortuneHTMLParser(HTMLParser):
   def handle_decl(self, decl):
     self.body.append("<!{d}>".format(d=decl))
 
-  def handle_charref(self, name):
+  def handle_entityref(self, name):
     self.body.append("&{n};".format(n=name))
 
   def handle_starttag(self, tag, attrs):
@@ -26,4 +26,4 @@ class FortuneHTMLParser(HTMLParser):
     print "Input: {i}\n".format(i=''.join(self.body))
     print "Equal: {e}\n".format(e=str(self.valid == self.body))
 
-    return True
+    return self.valid == ''.join(self.body)
