@@ -1,2 +1,4 @@
 tornado
 motor
+psycopg2
+Momoko
