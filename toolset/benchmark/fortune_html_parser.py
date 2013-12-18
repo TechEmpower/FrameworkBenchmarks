@@ -9,6 +9,9 @@ class FortuneHTMLParser(HTMLParser):
   def handle_decl(self, decl):
     self.body.append("<!{d}>".format(d=decl))
 
+  def handle_charref(self, name):
+    self.body.append("&{n};".format(n=name))
+
   def handle_starttag(self, tag, attrs):
     self.body.append("<{t}>".format(t=tag))
 
