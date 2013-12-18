@@ -19,8 +19,8 @@ class FortuneHTMLParser(HTMLParser):
     self.body.append("</{t}>".format(t=tag))
 
   def isValidFortune(self):
-    print "Valid: {v}\n".format(self.valid)
-    print "Input: {i}\n".format(self.body)
-    print "Equal: {e}\n".format(str(self.valid == self.body))
+    print "Valid: {v}\n".format(v=self.valid)
+    print "Input: {i}\n".format(i=''.join(self.body))
+    print "Equal: {e}\n".format(e=str(self.valid == self.body))
 
     return True
