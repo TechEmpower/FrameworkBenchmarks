@@ -139,6 +139,8 @@ class FrameworkTest:
 
     if not obj:
       return False
+    if type(obj) != dict:
+      return False
     if not obj["id"] or type(obj["id"]) != int:
       return False
     if not obj["randomNumber"] or type(obj["randomNumber"]) != int:
