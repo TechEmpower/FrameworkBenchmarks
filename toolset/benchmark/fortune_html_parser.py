@@ -27,22 +27,25 @@ class FortuneHTMLParser(HTMLParser):
     # "&#34;" is a valid escaping, but we are normalizing
     # it so that our final parse can just be checked for
     # equality.
-    norm = name.replace("34", "quot")
+    if name == "34":
+      # Append our normalized entity reference to our body.
+      self.body.append("&quot;")
     # Again, "&#43;" is a valid escaping of the "+", but
     # it is not required, so we need to normalize for out
     # final parse and equality check.
-    norm = norm.replace("43", "+")
+    if name == "43":
+      self.body.append("+")
     # Again, "&#62;" is a valid escaping of ">", but we
     # need to normalize to "&gt;" for equality checking.
-    norm = norm.replace("62", "gt")
+    if name == "62":
+      self.body.append("&gt;")
     # Again, "&#60;" is a valid escaping of "<", but we
     # need to nromalize to "&lt;" for equality checking.
-    norm = norm.replace("60", "lt")
-    # Append our normalized entity reference to our body.
-    self.body.append("&{n};".format(n=norm))
+    if name == "60":
+      self.body.append("&lt;")
 
   def handle_entityref(self, name):
-    self.body.append("&{n};".format(n=norm))
+    self.body.append("&{n};".format(n=name))
 
   # This is called every time a tag is opened. We append
   # each one wrapped in "<" and ">".
