@@ -19,9 +19,19 @@ public class DatabaseAccess implements Filter {
     @Override
     public Result filter(FilterChain filterChain, Context context) {
         
-        unitOfWork.begin();
-        Result result = filterChain.next(context);
-        unitOfWork.end();
+        Result result;
+                
+        try {
+            
+            unitOfWork.begin();
+          
+            result = filterChain.next(context);
+            
+        } finally {
+            
+            unitOfWork.end();
+            
+        }
         
         return result;
      }
