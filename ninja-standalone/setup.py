@@ -4,7 +4,7 @@ import setup_util
 import os
 
 def start(args, logfile, errfile):
-  setup_util.replace_text("ninja-standalone/src/main/resource/conf/application.conf", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+  setup_util.replace_text("ninja-standalone/src/main/resources/conf/application.conf", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
   
   try:
     subprocess.check_call("mvn clean compile assembly:single", shell=True, cwd="ninja-standalone", stderr=errfile, stdout=logfile)
