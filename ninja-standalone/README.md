@@ -5,22 +5,22 @@ This is the [Ninja-standalone](http://www.ninjaframework.org/) portion of a [ben
 ## Test URLs
 ### JSON Encoding Test
 
-http://localhost:8080/ninja/json
+http://localhost:8080/json
 
 ### Single Query Test
 
-http://localhost:8080/ninja/db
+http://localhost:8080/db
 
 ### Multiple Queries Test
 
-http://localhost:8080/ninja/queries/5
+http://localhost:8080/queries?5
 
 ### Fortunes Test
 
-http://localhost:8080/ninja/fotunes
+http://localhost:8080/fotunes
 
 ### Plaintext Test
 
-http://localhost:8080/ninja/plaintext
+http://localhost:8080/plaintext
 
 
