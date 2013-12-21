@@ -15,13 +15,11 @@ public class WorldDao {
     @Inject
     Provider<EntityManager> entitiyManagerProvider;
 
-    @Transactional
     public World get(int id) {
 	EntityManager entityManager = entitiyManagerProvider.get();
 	return entityManager.find(World.class, id);
     }
     
-    @Transactional
     public void put(World world) {
 	EntityManager entityManager = entitiyManagerProvider.get();
 	entityManager.persist(world);

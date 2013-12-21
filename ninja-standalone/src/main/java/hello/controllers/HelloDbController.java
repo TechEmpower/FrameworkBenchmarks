@@ -12,6 +12,7 @@ import ninja.Results;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
+import ninja.FilterWith;
 import ninja.params.Param;
 
 @Singleton
@@ -32,7 +33,7 @@ public class HelloDbController {
     // JPA calls in dependent methods inside one - and only one - 
     // transaction. Otherwise WorldDao would open x new transactions what
     // is of course slower than only having one encapsulating transaction.
-    @Transactional
+    @FilterWith(DatabaseAccess.class)
     public Result multiGet(@Param("queries") Integer queries) {
 	if (queries == null || queries < 1) {
 	    queries = 1;
@@ -54,7 +55,7 @@ public class HelloDbController {
     // JPA calls in dependent methods inside one - and only one - 
     // transaction. Otherwise WorldDao would open x new transactions what
     // is of course slower than only having one encapsulating transaction.
-    @Transactional
+    @FilterWith(DatabaseAccess.class)
     public Result update(@Param("queries") Integer queries) {
 	if (queries == null || queries < 1) {
 	    queries = 1;
