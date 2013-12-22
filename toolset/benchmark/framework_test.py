@@ -118,64 +118,52 @@ class FrameworkTest:
   # Validates the jsonString is a JSON object with a 'message'
   # key with the value "hello, world!" (case-insensitive).
   ############################################################
-  def validateJson(self, jsonString):
-    obj = json.loads(jsonString)
+  def validateJson(self, jsonString, out, err):
+    try:
+      obj = json.loads(jsonString)
 
-    if not obj:
-      return False
-    if not obj["message"]:
-      return False
-    if not obj["message"].lower() == "hello, world!":
-      return False
-    return True
+      if not obj:
+        return False
+      if not obj["message"]:
+        return False
+      if not obj["message"].lower() == "hello, world!":
+        return False
+      return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateJson raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
 
   ############################################################
   # Validates the jsonString is a JSON object that has an "id"
   # and a "randomNumber" key, and that both keys map to 
   # integers.
   ############################################################
-  def validateDb(self, jsonString):
-    obj = json.loads(jsonString)
+  def validateDb(self, jsonString, out, err):
+    try:
+      obj = json.loads(jsonString)
 
-    if not obj:
-      return False
-    if type(obj) != dict:
-      return False
-    if not obj["id"] or type(obj["id"]) != int:
-      return False
-    if not obj["randomNumber"] or type(obj["randomNumber"]) != int:
-      return False
-    return True
-
-  ############################################################
-  # Validates the jsonString is an array with a length of
-  # 2, that each entry in the array is a JSON object, that
-  # each object has an "id" and a "randomNumber" key, and that
-  # both keys map to integers.
-  ############################################################
-  def validateQuery(self, jsonString):
-    arr = json.loads(jsonString)
-
-    if not arr or len(arr) != 2 or type(arr[0]) != dict or type(arr[1]) != dict:
-      return False
-    if not arr[0]["id"] or type(arr[0]["id"]) != int:
-      return False
-    if not arr[0]["randomNumber"] or type(arr[0]["randomNumber"]) != int:
-      return False
-    if not arr[1]["id"] or type(arr[1]["id"]) != int:
-      return False
-    if not arr[1]["randomNumber"] or type(arr[1]["randomNumber"]) != int:
-      return False 
-    return True
-
-  ############################################################
-  #
-  ############################################################
-  def validateFortune(self, htmlString):
-    parser = FortuneHTMLParser()
-    parser.feed(htmlString)
-
-    return parser.isValidFortune()
+      if not obj:
+        return False
+      if type(obj) != dict:
+        return False
+      if not obj["id"] or type(obj["id"]) != int:
+        return False
+      if not obj["randomNumber"] or type(obj["randomNumber"]) != int:
+        return False
+      return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateDb raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
 
   ############################################################
   # Validates the jsonString is an array with a length of
@@ -183,26 +171,93 @@ class FrameworkTest:
   # each object has an "id" and a "randomNumber" key, and that
   # both keys map to integers.
   ############################################################
-  def validateUpdate(self, jsonString):
-    arr = json.loads(jsonString)
+  def validateQuery(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
 
-    if not arr or len(arr) != 2 or type(arr[0]) != dict or type(arr[1]) != dict:
-      return False
-    if not arr[0]["id"] or type(arr[0]["id"]) != int:
-      return False
-    if not arr[0]["randomNumber"] or type(arr[0]["randomNumber"]) != int:
-      return False
-    if not arr[1]["id"] or type(arr[1]["id"]) != int:
-      return False
-    if not arr[1]["randomNumber"] or type(arr[1]["randomNumber"]) != int:
-      return False 
-    return True
+      if not arr or len(arr) != 2 or type(arr[0]) != dict or type(arr[1]) != dict:
+        return False
+      if not arr[0]["id"] or type(arr[0]["id"]) != int:
+        return False
+      if not arr[0]["randomNumber"] or type(arr[0]["randomNumber"]) != int:
+        return False
+      if not arr[1]["id"] or type(arr[1]["id"]) != int:
+        return False
+      if not arr[1]["randomNumber"] or type(arr[1]["randomNumber"]) != int:
+        return False 
+      return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateQuery raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Parses the given HTML string and asks a FortuneHTMLParser
+  # whether the parsed string is a valid fortune return.
+  ############################################################
+  def validateFortune(self, htmlString, out, err):
+    try:
+      parser = FortuneHTMLParser()
+      parser.feed(htmlString)
+
+      return parser.isValidFortune()
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateFortune raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 2, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateUpdate(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
+
+      if not arr or len(arr) != 2 or type(arr[0]) != dict or type(arr[1]) != dict:
+        return False
+      if not arr[0]["id"] or type(arr[0]["id"]) != int:
+        return False
+      if not arr[0]["randomNumber"] or type(arr[0]["randomNumber"]) != int:
+        return False
+      if not arr[1]["id"] or type(arr[1]["id"]) != int:
+        return False
+      if not arr[1]["randomNumber"] or type(arr[1]["randomNumber"]) != int:
+        return False 
+      return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateUpdate raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
 
   ############################################################
   #
   ############################################################
-  def validatePlaintext(self, jsonString):
-    return jsonString.lower().strip() == "hello, world!"
+  def validatePlaintext(self, jsonString, out, err):
+    try:
+      return jsonString.lower().strip() == "hello, world!"
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validatePlaintext raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
 
   ############################################################
   # start(benchmarker)
@@ -234,87 +289,117 @@ class FrameworkTest:
   def verify_urls(self, out, err):
     # JSON
     if self.runTests[self.JSON]:
+      out.write( "VERIFYING JSON (" + self.json_url + ") ... " )
+      out.flush()
       try:
-        out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
-        out.flush()
         url = self.benchmarker.generate_url(self.json_url, self.port)
         output = self.__curl_url(url, self.JSON, out, err)
-        if self.validateJson(output):
+        if self.validateJson(output, out, err):
           self.json_url_passed = True
         else:
           self.json_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.json_url_passed = False
+      if self.json_url_passed 
+        out.write("PASS\n")
+      else:
+        out.write("FAIL\n")
+      out.flush
 
     # DB
     if self.runTests[self.DB]:
+      out.write( "VERIFYING DB (" + self.db_url + ") ... " )
+      out.flush()
       try:
-        out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
-        out.flush()
         url = self.benchmarker.generate_url(self.db_url, self.port)
         output = self.__curl_url(url, self.DB, out, err)
-        if self.validateDb(output):
+        if self.validateDb(output, out, err):
           self.db_url_passed = True
         else:
           self.db_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.db_url_passed = False
+      if self.db_url_passed 
+        out.write("PASS\n")
+      else:
+        out.write("FAIL\n")
+      out.flush
 
     # Query
     if self.runTests[self.QUERY]:
+      out.write( "VERIFYING QUERY (" + self.query_url + "2) ... " )
+      out.flush()
       try:
-        out.write( "VERIFYING Query (" + self.query_url + "2) ...\n" )
-        out.flush()
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
         output = self.__curl_url(url, self.QUERY, out, err)
-        if self.validateQuery(output):
+        if self.validateQuery(output, out, err):
           self.query_url_passed = True
         else:
           self.query_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.query_url_passed = False
+      if self.query_url_passed 
+        out.write("PASS\n")
+      else:
+        out.write("FAIL\n")
+      out.flush
 
     # Fortune
     if self.runTests[self.FORTUNE]:
+      out.write( "VERIFYING FORTUNE (" + self.fortune_url + ") ... " )
+      out.flush()
       try:
-        out.write( "VERIFYING Fortune (" + self.fortune_url + ") ...\n" )
-        out.flush()
         url = self.benchmarker.generate_url(self.fortune_url, self.port)
         output = self.__curl_url(url, self.FORTUNE, out, err)
-        if self.validateFortune(output):
+        if self.validateFortune(output, out, err):
           self.fortune_url_passed = True
         else:
           self.fortune_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.fortune_url_passed = False
+      if self.fortune_url_passed 
+        out.write("PASS\n")
+      else:
+        out.write("FAIL\n")
+      out.flush
 
     # Update
     if self.runTests[self.UPDATE]:
+      out.write( "VERIFYING UPDATE (" + self.update_url + "2) ... " )
+      out.flush()
       try:
-        out.write( "VERIFYING Update (" + self.update_url + "2) ...\n" )
-        out.flush()
         url = self.benchmarker.generate_url(self.update_url + "2", self.port)
         output = self.__curl_url(url, self.UPDATE, out, err)
-        if self.validateUpdate(output):
+        if self.validateUpdate(output, out, err):
           self.update_url_passed = True
         else:
           self.update_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.update_url_passed = False
+      if self.update_url_passed 
+        out.write("PASS\n")
+      else:
+        out.write("FAIL\n")
+      out.flush
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
+      out.write( "VERIFYING PLAINTEXT (" + self.plaintext_url + ") ... " )
+      out.flush()
       try:
-        out.write( "VERIFYING Plaintext (" + self.plaintext_url + ") ...\n" )
-        out.flush()
         url = self.benchmarker.generate_url(self.plaintext_url, self.port)
         output = self.__curl_url(url, self.PLAINTEXT, out, err)
-        if self.validatePlaintext(output):
+        if self.validatePlaintext(output, out, err):
           self.plaintext_url_passed = True
         else:
           self.plaintext_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.plaintext_url_passed = False
+      if self.plaintext_url_passed 
+        out.write("PASS\n")
+      else:
+        out.write("FAIL\n")
+      out.flush
 
   ############################################################
   # End verify_urls
