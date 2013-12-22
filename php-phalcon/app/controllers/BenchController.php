@@ -5,74 +5,55 @@ use Phalcon\Mvc\View,
 
 class BenchController extends \Phalcon\Mvc\Controller
 {
+
     public function initialize()
     {
         // views must be renderd explicitly. safes processing time when not needed.
         $this->view->setRenderLevel(View::LEVEL_LAYOUT);
     }
 
-    public function jsonAction() {
+    public function jsonAction()
+    {
         return $this->sendContentAsJson(array(
-            'message' => 'Hello World!'
-        ));
+                    'message' => 'Hello World!'
+                ));
     }
 
-    public function dbAction() {
+    public function dbAction()
+    {
 
         $queries = $this->request->getQuery('queries', null, 1);
 
         $worlds = array();
 
         for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = Worlds::findFirst(mt_rand(1, 10000));
+            $worlds[] = $this->getRandomWorld();
         }
 
         return $this->sendContentAsJson($worlds);
     }
 
-    public function fortunesAction() {
+    public function fortunesAction()
+    {
 
-        // since the resultset is immutable get an array instead
-        // so we can add the new fortune
-        $fortunes = Fortunes::find()->toArray();
-
-        $fortunes[] = array(
-            'id' => 0,
-            'message' => 'Additional fortune added at request time.'
-        );
-
-        usort($fortunes, function($left, $right) {
-            $l = $left['message'];
-            $r = $right['message'];
-            if ($l === $r) {
-                return 0;
-            } else {
-                if ($l > $r) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-        });
+        $fortunes = $this->getFortunesArray();
+        $fortunes[] = $this->buildFortune();
 
         $this->response->setHeader("Content-Type", "text/html; charset=utf-8");
 
-        $this->view->fortunes = $fortunes;
+        $this->view->fortunes = $this->sortFortunes($fortunes);
     }
 
-    public function updateAction() {
+    public function updateAction()
+    {
 
         $queries = $this->request->getQuery('queries', null, 1);
-        if($queries < 1) {
-            $queries = 1;
-        } else if ($queries > 500) {
-            $queries = 500;
-        }
+        $queries = max(1, min(500, $queries));
 
         $worlds = array();
 
         for ($i = 0; $i < $queries; ++$i) {
-            $world = Worlds::findFirst(mt_rand(1, 10000));
+            $world = $this->getRandomWorld();
             $world->randomNumber = mt_rand(1, 10000);
             $world->save();
             $worlds[] = $world;
@@ -81,9 +62,50 @@ class BenchController extends \Phalcon\Mvc\Controller
         return $this->sendContentAsJson($worlds);
     }
 
-    private function sendContentAsJson($content) {
+    protected function getRandomWorld()
+    {
+        return Worlds::findFirst(mt_rand(1, 10000));
+    }
+
+    protected function getFortunesArray()
+    {
+        // since the resultset is immutable get an array instead
+        // so we can add the new fortune
+        return Fortunes::find()->toArray();
+    }
+
+    protected function buildFortune()
+    {
+        return array(
+            'id' => 0,
+            'message' => 'Additional fortune added at request time.'
+        );
+    }
+
+    protected function sortFortunes($fortunes)
+    {
+        usort($fortunes,
+                function($left, $right) {
+                    $l = $left['message'];
+                    $r = $right['message'];
+                    if ($l === $r) {
+                        return 0;
+                    } else {
+                        if ($l > $r) {
+                            return 1;
+                        } else {
+                            return -1;
+                        }
+                    }
+                });
+        return $fortunes;
+    }
+
+    private function sendContentAsJson($content)
+    {
         $response = new Phalcon\Http\Response(json_encode($content));
         $response->setHeader("Content-Type", "application/json");
         return $response;
     }
+
 }
