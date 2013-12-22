@@ -23,4 +23,9 @@ $router->add('/update', array(
     'action' => 'update',
 ));
 
+$router->add('/plaintext', array(
+    'controller' => 'bench',
+    'action' => 'plaintext',
+));
+
 return $router;

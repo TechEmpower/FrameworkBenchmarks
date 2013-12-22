@@ -43,3 +43,7 @@ http://localhost/db?queries=2
 ### Templating Test
 
 http://localhost/fortunes
+
+### Plaintext Test
+
+http://localhost/plaintext
