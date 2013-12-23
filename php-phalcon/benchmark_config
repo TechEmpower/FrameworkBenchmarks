@@ -28,7 +28,6 @@
       "db_url": "/mongodb/db",
       "query_url": "/mongodb/db?queries=",
       "fortune_url": "/mongodb/fortunes",
-      "update_url": "/mongodb/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
