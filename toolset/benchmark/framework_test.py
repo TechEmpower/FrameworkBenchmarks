@@ -289,7 +289,7 @@ class FrameworkTest:
   def verify_urls(self, out, err):
     # JSON
     if self.runTests[self.JSON]:
-      out.write( "VERIFYING JSON (" + self.json_url + ") ... " )
+      out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.json_url, self.port)
@@ -300,7 +300,8 @@ class FrameworkTest:
           self.json_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.json_url_passed = False
-      if self.json_url_passed 
+      out.write("VALIDATING JSON ... ")
+      if self.json_url_passed:
         out.write("PASS\n")
       else:
         out.write("FAIL\n")
@@ -308,7 +309,7 @@ class FrameworkTest:
 
     # DB
     if self.runTests[self.DB]:
-      out.write( "VERIFYING DB (" + self.db_url + ") ... " )
+      out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.db_url, self.port)
@@ -319,7 +320,8 @@ class FrameworkTest:
           self.db_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.db_url_passed = False
-      if self.db_url_passed 
+      out.write("VALIDATING DB ... ")
+      if self.db_url_passed:
         out.write("PASS\n")
       else:
         out.write("FAIL\n")
@@ -327,7 +329,7 @@ class FrameworkTest:
 
     # Query
     if self.runTests[self.QUERY]:
-      out.write( "VERIFYING QUERY (" + self.query_url + "2) ... " )
+      out.write( "VERIFYING QUERY (" + self.query_url + "2) ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
@@ -338,7 +340,8 @@ class FrameworkTest:
           self.query_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.query_url_passed = False
-      if self.query_url_passed 
+      out.write("VALIDATING QUERY ... ")
+      if self.query_url_passed:
         out.write("PASS\n")
       else:
         out.write("FAIL\n")
@@ -346,7 +349,7 @@ class FrameworkTest:
 
     # Fortune
     if self.runTests[self.FORTUNE]:
-      out.write( "VERIFYING FORTUNE (" + self.fortune_url + ") ... " )
+      out.write( "VERIFYING FORTUNE (" + self.fortune_url + ") ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.fortune_url, self.port)
@@ -357,7 +360,8 @@ class FrameworkTest:
           self.fortune_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.fortune_url_passed = False
-      if self.fortune_url_passed 
+      out.write("VALIDATING FORTUNE ... ")
+      if self.fortune_url_passed:
         out.write("PASS\n")
       else:
         out.write("FAIL\n")
@@ -365,7 +369,7 @@ class FrameworkTest:
 
     # Update
     if self.runTests[self.UPDATE]:
-      out.write( "VERIFYING UPDATE (" + self.update_url + "2) ... " )
+      out.write( "VERIFYING UPDATE (" + self.update_url + "2) ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.update_url + "2", self.port)
@@ -376,7 +380,8 @@ class FrameworkTest:
           self.update_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.update_url_passed = False
-      if self.update_url_passed 
+      out.write("VALIDATING UPDATE ... ")
+      if self.update_url_passed:
         out.write("PASS\n")
       else:
         out.write("FAIL\n")
@@ -384,7 +389,7 @@ class FrameworkTest:
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
-      out.write( "VERIFYING PLAINTEXT (" + self.plaintext_url + ") ... " )
+      out.write( "VERIFYING PLAINTEXT (" + self.plaintext_url + ") ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.plaintext_url, self.port)
@@ -395,7 +400,8 @@ class FrameworkTest:
           self.plaintext_url_passed = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.plaintext_url_passed = False
-      if self.plaintext_url_passed 
+      out.write("VALIDATING PLAINTEXT ... ")
+      if self.plaintext_url_passed:
         out.write("PASS\n")
       else:
         out.write("FAIL\n")
