@@ -9,6 +9,7 @@ import pprint
 import sys
 import traceback
 import json
+import textwrap
 
 class FrameworkTest:
   ##########################################################################################
@@ -302,9 +303,9 @@ class FrameworkTest:
         self.json_url_passed = False
       out.write("VALIDATING JSON ... ")
       if self.json_url_passed:
-        out.write("PASS\n")
+        out.write("PASS\n\n")
       else:
-        out.write("FAIL\n")
+        out.write("FAIL\n\n")
       out.flush
 
     # DB
@@ -322,9 +323,9 @@ class FrameworkTest:
         self.db_url_passed = False
       out.write("VALIDATING DB ... ")
       if self.db_url_passed:
-        out.write("PASS\n")
+        out.write("PASS\n\n")
       else:
-        out.write("FAIL\n")
+        out.write("FAIL\n\n")
       out.flush
 
     # Query
@@ -342,9 +343,9 @@ class FrameworkTest:
         self.query_url_passed = False
       out.write("VALIDATING QUERY ... ")
       if self.query_url_passed:
-        out.write("PASS\n")
+        out.write("PASS\n\n")
       else:
-        out.write("FAIL\n")
+        out.write("FAIL\n\n")
       out.flush
 
     # Fortune
@@ -362,9 +363,9 @@ class FrameworkTest:
         self.fortune_url_passed = False
       out.write("VALIDATING FORTUNE ... ")
       if self.fortune_url_passed:
-        out.write("PASS\n")
+        out.write("PASS\n\n")
       else:
-        out.write("FAIL\n")
+        out.write("FAIL\n\n")
       out.flush
 
     # Update
@@ -382,9 +383,9 @@ class FrameworkTest:
         self.update_url_passed = False
       out.write("VALIDATING UPDATE ... ")
       if self.update_url_passed:
-        out.write("PASS\n")
+        out.write("PASS\n\n")
       else:
-        out.write("FAIL\n")
+        out.write("FAIL\n\n")
       out.flush
 
     # plaintext
@@ -402,9 +403,9 @@ class FrameworkTest:
         self.plaintext_url_passed = False
       out.write("VALIDATING PLAINTEXT ... ")
       if self.plaintext_url_passed:
-        out.write("PASS\n")
+        out.write("PASS\n\n")
       else:
-        out.write("FAIL\n")
+        out.write("FAIL\n\n")
       out.flush
 
   ############################################################
@@ -795,7 +796,6 @@ class FrameworkTest:
     # ignore the HTTP response because we already output that in
     # the first curl invocation.
     subprocess.check_output(["curl", "-fsS", url], stderr=err)
-    out.flush()
     err.flush()
     # HTTP output may not end in a newline, so add that here.
     out.write( "\n" )
