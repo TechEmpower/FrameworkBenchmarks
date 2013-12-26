@@ -27,26 +27,29 @@ class FortuneHTMLParser(HTMLParser):
     # "&#34;" is a valid escaping, but we are normalizing
     # it so that our final parse can just be checked for
     # equality.
-    if name == "34":
+    if name == "34" or name == "x22":
       # Append our normalized entity reference to our body.
       self.body.append("&quot;")
     # "&#39;" is a valid escaping of "-", but it is not
     # required, so we normalize for equality checking.
-    if name == "39":
+    if name == "39" or name == "x27":
       self.body.append("&apos;")
     # Again, "&#43;" is a valid escaping of the "+", but
     # it is not required, so we need to normalize for out
     # final parse and equality check.
-    if name == "43":
+    if name == "43" or name == "x2B":
       self.body.append("+")
     # Again, "&#62;" is a valid escaping of ">", but we
     # need to normalize to "&gt;" for equality checking.
-    if name == "62":
+    if name == "62" or name == "x3E":
       self.body.append("&gt;")
     # Again, "&#60;" is a valid escaping of "<", but we
     # need to nromalize to "&lt;" for equality checking.
-    if name == "60":
+    if name == "60" or name == "x3C":
       self.body.append("&lt;")
+    # Not sure why some are escaping '/'
+    if name == "47" or name == "x2F":
+      self.body.append("/")
 
   def handle_entityref(self, name):
     self.body.append("&{n};".format(n=name))

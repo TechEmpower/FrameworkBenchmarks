@@ -452,14 +452,12 @@ class FrameworkTest:
           out.write("BENCHMARKING JSON ... ") 
           out.flush()
           results = None
+          output_file = self.benchmarker.output_file(self.name, self.JSON)
           if self.json_url_passed:
             remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
-            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.JSON), err)
-            results = self.__parse_test(self.JSON)
-          else:
-            results = dict()
-            results['results'] = []
-          self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'], passed=self.json_url_passed)
+            self.__run_benchmark(remote_script, output_file, err)
+          results = self.__parse_test(self.JSON)
+          self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
           out.write( "Complete\n" )
           out.flush()
       except AttributeError:
@@ -472,14 +470,12 @@ class FrameworkTest:
           out.write("BENCHMARKING DB ... ") 
           out.flush()
           results = None
+          output_file = self.benchmarker.output_file(self.name, self.DB)
           if self.db_url_passed:
             remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
-            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.DB), err)
-            results = self.__parse_test(self.DB)
-          else:
-            results = dict()
-            results['results'] = []
-          self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'], passed=self.db_url_passed)
+            self.__run_benchmark(remote_script, output_file, err)
+          results = self.__parse_test(self.DB)
+          self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
           out.write( "Complete\n" )
       except AttributeError:
         pass
@@ -491,14 +487,12 @@ class FrameworkTest:
           out.write("BENCHMARKING Query ... ")
           out.flush()
           results = None
+          output_file = self.benchmarker.output_file(self.name, self.QUERY)
           if self.query_url_passed:
             remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
-            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.QUERY), err)
-            results = self.__parse_test(self.QUERY)
-          else:
-            results = dict()
-            results['results'] = []
-          self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'], passed=self.query_url_passed)
+            self.__run_benchmark(remote_script, output_file, err)
+          results = self.__parse_test(self.QUERY)
+          self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
           out.write( "Complete\n" )
           out.flush()
       except AttributeError:
@@ -511,14 +505,12 @@ class FrameworkTest:
           out.write("BENCHMARKING Fortune ... ") 
           out.flush()
           results = None
+          output_file = self.benchmarker.output_file(self.name, self.FORTUNE)
           if self.fortune_url_passed:
             remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
-            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.FORTUNE), err)
-            results = self.__parse_test(self.FORTUNE)
-          else:
-            results = dict()
-            results['results'] = []
-          self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'], passed=self.fortune_url_passed)
+            self.__run_benchmark(remote_script, output_file, err)
+          results = self.__parse_test(self.FORTUNE)
+          self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
           out.write( "Complete\n" )
           out.flush()
       except AttributeError:
@@ -531,14 +523,12 @@ class FrameworkTest:
           out.write("BENCHMARKING Update ... ") 
           out.flush()
           results = None
+          output_file = self.benchmarker.output_file(self.name, self.UPDATE)
           if self.update_url_passed:
             remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
-            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.UPDATE), err)
-            results = self.__parse_test(self.UPDATE)
-          else:
-            results = dict()
-            results['results'] = []
-          self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'], passed=self.update_url_passed)
+            self.__run_benchmark(remote_script, output_file, err)
+          results = self.__parse_test(self.UPDATE)
+          self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
           out.write( "Complete\n" )
           out.flush()
       except AttributeError:
@@ -551,14 +541,12 @@ class FrameworkTest:
           out.write("BENCHMARKING Plaintext ... ")
           out.flush()
           results = None
+          output_file = self.benchmarker.output_file(self.name, self.PLAINTEXT)
           if self.plaintext_url_passed:
             remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
-            self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, self.PLAINTEXT), err)
-            results = self.__parse_test(self.PLAINTEXT)
-          else:
-            results = dict()
-            results['results'] = []
-          self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'], passed=self.plaintext_url_passed)
+            self.__run_benchmark(remote_script, output_file, err)
+          results = self.__parse_test(self.PLAINTEXT)
+          self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
           out.write( "Complete\n" )
           out.flush()
       except AttributeError:
@@ -575,32 +563,32 @@ class FrameworkTest:
   ############################################################
   def parse_all(self):
     # JSON
-    if os.path.exists(self.benchmarker.output_file(self.name, self.JSON)):
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.JSON)):
       results = self.__parse_test(self.JSON)
       self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
     
     # DB
-    if os.path.exists(self.benchmarker.output_file(self.name, self.DB)):
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.DB)):
       results = self.__parse_test(self.DB)
       self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
     
     # Query
-    if os.path.exists(self.benchmarker.output_file(self.name, self.QUERY)):
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.QUERY)):
       results = self.__parse_test(self.QUERY)
       self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
 
     # Fortune
-    if os.path.exists(self.benchmarker.output_file(self.name, self.FORTUNE)):
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.FORTUNE)):
       results = self.__parse_test(self.FORTUNE)
       self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
 
     # Update
-    if os.path.exists(self.benchmarker.output_file(self.name, self.UPDATE)):
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.UPDATE)):
       results = self.__parse_test(self.UPDATE)
       self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
 
     # Plaintext
-    if os.path.exists(self.benchmarker.output_file(self.name, self.PLAINTEXT)):
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.PLAINTEXT)):
       results = self.__parse_test(self.PLAINTEXT)
       self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
   ############################################################
@@ -615,82 +603,83 @@ class FrameworkTest:
       results = dict()
       results['results'] = []
       
-      with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
-        is_warmup = True
-        rawData = None
-        for line in raw_data:
+      if os.path.exists(self.benchmarker.get_output_file(self.name, test_type)):
+        with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
+          is_warmup = True
+          rawData = None
+          for line in raw_data:
 
-          if "Queries:" in line or "Concurrency:" in line:
-            is_warmup = False
-            rawData = None
-            continue
-          if "Warmup" in line or "Primer" in line:
-            is_warmup = True
-            continue
+            if "Queries:" in line or "Concurrency:" in line:
+              is_warmup = False
+              rawData = None
+              continue
+            if "Warmup" in line or "Primer" in line:
+              is_warmup = True
+              continue
 
-          if not is_warmup:
-            if rawData == None:
-              rawData = dict()
-              results['results'].append(rawData)
+            if not is_warmup:
+              if rawData == None:
+                rawData = dict()
+                results['results'].append(rawData)
 
-            #if "Requests/sec:" in line:
-            #  m = re.search("Requests/sec:\s+([0-9]+)", line)
-            #  rawData['reportedResults'] = m.group(1)
+              #if "Requests/sec:" in line:
+              #  m = re.search("Requests/sec:\s+([0-9]+)", line)
+              #  rawData['reportedResults'] = m.group(1)
+                
+              # search for weighttp data such as succeeded and failed.
+              if "Latency" in line:
+                m = re.findall("([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
+                if len(m) == 4:
+                  rawData['latencyAvg'] = m[0]
+                  rawData['latencyStdev'] = m[1]
+                  rawData['latencyMax'] = m[2]
+              #    rawData['latencyStdevPercent'] = m[3]
               
-            # search for weighttp data such as succeeded and failed.
-            if "Latency" in line:
-              m = re.findall("([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
-              if len(m) == 4:
-                rawData['latencyAvg'] = m[0]
-                rawData['latencyStdev'] = m[1]
-                rawData['latencyMax'] = m[2]
-            #    rawData['latencyStdevPercent'] = m[3]
-            
-            #if "Req/Sec" in line:
-            #  m = re.findall("([0-9]+\.*[0-9]*[k|%]*)", line)
-            #  if len(m) == 4:
-            #    rawData['requestsAvg'] = m[0]
-            #    rawData['requestsStdev'] = m[1]
-            #    rawData['requestsMax'] = m[2]
-            #    rawData['requestsStdevPercent'] = m[3]
+              #if "Req/Sec" in line:
+              #  m = re.findall("([0-9]+\.*[0-9]*[k|%]*)", line)
+              #  if len(m) == 4:
+              #    rawData['requestsAvg'] = m[0]
+              #    rawData['requestsStdev'] = m[1]
+              #    rawData['requestsMax'] = m[2]
+              #    rawData['requestsStdevPercent'] = m[3]
+                
+              #if "requests in" in line:
+              #  m = re.search("requests in ([0-9]+\.*[0-9]*[ms|s|m|h]+)", line)
+              #  if m != None: 
+              #    # parse out the raw time, which may be in minutes or seconds
+              #    raw_time = m.group(1)
+              #    if "ms" in raw_time:
+              #      rawData['total_time'] = float(raw_time[:len(raw_time)-2]) / 1000.0
+              #    elif "s" in raw_time:
+              #      rawData['total_time'] = float(raw_time[:len(raw_time)-1])
+              #    elif "m" in raw_time:
+              #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 60.0
+              #    elif "h" in raw_time:
+              #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 3600.0
+             
+              if "requests in" in line:
+                m = re.search("([0-9]+) requests in", line)
+                if m != None: 
+                  rawData['totalRequests'] = int(m.group(1))
               
-            #if "requests in" in line:
-            #  m = re.search("requests in ([0-9]+\.*[0-9]*[ms|s|m|h]+)", line)
-            #  if m != None: 
-            #    # parse out the raw time, which may be in minutes or seconds
-            #    raw_time = m.group(1)
-            #    if "ms" in raw_time:
-            #      rawData['total_time'] = float(raw_time[:len(raw_time)-2]) / 1000.0
-            #    elif "s" in raw_time:
-            #      rawData['total_time'] = float(raw_time[:len(raw_time)-1])
-            #    elif "m" in raw_time:
-            #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 60.0
-            #    elif "h" in raw_time:
-            #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 3600.0
-           
-            if "requests in" in line:
-              m = re.search("([0-9]+) requests in", line)
-              if m != None: 
-                rawData['totalRequests'] = int(m.group(1))
-            
-            if "Socket errors" in line:
-              if "connect" in line:
-                m = re.search("connect ([0-9]+)", line)
-                rawData['connect'] = int(m.group(1))
-              if "read" in line:
-                m = re.search("read ([0-9]+)", line)
-                rawData['read'] = int(m.group(1))
-              if "write" in line:
-                m = re.search("write ([0-9]+)", line)
-                rawData['write'] = int(m.group(1))
-              if "timeout" in line:
-                m = re.search("timeout ([0-9]+)", line)
-                rawData['timeout'] = int(m.group(1))
-            
-            if "Non-2xx" in line:
-              m = re.search("Non-2xx or 3xx responses: ([0-9]+)", line)
-              if m != None: 
-                rawData['5xx'] = int(m.group(1))
+              if "Socket errors" in line:
+                if "connect" in line:
+                  m = re.search("connect ([0-9]+)", line)
+                  rawData['connect'] = int(m.group(1))
+                if "read" in line:
+                  m = re.search("read ([0-9]+)", line)
+                  rawData['read'] = int(m.group(1))
+                if "write" in line:
+                  m = re.search("write ([0-9]+)", line)
+                  rawData['write'] = int(m.group(1))
+                if "timeout" in line:
+                  m = re.search("timeout ([0-9]+)", line)
+                  rawData['timeout'] = int(m.group(1))
+              
+              if "Non-2xx" in line:
+                m = re.search("Non-2xx or 3xx responses: ([0-9]+)", line)
+                if m != None: 
+                  rawData['5xx'] = int(m.group(1))
               
 
       return results

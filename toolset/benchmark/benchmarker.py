@@ -184,12 +184,23 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # get_output_file(test_name, test_type)
+  # returns the output file name for this test_name and 
+  # test_type timestamp/test_type/test_name/raw 
+  ############################################################
+  def get_output_file(self, test_name, test_type):
+    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
+  ############################################################
+  # End get_output_file
+  ############################################################
+
+  ############################################################
   # output_file(test_name, test_type)
   # returns the output file for this test_name and test_type
   # timestamp/test_type/test_name/raw 
   ############################################################
   def output_file(self, test_name, test_type):
-    path = os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
+    path = self.get_output_file(test_name, test_type)
     try:
       os.makedirs(os.path.dirname(path))
     except OSError:
@@ -228,13 +239,13 @@ class Benchmarker:
   ############################################################
   # report_results
   ############################################################
-  def report_results(self, framework, test, results, passed=True):
+  def report_results(self, framework, test, results):
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
 
-    self.results['rawData'][test][framework.name] = results
-
-    if passed:
+    # If results has a size from the parse, then it succeeded.
+    if results:
+      self.results['rawData'][test][framework.name] = results
       self.results['succeeded'][test].append(framework.name)
     else:
       self.results['failed'][test].append(framework.name)
