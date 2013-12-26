@@ -246,9 +246,13 @@ class Benchmarker:
     # If results has a size from the parse, then it succeeded.
     if results:
       self.results['rawData'][test][framework.name] = results
-      self.results['succeeded'][test].append(framework.name)
+      # This may already be set for single-tests
+      if framework.name not in self.results['succeeded'][test]:
+        self.results['succeeded'][test].append(framework.name)
     else:
-      self.results['failed'][test].append(framework.name)
+      # This may already be set for single-tests
+      if framework.name not in self.results['failed'][test]:
+        self.results['failed'][test].append(framework.name)
 
   ############################################################
   # End report_results
