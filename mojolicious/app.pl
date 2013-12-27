@@ -4,9 +4,9 @@ use JSON::XS;
 use Memoize;
 use DBI;
 
-my $dsn ;#= "dbi:mysql:database=hello_world;host=localhost;port=3306";
-my $dbh ;#= DBI->connect( $dsn, 'benchmarkdbuser', 'benchmarkdbpass', {} );
-my $sth ;#= $dbh->prepare("SELECT * FROM World where id = ?");
+my $dsn = "dbi:mysql:database=hello_world;host=localhost;port=3306";
+my $dbh = DBI->connect( $dsn, 'benchmarkdbuser', 'benchmarkdbpass', {} );
+my $sth = $dbh->prepare("SELECT * FROM World where id = ?");
 
 
 get '/json' => sub {
