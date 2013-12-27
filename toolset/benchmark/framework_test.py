@@ -453,6 +453,10 @@ class FrameworkTest:
           out.flush()
           results = None
           output_file = self.benchmarker.output_file(self.name, self.JSON)
+          if not os.path.exists(output_file):
+            with open(output_file, 'w'):
+              # Simply opening the file in write mode should create the empty file.
+              pass
           if self.json_url_passed:
             remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
             self.__run_benchmark(remote_script, output_file, err)
@@ -471,6 +475,10 @@ class FrameworkTest:
           out.flush()
           results = None
           output_file = self.benchmarker.output_file(self.name, self.DB)
+          if not os.path.exists(output_file):
+            with open(output_file, 'w'):
+              # Simply opening the file in write mode should create the empty file.
+              pass
           if self.db_url_passed:
             remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
             self.__run_benchmark(remote_script, output_file, err)
@@ -488,6 +496,10 @@ class FrameworkTest:
           out.flush()
           results = None
           output_file = self.benchmarker.output_file(self.name, self.QUERY)
+          if not os.path.exists(output_file):
+            with open(output_file, 'w'):
+              # Simply opening the file in write mode should create the empty file.
+              pass
           if self.query_url_passed:
             remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
             self.__run_benchmark(remote_script, output_file, err)
@@ -506,6 +518,10 @@ class FrameworkTest:
           out.flush()
           results = None
           output_file = self.benchmarker.output_file(self.name, self.FORTUNE)
+          if not os.path.exists(output_file):
+            with open(output_file, 'w'):
+              # Simply opening the file in write mode should create the empty file.
+              pass
           if self.fortune_url_passed:
             remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
             self.__run_benchmark(remote_script, output_file, err)
@@ -524,6 +540,10 @@ class FrameworkTest:
           out.flush()
           results = None
           output_file = self.benchmarker.output_file(self.name, self.UPDATE)
+          if not os.path.exists(output_file):
+            with open(output_file, 'w'):
+              # Simply opening the file in write mode should create the empty file.
+              pass
           if self.update_url_passed:
             remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
             self.__run_benchmark(remote_script, output_file, err)
@@ -542,6 +562,10 @@ class FrameworkTest:
           out.flush()
           results = None
           output_file = self.benchmarker.output_file(self.name, self.PLAINTEXT)
+          if not os.path.exists(output_file):
+            with open(output_file, 'w'):
+              # Simply opening the file in write mode should create the empty file.
+              pass
           if self.plaintext_url_passed:
             remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
             self.__run_benchmark(remote_script, output_file, err)
