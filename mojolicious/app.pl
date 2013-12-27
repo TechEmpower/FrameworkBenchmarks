@@ -1,14 +1,17 @@
 #!/usr/bin/env perl
 use Mojolicious::Lite;
+use JSON::XS;
+use Memoize;
 use DBI;
 
-my $dsn = "dbi:mysql:database=hello_world;host=localhost;port=3306";
-my $dbh = DBI->connect( $dsn, 'benchmarkdbuser', 'benchmarkdbpass', {} );
-my $sth = $dbh->prepare("SELECT * FROM World where id = ?");
+my $dsn ;#= "dbi:mysql:database=hello_world;host=localhost;port=3306";
+my $dbh ;#= DBI->connect( $dsn, 'benchmarkdbuser', 'benchmarkdbpass', {} );
+my $sth ;#= $dbh->prepare("SELECT * FROM World where id = ?");
+
 
 get '/json' => sub {
-    my $self = shift;
-    $self->render( json => { message => 'Hello, world!' } );
+    my $self = shift;    
+    $self->render( text => JSON::XS::encode_json( { message => 'Hello, world!' } ), format => 'json' );
 };
 
 get '/db' => sub {
