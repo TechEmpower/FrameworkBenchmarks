@@ -20,7 +20,7 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 ));
 
 $app->get('/json', function() {
-    return new JsonResponse(array("message" => "Hello World!"));
+    return new JsonResponse(array("message" => "Hello, World!"));
 });
 
 $app->get('/db', function(Request $request) use ($app) {
