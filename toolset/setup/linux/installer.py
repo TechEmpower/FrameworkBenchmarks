@@ -277,15 +277,15 @@ class Installer:
     #
     # TreeFrog Framework
     #
-    self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql g++", True)
-    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.4.tar.gz")
-    self.__run_command("tar xzf treefrog-1.7.4.tar.gz")
-    self.__run_command("rm treefrog-1.7.4.tar.gz")
-    self.__run_command("./configure", cwd="treefrog-1.7.4")
-    self.__run_command("make", cwd="treefrog-1.7.4/src")
-    self.__run_command("sudo make install", cwd="treefrog-1.7.4/src")
-    self.__run_command("make", cwd="treefrog-1.7.4/tools")
-    self.__run_command("sudo make install", cwd="treefrog-1.7.4/tools")
+    self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++", True)
+    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.5.tar.gz")
+    self.__run_command("tar xzf treefrog-1.7.5.tar.gz")
+    self.__run_command("rm treefrog-1.7.5.tar.gz")
+    self.__run_command("./configure", cwd="treefrog-1.7.5")
+    self.__run_command("make", cwd="treefrog-1.7.5/src")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.5/src")
+    self.__run_command("make", cwd="treefrog-1.7.5/tools")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.5/tools")
 
     #
     # Vert.x
