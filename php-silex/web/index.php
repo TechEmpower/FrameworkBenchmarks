@@ -32,6 +32,10 @@ $app->get('/db', function(Request $request) use ($app) {
         $worlds[] = $app['db']->fetchAssoc('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)));
     }
 
+    if (count($worlds) == 1) {
+        $worlds = $worlds[0];
+    }
+
     return new JsonResponse($worlds);
 });
 
