@@ -6,7 +6,7 @@ Class Controller_Bench extends Controller
     {
         $this->response
             ->headers(array('Content-Type' => 'application/json'))
-            ->body(json_encode(array('message' => 'Hello World!')));
+            ->body(json_encode(array('message' => 'Hello, World!')));
     }
 
     public function action_db()
