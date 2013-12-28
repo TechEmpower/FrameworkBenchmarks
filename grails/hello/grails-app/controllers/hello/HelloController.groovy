@@ -96,6 +96,6 @@ class HelloController {
     
     // Test type 6: Plaintext
     def plaintext() {
-        render text:'Hello, world', contentType:'text/plain'
+        render text:'Hello, World!', contentType:'text/plain'
     }
 }

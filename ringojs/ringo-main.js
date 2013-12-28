@@ -83,7 +83,7 @@ exports.app = function(req) {
       return {
         status: 200,
         headers: {"Content-Type": 'text/plain'},
-        body: ['Hello World']
+        body: ['Hello, World!']
       };
    } else if (path === '/updates') {
       var queryCount = parseInt(req.env.servletRequest.getParameter('queries'), 10);
