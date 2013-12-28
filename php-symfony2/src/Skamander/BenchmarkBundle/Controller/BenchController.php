@@ -13,7 +13,7 @@ class BenchController extends Controller
 
     public function jsonAction()
     {
-        return new JsonResponse(array('message' => 'Hello World!'));
+        return new JsonResponse(array('message' => 'Hello, World!'));
     }
 
     public function dbAction(Request $request)
