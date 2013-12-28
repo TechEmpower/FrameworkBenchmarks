@@ -78,7 +78,7 @@ function sequelizeQuery(callback) {
 
 http.createServer(function (req, res) {
   // JSON response object
-  var hello = {message: "Hello, world"};
+  var hello = {message: "Hello, World!"};
   var helloStr = "Hello, World!";
   var path = url.parse(req.url).pathname;
   
