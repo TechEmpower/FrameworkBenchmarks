@@ -22,7 +22,7 @@ class HelloController {
     // Test type 1: JSON serialization
     def json() {
         def msg = [
-            message: "Hello, world"
+            message: "Hello, World!"
         ]
         render msg as JSON
     }
