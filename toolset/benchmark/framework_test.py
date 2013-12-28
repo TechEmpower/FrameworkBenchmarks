@@ -123,13 +123,8 @@ class FrameworkTest:
     try:
       obj = json.loads(jsonString)
 
-      if not obj:
-        return False
-      if not obj["message"]:
-        return False
-      if not obj["message"].lower() == "hello, world!":
-        return False
-      return True
+      if  obj["message"].lower() == "hello, world!":
+        return True
     except:
       err.write(textwrap.dedent("""
           -----------------------------------------------------
@@ -148,15 +143,11 @@ class FrameworkTest:
     try:
       obj = json.loads(jsonString)
 
-      if not obj:
-        return False
-      if type(obj) != dict:
-        return False
-      if not obj["id"] or type(obj["id"]) != int:
-        return False
-      if not obj["randomNumber"] or type(obj["randomNumber"]) != int:
-        return False
-      return True
+      # This will error out of the value could not parsed to a
+      # float (this will work with ints, but it will turn them
+      # into their float equivalent; i.e. "123" => 123.0)
+      if type(float(obj["id"])) == float and type(float(obj["randomNumber"])) != float:
+        return True
     except:
       err.write(textwrap.dedent("""
           -----------------------------------------------------
@@ -176,17 +167,8 @@ class FrameworkTest:
     try:
       arr = json.loads(jsonString)
 
-      if not arr or len(arr) != 2 or type(arr[0]) != dict or type(arr[1]) != dict:
-        return False
-      if not arr[0]["id"] or type(arr[0]["id"]) != int:
-        return False
-      if not arr[0]["randomNumber"] or type(arr[0]["randomNumber"]) != int:
-        return False
-      if not arr[1]["id"] or type(arr[1]["id"]) != int:
-        return False
-      if not arr[1]["randomNumber"] or type(arr[1]["randomNumber"]) != int:
-        return False 
-      return True
+      if type(float(arr[0]["id"])) == float and type(float(arr[0]["randomNumber"])) == float and type(float(arr[1]["id"])) == float and type(float(arr[1]["randomNumber"])) == float:
+        return True
     except:
       err.write(textwrap.dedent("""
           -----------------------------------------------------
@@ -225,17 +207,8 @@ class FrameworkTest:
     try:
       arr = json.loads(jsonString)
 
-      if not arr or len(arr) != 2 or type(arr[0]) != dict or type(arr[1]) != dict:
-        return False
-      if not arr[0]["id"] or type(arr[0]["id"]) != int:
-        return False
-      if not arr[0]["randomNumber"] or type(arr[0]["randomNumber"]) != int:
-        return False
-      if not arr[1]["id"] or type(arr[1]["id"]) != int:
-        return False
-      if not arr[1]["randomNumber"] or type(arr[1]["randomNumber"]) != int:
-        return False 
-      return True
+      if type(float(arr[0]["id"])) == float and type(float(arr[0]["randomNumber"])) == float and type(float(arr[1]["id"])) == float and type(float(arr[1]["randomNumber"])) == float:
+        return True
     except:
       err.write(textwrap.dedent("""
           -----------------------------------------------------
