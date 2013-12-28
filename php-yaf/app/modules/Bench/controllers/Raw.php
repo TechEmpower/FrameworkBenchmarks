@@ -8,7 +8,7 @@ class RawController extends AbstractController
     public function jsonAction ()
     {
         header('Content-type: application/json');
-        die(json_encode(array('message' => 'Hello World!')));
+        die(json_encode(array('message' => 'Hello, World!')));
     }
 
     public function dbAction ()
