@@ -38,7 +38,7 @@ object Application extends Controller {
 
 
   def json() = Action {
-    Ok(Json.obj("message" -> "Hello World!"))
+    Ok(Json.obj("message" -> "Hello, World!"))
   }
 
   def db(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
