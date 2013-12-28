@@ -12,7 +12,7 @@ class Bench extends CI_Controller {
     public function json() {
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode(array('message' => 'Hello World!')));
+            ->set_output(json_encode(array('message' => 'Hello, World!')));
     }
 
     public function db($queries = 1) {
