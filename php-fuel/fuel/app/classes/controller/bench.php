@@ -4,7 +4,7 @@ class Controller_Bench extends Controller
 {
     public function action_json()
     {
-        return new Response(json_encode(array('message' => 'Hello World!')), 200, array(
+        return new Response(json_encode(array('message' => 'Hello, World!')), 200, array(
             'Content-Type' => 'application/json'
         ));
     }
