@@ -3,7 +3,7 @@ class HelloWorldController < ActionController::Metal
   include ActionController::Renderers::All
 
   def json
-    render :json => {:message => "Hello World!"}
+    render :json => {:message => "Hello, World!"}
   end
 
   def db
