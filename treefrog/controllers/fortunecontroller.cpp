@@ -1,6 +1,10 @@
 #include "fortunecontroller.h"
 #include "fortune.h"
 
+static bool caseSensitiveLessThan(const Fortune &f1, const Fortune &f2)
+{
+    return f1.message() < f2.message();
+}
 
 FortuneController::FortuneController(const FortuneController &)
     : ApplicationController()
@@ -9,6 +13,8 @@ FortuneController::FortuneController(const FortuneController &)
 void FortuneController::index()
 {
     QList<Fortune> fortuneList = Fortune::getAll();
+    // Sort
+    qSort(fortuneList.begin(), fortuneList.end(), caseSensitiveLessThan);
     texport(fortuneList);
     render();
 }
