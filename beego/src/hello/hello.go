@@ -6,7 +6,7 @@ import (
 )
 
 type MessageStruct struct {
-	message string `json:"message"`
+	Message string `json:"message"`
 }
 
 type JsonController struct {
