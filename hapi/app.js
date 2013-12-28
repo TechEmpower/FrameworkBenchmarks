@@ -49,7 +49,7 @@ if (cluster.isMaster) {
 		method: 'GET',
 		path: '/json',
 		handler: function(req) {
-			req.reply({ message: 'Hello World!' })
+			req.reply({ message: 'Hello, World!' })
 		}
 	});
 
