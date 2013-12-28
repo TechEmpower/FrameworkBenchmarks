@@ -23,7 +23,7 @@ object JsonBenchmark {
     }
 
   def sayHello() = Full(JsonResponse(
-    JObject(List(JField("message", JString("Hello World!"))))
+    JObject(List(JField("message", JString("Hello, World!"))))
   ))
 }
 
