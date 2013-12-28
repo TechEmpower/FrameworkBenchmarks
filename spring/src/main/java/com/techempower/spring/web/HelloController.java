@@ -6,14 +6,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 final class HelloController {
 
-    @RequestMapping(value = "/json", produces = "application/json")
+    private static final String HELLO_WORLD = "Hello, World!";
+
+	@RequestMapping(value = "/json", produces = "application/json")
     Message json() {
         return new Message("Hello, World!");
     }
 
     @RequestMapping(value = "/plaintext", produces = "text/plain")
     String plaintext() {
-        return "Hello, World!";
+        return HELLO_WORLD;
     }
 
     public static final class Message {

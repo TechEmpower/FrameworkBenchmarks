@@ -8,21 +8,18 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>0.5.0.M6</version>
+        <version>0.5.0.M7</version>
     </parent>
 
     <groupId>com.techempower</groupId>
     <artifactId>spring</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>Spring MVC sample project</name>
+    <packaging>war</packaging>
 
     <properties>
-        <mysql.version>5.1.23</mysql.version>
-        <jackson.version>2.1.1</jackson.version>
         <java.version>1.7</java.version>
-        <spring.version>4.0.0.RC1</spring.version>
-        <spring-data-jpa.version>1.4.2.RELEASE</spring-data-jpa.version>
-        <tomcat.version>8.0.0-RC5</tomcat.version>
+        <tomcat.version>8.0.0-RC10</tomcat.version>
     </properties>
 
     <dependencies>
@@ -34,7 +31,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -45,9 +41,13 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-starter-tomcat</artifactId>
+        	<scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf-spring3</artifactId>
-            <version>${thymeleaf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
@@ -57,7 +57,6 @@
 
     <build>
         <finalName>spring</finalName>
-
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
