@@ -13,7 +13,7 @@ class BenchController extends \Phalcon\Mvc\Controller
 
     public function jsonAction() {
         return $this->sendContentAsJson(array(
-            'message' => 'Hello World!'
+            'message' => 'Hello, World!'
         ));
     }
 
