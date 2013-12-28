@@ -44,7 +44,7 @@ class FortuneHTMLParser(HTMLParser):
     if name == "62" or name == "x3E":
       self.body.append("&gt;")
     # Again, "&#60;" is a valid escaping of "<", but we
-    # need to nromalize to "&lt;" for equality checking.
+    # need to normalize to "&lt;" for equality checking.
     if name == "60" or name == "x3C":
       self.body.append("&lt;")
     # Not sure why some are escaping '/'
@@ -52,7 +52,12 @@ class FortuneHTMLParser(HTMLParser):
       self.body.append("/")
 
   def handle_entityref(self, name):
-    self.body.append("&{n};".format(n=name))
+    # Again, "&mdash;" is a valid escaping of "—", but we
+    # need to normalize to "—" for equality checking.
+    if name == "mdash":
+      self.body.append("—")
+    else:  
+      self.body.append("&{n};".format(n=name))
 
   # This is called every time a tag is opened. We append
   # each one wrapped in "<" and ">".
