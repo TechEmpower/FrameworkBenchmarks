@@ -1,7 +1,7 @@
 class HelloWorldController < ApplicationController
 
   def json
-    render :json => {:message => "Hello World!"}
+    render :json => {:message => "Hello, World!"}
   end
 
   def db
