@@ -17,7 +17,7 @@ class World < ActiveRecord::Base
 end
 
 get '/json' do
-  json :message => 'Hello World!'
+  json :message => 'Hello, World!'
 end
 
 get '/plaintext' do
