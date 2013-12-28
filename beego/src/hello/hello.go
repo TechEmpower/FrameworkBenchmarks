@@ -6,7 +6,7 @@ import (
 )
 
 type MessageStruct struct {
-	message string
+	message string `json:"message"`
 }
 
 type JsonController struct {
@@ -14,7 +14,7 @@ type JsonController struct {
 }
 
 func (this *JsonController) Get() {
-	m := MessageStruct{"Hello, World!"}
+	m := MessageStruct{message: "Hello, World!"}
 	this.Data["json"] = &m
 	this.ServeJson()
 }
