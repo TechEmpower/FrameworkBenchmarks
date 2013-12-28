@@ -1,7 +1,9 @@
-import random
-import sys
+#!/usr/bin/env python
 
+import sys
 import json
+from random import randint
+
 import motor
 import tornado.ioloop
 import tornado.web
@@ -39,16 +41,20 @@ class PlaintextHandler(BaseHandler):
 class QueryTestHandler(BaseHandler):
     @gen.coroutine
     def get(self):
-        queries = int(self.get_argument("queries", 0))
+        try:
+            queries = int(self.get_argument("queries", 1))
+        except Exception:
+            queries = 1
 
-        if queries == 0:
-            random_id = random.randint(1, 10000)
+        if queries <= 1:
+            random_id = randint(1, 10000)
             world = yield motor.Op(db.World.find_one, random_id)
             # Get first postion on arguments, and so first postion in mongo return
             world['id'] = str(world.pop('_id'))
             response = json.dumps(world)
         else:
-            worlds = yield [motor.Op(db.World.find_one, random.randint(1, 10000))
+            queries = min(queries, 500)
+            worlds = yield [motor.Op(db.World.find_one, randint(1, 10000))
                             for _ in xrange(queries)]
             for world in worlds:
                 # Get first postion on arguments, and so first postion in mongo return
