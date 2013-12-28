@@ -34,5 +34,10 @@ while (0 < $query_count--) {
 
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
-echo json_encode($arr);
+if (count($arr) == 1) {
+  echo json_encode($arr[0])
+}
+else {
+  echo json_encode($arr);
+}
 ?>
