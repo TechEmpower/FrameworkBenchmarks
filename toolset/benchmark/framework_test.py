@@ -146,7 +146,7 @@ class FrameworkTest:
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
-      if type(float(obj["id"])) == float and type(float(obj["randomNumber"])) != float:
+      if type(float(obj["id"])) == float and type(float(obj["randomNumber"])) == float:
         return True
     except:
       err.write(textwrap.dedent("""
