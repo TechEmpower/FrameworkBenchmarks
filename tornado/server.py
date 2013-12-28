@@ -42,24 +42,21 @@ class QueryTestHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         try:
-            queries = int(self.get_argument("queries", 1))
+            queries = int(self.get_argument("queries"))
         except Exception:
             queries = 1
+        else:
+            if queries < 1:
+                queries = 1
+            elif queries > 500:
+                queries = 500
 
-        if queries <= 1:
-            random_id = randint(1, 10000)
-            world = yield motor.Op(db.World.find_one, random_id)
+        worlds = yield [motor.Op(db.World.find_one, randint(1, 10000))
+                        for _ in xrange(queries)]
+        for world in worlds:
             # Get first postion on arguments, and so first postion in mongo return
             world['id'] = str(world.pop('_id'))
-            response = json.dumps(world)
-        else:
-            queries = min(queries, 500)
-            worlds = yield [motor.Op(db.World.find_one, randint(1, 10000))
-                            for _ in xrange(queries)]
-            for world in worlds:
-                # Get first postion on arguments, and so first postion in mongo return
-                world['id'] = str(world.pop('_id'))
-            response = json.dumps(worlds)
+        response = json.dumps(worlds)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(response)
 
