@@ -27,7 +27,12 @@ class BenchController extends \Phalcon\Mvc\Controller
             $worlds[] = Worlds::findFirst(mt_rand(1, 10000));
         }
 
-        return $this->sendContentAsJson($worlds);
+        if (count($worlds) == 1) {
+            return $this->sendContentAsJson($worlds[0]);
+        }
+        else {
+            return $this->sendContentAsJson($worlds);
+        }
     }
 
     public function fortunesAction() {
