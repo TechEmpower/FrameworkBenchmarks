@@ -12,5 +12,12 @@ class {
         stage => 'pre'
 }
 
+import "manifests/nginx.pp"
+import "manifests/php5-fpm.pp"
+import "manifests/mysql.pp"
+
+
 # PHP frameworks
+import "/benchmark_root/php/puppet.pp"
 import "/benchmark_root/php-cakephp/puppet.pp"
+import "/benchmark_root/php-silex/puppet.pp"

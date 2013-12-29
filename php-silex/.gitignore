@@ -7,3 +7,7 @@
 .DS_Store
 /tags
 .idea
+/vendor
+/composer.lock
+/access_log.txt
+/error_log.txt

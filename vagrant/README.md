@@ -14,3 +14,8 @@ Manual test:
 * download and compile wrk (https://github.com/wg/wrk)
 * `wrk -t 1 -c 256 -d 15s http://php-cakephp.box.kyon.pl/json.json`
 
+
+Frameworks working with Vagrant:
+* php
+* php-cakephp
+* php-silex
