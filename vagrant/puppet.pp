@@ -13,4 +13,4 @@ class {
 }
 
 # PHP frameworks
-import "php-cakephp/puppet.pp"
+import "../php-cakephp/puppet.pp"
