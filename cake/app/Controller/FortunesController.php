@@ -9,15 +9,15 @@ class FortunesController extends AppController {
 		$this->layout = 'benchmark';
 		$this->set('title_for_layout', 'Fortunes');
 
-		// using prepared query as encouraged by test rules
-		$db      = $this->Fortune->getDataSource();
-		$results = $db->fetchAll('SELECT * FROM Fortune');
+		// using ORM instead of raw SQL
+		$this->loadModel('Fortune');
+		$results = $this->Fortune->find('all');
 
 		// stuffing in the dynamic data
-		$results[]['Fortune'] = [
+		$results[]['Fortune'] = array(
 			'id'      => 0,
 			'message' => 'Additional fortune added at request time.'
-		];
+		);
 
 		// because we are performance concerned we don't use Hash::sort()
 		foreach ($results as $result) {
