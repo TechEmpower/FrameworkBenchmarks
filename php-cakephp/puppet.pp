@@ -56,6 +56,12 @@ class mysql {
     package { 'mysql-server':
         ensure => present,
     }
+    exec { 'mysql --user root < /vagrant/config/create.sql >> /vagrant/puppet-mysql.sql.log 2>&1':
+        path    =>  ['/usr/bin', '/usr/sbin', '/bin'],
+        user    =>  postgres,
+        timeout => 600,
+        require =>  Package['mysql-server']
+    }
 
     service { 'mysql':
         ensure  =>  running,

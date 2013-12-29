@@ -1,5 +1,5 @@
 {
-  "framework": "cake",
+  "framework": "php-cakephp",
   "tests": [{
     "default": {
       "setup_file": "setup",
