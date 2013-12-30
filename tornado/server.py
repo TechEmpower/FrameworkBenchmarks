@@ -38,6 +38,17 @@ class PlaintextHandler(BaseHandler):
         self.write(b"Hello, World!")
 
 
+class DBTestHandler(BaseHandler):
+    @gen.coroutine
+    def get(self):
+        world = yield motor.Op(db.World.find_one, randint(1, 10000))
+        # Get first postion on arguments, and so first postion in mongo return
+        world['id'] = str(world.pop('_id'))
+        response = json.dumps(world)
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
+        self.write(response)
+
+
 class QueryTestHandler(BaseHandler):
     @gen.coroutine
     def get(self):
@@ -64,7 +75,8 @@ class QueryTestHandler(BaseHandler):
 application = tornado.web.Application([
     (r"/json", JsonSerializeTestHandler),
     (r"/plaintext", PlaintextHandler),
-    (r"/db", QueryTestHandler),
+    (r"/db", DBTestHandler),
+    (r"/queries", QueryTestHandler),
 ])
 
 
