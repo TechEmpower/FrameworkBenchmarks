@@ -18,7 +18,10 @@ import "manifests/mysql.pp"
 
 
 # PHP frameworks
-import "/benchmark_root/php/puppet.pp"
-import "/benchmark_root/php-cakephp/puppet.pp"
-import "/benchmark_root/php-silex/puppet.pp"
-import "/benchmark_root/php-phalcon/puppet.pp"
+#import "/benchmark_root/php/puppet.pp"
+#import "/benchmark_root/php-cakephp/puppet.pp"
+#import "/benchmark_root/php-silex/puppet.pp"
+#import "/benchmark_root/php-phalcon/puppet.pp"
+
+# JS frameworks
+import "/benchmark_root/express/puppet.pp"
