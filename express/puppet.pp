@@ -31,8 +31,8 @@ class mongodb {
     exec { 'apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10':
         command => '/usr/bin/apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10'
     }->
-    exec { 'echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list':
-        command => '/usr/bin/echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list'
+    exec { "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list":
+        command => "/usr/bin/echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list"
     }->
     exec { 'apt-get update after mongodb':
         command => '/usr/bin/apt-get update'
