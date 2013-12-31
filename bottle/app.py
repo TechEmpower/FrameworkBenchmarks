@@ -62,9 +62,9 @@ def get_random_world(db):
 @app.route("/dbs")
 def get_random_world_single(db):
     wid = randint(1, 10000)
-    worlds = [db.query(World).get(wid).serialize]
+    world = db.query(World).get(wid).serialize
     response.content_type = 'application/json'
-    return json.dumps(worlds)
+    return json.dumps(world)
   
 @app.route("/dbraw")
 def get_random_world_raw():
