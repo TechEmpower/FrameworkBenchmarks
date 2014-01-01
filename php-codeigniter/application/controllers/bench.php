@@ -24,6 +24,10 @@ class Bench extends CI_Controller {
                 ->row();
         }
 
+        if ($queries == 1) {
+            $worlds = $world[0];
+        }
+
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($worlds));
