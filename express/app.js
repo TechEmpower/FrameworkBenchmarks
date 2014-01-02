@@ -103,6 +103,9 @@ if (cluster.isMaster) {
     }
 
     async.parallel(queryFunctions, function(err, results) {
+      if (queries == 1) {
+        worlds = worlds[0];
+      }
       res.send(worlds);
     });
   });
