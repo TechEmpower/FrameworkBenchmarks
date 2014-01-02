@@ -51,6 +51,13 @@ final class DbSqlHandler implements HttpHandler {
     }
     exchange.getResponseHeaders().put(
         Headers.CONTENT_TYPE, JSON_UTF8);
-    exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
+    if (queries == 1)
+    {
+      exchange.getResponseSender().send(objectMapper.writeValueAsString(world[0]));
+    }
+    else
+    {
+      exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
+    }
   }
 }
