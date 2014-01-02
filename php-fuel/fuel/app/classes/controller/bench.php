@@ -18,6 +18,10 @@ class Controller_Bench extends Controller
             $worlds[] = Model_World::find(mt_rand(1, 10000))->toJson();
         }
 
+        if($queries == 1) {
+            $worlds = $worlds[0];
+        }
+
         return new Response(json_encode($worlds), 200, array(
             'Content-Type' => 'application/json'
         ));
