@@ -24,6 +24,10 @@ Class Controller_Bench extends Controller
             $worlds[] = $query->param(':id', mt_rand(1, 10000))->execute()->current();
         }
 
+        if ($queries == 1) {
+            $worlds = $worlds[0];
+        }
+
         $this->response
             ->headers(array('Content-Type' => 'application/json'))
             ->body(json_encode($worlds));
