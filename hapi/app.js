@@ -69,6 +69,9 @@ if (cluster.isMaster) {
 			}
 
 			async.parallel(queryFunctions, function(err, results){
+				if (queries == 1) {
+					results = results[0];
+				}
 				req.reply(results).header('Server', 'hapi');
 			});
 		}
@@ -92,6 +95,9 @@ if (cluster.isMaster) {
 			}
 
 			async.parallel(queryFunctions, function(err, results){
+				if (queries == 1) {
+					results = results[0];
+				}
 				req.reply(results).header('Server', 'hapi');
 			});
 		}
