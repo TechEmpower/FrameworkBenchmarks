@@ -115,6 +115,9 @@ http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
 
     async.parallel(queryFunctions, function(err, results) {
+      if (queries == 1) {
+        results = results[0];
+      }
       res.end(JSON.stringify(results));
     });
     break;
@@ -132,6 +135,9 @@ http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'application/json; charset=UTF-8'});
 
     async.parallel(queryFunctions, function(err, results) {
+      if (queries == 1) {
+        results = results[0];
+      }
       res.end(JSON.stringify(results));
     });
     break;
@@ -148,6 +154,9 @@ http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'application/json'});
 
     async.parallel(queryFunctions, function(err, results) {
+      if (queries == 1) {
+        results = results[0];
+      }
       res.end(JSON.stringify(results));
     });
     break;
@@ -183,6 +192,9 @@ http.createServer(function (req, res) {
       if (err) {
         res.writeHead(500);
         return res.end('MYSQL CONNECTION ERROR.');
+      }
+      if (queries == 1) {
+        results = results[0];
       }
       res.end(JSON.stringify(results));
     });
