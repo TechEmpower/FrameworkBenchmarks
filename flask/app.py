@@ -75,7 +75,7 @@ def get_random_world():
 @app.route("/dbs")
 def get_random_world_single():
     wid = randint(1, 10000)
-    worlds = [World.query.get(wid).serialize]
+    worlds = World.query.get(wid).serialize
     return json_response(worlds)
 
 
@@ -97,7 +97,7 @@ def get_random_world_single_raw():
     connection = dbraw_engine.connect()
     wid = randint(1, 10000)
     result = connection.execute("SELECT * FROM World WHERE id = " + str(wid)).fetchone()
-    worlds = [{'id': result[0], 'randomNumber': result[1]}]
+    worlds = {'id': result[0], 'randomNumber': result[1]}
     connection.close()
     return json_response(worlds)
 
