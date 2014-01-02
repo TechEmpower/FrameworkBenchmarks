@@ -53,6 +53,10 @@ $app->get('/db', function(Request $request) use ($app) {
         $worlds[] =  $repo->find(mt_rand(1, 10000));
     }
 
+    if ($queries == 1) {
+        $worlds = $worlds[0];
+    }
+
     return new JsonResponse($worlds);
 });
 
