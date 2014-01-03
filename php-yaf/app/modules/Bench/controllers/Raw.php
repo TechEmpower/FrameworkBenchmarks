@@ -35,6 +35,10 @@ class RawController extends AbstractController
             $id = mt_rand(1, 10000);
         }
 
+        if (count($arr) == 1) {
+            $arr = $arr[0];
+        }
+
         header('Content-type: application/json');
         die(json_encode($arr));
     }
