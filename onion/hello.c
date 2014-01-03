@@ -72,7 +72,7 @@ onion_connection_status return_json(onion_dict *json, onion_request *req, onion_
 /// Gets the dict and converts it to JSON and writes it into the response. 
 onion_connection_status return_json_libjson(void *_, onion_request *req, onion_response *res){
 	json_object *hello=json_object_new_object();
-	json_object_object_add(hello, "message", json_object_new_string("Hello, world"));
+	json_object_object_add(hello, "message", json_object_new_string("Hello, World!"));
 	
 	const char *hello_str=json_object_to_json_string(hello);
 	int size=strlen(hello_str);
