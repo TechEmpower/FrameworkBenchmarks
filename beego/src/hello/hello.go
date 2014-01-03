@@ -14,7 +14,7 @@ type JsonController struct {
 }
 
 func (this *JsonController) Get() {
-	m := MessageStruct{message: "Hello, World!"}
+	m := MessageStruct{"Hello, World!"}
 	this.Data["json"] = &m
 	this.ServeJson()
 }
