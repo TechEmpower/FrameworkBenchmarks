@@ -21,7 +21,7 @@ def start(args, logfile, errfile):
     #
     conf = []
     conf.append('worker_processes ' + str(args.max_threads) + ';')
-    conf.append('error_log /dev/null crit;')
+    conf.append('error_log stderr error;')
     conf.append('events {')
     conf.append('    worker_connections 1024;')
     conf.append('}')
