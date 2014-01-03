@@ -84,7 +84,7 @@ def get_random_world_single_raw():
     connection = db_engine.connect()
     wid = randint(1, 10000)
     result = connection.execute("SELECT * FROM world WHERE id = " + str(wid)).fetchone()
-    worlds = [{'id': result[0], 'randomNumber': result[1]}]
+    worlds = {'id': result[0], 'randomNumber': result[1]}
     connection.close()
     response.content_type = 'application/json'
     return json.dumps(worlds)
