@@ -25,7 +25,7 @@ class Bench extends CI_Controller {
         }
 
         if ($queries == 1) {
-            $worlds = $world[0];
+            $worlds = $worlds[0];
         }
 
         $this->output
