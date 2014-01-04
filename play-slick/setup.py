@@ -35,12 +35,18 @@ def stop(logfile, errfile):
     #    os.kill(pid, 9)
   with open("./play-slick/target/universal/play-slick-1.0-SNAPSHOT/RUNNING_PID") as f:
     pid = int(f.read())
-    os.kill(pid, 9)
+    os.kill(pid, 15)
 
   try:
     #os.remove("play-slick/target/universal/play-slick-1.0-SNAPSHOT/RUNNING_PID")
     os.remove("play-slick/target/universal/play-slick-1.0-SNAPSHOT/play-slick-1.0-SNAPSHOT/RUNNING_PID")
   except OSError:
-    pass
+    return 1
+
+  # Takes up so much disk space
+  if os.name == 'nt':
+    subprocess.check_call("del /f /s /q target", shell=True, cwd="play-slick", stderr=errfile, stdout=logfile)
+  else:
+    subprocess.check_call("rm -rf target", shell=True, cwd="play-slick", stderr=errfile, stdout=logfile)
 
   return 0
