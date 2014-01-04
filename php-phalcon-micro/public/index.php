@@ -58,6 +58,10 @@ try {
             $worlds[] = $db->fetchOne('SELECT * FROM world WHERE id = ' . mt_rand(1, 10000), Phalcon\Db::FETCH_ASSOC);
         }
 
+        if ($queries == 1) {
+            $worlds = $worlds[0];
+        }
+
         echo json_encode($worlds);
     });
 
