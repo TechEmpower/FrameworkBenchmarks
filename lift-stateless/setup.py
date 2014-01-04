@@ -26,5 +26,12 @@ def stop(logfile, errfile):
     for line in out.splitlines():
       if 'lift-stateless-assembly' in line and 'java' in line:
         pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+        os.kill(pid, 15)
+
+  # Takes up so much disk space
+  if os.name == 'nt':
+    subprocess.check_call("del /f /s /q target", shell=True, cwd="lift-stateless", stderr=errfile, stdout=logfile)
+  else:
+    subprocess.check_call("rm -rf target", shell=True, cwd="lift-stateless", stderr=errfile, stdout=logfile)
+    
   return 0
