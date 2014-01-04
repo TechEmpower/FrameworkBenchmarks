@@ -23,7 +23,11 @@ app.get('/db/:queries?', function(request, queries) {
    for (var i = 0; i < queries; i++) {
       randId = ((Math.random() * 10000) | 0) + 1;
       world = models.store.query('select World.* from World where World.id = :id', {id: randId})[0];
-      worlds.push(world.toJSON());
+      //worlds.push(world.toJSON());
+      worlds.push({"id": world._id, "randomNumber" : world.randomNumber});
+   }
+   if (queries == 1) {
+      worlds = worlds[0];
    }
    return response.json(worlds);
 });
@@ -68,7 +72,7 @@ app.get('/updates/:queries?', function(request, queries) {
          models.store.abortTransaction();
          return response.error('SQL error');
       }
-      worlds.push(world.toJSON());
+      worlds.push({"id": world._id, "randomNumber": world.randomNumber});
    }
    models.store.commitTransaction();
    return response.json(worlds);
