@@ -6,7 +6,8 @@
         korma.db
         korma.core
         hiccup.core
-        hiccup.util)
+        hiccup.util
+        hiccup.page)
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             [clojure.java.jdbc :as jdbc]
@@ -126,19 +127,19 @@ message text, and then return the results."
 
 (defn fortunes-hiccup [fortunes]
   "Render the given fortunes to simple HTML using Hiccup."
-  (html
-   [:head
-    [:title "Fortunes"]]
-   [:body
-    [:table
-     [:tr
-      [:th "id"]
-      [:th "message"]]
-     (for [x fortunes]
-       [:tr
-        [:td (:id x)]
-        [:td (escape-html-local (:message x))]])
-     ]]))
+  (html5
+    [:head
+     [:title "Fortunes"]]
+    [:body
+     [:table
+      [:tr
+       [:th "id"]
+       [:th "message"]]
+      (for [x fortunes]
+        [:tr
+         [:td (:id x)]
+         [:td (escape-html-local (:message x))]])
+      ]]))
 
 (defn fortunes-enlive [fortunes]
   "Render the given fortunes to simple HTML using Enlive."
