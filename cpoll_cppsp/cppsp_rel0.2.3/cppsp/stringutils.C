@@ -182,6 +182,9 @@ namespace cppsp
 				case '>':
 					sz += 4;
 					break;
+				case '\'':
+					sz += 6;
+					break;
 				default:
 					sz++;
 					break;
@@ -213,6 +216,15 @@ namespace cppsp
 					c[2] = 't';
 					c[3] = ';';
 					c += 4;
+					break;
+				case '\'':
+					c[0] = '&';
+					c[1] = 'a';
+					c[2] = 'p';
+					c[3] = 'o';
+					c[4] = 's';
+					c[5] = ';';
+					c += 6;
 					break;
 				default:
 					*(c++) = in[i];
