@@ -114,6 +114,16 @@ message text, and then return the results."
   (let [fortunes (conj (get-all-fortunes) {:id 0 :message "Additional fortune added at request time."} )]
     (sort-by #(:message %) fortunes)))
 
+(defn escape-html-local
+  "Change special characters into HTML character entities."
+  [text]
+  (.. ^String (as-str text)
+    (replace "&" "&amp;")
+    (replace "<" "&lt;")
+    (replace ">" "&gt;")
+    (replace "\"" "&quot;")
+    (replace "'" "&apos;")))
+
 (defn fortunes-hiccup [fortunes]
   "Render the given fortunes to simple HTML using Hiccup."
   (html
@@ -127,7 +137,7 @@ message text, and then return the results."
      (for [x fortunes]
        [:tr
         [:td (:id x)]
-        [:td (escape-html (:message x))]])
+        [:td (escape-html-local (:message x))]])
      ]]))
 
 (defn fortunes-enlive [fortunes]
