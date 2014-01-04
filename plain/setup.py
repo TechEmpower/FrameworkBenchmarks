@@ -20,13 +20,19 @@ def stop(logfile, errfile):
     subprocess.call("taskkill /f /im *plain-benchmark* > NUL", shell=True, stderr=errfile, stdout=logfile)
     return 0
 
+  # Takes up so much disk space
+  if os.name == 'nt':
+    subprocess.check_call("del /f /s /q target && del /f /s /q project", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
+  else:
+    subprocess.check_call("rm -rf target && rm -rf project", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
+
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
     if 'plain-benchmark' in line:
       try:
         pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+        os.kill(pid, 15)
       except OSError:
         pass
   
