@@ -69,7 +69,8 @@ class FortuneHTMLParser(HTMLParser):
   # the contents inside of "<td>" and "</td>", but there
   # are also the "<title>" and "</title>" tags.
   def handle_data (self, data):
-    self.body.append("{d}".format(d=data))
+    if data.strip() != '':
+      self.body.append("{d}".format(d=data))
 
   # This is called every time a tag is closed. We append
   # each one wrapped in "</" and ">".
