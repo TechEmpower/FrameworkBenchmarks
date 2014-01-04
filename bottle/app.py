@@ -92,7 +92,7 @@ def get_random_world_single_raw():
 @app.route("/fortune")
 def fortune_orm(db):
   fortunes=db.query(Fortune).all()
-  fortunes.append(Fortune(message="Additional fortune added at request time."))
+  fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
   fortunes=sorted(fortunes, key=attrgetter('message'))
   return template('fortune-obj', fortunes=fortunes)
 
