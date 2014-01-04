@@ -68,10 +68,8 @@ class FortuneHTMLParser(HTMLParser):
   # start and end tag. Generally, this will only ever be
   # the contents inside of "<td>" and "</td>", but there
   # are also the "<title>" and "</title>" tags.
-  # Note: The data is stripped of leading and trailing 
-  # white-space.
   def handle_data (self, data):
-    self.body.append("{d}".format(d=data.strip()))
+    self.body.append("{d}".format(d=data))
 
   # This is called every time a tag is closed. We append
   # each one wrapped in "</" and ">".
