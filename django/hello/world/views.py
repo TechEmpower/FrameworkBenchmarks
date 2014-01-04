@@ -52,7 +52,7 @@ def db(request):
 
 def fortunes(request):
   fortunes = list(Fortune.objects.all())
-  fortunes.append(Fortune(id=0, message="Additional message added at runtime."))
+  fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
 
   fortunes = sorted(fortunes, key=attrgetter('message'))
 
