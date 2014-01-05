@@ -22,7 +22,7 @@ class HelloWorldController < ApplicationController
   
   def fortune
     @fortunes = Fortune.all
-    @fortunes << Fortune.new(:message => "Additional fortune added at request time.")
+    @fortunes << Fortune.new(:id => 0, :message => "Additional fortune added at request time.")
     @fortunes = @fortunes.sort { |x, y| x.message <=> y.message }
   end
 
