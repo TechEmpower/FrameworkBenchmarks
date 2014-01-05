@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <title>Benchmark</title>
+    <title>Fortunes</title>
 </head>
 <body>
 
