@@ -464,6 +464,23 @@ class Installer:
     sudo cp -R -p /var/lib/mongodb /ssd/
     sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo start mongodb
+
+    ##############################
+    # Apache Cassandra
+    ##############################
+    wget http://www.apache.org/dist/cassandra/2.0.4/apache-cassandra-2.0.4-bin.tar.gz
+    tar xzf apache-cassandra-2.0.4-bin.tar.gz
+    rm apache-cassandra-2.0.4-bin.tar.gz
+    fuser -k -TERM /ssd/log/cassandra/system.log
+    sleep 5
+    cp cassandra/cassandra.yaml apache-cassandra-2.0.4/conf
+    cp cassandra/log4j-server.properties apache-cassandra-2.0.4/conf
+    pushd apache-cassandra-2.0.4
+    ./bin/cassandra
+    sleep 5
+    cat create-keyspace.cql | ./bin/cqlsh tfbdata
+    python ../cassandra/db-data-gen.py | ./bin/cqlsh tfbdata
+    popd
     """
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
