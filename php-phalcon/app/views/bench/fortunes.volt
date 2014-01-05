@@ -1,1 +1,1 @@
-<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>{% for fortune in fortunes %}<tr><td>{{ fortune['id'] }}</td><td>{{ fortune['message'] | e }}</td></tr>{% endfor %}</table></body></html>
+<table><tr><th>id</th><th>message</th></tr>{% for fortune in fortunes %}<tr><td>{{ fortune['id'] }}</td><td>{{ fortune['message'] | e }}</td></tr>{% endfor %}</table></body></html>
