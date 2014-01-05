@@ -2,16 +2,16 @@ import subprocess
 import os
 
 def start(args, logfile, errfile):
-  subprocess.check_call("urweb bench", shell=True, cwd="UrWeb", stderr=errfile, stdout=logfile)
+  conn_string = ('dbname=hello_world '
+                 'user=benchmarkdbuser '
+                 'password=benchmarkdbpass '
+                 'host=' + args.database_host)
+
+  subprocess.check_call("urweb -db \"" + conn_string + "\" bench", shell=True, cwd="urweb", stderr=errfile, stdout=logfile)
 
   threads = str(args.max_threads)
-  conn_string = ('dbname=hello_world '
-                'user=benchmarkdbuser '
-                'password=benchmarkdbpass '
-                'host=' + args.database_host)
-  env = {'URWEB_PQ_CON': conn_string}
   subprocess.Popen("./bench.exe -q -k -t " + threads,
-                   env=env, shell=True, cwd="UrWeb", stderr=errfile, stdout=logfile)
+                   shell=True, cwd="urweb", stderr=errfile, stdout=logfile)
   return 0
 
 def stop(logfile, errfile):
