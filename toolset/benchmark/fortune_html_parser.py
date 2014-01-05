@@ -70,7 +70,10 @@ class FortuneHTMLParser(HTMLParser):
   # are also the "<title>" and "</title>" tags.
   def handle_data (self, data):
     if data.strip() != '':
-      self.body.append("{d}".format(d=data))
+      # TODO: decide whether this is worth it or not...
+      # not all frameworks/libs agree on escaping
+      # apostrophes, so let's just allow them for now.
+      self.body.append("{d}".format(d=data.replace('\'','&apos;')))
 
   # This is called every time a tag is closed. We append
   # each one wrapped in "</" and ">".
