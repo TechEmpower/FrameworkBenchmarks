@@ -15,9 +15,7 @@
       "platform": "Ur/Web",
       "webserver": "None",
       "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "ur/web",
-      "versus": "ur/web"
+      "database_os": "Linux"
     },
     "postgres": {
       "setup_file": "setup",
@@ -35,9 +33,7 @@
       "platform": "Ur/Web",
       "webserver": "None",
       "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "ur/web",
-      "versus": "ur/web"
+      "database_os": "Linux"
     },
     "mysql": {
       "setup_file": "setup_mysql",
@@ -55,9 +51,7 @@
       "platform": "Ur/Web",
       "webserver": "None",
       "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "ur/web",
-      "versus": "ur/web"
+      "database_os": "Linux"
     }
   }]
 }
