@@ -6,6 +6,8 @@ import re
 import pprint
 import sys
 import traceback
+import psutil
+import threading
 
 class FrameworkTest:
   ##########################################################################################
@@ -218,6 +220,102 @@ class FrameworkTest:
   # End stop
   ############################################################
 
+  # List of snapshots of performance data
+  stats_records = []
+
+  # Stat baselines, to subtract from snapshots
+  memory_baseline = 0
+  net_baseline = dict()
+  disk_baseline = dict()
+
+  ############################################################
+  # estimate_memory_usage
+  # A best effort at calculating actual writable memory of
+  # this user's processes
+  ############################################################
+  def estimate_memory_usage(self):
+    if os.name == 'posix':
+      # Linux case, via crawling /proc.
+      # We're looking for private dirty memory, to avoid
+      # double counting shared memory across processes or
+      # other pitfalls.
+      kbytes = subprocess.check_output("grep Private_Dirty /proc/*/smaps 2>/dev/null | sed -e 's/.*\\([0-9][0-9]*\\).*/\\1/g' | awk '{s+=$1} END {print s}'", shell=True)
+      return int(kbytes)
+    else:
+      # Punting on other OSes for now!
+      return 0
+
+  ############################################################
+  # init_stats
+  # Initializes state for capturing performance numbers.
+  ############################################################
+  def init_stats(self):
+    self.stats_records = []
+    self.net_baseline = psutil.network_io_counters()
+    self.disk_baseline = psutil.disk_io_counters()
+
+  ############################################################
+  # grab_memory_baseline
+  # Call this before actually running the framework,
+  # to record how much memory other processes were using.
+  ############################################################
+  def grab_memory_baseline(self):
+    self.memory_baseline = self.estimate_memory_usage()
+
+  ############################################################
+  # stats_snapshot
+  # Save one snapshot of performance numbers.
+  ############################################################
+  def stats_snapshot(self):
+    snap = dict()
+    snap['cpu'] = psutil.cpu_percent(interval=1)
+    snap['mem'] = self.estimate_memory_usage() - self.memory_baseline
+
+    net = psutil.network_io_counters()
+    netd = dict()
+    netd['sent'] = net.bytes_sent - self.net_baseline.bytes_sent
+    netd['recv'] = net.bytes_recv - self.net_baseline.bytes_recv
+    snap['net'] = netd
+
+    disk = psutil.disk_io_counters()
+    diskd = dict()
+    diskd['read'] = disk.read_bytes - self.disk_baseline.read_bytes
+    diskd['write'] = disk.write_bytes - self.disk_baseline.write_bytes
+    snap['disk'] = diskd
+
+    self.stats_records.append(snap)
+
+  ############################################################
+  # statsThread
+  # ...which captures the performance numbers
+  ############################################################
+  class statsThread (threading.Thread):
+    def __init__(self, parent, intervals):
+      threading.Thread.__init__(self)
+      self.intervals = intervals
+      self.parent = parent
+    def run(self):
+      for interval in self.intervals:
+        time.sleep(interval)
+        self.parent.stats_snapshot()
+
+  ############################################################
+  # start_stats
+  # Start capturing performance numbers, running one capture
+  # after each seconds time interval in the argument.
+  ############################################################
+  def start_stats(self, intervals):
+    self.init_stats()
+    self.statsThread(self, intervals).start()
+
+  ############################################################
+  # placeholder_stats
+  # This function should be rewritten to follow a more
+  # reasoned distribution of samples across time!
+  ############################################################
+  def placeholder_stats(self):
+    self.start_stats([15, 30])
+
   ############################################################
   # benchmark
   # Runs the benchmark for each type of test that it implements
@@ -360,7 +458,9 @@ class FrameworkTest:
   def __parse_test(self, test_type):
     try:
       results = dict()
-      results['results'] = []
+      results['results'] = dict()
+      results['results']['wrk'] = []
+      results['results']['snapshots'] = self.stats_records
       
       with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
         is_warmup = True
@@ -378,7 +478,7 @@ class FrameworkTest:
           if not is_warmup:
             if rawData == None:
               rawData = dict()
-              results['results'].append(rawData)
+              results['results']['wrk'].append(rawData)
 
             #if "Requests/sec:" in line:
             #  m = re.search("Requests/sec:\s+([0-9]+)", line)
@@ -458,11 +558,15 @@ class FrameworkTest:
   # outputed to the output_file.
   ############################################################
   def __run_benchmark(self, script, output_file, err):
+    self.placeholder_stats()
+
     with open(output_file, 'w') as raw_file:
 	  
       p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=err)
       p.communicate(script)
       err.flush()
+
+    self.stats_snapshot()
   ############################################################
   # End __run_benchmark
   ############################################################
@@ -561,6 +665,8 @@ class FrameworkTest:
       open(os.path.join(directory, "__init__.py"), 'w').close()
 
     self.setup_module = setup_module = importlib.import_module(directory + '.' + self.setup_file)
+
+    self.grab_memory_baseline()
   ############################################################
   # End __init__
   ############################################################

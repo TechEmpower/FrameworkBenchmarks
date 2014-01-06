@@ -68,3 +68,6 @@ benchmark.cfg
 
 # go
 go/pkg/
+
+# urweb
+urweb/*.exe
