@@ -11,16 +11,6 @@ import traceback
 import json
 import textwrap
 
-############################################################
-# Test Variables
-############################################################
-JSON = "json"
-DB = "db"
-QUERY = "query"
-FORTUNE = "fortune"
-UPDATE = "update"
-PLAINTEXT = "plaintext"
-
 class FrameworkTest:
   ##########################################################################################
   # Class variables
@@ -109,13 +99,16 @@ class FrameworkTest:
   display_name = None
   notes = None
   versus = None
-  JSON = framework_test.JSON
-  DB = framework_test.DB
-  QUERY = framework_test.QUERY
-  FORTUNE = framework_test.FORTUNE
-  UPDATE = framework_test.UPDATE
-  PLAINTEXT = framework_test.PLAINTEXT
 
+  ############################################################
+  # Test Variables
+  ############################################################
+  JSON = "json"
+  DB = "db"
+  QUERY = "query"
+  FORTUNE = "fortune"
+  UPDATE = "update"
+  PLAINTEXT = "plaintext"
 
   ##########################################################################################
   # Public Methods
@@ -836,17 +829,17 @@ def parse_config(config, directory, benchmarker):
       
       runTests = dict()
 
-      if (benchmarker.type == "all" or benchmarker.type == JSON) and value.get("json_url", False):
+      if (benchmarker.type == "all" or benchmarker.type == "json") and value.get("json_url", False):
         runTests["json"] = True
-      if (benchmarker.type == "all" or benchmarker.type == DB) and value.get("db_url", False):
+      if (benchmarker.type == "all" or benchmarker.type == "db") and value.get("db_url", False):
         runTests["db"] = True
-      if (benchmarker.type == "all" or benchmarker.type == QUERY) and value.get("query_url", False):
+      if (benchmarker.type == "all" or benchmarker.type == "query") and value.get("query_url", False):
         runTests["query"] = True
-      if (benchmarker.type == "all" or benchmarker.type == FORTUNE) and value.get("fortune_url", False):
+      if (benchmarker.type == "all" or benchmarker.type == "fortune") and value.get("fortune_url", False):
         runTests["fortune"] = True
-      if (benchmarker.type == "all" or benchmarker.type == UPDATE) and value.get("update_url", False):
+      if (benchmarker.type == "all" or benchmarker.type == "update") and value.get("update_url", False):
         runTests["update"] = True
-      if (benchmarker.type == "all" or benchmarker.type == PLAINTEXT) and value.get("plaintext_url", False):
+      if (benchmarker.type == "all" or benchmarker.type == "plaintext") and value.get("plaintext_url", False):
         runTests["plaintext"] = True
 
       # if the test uses the 'defualt' keywork, then we don't 
