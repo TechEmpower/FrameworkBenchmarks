@@ -28,19 +28,17 @@
 
 ; Run the specified number of queries, return the results
 (defn run-queries [queries]
-  (vec ; Return as a vector
    (flatten ; Make it a list of maps
     (take
      queries ; Number of queries to run
-     (repeatedly get-world)))))
+     (repeatedly get-world))))
 
 ; Run the specified number of queries, return the results
 (defn run-queries-raw [queries]
-  (vec ; Return as a vector
    (flatten ; Make it a list of maps
     (take
      queries ; Number of queries to run
-     (repeatedly get-world-raw)))))
+     (repeatedly get-world-raw))))
 
 (defn get-query-count [queries]
   "Parse provided string value of query count, clamping values to between 1 and 500."
