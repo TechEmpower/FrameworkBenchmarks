@@ -421,131 +421,125 @@ class FrameworkTest:
     # JSON
     if self.runTests[self.JSON]:
       try:
-        if self.benchmarker.type == "all" or self.benchmarker.type == self.JSON:
-          out.write("BENCHMARKING JSON ... ") 
-          out.flush()
-          results = None
-          output_file = self.benchmarker.output_file(self.name, self.JSON)
-          if not os.path.exists(output_file):
-            with open(output_file, 'w'):
-              # Simply opening the file in write mode should create the empty file.
-              pass
-          if self.json_url_passed:
-            remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
-            self.__run_benchmark(remote_script, output_file, err)
-          results = self.__parse_test(self.JSON)
-          self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
-          out.write( "Complete\n" )
-          out.flush()
+        out.write("BENCHMARKING JSON ... ") 
+        out.flush()
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.JSON)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.json_url_passed:
+          remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.JSON)
+        self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
+        out.write( "Complete\n" )
+        out.flush()
       except AttributeError:
         pass
 
     # DB
     if self.runTests[self.DB]:
       try:
-        if self.benchmarker.type == "all" or self.benchmarker.type == self.DB:
-          out.write("BENCHMARKING DB ... ") 
-          out.flush()
-          results = None
-          output_file = self.benchmarker.output_file(self.name, self.DB)
-          if not os.path.exists(output_file):
-            with open(output_file, 'w'):
-              # Simply opening the file in write mode should create the empty file.
-              pass
-          if self.db_url_passed:
-            remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
-            self.__run_benchmark(remote_script, output_file, err)
-          results = self.__parse_test(self.DB)
-          self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
-          out.write( "Complete\n" )
+        out.write("BENCHMARKING DB ... ") 
+        out.flush()
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.DB)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.db_url_passed:
+          remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.DB)
+        self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
+        out.write( "Complete\n" )
       except AttributeError:
         pass
 
     # Query
     if self.runTests[self.QUERY]:
       try:
-        if self.benchmarker.type == "all" or self.benchmarker.type == self.QUERY:
-          out.write("BENCHMARKING Query ... ")
-          out.flush()
-          results = None
-          output_file = self.benchmarker.output_file(self.name, self.QUERY)
-          if not os.path.exists(output_file):
-            with open(output_file, 'w'):
-              # Simply opening the file in write mode should create the empty file.
-              pass
-          if self.query_url_passed:
-            remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
-            self.__run_benchmark(remote_script, output_file, err)
-          results = self.__parse_test(self.QUERY)
-          self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
-          out.write( "Complete\n" )
-          out.flush()
+        out.write("BENCHMARKING Query ... ")
+        out.flush()
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.QUERY)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.query_url_passed:
+          remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.QUERY)
+        self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
+        out.write( "Complete\n" )
+        out.flush()
       except AttributeError:
         pass
 
     # fortune
     if self.runTests[self.FORTUNE]:
       try:
-        if self.benchmarker.type == "all" or self.benchmarker.type == self.FORTUNE:
-          out.write("BENCHMARKING Fortune ... ") 
-          out.flush()
-          results = None
-          output_file = self.benchmarker.output_file(self.name, self.FORTUNE)
-          if not os.path.exists(output_file):
-            with open(output_file, 'w'):
-              # Simply opening the file in write mode should create the empty file.
-              pass
-          if self.fortune_url_passed:
-            remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
-            self.__run_benchmark(remote_script, output_file, err)
-          results = self.__parse_test(self.FORTUNE)
-          self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
-          out.write( "Complete\n" )
-          out.flush()
+        out.write("BENCHMARKING Fortune ... ") 
+        out.flush()
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.FORTUNE)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.fortune_url_passed:
+          remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.FORTUNE)
+        self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
+        out.write( "Complete\n" )
+        out.flush()
       except AttributeError:
         pass
 
     # update
     if self.runTests[self.UPDATE]:
       try:
-        if self.benchmarker.type == "all" or self.benchmarker.type == self.UPDATE:
-          out.write("BENCHMARKING Update ... ") 
-          out.flush()
-          results = None
-          output_file = self.benchmarker.output_file(self.name, self.UPDATE)
-          if not os.path.exists(output_file):
-            with open(output_file, 'w'):
-              # Simply opening the file in write mode should create the empty file.
-              pass
-          if self.update_url_passed:
-            remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
-            self.__run_benchmark(remote_script, output_file, err)
-          results = self.__parse_test(self.UPDATE)
-          self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
-          out.write( "Complete\n" )
-          out.flush()
+        out.write("BENCHMARKING Update ... ") 
+        out.flush()
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.UPDATE)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.update_url_passed:
+          remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.UPDATE)
+        self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
+        out.write( "Complete\n" )
+        out.flush()
       except AttributeError:
         pass
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
       try:
-        if self.benchmarker.type == "all" or self.benchmarker.type == self.PLAINTEXT:
-          out.write("BENCHMARKING Plaintext ... ")
-          out.flush()
-          results = None
-          output_file = self.benchmarker.output_file(self.name, self.PLAINTEXT)
-          if not os.path.exists(output_file):
-            with open(output_file, 'w'):
-              # Simply opening the file in write mode should create the empty file.
-              pass
-          if self.plaintext_url_passed:
-            remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
-            self.__run_benchmark(remote_script, output_file, err)
-          results = self.__parse_test(self.PLAINTEXT)
-          self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
-          out.write( "Complete\n" )
-          out.flush()
+        out.write("BENCHMARKING Plaintext ... ")
+        out.flush()
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.PLAINTEXT)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.plaintext_url_passed:
+          remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.PLAINTEXT)
+        self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
+        out.write( "Complete\n" )
+        out.flush()
       except AttributeError:
         traceback.print_exc()
         pass
@@ -834,12 +828,19 @@ def parse_config(config, directory, benchmarker):
       test_name = config['framework']
       
       runTests = dict()
-      runTests["json"] = True if value.get("json_url", False) else False
-      runTests["db"] = True if value.get("db_url", False) else False
-      runTests["query"] = True if value.get("query_url", False) else False
-      runTests["fortune"] = True if value.get("fortune_url", False) else False
-      runTests["update"] = True if value.get("update_url", False) else False
-      runTests["plaintext"] = True if value.get("plaintext_url", False) else False
+
+      if (benchmarker.type == "all" or benchmarker.type == self.JSON) and value.get("json_url", False):
+        runTests["json"] = True
+      if (benchmarker.type == "all" or benchmarker.type == self.DB) and value.get("db_url", False):
+        runTests["db"] = True
+      if (benchmarker.type == "all" or benchmarker.type == self.QUERY) and value.get("query_url", False):
+        runTests["query"] = True
+      if (benchmarker.type == "all" or benchmarker.type == self.FORTUNE) and value.get("fortune_url", False):
+        runTests["fortune"] = True
+      if (benchmarker.type == "all" or benchmarker.type == self.UPDATE) and value.get("update_url", False):
+        runTests["update"] = True
+      if (benchmarker.type == "all" or benchmarker.type == self.PLAINTEXT) and value.get("plaintext_url", False):
+        runTests["plaintext"] = True
 
       # if the test uses the 'defualt' keywork, then we don't 
       # append anything to it's name. All configs should only have 1 default
