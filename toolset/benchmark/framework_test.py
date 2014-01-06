@@ -829,18 +829,12 @@ def parse_config(config, directory, benchmarker):
       
       runTests = dict()
 
-      if (benchmarker.type == "all" or benchmarker.type == "json") and value.get("json_url", False):
-        runTests["json"] = True
-      if (benchmarker.type == "all" or benchmarker.type == "db") and value.get("db_url", False):
-        runTests["db"] = True
-      if (benchmarker.type == "all" or benchmarker.type == "query") and value.get("query_url", False):
-        runTests["query"] = True
-      if (benchmarker.type == "all" or benchmarker.type == "fortune") and value.get("fortune_url", False):
-        runTests["fortune"] = True
-      if (benchmarker.type == "all" or benchmarker.type == "update") and value.get("update_url", False):
-        runTests["update"] = True
-      if (benchmarker.type == "all" or benchmarker.type == "plaintext") and value.get("plaintext_url", False):
-        runTests["plaintext"] = True
+      runTests["json"] = (benchmarker.type == "all" or benchmarker.type == "json") and value.get("json_url", False)
+      runTests["db"] = (benchmarker.type == "all" or benchmarker.type == "db") and value.get("db_url", False)
+      runTests["query"] = (benchmarker.type == "all" or benchmarker.type == "query") and value.get("query_url", False)
+      runTests["fortune"] = (benchmarker.type == "all" or benchmarker.type == "fortune") and value.get("fortune_url", False)
+      runTests["update"] = (benchmarker.type == "all" or benchmarker.type == "update") and value.get("update_url", False)
+      runTests["plaintext"] = (benchmarker.type == "all" or benchmarker.type == "plaintext") and value.get("plaintext_url", False)
 
       # if the test uses the 'defualt' keywork, then we don't 
       # append anything to it's name. All configs should only have 1 default
