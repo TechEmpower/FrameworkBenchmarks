@@ -49,34 +49,17 @@ def main(argv=None):
     clientUser = os.environ.get('TFB_CLIENT_USER')
     clientIden = os.environ.get('TFB_CLIENT_IDENTITY_FILE')
     databaHost = os.getenv('TFB_DATABASE_HOST', clientHost)
-    databaUser = os.getenv('TFB_DATABASE_USER', clientUser)
-    dbIdenFile = os.getenv('TFB_DATABASE_IDENTITY_FILE', clientIden)
-
-    if serverHost != None:
-        defaults["server_host"] = serverHost
-    if clientHost != None:
-        defaults["client_host"] = clientHost
-    if clientUser != None:
-        defaults["client_user"] = clientUser
-    if clientIden != None:
-        defaults["client_identity_file"] = clientIden
-    if databaHost != None:
-        defaults["database_host"] = databaHost
-    if databaUser != None:
-        defaults["database_user"] = databaUser
-    if dbIdenFile != None:
-        defaults["database_identity_file"] = dbIdenFile
 
     ##########################################################
     # Set up argument parser
     ##########################################################
     parser = argparse.ArgumentParser(description='Run the Framework Benchmarking test suite.',
         parents=[conf_parser])
-    parser.add_argument('server-host', help='The application server.')
-    parser.add_argument('client-host', help='The client / load generation server.')
-    parser.add_argument('client-user', help='The username to use for SSH to the client instance.')
-    parser.add_argument('client-identity-file', help='The key to use for SSH to the client instance.')
-    parser.add_argument('database-host', help='The database server.  If not provided, defaults to the value of --client-host.')
+    parser.add_argument('server-host', default=serverHost, help='The application server.')
+    parser.add_argument('client-host', default=clientHost, help='The client / load generation server.')
+    parser.add_argument('client-user', default=clientUser, help='The username to use for SSH to the client instance.')
+    parser.add_argument('client-identity-file', default=clientIden, help='The key to use for SSH to the client instance.')
+    parser.add_argument('database-host', default=databaHost, help='The database server.  If not provided, defaults to the value of --client-host.')
     parser.add_argument('--database-user', help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
     parser.add_argument('--database-identity-file', dest='database_identity_file', help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
     parser.add_argument('-p', dest='password_prompt', action='store_true')
