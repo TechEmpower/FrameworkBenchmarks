@@ -42,17 +42,28 @@ def main(argv=None):
         defaults = { "client-host":"localhost"}
 
     ##########################################################
+    # Set up default values
+    ##########################################################        
+    serverHost = os.getenv('TFB_SERVER_HOST', 'localhost')
+    clientHost = os.getenv('TFB_CLIENT_HOST', 'localhost')
+    clientUser = os.environ.get('TFB_CLIENT_USER')
+    clientIden = os.environ.get('TFB_CLIENT_IDENTITY_FILE')
+    databaHost = os.getenv('TFB_DATABASE_HOST', clientHost)
+    databaUser = os.getenv('TFB_DATABASE_USER', clientUser)
+    dbIdenFile = os.getenv('TFB_DATABASE_IDENTITY_FILE', clientIden)
+
+    ##########################################################
     # Set up argument parser
     ##########################################################
     parser = argparse.ArgumentParser(description='Run the Framework Benchmarking test suite.',
         parents=[conf_parser])
-    parser.add_argument('-s', '--server-host', default='localhost', help='The application server.')
-    parser.add_argument('-c', '--client-host', default='localhost', help='The client / load generation server.')
-    parser.add_argument('-u', '--client-user', help='The username to use for SSH to the client instance.')
-    parser.add_argument('-i', '--client-identity-file', dest='client_identity_file', help='The key to use for SSH to the client instance.')
-    parser.add_argument('-d', '--database-host', help='The database server.  If not provided, defaults to the value of --client-host.')
-    parser.add_argument('--database-user', help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
-    parser.add_argument('--database-identity-file', dest='database_identity_file', help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
+    parser.add_argument('-s', '--server-host', default=serverHost, help='The application server.')
+    parser.add_argument('-c', '--client-host', default=clientHost, help='The client / load generation server.')
+    parser.add_argument('-u', '--client-user', default=clientUser, type=str, help='The username to use for SSH to the client instance.')
+    parser.add_argument('-i', '--client-identity-file', default=clientIden, type=str, dest='client_identity_file', help='The key to use for SSH to the client instance.')
+    parser.add_argument('-d', '--database-host', default=databaHost, help='The database server.  If not provided, defaults to the value of --client-host.')
+    parser.add_argument('--database-user', default=databaUser, help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
+    parser.add_argument('--database-identity-file', default=dbIdenFile, dest='database_identity_file', help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
     parser.add_argument('-p', dest='password_prompt', action='store_true')
     parser.add_argument('--install-software', action='store_true', help='runs the installation script before running the rest of the commands')
     parser.add_argument('--install', choices=['client', 'database', 'server', 'all'], default='all', help='Allows you to only install the server, client, or database software')
@@ -67,7 +78,7 @@ def main(argv=None):
     parser.add_argument('--max-queries', default=20, help='The maximum number of queries to run during the query test', type=int)
     parser.add_argument('--query-interval', default=5, type=int)
     parser.add_argument('--max-threads', default=8, help='The max number of threads to run weight at, this should be set to the number of cores for your system.', type=int)
-    parser.add_argument('--duration', default=60, help='Time in seconds that each test should run for.')
+    parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
     parser.add_argument('--starting-concurrency', default=8, type=int)
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
