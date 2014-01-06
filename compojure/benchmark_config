@@ -4,7 +4,7 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/compojure/json",
-      "db_url": "/compojure/db/1",
+      "db_url": "/compojure/db",
       "query_url": "/compojure/db/",
       "fortune_url": "/compojure/fortune-hiccup",
       "plaintext_url": "/compojure/plaintext",
