@@ -72,11 +72,11 @@ def main(argv=None):
     ##########################################################
     parser = argparse.ArgumentParser(description='Run the Framework Benchmarking test suite.',
         parents=[conf_parser])
-    parser.add_argument('-s', '--server-host', required=True, help='The application server.')
-    parser.add_argument('-c', '--client-host', required=True, help='The client / load generation server.')
-    parser.add_argument('-u', '--client-user', required=True, help='The username to use for SSH to the client instance.')
-    parser.add_argument('-i', '--client-identity-file', required=True, dest='client_identity_file', help='The key to use for SSH to the client instance.')
-    parser.add_argument('-d', '--database-host', help='The database server.  If not provided, defaults to the value of --client-host.')
+    parser.add_argument('server-host', help='The application server.')
+    parser.add_argument('client-host', help='The client / load generation server.')
+    parser.add_argument('client-user', help='The username to use for SSH to the client instance.')
+    parser.add_argument('client-identity-file', dest='client_identity_file', help='The key to use for SSH to the client instance.')
+    parser.add_argument('database-host', help='The database server.  If not provided, defaults to the value of --client-host.')
     parser.add_argument('--database-user', help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
     parser.add_argument('--database-identity-file', dest='database_identity_file', help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
     parser.add_argument('-p', dest='password_prompt', action='store_true')
