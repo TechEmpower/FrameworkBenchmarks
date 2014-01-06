@@ -57,13 +57,13 @@ def main(argv=None):
     ##########################################################
     parser = argparse.ArgumentParser(description='Run the Framework Benchmarking test suite.',
         parents=[conf_parser])
-    parser.add_argument('server_host', help='The application server.')
-    parser.add_argument('client_host', help='The client / load generation server.')
-    parser.add_argument('client_user', help='The username to use for SSH to the client instance.')
-    parser.add_argument('client_identity_file', help='The key to use for SSH to the client instance.')
-    parser.add_argument('--database-host', help='The database server.  If not provided, defaults to the value of --client-host.')
-    parser.add_argument('--database-user', help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
-    parser.add_argument('--database-identity-file', dest='database_identity_file', help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
+    parser.add_argument('-s', '--server-host', default=serverHost, help='The application server.')
+    parser.add_argument('-c' ,'--client-host', default=clientHost, help='The client / load generation server.')
+    parser.add_argument('-u', '--client-user', default=clientUser, help='The username to use for SSH to the client instance.')
+    parser.add_argument('-i', '--client-identity-file', default=clientIden, help='The key to use for SSH to the client instance.')
+    parser.add_argument('-d', '--database-host', default=databaHost, help='The database server.  If not provided, defaults to the value of --client-host.')
+    parser.add_argument('--database-user', default=databaUser, help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
+    parser.add_argument('--database-identity-file', default=dbIdenFile, dest='database_identity_file', help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
     parser.add_argument('-p', dest='password_prompt', action='store_true')
     parser.add_argument('--install-software', action='store_true', help='runs the installation script before running the rest of the commands')
     parser.add_argument('--install', choices=['client', 'database', 'server', 'all'], default='all', help='Allows you to only install the server, client, or database software')
@@ -87,22 +87,6 @@ def main(argv=None):
     parser.add_argument('--database-os', choices=['linux', 'windows'], default='linux', help='The operating system of the database server.')
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
-
-    if serverHost != None:
-        parser.set_defaults(server_host = serverHost)
-    if clientHost != None:
-        parser.set_defaults(client_host = clientHost)
-    if clientUser != None:
-        parser.set_defaults(client_user = clientUser)
-    if clientIden != None:
-        parser.set_defaults(client_identity_file = clientIden)
-    if databaHost != None:
-        parser.set_defaults("--database-host" = databaHost)
-    if databaUser != None:
-        parser.set_defaults("--database-user" = databaUser)
-    if dbIdenFile != None:
-        parser.set_defaults("--database-identity-file" = dbIdenFile)
-
     args = parser.parse_args(remaining_argv)
 
     if args.verbose:
