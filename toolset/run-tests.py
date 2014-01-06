@@ -44,26 +44,41 @@ def main(argv=None):
     ##########################################################
     # Set up default values
     ##########################################################        
-    serverHost = os.environ.get('TFB_SERVER_HOST', 'localhost')
-    clientHost = os.environ.get('TFB_CLIENT_HOST', 'localhost')
+    serverHost = os.environ.get('TFB_SERVER_HOST')
+    clientHost = os.environ.get('TFB_CLIENT_HOST')
     clientUser = os.environ.get('TFB_CLIENT_USER')
     clientIden = os.environ.get('TFB_CLIENT_IDENTITY_FILE')
     databaHost = os.getenv('TFB_DATABASE_HOST', clientHost)
     databaUser = os.getenv('TFB_DATABASE_USER', clientUser)
     dbIdenFile = os.getenv('TFB_DATABASE_IDENTITY_FILE', clientIden)
 
+    if serverHost != None:
+        defaults["server_host"] = serverHost
+    if clientHost != None:
+        defaults["client_host"] = clientHost
+    if clientUser != None:
+        defaults["client_user"] = clientUser
+    if clientIden != None:
+        defaults["client_identity_file"] = clientIden
+    if databaHost != None:
+        defaults["database_host"] = databaHost
+    if databaUser != None:
+        defaults["database_user"] = databaUser
+    if dbIdenFile != None:
+        defaults["database_identity_file"] = dbIdenFile
+
     ##########################################################
     # Set up argument parser
     ##########################################################
     parser = argparse.ArgumentParser(description='Run the Framework Benchmarking test suite.',
         parents=[conf_parser])
-    parser.add_argument('-s', '--server-host', default=serverHost, required=true, help='The application server.')
-    parser.add_argument('-c', '--client-host', default=clientHost, required=true, help='The client / load generation server.')
-    parser.add_argument('-u', '--client-user', default=clientUser, required=true, help='The username to use for SSH to the client instance.')
-    parser.add_argument('-i', '--client-identity-file', default=clientIden, required=true, dest='client_identity_file', help='The key to use for SSH to the client instance.')
-    parser.add_argument('-d', '--database-host', default=databaHost, help='The database server.  If not provided, defaults to the value of --client-host.')
-    parser.add_argument('--database-user', default=databaUser, help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
-    parser.add_argument('--database-identity-file', default=dbIdenFile, dest='database_identity_file', help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
+    parser.add_argument('-s', '--server-host', required=true, help='The application server.')
+    parser.add_argument('-c', '--client-host', required=true, help='The client / load generation server.')
+    parser.add_argument('-u', '--client-user', required=true, help='The username to use for SSH to the client instance.')
+    parser.add_argument('-i', '--client-identity-file', required=true, dest='client_identity_file', help='The key to use for SSH to the client instance.')
+    parser.add_argument('-d', '--database-host', help='The database server.  If not provided, defaults to the value of --client-host.')
+    parser.add_argument('--database-user', help='The username to use for SSH to the database instance.  If not provided, defaults to the value of --client-user.')
+    parser.add_argument('--database-identity-file', dest='database_identity_file', help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
     parser.add_argument('-p', dest='password_prompt', action='store_true')
     parser.add_argument('--install-software', action='store_true', help='runs the installation script before running the rest of the commands')
     parser.add_argument('--install', choices=['client', 'database', 'server', 'all'], default='all', help='Allows you to only install the server, client, or database software')
