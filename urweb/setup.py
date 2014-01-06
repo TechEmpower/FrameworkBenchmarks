@@ -9,7 +9,7 @@ def start(args, logfile, errfile):
 
   subprocess.check_call("urweb -db \"" + conn_string + "\" bench", shell=True, cwd="urweb", stderr=errfile, stdout=logfile)
 
-  threads = str(args.max_threads)
+  threads = str(args.max_threads * 2)
   subprocess.Popen("./bench.exe -q -k -t " + threads,
                    shell=True, cwd="urweb", stderr=errfile, stdout=logfile)
   return 0
