@@ -109,6 +109,13 @@ class FrameworkTest:
   display_name = None
   notes = None
   versus = None
+  JSON = framework_test.JSON
+  DB = framework_test.DB
+  QUERY = framework_test.QUERY
+  FORTUNE = framework_test.FORTUNE
+  UPDATE = framework_test.UPDATE
+  PLAINTEXT = framework_test.PLAINTEXT
+
 
   ##########################################################################################
   # Public Methods
@@ -262,12 +269,12 @@ class FrameworkTest:
   ############################################################
   def verify_urls(self, out, err):
     # JSON
-    if self.runTests[JSON]:
+    if self.runTests[self.JSON]:
       out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.json_url, self.port)
-        output = self.__curl_url(url, JSON, out, err)
+        output = self.__curl_url(url, self.JSON, out, err)
         if self.validateJson(output, out, err):
           self.json_url_passed = True
         else:
@@ -282,12 +289,12 @@ class FrameworkTest:
       out.flush
 
     # DB
-    if self.runTests[DB]:
+    if self.runTests[self.DB]:
       out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.db_url, self.port)
-        output = self.__curl_url(url, DB, out, err)
+        output = self.__curl_url(url, self.DB, out, err)
         if self.validateDb(output, out, err):
           self.db_url_passed = True
         else:
@@ -302,12 +309,12 @@ class FrameworkTest:
       out.flush
 
     # Query
-    if self.runTests[QUERY]:
+    if self.runTests[self.QUERY]:
       out.write( "VERIFYING QUERY (" + self.query_url + "2) ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-        output = self.__curl_url(url, QUERY, out, err)
+        output = self.__curl_url(url, self.QUERY, out, err)
         if self.validateQuery(output, out, err):
           self.query_url_passed = True
         else:
@@ -322,12 +329,12 @@ class FrameworkTest:
       out.flush
 
     # Fortune
-    if self.runTests[FORTUNE]:
+    if self.runTests[self.FORTUNE]:
       out.write( "VERIFYING FORTUNE (" + self.fortune_url + ") ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.fortune_url, self.port)
-        output = self.__curl_url(url, FORTUNE, out, err)
+        output = self.__curl_url(url, self.FORTUNE, out, err)
         if self.validateFortune(output, out, err):
           self.fortune_url_passed = True
         else:
@@ -342,12 +349,12 @@ class FrameworkTest:
       out.flush
 
     # Update
-    if self.runTests[UPDATE]:
+    if self.runTests[self.UPDATE]:
       out.write( "VERIFYING UPDATE (" + self.update_url + "2) ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.update_url + "2", self.port)
-        output = self.__curl_url(url, UPDATE, out, err)
+        output = self.__curl_url(url, self.UPDATE, out, err)
         if self.validateUpdate(output, out, err):
           self.update_url_passed = True
         else:
@@ -362,12 +369,12 @@ class FrameworkTest:
       out.flush
 
     # plaintext
-    if self.runTests[PLAINTEXT]:
+    if self.runTests[self.PLAINTEXT]:
       out.write( "VERIFYING PLAINTEXT (" + self.plaintext_url + ") ...\n" )
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.plaintext_url, self.port)
-        output = self.__curl_url(url, PLAINTEXT, out, err)
+        output = self.__curl_url(url, self.PLAINTEXT, out, err)
         if self.validatePlaintext(output, out, err):
           self.plaintext_url_passed = True
         else:
@@ -392,17 +399,17 @@ class FrameworkTest:
   ############################################################
   def contains_type(self, type):
     try:
-      if type == JSON and self.json_url != None:
+      if type == self.JSON and self.json_url != None:
         return True
-      if type == DB and self.db_url != None:
+      if type == self.DB and self.db_url != None:
         return True
-      if type == QUERY and self.query_url != None:
+      if type == self.QUERY and self.query_url != None:
         return True
-      if type == FORTUNE and self.fortune_url != None:
+      if type == self.FORTUNE and self.fortune_url != None:
         return True
-      if type == UPDATE and self.update_url != None:
+      if type == self.UPDATE and self.update_url != None:
         return True
-      if type == PLAINTEXT and self.plaintext_url != None:
+      if type == self.PLAINTEXT and self.plaintext_url != None:
         return True
     except AttributeError:
       pass
@@ -419,12 +426,12 @@ class FrameworkTest:
   ############################################################
   def benchmark(self, out, err):
     # JSON
-    if self.runTests[JSON]:
+    if self.runTests[self.JSON]:
       try:
         out.write("BENCHMARKING JSON ... ") 
         out.flush()
         results = None
-        output_file = self.benchmarker.output_file(self.name, JSON)
+        output_file = self.benchmarker.output_file(self.name, self.JSON)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
@@ -432,20 +439,20 @@ class FrameworkTest:
         if self.json_url_passed:
           remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
           self.__run_benchmark(remote_script, output_file, err)
-        results = self.__parse_test(JSON)
-        self.benchmarker.report_results(framework=self, test=JSON, results=results['results'])
+        results = self.__parse_test(self.JSON)
+        self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
         pass
 
     # DB
-    if self.runTests[DB]:
+    if self.runTests[self.DB]:
       try:
         out.write("BENCHMARKING DB ... ") 
         out.flush()
         results = None
-        output_file = self.benchmarker.output_file(self.name, DB)
+        output_file = self.benchmarker.output_file(self.name, self.DB)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
@@ -453,19 +460,19 @@ class FrameworkTest:
         if self.db_url_passed:
           remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
           self.__run_benchmark(remote_script, output_file, err)
-        results = self.__parse_test(DB)
-        self.benchmarker.report_results(framework=self, test=DB, results=results['results'])
+        results = self.__parse_test(self.DB)
+        self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
         out.write( "Complete\n" )
       except AttributeError:
         pass
 
     # Query
-    if self.runTests[QUERY]:
+    if self.runTests[self.QUERY]:
       try:
         out.write("BENCHMARKING Query ... ")
         out.flush()
         results = None
-        output_file = self.benchmarker.output_file(self.name, QUERY)
+        output_file = self.benchmarker.output_file(self.name, self.QUERY)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
@@ -473,20 +480,20 @@ class FrameworkTest:
         if self.query_url_passed:
           remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
           self.__run_benchmark(remote_script, output_file, err)
-        results = self.__parse_test(QUERY)
-        self.benchmarker.report_results(framework=self, test=QUERY, results=results['results'])
+        results = self.__parse_test(self.QUERY)
+        self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
         pass
 
     # fortune
-    if self.runTests[FORTUNE]:
+    if self.runTests[self.FORTUNE]:
       try:
         out.write("BENCHMARKING Fortune ... ") 
         out.flush()
         results = None
-        output_file = self.benchmarker.output_file(self.name, FORTUNE)
+        output_file = self.benchmarker.output_file(self.name, self.FORTUNE)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
@@ -494,20 +501,20 @@ class FrameworkTest:
         if self.fortune_url_passed:
           remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
           self.__run_benchmark(remote_script, output_file, err)
-        results = self.__parse_test(FORTUNE)
-        self.benchmarker.report_results(framework=self, test=FORTUNE, results=results['results'])
+        results = self.__parse_test(self.FORTUNE)
+        self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
         pass
 
     # update
-    if self.runTests[UPDATE]:
+    if self.runTests[self.UPDATE]:
       try:
         out.write("BENCHMARKING Update ... ") 
         out.flush()
         results = None
-        output_file = self.benchmarker.output_file(self.name, UPDATE)
+        output_file = self.benchmarker.output_file(self.name, self.UPDATE)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
@@ -515,20 +522,20 @@ class FrameworkTest:
         if self.update_url_passed:
           remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
           self.__run_benchmark(remote_script, output_file, err)
-        results = self.__parse_test(UPDATE)
-        self.benchmarker.report_results(framework=self, test=UPDATE, results=results['results'])
+        results = self.__parse_test(self.UPDATE)
+        self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
         pass
 
     # plaintext
-    if self.runTests[PLAINTEXT]:
+    if self.runTests[self.PLAINTEXT]:
       try:
         out.write("BENCHMARKING Plaintext ... ")
         out.flush()
         results = None
-        output_file = self.benchmarker.output_file(self.name, PLAINTEXT)
+        output_file = self.benchmarker.output_file(self.name, self.PLAINTEXT)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
@@ -536,8 +543,8 @@ class FrameworkTest:
         if self.plaintext_url_passed:
           remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
           self.__run_benchmark(remote_script, output_file, err)
-        results = self.__parse_test(PLAINTEXT)
-        self.benchmarker.report_results(framework=self, test=PLAINTEXT, results=results['results'])
+        results = self.__parse_test(self.PLAINTEXT)
+        self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -554,34 +561,34 @@ class FrameworkTest:
   ############################################################
   def parse_all(self):
     # JSON
-    if os.path.exists(self.benchmarker.get_output_file(self.name, JSON)):
-      results = self.__parse_test(JSON)
-      self.benchmarker.report_results(framework=self, test=JSON, results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.JSON)):
+      results = self.__parse_test(self.JSON)
+      self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
     
     # DB
-    if os.path.exists(self.benchmarker.get_output_file(self.name, DB)):
-      results = self.__parse_test(DB)
-      self.benchmarker.report_results(framework=self, test=DB, results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.DB)):
+      results = self.__parse_test(self.DB)
+      self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
     
     # Query
-    if os.path.exists(self.benchmarker.get_output_file(self.name, QUERY)):
-      results = self.__parse_test(QUERY)
-      self.benchmarker.report_results(framework=self, test=QUERY, results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.QUERY)):
+      results = self.__parse_test(self.QUERY)
+      self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
 
     # Fortune
-    if os.path.exists(self.benchmarker.get_output_file(self.name, FORTUNE)):
-      results = self.__parse_test(FORTUNE)
-      self.benchmarker.report_results(framework=self, test=FORTUNE, results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.FORTUNE)):
+      results = self.__parse_test(self.FORTUNE)
+      self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
 
     # Update
-    if os.path.exists(self.benchmarker.get_output_file(self.name, UPDATE)):
-      results = self.__parse_test(UPDATE)
-      self.benchmarker.report_results(framework=self, test=UPDATE, results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.UPDATE)):
+      results = self.__parse_test(self.UPDATE)
+      self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
 
     # Plaintext
-    if os.path.exists(self.benchmarker.get_output_file(self.name, PLAINTEXT)):
-      results = self.__parse_test(PLAINTEXT)
-      self.benchmarker.report_results(framework=self, test=PLAINTEXT, results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.PLAINTEXT)):
+      results = self.__parse_test(self.PLAINTEXT)
+      self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
   ############################################################
   # End parse_all
   ############################################################
