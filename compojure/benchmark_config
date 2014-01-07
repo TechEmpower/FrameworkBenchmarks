@@ -25,7 +25,7 @@
     },
     "raw": {
       "setup_file": "setup",
-      "db_url": "/compojure/dbraw/1",
+      "db_url": "/compojure/dbraw",
       "query_url": "/compojure/dbraw/",
       "port": 8080,
       "approach": "Realistic",
