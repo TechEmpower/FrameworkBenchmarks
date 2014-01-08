@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
     <title>Fortunes</title>
 </head>
