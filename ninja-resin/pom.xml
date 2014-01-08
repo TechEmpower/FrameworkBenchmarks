@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>helo.world</groupId>
-    <artifactId>hello-ninja</artifactId>
+    <groupId>org.ninjaframework.techempower</groupId>
+    <artifactId>ninja-resin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ninja-resin</name>
-    <description>Nnja test for the TechEmpower/FrameworkBenchmarks project</description>
+    <description>Ninja test for the TechEmpower/FrameworkBenchmarks project</description>
 
     <properties>
         <java.version>1.7</java.version>

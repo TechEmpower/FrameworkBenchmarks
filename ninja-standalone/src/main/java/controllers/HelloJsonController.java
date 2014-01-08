@@ -1,4 +1,4 @@
-package hello.controllers;
+package controllers;
 
 import ninja.Result;
 import ninja.Results;

@@ -1,36 +1,27 @@
- /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package hello.controllers;
+package controllers;
 
 import ninja.NinjaDocTester;
 import org.doctester.testbrowser.Request;
 import org.doctester.testbrowser.Response;
 import org.hamcrest.CoreMatchers;
+import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author ra
- */
 public class HelloPlaintextControllerTest extends NinjaDocTester {
     
-    String URL = "/plaintext";
+    String URL_PLAINTEXT = "/plaintext";
     
     @Test
     public void helloPlaintextControllerTest() {
         
         Response response = makeRequest(
-            Request.GET().url(testServerUrl().path(URL)));
+            Request.GET().url(testServerUrl().path(URL_PLAINTEXT)));
         
         assertThat(response.payload, CoreMatchers.is("Hello, world!"));
         assertThat(
             response.headers.get("Content-Type"), 
-            CoreMatchers.is("text/plain; charset=UTF-8"));
+            is("text/plain; charset=UTF-8"));
         
    
     }

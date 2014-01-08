@@ -1,25 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package hello.controllers;
+package controllers;
 
 import ninja.NinjaDocTester;
 import org.doctester.testbrowser.Request;
 import org.doctester.testbrowser.Response;
 import org.hamcrest.CoreMatchers;
+import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author ra
- */
+
 public class HelloJsonControllerTest extends NinjaDocTester {
     
-    String URL = "/json";
+    String URL_JSON = "/json";
 
     @Test
     public void testHelloJsonController() {
@@ -27,12 +19,12 @@ public class HelloJsonControllerTest extends NinjaDocTester {
         Response response = makeRequest(
             Request
                 .GET()
-                .url(testServerUrl().path(URL))
+                .url(testServerUrl().path(URL_JSON))
                 .contentTypeApplicationJson());
         
         assertThat(
             response.payloadAs(Message.class).message, 
-            CoreMatchers.is("Hello, world"));
+            is("Hello, world"));
         
     }
     
