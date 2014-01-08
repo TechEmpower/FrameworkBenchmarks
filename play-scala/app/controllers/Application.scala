@@ -59,7 +59,7 @@ object Application extends Controller {
   def fortunes() = PredicatedAction(isDbAvailable, ServiceUnavailable) {
     Action.async {
       Future(Fortune.getAll())(dbEc).map { fs =>
-        val fortunes =  Fortune(anorm.NotAssigned, "Additional fortune added at request time.") +: fs
+        val fortunes =  Fortune(0.toLong, "Additional fortune added at request time.") +: fs
         Ok(views.html.fortune(fortunes))
       }
     }
