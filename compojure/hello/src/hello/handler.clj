@@ -95,7 +95,6 @@
         1 ; clamp to 1 min
         q)))) ; otherwise use provided value
 
-
 ; Set up entity World and the database representation
 (defentity fortune
   (pk :id)
@@ -142,9 +141,9 @@ message text, and then return the results."
         :headers {"Content-Type" "text/plain; charset=utf-8"}
         :body "Hello, World!"})
   (GET "/json" [] (response {:message "Hello, World!"}))
-  (GET "/db" [] (response (first (run-queries (get-query-count 1)))))
+  (GET "/db" [] (response (first (run-queries 1))))
   (GET "/db/:queries" [queries] (response (run-queries (get-query-count queries))))
-  (GET "/dbraw" [] (response (first (run-queries-raw (get-query-count 1)))))
+  (GET "/dbraw" [] (response (first (run-queries-raw 1))))
   (GET "/dbraw/:queries" [queries] (response (run-queries-raw (get-query-count queries))))
   (GET "/fortune" [] (response (get-fortunes)))
   (GET "/fortune-hiccup" [] (fortunes-hiccup (get-fortunes)))
