@@ -6,7 +6,7 @@
    [lib-noir "0.6.6"]
    [compojure "1.1.6"]
    [ring-server "0.3.1"]
-   [selmer "0.4.0"]
+   [selmer "0.5.6"]
    [com.taoensso/timbre "1.6.0"]
    [com.postspectacular/rotor "0.1.0"]
    [com.taoensso/tower "1.5.1"]
