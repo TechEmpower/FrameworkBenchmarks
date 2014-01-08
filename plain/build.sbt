@@ -44,7 +44,7 @@ libraryDependencies ++= Seq(
   "com.googlecode.concurrentlinkedhashmap" % "concurrentlinkedhashmap-lru" % "1.3.2",
   "net.jpountz.lz4" % "lz4" % "1.2.0",
   "net.lingala.zip4j" % "zip4j" % "1.3.1", 
-  "com.fasterxml.jackson.core" % "jackson-databind" % "2.2.3",
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.3.0",
   "com.sun.jersey" % "jersey-json" % "1.17.1",
   "org.jvnet.mimepull" % "mimepull" % "1.9.3",
   "mysql" % "mysql-connector-java" % "5.1.27"
