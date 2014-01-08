@@ -33,6 +33,6 @@ def stop(logfile, errfile):
   if os.name == 'nt':
     subprocess.check_call("del /f /s /q target && del /f /s /q project", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
   else:
-    subprocess.check_call("rm -rf target && rm -rf project", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
+    subprocess.check_call("rm -rf target && rm -rf project/.ivy && rm -rf project/.boot", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
   
   return 0
