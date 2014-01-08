@@ -1,13 +1,13 @@
 package hellowicket;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.wicket.request.resource.AbstractResource;
-import com.fasterxml.jackson.databind.*;
+import org.hibernate.IdentifierLoadAccess;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HelloDbResponse extends AbstractResource
 {
@@ -15,25 +15,28 @@ public class HelloDbResponse extends AbstractResource
 
   private static final int DB_ROWS = 10000;
 
+  private static final String CONTENT_TYPE = "application/json";
   private static final ObjectMapper mapper = new ObjectMapper();
 
   protected ResourceResponse newResourceResponse(Attributes attributes)
   {
     final int queries = attributes.getRequest().getQueryParameters().getParameterValue("queries").toInt(1);
     final World[] worlds = new World[queries];
-    final Random random = ThreadLocalRandom.current();
+    final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     final ResourceResponse response = new ResourceResponse();
-    response.setContentType("application/json");
+    response.setContentType(CONTENT_TYPE);
 
-    response.setWriteCallback(new WriteCallback() {
+    response.setWriteCallback(new WriteCallback()
+    {
       public void writeData(Attributes attributes)
       {
         final Session session = HibernateUtil.getSessionFactory().openSession();
 
+        IdentifierLoadAccess loader = session.byId(World.class);
         for (int i = 0; i < queries; i++)
         {
-          worlds[i] = (World)session.byId(World.class).load(random.nextInt(DB_ROWS) + 1);
+          worlds[i] = (World) loader.load(random.nextInt(DB_ROWS) + 1);
         }
 
         session.close();
