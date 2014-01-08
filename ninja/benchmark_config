@@ -20,7 +20,7 @@
       "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ninja",
+      "display_name": "ninja-resin",
       "notes": "",
       "versus": "servlet"
     }

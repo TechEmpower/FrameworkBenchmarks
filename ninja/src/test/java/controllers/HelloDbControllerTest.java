@@ -1,29 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package controllers;
 
-package hello.controllers;
-
-import hello.model.World;
+import dao.SetupDao;
+import model.World;
 import ninja.NinjaDocTester;
 import org.doctester.testbrowser.Request;
 import org.doctester.testbrowser.Response;
 import org.hamcrest.CoreMatchers;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
-/**
- *
- * @author ra
- */
 public class HelloDbControllerTest extends NinjaDocTester {
             
-    String SINGLE_GET = "/db";
-    String QUERIES = "/queries";
+    String URL_DB = "/db";
+    String URL_QUERIES = "/queries";
     String URL_UPDATE = "/update";
     
     @Before
@@ -37,11 +29,11 @@ public class HelloDbControllerTest extends NinjaDocTester {
         Response response = makeRequest(
                 Request
                         .GET()
-                        .url(testServerUrl().path(SINGLE_GET))
+                        .url(testServerUrl().path(URL_DB))
                         .contentTypeApplicationJson());
         
         // Just make sure that we get back a World Json.
-        assertThat(response.payloadAs(World.class), CoreMatchers.notNullValue());      
+        assertThat(response.payloadAs(World.class), notNullValue());      
                 
     }
     
@@ -62,12 +54,12 @@ public class HelloDbControllerTest extends NinjaDocTester {
                 .GET()
                 .url(
                     testServerUrl()
-                    .path(QUERIES)
+                    .path(URL_QUERIES)
                     .addQueryParameter("queries", numberOfQueries + ""))
                 .contentTypeApplicationJson());
         
         // Just make sure that we get back an array
-        assertThat(response.payloadAs(World[].class).length, CoreMatchers.is(numberOfQueries)); 
+        assertThat(response.payloadAs(World[].class).length, is(numberOfQueries)); 
     }
     
     @Test
@@ -91,7 +83,7 @@ public class HelloDbControllerTest extends NinjaDocTester {
                     .addQueryParameter("queries", numberOfQueries + ""))
                 .contentTypeApplicationJson());
         
-        assertThat(response.payloadAs(World[].class).length, CoreMatchers.is(numberOfQueries)); 
+        assertThat(response.payloadAs(World[].class).length, is(numberOfQueries)); 
         
     }
 

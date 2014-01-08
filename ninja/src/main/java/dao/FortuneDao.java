@@ -1,6 +1,6 @@
-package hello.dao;
+package dao;
 
-import hello.model.Fortune;
+import model.Fortune;
 
 import java.util.List;
 
@@ -10,7 +10,6 @@ import javax.persistence.Query;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.persist.Transactional;
 
 @Singleton
 public class FortuneDao {
@@ -19,12 +18,12 @@ public class FortuneDao {
     Provider<EntityManager> entitiyManagerProvider;
 
     public List<Fortune> getAll() {
-	EntityManager entityManager = entitiyManagerProvider.get();
+        EntityManager entityManager = entitiyManagerProvider.get();
 
-	Query q = entityManager.createQuery("SELECT x FROM Fortune x");
-	List<Fortune> fortunes = q.getResultList();
+        Query q = entityManager.createQuery("SELECT x FROM Fortune x");
+        List<Fortune> fortunes = q.getResultList();
 
-	return fortunes;
+        return fortunes;
     }
 
 }

@@ -1,25 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package controllers;
 
-package hello.controllers;
-
-import hello.model.Fortune;
+import dao.SetupDao;
+import model.Fortune;
 import ninja.NinjaDocTester;
 import org.doctester.testbrowser.Request;
 import org.doctester.testbrowser.Response;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author ra
- */
 public class HelloFortuneControllerTest extends NinjaDocTester {
 
-    String URL = "/fortunes";
+    String URL_FORTUNES = "/fortunes";
     
     @Test
     public void testSomeMethod() {
@@ -27,7 +18,7 @@ public class HelloFortuneControllerTest extends NinjaDocTester {
         getInjector().getInstance(SetupDao.class).generateFortunesForTest();
 
         Response response 
-                = makeRequest(Request.GET().url(testServerUrl().path(URL)));
+                = makeRequest(Request.GET().url(testServerUrl().path(URL_FORTUNES)));
         
         System.out.println(" " + response.payload);
         

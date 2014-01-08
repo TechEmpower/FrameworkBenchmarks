@@ -4,12 +4,12 @@
 	<groupId>helo.world</groupId>
 	<artifactId>hello-ninja-standalone</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ninja-techempower-standalone</name>
+	<name>ninja-standalone</name>
 	<description>Nnja test for the TechEmpower/FrameworkBenchmarks project</description>
 
 	<properties>
 		<java-version>1.7</java-version>
-		<ninja.version>2.4.0</ninja.version>
+		<ninja.version>2.5.0</ninja.version>
 		<mysql.version>5.1.26</mysql.version>
 		<jetty.version>9.0.5.v20130815</jetty.version>
 	</properties>
