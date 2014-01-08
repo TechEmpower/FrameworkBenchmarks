@@ -78,11 +78,7 @@ class FortuneHTMLParser(HTMLParser):
   # This is called every time a tag is closed. We append
   # each one wrapped in "</" and ">".
   def handle_endtag(self, tag):
-    # Strictly speaking, a '</html>' is unnecessary, and
-    # some tests omit it; so we will omit it in our 
-    # normalized version.
-    if tag != "html":
-      self.body.append("</{t}>".format(t=tag))
+    self.body.append("</{t}>".format(t=tag))
 
   # Returns whether the HTML input parsed by this parser
   # is valid against our known "fortune" spec.
