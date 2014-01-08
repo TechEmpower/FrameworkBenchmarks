@@ -23,8 +23,10 @@
 (defn get-world-raw []
   (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
     (jdbc/with-connection (db-raw)
-      (jdbc/with-query-results rs [(str "select * from world where id = ?") id]
-        (doall rs)))))
+      ; Set a naming strategy to preserve column name case
+      (jdbc/with-naming-strategy {:keyword identity}
+        (jdbc/with-query-results rs [(str "select * from world where id = ?") id]
+          (doall rs))))))
 
 ; Run the specified number of queries, return the results
 (defn run-queries [queries]
