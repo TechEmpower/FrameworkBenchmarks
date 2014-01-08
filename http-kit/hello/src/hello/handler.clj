@@ -23,16 +23,17 @@
 
 ;; Run the specified number of queries, return the results
 (defn run-queries [queries]
-  (vec ; Return as a vector
    (flatten ; Make it a list of maps
     (take
      queries ; Number of queries to run
-     (repeatedly get-world)))))
+     (repeatedly get-world))))
 
 ;; Define route handlers
 (defroutes app-routes
   (GET "/http-kit/" [] "Hello, World!")
   (GET "/http-kit/json" [] (response {:message "Hello, World!"}))
+  (GET "/http-kit/db" []
+       (response (first (run-queries 1))))
   (GET "/http-kit/db/:queries" [queries]
        (response (run-queries (Integer/parseInt queries))))
   (route/not-found "Not Found"))

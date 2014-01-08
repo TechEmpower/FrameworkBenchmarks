@@ -8,7 +8,7 @@ int64_t fib(int64_t n){
 %><%
 
 json_object *hello=json_object_new_object();
-json_object_object_add(hello, "message", json_object_new_string("Hello, world"));
+json_object_object_add(hello, "message", json_object_new_string("Hello, World!"));
 
 const char *hello_str=json_object_to_json_string(hello);
 

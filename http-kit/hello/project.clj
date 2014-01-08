@@ -2,7 +2,7 @@
   :description "JSON/Database tests"
   :url "http://example.com/FIXME"
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [compojure "1.1.5"]
+                 [compojure "1.1.6"]
                  [ring/ring-json "0.2.0"]
                  [org.clojure/tools.cli "0.2.1"]
                  [http-kit/dbcp "0.1.0"]
@@ -12,4 +12,4 @@
   :main hello.handler
   :aot [hello.handler]
   :uberjar-name "http-kit-standalone.jar"
-  :profiles {:dev {:dependencies [[ring-mock "0.1.3"]]}})
+  :profiles {:dev {:dependencies [[ring-mock "0.1.5"]]}})

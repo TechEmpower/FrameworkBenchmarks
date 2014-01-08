@@ -21,7 +21,7 @@ public class HelloJsonResponse extends AbstractResource
       public void writeData(Attributes attributes)
       {
         Map<String, String> data = new HashMap<String, String>();
-        data.put("message", "Hello, world");
+        data.put("message", "Hello, World!");
 
         try
         {

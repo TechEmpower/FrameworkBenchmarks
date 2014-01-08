@@ -184,12 +184,23 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # get_output_file(test_name, test_type)
+  # returns the output file name for this test_name and 
+  # test_type timestamp/test_type/test_name/raw 
+  ############################################################
+  def get_output_file(self, test_name, test_type):
+    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
+  ############################################################
+  # End get_output_file
+  ############################################################
+
+  ############################################################
   # output_file(test_name, test_type)
   # returns the output file for this test_name and test_type
   # timestamp/test_type/test_name/raw 
   ############################################################
   def output_file(self, test_name, test_type):
-    path = os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
+    path = self.get_output_file(test_name, test_type)
     try:
       os.makedirs(os.path.dirname(path))
     except OSError:
@@ -232,7 +243,16 @@ class Benchmarker:
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
 
-    self.results['rawData'][test][framework.name] = results
+    # If results has a size from the parse, then it succeeded.
+    if results:
+      self.results['rawData'][test][framework.name] = results
+      # This may already be set for single-tests
+      if framework.name not in self.results['succeeded'][test]:
+        self.results['succeeded'][test].append(framework.name)
+    else:
+      # This may already be set for single-tests
+      if framework.name not in self.results['failed'][test]:
+        self.results['failed'][test].append(framework.name)
 
   ############################################################
   # End report_results
@@ -624,7 +644,8 @@ class Benchmarker:
           Subprocess Error {name}
         -----------------------------------------------------
         {err}
-        """.format(name=test.name, err=e)) )
+        {trace}
+        """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
         err.flush()
         try:
           test.stop(out, err)
@@ -635,17 +656,17 @@ class Benchmarker:
             Subprocess Error: Test .stop() raised exception {name}
           -----------------------------------------------------
           {err}
-          """.format(name=test.name, err=e)) )
+          {trace}
+          """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
           err.flush()
       except (KeyboardInterrupt, SystemExit) as e:
         test.stop(out)
-        err.write( """
+        out.write( """
         -----------------------------------------------------
           Cleaning up....
         -----------------------------------------------------
-        {err}
-        """.format(err=e) )
-        err.flush()
+        """)
+        out.flush()
         self.__finish()
         sys.exit()
 
@@ -883,6 +904,20 @@ class Benchmarker:
       self.results['rawData']['update'] = dict()
       self.results['rawData']['plaintext'] = dict()
       self.results['completed'] = dict()
+      self.results['succeeded'] = dict()
+      self.results['succeeded']['json'] = []
+      self.results['succeeded']['db'] = []
+      self.results['succeeded']['query'] = []
+      self.results['succeeded']['fortune'] = []
+      self.results['succeeded']['update'] = []
+      self.results['succeeded']['plaintext'] = []
+      self.results['failed'] = dict()
+      self.results['failed']['json'] = []
+      self.results['failed']['db'] = []
+      self.results['failed']['query'] = []
+      self.results['failed']['fortune'] = []
+      self.results['failed']['update'] = []
+      self.results['failed']['plaintext'] = []
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:

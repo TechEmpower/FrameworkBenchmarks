@@ -6,12 +6,12 @@
         korma.db
         korma.core
         hiccup.core
-        hiccup.util)
+        hiccup.util
+        hiccup.page)
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             [clojure.java.jdbc :as jdbc]
-            [clojure.java.jdbc.sql :as sql]
-            [net.cgrand.enlive-html :as html]))
+            [clojure.java.jdbc.sql :as sql]))
 
 ; Database connection
 (defdb db (mysql {:subname "//localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true"
@@ -38,11 +38,10 @@
 
 ; Run the specified number of queries, return the results
 (defn run-queries [queries]
-  (vec ; Return as a vector
    (flatten ; Make it a list of maps
     (take
      queries ; Number of queries to run
-     (repeatedly get-world)))))
+     (repeatedly get-world))))
 
 ; Database connection for java.jdbc "raw"
 ; https://github.com/clojure/java.jdbc/blob/master/doc/clojure/java/jdbc/ConnectionPooling.md
@@ -74,16 +73,17 @@
 (defn get-world-raw []
   (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
     (jdbc/with-connection (db-raw)
-      (jdbc/with-query-results rs [(str "select * from world where id = ?") id]
-        (doall rs)))))
+      ; Set a naming strategy to preserve column name case
+      (jdbc/with-naming-strategy {:keyword identity}
+        (jdbc/with-query-results rs [(str "select * from world where id = ?") id]
+          (doall rs))))))
 
 ; Run the specified number of queries, return the results
 (defn run-queries-raw [queries]
-  (vec ; Return as a vector
    (flatten ; Make it a list of maps
     (take
      queries ; Number of queries to run
-     (repeatedly get-world-raw)))))
+     (repeatedly get-world-raw))))
 
 (defn get-query-count [queries]
   "Parse provided string value of query count, clamping values to between 1 and 500."
@@ -116,7 +116,7 @@ message text, and then return the results."
 
 (defn fortunes-hiccup [fortunes]
   "Render the given fortunes to simple HTML using Hiccup."
-  (html
+  (html5
    [:head
     [:title "Fortunes"]]
    [:body
@@ -142,7 +142,9 @@ message text, and then return the results."
         :headers {"Content-Type" "text/plain; charset=utf-8"}
         :body "Hello, World!"})
   (GET "/json" [] (response {:message "Hello, World!"}))
+  (GET "/db" [] (response (first (run-queries (get-query-count 1)))))
   (GET "/db/:queries" [queries] (response (run-queries (get-query-count queries))))
+  (GET "/dbraw" [] (response (first (run-queries-raw (get-query-count 1)))))
   (GET "/dbraw/:queries" [queries] (response (run-queries-raw (get-query-count queries))))
   (GET "/fortune" [] (response (get-fortunes)))
   (GET "/fortune-hiccup" [] (fortunes-hiccup (get-fortunes)))
