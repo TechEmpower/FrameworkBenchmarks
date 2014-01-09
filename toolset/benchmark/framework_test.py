@@ -146,7 +146,8 @@ class FrameworkTest:
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
-      if type(float(obj["id"])) == float and type(float(obj["randomNumber"])) == float:
+      if (type(float(obj["id"])) == float and 
+          type(float(obj["randomNumber"])) == float):
         return True
     except:
       err.write(textwrap.dedent("""
@@ -167,8 +168,72 @@ class FrameworkTest:
     try:
       arr = json.loads(jsonString)
 
-      if type(float(arr[0]["id"])) == float and type(float(arr[0]["randomNumber"])) == float and type(float(arr[1]["id"])) == float and type(float(arr[1]["randomNumber"])) == float:
+      if (type(float(arr[0]["id"])) == float and 
+          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[1]["id"])) == float and 
+          type(float(arr[1]["randomNumber"])) == float):
         return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateQuery raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 1, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateQueryOneOrLess(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
+
+      if len(arr) != 1:
+        return False
+
+      for obj in arr:
+        if (type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float or
+            type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float):
+          return False
+      # By here, it's passed validation
+      return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateQuery raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 500, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateQueryFiveHundredOrMore(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
+
+      if len(arr) != 500:
+        return False
+
+      for obj in arr:
+        if (type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float or
+            type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float):
+          return False
+      # By here, it's passed validation
+      return True
     except:
       err.write(textwrap.dedent("""
           -----------------------------------------------------
@@ -207,7 +272,10 @@ class FrameworkTest:
     try:
       arr = json.loads(jsonString)
 
-      if type(float(arr[0]["id"])) == float and type(float(arr[0]["randomNumber"])) == float and type(float(arr[1]["id"])) == float and type(float(arr[1]["randomNumber"])) == float:
+      if (type(float(arr[0]["id"])) == float and 
+          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[1]["id"])) == float and 
+          type(float(arr[1]["randomNumber"])) == float):
         return True
     except:
       err.write(textwrap.dedent("""
@@ -308,7 +376,13 @@ class FrameworkTest:
       try:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
         output = self.__curl_url(url, self.QUERY, out, err)
-        if self.validateQuery(output, out, err):
+        url2 = self.benchmarker.generate_url(self.query_url + "-1", self.port)
+        output2 = self.__curl_url(url2, self.QUERY, out, err)
+        url3 = self.benchmarker.generate_url(self.query_url + "501", self.port)
+        output3 = self.__curl_url(url3, self.QUERY, out, err)
+        if (self.validateQuery(output, out, err) and
+            self.validateQueryOneOrLess(output2, out, err) and
+            self.validateQueryFiveHundredOrMore(output3, out, err)):
           self.query_url_passed = True
         else:
           self.query_url_passed = False
