@@ -143,6 +143,11 @@ class FrameworkTest:
     try:
       obj = json.loads(jsonString)
 
+      # We are allowing the single-object array for the DB 
+      # test for now, but will likely remove this later.
+      if type(obj) == list:
+        obj = obj[0]
+
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
@@ -377,15 +382,18 @@ class FrameworkTest:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
         output = self.__curl_url(url, self.QUERY, out, err)
         url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
-        output2 = self.__curl_url(url2, self.QUERY, out, err)
+        output2 = self.__curl_url(url2, self.QUERY, None, None)
         url3 = self.benchmarker.generate_url(self.query_url + "501", self.port)
-        output3 = self.__curl_url(url3, self.QUERY, out, err)
-        if (self.validateQuery(output, out, err) and
-            self.validateQueryOneOrLess(output2, out, err) and
-            self.validateQueryFiveHundredOrMore(output3, out, err)):
+        output3 = self.__curl_url(url3, self.QUERY, None, None)
+        if self.validateQuery(output, out, err):
           self.query_url_passed = True
         else:
           self.query_url_passed = False
+        if (not self.validateQueryOneOrLess(output2, out, err) or
+            not self.validateQueryFiveHundredOrMore(output3, out, err)):
+          self.query_url_warn = True
+        else:
+          self.query_url_warn = False
       except (AttributeError, subprocess.CalledProcessError) as e:
         self.query_url_passed = False
       out.write("VALIDATING QUERY ... ")
