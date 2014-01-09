@@ -396,9 +396,9 @@ class FrameworkTest:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
         output = self.__curl_url(url, self.QUERY, out, err)
         url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
-        output2 = self.__curl_url(url2, self.QUERY, os.devnull, os.devnull)
+        output2 = self.__curl_url(url2, self.QUERY, out, err)
         url3 = self.benchmarker.generate_url(self.query_url + "501", self.port)
-        output3 = self.__curl_url(url3, self.QUERY, os.devnull, os.devnull)
+        output3 = self.__curl_url(url3, self.QUERY, out, err)
         if self.validateQuery(output, out, err):
           self.query_url_passed = True
         else:
