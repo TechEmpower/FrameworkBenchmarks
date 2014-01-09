@@ -749,9 +749,6 @@ class FrameworkTest:
     try:
       results = dict()
       results['results'] = []
-
-      if os.path.exists(self.benchmarker.get_warning_file(self.name, test_type)):
-        results['results']['warning'][test_type].append(self.name)
       
       if os.path.exists(self.benchmarker.get_output_file(self.name, test_type)):
         with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:

@@ -276,6 +276,9 @@ class Benchmarker:
       # This may already be set for single-tests
       if framework.name not in self.results['succeeded'][test]:
         self.results['succeeded'][test].append(framework.name)
+      # Add this type
+      if os.path.exists(self.get_warning_file(framework.name, test)):
+        results['results']['warning'][test].append(framework.name)
     else:
       # This may already be set for single-tests
       if framework.name not in self.results['failed'][test]:
