@@ -376,7 +376,7 @@ class FrameworkTest:
       try:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
         output = self.__curl_url(url, self.QUERY, out, err)
-        url2 = self.benchmarker.generate_url(self.query_url + "-1", self.port)
+        url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
         output2 = self.__curl_url(url2, self.QUERY, out, err)
         url3 = self.benchmarker.generate_url(self.query_url + "501", self.port)
         output3 = self.__curl_url(url3, self.QUERY, out, err)
@@ -832,11 +832,10 @@ class FrameworkTest:
     # error output for sure in stdout.
     # Use -sS to hide progress bar, but show errors.
     subprocess.check_call(["curl", "-i", "-sS", url], stderr=err, stdout=out)
-    out.flush()
-    err.flush()
     # HTTP output may not end in a newline, so add that here.
     out.write( "\n" )
     out.flush()
+    err.flush()
 
     # We need to get the respond body from the curl and return it.
     p = subprocess.Popen(["curl", "-s", url], stdout=subprocess.PIPE)
@@ -851,9 +850,7 @@ class FrameworkTest:
     # the first curl invocation.
     subprocess.check_output(["curl", "-fsS", url], stderr=err)
     err.flush()
-    # HTTP output may not end in a newline, so add that here.
-    out.write( "\n" )
-    out.flush()
+
     if output:
       # We have the response body - return it
       return output[0]
