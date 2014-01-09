@@ -304,6 +304,14 @@ class Installer:
     #
     self.__run_command("git clone git://github.com/dom96/jester.git jester/jester", retry=True)
 
+    #
+    # Onion
+    #
+    self.__run_command("git clone git@github.com:davidmoreno/onion.git")
+    self.__run_command("mkdir build", cwd="onion")
+    self.__run_command("cmake ..", cwd="onion/build")
+    self.__run_command("make", cwd="onion/build")
+
     print("\nINSTALL: Finished installing server software\n")
   ############################################################
   # End __install_server_software
