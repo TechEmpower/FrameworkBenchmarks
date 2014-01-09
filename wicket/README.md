@@ -20,6 +20,7 @@ Use [Hibernate](http://www.hibernate.org/) for interaction with MySQL database.
 * [MySQL 5.5.29](http://dev.mysql.com/)
 * [Maven 2.2.1](https://maven.apache.org/)
 * [Resin 4.0.34](http://www.caucho.com/)
+* [Jackson 2.3.0](http://wiki.fasterxml.com/JacksonHome)
 
 ## Test URLs
 

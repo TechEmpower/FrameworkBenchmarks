@@ -6,6 +6,8 @@ import setup_util
 def start(args, logfile, errfile):
   setup_util.replace_text("onion/hello.c", "mysql_real_connect\(data.db\[i\], \".*\",", "mysql_real_connect(data.db[i], \"" + args.database_host + "\",")
   os.putenv("ONION_LOG","noinfo")
+  subprocess.call("rm *.o", cwd="onion", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.call("cp -R installs/onion/* onion/onion", shell=True, stderr=errfile, stdout=logfile)
   subprocess.Popen("make && ./hello", shell=True, cwd="onion", stderr=errfile, stdout=logfile)
   return 0
 

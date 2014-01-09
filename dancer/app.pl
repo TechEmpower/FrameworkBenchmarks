@@ -22,8 +22,13 @@ get '/db' => sub {
         my $id = int rand 10000 + 1;
         $sth->execute($id);
         if ( my $row = $sth->fetchrow_hashref ) {
-            push @response,
-              { id => $id, randomNumber => $row->{randomNumber} };
+            if ( $queries == 1 ) {
+                return { id => $id, randomNumber => $row->{randomNumber} };
+            }
+            else {
+                push @response,
+                  { id => $id, randomNumber => $row->{randomNumber} };
+            }
         }
     }
     return \@response;

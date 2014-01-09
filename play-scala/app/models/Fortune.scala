@@ -6,12 +6,12 @@ import anorm._
 import anorm.SqlParser._
 import scala.language.postfixOps
 
-case class Fortune(id: Pk[Long], message: String)
+case class Fortune(id: Long, message: String)
 
 object Fortune {
 
   val simpleRowParser = {
-    get[Pk[Long]]("fortune.id") ~
+    get[Long]("fortune.id") ~
     get[String]("fortune.message") map {
       case id~message => Fortune(id, message)
     }

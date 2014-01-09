@@ -21,7 +21,7 @@ public class HelloJSON
 
   StreamResponse onActivate() {
     Map<String, String> data = new HashMap<String, String>();
-    data.put("message", "Hello, world");
+    data.put("message", "Hello, World!");
     
     String response = "";
     try
