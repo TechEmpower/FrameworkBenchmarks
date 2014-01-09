@@ -345,7 +345,14 @@ class FrameworkTest:
           self.json_url_passed = True
         else:
           self.json_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
+      except (AttributeError, subprocess.CalledProcessError):
+        err.write(textwrap.dedent("""
+            -----------------------------------------------------
+              Error: verify_urls raised exception (JSON)
+            -----------------------------------------------------
+            {trace}
+            """.format( trace=sys.exc_info()[:2])))
+        err.flush()
         self.json_url_passed = False
       out.write("VALIDATING JSON ... ")
       if self.json_url_passed:
@@ -365,7 +372,14 @@ class FrameworkTest:
           self.db_url_passed = True
         else:
           self.db_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
+      except (AttributeError, subprocess.CalledProcessError):
+        err.write(textwrap.dedent("""
+            -----------------------------------------------------
+              Error: verify_urls raised exception (DB)
+            -----------------------------------------------------
+            {trace}
+            """.format( trace=sys.exc_info()[:2])))
+        err.flush()
         self.db_url_passed = False
       out.write("VALIDATING DB ... ")
       if self.db_url_passed:
@@ -382,9 +396,9 @@ class FrameworkTest:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
         output = self.__curl_url(url, self.QUERY, out, err)
         url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
-        output2 = self.__curl_url(url2, self.QUERY, None, None)
+        output2 = self.__curl_url(url2, self.QUERY, os.devnull, os.devnull)
         url3 = self.benchmarker.generate_url(self.query_url + "501", self.port)
-        output3 = self.__curl_url(url3, self.QUERY, None, None)
+        output3 = self.__curl_url(url3, self.QUERY, os.devnull, os.devnull)
         if self.validateQuery(output, out, err):
           self.query_url_passed = True
         else:
@@ -394,7 +408,14 @@ class FrameworkTest:
           self.query_url_warn = True
         else:
           self.query_url_warn = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
+      except (AttributeError, subprocess.CalledProcessError):
+        err.write(textwrap.dedent("""
+            -----------------------------------------------------
+              Error: verify_urls raised exception (QUERY)
+            -----------------------------------------------------
+            {trace}
+            """.format( trace=sys.exc_info()[:2])))
+        err.flush()
         self.query_url_passed = False
       out.write("VALIDATING QUERY ... ")
       if self.query_url_passed:
@@ -414,7 +435,14 @@ class FrameworkTest:
           self.fortune_url_passed = True
         else:
           self.fortune_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
+      except (AttributeError, subprocess.CalledProcessError):
+        err.write(textwrap.dedent("""
+            -----------------------------------------------------
+              Error: verify_urls raised exception (FORTUNE)
+            -----------------------------------------------------
+            {trace}
+            """.format( trace=sys.exc_info()[:2])))
+        err.flush()
         self.fortune_url_passed = False
       out.write("VALIDATING FORTUNE ... ")
       if self.fortune_url_passed:
@@ -434,7 +462,14 @@ class FrameworkTest:
           self.update_url_passed = True
         else:
           self.update_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
+      except (AttributeError, subprocess.CalledProcessError):
+        err.write(textwrap.dedent("""
+            -----------------------------------------------------
+              Error: verify_urls raised exception (UPDATE)
+            -----------------------------------------------------
+            {trace}
+            """.format( trace=sys.exc_info()[:2])))
+        err.flush()
         self.update_url_passed = False
       out.write("VALIDATING UPDATE ... ")
       if self.update_url_passed:
@@ -454,7 +489,14 @@ class FrameworkTest:
           self.plaintext_url_passed = True
         else:
           self.plaintext_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
+      except (AttributeError, subprocess.CalledProcessError):
+        err.write(textwrap.dedent("""
+            -----------------------------------------------------
+              Error: verify_urls raised exception (PLAINTEXT)
+            -----------------------------------------------------
+            {trace}
+            """.format( trace=sys.exc_info()[:2])))
+        err.flush()
         self.plaintext_url_passed = False
       out.write("VALIDATING PLAINTEXT ... ")
       if self.plaintext_url_passed:
@@ -841,7 +883,7 @@ class FrameworkTest:
     # Use -sS to hide progress bar, but show errors.
     subprocess.check_call(["curl", "-i", "-sS", url], stderr=err, stdout=out)
     # HTTP output may not end in a newline, so add that here.
-    out.write( "\n" )
+    out.write( "\n\n" )
     out.flush()
     err.flush()
 
