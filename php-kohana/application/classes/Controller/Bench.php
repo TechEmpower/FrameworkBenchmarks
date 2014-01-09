@@ -6,7 +6,7 @@ Class Controller_Bench extends Controller
     {
         $this->response
             ->headers(array('Content-Type' => 'application/json'))
-            ->body(json_encode(array('message' => 'Hello World!')));
+            ->body(json_encode(array('message' => 'Hello, World!')));
     }
 
     public function action_db()
@@ -22,6 +22,10 @@ Class Controller_Bench extends Controller
 
         for ($i = 0; $i < $queries; $i++) {
             $worlds[] = $query->param(':id', mt_rand(1, 10000))->execute()->current();
+        }
+
+        if ($queries == 1) {
+            $worlds = $worlds[0];
         }
 
         $this->response

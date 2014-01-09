@@ -13,7 +13,7 @@ class BenchController extends Controller
 
     public function jsonAction()
     {
-        return new JsonResponse(array('message' => 'Hello World!'));
+        return new JsonResponse(array('message' => 'Hello, World!'));
     }
 
     public function dbAction(Request $request)
@@ -29,6 +29,10 @@ class BenchController extends Controller
             $worlds[] =  $repo->find(mt_rand(1, 10000));
         }
 
+        if ($queries == 1) {
+            $worlds = $worlds[0];
+        }
+
         return new JsonResponse($worlds);
     }
 
@@ -42,6 +46,10 @@ class BenchController extends Controller
 
         for($i = 0; $i < $queries; ++$i) {
             $worlds[] =  $conn->fetchAssoc('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)));
+        }
+        
+        if ($queries == 1) {
+            $worlds = $worlds[0];
         }
 
         return new JsonResponse($worlds);

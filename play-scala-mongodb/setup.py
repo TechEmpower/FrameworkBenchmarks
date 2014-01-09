@@ -25,18 +25,24 @@ def stop(logfile, errfile):
   if os.name == 'nt':
     with open("./play-scala-mongodb/target/universal/play-scala-mongodb-1.0-SNAPSHOT/RUNNING_PID") as f:
       pid = int(f.read())
-      os.kill(pid, 9)
+      os.kill(pid, 15)
   else:
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():
       if 'NettyServer' in line:
         pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+        os.kill(pid, 15)
 
   try:
     os.remove("play-scala-mongodb/target/universal/play-scala-mongodb-1.0-SNAPSHOT/RUNNING_PID")
   except OSError:
-    pass
+    return 1
+
+  # Takes up so much disk space
+  if os.name == 'nt':
+    subprocess.check_call("del /f /s /q target", shell=True, cwd="play-scala-mongodb", stderr=errfile, stdout=logfile)
+  else:
+    subprocess.check_call("rm -rf target", shell=True, cwd="play-scala-mongodb", stderr=errfile, stdout=logfile)
 
   return 0

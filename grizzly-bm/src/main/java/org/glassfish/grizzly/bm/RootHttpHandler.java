@@ -10,7 +10,11 @@ import org.glassfish.grizzly.http.util.DataChunk;
  * Root {@link HttpHandler} to be used to avoid mapping overhead
  */
 public class RootHttpHandler extends HttpHandler {
-    private final HttpHandler plainTextHandler = new PlainTextHttpHandler();
+//  Uncomment for real text benchmark
+//    private final HttpHandler plainTextHandler = new PlainTextHttpHandler();
+    
+//  Binary PlainText handler  
+    private final HttpHandler plainTextHandler = new PlainText2HttpHandler();
     private final HttpHandler jsonHandler = new JsonHttpHandler();
     
     @Override

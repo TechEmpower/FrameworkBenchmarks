@@ -8,7 +8,7 @@ final class HelloController {
 
     @RequestMapping(value = "/json", produces = "application/json")
     Message json() {
-        return new Message("Hello, world");
+        return new Message("Hello, World!");
     }
 
     @RequestMapping(value = "/plaintext", produces = "text/plain")
