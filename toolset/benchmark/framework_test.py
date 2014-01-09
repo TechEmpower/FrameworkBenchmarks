@@ -163,6 +163,26 @@ class FrameworkTest:
           """.format( trace=sys.exc_info()[:2])))
     return False
 
+  def validateDbStrict(self, jsonString, out, err):
+    try:
+      obj = json.loads(jsonString)
+
+      # This will error out of the value could not parsed to a
+      # float (this will work with ints, but it will turn them
+      # into their float equivalent; i.e. "123" => 123.0)
+      if (type(float(obj["id"])) == float and 
+          type(float(obj["randomNumber"])) == float):
+        return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateDbStrict raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+
   ############################################################
   # Validates the jsonString is an array with a length of
   # 2, that each entry in the array is a JSON object, that
@@ -372,6 +392,10 @@ class FrameworkTest:
           self.db_url_passed = True
         else:
           self.db_url_passed = False
+        if self.validateDbStrict(output, out, err):
+          self.db_url_warn = False
+        else:
+          self.db_url_warn = True
       except (AttributeError, subprocess.CalledProcessError):
         err.write(textwrap.dedent("""
             -----------------------------------------------------
@@ -570,9 +594,13 @@ class FrameworkTest:
         out.flush()
         results = None
         output_file = self.benchmarker.output_file(self.name, self.DB)
+        warning_file = self.benchmarker.warning_file(self.name, self.DB)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.db_url_warn:
+          with open(warning_file, 'w'):
             pass
         if self.db_url_passed:
           remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
@@ -590,9 +618,13 @@ class FrameworkTest:
         out.flush()
         results = None
         output_file = self.benchmarker.output_file(self.name, self.QUERY)
+        warning_file = self.benchmarker.warning_file(self.name, self.DB)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.query_url_warn:
+          with open(warning_file, 'w'):
             pass
         if self.query_url_passed:
           remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
@@ -717,6 +749,9 @@ class FrameworkTest:
     try:
       results = dict()
       results['results'] = []
+
+      if os.path.exists(self.benchmarker.get_warning_file(self.name, test_type)):
+        results['results']['warning'][test_type].append(self.name)
       
       if os.path.exists(self.benchmarker.get_output_file(self.name, test_type)):
         with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:

@@ -211,6 +211,33 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # get_warning_file(test_name, test_type)
+  # returns the output file name for this test_name and 
+  # test_type timestamp/test_type/test_name/raw 
+  ############################################################
+  def get_warning_file(self, test_name, test_type):
+    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "warn")
+  ############################################################
+  # End get_warning_file
+  ############################################################
+
+  ############################################################
+  # warning_file(test_name, test_type)
+  # returns the warning file for this test_name and test_type
+  # timestamp/test_type/test_name/raw 
+  ############################################################
+  def warning_file(self, test_name, test_type):
+    path = self.get_warning_file(test_name, test_type)
+    try:
+      os.makedirs(os.path.dirname(path))
+    except OSError:
+      pass
+    return path
+  ############################################################
+  # End warning_file
+  ############################################################
+
+  ############################################################
   # full_results_directory
   ############################################################
   def full_results_directory(self):
@@ -221,7 +248,7 @@ class Benchmarker:
       pass
     return path
   ############################################################
-  # End output_file
+  # End full_results_directory
   ############################################################
 
   ############################################################
@@ -918,6 +945,13 @@ class Benchmarker:
       self.results['failed']['fortune'] = []
       self.results['failed']['update'] = []
       self.results['failed']['plaintext'] = []
+      self.results['warning'] = dict()
+      self.results['warning']['json'] = []
+      self.results['warning']['db'] = []
+      self.results['warning']['query'] = []
+      self.results['warning']['fortune'] = []
+      self.results['warning']['update'] = []
+      self.results['warning']['plaintext'] = []
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:
