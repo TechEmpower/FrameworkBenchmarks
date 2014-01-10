@@ -20,9 +20,9 @@
     "postgres": {
       "setup_file": "setup",
       "db_url": "/db",
-      "query_url": "/queries?queries=",
+      "query_url": "/queries/",
       "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
+      "update_url": "/updates/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -38,9 +38,9 @@
     "mysql": {
       "setup_file": "setup_mysql",
       "db_url": "/db",
-      "query_url": "/queries?queries=",
+      "query_url": "/queries/",
       "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
+      "update_url": "/updates/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
