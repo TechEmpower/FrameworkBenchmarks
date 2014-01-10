@@ -432,10 +432,11 @@ class FrameworkTest:
         output = self.__curl_url(url, self.QUERY, out, err)
         if self.validateQuery(output, out, err):
           self.query_url_passed = True
-          out.write(self.query_url + "2 - VALID\n\n")
+          out.write(self.query_url + "2 - PASS\n\n")
         else:
           self.query_url_passed = False
           out.write(self.query_url + "2 - ERROR\n\n")
+        out.write("-----------------------------------------------------\n\n")
         out.flush()
 
         url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
@@ -444,7 +445,8 @@ class FrameworkTest:
           self.query_url_warn = True
           out.write(self.query_url + "0 - WARNING\n\n")
         else:
-          out.write(self.query_url + "0 - VALID\n\n")
+          out.write(self.query_url + "0 - PASS\n\n")
+        out.write("-----------------------------------------------------\n\n")
         out.flush()
 
         url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
@@ -453,7 +455,8 @@ class FrameworkTest:
           self.query_url_warn = True
           out.write(self.query_url + "foo - WARNING\n\n")
         else:
-          out.write(self.query_url + "foo - VALID\n\n")
+          out.write(self.query_url + "foo - PASS\n\n")
+        out.write("-----------------------------------------------------\n\n")
         out.flush()
 
         url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
@@ -463,7 +466,8 @@ class FrameworkTest:
           out.write(self.query_url + "501 - WARNING\n\n")
         else:
           self.query_url_warn = False
-          out.write(self.query_url + "501 - VALID\n\n")
+          out.write(self.query_url + "501 - PASS\n\n")
+        out.write("-----------------------------------------------------\n\n")
         out.flush()
 
       except (AttributeError, subprocess.CalledProcessError):
