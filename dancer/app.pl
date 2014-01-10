@@ -4,6 +4,7 @@ use warnings;
 
 use Dancer ':syntax';
 use DBI;
+use JSON::XS;  # Ensure that the fast implementation of the serializer is installed
 
 set serializer => 'JSON';
 
