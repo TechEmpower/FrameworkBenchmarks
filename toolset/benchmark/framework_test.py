@@ -355,7 +355,11 @@ class FrameworkTest:
   def verify_urls(self, out, err):
     # JSON
     if self.runTests[self.JSON]:
-      out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING JSON ({url})
+        -----------------------------------------------------
+        """.format(url = self.json_url)))
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.json_url, self.port)
@@ -382,7 +386,11 @@ class FrameworkTest:
 
     # DB
     if self.runTests[self.DB]:
-      out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING DB ({url})
+        -----------------------------------------------------
+        """.format(url = self.db_url)))
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.db_url, self.port)
@@ -415,50 +423,49 @@ class FrameworkTest:
     if self.runTests[self.QUERY]:
       out.write(textwrap.dedent("""
         -----------------------------------------------------
-          VERIFYING QUERY
+          VERIFYING QUERY ({url})
         -----------------------------------------------------
-        """))
+        """.format(url=self.query_url+"2")))
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-        out.write(url + "\n")
         output = self.__curl_url(url, self.QUERY, out, err)
         if self.validateQuery(output, out, err):
           self.query_url_passed = True
-          out.write("VALID\n\n")
+          out.write(self.query_url + "2 - VALID\n\n")
         else:
           self.query_url_passed = False
-          out.write("ERROR\n\n")
+          out.write(self.query_url + "2 - ERROR\n\n")
         out.flush()
 
         url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
         output2 = self.__curl_url(url2, self.QUERY, out, err)
         if not self.validateQueryOneOrLess(output2, out, err):
           self.query_url_warn = True
-          out.write("WARNING\n\n")
+          out.write(self.query_url + "0 - WARNING\n\n")
         else:
-          out.write("VALID\n\n")
+          out.write(self.query_url + "0 - VALID\n\n")
         out.flush()
 
         url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
         output3 = self.__curl_url(url3, self.QUERY, out, err)
         if not self.validateQueryOneOrLess(output3, out, err):
           self.query_url_warn = True
-          out.write("WARNING\n\n")
+          out.write(self.query_url + "foo - WARNING\n\n")
         else:
-          out.write("VALID\n\n")
+          out.write(self.query_url + "foo - VALID\n\n")
         out.flush()
 
         url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
         output4 = self.__curl_url(url4, self.QUERY, out, err)
         if not self.validateQueryFiveHundredOrMore(output4, out, err):
           self.query_url_warn = True
-          out.write("WARNING\n\n")
+          out.write(self.query_url + "501 - WARNING\n\n")
         else:
           self.query_url_warn = False
-          out.write("VALID\n\n")
+          out.write(self.query_url + "501 - VALID\n\n")
         out.flush()
-        
+
       except (AttributeError, subprocess.CalledProcessError):
         err.write(textwrap.dedent("""
             -----------------------------------------------------
@@ -480,7 +487,11 @@ class FrameworkTest:
 
     # Fortune
     if self.runTests[self.FORTUNE]:
-      out.write( "VERIFYING FORTUNE (" + self.fortune_url + ") ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING FORTUNE ({url})
+        -----------------------------------------------------
+        """.format(url = self.fortune_url)))
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.fortune_url, self.port)
@@ -507,7 +518,11 @@ class FrameworkTest:
 
     # Update
     if self.runTests[self.UPDATE]:
-      out.write( "VERIFYING UPDATE (" + self.update_url + "2) ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING UPDATE ({url})
+        -----------------------------------------------------
+        """.format(url = self.update_url)))
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.update_url + "2", self.port)
@@ -534,7 +549,11 @@ class FrameworkTest:
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
-      out.write( "VERIFYING PLAINTEXT (" + self.plaintext_url + ") ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING PLAINTEXT ({url})
+        -----------------------------------------------------
+        """.format(url = self.plaintext_url)))
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.plaintext_url, self.port)
