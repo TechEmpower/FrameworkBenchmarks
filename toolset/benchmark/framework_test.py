@@ -934,8 +934,8 @@ class FrameworkTest:
     # uses check_output() instead of check_call() so that we can
     # ignore the HTTP response because we already output that in
     # the first curl invocation.
-    subprocess.check_output(["curl", "-fsS", url], stderr=err)
-    err.flush()
+    #subprocess.check_output(["curl", "-fsS", url], stderr=err)
+    #err.flush()
 
     if output:
       # We have the response body - return it
