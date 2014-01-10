@@ -5,6 +5,7 @@
       "setup_file": "setup",
       "json_url": "/wicket/json",
       "db_url": "/wicket/db",
+      "plaintext_url": "/wicket/plaintext",
       "query_url": "/wicket/db?queries=",
       "port": 8080,
       "approach": "Realistic",

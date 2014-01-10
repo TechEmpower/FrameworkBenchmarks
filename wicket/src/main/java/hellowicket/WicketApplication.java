@@ -1,5 +1,6 @@
 package hellowicket;
 
+import hellowicket.plaintext.HelloTextReference;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -31,6 +32,7 @@ public class WicketApplication extends WebApplication
 		// mount the resources under test
 		mountResource("/json", new HelloJsonReference());
 		mountResource("/db", new HelloDbReference());
+		mountResource("/plaintext", new HelloTextReference());
 
 		// disable response caching to be more close to other
 		// test applications' behavior

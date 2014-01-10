@@ -11,6 +11,8 @@
 ./wicket/src/main/java/hellowicket/BasePage.html
 ./wicket/src/main/java/hellowicket/HomePage.html
 ./wicket/src/main/java/hellowicket/World.java
+./wicket/src/main/java/hellowicket/plaintext/HelloTextReference.java
+./wicket/src/main/java/hellowicket/plaintext/HelloTextResource.java
 ./wicket/src/main/webapp/
 ./wicket/src/main/webapp/logo.png
 ./wicket/src/main/webapp/style.css
