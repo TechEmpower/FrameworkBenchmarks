@@ -70,10 +70,29 @@ class FortuneHTMLParser(HTMLParser):
   # are also the "<title>" and "</title>" tags.
   def handle_data (self, data):
     if data.strip() != '':
-      # TODO: decide whether this is worth it or not...
-      # not all frameworks/libs agree on escaping
-      # apostrophes, so let's just allow them for now.
-      self.body.append("{d}".format(d=data.replace('\'','&apos;')))
+      # After a LOT of debate, these are now considered
+      # valid in data. The reason for this approach is
+      # because a few tests use tools which determine
+      # at compile time whether or not a string needs
+      # a given type of html escaping, and our fortune
+      # test has apostrophes and quotes in html data
+      # rather than as an html attribute etc.
+      # example:
+      # <td>A computer scientist is someone who fixes things that aren't broken.</td>
+      # Semanticly, that apostrophe does not NEED to
+      # be escaped. The same is currently true for our
+      # quotes.
+      # In fact, in data (read: between two html tags)
+      # even the '>' need not be replaced as long as
+      # the '<' are all escaped.
+      # We replace them with their escapings here in
+      # order to have a noramlized string for equality
+      # comparison at the end.
+      data = data.replace('\'', '&apos;')
+      data = data.replace('"', '&quot;')
+      data = data.replace('>', '&gt;')
+
+      self.body.append("{d}".format(d=data))
 
   # This is called every time a tag is closed. We append
   # each one wrapped in "</" and ">".
