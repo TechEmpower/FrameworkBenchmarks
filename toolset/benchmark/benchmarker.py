@@ -602,11 +602,6 @@ class Benchmarker:
         ##########################
         # Verify URLs
         ##########################
-        out.write( textwrap.dedent("""
-        -----------------------------------------------------
-          Verifying URLs for {name}
-        -----------------------------------------------------
-        """.format(name=test.name)) )
         test.verify_urls(out, err)
         out.flush()
         err.flush()

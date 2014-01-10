@@ -413,29 +413,52 @@ class FrameworkTest:
 
     # Query
     if self.runTests[self.QUERY]:
-      out.write( "VERIFYING QUERY (" + self.query_url + "2, " +
-                 self.query_url + "0," + self.query_url + "foo, " +
-                 self.query_url + "501 ) ...\n")
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING QUERY
+        -----------------------------------------------------
+        """))
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
+        out.write(url + "\n")
         output = self.__curl_url(url, self.QUERY, out, err)
-        url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
-        output2 = self.__curl_url(url2, self.QUERY, out, err)
-        url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
-        output3 = self.__curl_url(url3, self.QUERY, out, err)
-        url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
-        output4 = self.__curl_url(url4, self.QUERY, out, err)
         if self.validateQuery(output, out, err):
           self.query_url_passed = True
+          out.write("VALID\n\n")
         else:
           self.query_url_passed = False
-        if (not self.validateQueryOneOrLess(output2, out, err) or
-            not self.validateQueryOneOrLess(output3, out, err) or
-            not self.validateQueryFiveHundredOrMore(output4, out, err)):
+          out.write("ERROR\n\n")
+        out.flush()
+
+        url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
+        output2 = self.__curl_url(url2, self.QUERY, out, err)
+        if not self.validateQueryOneOrLess(output2, out, err):
           self.query_url_warn = True
+          out.write("WARNING\n\n")
+        else:
+          out.write("VALID\n\n")
+        out.flush()
+
+        url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
+        output3 = self.__curl_url(url3, self.QUERY, out, err)
+        if not self.validateQueryOneOrLess(output3, out, err):
+          self.query_url_warn = True
+          out.write("WARNING\n\n")
+        else:
+          out.write("VALID\n\n")
+        out.flush()
+
+        url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
+        output4 = self.__curl_url(url4, self.QUERY, out, err)
+        if not self.validateQueryFiveHundredOrMore(output4, out, err):
+          self.query_url_warn = True
+          out.write("WARNING\n\n")
         else:
           self.query_url_warn = False
+          out.write("VALID\n\n")
+        out.flush()
+        
       except (AttributeError, subprocess.CalledProcessError):
         err.write(textwrap.dedent("""
             -----------------------------------------------------
@@ -447,7 +470,10 @@ class FrameworkTest:
         self.query_url_passed = False
       out.write("VALIDATING QUERY ... ")
       if self.query_url_passed:
-        out.write("PASS\n\n")
+        out.write("PASS")
+        if self.query_url_warn:
+          out.write(" (with warnings)")
+        out.write("\n\n")
       else:
         out.write("FAIL\n\n")
       out.flush
@@ -528,7 +554,7 @@ class FrameworkTest:
         self.plaintext_url_passed = False
       out.write("VALIDATING PLAINTEXT ... ")
       if self.plaintext_url_passed:
-        out.write("PASS\n\n")
+        out.write("PASS")
       else:
         out.write("FAIL\n\n")
       out.flush
@@ -926,16 +952,6 @@ class FrameworkTest:
     # We need to get the respond body from the curl and return it.
     p = subprocess.Popen(["curl", "-s", url], stdout=subprocess.PIPE)
     output = p.communicate()
-
-    # In the curl invocation above we could not use -f because
-    # then the HTTP response would not be output, so use -f in
-    # an additional invocation so that if there is an HTTP error,
-    # subprocess.CalledProcessError will be thrown. Note that this
-    # uses check_output() instead of check_call() so that we can
-    # ignore the HTTP response because we already output that in
-    # the first curl invocation.
-    #subprocess.check_output(["curl", "-fsS", url], stderr=err)
-    #err.flush()
 
     if output:
       # We have the response body - return it
