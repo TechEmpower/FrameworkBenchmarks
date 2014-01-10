@@ -618,7 +618,7 @@ class FrameworkTest:
         out.flush()
         results = None
         output_file = self.benchmarker.output_file(self.name, self.QUERY)
-        warning_file = self.benchmarker.warning_file(self.name, self.DB)
+        warning_file = self.benchmarker.warning_file(self.name, self.QUERY)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
