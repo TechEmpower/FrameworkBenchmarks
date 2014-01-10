@@ -413,7 +413,9 @@ class FrameworkTest:
 
     # Query
     if self.runTests[self.QUERY]:
-      out.write( "VERIFYING QUERY (" + self.query_url + "2) ...\n" )
+      out.write( "VERIFYING QUERY (" + self.query_url + "2, " +
+                 self.query_url + "0," + self.query_url + "foo, " +
+                 self.query_url + "501 ) ...\n")
       out.flush()
       try:
         url = self.benchmarker.generate_url(self.query_url + "2", self.port)
