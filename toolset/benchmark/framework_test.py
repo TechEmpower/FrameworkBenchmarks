@@ -143,10 +143,16 @@ class FrameworkTest:
     try:
       obj = json.loads(jsonString)
 
+      # We are allowing the single-object array for the DB 
+      # test for now, but will likely remove this later.
+      if type(obj) == list:
+        obj = obj[0]
+
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
-      if type(float(obj["id"])) == float and type(float(obj["randomNumber"])) == float:
+      if (type(float(obj["id"])) == float and 
+          type(float(obj["randomNumber"])) == float):
         return True
     except:
       err.write(textwrap.dedent("""
@@ -156,6 +162,26 @@ class FrameworkTest:
           {trace}
           """.format( trace=sys.exc_info()[:2])))
     return False
+
+  def validateDbStrict(self, jsonString, out, err):
+    try:
+      obj = json.loads(jsonString)
+
+      # This will error out of the value could not parsed to a
+      # float (this will work with ints, but it will turn them
+      # into their float equivalent; i.e. "123" => 123.0)
+      if (type(float(obj["id"])) == float and 
+          type(float(obj["randomNumber"])) == float):
+        return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateDbStrict raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
 
   ############################################################
   # Validates the jsonString is an array with a length of
@@ -167,8 +193,71 @@ class FrameworkTest:
     try:
       arr = json.loads(jsonString)
 
-      if type(float(arr[0]["id"])) == float and type(float(arr[0]["randomNumber"])) == float and type(float(arr[1]["id"])) == float and type(float(arr[1]["randomNumber"])) == float:
+      if (type(float(arr[0]["id"])) == float and 
+          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[1]["id"])) == float and 
+          type(float(arr[1]["randomNumber"])) == float):
         return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateQuery raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 1, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateQueryOneOrLess(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
+
+      if len(arr) != 1:
+        return False
+
+      for obj in arr:
+        if (type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float or
+            type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float):
+          return False
+      # By here, it's passed validation
+      return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateQuery raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 500, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateQueryFiveHundredOrMore(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
+
+      if len(arr) != 500:
+        return False
+
+      for obj in arr:
+        if (type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float or
+            type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float):
+          return False
+      # By here, it's passed validation
+      return True
     except:
       err.write(textwrap.dedent("""
           -----------------------------------------------------
@@ -207,7 +296,10 @@ class FrameworkTest:
     try:
       arr = json.loads(jsonString)
 
-      if type(float(arr[0]["id"])) == float and type(float(arr[0]["randomNumber"])) == float and type(float(arr[1]["id"])) == float and type(float(arr[1]["randomNumber"])) == float:
+      if (type(float(arr[0]["id"])) == float and 
+          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[1]["id"])) == float and 
+          type(float(arr[1]["randomNumber"])) == float):
         return True
     except:
       err.write(textwrap.dedent("""
@@ -263,121 +355,172 @@ class FrameworkTest:
   def verify_urls(self, out, err):
     # JSON
     if self.runTests[self.JSON]:
-      out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING JSON ({url})
+        -----------------------------------------------------
+        """.format(url = self.json_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.json_url, self.port)
-        output = self.__curl_url(url, self.JSON, out, err)
-        if self.validateJson(output, out, err):
-          self.json_url_passed = True
-        else:
-          self.json_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
-        self.json_url_passed = False
+
+      url = self.benchmarker.generate_url(self.json_url, self.port)
+      output = self.__curl_url(url, self.JSON, out, err)
       out.write("VALIDATING JSON ... ")
-      if self.json_url_passed:
+      if self.validateJson(output, out, err):
+        self.json_url_passed = True
         out.write("PASS\n\n")
       else:
+        self.json_url_passed = False
         out.write("FAIL\n\n")
       out.flush
 
     # DB
     if self.runTests[self.DB]:
-      out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING DB ({url})
+        -----------------------------------------------------
+        """.format(url = self.db_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.db_url, self.port)
-        output = self.__curl_url(url, self.DB, out, err)
-        if self.validateDb(output, out, err):
-          self.db_url_passed = True
-        else:
-          self.db_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
+
+      url = self.benchmarker.generate_url(self.db_url, self.port)
+      output = self.__curl_url(url, self.DB, out, err)
+      if self.validateDb(output, out, err):
+        self.db_url_passed = True
+      else:
         self.db_url_passed = False
+      if self.validateDbStrict(output, out, err):
+        self.db_url_warn = False
+      else:
+        self.db_url_warn = True
+
       out.write("VALIDATING DB ... ")
       if self.db_url_passed:
-        out.write("PASS\n\n")
+        out.write("PASS")
+        if self.db_url_warn:
+          out.write(" (with warnings)")
+        out.write("\n\n")
       else:
         out.write("FAIL\n\n")
       out.flush
 
     # Query
     if self.runTests[self.QUERY]:
-      out.write( "VERIFYING QUERY (" + self.query_url + "2) ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING QUERY ({url})
+        -----------------------------------------------------
+        """.format(url=self.query_url+"2")))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-        output = self.__curl_url(url, self.QUERY, out, err)
-        if self.validateQuery(output, out, err):
-          self.query_url_passed = True
-        else:
-          self.query_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
+
+      url = self.benchmarker.generate_url(self.query_url + "2", self.port)
+      output = self.__curl_url(url, self.QUERY, out, err)
+      if self.validateQuery(output, out, err):
+        self.query_url_passed = True
+        out.write(self.query_url + "2 - PASS\n\n")
+      else:
         self.query_url_passed = False
+        out.write(self.query_url + "2 - ERROR\n\n")
+      out.write("-----------------------------------------------------\n\n")
+      out.flush()
+
+      url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
+      output2 = self.__curl_url(url2, self.QUERY, out, err)
+      if not self.validateQueryOneOrLess(output2, out, err):
+        self.query_url_warn = True
+        out.write(self.query_url + "0 - WARNING\n\n")
+      else:
+        out.write(self.query_url + "0 - PASS\n\n")
+      out.write("-----------------------------------------------------\n\n")
+      out.flush()
+
+      url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
+      output3 = self.__curl_url(url3, self.QUERY, out, err)
+      if not self.validateQueryOneOrLess(output3, out, err):
+        self.query_url_warn = True
+        out.write(self.query_url + "foo - WARNING\n\n")
+      else:
+        out.write(self.query_url + "foo - PASS\n\n")
+      out.write("-----------------------------------------------------\n\n")
+      out.flush()
+
+      url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
+      output4 = self.__curl_url(url4, self.QUERY, out, err)
+      if not self.validateQueryFiveHundredOrMore(output4, out, err):
+        self.query_url_warn = True
+        out.write(self.query_url + "501 - WARNING\n\n")
+      else:
+        self.query_url_warn = False
+        out.write(self.query_url + "501 - PASS\n\n")
+      out.write("-----------------------------------------------------\n\n\n")
+      out.flush()
+
       out.write("VALIDATING QUERY ... ")
       if self.query_url_passed:
-        out.write("PASS\n\n")
+        out.write("PASS")
+        if self.query_url_warn:
+          out.write(" (with warnings)")
+        out.write("\n\n")
       else:
         out.write("FAIL\n\n")
       out.flush
 
     # Fortune
     if self.runTests[self.FORTUNE]:
-      out.write( "VERIFYING FORTUNE (" + self.fortune_url + ") ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING FORTUNE ({url})
+        -----------------------------------------------------
+        """.format(url = self.fortune_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.fortune_url, self.port)
-        output = self.__curl_url(url, self.FORTUNE, out, err)
-        if self.validateFortune(output, out, err):
-          self.fortune_url_passed = True
-        else:
-          self.fortune_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
-        self.fortune_url_passed = False
+
+      url = self.benchmarker.generate_url(self.fortune_url, self.port)
+      output = self.__curl_url(url, self.FORTUNE, out, err)
       out.write("VALIDATING FORTUNE ... ")
-      if self.fortune_url_passed:
+      if self.validateFortune(output, out, err):
+        self.fortune_url_passed = True
         out.write("PASS\n\n")
       else:
+        self.fortune_url_passed = False
         out.write("FAIL\n\n")
       out.flush
 
     # Update
     if self.runTests[self.UPDATE]:
-      out.write( "VERIFYING UPDATE (" + self.update_url + "2) ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING UPDATE ({url})
+        -----------------------------------------------------
+        """.format(url = self.update_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.update_url + "2", self.port)
-        output = self.__curl_url(url, self.UPDATE, out, err)
-        if self.validateUpdate(output, out, err):
-          self.update_url_passed = True
-        else:
-          self.update_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
-        self.update_url_passed = False
+
+      url = self.benchmarker.generate_url(self.update_url + "2", self.port)
+      output = self.__curl_url(url, self.UPDATE, out, err)
       out.write("VALIDATING UPDATE ... ")
-      if self.update_url_passed:
+      if self.validateUpdate(output, out, err):
+        self.update_url_passed = True
         out.write("PASS\n\n")
       else:
+        self.update_url_passed = False
         out.write("FAIL\n\n")
       out.flush
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
-      out.write( "VERIFYING PLAINTEXT (" + self.plaintext_url + ") ...\n" )
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING PLAINTEXT ({url})
+        -----------------------------------------------------
+        """.format(url = self.plaintext_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.plaintext_url, self.port)
-        output = self.__curl_url(url, self.PLAINTEXT, out, err)
-        if self.validatePlaintext(output, out, err):
-          self.plaintext_url_passed = True
-        else:
-          self.plaintext_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError) as e:
-        self.plaintext_url_passed = False
+
+      url = self.benchmarker.generate_url(self.plaintext_url, self.port)
+      output = self.__curl_url(url, self.PLAINTEXT, out, err)
       out.write("VALIDATING PLAINTEXT ... ")
-      if self.plaintext_url_passed:
+      if self.validatePlaintext(output, out, err):
+        self.plaintext_url_passed = True
         out.write("PASS\n\n")
       else:
+        self.plaintext_url_passed = False
         out.write("FAIL\n\n")
       out.flush
 
@@ -446,9 +589,13 @@ class FrameworkTest:
         out.flush()
         results = None
         output_file = self.benchmarker.output_file(self.name, self.DB)
+        warning_file = self.benchmarker.warning_file(self.name, self.DB)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.db_url_warn:
+          with open(warning_file, 'w'):
             pass
         if self.db_url_passed:
           remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
@@ -466,9 +613,13 @@ class FrameworkTest:
         out.flush()
         results = None
         output_file = self.benchmarker.output_file(self.name, self.QUERY)
+        warning_file = self.benchmarker.warning_file(self.name, self.QUERY)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.query_url_warn:
+          with open(warning_file, 'w'):
             pass
         if self.query_url_passed:
           remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
@@ -758,28 +909,15 @@ class FrameworkTest:
     # error output for sure in stdout.
     # Use -sS to hide progress bar, but show errors.
     subprocess.check_call(["curl", "-i", "-sS", url], stderr=err, stdout=out)
+    # HTTP output may not end in a newline, so add that here.
+    out.write( "\n\n" )
     out.flush()
     err.flush()
-    # HTTP output may not end in a newline, so add that here.
-    out.write( "\n" )
-    out.flush()
 
     # We need to get the respond body from the curl and return it.
     p = subprocess.Popen(["curl", "-s", url], stdout=subprocess.PIPE)
     output = p.communicate()
 
-    # In the curl invocation above we could not use -f because
-    # then the HTTP response would not be output, so use -f in
-    # an additional invocation so that if there is an HTTP error,
-    # subprocess.CalledProcessError will be thrown. Note that this
-    # uses check_output() instead of check_call() so that we can
-    # ignore the HTTP response because we already output that in
-    # the first curl invocation.
-    subprocess.check_output(["curl", "-fsS", url], stderr=err)
-    err.flush()
-    # HTTP output may not end in a newline, so add that here.
-    out.write( "\n" )
-    out.flush()
     if output:
       # We have the response body - return it
       return output[0]
