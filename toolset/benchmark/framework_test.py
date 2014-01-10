@@ -361,26 +361,15 @@ class FrameworkTest:
         -----------------------------------------------------
         """.format(url = self.json_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.json_url, self.port)
-        output = self.__curl_url(url, self.JSON, out, err)
-        if self.validateJson(output, out, err):
-          self.json_url_passed = True
-        else:
-          self.json_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError):
-        err.write(textwrap.dedent("""
-            -----------------------------------------------------
-              Error: verify_urls raised exception (JSON)
-            -----------------------------------------------------
-            {trace}
-            """.format( trace=sys.exc_info()[:2])))
-        err.flush()
-        self.json_url_passed = False
+
+      url = self.benchmarker.generate_url(self.json_url, self.port)
+      output = self.__curl_url(url, self.JSON, out, err)
       out.write("VALIDATING JSON ... ")
-      if self.json_url_passed:
+      if self.validateJson(output, out, err):
+        self.json_url_passed = True
         out.write("PASS\n\n")
       else:
+        self.json_url_passed = False
         out.write("FAIL\n\n")
       out.flush
 
@@ -392,29 +381,24 @@ class FrameworkTest:
         -----------------------------------------------------
         """.format(url = self.db_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.db_url, self.port)
-        output = self.__curl_url(url, self.DB, out, err)
-        if self.validateDb(output, out, err):
-          self.db_url_passed = True
-        else:
-          self.db_url_passed = False
-        if self.validateDbStrict(output, out, err):
-          self.db_url_warn = False
-        else:
-          self.db_url_warn = True
-      except (AttributeError, subprocess.CalledProcessError):
-        err.write(textwrap.dedent("""
-            -----------------------------------------------------
-              Error: verify_urls raised exception (DB)
-            -----------------------------------------------------
-            {trace}
-            """.format( trace=sys.exc_info()[:2])))
-        err.flush()
+
+      url = self.benchmarker.generate_url(self.db_url, self.port)
+      output = self.__curl_url(url, self.DB, out, err)
+      if self.validateDb(output, out, err):
+        self.db_url_passed = True
+      else:
         self.db_url_passed = False
+      if self.validateDbStrict(output, out, err):
+        self.db_url_warn = False
+      else:
+        self.db_url_warn = True
+
       out.write("VALIDATING DB ... ")
       if self.db_url_passed:
-        out.write("PASS\n\n")
+        out.write("PASS")
+        if self.db_url_warn:
+          out.write(" (with warnings)")
+        out.write("\n\n")
       else:
         out.write("FAIL\n\n")
       out.flush
@@ -427,58 +411,49 @@ class FrameworkTest:
         -----------------------------------------------------
         """.format(url=self.query_url+"2")))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-        output = self.__curl_url(url, self.QUERY, out, err)
-        if self.validateQuery(output, out, err):
-          self.query_url_passed = True
-          out.write(self.query_url + "2 - PASS\n\n")
-        else:
-          self.query_url_passed = False
-          out.write(self.query_url + "2 - ERROR\n\n")
-        out.write("-----------------------------------------------------\n\n")
-        out.flush()
 
-        url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
-        output2 = self.__curl_url(url2, self.QUERY, out, err)
-        if not self.validateQueryOneOrLess(output2, out, err):
-          self.query_url_warn = True
-          out.write(self.query_url + "0 - WARNING\n\n")
-        else:
-          out.write(self.query_url + "0 - PASS\n\n")
-        out.write("-----------------------------------------------------\n\n")
-        out.flush()
-
-        url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
-        output3 = self.__curl_url(url3, self.QUERY, out, err)
-        if not self.validateQueryOneOrLess(output3, out, err):
-          self.query_url_warn = True
-          out.write(self.query_url + "foo - WARNING\n\n")
-        else:
-          out.write(self.query_url + "foo - PASS\n\n")
-        out.write("-----------------------------------------------------\n\n")
-        out.flush()
-
-        url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
-        output4 = self.__curl_url(url4, self.QUERY, out, err)
-        if not self.validateQueryFiveHundredOrMore(output4, out, err):
-          self.query_url_warn = True
-          out.write(self.query_url + "501 - WARNING\n\n")
-        else:
-          self.query_url_warn = False
-          out.write(self.query_url + "501 - PASS\n\n")
-        out.write("-----------------------------------------------------\n\n")
-        out.flush()
-
-      except (AttributeError, subprocess.CalledProcessError):
-        err.write(textwrap.dedent("""
-            -----------------------------------------------------
-              Error: verify_urls raised exception (QUERY)
-            -----------------------------------------------------
-            {trace}
-            """.format( trace=sys.exc_info()[:2])))
-        err.flush()
+      url = self.benchmarker.generate_url(self.query_url + "2", self.port)
+      output = self.__curl_url(url, self.QUERY, out, err)
+      if self.validateQuery(output, out, err):
+        self.query_url_passed = True
+        out.write(self.query_url + "2 - PASS\n\n")
+      else:
         self.query_url_passed = False
+        out.write(self.query_url + "2 - ERROR\n\n")
+      out.write("-----------------------------------------------------\n\n")
+      out.flush()
+
+      url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
+      output2 = self.__curl_url(url2, self.QUERY, out, err)
+      if not self.validateQueryOneOrLess(output2, out, err):
+        self.query_url_warn = True
+        out.write(self.query_url + "0 - WARNING\n\n")
+      else:
+        out.write(self.query_url + "0 - PASS\n\n")
+      out.write("-----------------------------------------------------\n\n")
+      out.flush()
+
+      url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
+      output3 = self.__curl_url(url3, self.QUERY, out, err)
+      if not self.validateQueryOneOrLess(output3, out, err):
+        self.query_url_warn = True
+        out.write(self.query_url + "foo - WARNING\n\n")
+      else:
+        out.write(self.query_url + "foo - PASS\n\n")
+      out.write("-----------------------------------------------------\n\n")
+      out.flush()
+
+      url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
+      output4 = self.__curl_url(url4, self.QUERY, out, err)
+      if not self.validateQueryFiveHundredOrMore(output4, out, err):
+        self.query_url_warn = True
+        out.write(self.query_url + "501 - WARNING\n\n")
+      else:
+        self.query_url_warn = False
+        out.write(self.query_url + "501 - PASS\n\n")
+      out.write("-----------------------------------------------------\n\n\n")
+      out.flush()
+
       out.write("VALIDATING QUERY ... ")
       if self.query_url_passed:
         out.write("PASS")
@@ -497,26 +472,15 @@ class FrameworkTest:
         -----------------------------------------------------
         """.format(url = self.fortune_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.fortune_url, self.port)
-        output = self.__curl_url(url, self.FORTUNE, out, err)
-        if self.validateFortune(output, out, err):
-          self.fortune_url_passed = True
-        else:
-          self.fortune_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError):
-        err.write(textwrap.dedent("""
-            -----------------------------------------------------
-              Error: verify_urls raised exception (FORTUNE)
-            -----------------------------------------------------
-            {trace}
-            """.format( trace=sys.exc_info()[:2])))
-        err.flush()
-        self.fortune_url_passed = False
+
+      url = self.benchmarker.generate_url(self.fortune_url, self.port)
+      output = self.__curl_url(url, self.FORTUNE, out, err)
       out.write("VALIDATING FORTUNE ... ")
-      if self.fortune_url_passed:
+      if self.validateFortune(output, out, err):
+        self.fortune_url_passed = True
         out.write("PASS\n\n")
       else:
+        self.fortune_url_passed = False
         out.write("FAIL\n\n")
       out.flush
 
@@ -528,26 +492,15 @@ class FrameworkTest:
         -----------------------------------------------------
         """.format(url = self.update_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.update_url + "2", self.port)
-        output = self.__curl_url(url, self.UPDATE, out, err)
-        if self.validateUpdate(output, out, err):
-          self.update_url_passed = True
-        else:
-          self.update_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError):
-        err.write(textwrap.dedent("""
-            -----------------------------------------------------
-              Error: verify_urls raised exception (UPDATE)
-            -----------------------------------------------------
-            {trace}
-            """.format( trace=sys.exc_info()[:2])))
-        err.flush()
-        self.update_url_passed = False
+
+      url = self.benchmarker.generate_url(self.update_url + "2", self.port)
+      output = self.__curl_url(url, self.UPDATE, out, err)
       out.write("VALIDATING UPDATE ... ")
-      if self.update_url_passed:
+      if self.validateUpdate(output, out, err):
+        self.update_url_passed = True
         out.write("PASS\n\n")
       else:
+        self.update_url_passed = False
         out.write("FAIL\n\n")
       out.flush
 
@@ -559,26 +512,15 @@ class FrameworkTest:
         -----------------------------------------------------
         """.format(url = self.plaintext_url)))
       out.flush()
-      try:
-        url = self.benchmarker.generate_url(self.plaintext_url, self.port)
-        output = self.__curl_url(url, self.PLAINTEXT, out, err)
-        if self.validatePlaintext(output, out, err):
-          self.plaintext_url_passed = True
-        else:
-          self.plaintext_url_passed = False
-      except (AttributeError, subprocess.CalledProcessError):
-        err.write(textwrap.dedent("""
-            -----------------------------------------------------
-              Error: verify_urls raised exception (PLAINTEXT)
-            -----------------------------------------------------
-            {trace}
-            """.format( trace=sys.exc_info()[:2])))
-        err.flush()
-        self.plaintext_url_passed = False
+
+      url = self.benchmarker.generate_url(self.plaintext_url, self.port)
+      output = self.__curl_url(url, self.PLAINTEXT, out, err)
       out.write("VALIDATING PLAINTEXT ... ")
-      if self.plaintext_url_passed:
-        out.write("PASS")
+      if self.validatePlaintext(output, out, err):
+        self.plaintext_url_passed = True
+        out.write("PASS\n\n")
       else:
+        self.plaintext_url_passed = False
         out.write("FAIL\n\n")
       out.flush
 
