@@ -11,7 +11,7 @@ def start(args, logfile, errfile):
   else:
     subprocess.check_call("./sbt assembly && rm -rf target/scala-2.10/cache", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
 
-  subprocess.Popen("java -server -da -dsa -Xrs -Xmx6g -Xmn4g -Xss8m -Xnoclassgc -XX:MaxPermSize=1g -XX:ReservedCodeCacheSize=384m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -jar target/scala-2.10/plain-benchmark-assembly-1.0.1.jar", cwd="plain", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.Popen("java -jar target/scala-2.10/plain-benchmark-assembly-1.0.1.jar", cwd="plain", shell=True, stderr=errfile, stdout=logfile)
   time.sleep(10)
   return 0
 

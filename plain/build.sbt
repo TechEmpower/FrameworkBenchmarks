@@ -31,7 +31,6 @@ libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.0.2",
   "ch.qos.logback" % "logback-classic" % "1.0.13",
   "org.codehaus.janino" % "janino" % "2.6.1",
-  "com.lmax" % "disruptor" % "3.2.0",
   "com.typesafe.akka" %% "akka-actor" % "2.2.3",
   "com.typesafe.akka" %% "akka-slf4j" % "2.2.3",
   "org.apache.commons" % "commons-lang3" % "3.1",
@@ -41,12 +40,11 @@ libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.8",
   "javax.servlet" % "javax.servlet-api" % "3.1.0",
   "org.glassfish.web" % "javax.servlet.jsp" % "2.3.1",
-  "com.googlecode.concurrentlinkedhashmap" % "concurrentlinkedhashmap-lru" % "1.3.2",
+  "com.googlecode.concurrentlinkedhashmap" % "concurrentlinkedhashmap-lru" % "1.4",
   "net.jpountz.lz4" % "lz4" % "1.2.0",
   "net.lingala.zip4j" % "zip4j" % "1.3.1", 
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.3.0",
   "com.sun.jersey" % "jersey-json" % "1.17.1",
-  "org.jvnet.mimepull" % "mimepull" % "1.9.3",
   "mysql" % "mysql-connector-java" % "5.1.27"
 )
 
