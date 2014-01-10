@@ -6,6 +6,10 @@
 
 (defroutes home-routes
   (GET "/" [] "Hello, World!")
+  (GET "/plaintext" []
+       {:status 200
+        :headers {"Content-Type" "text/plain; charset=utf-8"}
+        :body "Hello, World!"})
   (GET "/json" [] (response/json {:message "Hello, World!"}))
   (GET "/db" [] (response/json (first (run-queries 1))))
   (GET "/db/:queries" [queries] (response/json (run-queries (get-query-count queries))))
