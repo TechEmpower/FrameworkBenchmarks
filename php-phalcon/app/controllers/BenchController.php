@@ -86,6 +86,15 @@ class BenchController extends \Phalcon\Mvc\Controller
         return $this->sendContentAsJson($worlds);
     }
 
+    public function plaintextAction()
+    {
+        $this->view->disable();
+        $this->response->setStatusCode(200, "OK");
+        $this->response->setContentType('text/plain', 'UTF-8');
+        $this->response->setContent("Hello, World!");
+        $this->response->send();
+    }
+
     private function sendContentAsJson($content) {
         $response = new Phalcon\Http\Response(json_encode($content));
         $response->setHeader("Content-Type", "application/json");
