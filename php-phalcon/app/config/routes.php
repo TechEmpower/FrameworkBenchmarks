@@ -28,4 +28,15 @@ $router->add('/plaintext', array(
     'action' => 'plaintext',
 ));
 
+// Handles "/db" as well as "/db?queries={queries}"
+$router->add('/mongodb/db', array(
+    'controller' => 'mongobench',
+    'action' => 'db',
+));
+
+$router->add('/mongodb/fortunes', array(
+    'controller' => 'mongobench',
+    'action' => 'fortunes',
+));
+
 return $router;

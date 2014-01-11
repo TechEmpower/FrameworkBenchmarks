@@ -6,6 +6,7 @@ from os.path import expanduser
 home = expanduser("~")
 
 def start(args, logfile, errfile):
+  setup_util.replace_text("php-phalcon/app/config/config.php", "mongodb:\/\/localhost", "mongodb://" + args.database_host)
   setup_util.replace_text("php-phalcon/app/config/config.php", "localhost", ""+ args.database_host +"")
   setup_util.replace_text("php-phalcon/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
 
