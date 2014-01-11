@@ -20,7 +20,16 @@ public class HelloDbResponse extends AbstractResource
 
   protected ResourceResponse newResourceResponse(Attributes attributes)
   {
-    final int queries = attributes.getRequest().getQueryParameters().getParameterValue("queries").toInt(1);
+    int qs = attributes.getRequest().getQueryParameters().getParameterValue("queries").toInt(1);
+    if (qs < 1)
+    {
+      qs = 1;
+    } 
+    else if (qs > 500)
+    {
+      qs = 500;
+    }
+    final int queries = qs;
     final World[] worlds = new World[queries];
     final ThreadLocalRandom random = ThreadLocalRandom.current();
 
