@@ -8,7 +8,7 @@ class RawController extends AbstractController
     public function jsonAction ()
     {
         header('Content-type: application/json');
-        die(json_encode(array('message' => 'Hello World!')));
+        die(json_encode(array('message' => 'Hello, World!')));
     }
 
     public function dbAction ()
@@ -33,6 +33,10 @@ class RawController extends AbstractController
             $statement->execute();
             $arr[] = array('id' => $id, 'randomNumber' => $statement->fetchColumn());
             $id = mt_rand(1, 10000);
+        }
+
+        if (count($arr) == 1) {
+            $arr = $arr[0];
         }
 
         header('Content-type: application/json');

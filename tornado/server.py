@@ -23,15 +23,18 @@ class BaseHandler(tornado.web.RequestHandler):
     def compute_etag(self):
         return None
 
+
 class JsonSerializeTestHandler(BaseHandler):
     def get(self):
-        obj = dict(message="Hello, World!")
+        obj = {"message": "Hello, World!", }
         self.write(obj)
+
 
 class PlaintextHandler(BaseHandler):
     def get(self):
         self.set_header('Content-Type', 'text/plain')
         self.write(b"Hello, World!")
+
 
 class QueryTestHandler(BaseHandler):
     @gen.coroutine
@@ -42,25 +45,25 @@ class QueryTestHandler(BaseHandler):
             random_id = random.randint(1, 10000)
             world = yield motor.Op(db.World.find_one, random_id)
             # Get first postion on arguments, and so first postion in mongo return
-            world['id'] = world.pop('_id')
+            world['id'] = str(world.pop('_id'))
             response = json.dumps(world)
         else:
-            worlds = []
-            for i in xrange(int(queries)):
-                random_id = random.randint(1, 10000)
-                world = yield motor.Op(db.World.find_one, random_id)
+            worlds = yield [motor.Op(db.World.find_one, random.randint(1, 10000))
+                            for _ in xrange(queries)]
+            for world in worlds:
                 # Get first postion on arguments, and so first postion in mongo return
-                world['id'] = world.pop('_id')
-                worlds.append(world)
+                world['id'] = str(world.pop('_id'))
             response = json.dumps(worlds)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(response)
+
 
 application = tornado.web.Application([
     (r"/json", JsonSerializeTestHandler),
     (r"/plaintext", PlaintextHandler),
     (r"/db", QueryTestHandler),
 ])
+
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()

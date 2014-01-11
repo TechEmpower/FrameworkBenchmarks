@@ -12,7 +12,7 @@ class Bench extends CI_Controller {
     public function json() {
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode(array('message' => 'Hello World!')));
+            ->set_output(json_encode(array('message' => 'Hello, World!')));
     }
 
     public function db($queries = 1) {
@@ -22,6 +22,10 @@ class Bench extends CI_Controller {
             $worlds[] = $this->db
                 ->query('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)))
                 ->row();
+        }
+
+        if ($queries == 1) {
+            $worlds = $worlds[0];
         }
 
         $this->output

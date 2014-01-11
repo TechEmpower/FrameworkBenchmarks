@@ -22,7 +22,7 @@ class HelloController {
     // Test type 1: JSON serialization
     def json() {
         def msg = [
-            message: "Hello, world"
+            message: "Hello, World!"
         ]
         render msg as JSON
     }
@@ -78,7 +78,7 @@ class HelloController {
     @Transactional(readOnly=true)
     def fortunes() {
         def fortunes = Fortune.getAll()
-        fortunes << new Fortune(message: 'Additional fortune added at request time.')
+        fortunes << new Fortune(id: 0, message: 'Additional fortune added at request time.')
         fortunes.sort(true){Fortune it -> it.message}
         [fortunes: fortunes]
     }
@@ -96,6 +96,6 @@ class HelloController {
     
     // Test type 6: Plaintext
     def plaintext() {
-        render text:'Hello, world', contentType:'text/plain'
+        render text:'Hello, World!', contentType:'text/plain'
     }
 }

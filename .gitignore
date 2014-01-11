@@ -67,4 +67,5 @@ benchmark.cfg
 *.war
 
 # go
-go/pkg/
+go/pkg/*
+beego/pkg/*

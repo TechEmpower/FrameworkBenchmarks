@@ -1,3 +1,5 @@
+from benchmark.fortune_html_parser import FortuneHTMLParser
+
 import importlib
 import os
 import subprocess
@@ -6,6 +8,8 @@ import re
 import pprint
 import sys
 import traceback
+import json
+import textwrap
 
 class FrameworkTest:
   ##########################################################################################
@@ -96,9 +100,230 @@ class FrameworkTest:
   notes = None
   versus = None
 
+  ############################################################
+  # Test Variables
+  ############################################################
+  JSON = "json"
+  DB = "db"
+  QUERY = "query"
+  FORTUNE = "fortune"
+  UPDATE = "update"
+  PLAINTEXT = "plaintext"
+
   ##########################################################################################
   # Public Methods
   ##########################################################################################
+
+
+  ############################################################
+  # Validates the jsonString is a JSON object with a 'message'
+  # key with the value "hello, world!" (case-insensitive).
+  ############################################################
+  def validateJson(self, jsonString, out, err):
+    try:
+      obj = json.loads(jsonString)
+
+      if  obj["message"].lower() == "hello, world!":
+        return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateJson raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Validates the jsonString is a JSON object that has an "id"
+  # and a "randomNumber" key, and that both keys map to 
+  # integers.
+  ############################################################
+  def validateDb(self, jsonString, out, err):
+    try:
+      obj = json.loads(jsonString)
+
+      # We are allowing the single-object array for the DB 
+      # test for now, but will likely remove this later.
+      if type(obj) == list:
+        obj = obj[0]
+
+      # This will error out of the value could not parsed to a
+      # float (this will work with ints, but it will turn them
+      # into their float equivalent; i.e. "123" => 123.0)
+      if (type(float(obj["id"])) == float and 
+          type(float(obj["randomNumber"])) == float):
+        return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateDb raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  def validateDbStrict(self, jsonString, out, err):
+    try:
+      obj = json.loads(jsonString)
+
+      # This will error out of the value could not parsed to a
+      # float (this will work with ints, but it will turn them
+      # into their float equivalent; i.e. "123" => 123.0)
+      if (type(float(obj["id"])) == float and 
+          type(float(obj["randomNumber"])) == float):
+        return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateDbStrict raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 2, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateQuery(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
+
+      if (type(float(arr[0]["id"])) == float and 
+          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[1]["id"])) == float and 
+          type(float(arr[1]["randomNumber"])) == float):
+        return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateQuery raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 1, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateQueryOneOrLess(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
+
+      if len(arr) != 1:
+        return False
+
+      for obj in arr:
+        if (type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float or
+            type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float):
+          return False
+      # By here, it's passed validation
+      return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateQuery raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 500, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateQueryFiveHundredOrMore(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
+
+      if len(arr) != 500:
+        return False
+
+      for obj in arr:
+        if (type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float or
+            type(float(obj["id"])) != float or
+            type(float(obj["randomNumber"])) != float):
+          return False
+      # By here, it's passed validation
+      return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateQuery raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Parses the given HTML string and asks a FortuneHTMLParser
+  # whether the parsed string is a valid fortune return.
+  ############################################################
+  def validateFortune(self, htmlString, out, err):
+    try:
+      parser = FortuneHTMLParser()
+      parser.feed(htmlString)
+
+      return parser.isValidFortune()
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateFortune raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  # Validates the jsonString is an array with a length of
+  # 2, that each entry in the array is a JSON object, that
+  # each object has an "id" and a "randomNumber" key, and that
+  # both keys map to integers.
+  ############################################################
+  def validateUpdate(self, jsonString, out, err):
+    try:
+      arr = json.loads(jsonString)
+
+      if (type(float(arr[0]["id"])) == float and 
+          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[1]["id"])) == float and 
+          type(float(arr[1]["randomNumber"])) == float):
+        return True
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validateUpdate raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
+
+  ############################################################
+  #
+  ############################################################
+  def validatePlaintext(self, jsonString, out, err):
+    try:
+      return jsonString.lower().strip() == "hello, world!"
+    except:
+      err.write(textwrap.dedent("""
+          -----------------------------------------------------
+            Error: validatePlaintext raised exception
+          -----------------------------------------------------
+          {trace}
+          """.format( trace=sys.exc_info()[:2])))
+    return False
 
   ############################################################
   # start(benchmarker)
@@ -129,64 +354,176 @@ class FrameworkTest:
   ############################################################
   def verify_urls(self, out, err):
     # JSON
-    try:
-      out.write( "VERIFYING JSON (" + self.json_url + ") ...\n" )
+    if self.runTests[self.JSON]:
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING JSON ({url})
+        -----------------------------------------------------
+        """.format(url = self.json_url)))
       out.flush()
+
       url = self.benchmarker.generate_url(self.json_url, self.port)
-      self.__curl_url(url, out, err)
-      self.json_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.json_url_passed = False
+      output = self.__curl_url(url, self.JSON, out, err)
+      out.write("VALIDATING JSON ... ")
+      if self.validateJson(output, out, err):
+        self.json_url_passed = True
+        out.write("PASS\n\n")
+      else:
+        self.json_url_passed = False
+        out.write("FAIL\n\n")
+      out.flush
 
     # DB
-    try:
-      out.write( "VERIFYING DB (" + self.db_url + ") ...\n" )
+    if self.runTests[self.DB]:
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING DB ({url})
+        -----------------------------------------------------
+        """.format(url = self.db_url)))
       out.flush()
+
       url = self.benchmarker.generate_url(self.db_url, self.port)
-      self.__curl_url(url, out, err)
-      self.db_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.db_url_passed = False
+      output = self.__curl_url(url, self.DB, out, err)
+      if self.validateDb(output, out, err):
+        self.db_url_passed = True
+      else:
+        self.db_url_passed = False
+      if self.validateDbStrict(output, out, err):
+        self.db_url_warn = False
+      else:
+        self.db_url_warn = True
+
+      out.write("VALIDATING DB ... ")
+      if self.db_url_passed:
+        out.write("PASS")
+        if self.db_url_warn:
+          out.write(" (with warnings)")
+        out.write("\n\n")
+      else:
+        out.write("FAIL\n\n")
+      out.flush
 
     # Query
-    try:
-      out.write( "VERIFYING Query (" + self.query_url + "2) ...\n" )
+    if self.runTests[self.QUERY]:
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING QUERY ({url})
+        -----------------------------------------------------
+        """.format(url=self.query_url+"2")))
       out.flush()
+
       url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-      self.__curl_url(url, out, err)
-      self.query_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.query_url_passed = False
+      output = self.__curl_url(url, self.QUERY, out, err)
+      if self.validateQuery(output, out, err):
+        self.query_url_passed = True
+        out.write(self.query_url + "2 - PASS\n\n")
+      else:
+        self.query_url_passed = False
+        out.write(self.query_url + "2 - ERROR\n\n")
+      out.write("-----------------------------------------------------\n\n")
+      out.flush()
+
+      url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
+      output2 = self.__curl_url(url2, self.QUERY, out, err)
+      if not self.validateQueryOneOrLess(output2, out, err):
+        self.query_url_warn = True
+        out.write(self.query_url + "0 - WARNING\n\n")
+      else:
+        out.write(self.query_url + "0 - PASS\n\n")
+      out.write("-----------------------------------------------------\n\n")
+      out.flush()
+
+      url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
+      output3 = self.__curl_url(url3, self.QUERY, out, err)
+      if not self.validateQueryOneOrLess(output3, out, err):
+        self.query_url_warn = True
+        out.write(self.query_url + "foo - WARNING\n\n")
+      else:
+        out.write(self.query_url + "foo - PASS\n\n")
+      out.write("-----------------------------------------------------\n\n")
+      out.flush()
+
+      url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
+      output4 = self.__curl_url(url4, self.QUERY, out, err)
+      if not self.validateQueryFiveHundredOrMore(output4, out, err):
+        self.query_url_warn = True
+        out.write(self.query_url + "501 - WARNING\n\n")
+      else:
+        self.query_url_warn = False
+        out.write(self.query_url + "501 - PASS\n\n")
+      out.write("-----------------------------------------------------\n\n\n")
+      out.flush()
+
+      out.write("VALIDATING QUERY ... ")
+      if self.query_url_passed:
+        out.write("PASS")
+        if self.query_url_warn:
+          out.write(" (with warnings)")
+        out.write("\n\n")
+      else:
+        out.write("FAIL\n\n")
+      out.flush
 
     # Fortune
-    try:
-      out.write( "VERIFYING Fortune (" + self.fortune_url + ") ...\n" )
+    if self.runTests[self.FORTUNE]:
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING FORTUNE ({url})
+        -----------------------------------------------------
+        """.format(url = self.fortune_url)))
       out.flush()
+
       url = self.benchmarker.generate_url(self.fortune_url, self.port)
-      self.__curl_url(url, out, err)
-      self.fortune_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.fortune_url_passed = False
+      output = self.__curl_url(url, self.FORTUNE, out, err)
+      out.write("VALIDATING FORTUNE ... ")
+      if self.validateFortune(output, out, err):
+        self.fortune_url_passed = True
+        out.write("PASS\n\n")
+      else:
+        self.fortune_url_passed = False
+        out.write("FAIL\n\n")
+      out.flush
 
     # Update
-    try:
-      out.write( "VERIFYING Update (" + self.update_url + "2) ...\n" )
+    if self.runTests[self.UPDATE]:
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING UPDATE ({url})
+        -----------------------------------------------------
+        """.format(url = self.update_url)))
       out.flush()
+
       url = self.benchmarker.generate_url(self.update_url + "2", self.port)
-      self.__curl_url(url, out, err)
-      self.update_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.update_url_passed = False
+      output = self.__curl_url(url, self.UPDATE, out, err)
+      out.write("VALIDATING UPDATE ... ")
+      if self.validateUpdate(output, out, err):
+        self.update_url_passed = True
+        out.write("PASS\n\n")
+      else:
+        self.update_url_passed = False
+        out.write("FAIL\n\n")
+      out.flush
 
     # plaintext
-    try:
-      out.write( "VERIFYING Plaintext (" + self.plaintext_url + ") ...\n" )
+    if self.runTests[self.PLAINTEXT]:
+      out.write(textwrap.dedent("""
+        -----------------------------------------------------
+          VERIFYING PLAINTEXT ({url})
+        -----------------------------------------------------
+        """.format(url = self.plaintext_url)))
       out.flush()
+
       url = self.benchmarker.generate_url(self.plaintext_url, self.port)
-      self.__curl_url(url, out, err)
-      self.plaintext_url_passed = True
-    except (AttributeError, subprocess.CalledProcessError) as e:
-      self.plaintext_url_passed = False
+      output = self.__curl_url(url, self.PLAINTEXT, out, err)
+      out.write("VALIDATING PLAINTEXT ... ")
+      if self.validatePlaintext(output, out, err):
+        self.plaintext_url_passed = True
+        out.write("PASS\n\n")
+      else:
+        self.plaintext_url_passed = False
+        out.write("FAIL\n\n")
+      out.flush
+
   ############################################################
   # End verify_urls
   ############################################################
@@ -198,17 +535,17 @@ class FrameworkTest:
   ############################################################
   def contains_type(self, type):
     try:
-      if type == 'json' and self.json_url != None:
+      if type == self.JSON and self.json_url != None:
         return True
-      if type == 'db' and self.db_url != None:
+      if type == self.DB and self.db_url != None:
         return True
-      if type == 'query' and self.query_url != None:
+      if type == self.QUERY and self.query_url != None:
         return True
-      if type == 'fortune' and self.fortune_url != None:
+      if type == self.FORTUNE and self.fortune_url != None:
         return True
-      if type == 'update' and self.update_url != None:
+      if type == self.UPDATE and self.update_url != None:
         return True
-      if type == 'plaintext' and self.plaintext_url != None:
+      if type == self.PLAINTEXT and self.plaintext_url != None:
         return True
     except AttributeError:
       pass
@@ -225,93 +562,139 @@ class FrameworkTest:
   ############################################################
   def benchmark(self, out, err):
     # JSON
-    try:
-      if self.json_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "json"):
+    if self.runTests[self.JSON]:
+      try:
         out.write("BENCHMARKING JSON ... ") 
         out.flush()
-        remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'json'), err)
-        results = self.__parse_test('json')
-        self.benchmarker.report_results(framework=self, test="json", results=results['results'])
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.JSON)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.json_url_passed:
+          remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.JSON)
+        self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
-    except AttributeError:
-      pass
+      except AttributeError:
+        pass
 
     # DB
-    try:
-      if self.db_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "db"):
+    if self.runTests[self.DB]:
+      try:
         out.write("BENCHMARKING DB ... ") 
         out.flush()
-        remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'db'), err)
-        results = self.__parse_test('db')
-        self.benchmarker.report_results(framework=self, test="db", results=results['results'])
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.DB)
+        warning_file = self.benchmarker.warning_file(self.name, self.DB)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.db_url_warn:
+          with open(warning_file, 'w'):
+            pass
+        if self.db_url_passed:
+          remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.DB)
+        self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
         out.write( "Complete\n" )
-    except AttributeError:
-      traceback.print_exc()
-      pass
+      except AttributeError:
+        pass
 
     # Query
-    try:
-      if self.query_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "query"):
+    if self.runTests[self.QUERY]:
+      try:
         out.write("BENCHMARKING Query ... ")
         out.flush()
-        remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'query'), err)
-        results = self.__parse_test('query')
-        self.benchmarker.report_results(framework=self, test="query", results=results['results'])
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.QUERY)
+        warning_file = self.benchmarker.warning_file(self.name, self.QUERY)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.query_url_warn:
+          with open(warning_file, 'w'):
+            pass
+        if self.query_url_passed:
+          remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.QUERY)
+        self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
-    except AttributeError:
-      traceback.print_exc()
-      pass
+      except AttributeError:
+        pass
 
     # fortune
-    try:
-      if self.fortune_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "fortune"):
+    if self.runTests[self.FORTUNE]:
+      try:
         out.write("BENCHMARKING Fortune ... ") 
         out.flush()
-        remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'fortune'), err)
-        results = self.__parse_test('fortune')
-        self.benchmarker.report_results(framework=self, test="fortune", results=results['results'])
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.FORTUNE)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.fortune_url_passed:
+          remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.FORTUNE)
+        self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
-    except AttributeError:
-      traceback.print_exc()
-      pass
+      except AttributeError:
+        pass
 
     # update
-    try:
-      if self.update_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "update"):
+    if self.runTests[self.UPDATE]:
+      try:
         out.write("BENCHMARKING Update ... ") 
         out.flush()
-        remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'update'), err)
-        results = self.__parse_test('update')
-        self.benchmarker.report_results(framework=self, test="update", results=results['results'])
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.UPDATE)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.update_url_passed:
+          remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.UPDATE)
+        self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
-    except AttributeError:
-      # TODO - this needs to report some logging
-      traceback.print_exc()
-      pass
+      except AttributeError:
+        pass
 
     # plaintext
-    try:
-      if self.plaintext_url_passed and (self.benchmarker.type == "all" or self.benchmarker.type == "plaintext"):
+    if self.runTests[self.PLAINTEXT]:
+      try:
         out.write("BENCHMARKING Plaintext ... ")
         out.flush()
-        remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
-        self.__run_benchmark(remote_script, self.benchmarker.output_file(self.name, 'plaintext'), err)
-        results = self.__parse_test('plaintext')
-        self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
+        results = None
+        output_file = self.benchmarker.output_file(self.name, self.PLAINTEXT)
+        if not os.path.exists(output_file):
+          with open(output_file, 'w'):
+            # Simply opening the file in write mode should create the empty file.
+            pass
+        if self.plaintext_url_passed:
+          remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
+          self.__run_benchmark(remote_script, output_file, err)
+        results = self.__parse_test(self.PLAINTEXT)
+        self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
-    except AttributeError:
-      traceback.print_exc()
-      pass
+      except AttributeError:
+        traceback.print_exc()
+        pass
+
   ############################################################
   # End benchmark
   ############################################################
@@ -322,34 +705,34 @@ class FrameworkTest:
   ############################################################
   def parse_all(self):
     # JSON
-    if os.path.exists(self.benchmarker.output_file(self.name, 'json')):
-      results = self.__parse_test('json')
-      self.benchmarker.report_results(framework=self, test="json", results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.JSON)):
+      results = self.__parse_test(self.JSON)
+      self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
     
     # DB
-    if os.path.exists(self.benchmarker.output_file(self.name, 'db')):
-      results = self.__parse_test('db')
-      self.benchmarker.report_results(framework=self, test="db", results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.DB)):
+      results = self.__parse_test(self.DB)
+      self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
     
     # Query
-    if os.path.exists(self.benchmarker.output_file(self.name, 'query')):
-      results = self.__parse_test('query')
-      self.benchmarker.report_results(framework=self, test="query", results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.QUERY)):
+      results = self.__parse_test(self.QUERY)
+      self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
 
     # Fortune
-    if os.path.exists(self.benchmarker.output_file(self.name, 'fortune')):
-      results = self.__parse_test('fortune')
-      self.benchmarker.report_results(framework=self, test="fortune", results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.FORTUNE)):
+      results = self.__parse_test(self.FORTUNE)
+      self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
 
     # Update
-    if os.path.exists(self.benchmarker.output_file(self.name, 'update')):
-      results = self.__parse_test('update')
-      self.benchmarker.report_results(framework=self, test="update", results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.UPDATE)):
+      results = self.__parse_test(self.UPDATE)
+      self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
 
     # Plaintext
-    if os.path.exists(self.benchmarker.output_file(self.name, 'plaintext')):
-      results = self.__parse_test('plaintext')
-      self.benchmarker.report_results(framework=self, test="plaintext", results=results['results'])
+    if os.path.exists(self.benchmarker.get_output_file(self.name, self.PLAINTEXT)):
+      results = self.__parse_test(self.PLAINTEXT)
+      self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
   ############################################################
   # End parse_all
   ############################################################
@@ -362,82 +745,83 @@ class FrameworkTest:
       results = dict()
       results['results'] = []
       
-      with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
-        is_warmup = True
-        rawData = None
-        for line in raw_data:
+      if os.path.exists(self.benchmarker.get_output_file(self.name, test_type)):
+        with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
+          is_warmup = True
+          rawData = None
+          for line in raw_data:
 
-          if "Queries:" in line or "Concurrency:" in line:
-            is_warmup = False
-            rawData = None
-            continue
-          if "Warmup" in line or "Primer" in line:
-            is_warmup = True
-            continue
+            if "Queries:" in line or "Concurrency:" in line:
+              is_warmup = False
+              rawData = None
+              continue
+            if "Warmup" in line or "Primer" in line:
+              is_warmup = True
+              continue
 
-          if not is_warmup:
-            if rawData == None:
-              rawData = dict()
-              results['results'].append(rawData)
+            if not is_warmup:
+              if rawData == None:
+                rawData = dict()
+                results['results'].append(rawData)
 
-            #if "Requests/sec:" in line:
-            #  m = re.search("Requests/sec:\s+([0-9]+)", line)
-            #  rawData['reportedResults'] = m.group(1)
+              #if "Requests/sec:" in line:
+              #  m = re.search("Requests/sec:\s+([0-9]+)", line)
+              #  rawData['reportedResults'] = m.group(1)
+                
+              # search for weighttp data such as succeeded and failed.
+              if "Latency" in line:
+                m = re.findall("([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
+                if len(m) == 4:
+                  rawData['latencyAvg'] = m[0]
+                  rawData['latencyStdev'] = m[1]
+                  rawData['latencyMax'] = m[2]
+              #    rawData['latencyStdevPercent'] = m[3]
               
-            # search for weighttp data such as succeeded and failed.
-            if "Latency" in line:
-              m = re.findall("([0-9]+\.*[0-9]*[us|ms|s|m|%]+)", line)
-              if len(m) == 4:
-                rawData['latencyAvg'] = m[0]
-                rawData['latencyStdev'] = m[1]
-                rawData['latencyMax'] = m[2]
-            #    rawData['latencyStdevPercent'] = m[3]
-            
-            #if "Req/Sec" in line:
-            #  m = re.findall("([0-9]+\.*[0-9]*[k|%]*)", line)
-            #  if len(m) == 4:
-            #    rawData['requestsAvg'] = m[0]
-            #    rawData['requestsStdev'] = m[1]
-            #    rawData['requestsMax'] = m[2]
-            #    rawData['requestsStdevPercent'] = m[3]
+              #if "Req/Sec" in line:
+              #  m = re.findall("([0-9]+\.*[0-9]*[k|%]*)", line)
+              #  if len(m) == 4:
+              #    rawData['requestsAvg'] = m[0]
+              #    rawData['requestsStdev'] = m[1]
+              #    rawData['requestsMax'] = m[2]
+              #    rawData['requestsStdevPercent'] = m[3]
+                
+              #if "requests in" in line:
+              #  m = re.search("requests in ([0-9]+\.*[0-9]*[ms|s|m|h]+)", line)
+              #  if m != None: 
+              #    # parse out the raw time, which may be in minutes or seconds
+              #    raw_time = m.group(1)
+              #    if "ms" in raw_time:
+              #      rawData['total_time'] = float(raw_time[:len(raw_time)-2]) / 1000.0
+              #    elif "s" in raw_time:
+              #      rawData['total_time'] = float(raw_time[:len(raw_time)-1])
+              #    elif "m" in raw_time:
+              #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 60.0
+              #    elif "h" in raw_time:
+              #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 3600.0
+             
+              if "requests in" in line:
+                m = re.search("([0-9]+) requests in", line)
+                if m != None: 
+                  rawData['totalRequests'] = int(m.group(1))
               
-            #if "requests in" in line:
-            #  m = re.search("requests in ([0-9]+\.*[0-9]*[ms|s|m|h]+)", line)
-            #  if m != None: 
-            #    # parse out the raw time, which may be in minutes or seconds
-            #    raw_time = m.group(1)
-            #    if "ms" in raw_time:
-            #      rawData['total_time'] = float(raw_time[:len(raw_time)-2]) / 1000.0
-            #    elif "s" in raw_time:
-            #      rawData['total_time'] = float(raw_time[:len(raw_time)-1])
-            #    elif "m" in raw_time:
-            #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 60.0
-            #    elif "h" in raw_time:
-            #      rawData['total_time'] = float(raw_time[:len(raw_time)-1]) * 3600.0
-           
-            if "requests in" in line:
-              m = re.search("([0-9]+) requests in", line)
-              if m != None: 
-                rawData['totalRequests'] = int(m.group(1))
-            
-            if "Socket errors" in line:
-              if "connect" in line:
-                m = re.search("connect ([0-9]+)", line)
-                rawData['connect'] = int(m.group(1))
-              if "read" in line:
-                m = re.search("read ([0-9]+)", line)
-                rawData['read'] = int(m.group(1))
-              if "write" in line:
-                m = re.search("write ([0-9]+)", line)
-                rawData['write'] = int(m.group(1))
-              if "timeout" in line:
-                m = re.search("timeout ([0-9]+)", line)
-                rawData['timeout'] = int(m.group(1))
-            
-            if "Non-2xx" in line:
-              m = re.search("Non-2xx or 3xx responses: ([0-9]+)", line)
-              if m != None: 
-                rawData['5xx'] = int(m.group(1))
+              if "Socket errors" in line:
+                if "connect" in line:
+                  m = re.search("connect ([0-9]+)", line)
+                  rawData['connect'] = int(m.group(1))
+                if "read" in line:
+                  m = re.search("read ([0-9]+)", line)
+                  rawData['read'] = int(m.group(1))
+                if "write" in line:
+                  m = re.search("write ([0-9]+)", line)
+                  rawData['write'] = int(m.group(1))
+                if "timeout" in line:
+                  m = re.search("timeout ([0-9]+)", line)
+                  rawData['timeout'] = int(m.group(1))
+              
+              if "Non-2xx" in line:
+                m = re.search("Non-2xx or 3xx responses: ([0-9]+)", line)
+                if m != None: 
+                  rawData['5xx'] = int(m.group(1))
               
 
       return results
@@ -518,31 +902,25 @@ class FrameworkTest:
   # Dump HTTP response and headers. Throw exception if there
   # is an HTTP error.
   ############################################################
-  def __curl_url(self, url, out, err):
+  def __curl_url(self, url, testType, out, err):
     # Use -i to output response with headers.
     # Don't use -f so that the HTTP response code is ignored.
     # Use --stderr - to redirect stderr to stdout so we get
     # error output for sure in stdout.
     # Use -sS to hide progress bar, but show errors.
     subprocess.check_call(["curl", "-i", "-sS", url], stderr=err, stdout=out)
+    # HTTP output may not end in a newline, so add that here.
+    out.write( "\n\n" )
     out.flush()
     err.flush()
-    # HTTP output may not end in a newline, so add that here.
-    out.write( "\n" )
-    out.flush()
-    # In the curl invocation above we could not use -f because
-    # then the HTTP response would not be output, so use -f in
-    # an additional invocation so that if there is an HTTP error,
-    # subprocess.CalledProcessError will be thrown. Note that this
-    # uses check_output() instead of check_call() so that we can
-    # ignore the HTTP response because we already output that in
-    # the first curl invocation.
-    subprocess.check_output(["curl", "-fsS", url], stderr=err)
-    out.flush()
-    err.flush()
-    # HTTP output may not end in a newline, so add that here.
-    out.write( "\n" )
-    out.flush()
+
+    # We need to get the respond body from the curl and return it.
+    p = subprocess.Popen(["curl", "-s", url], stdout=subprocess.PIPE)
+    output = p.communicate()
+
+    if output:
+      # We have the response body - return it
+      return output[0]
   ##############################################################
   # End __curl_url
   ##############################################################
@@ -550,10 +928,11 @@ class FrameworkTest:
   ##########################################################################################
   # Constructor
   ##########################################################################################  
-  def __init__(self, name, directory, benchmarker, args):
+  def __init__(self, name, directory, benchmarker, runTests, args):
     self.name = name
     self.directory = directory
     self.benchmarker = benchmarker
+    self.runTests = runTests
     self.__dict__.update(args)
 
     # ensure directory has __init__.py file so that we can use it as a Python package
@@ -586,13 +965,22 @@ def parse_config(config, directory, benchmarker):
     for key, value in test.iteritems():
       test_name = config['framework']
       
+      runTests = dict()
+
+      runTests["json"] = (benchmarker.type == "all" or benchmarker.type == "json") and value.get("json_url", False)
+      runTests["db"] = (benchmarker.type == "all" or benchmarker.type == "db") and value.get("db_url", False)
+      runTests["query"] = (benchmarker.type == "all" or benchmarker.type == "query") and value.get("query_url", False)
+      runTests["fortune"] = (benchmarker.type == "all" or benchmarker.type == "fortune") and value.get("fortune_url", False)
+      runTests["update"] = (benchmarker.type == "all" or benchmarker.type == "update") and value.get("update_url", False)
+      runTests["plaintext"] = (benchmarker.type == "all" or benchmarker.type == "plaintext") and value.get("plaintext_url", False)
+
       # if the test uses the 'defualt' keywork, then we don't 
       # append anything to it's name. All configs should only have 1 default
       if key != 'default':
         # we need to use the key in the test_name
         test_name = test_name + "-" + key
 
-      tests.append(FrameworkTest(test_name, directory, benchmarker, value))
+      tests.append(FrameworkTest(test_name, directory, benchmarker, runTests, value))
 
   return tests
 ##############################################################

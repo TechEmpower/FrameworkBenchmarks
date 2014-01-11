@@ -20,7 +20,8 @@ start(_Type, _Args) ->
 	Dispatch = cowboy_router:compile([
 		{'_', [
 			{"/json", json_handler, []},
-			{"/db", db_handler, []}
+			{"/db", db_handler, []},
+      {"/query", query_handler, []}
 		]}
 	]),
 	{ok, _} = cowboy:start_http(http, 5000, [{port, 8080}], [

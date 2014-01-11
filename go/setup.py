@@ -12,6 +12,7 @@ def start(args, logfile, errfile):
     subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\go&& go get ./...", shell=True, cwd="go", stderr=errfile, stdout=logfile)
     subprocess.Popen("setup.bat", shell=True, cwd="go", stderr=errfile, stdout=logfile) 
     return 0
+  os.environ["GOPATH"] = os.path.expanduser('~/FrameworkBenchmarks/go')
   subprocess.call("go get ./...", shell=True, cwd="go", stderr=errfile, stdout=logfile) 
   subprocess.Popen("go run src/hello/hello.go".rsplit(" "), cwd="go", stderr=errfile, stdout=logfile)
   return 0

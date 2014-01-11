@@ -18,7 +18,7 @@ This is the Grizzly portion of a [benchmarking test suite](../) comparing a vari
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
 * [Grizzly 2.3.3](http://grizzly.java.net/)
-* [Jackson 2.2.2](http://wiki.fasterxml.com/JacksonHome)
+* [Jackson 2.3.0](http://wiki.fasterxml.com/JacksonHome)
 
 ## Test URLs
 

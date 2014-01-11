@@ -9,7 +9,7 @@ import com.google.inject.Singleton;
 public class HelloJsonController {
 
     public Result index() {
-	return Results.json().render(new Message("Hello, world"));
+	return Results.json().render(new Message("Hello, World!"));
     }
 
     public static class Message {
