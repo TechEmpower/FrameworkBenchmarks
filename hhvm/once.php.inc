@@ -9,7 +9,7 @@ class Benchmark {
         // hhvm doesn't support charset=utf8 in the DSN yet
         // See https://github.com/facebook/hhvm/issues/1309
         if ($need_utf8) {
-            $attrs[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES 'utf8'";
+            $attrs[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES utf8";
         }
         $this->pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', $attrs);
     }
