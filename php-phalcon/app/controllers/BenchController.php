@@ -22,7 +22,7 @@ class BenchController extends \Phalcon\Mvc\Controller
     public function dbAction()
     {
 
-        $queries = $this->request->getQuery('queries', null, 1);
+	$queries = min(500, max(1, $this->filter->sanitize($this->request->getQuery('queries', null, 1), "int")));
 
         $worlds = array();
 
