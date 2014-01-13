@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%-5level %msg%n</pattern>
-        </encoder>
-    </appender>
+ 	<include resource="org/springframework/boot/logging/logback/base.xml"/>	
 
     <logger name="org.apache" level="ERROR"/>
     <logger name="org.springframework.boot.autoconfigure" level="INFO"/>
@@ -14,7 +10,7 @@
     <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO"/>
 
     <root level="WARN">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 
 </configuration>
