@@ -16,7 +16,7 @@ def start(args, logfile, errfile):
   subprocess.check_call("m2sh load -config mongrel2.conf", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
   subprocess.check_call("sudo m2sh start -name test", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
   
-  for i in range(0, 2):
+  for i in range(1, 43):
     # launch workers
     subprocess.Popen("./nawak_app " + str(i), shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
   return 0
