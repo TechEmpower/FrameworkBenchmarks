@@ -46,9 +46,6 @@ class RawController extends AbstractController
     public function fortunesAction ()
     {
         $view = $this->getView();
-        /* @var $view eYaf\Layout */
-
-        $view->setLayout('fortunes');
 
         $dbh = DatabaseManager::getInstance()->getConnection();
 
