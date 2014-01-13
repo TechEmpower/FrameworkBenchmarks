@@ -22,16 +22,19 @@ bool ApplicationController::preFilter()
 
 QString ApplicationController::jsonEncode(const QVariantMap &obj)
 {
+    const QString JSON_OBJ_INT("\"%1\":%2, ");
+    const QString JSON_OBJ_STR("\"%1\":\"%2\", ");
     QString ret("{");
+
     for (QMap<QString, QVariant>::const_iterator i = obj.begin(); i != obj.end(); ++i) {
         switch (i.value().type()) {
         case QVariant::UInt:
         case QVariant::Int:
-            ret += QString("\"%1\":%2, ").arg(i.key()).arg(i.value().toInt());
+            ret += JSON_OBJ_INT.arg(i.key()).arg(i.value().toInt());
             break;
         default:
-            ret += QString("\"%1\":\"%2\", ").arg(i.key()).arg(i.value().toString());
-            break; 
+            ret += JSON_OBJ_STR.arg(i.key()).arg(i.value().toString());
+            break;
         }
     }
     ret.chop(2);
@@ -42,6 +45,7 @@ QString ApplicationController::jsonEncode(const QVariantMap &obj)
 QString ApplicationController::jsonEncode(const QList<QVariantMap> &lst)
 {
     QString ret("[");
+
     for (QListIterator<QVariantMap> it(lst); it.hasNext(); ) {
         ret += jsonEncode(it.next());
         ret += QLatin1String(", ");

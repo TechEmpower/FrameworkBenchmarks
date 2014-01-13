@@ -29,10 +29,10 @@ void WorldController::queries(const QString &num)
 {
     QList<QVariantMap> worlds;
     int d = num.toInt();
+
     for (int i = 0; i < d; ++i) {
         int id = Tf::random(9999) + 1;
-        World world = World::get(id);
-        worlds << world.toVariantMap();
+        worlds << World::get(id).toVariantMap();
     }
     setContentType("application/json; charset=UTF-8");
     renderText(jsonEncode(worlds), false);
@@ -124,9 +124,11 @@ void WorldController::updates(const QString &num)
 {
     QList<QVariantMap> worlds;
     int d = num.toInt();
+    World world;
+
     for (int i = 0; i < d; ++i) {
         int id = Tf::random(9999) + 1;
-        World world = World::get(id);
+        world = World::get(id);
         world.setRandomNumber( Tf::random(9999) + 1 );
         world.update();
 	worlds << world.toVariantMap();
