@@ -11,7 +11,6 @@
    [com.postspectacular/rotor "0.1.0"]
    [com.taoensso/tower "1.5.1"]
    [markdown-clj "0.9.40"]
-   [org.clojure/java.jdbc "0.2.3"]
    [mysql/mysql-connector-java "5.1.28"]
    [korma "0.3.0-RC5"]
    [log4j
