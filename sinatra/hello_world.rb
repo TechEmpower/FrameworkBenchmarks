@@ -9,6 +9,8 @@ set :static, false
 # Specify the encoder - otherwise, sinatra/json inefficiently
 # attempts to load one of several on each request
 set :json_encoder => :to_json
+# Don't prefix JSON results with { "world": {...} }
+ActiveRecord::Base.include_root_in_json = false
 
 if RUBY_PLATFORM == 'java'
   set :database, { :adapter => 'jdbcmysql', :database => 'hello_world', :username => 'benchmarkdbuser', :password => 'benchmarkdbpass', :host => 'localhost', :pool => 256, :timeout => 5000 }
@@ -47,6 +49,6 @@ get '/db' do
       World.find(Random.rand(10000) + 1)
     end
 
-    json results
+    results.length == 1 ? json(results.first) : json(results)
   end
 end
