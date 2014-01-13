@@ -5,7 +5,7 @@
       "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
@@ -26,7 +26,7 @@
     "mongodb": {
       "setup_file": "setup",
       "db_url": "/mongodb/db",
-      "query_url": "/mongodb/db?queries=",
+      "query_url": "/mongodb/queries?queries=",
       "fortune_url": "/mongodb/fortunes",
       "port": 8080,
       "approach": "Realistic",
