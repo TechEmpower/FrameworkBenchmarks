@@ -1,5 +1,5 @@
 {
-  "framework": "ninja",
+  "framework": "ninja-standalone",
   "tests": [{
     "default": {
       "setup_file": "setup",

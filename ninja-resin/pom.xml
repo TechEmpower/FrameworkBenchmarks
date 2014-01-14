@@ -15,10 +15,31 @@
     </properties>
 
     <dependencies>
+        
+        <!-- Ninja uses Guava 15.0 and Guava 15.0 by default has problems
+             with Resin (and other EE6 containers). Therefore we
+             force the usage of the following dependency which overwrites
+             the original one.
+             More here: https://code.google.com/p/guava-libraries/issues/detail?id=1527
+             -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>15.0</version>
+            <classifier>cdi1.0</classifier>
+        </dependency>
+
         <dependency>
             <groupId>org.ninjaframework</groupId>
             <artifactId>ninja-standalone</artifactId>
             <version>${ninja.version}</version>
+            <exclusions>
+                <!-- See the comment above why we exclude guava -->
+                <exclusion>
+                    <groupId>com.google.guava </groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
