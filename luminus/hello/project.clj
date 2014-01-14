@@ -10,7 +10,6 @@
    [com.taoensso/timbre "1.6.0"]
    [com.postspectacular/rotor "0.1.0"]
    [com.taoensso/tower "1.5.1"]
-   [markdown-clj "0.9.38"]
    [org.clojure/java.jdbc "0.3.0-alpha1"]
    [mysql/mysql-connector-java "5.1.6"]
    [korma "0.3.0-RC6"]
