@@ -207,6 +207,14 @@ class Installer:
     self.__run_command("./configure", cwd="urweb")
     self.__run_command("make", cwd="urweb")
     self.__run_command("sudo make install", cwd="urweb")
+    
+    #
+    # HHVM
+    #
+    self.__run_command("wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -")
+    self.__run_command("echo deb http://dl.hhvm.com/ubuntu precise main | sudo tee /etc/apt/sources.list.d/hhvm.list")
+    self.__run_command("sudo apt-get update")
+    self.__run_command("sudo apt-get install hhvm")
 
     #######################################
     # Webservers
