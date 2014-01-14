@@ -41,8 +41,8 @@ MongoDB: http://localhost/mongodb/db
 
 ### Variable Query Test
     
-MySQL: http://localhost/db?queries=2
-MongoDB: http://localhost/mongodb/db?queries=2
+MySQL: http://localhost/queries?queries=2
+MongoDB: http://localhost/mongodb/queries?queries=2
 
 ### Update Test
     

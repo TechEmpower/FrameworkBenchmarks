@@ -21,8 +21,13 @@ class BenchController extends \Phalcon\Mvc\Controller
 
     public function dbAction()
     {
+        return $this->sendContentAsJson($this->getRandomWorld());
+    }
 
-        $queries = $this->request->getQuery('queries', null, 1);
+    public function queriesAction()
+    {
+
+	$queries = min(500, max(1, $this->filter->sanitize($this->request->getQuery('queries', null, 1), "int")));
 
         $worlds = array();
 
@@ -30,12 +35,7 @@ class BenchController extends \Phalcon\Mvc\Controller
             $worlds[] = $this->getRandomWorld();
         }
 
-        if (count($worlds) == 1) {
-            return $this->sendContentAsJson($worlds[0]);
-        }
-        else {
-            return $this->sendContentAsJson($worlds);
-        }
+        return $this->sendContentAsJson($worlds);
     }
 
     public function fortunesAction()
