@@ -8,7 +8,7 @@ def start(args, logfile, errfile):
 
   try:
     subprocess.check_call("lein clean", shell=True, cwd="compojure/hello", stderr=errfile, stdout=logfile)
-    subprocess.check_call("lein ring uberwar", shell=True, cwd="luminus/hello" stderr=errfile, stdout=logfile)
+    subprocess.check_call("lein ring uberwar", shell=True, cwd="luminus/hello", stderr=errfile, stdout=logfile)
     subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
     subprocess.check_call("cp luminus/hello/target/hello-luminus-standalone.war $RESIN_HOME/webapps/luminus.war", shell=True)
     subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
