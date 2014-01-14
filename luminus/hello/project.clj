@@ -10,7 +10,6 @@
    [com.taoensso/timbre "2.7.1"]
    [com.postspectacular/rotor "0.1.0"]
    [com.taoensso/tower "1.5.1"]
-   [markdown-clj "0.9.40"]
    [mysql/mysql-connector-java "5.1.28"]
    [korma "0.3.0-RC5"]
    [log4j
