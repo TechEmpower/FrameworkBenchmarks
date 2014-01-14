@@ -18,7 +18,7 @@ def start(args, logfile, errfile):
     if os.name == 'nt':
       # Not supported !
       return 0
-    subprocess.check_call("hhvm --config " + home + "/FrameworkBenchmarks/hhvm/deploy/config.hdf -m daemon", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("hhvm --config " + home + "/FrameworkBenchmarks/hhvm/deploy/config.hdf -m server", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
