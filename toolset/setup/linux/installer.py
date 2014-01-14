@@ -200,7 +200,7 @@ class Installer:
 
     #
     # Ur/Web
-    #
+    # Min version: ac1be85e91ad --- HTML5 directive
 
     self.__run_command("hg clone http://hg.impredicative.com/urweb/")
     self.__run_command("./autogen.sh", cwd="urweb")
