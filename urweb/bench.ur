@@ -103,7 +103,7 @@ val fortune_conversion : json fortune_t =
 
 (** Here's the additional fortune mandated by the spec. *)
 val new_fortune : fortune_t =
-    {Id = 0, Message = "Additional fortune added at request time"}
+    {Id = 0, Message = "Additional fortune added at request time."}
 
 (** Actual page handler *)
 fun fortunes () =
