@@ -188,6 +188,7 @@ class Installer:
     self.__run_command("git clone git://github.com/Araq/Nimrod.git nimrod", retry=True)
     self.__run_command("git reset --hard \"43d12ef7495238977e4f236f6d25bce5bd687967\"", cwd="nimrod")
     self.__run_command("git clone --depth 1 git://github.com/nimrod-code/csources.git", cwd="nimrod", retry=True)
+    self.__run_command("chmod +x build.sh", cwd="nimrod/csources")
     self.__run_command("./build.sh", cwd="nimrod/csources")
     self.__run_command("bin/nimrod c koch", cwd="nimrod")
     self.__run_command("./koch boot -d:release", cwd="nimrod")
