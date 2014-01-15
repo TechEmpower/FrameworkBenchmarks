@@ -18,10 +18,12 @@ import static hello.HelloWebServer.JSON_UTF8;
 final class DbMongoHandler implements HttpHandler {
   private final ObjectMapper objectMapper;
   private final DB database;
+  private final boolean multiple;
 
-  DbMongoHandler(ObjectMapper objectMapper, DB database) {
+  DbMongoHandler(ObjectMapper objectMapper, DB database, boolean multiple) {
     this.objectMapper = Objects.requireNonNull(objectMapper);
     this.database = Objects.requireNonNull(database);
+    this.multiple = multiple;
   }
 
   @Override
@@ -30,7 +32,13 @@ final class DbMongoHandler implements HttpHandler {
       exchange.dispatch(this);
       return;
     }
-    int queries = Helper.getQueries(exchange);
+    
+    int queries = 1;
+    if(multiple)
+    {
+      queries = Helper.getQueries(exchange);
+    }
+    
     World[] worlds = new World[queries];
     for (int i = 0; i < queries; i++) {
       DBObject object = database.getCollection("World").findOne(
@@ -45,13 +53,16 @@ final class DbMongoHandler implements HttpHandler {
     }
     exchange.getResponseHeaders().put(
         Headers.CONTENT_TYPE, JSON_UTF8);
-    if (queries == 1)
+    
+    if (multiple)
     {
-      exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds[0]));
+      // If a multiple query then response must be an array
+      exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
     }
     else
     {
-      exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
+      // If a single query then response must be an object
+      exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds[0]));
     }
   }
 }
