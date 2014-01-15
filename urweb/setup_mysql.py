@@ -7,7 +7,7 @@ def start(args, logfile, errfile):
                  'password=benchmarkdbpass '
                  'host=' + args.database_host)
 
-  subprocess.check_call("urweb -db \"" + conn_string + "\" bench", shell=True, cwd="urweb", stderr=errfile, stdout=logfile)
+  subprocess.check_call("urweb -dbms mysql -db \"" + conn_string + "\" bench", shell=True, cwd="urweb", stderr=errfile, stdout=logfile)
 
   threads = str(args.max_threads * 2)
   subprocess.Popen("./bench.exe -q -k -t " + threads,
