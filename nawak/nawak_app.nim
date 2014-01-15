@@ -73,7 +73,7 @@ get "/fortunes":
     fortunes.newSeq(rows.len)
     for j, row in rows.pairs:
         fortunes[j] = unrowTFortune(row)
-    let new_fortune: TFortune = (id: rows.len + 1,
+    let new_fortune: TFortune = (id: 0,
                                  message: "Additional fortune added at request time.")
     fortunes.add new_fortune
     sort(fortunes, proc(x, y: TFortune): int =

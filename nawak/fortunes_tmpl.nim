@@ -10,7 +10,7 @@
   <table>
     <tr><th>id</th><th>message</th></tr>
   #for fortune in items(fortunes):
-    <tr><td>${fortune.id}</th><th>${escape(fortune.message)}</th></tr>
+    <tr><td>${fortune.id}</td><td>${escape(fortune.message)}</td></tr>
   #end for
   </table>
 </body>
