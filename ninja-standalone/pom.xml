@@ -12,6 +12,7 @@
         <ninja.version>2.5.1</ninja.version>
         <mysql.version>5.1.26</mysql.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
