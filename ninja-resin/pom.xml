@@ -87,6 +87,10 @@
                 <version>2.4</version>
                 <configuration>
                     <warName>ninja</warName>
+                    <!-- Because seomhow in Techempower's platform the nasty
+                         guava default version still gets included we exlude
+                         it by force in the war file -->
+                    <packagingExcludes>WEB-INF/lib/guava-15.0.jar</packagingExcludes>
                 </configuration>
             </plugin>
             
