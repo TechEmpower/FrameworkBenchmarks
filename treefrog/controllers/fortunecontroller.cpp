@@ -13,6 +13,9 @@ FortuneController::FortuneController(const FortuneController &)
 void FortuneController::index()
 {
     QList<Fortune> fortuneList = Fortune::getAll();
+    Fortune fortune;
+    fortune.setMessage(QLatin1String("Additional fortune added at request time."));
+    fortuneList << fortune;
     // Sort
     qSort(fortuneList.begin(), fortuneList.end(), caseSensitiveLessThan);
     texport(fortuneList);
