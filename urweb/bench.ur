@@ -17,25 +17,15 @@ fun addHeaders () =
   setHeader (blessResponseHeader "Date") (timef "%a, %d %b %Y %H:%M:%S GMT" n);
   setHeader (blessResponseHeader "Server") "Ur/Web"
 
-(** This function handles processing of a "queries" query string parameter to a
-  * few of the benchmarks.  The URL representation is mandated by the spec, so
-  * we don't get to use Ur/Web's standard handling of parameters.  Instead,
-  * there's some manual parsing. :-( *)
-fun parseQueries oqs : int =
-  let
-    val qt = case oqs of
-        None => Some ("queries", "1")
-      | Some qs => String.split (show qs) #"="
-    val on = case qt of
-        Some ("queries", x) => read x
-      | _ => Some 1
-  in
-    case on of
-      None => 1
-    | Some x => if x > 500 then 500
-                else if x < 1 then 1
-                else x
-  end
+(** This function handles processing of a "queries" string parameter to a few of
+  * the benchmarks.  The URL representation is mandated by the spec, so we need
+  * to do some manual parsing to handle malformed inputs. :-( *)
+fun parseQueries s =
+    case read s of
+        None => 1
+      | Some n => if n > 500 then 500
+                  else if n < 1 then 1
+                  else n
 
 (** Most of the benchmarks return results as JSON.
   * Here's a handy function to automate wrapping an arbitrary JSONable value as
@@ -96,8 +86,8 @@ fun db () =
 
 (** * Test type 3: Multiple database queries *)
 
-fun queries oqs =
-  rows <- List.tabulateM (fn _ => n <- random_id; world_find n) (parseQueries oqs);
+fun queries s =
+  rows <- List.tabulateM (fn _ => n <- random_id; world_find n) (parseQueries s);
   returnJson rows
 
 
@@ -113,7 +103,7 @@ val fortune_conversion : json fortune_t =
 
 (** Here's the additional fortune mandated by the spec. *)
 val new_fortune : fortune_t =
-    {Id = 0, Message = "Additional fortune added at request time"}
+    {Id = 0, Message = "Additional fortune added at request time."}
 
 (** Actual page handler *)
 fun fortunes () =
@@ -133,9 +123,9 @@ fun fortunes () =
 
 (** * Test type 5: Database updates *)
 
-fun updates oqs =
+fun updates s =
   rows <- List.tabulateM (fn _ => n <- random_id; world_find n)
-                         (parseQueries oqs);
+                         (parseQueries s);
   rows' <- List.mapM (fn r => n <- random_id;
                          return (r -- #RandomNumber ++ {RandomNumber = n}))
                      rows;
