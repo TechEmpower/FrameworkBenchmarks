@@ -8,7 +8,7 @@ def start(args, logfile, errfile):
   
   try:
     subprocess.check_call("mvn clean compile assembly:single", shell=True, cwd="ninja-standalone", stderr=errfile, stdout=logfile)
-    subprocess.check_call("java -Dninja.port=8080 -jar target/ninja-standalone-0.0.1-SNAPSHOT-jar-with-dependencies.jar", cwd="ninja-standalone", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.Popen("java -Dninja.port=8080 -jar target/ninja-standalone-0.0.1-SNAPSHOT-jar-with-dependencies.jar", cwd="ninja-standalone", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
