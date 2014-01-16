@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
+
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
@@ -42,6 +43,11 @@ final class UpdatesMongoHandler implements HttpHandler {
       // produce the correct output and side effects.
       //
       DBObject object = database.getCollection("World").findOne(key);
+      
+      @SuppressWarnings("unused")
+      // Per test requirement the old value must be read
+      int oldRandomNumber = ((Number) object.get("randomNumber")).intValue(); 
+      
       int newRandomNumber = Helper.randomWorld();
       object.put("randomNumber", newRandomNumber);
       database.getCollection("World").update(key, object);
