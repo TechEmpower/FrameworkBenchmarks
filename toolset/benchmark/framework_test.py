@@ -423,6 +423,7 @@ class FrameworkTest:
       out.write("-----------------------------------------------------\n\n")
       out.flush()
 
+      self.query_url_warn = False
       url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
       output2 = self.__curl_url(url2, self.QUERY, out, err)
       if not self.validateQueryOneOrLess(output2, out, err):
