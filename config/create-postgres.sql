@@ -2,7 +2,7 @@
 DROP TABLE IF EXISTS World;
 CREATE TABLE  World (
   id integer NOT NULL,
-  randomnumber integer NOT NULL default 0,
+  randomNumber integer NOT NULL default 0,
   PRIMARY KEY  (id)
 );
 

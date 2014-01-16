@@ -185,12 +185,15 @@ class Installer:
     #
     # Nimrod
     #
-    self.__download("http://www.nimrod-code.org/download/nimrod_0.9.2.zip")
-    self.__run_command("unzip nimrod_0.9.2.zip")
-    self.__run_command("chmod +x build.sh", cwd="nimrod")
-    self.__run_command("./build.sh", cwd="nimrod")
-    self.__run_command("chmod +x install.sh", cwd="nimrod")
-    self.__run_command("sudo ./install.sh /usr/bin", cwd="nimrod")
+    self.__run_command("git clone git://github.com/Araq/Nimrod.git nimrod", retry=True)
+    self.__run_command("git reset --hard \"43d12ef7495238977e4f236f6d25bce5bd687967\"", cwd="nimrod")
+    self.__run_command("git clone --depth 1 git://github.com/nimrod-code/csources.git", cwd="nimrod", retry=True)
+    self.__run_command("chmod +x build.sh", cwd="nimrod/csources")
+    self.__run_command("./build.sh", cwd="nimrod/csources")
+    self.__run_command("bin/nimrod c koch", cwd="nimrod")
+    self.__run_command("./koch boot -d:release", cwd="nimrod")
+    self.__run_command("sudo ./koch install /usr/bin", cwd="nimrod")
+
 
     #
     # Racket
@@ -252,6 +255,22 @@ class Installer:
     self.__run_command("cat ../config/resin.properties > resin-4.0.36/conf/resin.properties")
     self.__run_command("mv conf/resin.xml conf/resin.xml.orig", cwd="resin-4.0.36")
     self.__run_command("cat ../config/resin.xml > resin-4.0.36/conf/resin.xml")
+
+    #
+    # Mongrel2
+    #
+    self.__download("http://download.zeromq.org/zeromq-4.0.3.tar.gz")
+    self.__run_command("tar xzf zeromq-4.0.3.tar.gz")
+    self.__run_command("./configure", cwd="zeromq-4.0.3")
+    self.__run_command("make", cwd="zeromq-4.0.3")
+    self.__run_command("sudo make install", cwd="zeromq-4.0.3")
+    self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev")
+    self.__run_command("sudo ldconfig -v")
+    self.__run_command("git clone git://github.com/zedshaw/mongrel2.git mongrel2", retry=True)
+    # for zmq4, we update the following file manually (not in the stable master branch yet)
+    self.__download("https://raw.github.com/zedshaw/mongrel2/9b565eeea003783c47502c2d350b99c9684ce97c/src/zmq_compat.h")
+    self.__run_command("mv -f zmq_compat.h mongrel2/src/")
+    self.__run_command("make clean all && sudo make install", cwd="mongrel2")
 
     ##############################################################
     # Frameworks
@@ -319,6 +338,10 @@ class Installer:
     self.__run_command("mkdir build", cwd="onion")
     self.__run_command("cmake ..", cwd="onion/build")
     self.__run_command("make", cwd="onion/build")
+
+    # nawak
+    #
+    self.__run_command("git clone git://github.com/idlewan/nawak.git nawak/nawak", retry=True)
 
     print("\nINSTALL: Finished installing server software\n")
   ############################################################
