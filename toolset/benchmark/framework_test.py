@@ -449,7 +449,6 @@ class FrameworkTest:
         self.query_url_warn = True
         out.write(self.query_url + "501 - WARNING\n\n")
       else:
-        self.query_url_warn = False
         out.write(self.query_url + "501 - PASS\n\n")
       out.write("-----------------------------------------------------\n\n\n")
       out.flush()
