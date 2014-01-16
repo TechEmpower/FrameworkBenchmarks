@@ -3,9 +3,11 @@
 // 1. JSON Test
 //
 
+require_once dirname(__FILE__).'/once.php.inc';
+
 function main() {
-  $data = json_encode(array('message' => 'Hello, World!'));
-  header('Content-Type: application/json');
-  echo $data;
+    $b = new Benchmark();
+    $b->bench_json();
 }
+
 main();

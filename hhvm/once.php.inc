@@ -3,12 +3,27 @@
 class Benchmark {
     var $pdo;
 
-    public function setup_db()
+    public function setup_db($need_utf8 = true)
     {
-        $this->pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
-            PDO::ATTR_PERSISTENT => true,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"
-        ));
+        $attrs     = array(PDO::ATTR_PERSISTENT => true);
+        // hhvm doesn't support charset=utf8 in the DSN yet
+        // See https://github.com/facebook/hhvm/issues/1309
+        if ($need_utf8) {
+            $attrs[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES utf8";
+        }
+        $this->pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', $attrs);
+    }
+
+    public function bench_json()
+    {
+        header('Content-Type: application/json');
+        echo json_encode(array('message' => 'Hello, World!'));
+    }
+
+    public function bench_plaintext()
+    {
+        header('Content-Type: text/plain; charset=utf-8');
+        echo 'Hello, World!';
     }
 
     public function bench_db()
@@ -121,9 +136,9 @@ class Benchmark {
 <th>message</th>
 </tr>
 EOM;
-        foreach ( $arr as $id => &$fortune ) {
+        foreach ( $arr as $id => $fortune ) {
             echo '<tr>';
-            echo '<td>'.htmlspecialchars($id, ENT_QUOTES, 'utf-8').'</td>';
+            echo '<td>'.$id.'</td>';
             echo '<td>'.htmlspecialchars($fortune, ENT_QUOTES, 'utf-8').'</td>';
             echo '</tr>';
         }
