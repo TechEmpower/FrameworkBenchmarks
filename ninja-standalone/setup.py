@@ -17,7 +17,7 @@ def stop(logfile, errfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if 'ninja-standalone' in line:
+    if 'target/ninja-standalone' in line:
       pid = int(line.split(None, 2)[1])
-      os.kill(pid, 9)
+      os.kill(pid, 15)
   return 0
