@@ -1,6 +1,5 @@
 package hello;
 
-import com.google.common.net.MediaType;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;

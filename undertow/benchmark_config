@@ -24,7 +24,7 @@
     "mysql" : {
       "setup_file": "setup",
       "db_url": "/db/mysql",
-      "query_url": "/db/mysql?queries=",
+      "query_url": "/queries/mysql?queries=",
       "fortune_url": "/fortunes/mysql",
       "update_url": "/updates/mysql?queries=",
       "port": 8080,
@@ -45,7 +45,7 @@
     "postgresql" : {
       "setup_file": "setup",
       "db_url": "/db/postgresql",
-      "query_url": "/db/postgresql?queries=",
+      "query_url": "/queries/postgresql?queries=",
       "fortune_url": "/fortunes/postgresql",
       "update_url": "/updates/postgresql?queries=",
       "port": 8080,
@@ -66,7 +66,7 @@
     "mongodb" : {
       "setup_file": "setup",
       "db_url": "/db/mongodb",
-      "query_url": "/db/mongodb?queries=",
+      "query_url": "/queries/mongodb?queries=",
       "fortune_url": "/fortunes/mongodb",
       "update_url": "/updates/mongodb?queries=",
       "port": 8080,
