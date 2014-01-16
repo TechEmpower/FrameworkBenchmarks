@@ -1,0 +1,45 @@
+{
+  "framework": "ee7-wildfly",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/ee7-wildfly/rest/json",
+      "plaintext_url": "/ee7-wildfly/rest/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "EE7",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "Wildfly",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ee7-wildfly",
+      "notes": "",
+      "versus": ""
+    },
+    "mysql" : {
+      "setup_file": "setup",
+      "db_url": "/ee7-wildfly/rest/db",
+      "query_url": "/ee7-wildfly/rest/queries?queries=",
+      "fortune_url": "/ee7-wildfly/fortunes.xhtml",
+      "update_url": "/ee7-wildfly/rest/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "EE7",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Wildfly",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ee7-wildfly",
+      "notes": "",
+      "versus": ""
+    }   
+  }]
+}

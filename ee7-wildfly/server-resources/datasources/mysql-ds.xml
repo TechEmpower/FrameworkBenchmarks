@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.jboss.org/ironjacamar/schema">
+    <datasource jta="true" jndi-name="java:jboss/datasources/helloWorld" pool-name="MySqlDS" enabled="true" use-java-context="true" use-ccm="true">
+		<connection-url>jdbc:mysql://${database.host}:3306/hello_world</connection-url>
+		<driver>mysql-connector-java-${version.mysql.connector}.jar</driver>
+		<pool>
+		    <prefill>false</prefill>
+		    <min-pool-size>32</min-pool-size>
+		    <max-pool-size>256</max-pool-size>
+		</pool>
+		<security>
+		    <user-name>benchmarkdbuser</user-name>
+		    <password>benchmarkdbpass</password>
+		</security>
+		<validation>
+		    <validate-on-match>false</validate-on-match>
+		    <background-validation>false</background-validation>
+		    <use-fast-fail>false</use-fast-fail>
+		</validation>
+     </datasource>
+</datasources>
