@@ -43,6 +43,8 @@ end
 
 get '/db' do
   queries = (params[:queries] || 1).to_i
+  queries = 1 if queries < 1
+  queries = 500 if queries > 500
 
   ActiveRecord::Base.connection_pool.with_connection do
     results = (1..queries).map do
