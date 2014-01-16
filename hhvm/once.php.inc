@@ -3,7 +3,7 @@
 class Benchmark {
     var $pdo;
 
-    public function setup_db($need_utf8 = false)
+    public function setup_db($need_utf8 = true)
     {
         $attrs     = array(PDO::ATTR_PERSISTENT => true);
         // hhvm doesn't support charset=utf8 in the DSN yet
@@ -28,7 +28,7 @@ class Benchmark {
 
     public function bench_db()
     {
-        $this->setup_db(false);
+        $this->setup_db();
 
         // Create an array with the response string.
         $arr = array();
@@ -50,7 +50,7 @@ class Benchmark {
 
     public function bench_queries($query_count=1)
     {
-        $this->setup_db(false);
+        $this->setup_db();
 
         // Create an array with the response string.
         $arr = array();
@@ -76,7 +76,7 @@ class Benchmark {
 
     public function bench_updates($query_count)
     {
-        $this->setup_db(false);
+        $this->setup_db();
 
         // Create an array with the response string.
         $arr = array();
@@ -112,7 +112,7 @@ class Benchmark {
 
     public function bench_fortunes()
     {
-        $this->setup_db(true);
+        $this->setup_db();
 
         // Define query
         $statement = $this->pdo->query( 'SELECT id, message FROM Fortune' );
