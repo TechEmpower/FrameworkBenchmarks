@@ -19,6 +19,8 @@ class BenchController extends Controller
     public function dbAction(Request $request)
     {
         $queries = $request->query->getInt('queries', 1);
+        $queries = max(1, $queries);
+        $queries = min(500, $queries);
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = array();
