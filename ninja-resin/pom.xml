@@ -2,13 +2,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ninjaframework.techempower</groupId>
-    <artifactId>ninja-standalone</artifactId>
+    <artifactId>ninja-resin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ninja-standalone</name>
+    <name>ninja-resin</name>
     <description>Ninja test for the TechEmpower/FrameworkBenchmarks project</description>
 
     <properties>
-        <java-version>1.7</java-version>
+        <java.version>1.7</java.version>
         <ninja.version>2.5.1</ninja.version>
         <mysql.version>5.1.26</mysql.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
@@ -16,17 +16,32 @@
     </properties>
 
     <dependencies>
+        
+        <!-- Ninja uses Guava 15.0 and Guava 15.0 by default has problems
+             with Resin (and other EE6 containers). Therefore we
+             force the usage of the following dependency which overwrites
+             the original one.
+             More here: https://code.google.com/p/guava-libraries/issues/detail?id=1527
+             -->
         <dependency>
-            <groupId>org.ninjaframework</groupId>
-            <artifactId>ninja-servlet</artifactId>
-            <version>${ninja.version}</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>15.0</version>
+            <classifier>cdi1.0</classifier>
         </dependency>
 
         <dependency>
             <groupId>org.ninjaframework</groupId>
             <artifactId>ninja-standalone</artifactId>
             <version>${ninja.version}</version>
-        </dependency>   
+            <exclusions>
+                <!-- See the comment above why we exclude guava -->
+                <exclusion>
+                    <groupId>com.google.guava </groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -47,7 +62,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
-                        
+                
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -62,8 +77,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>${java-version}</source>
-                    <target>${java-version}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
 			
@@ -73,6 +88,10 @@
                 <version>2.4</version>
                 <configuration>
                     <warName>ninja</warName>
+                    <!-- Because seomhow in Techempower's platform the nasty
+                         guava default version still gets included we exlude
+                         it by force in the war file -->
+                    <packagingExcludes>WEB-INF/lib/guava-15.0.jar</packagingExcludes>
                 </configuration>
             </plugin>
             
