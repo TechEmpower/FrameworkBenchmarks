@@ -6,10 +6,10 @@ LDFLAGS=-lonion -ljson -lmysqlclient -lpthread -L/usr/lib64/mysql/ -L.
 hello.o: onion hello.c 
 
 hello: hello.o libonion_static.a base_html.o fortunes_html.o
-	cc hello.o base_html.o fortunes_html.o libonion_static.a -o hello -lpthread -lmysqlclient -ljson -lgnutls -lrt
+	cc hello.o base_html.o fortunes_html.o libonion_static.a -o hello -lpthread `mysql_config --libs` `pkg-config json --libs` -lgnutls -lgcrypt -lrt
 
 clean:
-	rm -f *.o hello base_html.c fortunes_html.c
+	rm -r *.o hello base_html.c fortunes_html.c
 
 	
 libonion_static.a: onion
