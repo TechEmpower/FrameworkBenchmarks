@@ -42,6 +42,12 @@ get '/plaintext' do
 end
 
 get '/db' do
+  ActiveRecord::Base.connection_pool.with_connection do
+    json(World.find(Random.rand(10000) + 1))
+  end
+end
+
+get '/queries' do
   queries = (params[:queries] || 1).to_i
   queries = 1 if queries < 1
   queries = 500 if queries > 500
@@ -51,6 +57,6 @@ get '/db' do
       World.find(Random.rand(10000) + 1)
     end
 
-    results.length == 1 ? json(results.first) : json(results)
+    json(results)
   end
 end
