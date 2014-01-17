@@ -11,6 +11,7 @@ import csv
 import sys
 import logging
 import socket
+import glob
 from multiprocessing import Process
 from datetime import datetime
 
@@ -299,9 +300,11 @@ class Benchmarker:
   @property
   def __gather_tests(self):
     tests = []
-    # Loop through each directory (we assume we're being run from the benchmarking root)
-    # and look for the files that signify a benchmark test
-    for dirname, dirnames, filenames in os.walk('.'):
+
+    # Assume we are running from FrameworkBenchmarks
+    config_files = glob.glob('*/benchmark_config')
+
+    for config_file_name in config_files:
       # Look for the benchmark_config file, this will set up our tests.
       # Its format looks like this:
       #
@@ -320,30 +323,28 @@ class Benchmarker:
       #     ...
       #   }]
       # }
-      if 'benchmark_config' in filenames:
-        config = None
-        config_file_name = os.path.join(dirname, 'benchmark_config')
+      config = None
 
-        with open(config_file_name, 'r') as config_file:
-          # Load json file into config object
-          try:
-            config = json.load(config_file)
-          except:
-            print("Error loading '%s'." % config_file_name)
-            raise
+      with open(config_file_name, 'r') as config_file:
+        # Load json file into config object
+        try:
+          config = json.load(config_file)
+        except:
+          print("Error loading '%s'." % config_file_name)
+          raise
 
-        if config == None:
-          continue
+      if config is None:
+        continue
 
-        test = framework_test.parse_config(config, dirname[2:], self)
-        # If the user specified which tests to run, then 
-        # we can skip over tests that are not in that list
-        if self.test == None:
-          tests = tests + test
-        else:
-          for atest in test:
-            if atest.name in self.test:
-              tests.append(atest)
+      test = framework_test.parse_config(config, os.path.dirname(config_file_name), self)
+      # If the user specified which tests to run, then 
+      # we can skip over tests that are not in that list
+      if self.test == None:
+        tests = tests + test
+      else:
+        for atest in test:
+          if atest.name in self.test:
+            tests.append(atest)
 
     tests.sort(key=lambda x: x.name)
     return tests
