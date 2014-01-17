@@ -40,7 +40,7 @@ $app->register(new DoctrineOrmServiceProvider, array(
 ));
 
 $app->get('/json', function() {
-    return new JsonResponse(array('message' => 'Hello World!'));
+    return new JsonResponse(array('message' => 'Hello, World!'));
 });
 
 $app->get('/db', function(Request $request) use ($app) {
@@ -51,6 +51,10 @@ $app->get('/db', function(Request $request) use ($app) {
 
     for ($i = 0; $i < $queries; ++$i) {
         $worlds[] =  $repo->find(mt_rand(1, 10000));
+    }
+
+    if ($queries == 1) {
+        $worlds = $worlds[0];
     }
 
     return new JsonResponse($worlds);

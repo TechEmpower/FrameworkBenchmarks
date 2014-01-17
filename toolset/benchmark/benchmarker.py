@@ -11,6 +11,7 @@ import csv
 import sys
 import logging
 import socket
+import glob
 from multiprocessing import Process
 from datetime import datetime
 
@@ -116,11 +117,19 @@ class Benchmarker:
     host = self.client_user + "@" + self.client_host
     if subprocess.call(['ssh', host, checkWrk]) or subprocess.call(['ssh', host, checkWrkPipeline]):
       raise Exception("wrk and/or wrk-pipeline are not properly installed. Not running tests.")
+    ## Check if wrk (and wrk-pipeline) is installed and executable, if not, raise an exception
+    #if not (os.access("/usr/local/bin/wrk", os.X_OK) and os.access("/usr/local/bin/wrk-pipeline", os.X_OK)):
+    #  raise Exception("wrk and/or wrk-pipeline are not properly installed. Not running tests.")
 
 
     ##########################
     # Run tests
     ##########################
+    print textwrap.dedent("""
+      =====================================================
+        Running Tests ...
+      =====================================================
+      """)
     self.__run_tests(all_tests)
 
     ##########################
@@ -183,12 +192,23 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # get_output_file(test_name, test_type)
+  # returns the output file name for this test_name and 
+  # test_type timestamp/test_type/test_name/raw 
+  ############################################################
+  def get_output_file(self, test_name, test_type):
+    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
+  ############################################################
+  # End get_output_file
+  ############################################################
+
+  ############################################################
   # output_file(test_name, test_type)
   # returns the output file for this test_name and test_type
   # timestamp/test_type/test_name/raw 
   ############################################################
   def output_file(self, test_name, test_type):
-    path = os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
+    path = self.get_output_file(test_name, test_type)
     try:
       os.makedirs(os.path.dirname(path))
     except OSError:
@@ -196,6 +216,33 @@ class Benchmarker:
     return path
   ############################################################
   # End output_file
+  ############################################################
+
+  ############################################################
+  # get_warning_file(test_name, test_type)
+  # returns the output file name for this test_name and 
+  # test_type timestamp/test_type/test_name/raw 
+  ############################################################
+  def get_warning_file(self, test_name, test_type):
+    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "warn")
+  ############################################################
+  # End get_warning_file
+  ############################################################
+
+  ############################################################
+  # warning_file(test_name, test_type)
+  # returns the warning file for this test_name and test_type
+  # timestamp/test_type/test_name/raw 
+  ############################################################
+  def warning_file(self, test_name, test_type):
+    path = self.get_warning_file(test_name, test_type)
+    try:
+      os.makedirs(os.path.dirname(path))
+    except OSError:
+      pass
+    return path
+  ############################################################
+  # End warning_file
   ############################################################
 
   ############################################################
@@ -209,7 +256,7 @@ class Benchmarker:
       pass
     return path
   ############################################################
-  # End output_file
+  # End full_results_directory
   ############################################################
 
   ############################################################
@@ -231,7 +278,20 @@ class Benchmarker:
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
 
-    self.results['rawData'][test][framework.name] = results
+    # If results has a size from the parse, then it succeeded.
+    if results:
+      self.results['rawData'][test][framework.name] = results
+      # This may already be set for single-tests
+      if framework.name not in self.results['succeeded'][test]:
+        self.results['succeeded'][test].append(framework.name)
+      # Add this type
+      if (os.path.exists(self.get_warning_file(framework.name, test)) and
+          framework.name not in self.results['warning'][test]):
+        self.results['warning'][test].append(framework.name)
+    else:
+      # This may already be set for single-tests
+      if framework.name not in self.results['failed'][test]:
+        self.results['failed'][test].append(framework.name)
 
   ############################################################
   # End report_results
@@ -247,9 +307,11 @@ class Benchmarker:
   @property
   def __gather_tests(self):
     tests = []
-    # Loop through each directory (we assume we're being run from the benchmarking root)
-    # and look for the files that signify a benchmark test
-    for dirname, dirnames, filenames in os.walk('.'):
+
+    # Assume we are running from FrameworkBenchmarks
+    config_files = glob.glob('*/benchmark_config')
+
+    for config_file_name in config_files:
       # Look for the benchmark_config file, this will set up our tests.
       # Its format looks like this:
       #
@@ -268,22 +330,28 @@ class Benchmarker:
       #     ...
       #   }]
       # }
-      if 'benchmark_config' in filenames:
-        config = None
-        config_file_name = os.path.join(dirname, 'benchmark_config')
+      config = None
 
-        with open(config_file_name, 'r') as config_file:
-          # Load json file into config object
-          try:
-            config = json.load(config_file)
-          except:
-            print("Error loading '%s'." % config_file_name)
-            raise
+      with open(config_file_name, 'r') as config_file:
+        # Load json file into config object
+        try:
+          config = json.load(config_file)
+        except:
+          print("Error loading '%s'." % config_file_name)
+          raise
 
-        if config == None:
-          continue
+      if config is None:
+        continue
 
-        tests = tests + framework_test.parse_config(config, dirname[2:], self)
+      test = framework_test.parse_config(config, os.path.dirname(config_file_name), self)
+      # If the user specified which tests to run, then 
+      # we can skip over tests that are not in that list
+      if self.test == None:
+        tests = tests + test
+      else:
+        for atest in test:
+          if atest.name in self.test:
+            tests.append(atest)
 
     tests.sort(key=lambda x: x.name)
     return tests
@@ -421,11 +489,16 @@ class Benchmarker:
       # These features do not work on Windows
       for test in tests:
         if __name__ == 'benchmark.benchmarker':
+          print textwrap.dedent("""
+            -----------------------------------------------------
+              Running Test: {name} ...
+            -----------------------------------------------------
+            """.format(name=test.name))
           test_process = Process(target=self.__run_test, args=(test,))
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
           if(test_process.is_alive()):
-            logging.debug("Child process for %s is still alive. Terminating.",test.name)
+            logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
             test_process.terminate()
     logging.debug("End __run_tests.")
@@ -445,83 +518,91 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __run_test(self, test):
-      # If the user specified which tests to run, then 
-      # we can skip over tests that are not in that list
-      if self.test != None and test.name not in self.test:
-        return
-
+    try:
+      os.makedirs(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name)))
+    except:
+      pass
+    with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
+         open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
       if hasattr(test, 'skip'):
         if test.skip.lower() == "true":
-          logging.info("Test %s benchmark_config specifies to skip this test. Skipping.", test.name)
+          out.write("Test {name} benchmark_config specifies to skip this test. Skipping.\n".format(name=test.name))
           return
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
         # application server or the database server don't match
         # our current environment
-        logging.info("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.")
+        out.write("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.\n")
         return 
       
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
-        logging.info("Test %s has been added to the excludes list. Skipping.", test.name)
+        out.write("Test {name} has been added to the excludes list. Skipping.\n".format(name=test.name))
         return
       
       # If the test does not contain an implementation of the current test-type, skip it
       if self.type != 'all' and not test.contains_type(self.type):
-        logging.info("Test type %s does not contain an implementation of the current test-type. Skipping", self.type)
+        out.write("Test type {type} does not contain an implementation of the current test-type. Skipping.\n".format(type=self.type))
         return
 
-      logging.debug("test.os.lower() = %s  test.database_os.lower() = %s",test.os.lower(),test.database_os.lower()) 
-      logging.debug("self.results['frameworks'] != None: " + str(self.results['frameworks'] != None))
-      logging.debug("test.name: " + str(test.name))
-      logging.debug("self.results['completed']: " + str(self.results['completed']))
+      out.write("test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".format(os=test.os.lower(),dbos=test.database_os.lower()))
+      out.write("self.results['frameworks'] != None: {val}\n".format(val=str(self.results['frameworks'] != None)))
+      out.write("test.name: {name}\n".format(name=str(test.name)))
+      out.write("self.results['completed']: {completed}\n".format(completed=str(self.results['completed'])))
       if self.results['frameworks'] != None and test.name in self.results['completed']:
-        logging.info('Framework %s found in latest saved data. Skipping.',str(test.name))
+        out.write('Framework {name} found in latest saved data. Skipping.\n'.format(name=str(test.name)))
         return
 
-      print textwrap.dedent("""
+      out.flush()
+
+      out.write( textwrap.dedent("""
       =====================================================
         Beginning {name}
       -----------------------------------------------------
-      """.format(name=test.name))
+      """.format(name=test.name)) )
+      out.flush()
 
       ##########################
       # Start this test
       ##########################  
-      print textwrap.dedent("""
+      out.write( textwrap.dedent("""
       -----------------------------------------------------
         Starting {name}
       -----------------------------------------------------
-      """.format(name=test.name))
+      """.format(name=test.name)) )
+      out.flush()
       try:
-        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
-        p.communicate("""
-          sudo restart mysql
-          sudo restart mongodb
-		      sudo /etc/init.d/postgresql restart
-        """)
-        time.sleep(10)
+        if test.requires_database():
+          p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=err, shell=True)
+          p.communicate("""
+            sudo restart mysql
+            sudo restart mongodb
+  		      sudo /etc/init.d/postgresql restart
+          """)
+          time.sleep(10)
 
         if self.__is_port_bound(test.port):
           self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-          print textwrap.dedent("""
+          err.write( textwrap.dedent("""
             ---------------------------------------------------------
               Error: Port {port} is not available before start {name}
             ---------------------------------------------------------
-            """.format(name=test.name, port=str(test.port)))
+            """.format(name=test.name, port=str(test.port))) )
+          err.flush()
           return
 
-        result = test.start()
+        result = test.start(out, err)
         if result != 0: 
-          test.stop()
+          test.stop(out, err)
           time.sleep(5)
-          print "ERROR: Problem starting " + test.name
-          print textwrap.dedent("""
+          err.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
+          err.write( textwrap.dedent("""
             -----------------------------------------------------
               Stopped {name}
             -----------------------------------------------------
-            """.format(name=test.name))
+            """.format(name=test.name)) )
+          err.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
           return
         
@@ -530,81 +611,102 @@ class Benchmarker:
         ##########################
         # Verify URLs
         ##########################
-        print textwrap.dedent("""
-        -----------------------------------------------------
-          Verifying URLs for {name}
-        -----------------------------------------------------
-        """.format(name=test.name))
-        test.verify_urls()
+        test.verify_urls(out, err)
+        out.flush()
+        err.flush()
 
         ##########################
         # Benchmark this test
         ##########################
         if self.mode == "benchmark":
-          print textwrap.dedent("""
+          out.write( textwrap.dedent("""
             -----------------------------------------------------
               Benchmarking {name} ...
             -----------------------------------------------------
-            """.format(name=test.name))
-          test.benchmark()
+            """.format(name=test.name)) )
+          out.flush()
+          test.benchmark(out, err)
+          out.flush()
+          err.flush()
 
         ##########################
         # Stop this test
         ##########################
-        test.stop()
+        out.write( textwrap.dedent("""
+        -----------------------------------------------------
+          Stopping {name}
+        -----------------------------------------------------
+        """.format(name=test.name)) )
+        out.flush()
+        test.stop(out, err)
+        out.flush()
+        err.flush()
         time.sleep(5)
 
         if self.__is_port_bound(test.port):
           self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-          print textwrap.dedent("""
+          err.write( textwrap.dedent("""
             -----------------------------------------------------
               Error: Port {port} was not released by stop {name}
             -----------------------------------------------------
-            """.format(name=test.name, port=str(test.port)))
+            """.format(name=test.name, port=str(test.port))) )
+          err.flush()
           return
 
-        print textwrap.dedent("""
+        out.write( textwrap.dedent("""
         -----------------------------------------------------
           Stopped {name}
         -----------------------------------------------------
-        """.format(name=test.name))
+        """.format(name=test.name)) )
+        out.flush()
         time.sleep(5)
 
         ##########################################################
         # Save results thus far into toolset/benchmark/latest.json
         ##########################################################
 
-        print textwrap.dedent("""
+        out.write( textwrap.dedent("""
         ----------------------------------------------------
         Saving results through {name}
         ----------------------------------------------------
-        """.format(name=test.name))
+        """.format(name=test.name)) )
+        out.flush()
         self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
-      except (OSError, IOError, subprocess.CalledProcessError):
+      except (OSError, IOError, subprocess.CalledProcessError) as e:
         self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
-        print textwrap.dedent("""
+        err.write( textwrap.dedent("""
         -----------------------------------------------------
           Subprocess Error {name}
         -----------------------------------------------------
-        """.format(name=test.name))
+        {err}
+        {trace}
+        """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
+        err.flush()
         try:
-          test.stop()
-        except (subprocess.CalledProcessError):
+          test.stop(out, err)
+        except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
-          print textwrap.dedent("""
-        -----------------------------------------------------
-          Subprocess Error: Test .stop() raised exception {name}
-        -----------------------------------------------------
-        """.format(name=test.name))
-      except (KeyboardInterrupt, SystemExit):
-        test.stop()
-        print """
+          err.write( textwrap.dedent("""
+          -----------------------------------------------------
+            Subprocess Error: Test .stop() raised exception {name}
+          -----------------------------------------------------
+          {err}
+          {trace}
+          """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
+          err.flush()
+      except (KeyboardInterrupt, SystemExit) as e:
+        test.stop(out)
+        out.write( """
         -----------------------------------------------------
           Cleaning up....
         -----------------------------------------------------
-        """
+        """)
+        out.flush()
         self.__finish()
         sys.exit()
+
+      out.close()
+      err.close()
 
   ############################################################
   # End __run_tests
@@ -837,6 +939,27 @@ class Benchmarker:
       self.results['rawData']['update'] = dict()
       self.results['rawData']['plaintext'] = dict()
       self.results['completed'] = dict()
+      self.results['succeeded'] = dict()
+      self.results['succeeded']['json'] = []
+      self.results['succeeded']['db'] = []
+      self.results['succeeded']['query'] = []
+      self.results['succeeded']['fortune'] = []
+      self.results['succeeded']['update'] = []
+      self.results['succeeded']['plaintext'] = []
+      self.results['failed'] = dict()
+      self.results['failed']['json'] = []
+      self.results['failed']['db'] = []
+      self.results['failed']['query'] = []
+      self.results['failed']['fortune'] = []
+      self.results['failed']['update'] = []
+      self.results['failed']['plaintext'] = []
+      self.results['warning'] = dict()
+      self.results['warning']['json'] = []
+      self.results['warning']['db'] = []
+      self.results['warning']['query'] = []
+      self.results['warning']['fortune'] = []
+      self.results['warning']['update'] = []
+      self.results['warning']['plaintext'] = []
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:

@@ -43,12 +43,16 @@ def db(request):
   # by creating dicts, we don't need to user the model serializer, which is probably slow and only appropriate
   # for complicated serializations of joins and crazy query sets etc
   # test xrange vs range if the query number is gigantic
-  worlds = uj_dumps([{'id' : r, 'randomNumber' : g(id=r).randomnumber} for r in [rp() for q in xrange(queries)]])  
+  if queries == 1:
+    r = random.randint(1,10000)
+    worlds = uj_dumps({'id' : r, 'randomNumber' : g(id=r).randomnumber})
+  else:
+    worlds = uj_dumps([{'id' : r, 'randomNumber' : g(id=r).randomnumber} for r in [rp() for q in xrange(queries)]])
   return HttpResponse(worlds, mimetype="application/json")
 
 def fortunes(request):
   fortunes = list(Fortune.objects.all())
-  fortunes.append(Fortune(id=0, message="Additional message added at runtime."))
+  fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
 
   fortunes = sorted(fortunes, key=attrgetter('message'))
 
@@ -68,4 +72,4 @@ def update(request):
 
     worlds.append({'id' : r, 'randomNumber' : w.randomnumber})
 
-  return HttpResponse(worlds, mimetype="application/json")
+  return HttpResponse(uj_dumps(worlds), mimetype="application/json")

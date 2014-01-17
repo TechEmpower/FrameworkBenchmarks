@@ -11,12 +11,18 @@ final class PlainText
 
   import PlainText._
 
-  Get { hello }
+  Get { hello.duplicate }
 
 }
 
 object PlainText {
 
-  private final val hello = "Hello, World!".getBytes(`UTF-8`)
+  private final val hello = {
+    val a = "Hello, World!".getBytes(`UTF-8`)
+    val buf = ByteBuffer.allocateDirect(a.length)
+    buf.put(a)
+    buf.flip
+    buf
+  }
 
 }

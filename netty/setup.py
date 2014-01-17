@@ -3,16 +3,16 @@ import sys
 import setup_util
 import os
 
-def start(args):
+def start(args, logfile, errfile):
   try:
-    subprocess.check_call("mvn clean compile assembly:single", shell=True, cwd="netty")
-    subprocess.Popen("java -Dio.netty.noResourceLeakDetection=true -jar netty-example-0.1-jar-with-dependencies.jar".rsplit(" "), cwd="netty/target")
+    subprocess.check_call("mvn clean compile assembly:single", shell=True, cwd="netty", stderr=errfile, stdout=logfile)
+    subprocess.Popen("java -jar netty-example-0.1-jar-with-dependencies.jar".rsplit(" "), cwd="netty/target", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile, errfile):
   if os.name == 'nt':
-    subprocess.check_call("wmic process where \"CommandLine LIKE '%netty-example%'\" call terminate")
+    subprocess.check_call("wmic process where \"CommandLine LIKE '%netty-example%'\" call terminate", stderr=errfile, stdout=logfile)
   else:
     p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
     out, err = p.communicate()

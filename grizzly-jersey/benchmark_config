@@ -20,7 +20,7 @@
       "database_os": "Linux",
       "display_name": "grizzly-jersey",
       "notes": "",
-      "versus": "servlet"
+      "versus": "grizzly"
     }
   }]
 }

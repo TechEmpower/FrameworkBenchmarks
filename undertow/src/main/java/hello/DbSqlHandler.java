@@ -1,12 +1,13 @@
 package hello;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.MediaType;
+
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 
 import javax.sql.DataSource;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,10 +21,12 @@ import static hello.HelloWebServer.JSON_UTF8;
 final class DbSqlHandler implements HttpHandler {
   private final ObjectMapper objectMapper;
   private final DataSource database;
+  private final boolean multiple;
 
-  DbSqlHandler(ObjectMapper objectMapper, DataSource database) {
+  DbSqlHandler(ObjectMapper objectMapper, DataSource database, boolean multiple) {
     this.objectMapper = Objects.requireNonNull(objectMapper);
     this.database = Objects.requireNonNull(database);
+    this.multiple = multiple;
   }
 
   @Override
@@ -32,7 +35,13 @@ final class DbSqlHandler implements HttpHandler {
       exchange.dispatch(this);
       return;
     }
-    int queries = Helper.getQueries(exchange);
+    
+    int queries = 1;
+    if(multiple)
+    {
+      queries = Helper.getQueries(exchange);
+    }
+    
     World[] worlds = new World[queries];
     try (Connection connection = database.getConnection();
          PreparedStatement statement = connection.prepareStatement(
@@ -51,6 +60,16 @@ final class DbSqlHandler implements HttpHandler {
     }
     exchange.getResponseHeaders().put(
         Headers.CONTENT_TYPE, JSON_UTF8);
-    exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
+    
+    if (multiple)
+    {
+      // If a multiple query then response must be an array
+      exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
+    }
+    else
+    {
+      // If a single query then response must be an object
+      exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds[0]));
+    }
   }
 }

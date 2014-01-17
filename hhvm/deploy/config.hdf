@@ -1,0 +1,46 @@
+# main configuration file
+
+# Application PID File
+PidFile = /tmp/FrameworkBenchmarks/hhvm/hhvm.pid
+
+# Server settings
+Server {
+  Port = 8080
+  SourceRoot = /tmp/FrameworkBenchmarks/hhvm
+  DefaultDocument = index.php
+}
+
+# Disable logging completely
+Log {
+  UseLogFile = false
+  UseSyslog = false
+  Level = Error
+  File = /tmp/FrameworkBenchmarks/hhvm/error.log
+}
+
+# Enable jit for production mode
+Eval {
+    Jit = true
+    CheckSymLink = false
+}
+
+# Repo file
+Repo {
+  Central {
+    Path = /tmp/FrameworkBenchmarks/hhvm/.hhvm.hhbc
+  }
+}
+
+# Setup basic rewrite
+VirtualHost {
+    * {
+        Pattern = .*
+        RewriteRules {
+            * {
+                pattern = ^(.*)$
+                to = $1.php
+                qsa = true
+            }
+        }
+    }
+}

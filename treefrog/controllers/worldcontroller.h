@@ -17,6 +17,7 @@ public slots:
     void index();
     void plain();
     void show(const QString &pk);
+    void queries();
     void queries(const QString &num);
     void random();
     void entry();

@@ -28,7 +28,7 @@ class Console
 	{
 		error_reporting(E_ALL | E_STRICT);
 
-		ini_set("error_log", NULL);
+		ini_set("error_log", stderr);
 		ini_set("log_errors", 1);
 		ini_set("html_errors", 0);
 		ini_set("display_errors", 0);

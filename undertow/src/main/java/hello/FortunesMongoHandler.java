@@ -2,7 +2,6 @@ package hello;
 
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.google.common.net.MediaType;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -37,11 +36,11 @@ final class FortunesMongoHandler implements HttpHandler {
       return;
     }
     List<Fortune> fortunes = new ArrayList<>();
-    DBCursor cursor = database.getCollection("fortune").find();
+    DBCursor cursor = database.getCollection("Fortune").find();
     while (cursor.hasNext()) {
       DBObject object = cursor.next();
       fortunes.add(new Fortune(
-          ((Number) object.get("id")).intValue(),
+          ((Number) object.get("_id")).intValue(),
           (String) object.get("message")));
     }
     fortunes.add(new Fortune(0, "Additional fortune added at request time."));

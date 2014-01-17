@@ -1,5 +1,7 @@
 package hellowicket;
 
+import hellowicket.plaintext.HelloTextReference;
+import hellowicket.dbupdates.HelloDbUpdatesReference;
 import org.apache.wicket.protocol.http.WebApplication;
 
 /**
@@ -8,7 +10,7 @@ import org.apache.wicket.protocol.http.WebApplication;
  * @see hellowicket.Start#main(String[])
  */
 public class WicketApplication extends WebApplication
-{    	
+{
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
@@ -27,7 +29,15 @@ public class WicketApplication extends WebApplication
 		super.init();
 
 		// add your configuration here
-    mountResource("/json", new HelloJsonReference());
-    mountResource("/db", new HelloDbReference());
+
+		// mount the resources under test
+		mountResource("/json", new HelloJsonReference());
+		mountResource("/db", new HelloDbReference());
+		mountResource("/updates", new HelloDbUpdatesReference());
+		mountResource("/plaintext", new HelloTextReference());
+
+		// disable response caching to be more close to other
+		// test applications' behavior
+		getRequestCycleSettings().setBufferResponse(false);
 	}
 }

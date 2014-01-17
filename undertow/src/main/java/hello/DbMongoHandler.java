@@ -1,7 +1,6 @@
 package hello;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.MediaType;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
@@ -19,10 +18,12 @@ import static hello.HelloWebServer.JSON_UTF8;
 final class DbMongoHandler implements HttpHandler {
   private final ObjectMapper objectMapper;
   private final DB database;
+  private final boolean multiple;
 
-  DbMongoHandler(ObjectMapper objectMapper, DB database) {
+  DbMongoHandler(ObjectMapper objectMapper, DB database, boolean multiple) {
     this.objectMapper = Objects.requireNonNull(objectMapper);
     this.database = Objects.requireNonNull(database);
+    this.multiple = multiple;
   }
 
   @Override
@@ -31,21 +32,37 @@ final class DbMongoHandler implements HttpHandler {
       exchange.dispatch(this);
       return;
     }
-    int queries = Helper.getQueries(exchange);
+    
+    int queries = 1;
+    if(multiple)
+    {
+      queries = Helper.getQueries(exchange);
+    }
+    
     World[] worlds = new World[queries];
     for (int i = 0; i < queries; i++) {
-      DBObject object = database.getCollection("world").findOne(
-          new BasicDBObject("id", Helper.randomWorld()));
+      DBObject object = database.getCollection("World").findOne(
+          new BasicDBObject("_id", Helper.randomWorld()));
       worlds[i] = new World(
           //
           // The creation script for the Mongo database inserts these numbers as
           // JavaScript numbers, which resolve to Doubles in Java.
           //
-          ((Number) object.get("id")).intValue(),
+          ((Number) object.get("_id")).intValue(),
           ((Number) object.get("randomNumber")).intValue());
     }
     exchange.getResponseHeaders().put(
         Headers.CONTENT_TYPE, JSON_UTF8);
-    exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
+    
+    if (multiple)
+    {
+      // If a multiple query then response must be an array
+      exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds));
+    }
+    else
+    {
+      // If a single query then response must be an object
+      exchange.getResponseSender().send(objectMapper.writeValueAsString(worlds[0]));
+    }
   }
 }

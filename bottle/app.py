@@ -62,9 +62,9 @@ def get_random_world(db):
 @app.route("/dbs")
 def get_random_world_single(db):
     wid = randint(1, 10000)
-    worlds = [db.query(World).get(wid).serialize]
+    world = db.query(World).get(wid).serialize
     response.content_type = 'application/json'
-    return json.dumps(worlds)
+    return json.dumps(world)
   
 @app.route("/dbraw")
 def get_random_world_raw():
@@ -84,7 +84,7 @@ def get_random_world_single_raw():
     connection = db_engine.connect()
     wid = randint(1, 10000)
     result = connection.execute("SELECT * FROM world WHERE id = " + str(wid)).fetchone()
-    worlds = [{'id': result[0], 'randomNumber': result[1]}]
+    worlds = {'id': result[0], 'randomNumber': result[1]}
     connection.close()
     response.content_type = 'application/json'
     return json.dumps(worlds)
@@ -92,7 +92,7 @@ def get_random_world_single_raw():
 @app.route("/fortune")
 def fortune_orm(db):
   fortunes=db.query(Fortune).all()
-  fortunes.append(Fortune(message="Additional fortune added at request time."))
+  fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
   fortunes=sorted(fortunes, key=attrgetter('message'))
   return template('fortune-obj', fortunes=fortunes)
 

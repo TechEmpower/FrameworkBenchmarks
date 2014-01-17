@@ -10,36 +10,41 @@
 
   <dependencies>
     <dependency>
-    	<groupId>io.netty</groupId>
-    	<artifactId>netty-codec-http</artifactId>
-    	<version>4.0.0.CR7</version>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-codec-http</artifactId>
+      <version>4.0.14.Beta1</version>
     </dependency>
 	 <dependency>
 		<groupId>com.fasterxml.jackson.core</groupId>
 		<artifactId>jackson-databind</artifactId>
-		<version>2.1.1</version>
-	</dependency>
+		<version>2.3.0</version>
+	 </dependency>
     <dependency>
-        <groupId>org.javassist</groupId>
-        <artifactId>javassist</artifactId>
-        <version>3.18.0-GA</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.18.0-GA</version>
     </dependency>
   </dependencies>
   
   <build>
     <plugins>
-			<plugin>
-				<inherited>true</inherited>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-					<optimize>true</optimize>
-					<debug>false</debug>
-				</configuration>
-			</plugin>
+      <plugin>
+        <inherited>true</inherited>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <optimize>true</optimize>
+          <debug>false</debug>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
@@ -62,6 +67,6 @@
           </execution>
         </executions>
       </plugin>
-       </plugins>
+    </plugins>
   </build>
 </project>
