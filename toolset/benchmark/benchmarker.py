@@ -566,13 +566,14 @@ class Benchmarker:
       """.format(name=test.name)) )
       out.flush()
       try:
-        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=err, shell=True)
-        p.communicate("""
-          sudo restart mysql
-          sudo restart mongodb
-		      sudo /etc/init.d/postgresql restart
-        """)
-        time.sleep(10)
+        if test.requires_database():
+          p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=err, shell=True)
+          p.communicate("""
+            sudo restart mysql
+            sudo restart mongodb
+  		      sudo /etc/init.d/postgresql restart
+          """)
+          time.sleep(10)
 
         if self.__is_port_bound(test.port):
           self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")

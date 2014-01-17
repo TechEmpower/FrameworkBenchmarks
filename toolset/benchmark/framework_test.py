@@ -535,17 +535,17 @@ class FrameworkTest:
   ############################################################
   def contains_type(self, type):
     try:
-      if type == self.JSON and self.json_url != None:
+      if type == self.JSON and self.json_url is not None:
         return True
-      if type == self.DB and self.db_url != None:
+      if type == self.DB and self.db_url is not None:
         return True
-      if type == self.QUERY and self.query_url != None:
+      if type == self.QUERY and self.query_url is not None:
         return True
-      if type == self.FORTUNE and self.fortune_url != None:
+      if type == self.FORTUNE and self.fortune_url is not None:
         return True
-      if type == self.UPDATE and self.update_url != None:
+      if type == self.UPDATE and self.update_url is not None:
         return True
-      if type == self.PLAINTEXT and self.plaintext_url != None:
+      if type == self.PLAINTEXT and self.plaintext_url is not None:
         return True
     except AttributeError:
       pass
@@ -924,6 +924,13 @@ class FrameworkTest:
   ##############################################################
   # End __curl_url
   ##############################################################
+
+  def requires_database(self):
+      """Returns True/False if this test requires a database"""
+      return (self.contains_type(self.FORTUNE) or 
+              self.contains_type(self.DATABASE) or 
+              self.contains_type(self.QUERY) or
+              self.contains_type(self.UPDATE))
 
   ##########################################################################################
   # Constructor
