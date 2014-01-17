@@ -19,5 +19,6 @@
         <property name="hibernate.jdbc.batch_size">500</property>
 
         <mapping class="hellowicket.World" />
+        <mapping class="hellowicket.fortune.Fortune"/>
     </session-factory>
 </hibernate-configuration>

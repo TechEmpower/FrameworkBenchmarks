@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.wicket.request.resource.AbstractResource;
+import org.apache.wicket.util.string.StringValue;
 import org.hibernate.IdentifierLoadAccess;
 import org.hibernate.Session;
 
@@ -20,7 +21,17 @@ public class HelloDbResponse extends AbstractResource
 
   protected ResourceResponse newResourceResponse(Attributes attributes)
   {
-    final int queries = attributes.getRequest().getQueryParameters().getParameterValue("queries").toInt(1);
+    final StringValue queriesParam = attributes.getRequest().getQueryParameters().getParameterValue("queries");
+    int qs = queriesParam.toInt(1);
+    if (qs < 1)
+    {
+      qs = 1;
+    } 
+    else if (qs > 500)
+    {
+      qs = 500;
+    }
+    final int queries = qs;
     final World[] worlds = new World[queries];
     final ThreadLocalRandom random = ThreadLocalRandom.current();
 
@@ -44,12 +55,14 @@ public class HelloDbResponse extends AbstractResource
         try
         {
           String data;
-          if (queries == 1)
+          if (queriesParam.isNull())
           {
+              // request to /db should return JSON object
               data = HelloDbResponse.mapper.writeValueAsString(worlds[0]);
           }
           else
           {
+              // request to /db?queries=xyz should return JSON array (issue #648)
               data = HelloDbResponse.mapper.writeValueAsString(worlds);
           }
           attributes.getResponse().write(data);
