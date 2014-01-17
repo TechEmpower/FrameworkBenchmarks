@@ -1,5 +1,7 @@
 package hellowicket;
 
+import hellowicket.plaintext.HelloTextReference;
+import hellowicket.dbupdates.HelloDbUpdatesReference;
 import hellowicket.fortune.FortunePage;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.protocol.http.WebApplication;
