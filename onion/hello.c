@@ -190,7 +190,7 @@ onion_connection_status return_fortune(MYSQL *db, onion_request *req, onion_resp
 	int i;
 	for (i=0;i<fortune_list.count;i++){
 		char nr[16];
-		snprintf(nr,sizeof(nr),"%010d",nr);
+		snprintf(nr,sizeof(nr),"%010d",i);
 		
 		onion_dict *fortune=onion_dict_new();
 		onion_dict_add(fortune, "id", fortune_list.list[i].id, 0);
