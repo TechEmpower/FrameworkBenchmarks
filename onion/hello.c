@@ -110,19 +110,40 @@ onion_connection_status return_db(MYSQL *db, onion_request *req, onion_response 
 		json_object_object_add(obj, "randomNumber", json_object_new_int( atoi(row[1]) ));
 		//json_object_array_add(array, obj);
 
-		if (queries > 1){
-			json_object_array_add(array, obj);
-		}
-		else {
-			json = obj;
-		}
+		json_object_array_add(array, obj);
 
 		mysql_free_result(sqlres);
 	}
-	if (queries > 1){
-		json = array;
-	}
+	json = array;
+
 	//json_object_object_add(json,"json",array);
+	const char *str=json_object_to_json_string(json);
+	int size=strlen(str);
+	onion_response_set_header(res,"Content-Type","application/json");
+	onion_response_set_length(res, size);
+	onion_response_write(res, str, size);
+	
+	json_object_put(json);
+	return OCS_PROCESSED;
+}
+
+onion_connection_status return_one_db(MYSQL *db, onion_request *req, onion_response *res){
+	char query[256];
+	char *error;
+
+	json_object *json=json_object_new_object();
+		
+	snprintf(query,sizeof(query), "SELECT * FROM World WHERE id = %d", 1 + (rand()%10000));
+	mysql_query(db, query);
+	MYSQL_RES *sqlres = mysql_store_result(db);
+	MYSQL_ROW row = mysql_fetch_row(sqlres);
+		
+	json_object_object_add(json, "id", json_object_new_int( atoi(row[0]) ));
+	json_object_object_add(json, "randomNumber", json_object_new_int( atoi(row[1]) ));
+
+	mysql_free_result(sqlres);
+	//json_object_object_add(json,"json",array);
+
 	const char *str=json_object_to_json_string(json);
 	int size=strlen(str);
 	onion_response_set_header(res,"Content-Type","application/json");
@@ -262,6 +283,12 @@ onion_connection_status muxer(struct test_data *data, onion_request *req, onion_
 		return return_json_libjson(NULL, req, res);
 	
 	if (strcmp(path, "db")==0){
+		MYSQL *db=get_connection(data);
+		int ret=return_one_db(db, req, res);
+		free_connection(data, db);
+		return ret;
+	}
+	if (strcmp(path, "queries")==0){
 		MYSQL *db=get_connection(data);
 		int ret=return_db(db, req, res);
 		free_connection(data, db);
