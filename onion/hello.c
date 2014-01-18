@@ -159,6 +159,14 @@ onion_connection_status return_fortune(MYSQL *db, onion_request *req, onion_resp
 		strncpy(fortune_list.list[fortune_list.count].message,row[1],sizeof(fortune_list.list[fortune_list.count].message));
 		fortune_list.count++;
 	}
+	if (fortune_list.count>=fortune_list.size){
+		fortune_list.size+=fortune_list.size;
+		fortune_list.list=realloc(fortune_list.list, fortune_list.size * sizeof(fortune_list.size));
+	}
+	strncpy(fortune_list.list[fortune_list.count].id,"0",sizeof(fortune_list.list[fortune_list.count].id));
+	strncpy(fortune_list.list[fortune_list.count].message,"Additional fortune added at request time",sizeof(fortune_list.list[fortune_list.count].message));
+	fortune_list.count++;
+	
 	
 	qsort(fortune_list.list, fortune_list.count, sizeof(fortune_t), (__compar_fn_t)cmp_fortune);
 	
