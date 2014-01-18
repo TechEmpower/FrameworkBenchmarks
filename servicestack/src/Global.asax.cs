@@ -8,9 +8,7 @@ namespace ServiceStackBenchmark
     {
         protected void Application_Start(object sender, EventArgs e)
         {
-            var threads = 40 * Environment.ProcessorCount;
-            ThreadPool.SetMaxThreads(threads, threads);
-            ThreadPool.SetMinThreads(threads, threads);
+            AppHostConfigHelper.ConfigThreadPool();
 
             new AppHost().Init();
         }

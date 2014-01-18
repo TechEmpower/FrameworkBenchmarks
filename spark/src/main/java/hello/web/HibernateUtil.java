@@ -4,6 +4,7 @@ import hello.domain.World;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.MySQLDialect;
 import org.hibernate.service.ServiceRegistryBuilder;
@@ -32,9 +33,10 @@ public class HibernateUtil {
     
     private static SessionFactory createSessionFactory() {
         Configuration configuration = configuration();
-        configuration.setProperty("hibernate.dialect ", MySQLDialect.class.getName());
-        configuration.setProperty("hibernate.cache.use_query_cache", "false");
-        configuration.setProperty("show_sql", "false");
+        configuration.setProperty(AvailableSettings.DIALECT, MySQLDialect.class.getName());
+        configuration.setProperty(AvailableSettings.USE_QUERY_CACHE, "false");
+        configuration.setProperty(AvailableSettings.SHOW_SQL, "false");
+        configuration.setProperty(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS, "thread");
         configuration.addAnnotatedClass(World.class);
         ServiceRegistryBuilder serviceRegistryBuilder = new ServiceRegistryBuilder().applySettings(configuration.getProperties());
         return configuration.buildSessionFactory(serviceRegistryBuilder.buildServiceRegistry());

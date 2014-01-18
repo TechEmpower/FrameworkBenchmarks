@@ -22,6 +22,9 @@ store.setQueryCache(queryCache);
 // define entities in DB
 exports.World = store.defineEntity('World', {
 	table: 'World',
+  id: {
+    column: 'id'
+  },
 	properties: {
 		randomNumber: 'integer'
 	}

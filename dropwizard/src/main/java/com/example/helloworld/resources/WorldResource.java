@@ -1,4 +1,3 @@
-
 package com.example.helloworld.resources;
 
 import java.util.Random;
@@ -35,7 +34,7 @@ public class WorldResource
 
     for (int i = 0; i < totalQueries; i++)
     {
-      worlds[i] = this.worldDAO.findById((long)random.nextInt(10000)).orNull();
+      worlds[i] = this.worldDAO.findById((long)(random.nextInt(10000) + 1)).orNull();
     }
     return worlds;
   }

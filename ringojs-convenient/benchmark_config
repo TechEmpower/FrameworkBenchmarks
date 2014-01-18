@@ -11,18 +11,18 @@
       "update_url": "/updates/",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Micro",
       "database": "MySQL",
       "framework": "ringo",
       "language": "JavaScript",
       "orm": "Micro",
-      "platform": "Jetty",
+      "platform": "RingoJs",
       "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ringo-conv",
+      "display_name": "ringojs-conv",
       "notes": "Convenient",
-      "versus": ""
+      "versus": "ringojs"
     }
   }]
 }

@@ -1,0 +1,8 @@
+./revel/src/benchmark/app/
+./revel/src/benchmark/app/controllers
+./revel/src/benchmark/app/controllers/app.go
+./revel/src/benchmark/app/views
+./revel/src/benchmark/app/views/footer.html
+./revel/src/benchmark/app/views/App
+./revel/src/benchmark/app/views/App/Fortune.html
+./revel/src/benchmark/app/views/header.html

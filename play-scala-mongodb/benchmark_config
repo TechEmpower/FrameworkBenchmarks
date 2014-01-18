@@ -1,7 +1,7 @@
 {
-  "framework": "play-scala",
+  "framework": "play-scala-mongodb",
   "tests": [{
-    "mongodb": {
+    "default": {
       "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/db?queries=",
@@ -9,15 +9,15 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MongoDB",
-      "framework": "play-scala",
+      "framework": "play2",
       "language": "Scala",
       "orm": "Raw",
       "platform": "Netty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play-scala",
-      "notes": "",
+      "display_name": "play-scala-rmongo",
+      "notes": "Uses Reactive Mongo",
       "versus": "netty"
     }
   }]

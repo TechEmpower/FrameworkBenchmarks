@@ -15,7 +15,7 @@ var fortuneTemplate = require('fs').read(module.resolve('./templates/fortune.mus
 exports.app = function(req) {
    var path = req.pathInfo;
    if (path === '/json') {
-      var helloObject = {message: "Hello, world"};
+      var helloObject = {message: "Hello, World!"};
       // JSON Response Test
       return {
          status: 200,
@@ -83,7 +83,7 @@ exports.app = function(req) {
       return {
         status: 200,
         headers: {"Content-Type": 'text/plain'},
-        body: ['Hello World']
+        body: ['Hello, World!']
       };
    } else if (path === '/updates') {
       var queryCount = parseInt(req.env.servletRequest.getParameter('queries'), 10);

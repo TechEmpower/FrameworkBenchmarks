@@ -1,10 +1,10 @@
 package hello;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.net.MediaType;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
+
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
@@ -35,18 +35,22 @@ final class UpdatesMongoHandler implements HttpHandler {
     World[] worlds = new World[queries];
     for (int i = 0; i < queries; i++) {
       int id = Helper.randomWorld();
-      DBObject key = new BasicDBObject("id", id);
+      DBObject key = new BasicDBObject("_id", id);
       //
       // The requirements for the test dictate that we must fetch the World
       // object from the data store and read its randomNumber field, even though
       // we could technically avoid doing either of those things and still
       // produce the correct output and side effects.
       //
-      DBObject object = database.getCollection("world").findOne(key);
-      int oldRandomNumber = ((Number) object.get("randomNumber")).intValue();
+      DBObject object = database.getCollection("World").findOne(key);
+      
+      @SuppressWarnings("unused")
+      // Per test requirement the old value must be read
+      int oldRandomNumber = ((Number) object.get("randomNumber")).intValue(); 
+      
       int newRandomNumber = Helper.randomWorld();
       object.put("randomNumber", newRandomNumber);
-      database.getCollection("world").update(key, object);
+      database.getCollection("World").update(key, object);
       worlds[i] = new World(id, newRandomNumber);
     }
     exchange.getResponseHeaders().put(

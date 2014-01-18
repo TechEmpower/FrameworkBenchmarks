@@ -8,18 +8,23 @@ import time
 uwsgi = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin/uwsgi')
 PROCS = multiprocessing.cpu_count()
 
-def start(args):
+def start(args, logfile, errfile):
+    # --http and --http-processes create http router processes that process the
+    # incoming connections and pass them to the worker processes (-p). We use
+    # PROCS number of http router processes so that a single router process
+    # doesn't become a bottleneck.
     subprocess.Popen(
-        uwsgi + ' --master -L --gevent 1000 --http :8080 --http-keepalive ' +
-        '-p ' + str(PROCS) + ' -w hello --add-header "Connection: keep-alive" ' +
+        uwsgi + ' --master -L -l 5000 --gevent 1000 --http :8080 --http-keepalive ' +
+        ' --http-processes ' + str(PROCS) + ' -p ' + str(PROCS) + ' -w hello ' +
+        ' --add-header "Connection: keep-alive" ' +
         ' --pidfile /tmp/uwsgi.pid',
-        shell=True, cwd="uwsgi")
+        shell=True, cwd="uwsgi", stderr=errfile, stdout=logfile)
     return 0
 
 
-def stop():
+def stop(logfile, errfile):
     try:
-        subprocess.Popen(uwsgi + ' --stop /tmp/uwsgi.pid', shell=True, cwd="uwsgi")
+        subprocess.Popen(uwsgi + ' --stop /tmp/uwsgi.pid', shell=True, cwd="uwsgi", stderr=errfile, stdout=logfile)
     except OSError:
         pass
     time.sleep(1)

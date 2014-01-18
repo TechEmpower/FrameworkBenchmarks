@@ -1,29 +1,31 @@
 
 import subprocess
 import sys
+import os
 import setup_util
 
-def start(args):
+def start(args, logfile, errfile):
   setup_util.replace_text("rails-stripped/config/database-jruby.yml", "host: .*", "host: " + args.database_host)
-  setup_util.replace_text("rails-stripped/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 
   try:
-    subprocess.check_call("rvm jruby-1.7.4 do bundle install --gemfile=Gemfile-jruby", shell=True, cwd="rails-stripped")
-    subprocess.check_call("cp Gemfile-jruby Gemfile", shell=True, cwd="rails-stripped")
-    subprocess.check_call("cp Gemfile-jruby.lock Gemfile.lock", shell=True, cwd="rails-stripped")
-    subprocess.check_call("cp config/database-jruby.yml config/database.yml", shell=True, cwd="rails-stripped")
-    subprocess.check_call("rvm jruby-1.7.4 do warble war", shell=True, cwd="rails-stripped")
-    subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
-    subprocess.check_call("cp rails-stripped.war $RESIN_HOME/webapps/rails.war", shell=True, cwd="rails-stripped")
-    subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
+    subprocess.check_call("rvm jruby-1.7.8 do bundle install --gemfile=Gemfile-jruby", shell=True, cwd="rails-stripped", stderr=errfile, stdout=logfile)
+    subprocess.check_call("cp Gemfile-jruby Gemfile", shell=True, cwd="rails-stripped", stderr=errfile, stdout=logfile)
+    subprocess.check_call("cp Gemfile-jruby.lock Gemfile.lock", shell=True, cwd="rails-stripped", stderr=errfile, stdout=logfile)
+    subprocess.check_call("cp config/database-jruby.yml config/database.yml", shell=True, cwd="rails-stripped", stderr=errfile, stdout=logfile)
+    subprocess.Popen("rvm jruby-1.7.8 do bundle exec torqbox -b 0.0.0.0 -E production", shell=True, cwd="rails-stripped", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile, errfile):
   try:
-    subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
-    subprocess.check_call("rm Gemfile", shell=True, cwd="rails-stripped")
-    subprocess.check_call("rm Gemfile.lock", shell=True, cwd="rails-stripped")
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'torqbox' in line:
+        pid = int(line.split(None, 2)[1])
+        os.kill(pid, 9)
+    subprocess.check_call("rm Gemfile", shell=True, cwd="rails-stripped", stderr=errfile, stdout=logfile)
+    subprocess.check_call("rm Gemfile.lock", shell=True, cwd="rails-stripped", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1

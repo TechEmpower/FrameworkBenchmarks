@@ -10,7 +10,7 @@ Falcon API framework (http://falconframework.org)
 
 * CPython 2.7
 * CPython 3.3
-* PyPy 2.0
+* PyPy 2.2
 
 ### Database
 

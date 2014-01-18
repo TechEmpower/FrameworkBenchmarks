@@ -17,9 +17,9 @@ with Spark filters.
 
 ## Infrastructure Software Versions
 
-* [Spark 0.9.9.7-SNAPSHOT](http://www.sparkjava.com/)
-* [Hibernate 4.2.0.Final](http://www.hibernate.org/)
-* [Gson 2.2.2](https://code.google.com/p/google-gson/)
+* [Spark 1.1](http://www.sparkjava.com/)
+* [Hibernate 4.2.6.Final](http://www.hibernate.org/)
+* [Gson 2.2.4](https://code.google.com/p/google-gson/)
 
 
 ## Different test setups
@@ -50,4 +50,10 @@ http://localhost:8080/spark/json
 
 http://localhost:4567/db?queries=5
 
-http://localhost:8080/spring/db?queries=5
+http://localhost:8080/spark/db?queries=5
+
+### Plain Text Test
+
+http://localhost:4567/plaintext
+
+http://localhost:8080/spark/plaintext

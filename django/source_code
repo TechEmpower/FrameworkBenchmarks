@@ -1,0 +1,14 @@
+./django/hello/
+./django/hello/manage.py
+./django/hello/templates
+./django/hello/templates/fortunes.html
+./django/hello/templates/base.html
+./django/hello/hello
+./django/hello/hello/settings.py
+./django/hello/hello/__init__.py
+./django/hello/hello/urls.py
+./django/hello/hello/wsgi.py
+./django/hello/world
+./django/hello/world/models.py
+./django/hello/world/__init__.py
+./django/hello/world/views.py

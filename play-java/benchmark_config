@@ -1,5 +1,5 @@
 {
-  "framework": "play",
+  "framework": "play2",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -10,14 +10,14 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "play-java",
+      "framework": "play2",
       "language": "Java",
       "orm": "Full",
       "platform": "Netty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play-java",
+      "display_name": "play-java-ebean",
       "notes": "",
       "versus": "netty"
     }

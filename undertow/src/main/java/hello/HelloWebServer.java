@@ -11,6 +11,7 @@ import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
+import io.undertow.UndertowOptions;
 import io.undertow.util.Headers;
 
 import javax.sql.DataSource;
@@ -56,7 +57,8 @@ public final class HelloWebServer {
    * @throws SQLException if reading from the SQL database (while priming the
    *                      cache) fails
    */
-  public HelloWebServer() throws IOException, SQLException {
+  public HelloWebServer() throws ClassNotFoundException, IOException, SQLException {
+    Class.forName("org.postgresql.Driver");
     Properties properties = new Properties();
     try (InputStream in = HelloWebServer.class.getResourceAsStream(
         "server.properties")) {
@@ -116,32 +118,41 @@ public final class HelloWebServer {
             Integer.parseInt(properties.getProperty("web.port")),
             properties.getProperty("web.host"))
         .setBufferSize(1024 * 16)
+        .setIoThreads(Runtime.getRuntime().availableProcessors() * 2) //this seems slightly faster in some configurations
+        .setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, false) //don't send a keep-alive header for HTTP/1.1 requests, as it is not required
         .setHandler(Handlers.date(Handlers.header(Handlers.path()
-            .addPath("/json",
+            .addPrefixPath("/json",
                 new JsonHandler(objectMapper))
-            .addPath("/db/mysql",
-                new DbSqlHandler(objectMapper, mysql))
-            .addPath("/db/postgresql",
-                new DbSqlHandler(objectMapper, postgresql))
-            .addPath("/db/mongodb",
-                new DbMongoHandler(objectMapper, mongodb))
-            .addPath("/fortunes/mysql",
+            .addPrefixPath("/db/mysql",
+                new DbSqlHandler(objectMapper, mysql, false))
+            .addPrefixPath("/queries/mysql",
+                new DbSqlHandler(objectMapper, mysql, true))
+            .addPrefixPath("/db/postgresql",
+                new DbSqlHandler(objectMapper, postgresql, false))
+            .addPrefixPath("/queries/postgresql",
+                new DbSqlHandler(objectMapper, postgresql, true))
+            .addPrefixPath("/db/mongodb",
+                new DbMongoHandler(objectMapper, mongodb, false))
+            .addPrefixPath("/queries/mongodb",
+                new DbMongoHandler(objectMapper, mongodb, true))
+            .addPrefixPath("/fortunes/mysql",
                 new FortunesSqlHandler(mustacheFactory, mysql))
-            .addPath("/fortunes/postgresql",
+            .addPrefixPath("/fortunes/postgresql",
                 new FortunesSqlHandler(mustacheFactory, postgresql))
-            .addPath("/fortunes/mongodb",
+            .addPrefixPath("/fortunes/mongodb",
                 new FortunesMongoHandler(mustacheFactory, mongodb))
-            .addPath("/updates/mysql",
+            .addPrefixPath("/updates/mysql",
                 new UpdatesSqlHandler(objectMapper, mysql))
-            .addPath("/updates/postgresql",
+            .addPrefixPath("/updates/postgresql",
                 new UpdatesSqlHandler(objectMapper, postgresql))
-            .addPath("/updates/mongodb",
+            .addPrefixPath("/updates/mongodb",
                 new UpdatesMongoHandler(objectMapper, mongodb))
-            .addPath("/plaintext",
+            .addPrefixPath("/plaintext",
                 new PlaintextHandler())
-            .addPath("/cache",
+            .addPrefixPath("/cache",
                 new CacheHandler(objectMapper, worldCache)),
-            Headers.SERVER_STRING, "undertow")))
+            Headers.SERVER_STRING, "U-tow")))
+        .setWorkerThreads(200)
         .build()
         .start();
   }

@@ -88,7 +88,14 @@ public class DbPoolServlet extends HttpServlet
     // Write JSON encoded message to the response.
     try
     {
-      Common.MAPPER.writeValue(res.getOutputStream(), worlds);
+      if (count == 1)
+      {
+        Common.MAPPER.writeValue(res.getOutputStream(), worlds[0]); 
+      }
+      else
+      {
+        Common.MAPPER.writeValue(res.getOutputStream(), worlds);
+      }
     }
     catch (IOException ioe) 
     {

@@ -1,0 +1,35 @@
+---
+spring:
+  datasource:
+    initialize: false
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${database.host:localhost}:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true
+    username: benchmarkdbuser
+    password: benchmarkdbpass
+    maxActive: 256
+    maxIdle: 256    
+  jpa:
+    show_sql: false
+    hibernate:
+      naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+      ddl-auto: validate
+    open_in_view: true
+
+tomcat:
+  connector:
+    maxThreads: 200
+    minSpareThreads: 100
+    connectionTimeout: 20000
+    maxConnections: 200
+    maxKeepAliveRequests: 2000
+
+---
+spring:
+  profiles: local
+  datasource:
+    initialize: true
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:framework_benchmark
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

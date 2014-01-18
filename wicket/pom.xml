@@ -20,7 +20,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>6.5.0</wicket.version>
+		<wicket.version>6.12.0</wicket.version>
 		<jetty.version>7.5.0.v20110901</jetty.version>
 	</properties>
 	<dependencies>
@@ -69,7 +69,7 @@
 		 <dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.1.1</version>
+			<version>2.3.0</version>
 		</dependency>
 		            
 		<dependency>
@@ -145,13 +145,13 @@
 							<port>8080</port>
 							<maxIdleTime>3600000</maxIdleTime>
 						</connector>
-						<connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
+						<!--connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
 							<port>8443</port>
 							<maxIdleTime>3600000</maxIdleTime>
 							<keystore>${project.build.directory}/test-classes/keystore</keystore>
 							<password>wicket</password>
 							<keyPassword>wicket</keyPassword>
-						</connector>
+						</connector-->
 					</connectors>
 				</configuration>
 			</plugin>

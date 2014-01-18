@@ -2,11 +2,11 @@ package main
 
 import (
 	"github.com/astaxie/beego"
-	"runtime"
+	//"runtime"
 )
 
 type MessageStruct struct {
-	Message string
+	Message string `json:"message"`
 }
 
 type JsonController struct {
@@ -14,7 +14,7 @@ type JsonController struct {
 }
 
 func (this *JsonController) Get() {
-	m := MessageStruct{"Hello, world"}
+	m := MessageStruct{"Hello, World!"}
 	this.Data["json"] = &m
 	this.ServeJson()
 }

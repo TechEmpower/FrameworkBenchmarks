@@ -72,7 +72,7 @@ onion_connection_status return_json(onion_dict *json, onion_request *req, onion_
 /// Gets the dict and converts it to JSON and writes it into the response. 
 onion_connection_status return_json_libjson(void *_, onion_request *req, onion_response *res){
 	json_object *hello=json_object_new_object();
-	json_object_object_add(hello, "message", json_object_new_string("Hello, world"));
+	json_object_object_add(hello, "message", json_object_new_string("Hello, World!"));
 	
 	const char *hello_str=json_object_to_json_string(hello);
 	int size=strlen(hello_str);
@@ -106,11 +106,23 @@ onion_connection_status return_db(MYSQL *db, onion_request *req, onion_response 
 		MYSQL_RES *sqlres = mysql_store_result(db);
 		MYSQL_ROW row = mysql_fetch_row(sqlres);
 		
+		json_object_object_add(obj, "id", json_object_new_int( atoi(row[0]) ));
 		json_object_object_add(obj, "randomNumber", json_object_new_int( atoi(row[1]) ));
-		json_object_array_add(array, obj);
+		//json_object_array_add(array, obj);
+
+		if (queries > 1){
+			json_object_array_add(array, obj);
+		}
+		else {
+			json = obj;
+		}
+
 		mysql_free_result(sqlres);
 	}
-	json_object_object_add(json,"json",array);
+	if (queries > 1){
+		json = array;
+	}
+	//json_object_object_add(json,"json",array);
 	const char *str=json_object_to_json_string(json);
 	int size=strlen(str);
 	onion_response_set_header(res,"Content-Type","application/json");

@@ -1,18 +1,25 @@
 package org.glassfish.grizzly.bm;
 
-import java.io.IOException;
 import org.glassfish.grizzly.Grizzly;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
+import org.glassfish.grizzly.http.server.RequestExecutorProvider;
+import org.glassfish.grizzly.http.util.HeaderValue;
 import org.glassfish.grizzly.nio.transport.TCPNIOTransport;
 
 /**
  * HttpServer
  */
 public class Server {
-    public static final String SERVER_VERSION = "Grizzly/" + Grizzly.getDotedVersion();
+    public static final HeaderValue SERVER_VERSION =
+            HeaderValue.newHeaderValue("GRZLY").prepare();
     
-    public static void main(String[] args) throws IOException {
+    // The RequestExecutorProvider, which will run HTTP request processing
+    // in the same thread
+    static final RequestExecutorProvider EXECUTOR_PROVIDER =
+            new RequestExecutorProvider.SameThreadProvider();
+    
+    public static void main(String[] args) throws Exception {
         final int port = args.length > 0
                 ? Integer.parseInt(args[0]) : 8080;
         
@@ -23,9 +30,14 @@ public class Server {
         
         // force to not initialize worker thread pool
         transport.setWorkerThreadPoolConfig(null);
+        transport.setSelectorRunnersCount(Runtime.getRuntime().availableProcessors() * 2);
         
+        // always keep-alive
         networkListener.getKeepAlive().setIdleTimeoutInSeconds(-1);
         networkListener.getKeepAlive().setMaxRequestsCount(-1);
+        
+        // disable file-cache
+        networkListener.getFileCache().setEnabled(false);
         
         httpServer.addListener(networkListener);
         
@@ -39,10 +51,12 @@ public class Server {
         try {
             httpServer.start();
             
-            System.err.print("Server started. Press ENTER to stop.\n");
-            System.in.read();
+            System.err.print("Server started.\n");
+            synchronized (Server.class) {
+		Server.class.wait();
+            }
         } finally {
-            httpServer.stop();
+            httpServer.shutdown();
         }
     }
 }

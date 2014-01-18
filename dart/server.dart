@@ -1,7 +1,6 @@
 import 'dart:async' show Future;
 import 'dart:io';
-import 'dart:utf';
-import 'dart:json' as json;
+import 'dart:convert';
 import 'dart:math' show Random;
 import 'package:args/args.dart' show ArgParser;
 import 'package:mustache/mustache.dart' as mustache;
@@ -13,12 +12,12 @@ import 'package:yaml/yaml.dart' as yaml;
 /// address and port for incoming connections is configurable via command line
 /// arguments, as is the number of database connections to be maintained in the
 /// connection pool.
-main() {
+main(List<String> args) {
   var parser = new ArgParser();
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
   parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
-  var arguments = parser.parse(new Options().arguments);
+  var arguments = parser.parse(args);
   _startServer(
       arguments['address'],
       int.parse(arguments['port']),
@@ -28,11 +27,12 @@ main() {
 /// The entity used in the database query and update tests.
 class World {
   int id;
-  int randomNumber;
 
-  World(this.id, this.randomNumber);
+  int randomnumber;
 
-  toJson() => { 'id': id, 'randomNumber': randomNumber };
+  World(this.id, this.randomnumber);
+
+  toJson() => { 'id': id, 'randomNumber': randomnumber };
 }
 
 /// The entity used in the fortunes test.
@@ -125,16 +125,11 @@ _parseInt(text) =>
 _sendResponse(request, statusCode, [ type, response ]) {
   request.response.statusCode = statusCode;
   request.response.headers.date = new DateTime.now();
-  //
-  // Prevent GZIP encoding, because it is disallowed in the rules for these
-  // benchmark tests.
-  //
-  request.response.headers.add(HttpHeaders.CONTENT_ENCODING, '');
   if (type != null) {
     request.response.headers.contentType = type;
   }
   if (response != null) {
-    var data = encodeUtf8(response);
+    var data = UTF8.encode(response);
     request.response.contentLength = data.length;
     request.response.add(data);
   } else {
@@ -150,7 +145,7 @@ _sendHtml(request, response) {
 
 /// Completes the given [request] by writing the [response] as JSON.
 _sendJson(request, response) {
-  _sendResponse(request, HttpStatus.OK, _TYPE_JSON, json.stringify(response));
+  _sendResponse(request, HttpStatus.OK, _TYPE_JSON, JSON.encode(response));
 }
 
 /// Completes the given [request] by writing the [response] as plain text.
@@ -167,7 +162,7 @@ _queryRandom() {
   return _connectionPool.connect()
       .then((connection) {
         return connection.query(
-            'SELECT id, randomNumber FROM world WHERE id = @id;',
+            'SELECT id, randomnumber FROM world WHERE id = @id;',
             { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
             //
             // The benchmark's constraints tell us there is exactly one row.
@@ -216,11 +211,11 @@ _updatesTest(request) {
   Future.wait(new List.generate(queries, (_) {
     return _queryRandom()
         .then((world) {
-          world.randomNumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
+          world.randomnumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
           return _connectionPool.connect().then((connection) {
             return connection.execute(
-                'UPDATE world SET randomNumber = @randomNumber WHERE id = @id;',
-                { 'randomNumber': world.randomNumber, 'id': world.id })
+                'UPDATE world SET randomnumber = @randomnumber WHERE id = @id;',
+                { 'randomnumber': world.randomnumber, 'id': world.id })
                 .whenComplete(() { connection.close(); });
           }).then((_) => world);
         });

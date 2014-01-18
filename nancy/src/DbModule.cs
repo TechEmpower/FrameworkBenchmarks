@@ -14,7 +14,7 @@ namespace NancyBenchmark
 {
     public class DbModule : NancyModule
     {
-        private static readonly string MYSQL_CONNECTION_STRING;
+        public static string MYSQL_CONNECTION_STRING;
         
         static DbModule()
         {

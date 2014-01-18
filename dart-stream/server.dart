@@ -3,7 +3,7 @@ library stream_benchmark;
 import "dart:core";
 import "dart:io";
 import 'dart:async' show Future;
-import 'dart:json' as json;
+import 'dart:convert';
 import 'dart:math' show Random;
 import "package:stream/stream.dart";
 import "package:args/args.dart";
@@ -76,20 +76,23 @@ class Fortune implements Comparable<Fortune> {
 
 class World {
   int id;
-  int randomNumber;
 
-  World(this.id, this.randomNumber);
+  int randomnumber;
 
-  toJson() => { "id": id, "randomNumber": randomNumber };
+  World(this.id, this.randomnumber);
+
+  toJson() => { "id": id, "randomNumber": randomnumber };
 }
 
-main() {
+main(List<String> args) {
+  
   var parser = new ArgParser();
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
   parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
   
-  var arguments = parser.parse(new Options().arguments);
+  var arguments = parser.parse(args);
+  
   Future.wait([
      new File("postgresql.yaml").readAsString().then((config){
        _connectionPool = new pgpool.Pool(
@@ -117,13 +120,13 @@ _jsonTest(HttpConnect connect) {
       "message": "Hello, World!"
   };
   
-  connect.response.write(json.stringify(helloWorld));
+  connect.response.write(JSON.encode(helloWorld));
 }
 
 _dbTest(HttpConnect connect) {
   
   return _query().then((data) {
-    connect.response.write(json.stringify(data));
+    connect.response.write(JSON.encode(data));
   });
 }
 
@@ -137,7 +140,7 @@ _queriesTest(HttpConnect connect) {
             growable: false
         )
     )
-    .then((response) => connect.response.write(json.stringify(response)));
+    .then((response) => connect.response.write(JSON.encode(response)));
 }
 
 _updatesTest(HttpConnect connect) {
@@ -146,13 +149,13 @@ _updatesTest(HttpConnect connect) {
   return Future.wait(new List.generate(queries, (_) {
       return _query()
           .then((world) {
-            world.randomNumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
+            world.randomnumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
             return _connectionPool.connect()
               .then((connection) {
                 return connection.execute(
-                      'UPDATE "World" SET "randomNumber" = @randomNumber WHERE "id" = @id;',
+                      'UPDATE world SET randomnumber = @randomnumber WHERE id = @id;',
                       { 
-                        'randomNumber': world.randomNumber,
+                        'randomnumber': world.randomnumber,
                         'id': world.id 
                       }
                   )
@@ -161,13 +164,13 @@ _updatesTest(HttpConnect connect) {
                 .then((_) => world);
           });
     }, growable: false))
-    .then((worlds) => connect.response.write(json.stringify(worlds)));
+    .then((worlds) => connect.response.write(JSON.encode(worlds)));
 }
 
 _fortunesTest(HttpConnect connect) {
   
   return _connectionPool.connect().then((connection) {
-    return connection.query('SELECT "id", "message" FROM "Fortune";')
+    return connection.query('SELECT id, message FROM fortune;')
         .map((row) => new Fortune(row[0], row[1]))
           .toList()
             .whenComplete(() { connection.close(); });
@@ -186,8 +189,8 @@ _plaintextTest(HttpConnect connect) {
 _dbMongoTest(HttpConnect connect) {
   
   return _mongoQuery().then((data) {
-    connect.response.write(json.stringify({
-      "id": data["id"],
+    connect.response.write(JSON.encode({
+      "id": data["_id"],
       "randomNumber": data["randomNumber"]
     }));
   });
@@ -206,11 +209,11 @@ _queriesMongoTest(HttpConnect connect) {
     .then((response) {
       var results = response.map((world) {
         return {
-          "id": world["id"],
+          "id": world["_id"],
           "randomNumber": world["randomNumber"]
         };
       });
-      connect.response.write(json.stringify(results.toList()));
+      connect.response.write(JSON.encode(results.toList()));
     });
 }
 
@@ -228,11 +231,11 @@ _updatesMongoTest(HttpConnect connect) {
     .then((worlds) {
       var result = worlds.map((world) {
         return {
-          "id": world["id"],
+          "id": world["_id"],
           "randomNumber": world["randomNumber"]
         };
       });
-      connect.response.write(json.stringify(result.toList()));
+      connect.response.write(JSON.encode(result.toList()));
     });
 }
 
@@ -240,7 +243,7 @@ _fortunesMongoTest(HttpConnect connect) {
   
   return _fortuneCollection.find().toList().then((fortunes) {
     fortunes = fortunes.map((fortune) {
-      return new Fortune(fortune["id"], fortune["message"]);
+      return new Fortune(fortune["_id"], fortune["message"]);
     }).toList();
     fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
@@ -281,14 +284,14 @@ _htmlHeadersFilter(HttpConnect connect, Future chain(HttpConnect conn)) {
 
 // parse queries param
 _parseQueriesParam(param) {
-  return param.isEmpty ? 1 : int.parse(param, radix: 10, onError: (_) => 1).clamp(1, 500);
+  return (param == null || param.isEmpty) ? 1 : int.parse(param, radix: 10, onError: (_) => 1).clamp(1, 500);
 }
 
 // runs a query and returns a promise
 _query() {
   return _connectionPool.connect().then((connection) {
     return connection
-      .query('SELECT "id", "randomNumber" FROM "World" WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
+      .query('SELECT id, randomnumber FROM world WHERE id = @id;', { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
       .single
       .then((row) =>new World(row[0], row[1]))
       .whenComplete(() {
@@ -300,6 +303,6 @@ _query() {
 // runs a mongo query and returns a promise
 _mongoQuery() {
   return _worldCollection.findOne({
-    "id": _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1
+    "_id": _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1
   });
 }

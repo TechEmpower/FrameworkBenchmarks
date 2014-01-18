@@ -72,6 +72,23 @@ try {
         ));
     });
 
+    // Setting up the mongodb connection
+    $di->set('mongo', function() use ($config) {
+        $mongodbConfig = $config->mongodb;
+        
+        $mongo = new \MongoClient($mongodbConfig->url);
+        return $mongo->{$mongodbConfig->db};
+    });
+    
+    //Registering the collectionManager service
+    $di->set('collectionManager', function() {
+        // Setting a default EventsManager
+        $modelsManager = new Phalcon\Mvc\Collection\Manager();
+        $modelsManager->setEventsManager(new Phalcon\Events\Manager());
+        return $modelsManager;
+
+    }, true);
+
     // Handle the request
     $application = new \Phalcon\Mvc\Application();
     $application->setDI($di);

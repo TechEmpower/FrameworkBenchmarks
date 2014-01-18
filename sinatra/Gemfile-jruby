@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
 gem 'sinatra', '1.3.4'
 gem 'sinatra-contrib', '1.3.2'
-gem 'warbler', '1.3.6'
-gem 'jruby-jars', '1.7.4'
-gem 'jruby-rack', '1.2.0.SNAPSHOT'
+gem 'torqbox', '0.1.7'
 gem 'activerecord-jdbcmysql-adapter', '1.2.6'
 gem "sinatra-activerecord", "1.2.2"
+gem "rubyzip", "~> 1.0.0"
+gem "zip-zip", "~> 0.1"
+
