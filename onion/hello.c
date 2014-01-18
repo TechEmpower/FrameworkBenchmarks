@@ -90,6 +90,10 @@ onion_connection_status return_db(MYSQL *db, onion_request *req, onion_response 
 	char *error;
 	const char *nqueries_str=onion_request_get_query(req,"queries");
 	int queries=(nqueries_str) ? atoi(nqueries_str) : 1;
+	if (queries<=0)
+		queries=1;
+	else if (queries>500)
+		queries=500;
 
 	json_object *json=json_object_new_object();
 	json_object *array=json_object_new_array();
