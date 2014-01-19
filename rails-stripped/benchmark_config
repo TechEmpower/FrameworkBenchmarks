@@ -19,7 +19,7 @@
       "database_os": "Linux",
       "display_name": "rails",
       "notes": "",
-      "versus": "rack"
+      "versus": "rack-unicorn"
     },
     "jruby": {
       "setup_file": "setup_jruby",
@@ -39,7 +39,7 @@
       "database_os": "Linux",
       "display_name": "rails",
       "notes": "",
-      "versus": "rack"
+      "versus": "rack-torqbox"
     }
   }]
 }

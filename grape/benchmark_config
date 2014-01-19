@@ -21,7 +21,7 @@
       "database_os": "Linux",
       "display_name": "puma-jruby-grape",
       "notes": "",
-      "versus": "rack-jruby"
+      "versus": "rack-puma-jruby"
     },
     "ruby-puma": {
       "setup_file": "run_mri_puma.py",
@@ -43,7 +43,7 @@
       "database_os": "Linux",
       "display_name": "puma-mri-grape",
       "notes": "",
-      "versus": "rack-ruby"
+      "versus": "rack-puma"
     },  
     "thin": {
       "setup_file": "run_thin.py",
@@ -65,7 +65,7 @@
       "database_os": "Linux",
       "display_name": "thin-grape",
       "notes": "",
-      "versus": "rack-ruby"
+      "versus": "rack-thin"
     },  
     "torqbox": {
       "setup_file": "run_torqbox.py",
@@ -87,7 +87,7 @@
       "database_os": "Linux",
       "display_name": "torqbox-grape",
       "notes": "",
-      "versus": "rack-jruby"
+      "versus": "rack-torqbox"
     },  
     "trinidad": {
       "setup_file": "run_trinidad.py",
@@ -109,7 +109,7 @@
       "database_os": "Linux",
       "display_name": "trinidad-grape",
       "notes": "",
-      "versus": "rack-jruby"
+      "versus": "rack-trinidad"
     },  
     "unicorn": {
       "setup_file": "run_unicorn.py",
@@ -131,7 +131,7 @@
       "database_os": "Linux",
       "display_name": "unicorn-grape",
       "notes": "",
-      "versus": "rack-ruby"
+      "versus": "rack-unicorn"
     } 
   }]
 }
