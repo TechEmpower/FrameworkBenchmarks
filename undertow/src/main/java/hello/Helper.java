@@ -77,6 +77,6 @@ final class Helper {
    * @return a random world number
    */
   static int randomWorld() {
-    return 1 + ThreadLocalRandom.current().nextInt(10000);
+    return 1 + ThreadLocalRandom.current().nextInt(10001);
   }
 }
