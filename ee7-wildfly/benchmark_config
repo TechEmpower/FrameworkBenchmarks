@@ -32,7 +32,7 @@
       "database": "MySQL",
       "framework": "EE7",
       "language": "Java",
-      "orm": "Raw",
+      "orm": "Full",
       "platform": "Servlet",
       "webserver": "Wildfly",
       "os": "Linux",
