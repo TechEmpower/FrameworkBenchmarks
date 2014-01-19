@@ -50,13 +50,12 @@ public class Updates {
       w.setRandomNumber(Helpers.randomWorldId());
     }
 
-    em.joinTransaction();
     try {
+      em.joinTransaction();
       em.flush();
     } catch (PersistenceException e) {
-      // Try Again
-      log.info("Failed to flush changes to database. Retrying");
-      em.flush();
+      log.info("Failed to flush changes to database.");
+      return Response.serverError().build();
     }
     return Helpers.jsonResponse(worlds);
   }
