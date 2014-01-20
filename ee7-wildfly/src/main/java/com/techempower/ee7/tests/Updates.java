@@ -12,7 +12,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.jboss.logging.Logger;
 
@@ -34,7 +33,7 @@ public class Updates {
   @Transactional
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response update(@QueryParam("queries") final String queries) {
+  public List<World> update(@QueryParam("queries") final String queries) {
     final int iterations =
         Helpers.boundedIntegerFromNullableString(queries, MIN_QUERIES, MAX_QUERIES);
 
@@ -55,8 +54,8 @@ public class Updates {
       em.flush();
     } catch (PersistenceException e) {
       log.info("Failed to flush changes to database.");
-      return Response.serverError().build();
+      throw e;
     }
-    return Helpers.jsonResponse(worlds);
+    return worlds;
   }
 }
