@@ -2,7 +2,6 @@ package hello;
 
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.google.common.net.MediaType;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;

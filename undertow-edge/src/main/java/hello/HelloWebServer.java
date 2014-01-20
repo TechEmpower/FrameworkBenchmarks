@@ -124,11 +124,17 @@ public final class HelloWebServer {
             .addPrefixPath("/json",
                 new JsonHandler(objectMapper))
             .addPrefixPath("/db/mysql",
-                new DbSqlHandler(objectMapper, mysql))
+                new DbSqlHandler(objectMapper, mysql, false))
+            .addPrefixPath("/queries/mysql",
+                new DbSqlHandler(objectMapper, mysql, true))
             .addPrefixPath("/db/postgresql",
-                new DbSqlHandler(objectMapper, postgresql))
+                new DbSqlHandler(objectMapper, postgresql, false))
+            .addPrefixPath("/queries/postgresql",
+                new DbSqlHandler(objectMapper, postgresql, true))
             .addPrefixPath("/db/mongodb",
-                new DbMongoHandler(objectMapper, mongodb))
+                new DbMongoHandler(objectMapper, mongodb, false))
+            .addPrefixPath("/queries/mongodb",
+                new DbMongoHandler(objectMapper, mongodb, true))
             .addPrefixPath("/fortunes/mysql",
                 new FortunesSqlHandler(mustacheFactory, mysql))
             .addPrefixPath("/fortunes/postgresql",
