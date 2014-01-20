@@ -2,7 +2,7 @@
   "framework": "grape",
   "tests": [{
     "jruby-puma": {
-      "setup_file": "run_jruby_puma.py",
+      "setup_file": "run_jruby_puma",
       "json_url": "/json",
       "db_url": "/db", 
       "query_url": "/query?queries=", 
@@ -24,7 +24,7 @@
       "versus": "rack-puma-jruby"
     },
     "ruby-puma": {
-      "setup_file": "run_mri_puma.py",
+      "setup_file": "run_mri_puma",
       "json_url": "/json",
       "db_url": "/db", 
       "query_url": "/query?queries=", 
@@ -46,7 +46,7 @@
       "versus": "rack-puma"
     },  
     "thin": {
-      "setup_file": "run_thin.py",
+      "setup_file": "run_thin",
       "json_url": "/json",
       "db_url": "/db", 
       "query_url": "/query?queries=", 
@@ -68,7 +68,7 @@
       "versus": "rack-thin"
     },  
     "torqbox": {
-      "setup_file": "run_torqbox.py",
+      "setup_file": "run_torqbox",
       "json_url": "/json",
       "db_url": "/db", 
       "query_url": "/query?queries=", 
@@ -90,7 +90,7 @@
       "versus": "rack-torqbox"
     },  
     "trinidad": {
-      "setup_file": "run_trinidad.py",
+      "setup_file": "run_trinidad",
       "json_url": "/json",
       "db_url": "/db", 
       "query_url": "/query?queries=", 
@@ -112,7 +112,7 @@
       "versus": "rack-trinidad"
     },  
     "unicorn": {
-      "setup_file": "run_unicorn.py",
+      "setup_file": "run_unicorn",
       "json_url": "/json",
       "db_url": "/db", 
       "query_url": "/query?queries=", 

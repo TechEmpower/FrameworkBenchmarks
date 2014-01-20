@@ -24,4 +24,4 @@ def run(commands, logfile, errfile):
   return 0
 
 def stop(partial_command, logfile, errfile):
-  return run([Command('sudo pkill --signal 9 -f "' + partial_command + '"', True)], logfile, errfile)
+  return run([Command('sudo pkill --signal 15 -f "' + partial_command + '"', True)], logfile, errfile)
