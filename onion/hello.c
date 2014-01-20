@@ -197,7 +197,7 @@ onion_connection_status return_fortune(MYSQL *db, onion_request *req, onion_resp
 		fortune_list.list=realloc(fortune_list.list, fortune_list.size * sizeof(fortune_list.size));
 	}
 	strncpy(fortune_list.list[fortune_list.count].id,"0",sizeof(fortune_list.list[fortune_list.count].id));
-	strncpy(fortune_list.list[fortune_list.count].message,"Additional fortune added at request time",sizeof(fortune_list.list[fortune_list.count].message));
+	strncpy(fortune_list.list[fortune_list.count].message,"Additional fortune added at request time.",sizeof(fortune_list.list[fortune_list.count].message));
 	fortune_list.count++;
 	
 	
