@@ -9,15 +9,15 @@ hello: hello.o libonion_static.a base_html.o fortunes_html.o
 	cc hello.o base_html.o fortunes_html.o libonion_static.a -o hello -lpthread `mysql_config --libs` `pkg-config json --libs` -lgnutls -lgcrypt -lrt
 
 clean:
-	rm -r *.o hello base_html.c fortunes_html.c
+	rm -fr *.o hello base_html.c fortunes_html.c libonion_static.a onion
 
-	
+
 libonion_static.a: onion
 	(cd onion && mkdir -p build && cd build && cmake .. && cd src && make -j4)
 	cp onion/build/src/onion/libonion_static.a .
 
 onion:
-	git clone https://github.com/davidmoreno/onion.git
+	git clone --depth 1 https://github.com/davidmoreno/onion.git
 
 otemplate:
 	(cd onion/build/tools/otemplate/; make)

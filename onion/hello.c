@@ -90,6 +90,10 @@ onion_connection_status return_db(MYSQL *db, onion_request *req, onion_response 
 	char *error;
 	const char *nqueries_str=onion_request_get_query(req,"queries");
 	int queries=(nqueries_str) ? atoi(nqueries_str) : 1;
+	if (queries<=0)
+		queries=1;
+	else if (queries>500)
+		queries=500;
 
 	json_object *json=json_object_new_object();
 	json_object *array=json_object_new_array();
@@ -106,19 +110,40 @@ onion_connection_status return_db(MYSQL *db, onion_request *req, onion_response 
 		json_object_object_add(obj, "randomNumber", json_object_new_int( atoi(row[1]) ));
 		//json_object_array_add(array, obj);
 
-		if (queries > 1){
-			json_object_array_add(array, obj);
-		}
-		else {
-			json = obj;
-		}
+		json_object_array_add(array, obj);
 
 		mysql_free_result(sqlres);
 	}
-	if (queries > 1){
-		json = array;
-	}
+	json = array;
+
 	//json_object_object_add(json,"json",array);
+	const char *str=json_object_to_json_string(json);
+	int size=strlen(str);
+	onion_response_set_header(res,"Content-Type","application/json");
+	onion_response_set_length(res, size);
+	onion_response_write(res, str, size);
+	
+	json_object_put(json);
+	return OCS_PROCESSED;
+}
+
+onion_connection_status return_one_db(MYSQL *db, onion_request *req, onion_response *res){
+	char query[256];
+	char *error;
+
+	json_object *json=json_object_new_object();
+		
+	snprintf(query,sizeof(query), "SELECT * FROM World WHERE id = %d", 1 + (rand()%10000));
+	mysql_query(db, query);
+	MYSQL_RES *sqlres = mysql_store_result(db);
+	MYSQL_ROW row = mysql_fetch_row(sqlres);
+		
+	json_object_object_add(json, "id", json_object_new_int( atoi(row[0]) ));
+	json_object_object_add(json, "randomNumber", json_object_new_int( atoi(row[1]) ));
+
+	mysql_free_result(sqlres);
+	//json_object_object_add(json,"json",array);
+
 	const char *str=json_object_to_json_string(json);
 	int size=strlen(str);
 	onion_response_set_header(res,"Content-Type","application/json");
@@ -167,6 +192,14 @@ onion_connection_status return_fortune(MYSQL *db, onion_request *req, onion_resp
 		strncpy(fortune_list.list[fortune_list.count].message,row[1],sizeof(fortune_list.list[fortune_list.count].message));
 		fortune_list.count++;
 	}
+	if (fortune_list.count>=fortune_list.size){
+		fortune_list.size+=fortune_list.size;
+		fortune_list.list=realloc(fortune_list.list, fortune_list.size * sizeof(fortune_list.size));
+	}
+	strncpy(fortune_list.list[fortune_list.count].id,"0",sizeof(fortune_list.list[fortune_list.count].id));
+	strncpy(fortune_list.list[fortune_list.count].message,"Additional fortune added at request time.",sizeof(fortune_list.list[fortune_list.count].message));
+	fortune_list.count++;
+	
 	
 	qsort(fortune_list.list, fortune_list.count, sizeof(fortune_t), (__compar_fn_t)cmp_fortune);
 	
@@ -178,7 +211,7 @@ onion_connection_status return_fortune(MYSQL *db, onion_request *req, onion_resp
 	int i;
 	for (i=0;i<fortune_list.count;i++){
 		char nr[16];
-		snprintf(nr,sizeof(nr),"%010d",nr);
+		snprintf(nr,sizeof(nr),"%010d",i);
 		
 		onion_dict *fortune=onion_dict_new();
 		onion_dict_add(fortune, "id", fortune_list.list[i].id, 0);
@@ -250,6 +283,12 @@ onion_connection_status muxer(struct test_data *data, onion_request *req, onion_
 		return return_json_libjson(NULL, req, res);
 	
 	if (strcmp(path, "db")==0){
+		MYSQL *db=get_connection(data);
+		int ret=return_one_db(db, req, res);
+		free_connection(data, db);
+		return ret;
+	}
+	if (strcmp(path, "queries")==0){
 		MYSQL *db=get_connection(data);
 		int ret=return_db(db, req, res);
 		free_connection(data, db);
