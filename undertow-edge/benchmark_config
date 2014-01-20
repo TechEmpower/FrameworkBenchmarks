@@ -1,5 +1,5 @@
-
-rk": "undertow-edge",
+{
+  "framework": "undertow-edge",
   "tests": [{
     "default": {
       "setup_file": "setup",
