@@ -25,7 +25,7 @@
       "db_url": "/activeweb/db",
       "query_url": "/activeweb/db?queries=",
       "fortune_url": "/activeweb/fortunes",
-      "update_url": "/activeweb/update?queries=",
+      "update_url": "/activeweb/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
