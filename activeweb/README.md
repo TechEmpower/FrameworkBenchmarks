@@ -17,9 +17,7 @@ How to start locally
 2. Start application:
 
 ```
-
     export ACTIVE_ENV=local
-
     mvn jetty:run
 ```
 
