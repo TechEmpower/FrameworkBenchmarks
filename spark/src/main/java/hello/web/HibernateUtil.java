@@ -4,13 +4,17 @@ import hello.domain.World;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.MySQLDialect;
-import org.hibernate.service.ServiceRegistryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HibernateUtil {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(HibernateUtil.class);
+    
     private static final SessionFactory SESSION_FACTORY = createSessionFactory();
     private static final ThreadLocal<Session> SESSIONS = new ThreadLocal<>();
     
@@ -32,14 +36,19 @@ public class HibernateUtil {
     }
     
     private static SessionFactory createSessionFactory() {
-        Configuration configuration = configuration();
-        configuration.setProperty(AvailableSettings.DIALECT, MySQLDialect.class.getName());
-        configuration.setProperty(AvailableSettings.USE_QUERY_CACHE, "false");
-        configuration.setProperty(AvailableSettings.SHOW_SQL, "false");
-        configuration.setProperty(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-        configuration.addAnnotatedClass(World.class);
-        ServiceRegistryBuilder serviceRegistryBuilder = new ServiceRegistryBuilder().applySettings(configuration.getProperties());
-        return configuration.buildSessionFactory(serviceRegistryBuilder.buildServiceRegistry());
+        try {
+            Configuration configuration = configuration();
+            configuration.setProperty(AvailableSettings.DIALECT, MySQLDialect.class.getName());
+            configuration.setProperty(AvailableSettings.USE_QUERY_CACHE, "false");
+            configuration.setProperty(AvailableSettings.SHOW_SQL, "false");
+            configuration.setProperty(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+            configuration.addAnnotatedClass(World.class);
+            StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+            return configuration.buildSessionFactory(serviceRegistryBuilder.build());
+        } catch (RuntimeException ex) {
+            LOGGER.error("Failed to create session factory");
+            throw ex;
+        }
     }
     
     private static Configuration configuration() {
