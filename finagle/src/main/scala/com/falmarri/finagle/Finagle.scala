@@ -71,6 +71,7 @@ object FinagleBenchmark extends App {
         createResponse(req, serialize(Map("message" -> "Hello, World!")))
       }
     })
+  /*
     .withHandler("/db", new Service[HttpRequest, HttpResponse] {
       val rand = new Random()
       val sql = "SELECT * FROM world WHERE id = "
@@ -97,6 +98,7 @@ object FinagleBenchmark extends App {
         }
       }
     })
+   */
 
   //Http.serve(new InetSocketAddress(8080), HttpMuxer)
   val server: Server = ServerBuilder()
