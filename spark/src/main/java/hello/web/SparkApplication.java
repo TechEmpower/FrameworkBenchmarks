@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import spark.Filter;
 import spark.Request;
 import spark.Response;
+import spark.Route;
 
 public class SparkApplication implements spark.servlet.SparkApplication {
 
@@ -50,9 +51,9 @@ public class SparkApplication implements spark.servlet.SparkApplication {
                 return (param == null ? 1 : Integer.parseInt(param));
             }
         });
-        get(new LoggingRoute("/plaintext") {
+        get(new Route("/plaintext") {
             @Override
-            protected Object handleInternal(final Request request, final Response response) {
+            public Object handle(final Request request, final Response response) {
                 response.type(CONTENT_TYPE_TEXT);
                 return MESSAGE;
             }
