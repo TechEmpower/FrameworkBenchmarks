@@ -20,7 +20,7 @@ limitations under the License.
 
 package app.controllers;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javalite.activeweb.AppController;
 
 import java.io.IOException;
