@@ -20,6 +20,7 @@ limitations under the License.
 
 package app.controllers;
 
+import org.javalite.activeweb.Configuration;
 import org.javalite.activeweb.ControllerSpec;
 import org.junit.Test;
 
@@ -30,6 +31,7 @@ public class JsonControllerSpec extends ControllerSpec {
     @Test
     public void shouldRenderMessage() {
 
+        System.out.println("ACTIVE_ENV value ============>>>>" + Configuration.getEnv());
         //execute controller
         request().get("index");
 
