@@ -33,7 +33,7 @@ public class FortunesController extends AppController {
     public void index() {
         List<Fortune> dbFortunes = Fortune.findAll();
         List<Fortune> fortunes = new ArrayList<Fortune>(dbFortunes);
-        fortunes.add((Fortune) Fortune.create("id", 0, "message", "New fortune: " + new Date().toString()));
+        fortunes.add((Fortune) Fortune.create("id", 0, "message", "Additional fortune added at request time."));
         Collections.sort(fortunes);
         view("fortunes", fortunes);
         render().noLayout();
