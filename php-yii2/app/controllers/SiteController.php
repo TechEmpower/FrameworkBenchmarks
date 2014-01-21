@@ -28,6 +28,8 @@ class SiteController extends Controller
         if ($queries == 1) {
             $arr = $statement->bindValue(':id',mt_rand(1, 10000))->queryOne();
         } else {
+            if ($queries > 500) $queries = 500;
+            elseif ($queries < 0 ) $queries = 1;
             // Create an array with the response string.
             $arr = array();
             // For each query, store the result set values in the response array
