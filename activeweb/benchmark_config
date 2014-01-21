@@ -1,0 +1,45 @@
+{
+  "framework": "activeweb",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/activeweb/json",
+      "plaintext_url": "/activeweb/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "activeweb",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "ActiveWeb",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ActiveWeb",
+      "notes": "",
+      "versus": "servlet"
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/activeweb/db",
+      "query_url": "/activeweb/db?queries=",
+      "fortune_url": "/activeweb/fortunes",
+      "update_url": "/activeweb/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "ActiveWeb",
+      "language": "Java",
+      "orm": "Raw",
+      "platform": "ActiveWeb",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "activeweb",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }]
+}
