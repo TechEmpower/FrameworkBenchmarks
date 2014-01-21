@@ -14,7 +14,7 @@ Uses the Yii2 Fluent Query Builder.
 * [DB test controller](app/controllers/SiteController.php)
 
 ### Template Test
-Uses Yii2s template engine 'blade'
+Uses Php template
 
 * [Template test controller](application/controllers/Bench.php)
 
