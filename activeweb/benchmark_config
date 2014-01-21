@@ -23,7 +23,7 @@
     "raw": {
       "setup_file": "setup",
       "db_url": "/activeweb/db",
-      "query_url": "/activeweb/db?queries=",
+      "query_url": "/activeweb/queries?queries=",
       "fortune_url": "/activeweb/fortunes",
       "update_url": "/activeweb/updates?queries=",
       "port": 8080,
