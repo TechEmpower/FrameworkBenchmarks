@@ -16,8 +16,12 @@ How to start locally
 
 2. Start application:
 
+```
+
     export ACTIVE_ENV=local
+
     mvn jetty:run
+```
 
 3. Access this URL with browser:
 
