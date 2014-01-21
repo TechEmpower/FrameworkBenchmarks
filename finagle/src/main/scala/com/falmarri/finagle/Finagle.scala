@@ -4,7 +4,6 @@ import scala.util.Random
 import scala.collection.immutable.StringOps
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import java.util.concurrent.Executors
 import com.twitter.finagle.Service
 import com.twitter.finagle.exp.Mysql
 import com.twitter.finagle.exp.mysql._
@@ -12,7 +11,7 @@ import org.jboss.netty.handler.codec.http._
 import org.jboss.netty.handler.codec.http.HttpResponseStatus._
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1
 import org.jboss.netty.buffer.ChannelBuffers.wrappedBuffer
-import com.twitter.util.{Future, FuturePool}
+import com.twitter.util.Future
 import java.net.InetSocketAddress
 import com.twitter.finagle.builder.{Server, ServerBuilder}
 import com.twitter.finagle.http.{Http,HttpMuxer}
@@ -35,8 +34,6 @@ object FinagleBenchmark extends App {
       .withCredentials(username, password)
       .withDatabase(db)
       .newRichClient(host + ":3306")
-
-  val pool = FuturePool(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2))
 
   val mapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
@@ -67,9 +64,8 @@ object FinagleBenchmark extends App {
 
   val muxService = new HttpMuxer()
     .withHandler("/json", new Service[HttpRequest, HttpResponse] {
-      def apply(req: HttpRequest): Future[HttpResponse] = pool {
+      def apply(req: HttpRequest): Future[HttpResponse] =
         createResponse(req, serialize(Map("message" -> "Hello, World!")))
-      }
     })
   /*
     .withHandler("/db", new Service[HttpRequest, HttpResponse] {
