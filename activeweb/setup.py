@@ -6,6 +6,7 @@ import setup_util
 
 def start(args, logfile, errfile):
   setup_util.replace_text("activeweb/src/main/webapp/WEB-INF/resin-web.xml", "localhost", args.database_host)
+  setup_util.replace_text("activeweb/src/main/java/app/config/DbConfig.java", "localhost", args.database_host)
 
   try:
     subprocess.check_call("mvn clean  package", shell=True, cwd="activeweb", stderr=errfile, stdout=logfile)
