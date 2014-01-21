@@ -1,0 +1,18 @@
+{
+    "name": "yiisoft/yii2",
+    "type": "project",
+    "description": "Slim Framework, a PHP micro framework",
+    "keywords": ["yii", "framework", "basic", "application template"],
+    "homepage": "http://www.yiiframework.com/",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Natchanon Tatsaneepong",
+            "email": "unlucky_soulz@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "*"
+    }
+}
