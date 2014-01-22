@@ -56,25 +56,63 @@ namespace AspNetAsyncBenchmark.Models
 			}
 		}
 
+		private static DbCommand CloneDbCommand(DbCommand command)
+		{
+			if (command is ICloneable)
+				return (DbCommand) ((ICloneable) command).Clone();
+			else
+			{
+				dynamic clone = command;
+				clone = clone.Clone();
+				return (DbCommand) clone;
+			}
+		}
+
 		public static async Task<IEnumerable<World>> GetRandomWorlds(string providerName, int count)
 		{
 			var results = new ConcurrentBag<World>();
 			var rnd = new Random();
 
-			return await ExecuteCommandAsync(providerName, true, "SELECT randomNumber FROM World WHERE id = @p_id", new[] { "p_id" },
-				async command =>
-				{
-					for (int i = 0; i < count; i++)
+			if (providerName.IndexOf("sqlserver", StringComparison.OrdinalIgnoreCase) > -1 || providerName.IndexOf("postgres", StringComparison.OrdinalIgnoreCase) > -1)
+			{
+				// take full advantage of multiple active recordsets (MARS) capabilities by batching commands in separate tasks
+				return await ExecuteCommandAsync(providerName, true, "SELECT randomNumber FROM World WHERE id = @p_id", new[] { "p_id" },
+					async command =>
 					{
-						int id = rnd.Next(0, 10000) + 1;
-						command.Parameters["p_id"].Value = id;
+						var tasks = new Task[count];
 
-						var result = await command.ExecuteScalarAsync();
-						results.Add(new World { id = id, randomNumber = (int) result });
-					}
+						for (int i = 0; i < count; i++)
+						{
+							var clone = CloneDbCommand(command);
+							int id = rnd.Next(0, 10000) + 1;
+							clone.Parameters["p_id"].Value = id;
 
-					return results;
-				});
+							tasks[i] = clone.ExecuteScalarAsync().ContinueWith(t => results.Add(new World { id = (int) clone.Parameters["p_id"].Value, randomNumber = (int) t.Result }));
+						}
+
+						await Task.WhenAll(tasks);
+
+						return results;
+					});
+			}
+			else
+			{
+				// await each command execution in sequence
+				return await ExecuteCommandAsync(providerName, true, "SELECT randomNumber FROM World WHERE id = @p_id", new[] { "p_id" },
+					async command =>
+					{
+						for (int i = 0; i < count; i++)
+						{
+							int id = rnd.Next(0, 10000) + 1;
+							command.Parameters["p_id"].Value = id;
+
+							var result = await command.ExecuteScalarAsync();
+							results.Add(new World { id = id, randomNumber = (int) result });
+						}
+
+						return results;
+					});
+			}
 		}
 
 		public static async Task<IEnumerable<Fortune>> GetFortunes(string providerName)
