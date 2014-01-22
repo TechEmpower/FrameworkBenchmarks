@@ -126,12 +126,7 @@ class FrameworkTest:
       if  obj["message"].lower() == "hello, world!":
         return True
     except:
-      err.write(textwrap.dedent("""
-          -----------------------------------------------------
-            Error: validateJson raised exception
-          -----------------------------------------------------
-          {trace}
-          """.format( trace=sys.exc_info()[:2])))
+      pass
     return False
 
   ############################################################
@@ -155,12 +150,7 @@ class FrameworkTest:
           type(float(obj["randomNumber"])) == float):
         return True
     except:
-      err.write(textwrap.dedent("""
-          -----------------------------------------------------
-            Error: validateDb raised exception
-          -----------------------------------------------------
-          {trace}
-          """.format( trace=sys.exc_info()[:2])))
+      pass
     return False
 
   def validateDbStrict(self, jsonString, out, err):
@@ -174,12 +164,7 @@ class FrameworkTest:
           type(float(obj["randomNumber"])) == float):
         return True
     except:
-      err.write(textwrap.dedent("""
-          -----------------------------------------------------
-            Error: validateDbStrict raised exception
-          -----------------------------------------------------
-          {trace}
-          """.format( trace=sys.exc_info()[:2])))
+      pass
     return False
 
 
@@ -199,12 +184,7 @@ class FrameworkTest:
           type(float(arr[1]["randomNumber"])) == float):
         return True
     except:
-      err.write(textwrap.dedent("""
-          -----------------------------------------------------
-            Error: validateQuery raised exception
-          -----------------------------------------------------
-          {trace}
-          """.format( trace=sys.exc_info()[:2])))
+      pass
     return False
 
   ############################################################
@@ -229,12 +209,7 @@ class FrameworkTest:
       # By here, it's passed validation
       return True
     except:
-      err.write(textwrap.dedent("""
-          -----------------------------------------------------
-            Error: validateQuery raised exception
-          -----------------------------------------------------
-          {trace}
-          """.format( trace=sys.exc_info()[:2])))
+      pass
     return False
 
   ############################################################
@@ -259,12 +234,7 @@ class FrameworkTest:
       # By here, it's passed validation
       return True
     except:
-      err.write(textwrap.dedent("""
-          -----------------------------------------------------
-            Error: validateQuery raised exception
-          -----------------------------------------------------
-          {trace}
-          """.format( trace=sys.exc_info()[:2])))
+      pass
     return False
 
   ############################################################
@@ -278,12 +248,7 @@ class FrameworkTest:
 
       return parser.isValidFortune()
     except:
-      err.write(textwrap.dedent("""
-          -----------------------------------------------------
-            Error: validateFortune raised exception
-          -----------------------------------------------------
-          {trace}
-          """.format( trace=sys.exc_info()[:2])))
+      pass
     return False
 
   ############################################################
@@ -302,12 +267,7 @@ class FrameworkTest:
           type(float(arr[1]["randomNumber"])) == float):
         return True
     except:
-      err.write(textwrap.dedent("""
-          -----------------------------------------------------
-            Error: validateUpdate raised exception
-          -----------------------------------------------------
-          {trace}
-          """.format( trace=sys.exc_info()[:2])))
+      pass
     return False
 
   ############################################################
@@ -317,12 +277,7 @@ class FrameworkTest:
     try:
       return jsonString.lower().strip() == "hello, world!"
     except:
-      err.write(textwrap.dedent("""
-          -----------------------------------------------------
-            Error: validatePlaintext raised exception
-          -----------------------------------------------------
-          {trace}
-          """.format( trace=sys.exc_info()[:2])))
+      pass
     return False
 
   ############################################################
@@ -419,7 +374,7 @@ class FrameworkTest:
         out.write(self.query_url + "2 - PASS\n\n")
       else:
         self.query_url_passed = False
-        out.write(self.query_url + "2 - ERROR\n\n")
+        out.write(self.query_url + "2 - FAIL\n\n")
       out.write("-----------------------------------------------------\n\n")
       out.flush()
 
