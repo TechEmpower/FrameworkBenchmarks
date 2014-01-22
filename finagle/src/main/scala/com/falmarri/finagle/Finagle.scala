@@ -65,7 +65,7 @@ object FinagleBenchmark extends App {
   val muxService = new HttpMuxer()
     .withHandler("/json", new Service[HttpRequest, HttpResponse] {
       def apply(req: HttpRequest): Future[HttpResponse] =
-        createResponse(req, serialize(Map("message" -> "Hello, World!")))
+        Future.value(createResponse(req, serialize(Map("message" -> "Hello, World!"))))
     })
   /*
     .withHandler("/db", new Service[HttpRequest, HttpResponse] {
