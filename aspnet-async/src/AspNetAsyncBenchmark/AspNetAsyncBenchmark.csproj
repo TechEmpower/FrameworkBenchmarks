@@ -41,6 +41,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Devart.Data">
+      <HintPath>..\packages\dotConnect.Express.for.PostgreSQL.7.2.80\lib\Devart.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Devart.Data.PostgreSql">
+      <HintPath>..\packages\dotConnect.Express.for.PostgreSQL.7.2.80\lib\Devart.Data.PostgreSql.dll</HintPath>
+    </Reference>
     <Reference Include="Jil">
       <HintPath>..\packages\Jil.0.11.0\lib\net45\Jil.dll</HintPath>
     </Reference>

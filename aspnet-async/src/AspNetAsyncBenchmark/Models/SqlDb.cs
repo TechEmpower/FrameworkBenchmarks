@@ -30,6 +30,10 @@ namespace AspNetAsyncBenchmark.Models
 				{
 					command.CommandText = commandText;
 
+					//HACK: ugly hack because dotConnect provider does not support @ parameter prefix : http://forums.devart.com/viewtopic.php?t=21497
+					if (command is Devart.Data.PostgreSql.PgSqlCommand) 
+						command.CommandText = command.CommandText.Replace('@', ':');
+
 					if (parameterNames != null)
 					{
 						foreach (var name in parameterNames)
@@ -42,7 +46,7 @@ namespace AspNetAsyncBenchmark.Models
 
 					await cnn.OpenAsync();
 
-					// quick hack to not call prepare for SQL Server because it requires parameter types
+					//HACK: quick hack to not call prepare for SQL Server because it requires parameter types
 					// SQL Server caches the execution plan by default anyway
 					if (prepare && !(command is System.Data.SqlClient.SqlCommand))
 						command.Prepare();

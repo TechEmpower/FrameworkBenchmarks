@@ -79,6 +79,26 @@
       "notes": "",
       "versus": ""
     },
+	"postgresql-raw-dotConnect": {
+      "setup_file": "setup_iis",
+      "db_url": "/db?providerName=PostgreSQL_dotConnect",
+      "query_url": "/queries?providerName=PostgreSQL_dotConnect&queries=",
+      "fortune_url": "/fortunes?providerName=PostgreSQL_dotConnect",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "aspnet-mvc",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": "NET",
+      "webserver": "IIS",
+      "os": "Windows",
+      "database_os": "Linux",
+      "display_name": "aspnet-async-postgres",
+      "notes": "Use dotConnect PostgreSQL provider instead of npgsql. Batch updates are not supported in Express edition.",
+      "versus": ""
+    },
     "sqlserver-raw": {
       "setup_file": "setup_iis",
       "db_url": "/db?providerName=SQLServer",
