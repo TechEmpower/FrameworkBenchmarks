@@ -1,5 +1,5 @@
 {
-  "framework": "aspnet",
+  "framework": "aspnet-async",
   "tests": [{
     "default": {
       "setup_file": "setup_iis",
