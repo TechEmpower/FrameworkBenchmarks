@@ -18,9 +18,7 @@ namespace AspNetAsyncBenchmark.Controllers
 
 		public async Task<ActionResult> SingleQuery(string providerName)
 		{
-			var world = (await SqlDb.GetRandomWorlds(providerName, 1)).FirstOrDefault();
-
-			return Content(JSON.Serialize(world));
+			return await MultipleQueries(providerName, 1);
 		}
 
 		public async Task<ActionResult> MultipleQueries(string providerName, int? queries)
