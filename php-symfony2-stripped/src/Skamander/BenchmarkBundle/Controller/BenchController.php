@@ -27,11 +27,11 @@ class BenchController extends Controller
         $repo = $this->getDoctrine()
             ->getRepository('SkamanderBenchmarkBundle:World');
 
-        for($i = 0; $i < $queries; ++$i) {
+        for ($i = 0; $i < $queries; ++$i) {
             $worlds[] =  $repo->find(mt_rand(1, 10000));
         }
 
-        if ($queries == 1) {
+        if ($queries == 1 && !$request->query->has('queries')) {
             $worlds = $worlds[0];
         }
 
