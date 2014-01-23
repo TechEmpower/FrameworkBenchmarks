@@ -1,0 +1,21 @@
+source 'http://rubygems.org'
+
+platforms :jruby do
+  gem "jdbc-mysql", '5.1.31', :require => 'jdbc/mysql'
+  gem 'torqbox', '0.1.7'
+  gem "trinidad", '1.4.6'
+end
+
+platforms :ruby do
+  gem 'mysql2', '0.3.16'
+  gem "unicorn", '4.8.3'
+  gem "thin", '1.6.2'
+end
+
+gem 'puma', '2.9.0'
+gem 'json', '1.8.1'
+
+gem 'slim', '2.0.3'
+gem 'dm-mysql-adapter', '1.2.0'
+gem 'dm-core', '1.2.1'
+gem "padrino", "~> 0.12.3"
