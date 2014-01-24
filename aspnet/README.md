@@ -18,7 +18,7 @@
 **Platforms**
 
 * .NET Framework 4.5 (Windows)
-* Mono 3.2.1 (Linux)
+* Mono 3.2.6 (Linux)
 
 **Web Servers**
 
@@ -44,11 +44,11 @@
 
 ## Mono Installation
 
-    sudo apt-get install git-core build-essential autoconf automake libtool zlib1g-dev pkg-config
+    sudo apt-get install git-core build-essential autoconf automake libtool zlib1g-dev pkg-config gettext
 
     git clone git://github.com/mono/mono
     cd mono
-    git checkout mono-3.2.1
+    git checkout mono-3.2.6
     ./autogen.sh --prefix=/usr/local
     make get-monolite-latest
     make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe
