@@ -29,14 +29,14 @@
 **Web Stack**
 
 * ASP.NET 4.5
-* ASP.NET MVC Framework 4
+* ASP.NET MVC Framework 5.1.0
 
 **Databases**
 
-* MySQL Connector/Net 6.7.2-beta ([custom build](https://github.com/pdonald/mysql-connector-net))
-* Npgsql 2.0.13-beta1
-* Entity Framework 6.0.0-beta1
-* Mongo C# Driver 1.8.2
+* MySQL Connector/Net 6.8.3
+* Npgsql 2.0.14.3
+* Entity Framework 6.0.2
+* Mongo C# Driver 1.8.3
 
 **Developer Tools**
 

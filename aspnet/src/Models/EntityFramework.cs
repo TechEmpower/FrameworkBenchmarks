@@ -1,10 +1,5 @@
-using System;
 using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Configuration;
-using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-using System.Data.Entity.ModelConfiguration.Configuration.Types;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Reflection;
 
 namespace Benchmarks.AspNet.Models
 {
@@ -28,27 +23,15 @@ namespace Benchmarks.AspNet.Models
             modelBuilder.Ignore<MongoWorld>();
             
             if (Database.Connection is Npgsql.NpgsqlConnection)
-                modelBuilder.Conventions.Add<PostgreSqlConfigurationConvention>();
+                modelBuilder.Conventions.Add(new PostgreSqlConfigurationConvention());
         }
         
-        private class PostgreSqlConfigurationConvention
-            : IConfigurationConvention<Type, EntityTypeConfiguration>, 
-              IConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration>,
-              IConfigurationConvention<Type, ModelConfiguration>
+        private class PostgreSqlConfigurationConvention : Convention
         {
-            public void Apply(Type memberInfo, Func<EntityTypeConfiguration> configuration)
+            public PostgreSqlConfigurationConvention()
             {
-                configuration().ToTable(memberInfo.Name.ToLowerInvariant(), null);
-            }
-            
-            public void Apply(PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration)
-            {
-                configuration().ColumnName = memberInfo.Name.ToLowerInvariant();
-            }
-            
-            public void Apply(Type memberInfo, Func<ModelConfiguration> configuration)
-            {
-                configuration().DefaultSchema = "public";
+                Properties().Configure(p => p.HasColumnName(p.ClrPropertyInfo.Name.ToLowerInvariant()));
+                Types().Configure(c => c.ToTable(c.ClrType.Name.ToLowerInvariant(), "public"));
             }
         }
     }
