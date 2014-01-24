@@ -7,7 +7,7 @@
       "db_url": "/site/db",
       "query_url": "/site/db?queries=",
       "fortune_url": "/site/fortunes",
-      "update_url": "/site/update?queries=",
+      "update_url": "/site/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
