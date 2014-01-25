@@ -5,6 +5,8 @@
          json
          db)
 
+(define DEPLOY? #t)
+
 (define (response/json x)
   (response/output
    #:mime-type #"application/json"
@@ -17,13 +19,21 @@
 
 (define (go! db-host)
   (define c
-    (virtual-connection
-     (connection-pool
-      (λ ()
-        (mysql-connect #:user "benchmarkdbuser"
-                       #:password "benchmarkdbpass"
-                       #:database "hello_world"
-                       #:server db-host)))))
+    (cond
+      [DEPLOY?
+       (virtual-connection
+        (connection-pool
+         (λ ()
+           (mysql-connect #:user "benchmarkdbuser"
+                          #:password "benchmarkdbpass"
+                          #:database "hello_world"
+                          #:server db-host))))]
+      [else
+       (define c (sqlite3-connect #:database 'memory))
+       (query-exec c "create table World ( randomNumber int )")
+       (for ([i (in-range (add1 10000))])
+         (query-exec c "insert into World values ( $1 )" i))
+       c]))
 
   (define (db-one)
     (define random-id (add1 (random 10000)))
