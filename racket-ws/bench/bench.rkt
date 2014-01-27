@@ -37,7 +37,7 @@
 
   (define (db-one)
     (define random-id (add1 (random 10000)))
-    (query-list c "select * from World where randomNumber = $1" random-id))
+    (query-list c "select * from World where randomNumber = ?" random-id))
 
   (define (page/db req)
     (response/json
