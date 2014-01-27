@@ -44,23 +44,26 @@ class DbController extends Controller {
   }
 
   get("update") {
-    withJDBC { implicit request => session =>
+    withJDBC { implicit request => implicit session =>
       implicit val conn = session.conn
       val random = ThreadLocalRandom.current()
       val count = normalizeInt(params("count", "1").toIntOption.getOrElse(1), 1, 500)
       val buf = Array.ofDim[World](count)
+
       val updates = new StringBuilder
+      updates.append("update world set randomNumber = case ")
 
       (0 until count).foreach { i =>
         val world = sql("select id, randomNumber from world where id = ?")
           .apply(random.nextInt(maxId) + 1).map(r(_))
           .map(x => new World(x("id").toInt, x("randomNumber"))).head
         world.randomNumber = random.nextInt(maxId) + 1
-        updates.append(s"update world set randomNumber = ${world.randomNumber} where id = ${world.id};")
+        updates.append(s"when id = ${world.id} then ${world.randomNumber} ")
         buf(i) = world
       }
 
-      Q.updateNA(updates.result)
+      updates.append("end where id in (" + buf.map(_.id).mkString(",") + ")")
+      Q.updateNA(updates.result).execute
       render.json(buf)
     }
   }
