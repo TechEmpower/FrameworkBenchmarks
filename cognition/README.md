@@ -4,11 +4,11 @@ This is the Cognition portion of a [benchmarking test suite](../) comparing a va
 
 ### JSON Encoding Test
 
-* [JSON test source](src/main/scala/app/JsonController.scala)
+* [JSON test source](src/main/scala/app/controllers/JsonController.scala)
 
 ### Data-Store/Database Mapping Test
 
-* [Database test controller and model](src/main/scala/app/DbController.scala)
+* [Database test controller and model](src/main/scala/app/controllers/DbController.scala)
 
 ## Infrastructure Software Versions
 The tests were run with:
