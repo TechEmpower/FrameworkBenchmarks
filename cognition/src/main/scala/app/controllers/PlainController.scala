@@ -6,6 +6,6 @@ class PlainController extends Controller {
 
   get("/plaintext")(_ => response)
 
-  private[this] final val response = render.plain("Hello, World!").header("Content-Type", "text/plain")
+  private[this] final val response = render.plain("Hello, World!")
 
 }
