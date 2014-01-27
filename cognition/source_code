@@ -1,0 +1,11 @@
+./cognition/src/main/resources/application.conf
+./cognition/src/main/resources/logback.xml
+./cognition/src/main/scala/Benchmark.scala
+./cognition/src/main/scala/app/conf/Authentication.scala
+./cognition/src/main/scala/app/controllers/DbController.scala
+./cognition/src/main/scala/app/controllers/FortuneController.scala
+./cognition/src/main/scala/app/controllers/JsonController.scala
+./cognition/src/main/scala/app/controllers/PlainController.scala
+./cognition/src/main/scala/app/models/Models.scala
+./cognition/src/main/scala/app/utils/Common.scala
+./cognition/src/main/scala/app/views/fortunes/Index.scala

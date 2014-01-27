@@ -1,0 +1,45 @@
+{
+  "framework": "cognition",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "cognition",
+      "language": "Scala",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cognition",
+      "notes": "",
+      "versus": "netty"
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/queries?count=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?count=",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "cognition",
+      "language": "Scala",
+      "orm": "Raw",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cognition",
+      "notes": "",
+      "versus": "netty"
+    }
+  }]
+}
