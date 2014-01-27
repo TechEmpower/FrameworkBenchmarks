@@ -89,9 +89,11 @@ if (cluster.isMaster) {
   app.get('/mysql-orm', function(req, res) {
     if (windows) return res.send(501, 'Not supported on windows');
     
-    var queries = req.query.queries || 1
+    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
       , worlds  = []
       , queryFunctions = [];
+
+    queries = Math.min(Math.max(queries, 1), 500);
 
     for (var i = 1; i <= queries; i++ ) {
       queryFunctions.push(function(callback) {
@@ -103,7 +105,7 @@ if (cluster.isMaster) {
     }
 
     async.parallel(queryFunctions, function(err, results) {
-      if (queries == 1) {
+      if (!req.query.queries) {
         worlds = worlds[0];
       }
       res.send(worlds);
