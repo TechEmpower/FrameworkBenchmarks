@@ -36,8 +36,10 @@
        c]))
 
   (define (db-one)
-    (define random-id (add1 (random 10000)))
-    (query-list c "select * from World where randomNumber = ?" random-id))
+    (define id (add1 (random 10000)))
+    (define randomNumber
+      (query-value c "select randomNumber from World where id = ?" id))
+    (hash 'id id 'randomNumber randomNumber))
 
   (define (page/db req)
     (response/json
