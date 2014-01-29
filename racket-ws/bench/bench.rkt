@@ -30,9 +30,9 @@
                           #:server db-host))))]
       [else
        (define c (sqlite3-connect #:database 'memory))
-       (query-exec c "create table World ( randomNumber int )")
+       (query-exec c "create table World ( id int, randomNumber int )")
        (for ([i (in-range (add1 10000))])
-         (query-exec c "insert into World values ( $1 )" i))
+         (query-exec c "insert into World values ( $1, $1 )" i))
        c]))
 
   (define (db-one)
@@ -45,7 +45,16 @@
     (response/json
      (db-one)))
 
-  (define (page/dbs req i)
+  (define (clamp lo x hi)
+    (cond
+      [(x . < . lo) lo]
+      [(hi . < . x) hi]
+      [else          x]))
+
+  (define (page/dbs req is)
+    (define maybe-num (string->number is))
+    (define maybe-i (or maybe-num 0))
+    (define i (clamp 1 maybe-i 500))
     (response/json
      (for/list ([j (in-range i)])
        (db-one))))
@@ -56,7 +65,7 @@
       page/json]
      [("db")
       page/db]
-     [("dbs" (integer-arg))
+     [("dbs" (string-arg))
       page/dbs]))
 
   (serve/servlet
