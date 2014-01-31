@@ -46,7 +46,7 @@ As it currently stands, the script that runs the tests makes some assumptions ab
 
 Next, we're going to setup the Linux server and the client with the required software:
 
-	toolset/run-tests.py -s server-private-ip -c client-private-ip -i path-to-ssh-key --install-software --list-tests &> install.log
+	toolset/run-tests.py -s server-private-ip -c client-private-ip -i path-to-ssh-key -u user-name --install-software --list-tests &> install.log
     
 This step can take a couple hours. If you like, you can open another shell and watch the progress:
 
