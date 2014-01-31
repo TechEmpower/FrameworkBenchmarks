@@ -20,7 +20,7 @@ class DbController extends Controller {
       implicit val conn = session.conn
       val random = ThreadLocalRandom.current()
       val world = worldQuery(random.nextInt(maxId) + 1)
-        .map(x => new World(x.get("id").toInt, x.get("randomNumber"))).head
+        .map(x => new World(x.get("id"), x.get("randomNumber"))).head
 
       render.json(world)
     }
@@ -34,7 +34,8 @@ class DbController extends Controller {
       val buf = Array.ofDim[World](count)
 
       (0 until count).foreach { i =>
-        buf(i) = worldQuery(random.nextInt(maxId) + 1).map(x => new World(x.get("id").toInt, x.get("randomNumber"))).head
+        buf(i) = worldQuery(random.nextInt(maxId) + 1)
+          .map(x => new World(x.get("id"), x.get("randomNumber"))).head
       }
 
       render.json(buf)
@@ -52,7 +53,8 @@ class DbController extends Controller {
       updates.append("update world set randomNumber = case ")
 
       (0 until count).foreach { i =>
-        val world = worldQuery(random.nextInt(maxId) + 1).map(x => new World(x.get("id").toInt, x.get("randomNumber"))).head
+        val world = worldQuery(random.nextInt(maxId) + 1)
+          .map(x => new World(x.get("id"), x.get("randomNumber"))).head
         world.randomNumber = random.nextInt(maxId) + 1
         updates.append(s"when id = ${world.id} then ${world.randomNumber} ")
         buf(i) = world
