@@ -9,7 +9,6 @@ import conf.Authentication._
 import models._
 import utils.Common._
 import sqltyped._
-import shapeless.record.{ recordOps => r }
 
 class DbController extends Controller {
 
@@ -20,8 +19,8 @@ class DbController extends Controller {
       implicit val conn = session.conn
       val random = ThreadLocalRandom.current()
       val world = sql("select id, randomNumber from world where id = ?")
-        .apply(random.nextInt(maxId) + 1).map(r(_))
-        .map(x => new World(x("id").toInt, x("randomNumber"))).head
+        .apply(random.nextInt(maxId) + 1)
+        .map(x => new World(x.get("id").toInt, x.get("randomNumber"))).head
 
       render.json(world)
     }
@@ -35,8 +34,8 @@ class DbController extends Controller {
       val buf = Array.ofDim[World](count)
       (0 until count).foreach { i =>
         buf(i) = sql("select id, randomNumber from world where id = ?")
-          .apply(random.nextInt(maxId) + 1).map(r(_))
-          .map(x => new World(x("id").toInt, x("randomNumber"))).head
+          .apply(random.nextInt(maxId) + 1)
+          .map(x => new World(x.get("id").toInt, x.get("randomNumber"))).head
       }
 
       render.json(buf)
@@ -55,8 +54,8 @@ class DbController extends Controller {
 
       (0 until count).foreach { i =>
         val world = sql("select id, randomNumber from world where id = ?")
-          .apply(random.nextInt(maxId) + 1).map(r(_))
-          .map(x => new World(x("id").toInt, x("randomNumber"))).head
+          .apply(random.nextInt(maxId) + 1)
+          .map(x => new World(x.get("id").toInt, x.get("randomNumber"))).head
         world.randomNumber = random.nextInt(maxId) + 1
         updates.append(s"when id = ${world.id} then ${world.randomNumber} ")
         buf(i) = world
