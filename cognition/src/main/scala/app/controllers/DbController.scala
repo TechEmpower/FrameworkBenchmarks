@@ -13,14 +13,14 @@ import sqltyped._
 class DbController extends Controller {
 
   private[this] final val maxId = 9999
+  private[this] final val worldTupled = World.tupled
   private[this] val worldQuery = sql("select id, randomNumber from world where id = ?")
 
   get("db") {
     withJDBC { implicit request => session =>
       implicit val conn = session.conn
       val random = ThreadLocalRandom.current()
-      val world = worldQuery(random.nextInt(maxId) + 1)
-        .map(x => new World(x.get("id"), x.get("randomNumber"))).head
+      val world = worldQuery(random.nextInt(maxId) + 1).map(x => worldTupled(x.tupled)).head
 
       render.json(world)
     }
@@ -34,8 +34,7 @@ class DbController extends Controller {
       val buf = Array.ofDim[World](count)
 
       (0 until count).foreach { i =>
-        buf(i) = worldQuery(random.nextInt(maxId) + 1)
-          .map(x => new World(x.get("id"), x.get("randomNumber"))).head
+        buf(i) = worldQuery(random.nextInt(maxId) + 1).map(x => worldTupled(x.tupled)).head
       }
 
       render.json(buf)
@@ -53,8 +52,7 @@ class DbController extends Controller {
       updates.append("update world set randomNumber = case ")
 
       (0 until count).foreach { i =>
-        val world = worldQuery(random.nextInt(maxId) + 1)
-          .map(x => new World(x.get("id"), x.get("randomNumber"))).head
+        val world = worldQuery(random.nextInt(maxId) + 1).map(x => worldTupled(x.tupled)).head
         world.randomNumber = random.nextInt(maxId) + 1
         updates.append(s"when id = ${world.id} then ${world.randomNumber} ")
         buf(i) = world

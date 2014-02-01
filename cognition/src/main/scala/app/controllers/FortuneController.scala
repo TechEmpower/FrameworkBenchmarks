@@ -16,7 +16,7 @@ class FortuneController extends Controller {
       val buffer = new ArrayBuffer[Fortune]
       buffer += new Fortune(0, "Additional fortune added at request time.")
       sql("select id, message from fortune").apply
-        .foreach(x => buffer += new Fortune(x.get("id"), x.get("message")))
+        .foreach(x => buffer += Fortune(x.get("id"), x.get("message")))
 
       render.html(Index(buffer.sortBy(_.message)))
     }
