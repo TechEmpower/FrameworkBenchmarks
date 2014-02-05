@@ -858,20 +858,24 @@ class FrameworkTest:
   # is an HTTP error.
   ############################################################
   def __curl_url(self, url, testType, out, err):
-    # Use -i to output response with headers.
-    # Don't use -f so that the HTTP response code is ignored.
-    # Use --stderr - to redirect stderr to stdout so we get
-    # error output for sure in stdout.
-    # Use -sS to hide progress bar, but show errors.
-    subprocess.check_call(["curl", "-i", "-sS", url], stderr=err, stdout=out)
-    # HTTP output may not end in a newline, so add that here.
-    out.write( "\n\n" )
-    out.flush()
-    err.flush()
+    output = None
+    try:
+      # Use -i to output response with headers.
+      # Don't use -f so that the HTTP response code is ignored.
+      # Use --stderr - to redirect stderr to stdout so we get
+      # error output for sure in stdout.
+      # Use -sS to hide progress bar, but show errors.
+      subprocess.check_call(["curl", "-i", "-sS", url], stderr=err, stdout=out)
+      # HTTP output may not end in a newline, so add that here.
+      out.write( "\n\n" )
+      out.flush()
+      err.flush()
 
-    # We need to get the respond body from the curl and return it.
-    p = subprocess.Popen(["curl", "-s", url], stdout=subprocess.PIPE)
-    output = p.communicate()
+      # We need to get the respond body from the curl and return it.
+      p = subprocess.Popen(["curl", "-s", url], stdout=subprocess.PIPE)
+      output = p.communicate()
+    except:
+      pass
 
     if output:
       # We have the response body - return it
