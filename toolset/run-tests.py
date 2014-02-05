@@ -85,7 +85,7 @@ def main(argv=None):
     parser.add_argument('--query-interval', default=5, type=int)
     parser.add_argument('--max-threads', default=maxThreads, help='The max number of threads to run weight at, this should be set to the number of cores for your system.', type=int)
     parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
-    parser.add_argument('--starting-concurrency', default=, type=int)
+    parser.add_argument('--starting-concurrency', default=8, type=int)
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
     parser.add_argument('--name', default="ec2", help='The name to give this test. Results will be placed in a folder using this name.')
