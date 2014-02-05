@@ -40,24 +40,46 @@ class TestController extends Controller
 	public function DB()
 	{
 		require_once("Model/World.php");
-		
+
+		$id = mt_rand(1, 10000);
+		$world = $this->Phreezer->Get("World",$id);
+		$this->RenderJSON($world);
+	}
+	
+	
+	/**
+	 * Test route that connects to the database and outputs
+	 * the number of rows specified in the querystring argument "queries"
+	 */
+	public function Query()
+	{
+		require_once("Model/World.php");
+	
 		// Read number of queries to run from URL parameter
 		$query_count = RequestUtil::Get('queries',1);
-
+		
+		// make sure the query count paramter is in range
+		if (!is_numeric($query_count)) {
+			$query_count = 1;
+		}
+		else {
+			$query_count = max(1,min($query_count,500));
+		}
+		
 		$arr = array();
-		
+			
 		for ($i = 0; $i < $query_count; $i++) {
-		
+				
 			$id = mt_rand(1, 10000);
-			
+
 			$world = $this->Phreezer->Get("World",$id);
-			
+
 			// convert the Phreezable object into a simple structure for output
 			$arr[] = array('id'=>$world->Id,'randomNumber'=>$world->Randomnumber);
 		}
-		
+			
 		$this->RenderJSON($arr);
-
+	
 	}
 	
 	/**
