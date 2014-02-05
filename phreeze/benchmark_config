@@ -3,9 +3,12 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/db?queries=",
+      "json_url": "/index.php?json",
+      "db_url": "/index.php?db",
+      "query_url": "/index.php?db&queries=",
+      "fortune_url": "/index.php?fortunes",
+      "update_url": "/index.php?updates&queries=",
+      "plaintext_url": "/index.php?plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

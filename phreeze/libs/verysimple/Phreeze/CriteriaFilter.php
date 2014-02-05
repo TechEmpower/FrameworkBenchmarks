@@ -57,6 +57,15 @@ class CriteriaFilter
 		
 		return $where;
 	}
+	
+	/**
+	 * Return the "order by" portion of the SQL statement (without the order by prefix)
+	 * @param Criteria $criteria the Criteria object to which this filter has been added
+	 */
+	public function GetOrder($criteria)
+	{
+		return "";
+	}
 }
 
 ?>
