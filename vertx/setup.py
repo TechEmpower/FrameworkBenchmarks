@@ -19,6 +19,6 @@ def stop(logfile, errfile):
   for line in out.splitlines():
     if 'app.js' in line:
       pid = int(line.split(None, 2)[1])
-      os.kill(pid, 9)
+      os.kill(pid, 15)
 
   return 0
