@@ -1,5 +1,5 @@
 {
-  "framework": "zend-framework",
+  "framework": "ZendFramework",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -7,7 +7,19 @@
       "db_url": "/db",
       "query_url": "/db-multi?queries=",
       "port": 8080,
-      "sort": 51
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "ZendFramework",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ZendFramework",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }
