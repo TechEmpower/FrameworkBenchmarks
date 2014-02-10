@@ -31,6 +31,7 @@ def start(args, logfile, errfile):
   cd src/ulib/net/server/plugin/usp
   make install >/dev/null 2>&1
   make db.la fortunes.la json.la plaintext.la queries.la updates.la >/dev/null 2>&1
+  sudo mkdir -p ~/FrameworkBenchmarks/ULib/www
   sudo cp .libs/db.so .libs/fortunes.so .libs/json.so .libs/plaintext.so .libs/queries.so .libs/updates.so ~/FrameworkBenchmarks/ULib/www
   cd ~
   """
