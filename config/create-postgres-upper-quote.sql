@@ -1,11 +1,11 @@
 DROP TABLE IF EXISTS "World";
 CREATE TABLE  "World" (
   id integer NOT NULL,
-  randomNumber integer NOT NULL default 0,
+  "randomNumber" integer NOT NULL default 0,
   PRIMARY KEY  (id)
 );
 
-INSERT INTO "World" (id, randomNumber)
+INSERT INTO "World" (id, "randomNumber")
 SELECT x.id, random() * 10000 + 1 FROM generate_series(1,10000) as x(id);
 
 DROP TABLE IF EXISTS "Fortune";
