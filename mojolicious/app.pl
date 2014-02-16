@@ -23,10 +23,7 @@ get '/db' => sub { shift->render_query(1) };
 
 get '/queries' => sub {
   my $c = shift;
-  my $q = $c->param('queries');
-  $q = 1 unless looks_like_number($q);
-  $q = 500 if $q > 500;
-  $c->render_query($q);
+  $c->render_query($c->param('queries'));
 };
 
 get '/fortunes' => sub {
@@ -38,13 +35,21 @@ get '/fortunes' => sub {
   });
 };
 
+get '/updates' => sub {
+  my $c = shift;
+  $c->render_query($c->param('queries'), 1);
+};
+
 get '/plaintext' => sub { shift->render( text => 'Hello, World!' ) };
 
 # Additional helpers (shared code)
 
 helper 'render_query' => sub {
-  my ($self, $q) = @_;
+  my ($self, $q, $update) = @_;
   $self->render_later;
+
+  $q = 1 unless looks_like_number($q);
+  $q = 500 if $q > 500;
 
   my $r  = [];
   my $tx = $self->tx;
@@ -60,9 +65,14 @@ helper 'render_query' => sub {
     my $end = $delay->begin;
     $world->find_one({_id => $id} => sub {
       my ($collection, $err, $doc) = @_;
-      # return warn $err if $err;
-      push @$r, { id => $id, randomNumber => $doc->{randomNumber} };
-      $end->();
+      if ($update) {
+        my $rand = 1 + int rand 10_000;
+        push @$r, { id => $id, randomNumber => $rand };
+        $world->update({_id => $id}, {'$set' => { randomNumber => $rand }}, $end);
+      } else {
+        push @$r, { id => $id, randomNumber => $doc->{randomNumber} };
+        $end->();
+      }
     });
   }
 
