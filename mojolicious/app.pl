@@ -1,39 +1,92 @@
-#!/usr/bin/env perl
 use Mojolicious::Lite;
-use JSON::XS;
-use Memoize;
-use DBI;
+use Mango;
 
-my $dsn = "dbi:mysql:database=hello_world;host=localhost;port=3306";
-my $dbh = DBI->connect( $dsn, 'benchmarkdbuser', 'benchmarkdbpass', {} );
-my $sth = $dbh->prepare("SELECT * FROM World where id = ?");
+use JSON::XS 'encode_json';
+use Scalar::Util 'looks_like_number';
 
+# Database connections
 
-get '/json' => sub {
-    my $self = shift;    
-    $self->render( text => JSON::XS::encode_json( { message => 'Hello, world!' } ), format => 'json' );
+helper mango   => sub { state $mango = Mango->new('mongodb://localhost:27017') };
+helper db      => sub { state $db = shift->mango->db('hello_world') };
+helper world   => sub { shift->db->collection('World') };
+helper fortune => sub { shift->db->collection('Fortune') };
+
+# JSON::XS renderer
+
+helper render_json => sub { shift->render( data => encode_json(shift), format => 'json' ) }; 
+
+# Routes
+
+get '/json' => sub { shift->render_json({message => 'Hello, World!'}) };
+
+get '/db' => sub { shift->render_query(1) };
+
+get '/queries' => sub {
+  my $c = shift;
+  my $q = $c->param('queries');
+  $q = 1 unless looks_like_number($q);
+  $q = 500 if $q > 500;
+  $c->render_query($q);
 };
 
-get '/db' => sub {
-    my $self = shift;
-    my $queries = $self->param('queries') || 1;
-    my @response;
-    for ( 1 .. $queries ) {
-        my $id = int rand 10000 + 1;
-        $sth->execute($id);
-        if ( my $row = $sth->fetchrow_hashref ) {
-            if ( $queries == 1 ) {
-                $self->render( json => { id => $id, randomNumber => $row->{randomNumber} } );
-            }
-            else {
-                push @response,
-                  { id => $id, randomNumber => $row->{randomNumber} };
-            }
-        }
-    }
-    if ( $queries > 1 ) {
-        $self->render( json => \@response );
-    }
+get '/fortunes' => sub {
+  my $c = shift->render_later;
+  $c->fortune->find->all(sub{
+    my ($cursor, $err, $docs) = @_;
+    push @$docs, { _id => 0, message => 'Additional fortune added at request time.' };
+    $c->render( fortunes => docs => $docs );
+  });
+};
+
+get '/plaintext' => sub { shift->render( text => 'Hello, World!' ) };
+
+# Additional helpers (shared code)
+
+helper 'render_query' => sub {
+  my ($self, $q) = @_;
+  $self->render_later;
+
+  my $r  = [];
+  my $tx = $self->tx;
+
+  my $delay = Mojo::IOLoop->delay(sub{
+    $self->render_json($r) unless $tx->is_finished;
+  });
+
+  my $world = $self->world;
+
+  foreach (1 .. $q) {
+    my $id = int rand 10_000;
+    my $end = $delay->begin;
+    $world->find_one({_id => $id} => sub {
+      my ($collection, $err, $doc) = @_;
+      # return warn $err if $err;
+      push @$r, { id => $id, randomNumber => $doc->{randomNumber} };
+      $end->();
+    });
+  }
+
+  # use this line if not running under a Mojolicious server
+  # $delay->wait unless $delay->ioloop->is_running;
 };
 
 app->start;
+
+__DATA__
+
+@@ fortunes.html.ep
+<!DOCTYPE html>
+<html>
+  <head><title>Fortunes</title></head>
+  <body>
+    <table>
+      <tr><th>id</th><th>message</th></tr>
+      % foreach my $doc (sort { $a->{message} cmp $b->{message} } @$docs) {
+        <tr>
+          <td><%= $doc->{_id}     %></td>
+          <td><%= $doc->{message} %></td>
+        </tr>
+      % }
+    </table>
+  </body>
+</html>
