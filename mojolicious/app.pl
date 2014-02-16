@@ -65,14 +65,9 @@ helper 'render_query' => sub {
     my $end = $delay->begin;
     $world->find_one({_id => $id} => sub {
       my ($collection, $err, $doc) = @_;
-      if ($update) {
-        my $rand = 1 + int rand 10_000;
-        push @$r, { id => $id, randomNumber => $rand };
-        $world->update({_id => $id}, {'$set' => { randomNumber => $rand }}, $end);
-      } else {
-        push @$r, { id => $id, randomNumber => $doc->{randomNumber} };
-        $end->();
-      }
+      if ($update) { $doc->{randomNumber} = 1 + int rand 10_000 };
+      push @$r, { id => $id, randomNumber => $doc->{randomNumber} };
+      $update ? $world->save($doc, $end) : $end->();
     });
   }
 
