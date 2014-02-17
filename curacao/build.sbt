@@ -1,3 +1,5 @@
+import AssemblyKeys._
+
 name := "curacao-benchmark"
 
 organization := "com.kolich"
@@ -11,10 +13,9 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.kolich.curacao" % "curacao" % "2.0-M10",
-  "com.kolich.curacao" % "curacao-gson" % "2.0-M10",
-  "org.eclipse.jetty" % "jetty-webapp" % "9.1.1.v20140108" % "container",
-  "org.eclipse.jetty" % "jetty-plus" % "9.1.1.v20140108" % "container",
+  "com.kolich.curacao" % "curacao" % "2.0-M10" % "compile",
+  "com.kolich.curacao" % "curacao-gson" % "2.0-M10" % "compile",
+  "org.eclipse.jetty" % "jetty-webapp" % "9.1.1.v20140108" % "compile",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
   "org.slf4j" % "slf4j-api" % "1.7.2" % "compile",
   "ch.qos.logback" % "logback-core" % "1.0.7" % "compile",
@@ -23,4 +24,10 @@ libraryDependencies ++= Seq(
 
 classDirectory in Compile <<= baseDirectory(new File(_, "target/classes"))
 
-seq(webSettings :_*)
+sbtassembly.Plugin.assemblySettings
+
+mainClass in assembly := Some("benchmark.Bootstrap")
+
+outputPath in assembly := file("dist/curacao-standalone.jar")
+
+assemblyOption in assembly ~= { _.copy(includeScala = false) }
