@@ -198,7 +198,7 @@ class Installer:
     #
     # Ur/Web
     #
-    self.__run_command("hg clone -r126d24ef6678 http://hg.impredicative.com/urweb")
+    self.__run_command("hg clone -r6bea98c7f736 http://hg.impredicative.com/urweb")
     self.__run_command("./autogen.sh", cwd="urweb")
     self.__run_command("./configure", cwd="urweb")
     self.__run_command("make", cwd="urweb")
