@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/mysql-connector-java-5.1.23-bin.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/guava-14.0.1.jar"/>
 	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/trove4j-3.0.3.jar"/>
-	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-1.3.7.jar"/>
+	<classpathentry kind="lib" path="Docroot/WEB-INF/lib/gemini-1.4.jar"/>
 	<classpathentry kind="output" path="Docroot/WEB-INF/classes"/>
 </classpath>

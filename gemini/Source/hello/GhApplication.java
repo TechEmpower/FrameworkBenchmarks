@@ -22,7 +22,6 @@ import com.techempower.js.*;
  */
 public class GhApplication
      extends GeminiApplication
-  implements PyxisApplication
 {
   //
   // Static variables.
