@@ -40,10 +40,11 @@ get '/queries' => sub {
 
 get '/fortunes' => sub {
   my $c = shift->render_later;
+  my $tx = $c->tx;
   $c->fortune->find->all(sub{
     my ($cursor, $err, $docs) = @_;
     push @$docs, { _id => 0, message => 'Additional fortune added at request time.' };
-    $c->render( fortunes => docs => $docs );
+    $c->render( fortunes => docs => $docs ) unless $tx->is_finished;
   });
 };
 
