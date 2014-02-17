@@ -4,9 +4,21 @@ use Mango;
 use JSON::XS 'encode_json';
 use Scalar::Util 'looks_like_number';
 
+# configuration
+
+plugin JSONConfig => {
+  file => 'app.conf',
+  default => {
+    database_host => 'localhost',
+    workers => 8,
+  },
+};
+
+app->config->{hypnotoad}{workers} = app->config->{workers};
+
 # Database connections
 
-helper mango   => sub { state $mango = Mango->new('mongodb://localhost:27017') };
+helper mango   => sub { state $mango = Mango->new('mongodb://'. shift->config->{database_host} . ':27017') };
 helper db      => sub { state $db = shift->mango->db('hello_world') };
 helper world   => sub { shift->db->collection('World') };
 helper fortune => sub { shift->db->collection('Fortune') };
