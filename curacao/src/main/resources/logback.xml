@@ -12,7 +12,7 @@
         <appender-ref ref="CONSOLE"/>
     </logger>
 
-    <logger name="com.kolich.curacao" additivity="false" level="WARN">
+    <logger name="com.kolich.curacao" additivity="false" level="ERROR">
         <appender-ref ref="CONSOLE"/>
     </logger>
 
