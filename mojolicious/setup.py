@@ -1,6 +1,5 @@
 import subprocess
 import sys
-#import setup_util
 import json
 from os.path import expanduser
 import os
@@ -9,11 +8,9 @@ import getpass
 home = expanduser("~")
 
 def start(args, logfile, errfile):
-  # setup_util.replace_text("mojolicious/app.pl", "localhost", ""+ args.database_host +"")
-  # str(args.max_threads)
   conf = { 
-    'database_host': args.database_host,
-    'workers': args.max_threads,
+    'database_host' : args.database_host,
+    'workers'       : args.max_threads,
   }
   with open('mojolicious/app.conf', 'w') as f:
     f.write(json.dumps(conf))
