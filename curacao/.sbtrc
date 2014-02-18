@@ -1,3 +1,0 @@
-alias start = ;container:start
-alias stop = ;container:stop
-alias war = ;package
