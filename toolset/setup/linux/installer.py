@@ -225,13 +225,20 @@ class Installer:
     self.__run_command("sudo make install", cwd="nginx-1.4.1")
 
     #
-    # Openresty (nginx with openresty stuff)
+    # Openresty (nginx with lua stuff)
     #
-    self.__download("http://openresty.org/download/ngx_openresty-1.2.7.5.tar.gz")
-    self.__run_command("tar xzf ngx_openresty-1.2.7.5.tar.gz")
-    self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.2.7.5")
-    self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
-    self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
+    self.__download("http://openresty.org/download/ngx_openresty-1.5.8.1.tar.gz")
+    self.__run_command("tar xzf ngx_openresty-1.5.8.1.tar.gz")
+    self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.5.8.1")
+    self.__run_command("make", cwd="ngx_openresty-1.5.8.1")
+    self.__run_command("sudo make install", cwd="ngx_openresty-1.5.8.1")
+    
+    #
+    # Lapis
+    #
+    self.__run_command("sudo apt-get install luarocks")
+    self.__run_command("sudo luarocks install http://github.com/leafo/lapis/raw/master/lapis-dev-1.rockspec")
+
 
     #
     # Resin
