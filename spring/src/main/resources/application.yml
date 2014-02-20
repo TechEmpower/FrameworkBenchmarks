@@ -13,15 +13,14 @@ spring:
     hibernate:
       naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
       ddl-auto: validate
-    open_in_view: true
+    open_in_view: false
 
 tomcat:
   connector:
-    maxThreads: 200
-    minSpareThreads: 100
+    maxThreads: 12
     connectionTimeout: 20000
-    maxConnections: 200
-    maxKeepAliveRequests: 2000
+    maxConnections: 20000
+    maxKeepAliveRequests: -1
 
 ---
 spring:

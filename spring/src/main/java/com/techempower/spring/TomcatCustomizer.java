@@ -25,9 +25,6 @@ public class TomcatCustomizer implements EmbeddedServletContainerCustomizer {
 	@Value("${tomcat.connector.maxKeepAliveRequests}")
 	private int maxKeepAliveRequests;
 
-	@Value("${tomcat.connector.minSpareThreads}")
-	private int minSpareThreads;
-
 	@Override
 	public void customize(ConfigurableEmbeddedServletContainerFactory factory) {
 
@@ -45,10 +42,10 @@ public class TomcatCustomizer implements EmbeddedServletContainerCustomizer {
 						if (handler instanceof AbstractProtocol) {
 							AbstractProtocol protocol = (AbstractProtocol) handler;
 							protocol.setMaxThreads(maxThreads);
-							protocol.setMinSpareThreads(minSpareThreads);
 							protocol.setConnectionTimeout(connectionTimeout);
 							protocol.setMaxConnections(maxConnections);
 						}
+                        connector.setProperty("acceptCount", maxConnections+"");
 						connector.setProperty("maxKeepAliveRequests", maxKeepAliveRequests+"");
 					}
 				}
