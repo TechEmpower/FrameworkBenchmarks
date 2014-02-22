@@ -31,3 +31,5 @@ mainClass in assembly := Some("benchmark.Bootstrap")
 outputPath in assembly := file("dist/curacao-standalone.jar")
 
 assemblyOption in assembly ~= { _.copy(includeScala = false) }
+
+test in assembly := {}
