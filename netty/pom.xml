@@ -1,72 +1,78 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.techempower</groupId>
-  <artifactId>netty-example</artifactId>
-  <version>0.1</version>
-  
-  <packaging>jar</packaging>
+	<groupId>com.techempower</groupId>
+	<artifactId>netty-example</artifactId>
+	<version>0.1</version>
 
-  <dependencies>
-    <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty-codec-http</artifactId>
-      <version>4.0.14.Beta1</version>
-    </dependency>
-	 <dependency>
-		<groupId>com.fasterxml.jackson.core</groupId>
-		<artifactId>jackson-databind</artifactId>
-		<version>2.3.0</version>
-	 </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.javassist</groupId>
-      <artifactId>javassist</artifactId>
-      <version>3.18.0-GA</version>
-    </dependency>
-  </dependencies>
-  
-  <build>
-    <plugins>
-      <plugin>
-        <inherited>true</inherited>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-          <optimize>true</optimize>
-          <debug>false</debug>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>hello.HelloWebServer</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id> <!-- this is used for inheritance merges -->
-            <phase>package</phase> <!-- bind to the packaging phase -->
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-codec-http</artifactId>
+			<version>4.0.16.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-transport-native-epoll</artifactId>
+			<version>4.0.16.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-afterburner</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<optimize>true</optimize>
+					<debug>false</debug>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>hello.HelloWebServer</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

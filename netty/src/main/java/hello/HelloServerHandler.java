@@ -2,13 +2,6 @@ package hello;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
-import com.fasterxml.jackson.databind.*;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -22,12 +15,19 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.CharsetUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+
 
 public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
     private final SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
     private CharSequence date;
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
     private final ByteBuf buffer = Unpooled.directBuffer().writeBytes("Hello, World!".getBytes(CharsetUtil.UTF_8));
     private final CharSequence contentLength = HttpHeaders.newEntity(String.valueOf(buffer.readableBytes()));
 
@@ -39,6 +39,12 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
     private static final CharSequence DATE_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.DATE);
     private static final CharSequence CONTENT_LENGTH_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.CONTENT_LENGTH);
     private static final CharSequence SERVER_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.SERVER);
+    private static final ObjectMapper MAPPER;
+    
+    static{
+    	MAPPER = new ObjectMapper();
+    	MAPPER.registerModule(new AfterburnerModule());
+    }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -50,7 +56,7 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
                     writeResponse(ctx, request, buffer.duplicate().retain(), TYPE_PLAIN, contentLength);
                     return;
                 case "/json":
-                    byte[] json = MAPPER.writeValueAsBytes(Collections.singletonMap("message", "Hello, World!"));
+                    byte[] json = MAPPER.writeValueAsBytes(new Message("Hello, World!"));
                     writeResponse(ctx, request, Unpooled.wrappedBuffer(json), TYPE_JSON,
                             String.valueOf(json.length));
                     return;
