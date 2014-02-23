@@ -43,7 +43,8 @@ public class HelloWebServer {
 	private void doRun(EventLoopGroup loupGroup, Class<? extends ServerChannel> serverChannelClass) throws InterruptedException	{
 		try {
 			ServerBootstrap b = new ServerBootstrap();
-			b.option(ChannelOption.SO_BACKLOG, 1024);			
+			b.option(ChannelOption.SO_BACKLOG, 1024);
+			b.option(ChannelOption.SO_REUSEADDR, true);
 			b.group(loupGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer());			
 			b.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
