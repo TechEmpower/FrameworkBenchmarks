@@ -278,8 +278,8 @@ class Installer:
     #
     # Grails
     #
-    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.3.zip")
-    self.__run_command("unzip -o grails-2.3.3.zip")
+    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.6.zip")
+    self.__run_command("unzip -o grails-2.3.6.zip")
 
     #
     # Play 2
