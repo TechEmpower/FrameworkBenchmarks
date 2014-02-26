@@ -18,7 +18,7 @@
 **Platforms**
 
 * .NET Framework 4.5 (Windows)
-* Mono 3.2.6 (Linux)
+* Mono 3.2.8 (Linux)
 
 **Web Servers**
 
@@ -48,7 +48,7 @@
 
     git clone git://github.com/mono/mono
     cd mono
-    git checkout mono-3.2.6
+    git checkout mono-3.2.8
     ./autogen.sh --prefix=/usr/local
     make get-monolite-latest
     make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe
