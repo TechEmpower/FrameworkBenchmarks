@@ -158,14 +158,14 @@ class Installer:
     self.__run_command("rm ringojs_0.9-1_all.deb")
 
     #
-    # Mono - TODO - this install script doesn't work.
+    # Mono
     #
-    #self.__run_command("git clone git://github.com/mono/mono", retry=True)
+    self.__run_command("git clone git://github.com/mono/mono", retry=True)
     #self.__run_command("git checkout mono-3.2.3", cwd="mono")
-    #self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
-    #self.__run_command("make get-monolite-latest", cwd="mono")
-    #self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
-    #self.__run_command("sudo make install", cwd="mono")
+    self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
+    self.__run_command("make get-monolite-latest", cwd="mono")
+    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe", cwd="mono")
+    self.__run_command("sudo make install", cwd="mono")
 
     self.__run_command("mozroots --import --sync", retry=True)
 
