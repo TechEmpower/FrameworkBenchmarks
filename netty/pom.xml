@@ -13,12 +13,12 @@
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-codec-http</artifactId>
-			<version>4.0.16.Final</version>
+			<version>4.0.17.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-transport-native-epoll</artifactId>
-			<version>4.0.16.Final</version>
+			<version>4.0.17.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
