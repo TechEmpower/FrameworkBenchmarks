@@ -61,8 +61,8 @@ Check out [SampleApplication, the main Application file](src/main/java/com/teche
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Spring 4.0.1.RELEASE](http://projects.spring.io/spring-framework/)
-* [Spring Boot 1.0.0.RC3](http://projects.spring.io/spring-boot/)
-* [Spring Data JPA 1.5.0.RC1](http://projects.spring.io/spring-data-jpa/)
+* [Spring 4.0.2.RELEASE](http://projects.spring.io/spring-framework/)
+* [Spring Boot 1.0.0.RC4](http://projects.spring.io/spring-boot/)
+* [Spring Data JPA 1.5.0.RELEASE](http://projects.spring.io/spring-data-jpa/)
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
 * [Tomcat 8.0.3](https://tomcat.apache.org/)
