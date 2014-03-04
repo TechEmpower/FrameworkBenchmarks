@@ -22,6 +22,9 @@ public class TomcatCustomizer implements EmbeddedServletContainerCustomizer {
 	@Value("${tomcat.connector.maxConnections}")
 	private int maxConnections;
 
+    @Value("${tomcat.connector.acceptCount}")
+    private int acceptCount;
+
 	@Value("${tomcat.connector.maxKeepAliveRequests}")
 	private int maxKeepAliveRequests;
 
@@ -45,7 +48,7 @@ public class TomcatCustomizer implements EmbeddedServletContainerCustomizer {
 							protocol.setConnectionTimeout(connectionTimeout);
 							protocol.setMaxConnections(maxConnections);
 						}
-                        connector.setProperty("acceptCount", maxConnections+"");
+						connector.setProperty("acceptCount", acceptCount+"");
 						connector.setProperty("maxKeepAliveRequests", maxKeepAliveRequests+"");
 					}
 				}

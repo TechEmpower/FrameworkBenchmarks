@@ -17,10 +17,19 @@ spring:
 
 tomcat:
   connector:
+    # reduce context switching; Intel Xeons have 12 threads
     maxThreads: 12
     connectionTimeout: 20000
+    # maximum: 16K connections test
     maxConnections: 20000
+    # handle initial connection spike
+    acceptCount: 20000
+    # avoid running out of ports due to connections stuck in TIME_WAIT state
     maxKeepAliveRequests: -1
+
+server:
+  tomcat:
+    access_log_enabled: false
 
 ---
 spring:
