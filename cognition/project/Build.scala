@@ -14,7 +14,7 @@ object Bench extends Build {
     scalaVersion := "2.10.3",
     version := "1.0.0",
     libraryDependencies ++= Seq(
-      "org.cognition" % "cognition" % "0.9.0-ALPHA11",
+      "org.cognition" % "cognition" % "0.9.0-ALPHA25",
       "mysql" % "mysql-connector-java" % "5.1.28",
       "com.jolbox" % "bonecp" % "0.8.0.RELEASE",
       "fi.reaktor" %% "sqltyped" % "0.3.2",
