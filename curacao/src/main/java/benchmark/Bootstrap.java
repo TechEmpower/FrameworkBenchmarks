@@ -11,11 +11,20 @@ import java.nio.file.Paths;
 
 public final class Bootstrap {
 
+    private static final int DEFAULT_SERVER_LISTEN_PORT = 8080;
+
     public static void main(final String[] args) throws Exception {
 
         final File workingDir = getWorkingDir();
 
-        final Server server = new Server(8080);
+        int port;
+        try {
+            port = Integer.parseInt(args[0]);
+        } catch (Exception e) {
+            port = DEFAULT_SERVER_LISTEN_PORT;
+        }
+
+        final Server server = new Server(port);
 
         final ServletHolder holder = new ServletHolder(CuracaoDispatcherServlet.class);
         holder.setAsyncSupported(true); // Async supported = true
