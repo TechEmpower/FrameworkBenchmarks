@@ -26,9 +26,9 @@ main(List<String> args) {
 
 /// The entity used in the database query and update tests.
 class World {
-  int id;
+  final int id;
 
-  int randomnumber;
+  final int randomnumber;
 
   World(this.id, this.randomnumber);
 
@@ -37,12 +37,12 @@ class World {
 
 /// The entity used in the fortunes test.
 class Fortune implements Comparable<Fortune> {
-  int id;
-  String message;
+  final int id;
+  final String message;
 
   Fortune(this.id, this.message);
 
-  compareTo(Fortune other) => message.compareTo(other.message);
+  int compareTo(Fortune other) => message.compareTo(other.message);
 }
 
 /// The number of rows in the world entity table.
@@ -62,15 +62,15 @@ final _TYPE_TEXT = new ContentType('text', 'plain', charset: 'utf-8');
 
 /// The PostgreSQL connection pool used by all the tests that require database
 /// connectivity.
-var _connectionPool;
+pgpool.Pool _connectionPool;
 
 /// The mustache template which is rendered in the fortunes test.
-var _fortunesTemplate;
+mustache.Template _fortunesTemplate;
 
 /// Starts a benchmark server, which listens for connections from
 /// '[address] : [port]' and maintains [dbConnections] connections to the
 /// database.
-_startServer(address, port, dbConnections) {
+void _startServer(address, port, dbConnections) {
   Future.wait([
     new File('postgresql.yaml').readAsString().then((config) {
       _connectionPool = new pgpool.Pool(
@@ -117,12 +117,13 @@ _startServer(address, port, dbConnections) {
 /// Returns the given [text] parsed as a base 10 integer.  If the text is null
 /// or is an otherwise invalid representation of a base 10 integer, zero is
 /// returned.
-_parseInt(text) =>
+int _parseInt(text) =>
     (text == null) ? 0 : int.parse(text, radix: 10, onError: ((_) => 0));
 
 /// Completes the given [request] by writing the [response] with the given
 /// [statusCode] and [type].
-_sendResponse(request, statusCode, [ type, response ]) {
+void _sendResponse(HttpRequest request, int statusCode, [ContentType type,
+    String response]) {
   request.response.statusCode = statusCode;
   request.response.headers.date = new DateTime.now();
   if (type != null) {
@@ -139,22 +140,22 @@ _sendResponse(request, statusCode, [ type, response ]) {
 }
 
 /// Completes the given [request] by writing the [response] as HTML.
-_sendHtml(request, response) {
+void _sendHtml(HttpRequest request, String response) {
   _sendResponse(request, HttpStatus.OK, _TYPE_HTML, response);
 }
 
 /// Completes the given [request] by writing the [response] as JSON.
-_sendJson(request, response) {
+void _sendJson(HttpRequest request, response) {
   _sendResponse(request, HttpStatus.OK, _TYPE_JSON, JSON.encode(response));
 }
 
 /// Completes the given [request] by writing the [response] as plain text.
-_sendText(request, response) {
+void _sendText(HttpRequest request, String response) {
   _sendResponse(request, HttpStatus.OK, _TYPE_TEXT, response);
 }
 
 /// Responds with the JSON test to the [request].
-_jsonTest(request) {
+void _jsonTest(HttpRequest request) {
   _sendJson(request, { 'message': 'Hello, World!' });
 }
 
@@ -174,12 +175,12 @@ _queryRandom() {
 }
 
 /// Responds with the database query test to the [request].
-_dbTest(request) {
+void _dbTest(HttpRequest request) {
   _queryRandom().then((response) => _sendJson(request, response));
 }
 
 /// Responds with the database queries test to the [request].
-_queriesTest(request) {
+void _queriesTest(HttpRequest request) {
   var queries = _parseInt(request.uri.queryParameters['queries']).clamp(1, 500);
   Future.wait(new List.generate(queries,
                                 (_) => _queryRandom(),
@@ -188,7 +189,7 @@ _queriesTest(request) {
 }
 
 /// Responds with the fortunes test to the [request].
-_fortunesTest(request) {
+void _fortunesTest(HttpRequest request) {
   _connectionPool.connect().then((connection) {
     return connection.query('SELECT id, message FROM fortune;')
         .map((row) => new Fortune(row[0], row[1]))
@@ -206,7 +207,7 @@ _fortunesTest(request) {
 }
 
 /// Responds with the updates test to the [request].
-_updatesTest(request) {
+void _updatesTest(HttpRequest request) {
   var queries = _parseInt(request.uri.queryParameters['queries']).clamp(1, 500);
   Future.wait(new List.generate(queries, (_) {
     return _queryRandom()
@@ -224,6 +225,6 @@ _updatesTest(request) {
 }
 
 /// Responds with the plaintext test to the [request].
-_plaintextTest(request) {
+void _plaintextTest(HttpRequest request) {
   _sendText(request, 'Hello, World!');
 }
