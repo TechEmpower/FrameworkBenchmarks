@@ -48,6 +48,6 @@ http://localhost/fortunes
 
 http://localhost/updates
 
-## Plaintext Test
+### Plaintext Test
 
 http://localhost/plaintext
