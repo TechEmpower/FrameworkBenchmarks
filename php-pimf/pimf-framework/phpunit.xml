@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        colors="false"
+        processIsolation="false"
+        stopOnError="false"
+        stopOnFailure="false"
+        stopOnIncomplete="false"
+        stopOnSkipped="false"
+        syntaxCheck="true"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        forceCoversAnnotation="false"
+        mapTestClassNameToCoveredClassName="false"
+        bootstrap="bootstrap.core.php">
+
+    <testsuites>
+        <testsuite name="Pimf">
+            <directory suffix="Test.php">./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./core</directory>
+            <exclude>
+               <file>bootstrap.core.php</file>
+               <directory suffix=".php">./core/_error</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-html"
+             target="./coverage/"
+             charset="UTF-8"
+             yui="true"
+             highlight="true"
+             lowUpperBound="35"
+             highLowerBound="70"
+                />
+
+    </logging>
+
+</phpunit>

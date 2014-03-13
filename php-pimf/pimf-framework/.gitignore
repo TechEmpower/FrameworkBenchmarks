@@ -27,4 +27,5 @@ nbproject
 intermediate
 publish
 .idea
-pimf-framework
+_coverage
+coverage

@@ -1,0 +1,5 @@
+CREATE TABLE  IF NOT EXISTS pimf_cache (
+     key VARCHAR PRIMARY KEY NOT NULL UNIQUE,
+     value TEXT NOT NULL,
+     expiration INTEGER NOT NULL
+);
