@@ -17,7 +17,7 @@ class World extends Base
     $sth->bindValue(':id', $id, \PDO::PARAM_INT);
     $sth->execute();
 
-    return (array) $sth->fetch();
+    return (array) $sth->fetch(\PDO::FETCH_ASSOC);
   }
 
   /**

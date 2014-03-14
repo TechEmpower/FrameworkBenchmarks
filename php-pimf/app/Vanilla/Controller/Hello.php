@@ -1,7 +1,7 @@
 <?php
 namespace Vanilla\Controller;
 
-use Pimf\Controller\Base, Pimf\View, Pimf\Registry;
+use Pimf\Controller\Base, Pimf\View, Pimf\Registry, Pimf\Param;
 
 class Hello extends Base
 {
@@ -42,7 +42,7 @@ class Hello extends Base
    */
   public function dbAction()
   {
-    $worlds = Registry::get('em')->world->find(1);
+    $worlds = Registry::get('em')->world->find(mt_rand(1, 10000));
 
     $this->response->asJSON()->send($worlds);
   }
@@ -52,19 +52,16 @@ class Hello extends Base
    */
   public function fortunesAction()
   {
-    $templates = array();
     $fortunes = Registry::get('em')->fortune->getAll();
-    $fortunes[] = 'Additional fortune added at request time.';
 
-    asort($fortunes);
-
-    foreach ($fortunes as $i => $fortune) {
-        $templates[$i] = '<tr><td>'.$i.'</td><td>'.$fortune.'</td></tr>';
-    }
-
-    $this->response->asHTML()->send(
-      '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'.implode('', $templates).'</table></body></html>'
+    $fortunes[] = array(
+      'id' => count($fortunes) + 1,
+      'message' => 'Additional fortune added at request time.'
     );
+
+    $view = new View('table.phtml', array('fortunes' => $fortunes));
+
+    $this->response->asHTML()->send($view);
   }
 
   /**
@@ -85,15 +82,14 @@ class Hello extends Base
       $worlds[] = $em->world->find(mt_rand(1, 10000));
     }
 
-    foreach ($worlds as $i => $row) {
-      $row[$i]['randomNumber'] = rand(1, 10000);
+    foreach ($worlds as $row) {
+      $row['randomNumber'] = rand(1, 10000);
       $em->world->update($row);
     }
 
     $em->commitTransaction();
 
     $this->response->asJSON()->send($worlds);
-
   }
 
   /**

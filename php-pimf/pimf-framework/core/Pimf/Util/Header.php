@@ -59,7 +59,7 @@ class Header extends Header\ContentType
 
     $conf    = Registry::get('conf');
     $appTpl  = str_replace('/', DS, BASE_PATH . 'app/' . $conf['app']['name'] . '/_error/' . $code . '.php');
-    $coreTpl = str_replace('/', DS, BASE_PATH . 'core/Pimf/_error/' . $code . '.php');
+    $coreTpl = str_replace('/', DS, BASE_PATH . 'pimf-framework/core/Pimf/_error/' . $code . '.php');
 
     if (file_exists($appTpl) && is_readable($appTpl)) {
       include $appTpl;

@@ -38,7 +38,7 @@ http://localhost/db
 
 ### Variable Query Test
     
-http://localhost/db?queries=2
+http://localhost/queries?queries=10
 
 ### Templating Test
 
@@ -46,7 +46,7 @@ http://localhost/fortunes
 
 ### Database Updates Test
 
-http://localhost/updates
+http://localhost/updates?queries=10
 
 ### Plaintext Test
 

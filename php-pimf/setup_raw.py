@@ -6,7 +6,7 @@ from os.path import expanduser
 home = expanduser("~")
 
 def start(args):
-  setup_util.replace_text("php-pimf/app/config.app.php", "192.168.100.102", "" + args.database_host + "")
+  setup_util.replace_text("php-pimf/app/config.app.php", "127.0.0.1", "" + args.database_host + "")
   setup_util.replace_text("php-pimf/deploy/php-pimf", "\".*\/FrameworkBenchmarks", "\"" + home + "/FrameworkBenchmarks")
   setup_util.replace_text("php-pimf/deploy/php-pimf", "Directory .*\/FrameworkBenchmarks", "Directory " + home + "/FrameworkBenchmarks")
   setup_util.replace_text("php-pimf/deploy/nginx_raw.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")

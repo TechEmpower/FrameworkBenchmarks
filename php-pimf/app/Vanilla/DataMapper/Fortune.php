@@ -13,7 +13,7 @@ class Fortune extends Base
     $sth = $this->pdo->prepare('SELECT * FROM Fortune');
     $sth->execute();
 
-    return $sth->fetchAll();
+    return $sth->fetchAll(\PDO::FETCH_ASSOC);
   }
 }
  
