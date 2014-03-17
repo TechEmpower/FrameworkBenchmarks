@@ -58,14 +58,9 @@ abstract class Base
 
     } else {
 
-      $requestMethod = ucfirst(Registry::get('env')->REQUEST_METHOD);
       $suffix        = 'Action';
-
-      if (!method_exists($this->request, $bag = 'from' . $requestMethod)) {
-        throw new Bomb("not supported request method=" . $requestMethod);
-      }
-
-      $action = $this->request->{$bag}()->get('action', 'index');
+      $bag           = 'from' . ucfirst(strtolower($this->response->getMethod()));
+      $action        = $this->request->{$bag}()->get('action', 'index');
 
       if ($conf['app']['routeable'] === true) {
 

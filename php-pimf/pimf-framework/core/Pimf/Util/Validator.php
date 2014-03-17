@@ -237,7 +237,7 @@ class Validator
    * @param string $field
    * @param string $format Find formats here http://www.php.net/manual/en/function.date.php
    *
-   * @return boolean|null
+   * @return boolean
    */
   public function date($field, $format)
   {

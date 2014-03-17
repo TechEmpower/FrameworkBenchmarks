@@ -56,11 +56,19 @@ class Response
     Header::clear();
   }
 
+  /**
+   * @return string
+   */
+  public function getMethod()
+  {
+    return $this->method;
+  }
+
   public function asJSON()
   {
     $this->preventMultipleTypes();
     self::$typed = __FUNCTION__;
-    Header::contentTypeJson();
+    Header::asJSON();
 
     return $this;
   }
@@ -69,7 +77,7 @@ class Response
   {
     $this->preventMultipleTypes();
     self::$typed = __FUNCTION__;
-    Header::contentTypeTextHTML();
+    Header::asTextHTML();
 
     return $this;
   }
@@ -78,7 +86,7 @@ class Response
   {
     $this->preventMultipleTypes();
     self::$typed = __FUNCTION__;
-    Header::contentTypePdf();
+    Header::asPDF();
 
     return $this;
   }
@@ -87,7 +95,7 @@ class Response
   {
     $this->preventMultipleTypes();
     self::$typed = __FUNCTION__;
-    Header::contentTypeCsv();
+    Header::asCSV();
 
     return $this;
   }
@@ -96,7 +104,7 @@ class Response
   {
     $this->preventMultipleTypes();
     self::$typed = __FUNCTION__;
-    Header::contentTypeTextPlain();
+    Header::asTextPlain();
 
     return $this;
   }
@@ -105,7 +113,7 @@ class Response
   {
     $this->preventMultipleTypes();
     self::$typed = __FUNCTION__;
-    Header::contentTypeZip();
+    Header::asZIP();
 
     return $this;
   }
@@ -114,7 +122,7 @@ class Response
   {
     $this->preventMultipleTypes();
     self::$typed = __FUNCTION__;
-    Header::contentTypeXZip();
+    Header::asXZIP();
 
     return $this;
   }
@@ -123,7 +131,7 @@ class Response
   {
     $this->preventMultipleTypes();
     self::$typed = __FUNCTION__;
-    Header::contentTypeMSWord();
+    Header::asMSWord();
 
     return $this;
   }

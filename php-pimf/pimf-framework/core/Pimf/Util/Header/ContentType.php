@@ -15,47 +15,47 @@ namespace Pimf\Util\Header;
  */
 abstract class ContentType extends ResponseStatus
 {
-  public static function contentTypeJson()
+  public static function asJSON()
   {
     self::type('application/json; charset=utf-8');
   }
 
-  public static function contentTypePdf()
+  public static function asPDF()
   {
     self::type('application/pdf');
   }
 
-  public static function contentTypeCsv()
+  public static function asCSV()
   {
     self::type('text/csv');
   }
 
-  public static function contentTypeTextPlain()
+  public static function asTextPlain()
   {
     self::type('text/plain');
   }
 
-  public static function contentTypeTextHTML()
+  public static function asTextHTML()
   {
     self::type('text/html');
   }
 
-  public static function contentTypeZip()
+  public static function asZIP()
   {
     self::type('application/zip');
   }
 
-  public static function contentTypeXZip()
+  public static function asXZIP()
   {
     self::type('application/x-zip');
   }
 
-  public static function contentTypeMSWord()
+  public static function asMSWord()
   {
     self::type('application/msword');
   }
 
-  public static function contentTypeOctetStream()
+  public static function asOctetStream()
   {
     self::type('application/octet-stream');
   }

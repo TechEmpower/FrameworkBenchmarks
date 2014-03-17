@@ -82,7 +82,7 @@ abstract class ResponseStatus
     self::send(302, 'Found');
   }
 
-  public function sendNotModified()
+  public static function sendNotModified()
   {
     self::send(304, 'Not Modified');
   }

@@ -79,7 +79,7 @@ class Apc extends Storage
    * @param  string $key
    * @param  mixed  $value
    *
-   * @return boolean|null
+   * @return boolean
    */
   public function forever($key, $value)
   {

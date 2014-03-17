@@ -81,7 +81,7 @@ abstract class Factory
    *
    * @return array
    */
-  protected static function heal($data)
+  public static function heal($data)
   {
     if (!is_array($data)) {
       return $data;
@@ -115,4 +115,3 @@ abstract class Factory
     return $files;
   }
 }
- 

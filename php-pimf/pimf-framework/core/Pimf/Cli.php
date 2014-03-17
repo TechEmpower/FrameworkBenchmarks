@@ -8,7 +8,6 @@
 
 namespace Pimf;
 
-use Pimf\Cli\Color;
 use Pimf\Util\String;
 
 /**
@@ -30,13 +29,9 @@ final class Cli
    */
   public static function absorb($appClr = null, $coreClr = null, $root = null)
   {
-    echo Color::paint(
-      PHP_EOL . 'PIMF v' . \Pimf\Application::VERSION . ' PHP Command Line Interface by Gjero Krsteski' . PHP_EOL
-    );
+    echo PHP_EOL . 'PIMF v' . \Pimf\Application::VERSION . ' PHP Command Line Interface by Gjero Krsteski' . PHP_EOL;
 
-    echo Color::paint(
-      '+------------------------------------------------------+' . PHP_EOL
-    );
+    echo '+------------------------------------------------------+' . PHP_EOL;
 
     self::reflect(self::collect($appClr, $coreClr, $root));
   }
@@ -56,20 +51,17 @@ final class Cli
           $methods    = $reflection->getMethods();
           $controller = explode('_', $class);
 
-          echo Color::paint('controller: ' . strtolower(end($controller)) . '' . PHP_EOL);
+          echo 'controller: ' . strtolower(end($controller)) . '' . PHP_EOL;
 
           array_map(
             function ($method) {
               if (false !== $command = strstr($method->getName(), 'CliAction', true)) {
-                echo Color::paint(PHP_EOL . ' action: ' . $command . ' ' . PHP_EOL);
+                echo PHP_EOL . ' action: ' . $command . ' ' . PHP_EOL;
               }
             }, $methods
           );
 
-          echo Color::paint(
-            PHP_EOL . '+------------------------------------------------------+' . PHP_EOL
-          );
-
+          echo PHP_EOL . '+------------------------------------------------------+' . PHP_EOL;
         }
 
       }, $classes

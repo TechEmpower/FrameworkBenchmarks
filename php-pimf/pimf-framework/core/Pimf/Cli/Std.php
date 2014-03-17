@@ -16,8 +16,6 @@ namespace Pimf\Cli;
  */
 class Std
 {
-  const READ = 'php://stdin';
-
   /**
    * @var resource
    */
@@ -26,7 +24,7 @@ class Std
   /**
    * @param string $stream
    */
-  public function __construct($stream = self::READ)
+  public function __construct($stream = 'php://stdin')
   {
     $this->handle = fopen($stream, 'r');
   }
@@ -78,7 +76,7 @@ class Std
 
     while (true) {
 
-      echo Color::paint("Please enter a " . $prompt . ":\n");
+      echo "Please enter a " . $prompt . ":\n";
 
       $value = $this->value();
 
@@ -86,7 +84,7 @@ class Std
         break;
       }
 
-      echo Color::paint("Value format for " . $prompt . " is invalid!\n", 'red');
+      echo "[ Value format for " . $prompt . " is invalid! ]\n";
     }
 
     return $value;

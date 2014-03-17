@@ -8,7 +8,7 @@
 
 namespace Pimf\Controller;
 
-use Pimf\Registry, Pimf\Util\String, Pimf\Cli\Color, Pimf\Cli\Std, Pimf\Pdo\Factory, \Pimf\Controller\Exception as Bomb, Pimf\Util\File;
+use Pimf\Registry, Pimf\Util\String, Pimf\Cli\Std, Pimf\Pdo\Factory, \Pimf\Controller\Exception as Bomb, Pimf\Util\File;
 
 /**
  * @package Controller
@@ -35,35 +35,39 @@ class Core extends Base
     $conf = Registry::get('conf');
     $app  = 'app/' . $conf['app']['name'] . '/';
 
-    $assets = array(BASE_PATH . $app . '_session/', BASE_PATH . $app . '_cache/', BASE_PATH . $app . '_database/',
-                    BASE_PATH . $app . '_templates/',);
+    $assets = array(
+      BASE_PATH . $app . '_session/',
+      BASE_PATH . $app . '_cache/',
+      BASE_PATH . $app . '_database/',
+      BASE_PATH . $app . '_templates/',
+    );
 
-    echo Color::paint('Check app assets' . PHP_EOL);
+    echo 'Check app assets' . PHP_EOL;
 
     foreach ($assets as $asset) {
 
       if (!is_dir($asset)) {
-        echo Color::paint("Please create '$asset' directory! " . PHP_EOL, 'red');
+        echo "[ Please create '$asset' directory! ]" . PHP_EOL;
       }
 
       if (!is_writable($asset)) {
-        echo Color::paint("Please make '$asset' writable! " . PHP_EOL, 'red');
+        echo "[ Please make '$asset' writable! ]" . PHP_EOL;
       }
     }
 
-    echo Color::paint('Secure root directory' . PHP_EOL);
+    echo 'Secure root directory' . PHP_EOL;
     chmod(BASE_PATH, 0755);
 
-    echo Color::paint('Secure .htaccess' . PHP_EOL);
+    echo 'Secure .htaccess' . PHP_EOL;
     chmod(BASE_PATH . '.htaccess', 0644);
 
-    echo Color::paint('Secure index.php' . PHP_EOL);
+    echo 'Secure index.php' . PHP_EOL;
     chmod(BASE_PATH . 'index.php', 0644);
 
-    echo Color::paint('Secure autoload.core.php' . PHP_EOL);
+    echo 'Secure autoload.core.php' . PHP_EOL;
     chmod(BASE_PATH . 'pimf-framework/autoload.core.php', 0644);
 
-    echo Color::paint('Create logging files' . PHP_EOL);
+    echo 'Create logging files' . PHP_EOL;
     $handle = fopen($file = $conf['bootstrap']['local_temp_directory'] . 'pimf-logs.txt', "at+");
     fclose($handle);
     chmod($file, 0777);
@@ -79,7 +83,7 @@ class Core extends Base
 
   public function create_session_tableCliAction()
   {
-    $std = new Std();
+    $std  = new Std();
     $type = $std->read('database type [mysql|sqlite]', '(mysql|sqlite)');
 
     var_dump(
@@ -89,7 +93,7 @@ class Core extends Base
 
   public function create_cache_tableCliAction()
   {
-    $std = new Std();
+    $std  = new Std();
     $type = $std->read('database type [mysql|sqlite]', '(mysql|sqlite)');
 
     var_dump(

@@ -49,7 +49,7 @@ class EntityManager extends Base
     }
 
     if (!class_exists($entity)) {
-      throw new \BadMethodCallException('entity "' . $entity . '" found at the data-mapper repository');
+      throw new \BadMethodCallException('entity "' . $entity . '" not found at the data-mapper repository');
     }
 
     $model = new $entity($this->pdo);
