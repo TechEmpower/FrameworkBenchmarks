@@ -54,7 +54,7 @@ abstract class Base
     if (Sapi::isCli() && $conf['environment'] == 'production') {
 
       $suffix = 'CliAction';
-      $action = $this->request->fromCli()->get('action') ? : 'index';
+      $action = $this->request->fromCli()->get('action', 'index');
 
     } else {
 
@@ -65,7 +65,7 @@ abstract class Base
         throw new Bomb("not supported request method=" . $requestMethod);
       }
 
-      $action = $this->request->{$bag}()->get('action') ? : 'index';
+      $action = $this->request->{$bag}()->get('action', 'index');
 
       if ($conf['app']['routeable'] === true) {
 

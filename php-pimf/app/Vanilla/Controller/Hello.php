@@ -30,7 +30,7 @@ class Hello extends Base
 
     $worlds = array();
 
-    for ($i = 0; $i < (int)$queries; ++$i) {
+    for ($i = 0; $i < $queries; ++$i) {
       $worlds[] = Registry::get('em')->world->find(mt_rand(1, 10000));
     }
 
@@ -78,7 +78,7 @@ class Hello extends Base
 
     $em->beginTransaction();
 
-    for ($i = 0; $i < (int)$queries; ++$i) {
+    for ($i = 0; $i < $queries; ++$i) {
       $worlds[] = $em->world->find(mt_rand(1, 10000));
     }
 

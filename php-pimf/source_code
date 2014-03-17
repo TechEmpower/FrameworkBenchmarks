@@ -5,6 +5,8 @@
 ./php-pimf/app/bootstrap.app.php
 ./php-pimf/app/config.app.php
 ./php-pimf/app/Vanilla/Controller/Hello.php
+./php-pimf/app/Vanilla/DataMapper/World.php
+./php-pimf/app/Vanilla/DataMapper/Fortune.php
 ./php-pimf/pimf-framework/
 ./php-pimf/pimf-framework/core/Pimf/Application.php
 ./php-pimf/pimf-framework/core/Pimf/Cache.php
@@ -77,9 +79,6 @@
 ./php-pimf/pimf-framework/core/Pimf/Util/Identifier.php
 ./php-pimf/pimf-framework/core/Pimf/Util/IdentityMap.php
 ./php-pimf/pimf-framework/core/Pimf/Util/Json.php
-./php-pimf/pimf-framework/core/Pimf/Util/Ldap.php
-./php-pimf/pimf-framework/core/Pimf/Util/Ldap/User.php
-./php-pimf/pimf-framework/core/Pimf/Util/LineByLine.php
 ./php-pimf/pimf-framework/core/Pimf/Util/Message.php
 ./php-pimf/pimf-framework/core/Pimf/Util/Serializer.php
 ./php-pimf/pimf-framework/core/Pimf/Util/String.php
