@@ -20,7 +20,6 @@
 ./php-pimf/pimf-framework/core/Pimf/Cache/Storages/Storage.php
 ./php-pimf/pimf-framework/core/Pimf/Cache/Storages/Wincache.php
 ./php-pimf/pimf-framework/core/Pimf/Cli.php
-./php-pimf/pimf-framework/core/Pimf/Cli/Color.php
 ./php-pimf/pimf-framework/core/Pimf/Cli/Std.php
 ./php-pimf/pimf-framework/core/Pimf/Contracts/Arrayable.php
 ./php-pimf/pimf-framework/core/Pimf/Contracts/Cleanable.php
@@ -88,7 +87,6 @@
 ./php-pimf/pimf-framework/core/Pimf/Util/Uuid.php
 ./php-pimf/pimf-framework/core/Pimf/Util/Validator.php
 ./php-pimf/pimf-framework/core/Pimf/Util/Validator/Factory.php
-./php-pimf/pimf-framework/core/Pimf/Util/Value.php
 ./php-pimf/pimf-framework/core/Pimf/Util/Xml.php
 ./php-pimf/pimf-framework/core/Pimf/View.php
 ./php-pimf/pimf-framework/core/Pimf/View/Haanga.php
