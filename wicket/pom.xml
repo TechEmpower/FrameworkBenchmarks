@@ -20,8 +20,11 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>6.14.0</wicket.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<wicket.version>6.15.0-SNAPSHOT</wicket.version>
 		<jetty.version>8.1.14.v20131031</jetty.version>
+		<bonecp.version>0.8.0.RELEASE</bonecp.version>
+		<slf4j.version>1.7.6</slf4j.version>
 	</properties>
 	<dependencies>
 		<!--  WICKET DEPENDENCIES -->
@@ -30,19 +33,18 @@
 			<artifactId>wicket-core</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
-		<!-- OPTIONAL DEPENDENCY
+
 		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-extensions</artifactId>
-			<version>${wicket.version}</version>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp</artifactId>
+			<version>${bonecp.version}</version>
 		</dependency>
-		-->
 
 		<!-- LOGGING DEPENDENCIES - LOG4J -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.6</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -71,18 +73,7 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.3.2</version>
 		</dependency>
-		            
-		<dependency>
-		  <groupId>org.hibernate</groupId>
-		  <artifactId>hibernate-core</artifactId>
-		  <version>4.1.1.Final</version>
-		</dependency>
 
-		<dependency>
-		  <groupId>com.google.inject</groupId>
-		  <artifactId>guice</artifactId>
-		  <version>3.0</version>
-		</dependency>
 		<dependency>
 		  <groupId>mysql</groupId>
 		  <artifactId>mysql-connector-java</artifactId>
@@ -127,7 +118,7 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.1</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>

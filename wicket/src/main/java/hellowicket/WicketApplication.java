@@ -1,17 +1,26 @@
 package hellowicket;
 
-import hellowicket.plaintext.HelloTextReference;
-import hellowicket.dbupdates.HelloDbUpdatesReference;
-import hellowicket.fortune.FortunePage;
-import org.apache.wicket.RuntimeConfigurationType;
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.IRequestCycleSettings;
+
+import com.jolbox.bonecp.BoneCPDataSource;
+
+import hellowicket.dbupdates.HelloDbUpdatesReference;
+import hellowicket.fortune.FortunePage;
+import hellowicket.plaintext.HelloTextReference;
 
 /**
  * Application object for your web application..
  */
 public class WicketApplication extends WebApplication
 {
+	private BoneCPDataSource db;
+
 	@Override
 	public Class<HomePage> getHomePage()
 	{
@@ -22,6 +31,8 @@ public class WicketApplication extends WebApplication
 	public void init()
 	{
 		super.init();
+
+		db = newDataSource();
 
 		// mount the resources under test
 		mountResource("/json", new HelloJsonReference());
@@ -41,8 +52,65 @@ public class WicketApplication extends WebApplication
 	}
 
 	@Override
-	public RuntimeConfigurationType getConfigurationType()
+	protected void onDestroy()
 	{
-		return RuntimeConfigurationType.DEPLOYMENT;
+		db.close();
+		super.onDestroy();
+	}
+
+//	@Override
+//	public RuntimeConfigurationType getConfigurationType()
+//	{
+//		return RuntimeConfigurationType.DEVELOPMENT;
+//	}
+
+	public static WicketApplication get()
+	{
+		return (WicketApplication) WebApplication.get();
+	}
+
+	public DataSource getDataSource()
+	{
+		return db;
+	}
+
+	private BoneCPDataSource newDataSource()
+	{
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException("Cannot load MySQL JDBC driver", e);
+		}
+		BoneCPDataSource ds = new BoneCPDataSource();
+		Properties settings = loadSettings();
+		ds.setJdbcUrl(settings.getProperty("mysql.uri"));
+		ds.setUsername(settings.getProperty("mysql.user"));
+		ds.setPassword(settings.getProperty("mysql.password"));
+
+		return ds;
+	}
+
+	private Properties loadSettings()
+	{
+		ClassLoader classLoader = WicketApplication.class.getClassLoader();
+		Properties settings = new Properties();
+
+		try
+		{
+			if (usesDeploymentConfig())
+			{
+				settings.load(classLoader.getResourceAsStream("prod.properties"));
+			}
+			else
+			{
+				settings.load(classLoader.getResourceAsStream("dev.properties"));
+			}
+		} catch (IOException e)
+		{
+			throw new RuntimeException("Cannot load the settings!", e);
+		}
+		return settings;
 	}
 }

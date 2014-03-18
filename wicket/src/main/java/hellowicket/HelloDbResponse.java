@@ -1,12 +1,14 @@
 package hellowicket;
 
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.concurrent.ThreadLocalRandom;
+
+import javax.sql.DataSource;
 
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.string.StringValue;
-import org.hibernate.IdentifierLoadAccess;
-import org.hibernate.Session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,8 +34,6 @@ public class HelloDbResponse extends AbstractResource
       qs = 500;
     }
     final int queries = qs;
-    final World[] worlds = new World[queries];
-    final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     final ResourceResponse response = new ResourceResponse();
     response.setContentType(CONTENT_TYPE);
@@ -42,18 +42,32 @@ public class HelloDbResponse extends AbstractResource
     {
       public void writeData(Attributes attributes)
       {
-        final Session session = HibernateUtil.getSessionFactory().openSession();
-
-        IdentifierLoadAccess loader = session.byId(World.class);
-        for (int i = 0; i < queries; i++)
-        {
-          worlds[i] = (World) loader.load(random.nextInt(DB_ROWS) + 1);
-        }
-
-        session.close();
-
         try
         {
+          final ThreadLocalRandom random = ThreadLocalRandom.current();
+          DataSource dataSource = WicketApplication.get().getDataSource();
+          World[] worlds = new World[queries];
+          try (Connection connection = dataSource.getConnection())
+          {
+            try (PreparedStatement statement = connection.prepareStatement(
+                       "SELECT * FROM World WHERE id = ?",
+                       ResultSet.TYPE_FORWARD_ONLY,
+                       ResultSet.CONCUR_READ_ONLY))
+            {
+              for (int i = 0; i < queries; i++)
+              {
+                  statement.setInt(1, random.nextInt(DB_ROWS) + 1);
+                  try (ResultSet resultSet = statement.executeQuery())
+                  {
+                      resultSet.next();
+                      worlds[i] = new World(
+                              resultSet.getInt("id"),
+                              resultSet.getInt("randomNumber"));
+                  }
+              }
+            }
+          }
+
           String data;
           if (queriesParam.isNull())
           {
@@ -67,7 +81,7 @@ public class HelloDbResponse extends AbstractResource
           }
           attributes.getResponse().write(data);
         }
-        catch (IOException ex)
+        catch (Exception ex)
         {
           // do nothing
         }
