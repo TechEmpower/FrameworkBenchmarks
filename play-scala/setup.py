@@ -1,17 +1,18 @@
-import setup_util
-import subprocess
 import os
+import signal
+import subprocess
+
+dirname = projname = 'play-scala'
+is_windows = args.os.lower() == "windows"
+cmd_suffix = '.bat' if is_windows else ''
 
 def start(args, logfile, errfile):
   kill_running_process() # Kill the running process and delete the 
                          # RUNNING_PID file (if any). With any luck no 
                          # new process has picked up the same PID.
 
-  play_cmd = "play"
-  if args.os.lower() == "windows":
-    play_cmd = "play.bat"
-  
-  subprocess.Popen([play_cmd,"start"], stdin=subprocess.PIPE, cwd="play-scala", stderr=errfile, stdout=logfile)
+  subprocess.call(['sbt'+cmd_suffix,"stage"], stdin=subprocess.PIPE, cwd=dirname, stderr=errfile, stdout=logfile)
+  subprocess.Popen([os.path.join("target","universal","stage","bin",projname+cmd_suffix)], shell=True, stdin=subprocess.PIPE, cwd=dirname, stderr=errfile, stdout=logfile)
   return 0
 
 def stop(logfile, errfile):
@@ -19,14 +20,15 @@ def stop(logfile, errfile):
   return 0
 
 def kill_running_process():
+  pidfile = os.path.join(dirname,"target","universal","stage","RUNNING_PID")
   try:
-    with open("./play-scala/RUNNING_PID") as f:
+    with open(pidfile) as f:
       pid = int(f.read())
-      os.kill(pid, 15)
+      os.kill(pid, signal.SIGTERM)
   except:
-  	pass
+    pass
 
   try:
-    os.remove("play-scala/RUNNING_PID")
+    os.remove(pidfile)
   except OSError:
-    pass  
+    pass

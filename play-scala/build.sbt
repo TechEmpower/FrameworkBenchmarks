@@ -2,4 +2,4 @@ name := "play-scala"
 
 version := "1.0-SNAPSHOT"
 
-playScalaSettings
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
