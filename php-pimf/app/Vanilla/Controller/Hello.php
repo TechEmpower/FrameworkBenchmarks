@@ -1,7 +1,7 @@
 <?php
 namespace Vanilla\Controller;
 
-use Pimf\Controller\Base, Pimf\View, Pimf\Registry, Pimf\Param;
+use Pimf\Controller\Base, Pimf\View, Pimf\Registry;
 
 class Hello extends Base
 {

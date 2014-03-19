@@ -37,7 +37,7 @@ class Param
 
   /**
    * @param string $index
-   * @param mixed  $defaultValue
+   * @param null|string $defaultValue
    * @param bool   $filtered If you trust foreign input introduced to your PHP code - set to FALSE!
    *
    * @return string
