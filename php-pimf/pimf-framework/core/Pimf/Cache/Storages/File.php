@@ -64,8 +64,8 @@ class File extends Storage
    */
   public function put($key, $value, $minutes)
   {
-    if ($minutes <= 0) {
-      return;
+    if ((int)$minutes <= 0) {
+      return null;
     }
 
     $value = $this->expiration($minutes) . serialize($value);
@@ -91,7 +91,7 @@ class File extends Storage
    *
    * @param string $key
    *
-   * @return bool|void
+   * @return bool
    */
   public function forget($key)
   {
@@ -103,5 +103,7 @@ class File extends Storage
 
       return true;
     }
+
+    return false;
   }
 }

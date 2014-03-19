@@ -125,11 +125,10 @@ class View implements Renderable
   }
 
   /**
-   * Is utilized for reading data from inaccessible properties.
-   *
    * @param string $name
    *
-   * @return mixed|null
+   * @return mixed
+   * @throws \OutOfBoundsException If undefined property at the template.
    */
   public function __get($name)
   {
@@ -138,11 +137,9 @@ class View implements Renderable
     }
 
     $trace = debug_backtrace();
-    trigger_error(
-      'undefined property "' . $name . '" at file ' . $trace[0]['file'] . ' line ' . $trace[0]['line'], E_USER_WARNING
+    throw new \OutOfBoundsException(
+      'undefined property "' . $name . '" at file ' . $trace[0]['file'] . ' line ' . $trace[0]['line']
     );
-
-    return null;
   }
 
   /**
