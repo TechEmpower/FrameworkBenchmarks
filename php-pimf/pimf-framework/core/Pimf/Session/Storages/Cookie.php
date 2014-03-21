@@ -28,13 +28,15 @@ class Cookie extends Storage
    *
    * @param  string $key
    *
-   * @return array
+   * @return array|null
    */
   public function load($key)
   {
     if (Crumb::has(static::PAYLOAD)) {
       return unserialize(base64_decode(Crumb::get(static::PAYLOAD)));
     }
+
+    return null;
   }
 
   /**

@@ -162,7 +162,7 @@ class Logger
 
       if (fclose($this->handle) === false) {
         // Failure to close the log file
-        $this->write("Logger failed to close the handle to the log file", 'ERROR_SEVERITY');
+        $this->error('Logger failed to close the handle to the log file');
       }
 
       fclose($this->warnHandle);
@@ -195,7 +195,7 @@ class Logger
 
     $msg .= " " . $severity . ": ";
 
-    //get the file name
+    // get the file name
     $lastSlashIndex = strrpos($script, "/");
     $fileName       = $script;
 

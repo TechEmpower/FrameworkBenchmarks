@@ -10,7 +10,7 @@ class Hello extends Base
    */
   public function indexAction()
   {
-    $this->jsonAction();
+    $this->plaintextAction();
   }
 
   /**

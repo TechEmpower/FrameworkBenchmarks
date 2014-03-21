@@ -184,8 +184,9 @@ class Header extends Header\ContentType
    *
    * @param string $fileOrString
    * @param string $fileName
+   * @param boolean $exit Optional for testing
    */
-  public static function sendDownloadDialog($fileOrString, $fileName)
+  public static function sendDownloadDialog($fileOrString, $fileName, $exit = true)
   {
     $disposition = (false !== strpos(Registry::get('env')->getUserAgent(), 'MSIE 5.5')) ? '' : 'attachment; ';
 
@@ -200,6 +201,9 @@ class Header extends Header\ContentType
     } else {
       echo $fileOrString;
     }
-    exit(0);
+
+    if ($exit) {
+      exit(0);
+    }
   }
 }

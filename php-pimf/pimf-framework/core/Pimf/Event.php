@@ -111,8 +111,8 @@ class Event
   /**
    * Fire an event and return the first response.
    *
-   * @param string $event
-   * @param \Exception[]  $parameters
+   * @param string       $event
+   * @param \Exception[] $parameters
    *
    * @return mixed
    */
@@ -141,15 +141,14 @@ class Event
    * Fire an event so that all listeners are called.
    *
    * @param string $events
-   * @param array        $parameters
-   * @param bool         $halt
+   * @param array  $parameters
+   * @param bool   $halt
    *
    * @return array|null
    */
   public static function fire($events, $parameters = array(), $halt = false)
   {
-    $responses = array();
-
+    $responses  = array();
     $parameters = (array)$parameters;
 
     // If the event has listeners, iterate through them and call each listener,

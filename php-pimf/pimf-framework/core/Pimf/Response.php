@@ -141,11 +141,12 @@ class Response
    *
    * @param string $stream Can be a file-path or a string.
    * @param string $name   Name of the stream/file should be shown.
+   * @param boolean $exit Optional for testing
    */
-  public function sendStream($stream, $name)
+  public function sendStream($stream, $name, $exit = true)
   {
     Header::clear();
-    Header::sendDownloadDialog($stream, $name);
+    Header::sendDownloadDialog($stream, $name, $exit);
   }
 
   /**
