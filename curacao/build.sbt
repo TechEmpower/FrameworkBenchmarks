@@ -4,7 +4,7 @@ name := "curacao-benchmark"
 
 organization := "com.kolich"
 
-scalaVersion := "2.10.2"
+scalaVersion := "2.10.3"
 
 version := "1.0"
 
@@ -13,8 +13,8 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.kolich.curacao" % "curacao" % "2.0-M11" % "compile",
-  "com.kolich.curacao" % "curacao-gson" % "2.0-M11" % "compile",
+  "com.kolich.curacao" % "curacao" % "2.0-RC3" % "compile",
+  "com.kolich.curacao" % "curacao-gson" % "2.0-RC3" % "compile",
   "org.eclipse.jetty" % "jetty-webapp" % "9.1.1.v20140108" % "compile",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
   "org.slf4j" % "slf4j-api" % "1.7.2" % "compile",
