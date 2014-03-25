@@ -11,7 +11,8 @@ def start(args, logfile, errfile):
   if args.os.lower() == "windows":
     play_cmd = "play.bat"
   
-  subprocess.Popen([play_cmd,"start"], stdin=subprocess.PIPE, cwd="play-scala", stderr=errfile, stdout=logfile)
+  setup_util.replace_text("play-scala/conf/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
+  subprocess.Popen([play_cmd,"start"], stdin=subprocess.PIPE, cwd="play-scala-anorm", stderr=errfile, stdout=logfile)
   return 0
 
 def stop(logfile, errfile):
@@ -20,13 +21,13 @@ def stop(logfile, errfile):
 
 def kill_running_process():
   try:
-    with open("./play-scala/RUNNING_PID") as f:
+    with open("./play-scala-anorm/RUNNING_PID") as f:
       pid = int(f.read())
       os.kill(pid, 15)
   except:
   	pass
 
   try:
-    os.remove("play-scala/RUNNING_PID")
+    os.remove("play-scala-anorm/RUNNING_PID")
   except OSError:
     pass  

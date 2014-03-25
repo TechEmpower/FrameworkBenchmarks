@@ -102,6 +102,7 @@ env:
     - TESTDIR=play-java-ebean
     - TESTDIR=play-java-jpa
     - TESTDIR=play-scala
+    - TESTDIR=play-scala-anorm
     - TESTDIR=play-scala-mongodb
     - TESTDIR=play-slick
     - TESTDIR=pyramid
