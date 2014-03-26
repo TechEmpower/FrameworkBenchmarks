@@ -41,7 +41,6 @@ class Installer:
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
-    self.__run_command("source ../../.profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
 
     ##############################################################
