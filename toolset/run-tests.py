@@ -3,6 +3,7 @@ import argparse
 import ConfigParser
 import sys
 import os
+import multiprocessing
 from pprint import pprint 
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
@@ -51,6 +52,11 @@ def main(argv=None):
     databaHost = os.getenv('TFB_DATABASE_HOST', clientHost)
     databaUser = os.getenv('TFB_DATABASE_USER', clientUser)
     dbIdenFile = os.getenv('TFB_DATABASE_IDENTITY_FILE', clientIden)
+    maxThreads = 8
+    try:
+        maxThreads = multiprocessing.cpu_count()
+    except:
+        pass
 
     ##########################################################
     # Set up argument parser
@@ -77,7 +83,7 @@ def main(argv=None):
     parser.add_argument('--max-concurrency', default=256, help='the maximum concurrency that the tests will run at. The query tests will run at this concurrency', type=int)
     parser.add_argument('--max-queries', default=20, help='The maximum number of queries to run during the query test', type=int)
     parser.add_argument('--query-interval', default=5, type=int)
-    parser.add_argument('--max-threads', default=8, help='The max number of threads to run weight at, this should be set to the number of cores for your system.', type=int)
+    parser.add_argument('--max-threads', default=maxThreads, help='The max number of threads to run weight at, this should be set to the number of cores for your system.', type=int)
     parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
     parser.add_argument('--starting-concurrency', default=8, type=int)
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')

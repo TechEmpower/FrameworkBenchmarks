@@ -1,7 +1,9 @@
-import random
-import sys
+#!/usr/bin/env python
 
+import sys
 import json
+from random import randint
+
 import motor
 import tornado.ioloop
 import tornado.web
@@ -36,24 +38,36 @@ class PlaintextHandler(BaseHandler):
         self.write(b"Hello, World!")
 
 
+class DBTestHandler(BaseHandler):
+    @gen.coroutine
+    def get(self):
+        world = yield motor.Op(db.World.find_one, randint(1, 10000))
+        # Get first postion on arguments, and so first postion in mongo return
+        world['id'] = str(world.pop('_id'))
+        response = json.dumps(world)
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
+        self.write(response)
+
+
 class QueryTestHandler(BaseHandler):
     @gen.coroutine
     def get(self):
-        queries = int(self.get_argument("queries", 0))
+        try:
+            queries = int(self.get_argument("queries"))
+        except Exception:
+            queries = 1
+        else:
+            if queries < 1:
+                queries = 1
+            elif queries > 500:
+                queries = 500
 
-        if queries == 0:
-            random_id = random.randint(1, 10000)
-            world = yield motor.Op(db.World.find_one, random_id)
+        worlds = yield [motor.Op(db.World.find_one, randint(1, 10000))
+                        for _ in xrange(queries)]
+        for world in worlds:
             # Get first postion on arguments, and so first postion in mongo return
             world['id'] = str(world.pop('_id'))
-            response = json.dumps(world)
-        else:
-            worlds = yield [motor.Op(db.World.find_one, random.randint(1, 10000))
-                            for _ in xrange(queries)]
-            for world in worlds:
-                # Get first postion on arguments, and so first postion in mongo return
-                world['id'] = str(world.pop('_id'))
-            response = json.dumps(worlds)
+        response = json.dumps(worlds)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(response)
 
@@ -61,7 +75,8 @@ class QueryTestHandler(BaseHandler):
 application = tornado.web.Application([
     (r"/json", JsonSerializeTestHandler),
     (r"/plaintext", PlaintextHandler),
-    (r"/db", QueryTestHandler),
+    (r"/db", DBTestHandler),
+    (r"/queries", QueryTestHandler),
 ])
 
 

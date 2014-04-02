@@ -22,7 +22,12 @@ def start(args, logfile, errfile):
   return 0
 
 def stop(logfile, errfile):
-  subprocess.check_call("sudo m2sh stop -every", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
+  ret = 0
+
+  try:
+    subprocess.check_call("sudo m2sh stop -every", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
+  except:
+    ret = 1
 
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
@@ -30,8 +35,8 @@ def stop(logfile, errfile):
     if 'nawak_app' in line:
       try:
         pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+        os.kill(pid, 15)
       except OSError:
-        pass
+        ret = 1
 
-  return 0
+  return ret

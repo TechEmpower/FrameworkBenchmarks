@@ -17,7 +17,6 @@ import com.techempower.helper.*;
  */
 public class GhVersion
      extends Version
-  implements GeminiConstants
 {
 
   //
@@ -32,7 +31,7 @@ public class GhVersion
     this.setVersionString(getMajorVersion() + "." 
         + StringHelper.padZero(getMinorVersion(), 2)
         + "(" + StringHelper.padZero(getMicroVersion(), 2) 
-        + ") (Gemini " + GEMINI_VERSION + ")");
+        + ") (Gemini " + GeminiConstants.GEMINI_VERSION + ")");
   }
 
   /**

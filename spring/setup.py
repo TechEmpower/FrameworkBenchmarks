@@ -6,7 +6,7 @@ import os
 def start(args, logfile, errfile):
   try:
     subprocess.check_call("mvn clean package", shell=True, cwd="spring", stderr=errfile, stdout=logfile)
-    subprocess.Popen(("java -Xmx2048m -Xms2048m -XX:MaxPermSize=256m -Ddatabase.host=" + args.database_host + " -jar spring.war").rsplit(" "), cwd="spring/target", stderr=errfile, stdout=logfile)
+    subprocess.Popen(("java -Ddatabase.host=" + args.database_host + " -jar spring.war").rsplit(" "), cwd="spring/target", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -19,5 +19,5 @@ def stop(logfile, errfile):
     for line in out.splitlines():
       if 'spring.war' in line:
         pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+        os.kill(pid, 15)
   return 0

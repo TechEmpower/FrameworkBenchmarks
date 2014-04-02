@@ -21,7 +21,7 @@ def stop(logfile, errfile):
     if 'bench.exe' in line:
       try:
         pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+        os.kill(pid, 15)
       except OSError:
         pass
   return 0

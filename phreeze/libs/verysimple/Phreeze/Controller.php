@@ -50,6 +50,9 @@ abstract class Controller
 
 	/** Prefix this to the name of the view templates */
 	static $SmartyViewPrefix = "View";
+	
+	/** search string to look for to determine if this is an API request or not */
+	static $ApiIdentifier = "api/";
 
 	/** the default mode used when calling 'Redirect' */
 	static $DefaultRedirectMode = "client";
@@ -63,7 +66,7 @@ abstract class Controller
 	 * @param Context (optional) a context object for persisting the state of the current page
 	 * @param Router (optional) a custom writer for URL formatting
 	 */
-	final function __construct(Phreezer &$phreezer, &$renderEngine, &$context = null, IRouter &$router = null)
+	final function __construct(Phreezer $phreezer, $renderEngine, $context = null, IRouter $router = null)
 	{
 		$this->Phreezer =& $phreezer;
 		$this->RenderEngine =& $renderEngine;
@@ -94,7 +97,18 @@ abstract class Controller
 			$this->Assign("BROWSER_DEVICE",$this->GetDevice());
 	
 			// if feedback was persisted, set it
-			$this->Assign("feedback",$this->Context->Get("feedback"));
+			$feedback = $this->Context->Get("feedback");
+			
+			// print_r($feedback); die('feedback');
+			
+			if (is_array($feedback)) {
+				foreach ($feedback as $key => $val) {
+					$this->Assign($key,$val);
+				}
+			}
+			else {
+				$this->Assign("feedback",$feedback);
+			}
 			$this->Context->Set("feedback",null);
 		}
 
@@ -163,6 +177,63 @@ abstract class Controller
 				// no username provided, which means prompt for username
 				Auth401::OutputHeaders($realm);
 			}
+		}
+	}
+	
+	/**
+	 * Assign the current CSRFToken to the view layer
+	 * @param string $varname the view varname to use for assignment
+	 */
+	protected function AssignCSRFToken($varname = 'CSRFToken')
+	{
+		$this->Assign($varname, $this->GetCSRFToken());
+	}
+	
+	/**
+	 * Returns a stored CSRF Token from the session.  If no token exists, then generate
+	 * one and save it to the session.
+	 *
+	 * @return string
+	 */
+	protected function GetCSRFToken()
+	{
+		$token = $this->Context->Get('X-CSRFToken');
+	
+		if (!$token)
+		{
+			$token = md5(rand(1111111111,9999999999).microtime());
+			$this->Context->Set('X-CSRFToken',$token);
+		}
+	
+		return $token;
+	}
+	
+	/**
+	 * Verify that X-CSRFToken was sent in the request headers and matches the session token
+	 * If not an Exception with be thrown.  If no exception is thrown then the token
+	 * is verified.
+	 * @param string the name of the header variable that contains the token
+	 * @throws Exception if token is not provided or does not match
+	 */
+	protected function VerifyCSRFToken($headerName = 'X-CSRFToken')
+	{
+		// check that a CSRF token is present in the request
+		$headers = RequestUtil::GetHeaders();
+		
+		// make this case-insensitive (IE changes all headers to lower-case)
+		$headers = array_change_key_case($headers, CASE_LOWER);
+		$headerName = strtolower($headerName);
+	
+		if (array_key_exists($headerName, $headers))
+		{
+			if ($this->GetCSRFToken() != $headers[$headerName])
+			{
+				throw new Exception('Invalid CSRFToken');
+			}
+		}
+		else
+		{
+			throw new Exception('Missing CSRFToken');
 		}
 	}
 	
@@ -681,11 +752,24 @@ abstract class Controller
 
 		return $this->_cu;
 	}
+	
+	/**
+	 * Returns true if this request is an API request.  This examines the URL to 
+	 * see if the string Controller::$ApiIdentifier is in the URL
+	 * @return bool
+	 */
+	public function IsApiRequest()
+	{
+		$url = RequestUtil::GetCurrentURL();
+		return (strpos($url, self::$ApiIdentifier ) !== false);
+	}
 
 	/**
 	 * Check the current user to see if they have the requested permission.
 	 * If so then the function does nothing.  If not, then the user is redirected
-	 * to $on_fail_action (if provided) or an AuthenticationException is thrown
+	 * to $on_fail_action (if provided) or an AuthenticationException is thrown.
+	 * if Controller->IsApiRequest() returns true then an AuthenticationException will
+	 * be thrown regardless of the fail_action.
 	 *
 	 * @param int $permission Permission ID requested
 	 * @param string $on_fail_action (optional) The action to redirect if require fails
@@ -704,10 +788,9 @@ abstract class Controller
 				? $not_authenticated_feedback
 				: $permission_denied_feedback;
 			
-			if ($on_fail_action)
+			if ($on_fail_action && $this->IsApiRequest() == false)
 			{
-
-				$this->Redirect($on_fail_action,$message);
+				$this->Redirect($on_fail_action,array('feedback'=>$message,'warning'=>$message));
 			}
 			else
 			{
@@ -867,19 +950,18 @@ abstract class Controller
 	 * call "exit" so do not put any code that you wish to execute after Redirect
 	 *
 	 * @param string $action in the format Controller.Method
-	 * @param string $feedback
+	 * @param mixed $feedback string which will be assigne to the template as "feedback" or an array of values to assign
 	 * @param array $params
 	 * @param string $mode (client | header) default = Controller::$DefaultRedirectMode
 	 */
-	protected function Redirect($action, $feedback = "", $params = "", $mode = "")
+	protected function Redirect($action, $feedback =  null, $params = "", $mode = "")
 	{
 		if (!$mode) $mode = self::$DefaultRedirectMode;
 
 		$params = is_array($params) ? $params : array();
 
-		if ($feedback)
+		if ($feedback != null)
 		{
-			// $params["feedback"] = $feedback;
 			$this->Context->Set("feedback",$feedback);
 		}
 

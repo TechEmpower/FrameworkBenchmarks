@@ -17,6 +17,7 @@
 	public $Username;
 	public $Password;
 	public $DBName;
+	public $Type;
 	
 	/**
 	 * Create a new instance of a DBConnectionString
@@ -28,13 +29,14 @@
 	 * @param string $password	 
 	 * @param string $$dbname	 
 	 */
-	function __construct($host = "", $port = "", $username = "", $password = "", $dbname = "")
+	function __construct($host = "", $port = "", $username = "", $password = "", $dbname = "", $type = "mysql")
 	{
 		$this->Host = $host;
 		$this->Port = $port;
 		$this->Username = $username;
 		$this->Password = $password;
 		$this->DBName = $dbname;
+		$this->Type = $type;
 	}
 	
 }

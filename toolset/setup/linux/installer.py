@@ -71,8 +71,8 @@ class Installer:
     #
     # Dart
     #
-    self.__download("https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-64.tar.gz")
-    self.__run_command("tar xzf dartsdk-linux-64.tar.gz")
+    self.__download("http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip")
+    self.__run_command("unzip dartsdk-linux-x64-release.zip")
 
     #
     # Erlang
@@ -86,22 +86,19 @@ class Installer:
     #
     # nodejs
     #
-
     self.__download("http://nodejs.org/dist/v0.10.8/node-v0.10.8-linux-x64.tar.gz")
     self.__run_command("tar xzf node-v0.10.8-linux-x64.tar.gz")
 
     #
     # Java
     #
-
     self.__run_command("sudo apt-get install openjdk-7-jdk", True)
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
 
     #
     # Ruby/JRuby
     #
-
-    self.__run_command("curl -L get.rvm.io | bash -s head")
+    self.__run_command("curl -L get.rvm.io | bash -s head --auto-dotfiles")
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler")
@@ -111,14 +108,12 @@ class Installer:
     #
     # go
     #
-
     self.__download("http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz");
     self.__run_command("tar xzf go1.2.linux-amd64.tar.gz")
 
     #
     # Perl
     #
-
     self.__download("http://downloads.activestate.com/ActivePerl/releases/5.16.3.1603/ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
     self.__run_command("tar xzf ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
     self.__run_command("sudo ./install.sh --license-accepted --prefix /opt/ActivePerl-5.16 --no-install-html", cwd="ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746", send_yes=True, retry=True)
@@ -129,8 +124,7 @@ class Installer:
     #
     # php
     #
-
-    self.__download("http://www.php.net/get/php-5.4.13.tar.gz/from/us1.php.net/mirror")
+    self.__download("http://museum.php.net/php5/php-5.4.13.tar.gz")
     self.__run_command("tar xzf php-5.4.13.tar.gz")
     self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
@@ -138,7 +132,6 @@ class Installer:
     self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13", retry=True)
     self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
-    self.__run_command("rm php-5.4.13.tar.gz")
 
     # Composer
     self.__download("https://getcomposer.org/installer", "composer-installer.php")
@@ -154,7 +147,6 @@ class Installer:
     #
     # Haskell
     #
-
     self.__run_command("sudo apt-get install ghc cabal-install", True)
 
     #
@@ -169,10 +161,10 @@ class Installer:
     # Mono
     #
     self.__run_command("git clone git://github.com/mono/mono", retry=True)
-    self.__run_command("git checkout mono-3.2.3", cwd="mono")
+    self.__run_command("git checkout mono-3.2.8-branch", cwd="mono")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
     self.__run_command("make get-monolite-latest", cwd="mono")
-    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
+    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe", cwd="mono")
     self.__run_command("sudo make install", cwd="mono")
 
     self.__run_command("mozroots --import --sync", retry=True)
@@ -192,20 +184,20 @@ class Installer:
     self.__run_command("./build.sh", cwd="nimrod/csources")
     self.__run_command("bin/nimrod c koch", cwd="nimrod")
     self.__run_command("./koch boot -d:release", cwd="nimrod")
-    self.__run_command("sudo ./koch install /usr/bin", cwd="nimrod")
-
 
     #
     # Racket
     #
-
-    self.__run_command("sudo apt-get install racket", True)
+    self.__download("https://github.com/plt/racket/archive/v5.3.6.tar.gz", "racket-5.3.6.tar.gz")
+    self.__run_command("tar xzf racket-5.3.6.tar.gz")
+    self.__run_command("./configure", cwd="racket-5.3.6/src")
+    self.__run_command("make", cwd="racket-5.3.6/src")
+    self.__run_command("sudo make install", cwd="racket-5.3.6/src")
 
     #
     # Ur/Web
     #
-
-    self.__run_command("hg clone -r3cc14f1e47d1 http://hg.impredicative.com/urweb")
+    self.__run_command("hg clone http://hg.impredicative.com/urweb")
     self.__run_command("./autogen.sh", cwd="urweb")
     self.__run_command("./configure", cwd="urweb")
     self.__run_command("make", cwd="urweb")
@@ -233,13 +225,20 @@ class Installer:
     self.__run_command("sudo make install", cwd="nginx-1.4.1")
 
     #
-    # Openresty (nginx with openresty stuff)
+    # Openresty (nginx with lua stuff)
     #
-    self.__download("http://openresty.org/download/ngx_openresty-1.2.7.5.tar.gz")
-    self.__run_command("tar xzf ngx_openresty-1.2.7.5.tar.gz")
-    self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.2.7.5")
-    self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
-    self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
+    self.__download("http://openresty.org/download/ngx_openresty-1.5.8.1.tar.gz")
+    self.__run_command("tar xzf ngx_openresty-1.5.8.1.tar.gz")
+    self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.5.8.1")
+    self.__run_command("make", cwd="ngx_openresty-1.5.8.1")
+    self.__run_command("sudo make install", cwd="ngx_openresty-1.5.8.1")
+    
+    #
+    # Lapis
+    #
+    self.__run_command("sudo apt-get install luarocks")
+    self.__run_command("sudo luarocks install http://github.com/leafo/lapis/raw/master/lapis-dev-1.rockspec")
+
 
     #
     # Resin
@@ -266,8 +265,10 @@ class Installer:
     self.__run_command("sudo make install", cwd="zeromq-4.0.3")
     self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev")
     self.__run_command("sudo ldconfig -v")
-    self.__run_command("git clone git://github.com/zedshaw/mongrel2.git mongrel2", retry=True)
-    # for zmq4, we update the following file manually (not in the stable master branch yet)
+    self.__download("https://github.com/zedshaw/mongrel2/tarball/v1.8.1", "mongrel2.tar.gz")
+    self.__run_command("tar xvf mongrel2.tar.gz")
+    self.__run_command("mv zedshaw-mongrel2-aa2ecf8 mongrel2")
+    # for zmq4, we update the following file manually (not in v1.8.1)
     self.__download("https://raw.github.com/zedshaw/mongrel2/9b565eeea003783c47502c2d350b99c9684ce97c/src/zmq_compat.h")
     self.__run_command("mv -f zmq_compat.h mongrel2/src/")
     self.__run_command("make clean all && sudo make install", cwd="mongrel2")
@@ -281,21 +282,18 @@ class Installer:
     #
     self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.3.zip")
     self.__run_command("unzip -o grails-2.3.3.zip")
-    self.__run_command("rm grails-2.3.3.zip")
 
     #
     # Play 2
     #
     self.__download("http://downloads.typesafe.com/play/2.2.0/play-2.2.0.zip")
     self.__run_command("unzip -o play-2.2.0.zip")
-    self.__run_command("rm play-2.2.0.zip")
 
     #
     # Play 1
     #
     self.__download("http://downloads.typesafe.com/releases/play-1.2.5.zip")
     self.__run_command("unzip -o play-1.2.5.zip")
-    self.__run_command("rm play-1.2.5.zip")
     self.__run_command("mv play-1.2.5/play play-1.2.5/play1")
 
     # siena
@@ -334,7 +332,7 @@ class Installer:
     #
     # Onion
     #
-    self.__run_command("git clone git@github.com:davidmoreno/onion.git")
+    self.__run_command("git clone https://github.com/davidmoreno/onion.git")
     self.__run_command("mkdir build", cwd="onion")
     self.__run_command("cmake ..", cwd="onion/build")
     self.__run_command("make", cwd="onion/build")

@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>0.5.0.M7</version>
+        <version>1.0.0.RC4</version>
     </parent>
 
     <groupId>com.techempower</groupId>
@@ -19,7 +19,7 @@
 
     <properties>
         <java.version>1.7</java.version>
-        <tomcat.version>8.0.0-RC10</tomcat.version>
+        <tomcat.version>8.0.3</tomcat.version>
     </properties>
 
     <dependencies>
@@ -47,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf-spring3</artifactId>
+            <artifactId>thymeleaf-spring4</artifactId>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
@@ -69,6 +69,11 @@
         <repository>
             <id>spring-milestones</id>
             <url>http://repo.spring.io/milestone</url>
+        </repository>
+        <repository>
+            <id>bintray</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com</url>
         </repository>
     </repositories>
 
