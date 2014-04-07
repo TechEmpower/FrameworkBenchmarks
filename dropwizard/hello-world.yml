@@ -1,12 +1,7 @@
-http:
-  port: 9000
-
-  requestLog:
-
-    # Settings for logging to stdout.
-    console:
-      # If true, log requests to stdout.
-      enabled: false
+server:
+  applicationConnectors:
+    - type: http
+      port: 9000
 
 database:
   # the name of your JDBC driver
@@ -24,6 +19,7 @@ database:
   # any properties specific to your JDBC driver:
   properties:
     charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
 
   # the maximum amount of time to wait on an empty pool before throwing an exception
   maxWaitForConnection: 1s
@@ -41,18 +37,12 @@ database:
   checkConnectionWhileIdle: false
 
   # how long a connection must be held before it can be validated
-  checkConnectionHealthWhenIdleFor: 10s
+  validationInterval: 10s
 
   # the maximum lifetime of an idle connection
-  closeConnectionIfIdleFor: 1 minute
+  evictionInterval: 1 minute
 
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: OFF
-
-  console:
-
-    # If true, write log statements to stdout.
-    enabled: false
-

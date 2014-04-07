@@ -1,11 +1,11 @@
 
 package com.example.helloworld.db;
 
+import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 
 import com.example.helloworld.core.World;
 import com.google.common.base.Optional;
-import com.yammer.dropwizard.hibernate.AbstractDAO;
 
 public class WorldDAO
     extends AbstractDAO<World>

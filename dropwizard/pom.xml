@@ -8,16 +8,20 @@
     <artifactId>hello-world</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <properties>
+        <dropwizard.version>0.7.0</dropwizard.version>
+    </properties>
+
     <dependencies>
         <dependency>
-            <groupId>com.yammer.dropwizard</groupId>
+            <groupId>io..dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
-            <version>0.6.2</version>
+            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.yammer.dropwizard</groupId>
+            <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-hibernate</artifactId>
-            <version>0.6.2</version>
+            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -76,7 +80,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.example.helloworld.HelloWorldService</mainClass>
+                                    <mainClass>com.example.helloworld.HelloWorldApplication</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

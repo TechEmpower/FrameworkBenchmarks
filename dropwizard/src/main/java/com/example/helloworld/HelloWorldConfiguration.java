@@ -4,11 +4,9 @@ package com.example.helloworld;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.yammer.dropwizard.config.Configuration;
-import com.yammer.dropwizard.db.DatabaseConfiguration;
+import io.dropwizard.Configuration;
+import io.dropwizard.db.DataSourceFactory;
 
 public class HelloWorldConfiguration
     extends Configuration
@@ -16,9 +14,9 @@ public class HelloWorldConfiguration
   @Valid
   @NotNull
   @JsonProperty
-  private DatabaseConfiguration database    = new DatabaseConfiguration();
+  private DataSourceFactory database = new DataSourceFactory();
 
-  public DatabaseConfiguration getDatabaseConfiguration()
+  public DataSourceFactory getDataSourceFactory()
   {
     return database;
   }
