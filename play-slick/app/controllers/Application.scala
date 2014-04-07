@@ -5,7 +5,7 @@ import play.api.mvc._
 import play.api.libs.json.Json
 import java.util.concurrent._
 import scala.concurrent._
-import models.{Worlds, World, Fortunes, Fortune}
+import models.{Worlds, World, Fortunes, Fortune, WorldsTableQuery, FortunesTableQuery}
 import utils._
 import scala.concurrent.Future
 
@@ -29,8 +29,8 @@ object Application extends Controller {
     new NamedThreadFactory("dbEc"))
   private val dbEc = ExecutionContext.fromExecutorService(tpe)
 
-  private val worldsTable = new Worlds
-  private val fortunesTable = new Fortunes
+  private val worldsTable = new WorldsTableQuery
+  private val fortunesTable = new FortunesTableQuery
 
   // A predicate for checking our ability to service database requests is determined by ensuring that the request
   // queue doesn't fill up beyond a certain threshold. For convenience we use the max number of connections * the max
