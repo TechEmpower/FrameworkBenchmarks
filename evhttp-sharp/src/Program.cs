@@ -15,8 +15,9 @@ namespace EvHttpSharpBenchmark
 
 		static void Main (string[] args)
 		{
-			var host = new EventHttpListener(Handler);
-			host.Start(args[0], ushort.Parse(args[1]), int.Parse(args[2]));
+            LibLocator.Init();
+		    var host = new EventHttpMultiworkerListener(Handler, int.Parse(args[2]));
+		    host.Start(args[0], ushort.Parse(args[1]));
 		}
 
 		private static void Handler(EventHttpRequest req)
