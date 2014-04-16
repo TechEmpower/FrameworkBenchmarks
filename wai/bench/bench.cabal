@@ -15,8 +15,8 @@ executable         bench
                  , aeson                         >= 0.6.1.0
                  , conduit-extra                 >= 1.1
                  , http-types
-                 , mighttpd2                     >= 3.0
                  , network                       >= 2.4
+                 , streaming-commons
                  , text                          >= 1.0
                  , wai                           >= 1.4
                  , warp                          >= 2.1

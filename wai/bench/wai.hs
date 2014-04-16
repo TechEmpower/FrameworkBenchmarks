@@ -1,15 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Data.Aeson ((.=), object, encode)
+import Data.Streaming.Network (bindPortTCP)
 import Data.Text (Text)
 import Network.HTTP.Types (status200)
 import Network.Wai (responseLBS)
 import qualified Network.Wai.Handler.Warp as W
-import Program.Mighty.Network (listenSocket)
 
 main :: IO ()
 main = do
-    s <- listenSocket "8000" 2048
+    s <- bindPortTCP 8000 "*"
     W.runSettingsSocket settings s app
   where
     settings = W.setOnException (\_ _ -> return ()) W.defaultSettings
