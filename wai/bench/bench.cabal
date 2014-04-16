@@ -12,10 +12,11 @@ executable         bench
     extensions: OverloadedStrings
 
     build-depends: base                          >= 4          && < 5
-                 , warp                          >= 2.1
-                 , wai                           >= 1.4
-                 , text                          >= 1.0
                  , aeson                         >= 0.6.1.0
-                 , unix                          >= 2.5
                  , conduit-extra                 >= 1.1
                  , http-types
+                 , mighttpd2                     >= 3.0
+                 , network                       >= 2.4
+                 , text                          >= 1.0
+                 , wai                           >= 1.4
+                 , warp                          >= 2.1
