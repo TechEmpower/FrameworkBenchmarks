@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+import Control.Concurrent (runInUnboundThread)
 import Data.Aeson ((.=), object, encode)
 import Data.Streaming.Network (bindPortTCP)
 import Data.Text (Text)
@@ -8,7 +9,7 @@ import Network.Wai (responseLBS)
 import qualified Network.Wai.Handler.Warp as W
 
 main :: IO ()
-main = do
+main = runInUnboundThread $ do
     s <- bindPortTCP 8000 "*"
     W.runSettingsSocket settings s app
   where
