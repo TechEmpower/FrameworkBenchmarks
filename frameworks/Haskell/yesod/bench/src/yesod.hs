@@ -3,6 +3,8 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE RankNTypes #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+module Main (main, resourcesApp, Widget, WorldId) where
 import Yesod hiding (Field)
 import System.Environment (getArgs)
 import qualified Network.Wai.Handler.Warp as Warp
@@ -15,9 +17,6 @@ import Database.MongoDB ((=:), Field((:=)))
 import qualified System.Random.MWC as R
 import Control.Monad.Primitive (PrimState)
 import Control.Monad (replicateM)
-import Data.Conduit.Network (bindPort)
-import System.Posix.Process (forkProcess)
-import Control.Monad (replicateM_)
 import Network (PortID (PortNumber))
 import Data.Int (Int64)
 
@@ -27,9 +26,9 @@ World sql=World
 |]
 
 data App = App
-    { appGen :: R.Gen (PrimState IO)
-    , mySqlPool :: Pool My.Connection
-    , mongoDBPool :: Pool Mongo.Connection
+    { appGen :: !(R.Gen (PrimState IO))
+    , mySqlPool :: !(Pool My.Connection)
+    , mongoDBPool :: !(Pool Mongo.Connection)
     }
 
 -- | Not actually using the non-raw mongoDB.
@@ -141,8 +140,7 @@ instance ToJSON Mongo.Value where
 
 main :: IO ()
 main = R.withSystemRandom $ \gen -> do
-    socket <- bindPort 8000 "*"
-    [cores, host] <- getArgs
+    [_cores, host] <- getArgs
     myPool <- My.createMySQLPool My.defaultConnectInfo
         { My.connectUser = "benchmarkdbuser"
         , My.connectPassword = "benchmarkdbpass"
@@ -161,10 +159,9 @@ main = R.withSystemRandom $ \gen -> do
         , mySqlPool = myPool
         , mongoDBPool = mongoPool
         }
-    let run = Warp.runSettingsSocket Warp.defaultSettings
-                { Warp.settingsPort = 8000
-                , Warp.settingsHost = "*"
-                , Warp.settingsOnException = const $ return ()
-                } socket app
-    replicateM_ (read cores - 1) $ forkProcess run
-    run
+    Warp.runSettings
+        ( Warp.setPort 8000
+        $ Warp.setHost "*"
+        $ Warp.setOnException (\_ _ -> return ())
+          Warp.defaultSettings
+        ) app
