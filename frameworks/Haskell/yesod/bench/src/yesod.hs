@@ -1,24 +1,28 @@
-{-# LANGUAGE QuasiQuotes, TemplateHaskell, TypeFamilies, MultiParamTypeClasses, OverloadedStrings #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE EmptyDataDecls #-}
-{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE EmptyDataDecls        #-}
+{-# LANGUAGE GADTs                 #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE QuasiQuotes           #-}
+{-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE RecordWildCards       #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Main (main, resourcesApp, Widget, WorldId) where
-import Yesod hiding (Field)
-import System.Environment (getArgs)
-import qualified Network.Wai.Handler.Warp as Warp
-import Data.Text (Text)
-import Data.Conduit.Pool (Pool)
-import qualified Database.Persist.MySQL as My
+import           Control.Monad            (replicateM)
+import           Control.Monad.Primitive  (PrimState)
+import           Data.Conduit.Pool        (Pool)
+import           Data.Int                 (Int64)
+import           Data.Text                (Text)
+import           Database.MongoDB         (Field ((:=)), (=:))
+import qualified Database.MongoDB         as Mongo
 import qualified Database.Persist.MongoDB as Mongo
-import qualified Database.MongoDB as Mongo
-import Database.MongoDB ((=:), Field((:=)))
-import qualified System.Random.MWC as R
-import Control.Monad.Primitive (PrimState)
-import Control.Monad (replicateM)
-import Network (PortID (PortNumber))
-import Data.Int (Int64)
+import qualified Database.Persist.MySQL   as My
+import           Network                  (PortID (PortNumber))
+import qualified Network.Wai.Handler.Warp as Warp
+import           System.Environment       (getArgs)
+import qualified System.Random.MWC        as R
+import           Yesod                    hiding (Field)
 
 mkPersist sqlSettings [persistLowerCase|
 World sql=World
@@ -26,8 +30,8 @@ World sql=World
 |]
 
 data App = App
-    { appGen :: !(R.Gen (PrimState IO))
-    , mySqlPool :: !(Pool My.Connection)
+    { appGen      :: !(R.Gen (PrimState IO))
+    , mySqlPool   :: !(Pool My.Connection)
     , mongoDBPool :: !(Pool Mongo.Connection)
     }
 
