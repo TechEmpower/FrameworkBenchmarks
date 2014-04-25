@@ -1,0 +1,6 @@
+./martini/src/
+./martini/src/app
+./martini/src/app/app.go
+./martini/src/app/models.go
+./martini/templates
+./martini/templates/fortune.tmpl
