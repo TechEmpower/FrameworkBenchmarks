@@ -39,6 +39,9 @@ php-fuel/fuel/app/logs/
 results/
 benchmark.cfg
 
+# komodo
+*.komodoproject
+
 # Mac filesystem dust
 .DS_Store
 
