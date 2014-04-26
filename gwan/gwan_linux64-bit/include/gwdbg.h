@@ -535,12 +535,12 @@ extern void set_reply(char *argv[], char *buf, u32 len, u32 status)
    p_set_reply(argv, buf, len, status);
 }
 
-extern void wake_up(char *argv[], int ms_or_fd, int type)
+extern void wake_up(char *argv[], int ms_or_fd, int type, void *fn)
 {
-   void(*p_wake_up)(char *argv[], int ms_or_fd, int type) =
-   (void(*)(char *argv[], int ms_or_fd, int type))
+   void(*p_wake_up)(char *argv[], int ms_or_fd, int type, void *fn) =
+   (void(*)(char *argv[], int ms_or_fd, int type, void *fn))
    _wake_up;
-   p_wake_up(argv, ms_or_fd, type);
+   p_wake_up(argv, ms_or_fd, type, fn);
 }
 
 extern u64 get_env(char *argv[], int name)
@@ -682,6 +682,14 @@ extern void throttle_reply(char *argv[], u16 kbps1, u16 kbps2, int global)
    (void(*)(char *argv[], u16 kbps1, u16 kbps2, int global))
    _throttle_reply;
    return p_throttle_reply(argv, kbps1, kbps2, global);
+}
+
+extern void *get_fd_ctx(int fd2, int fd1)
+{
+   void*(*p_get_fd_ctx)(int fd2, int fd1) =
+   (void*(*)(int fd2, int fd1))
+   _get_fd_ctx;
+   return p_get_fd_ctx(fd2, fd1);
 }
 
 extern int s_vsnprintf(char *str, size_t len, const char *fmt, va_list a)
@@ -902,6 +910,38 @@ extern int kv_do(kv_t *store, const char *key, int klen, kv_proc_t kv_proc,
    return p_kv_do(store, key, klen, kv_proc, user_defined_ctx);
 }
 
+extern void *mp_init(size_t pool_size)
+{
+   void*(*p_mp_init)(size_t pool_size) =
+   (void*(*)(size_t pool_size))
+   _mp_init;
+   return p_mp_init(pool_size);
+}
+
+extern void mp_del(void *pool)
+{
+   void(*p_mp_del)(void *pool) =
+   (void(*)(void *pool))
+   _mp_del;
+   p_mp_del(pool);
+}
+
+extern void *mp_malloc(void *pool, size_t size)
+{
+   void*(*p_mp_malloc)(void *pool, size_t size) =
+   (void*(*)(void *pool, size_t size))
+   _mp_malloc;
+   return p_mp_malloc(pool, size);
+}
+
+extern void mp_free(void *pool, void *ptr)
+{
+   void(*p_mp_free)(void *pool, void *ptr) =
+   (void(*)(void *pool, void *ptr))
+   _mp_free;
+   p_mp_free(pool, ptr);
+}
+
 extern int gc_init(char *argv[], size_t size)
 {
    int(*p_gc_init)(char *argv[], size_t size) =
@@ -940,6 +980,14 @@ extern void mpools_report(xbuf_t *reply)
    (void(*)(xbuf_t *reply))
    _mpools_report;
    p_mpools_report(reply);
+}
+
+extern int run_cmd(const char *cmd, int argc, char *argv[])
+{
+   int(*p_run_cmd)(const char *cmd, int argc, char *argv[]) =
+   (int(*)(const char *cmd, int argc, char *argv[]))
+   _run_cmd;
+   return p_run_cmd(cmd, argc, argv);
 }
 
 extern jsn_t *jsn_frtext(char *text, char *name)

@@ -116,6 +116,9 @@ s32   xbuf_http    (xbuf_t *ctx, s32 code, char *body);
 
 // send an HTTP request to a server, save the reply and return the HTTP status
 // ('headers' is adding headers, not overwriting any existing header)
+// xbuf_frurl(&buf, "gwan.com", 443, HTTPS | HTTP_POST, "/csp?contact", 1000,
+//           "&arg1=val1&arg2=val2");
+#define HTTPS 100
 s32   xbuf_frurl   (xbuf_t *ctx, char *host, u32 port, u32 method, char *uri, 
                     u32 mstimeout, char *headers);
 

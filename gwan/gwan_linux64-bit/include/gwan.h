@@ -29,6 +29,10 @@
 #include "short_types.h"  // u8/s8, u16/s16, u32/int, u64/s64
 #include "xbuffer.h"      // xbuf_xcat(), etc.
 
+#ifndef gcc_unused
+  #define gcc_unused   __attribute__((__unused__)) // avoid 'unused' warning
+#endif
+
 // ----------------------------------------------------------------------------
 // handler entry points (declared here for C++, see extern "C" {} above)
 // ----------------------------------------------------------------------------
@@ -46,11 +50,13 @@ extern void clean(int argc, char *argv[]);
 // HTTP code messages
 // URL parameters
 // Key-value store
+// Memory pools
 // Garbage collector
 // Handlers
 // Cache
 // Comet
 // Server report
+// Run Command
 // Comet Streaming
 // JSON (de-)serialization
 // HTML escaping
@@ -83,16 +89,19 @@ xbuf_t *get_reply(char *argv[]);
 void set_reply(char *argv[], char *buf, u32 len, u32 status);
 
 // tell G-WAN when to run a script again (for the same request)
-// type: WK_MS | WK_FD
+// 'type': WK_MS | WK_FD
 #define WK_MS 1  // milliseconds
 #define WK_FD 2  // file descriptor
-void wake_up(char *argv[], int delay_or_fd, int type);
+// 'fn' is an optional callback which can be used as a replacement for the
+// RC_STREAMING mode which makes a servlet be called repeatedly.
+// See the stream1/2/3.c examples
+void wake_up(char *argv[], int delay_or_fd, int type, void *fn);
 
 // Setup/update the send() throttling policy with a KiB/second transfer rate.
 // This can be done both by servlets and handlers.
 //
-// 'kbps1' is the first packets of a reply, 'kbps2' is the speed to use after
-// the first KiB of the defined 'kbps1' have been sent.
+// 'kbps1' is for the first packet of a reply, 'kbps2' is the speed to use 
+// after the first KiBs of the defined 'kbps1' have been sent.
 //
 // Throttling can be defined on a per-connection basis ('global' == FALSE)
 // or globally ('global' == TRUE).
@@ -104,14 +113,21 @@ void wake_up(char *argv[], int delay_or_fd, int type);
 // Use 0 to disable throttling (if throttling was previously enabled).
 //
 // Examples:
-// throttle_reply(argv, 100, 150, TRUE);
-// throttle_reply(argv,   0,   0, TRUE);
+// throttle_reply(argv, 100, 150, TRUE); // smaller for 1st packet, faster then
+// throttle_reply(argv,   0,   0, TRUE); // disable throttling
 // ----------------------------------------------------------------------------
 // because of the delay between the timeout loop and the actual processing of
 // the event triggered by a write() call, the actual rate is only half of what
 // is requested - that' s why we double the values below
 
 void throttle_reply(char *argv[], u16 kbps1, u16 kbps2, int global);
+
+// return the connection context of the given file descriptor 'fd2' peered
+// to 'fd1' (the client connection created earlier); if the fd 'fd1' is 
+// unknown or irrelevant (no relaying taking place) then use 0 for 'fd1'.
+// (used by "Protocol Handlers", see the /handlers/RELAY.c example)
+
+void *get_fd_ctx(int fd2, int fd1);
 
 // ============================================================================
 // The error.log file
@@ -152,12 +168,32 @@ void log_err(char *argv[], const char *msg);
 //
 u64 get_env(char *argv[], int name);
 
-enum HTTP_codes 
+// these codes supplement the standard HTTP codes, above and beyond the 
+// reserved ]100-600[ range and let servlets alter the normal behavior
+//
+enum HTTP_codes
 {
-  RC_CLOSE = 0,        // close connection
-  RC_NOHEADERS,        // prevent G-WAN from injecting HTTP headers
+  RC_CLOSE     = 0,    // close connection
+
+  RC_NOHEADERS = 1,    // prevent G-WAN from injecting HTTP headers
                        // [100-600] return codes are for HTTP status codes
-  RC_STREAMING = 1000  // call script again after all reply was sent
+
+  RC_STREAMING = 1000, // call script again after all reply was sent
+
+  RC_NOCACHE   = 2000, // prevent G-WAN from caching servlet output
+};
+
+// see the 'PONG.c' protocol handler example
+//
+enum PROTOCOL_state
+{
+   PRT_CONNECTED = 1, // a new (client or backend) connection was established
+   PRT_ACCEPTED,      // a new (client or backend) connection was accepted
+   PRT_SRV_READ,      // client  data can be read from the input  socket buffer
+   PRT_SRV_WRITE,     // client  data can be sent to   the output socket buffer
+   PRT_PRX_READ,      // backend data can be read from the input  socket buffer
+   PRT_PRX_WRITE,     // backend data can be sent to   the output socket buffer
+   PRT_CLOSED,        // the (client or backend) connection was closed
 };
 
 enum HTTP_Method
@@ -322,19 +358,19 @@ typedef struct
 #endif
 } http_t;
 
-enum HTTP_Env
+enum http_env
 {
    // -------------------------------------------------------------------------
    // Server 'environment' variables
    // -------------------------------------------------------------------------
    // NOTE: QUERY_CHAR and DEFAULT_LANG are global settings (server-wide)
-   REQUEST=0,       // char  *REQUEST;        // "GET / HTTP/1.1\r\n..."
+   REQUEST = 0,     // char  *REQUEST;        // "GET / HTTP/1.1\r\n..."
    REQUEST_LEN,     // int    REQUEST_LEN     // strlen(REQUEST); with headers
    REQUEST_METHOD,  // int    REQUEST_METHOD  // 1=GET, 2=HEAD, 3=PUT, 4=POST
    QUERY_STRING,    // char  *QUERY_STRING    // request URL after first '?'
    FRAGMENT_ID,     // char  *FRAGMENT_ID     // request URL after last '#'
-   REQ_ENTITY,      // char  *ENTITY          // "arg=x&arg=y..."
-   CONTENT_TYPE,    // int    CONTENT_TYPE;   // 1="x-www-form-urlencoded"
+   REQ_ENTITY,      // char  *REQ_ENTITY      // "arg=x&arg=y..."
+   CONTENT_TYPE,    // int    CONTENT_TYPE    // 1="x-www-form-urlencoded"
    CONTENT_LENGTH,  // int    CONTENT_LENGTH  // body length provided by client
    CONTENT_ENCODING,// int    CONTENT_ENCODING// entity, gzip, deflate
    SESSION_ID,      // int    SESSION_ID;     // 12345678 (range: 0-4294967295)
@@ -349,7 +385,7 @@ enum HTTP_Env
    REMOTE_PWD,      // char  *REMOTE_PWD      // "secret"
    CLIENT_SOCKET,   // int    CLIENT_SOCKET   // 1032 (-1 if invalid/closed)
    USER_AGENT,      // char  *USER_AGENT;     // "Mozilla ... Firefox"
-   SERVER_SOFTWARE, // char  *SERVER_SOFTWARE // "G-WAN"
+   SERVER_SOFTWARE, // char  *SERVER_SOFTWARE // "G-WAN/1.0.2"
    SERVER_NAME,     // char  *SERVER_NAME;    // "domain.com"
    SERVER_ADDR,     // char  *SERVER_ADDR;    // "192.168.10.14"
    SERVER_PORT,     // int    SERVER_PORT;    // 80 (443, 8080, etc.)
@@ -361,38 +397,57 @@ enum HTTP_Env
    LOG_ROOT,        // char  *LOG_ROOT;       // the log files folder
    HLD_ROOT,        // char  *HLD_ROOT;       // the handlers folder
    FNT_ROOT,        // char  *FNT_ROOT;       // the fonts folder
-   DOWNLOAD_SPEED,  // int   *DOWNLOAD_SPEED; // min CLIENT READ rate (default:1)
-   MIN_READ_RATE = DOWNLOAD_SPEED,            // 
-   READ_XBUF,       // xbuf_t*READ_XBUF;      // HTTP request is stored there
+   DOWNLOAD_SPEED,  // int   *DOWNLOAD_SPEED; // minimum allowed transfer rate
+   MIN_READ_RATE = DOWNLOAD_SPEED,            //
+   READ_XBUF,       // xbuf_t*READ_XBUF;      // pointer to the read() xbuffer
    SCRIPT_TMO,      // u32   *SCRIPT_TMO;     // time-out in milliseconds
-   KALIVE_TMO,      // u32   *KALIVE_TMO;     // HTTP Keep-Alive time-out (ms)
+   KALIVE_TMO,      // u32   *KALIVE_TMO;     // time-out in milliseconds
    REQUEST_TMO,     // u32   *REQUEST_TMO;    // time-out in milliseconds
-   MIN_SEND_SPEED,  // u32   *MIN_SEND_SPD;   // min CLIENT SEND speed, bytes/sec
+   MIN_READ_SPEED,  // u32   *MIN_READ_SPD;   // rate in bytes per second
    NBR_CPUS,        // int    NBR_CPUS;       // total of available CPUs
    NBR_CORES,       // int    NBR_CORES;      // total of available CPU Cores
    NBR_WORKERS,     // int    NBR_WORKERS;    // total of server workers
    CUR_WORKER,      // int    CUR_WORKER;     // worker thread number: 1,2,3...
    REPLY_MIME_TYPE, // char  *REPLY_MIME_TYPE;// set script's reply MIME type
-   DEFAULT_LANG,    // u8     DEFAULT_LANG;   // LG_D: /?hello.d => /?hello
+   DEFAULT_LANG,    // u8     DEFAULT_LANG;   // CC_D: /?hello.d => /?hello
    QUERY_CHAR,      // u8     QUERY_CHAR;     // replace '?' by [ -_.!~*'() ]
    REQUEST_TIME,    // u64    REQUEST_TIME;   // time (parse+build) in microsec
    MAX_ENTITY_SIZE, // u32   *MAX_ENTITY_SIZE;// maximum POST entity size
+   USE_WWW_CACHE,   // u8    *USE_WWW_CACHE;  // 0:disabled (default) 1:enabled
+   USE_CSP_CACHE,   // u8    *USE_CSP_CACHE;  // 0:disabled (default) 1:enabled
+   CACHE_ALL_WWW,   // u8    *CACHE_ALL_WWW;  // 1:cache all /www at startup
+   USE_MINIFYING,   // u8    *USE_MINIFYING;  // '1' by default (JS/CSS/HTML)
    // -------------------------------------------------------------------------
    // Server performance counters
    // -------------------------------------------------------------------------
-   CC_BYTES_IN=100, CC_BYTES_OUT,  CC_ACCEPTED,  CC_CLOSED,   CC_REQUESTS,
-   CC_HTTP_REQ,     CC_CACHE_MISS, CC_ACPT_TMO,  CC_READ_TMO, CC_SLOW_TMO,
-   CC_SEND_TMO,     CC_BUILD_TMO,  CC_CLOSE_TMO, CC_CSP_REQ,  CC_STAT_REQ,
-   CC_HTTP_ERR,     CC_EXCEPTIONS, CC_BYTES_INDAY, CC_BYTES_OUTDAY,
+   CC_BYTES_IN = 100, CC_BYTES_OUT,  CC_ACCEPTED,  CC_CLOSED,   CC_REQUESTS,
+   CC_HTTP_REQ,       CC_CACHE_MISS, CC_ACPT_TMO,  CC_READ_TMO, CC_SLOW_TMO,
+   CC_SEND_TMO,       CC_BUILD_TMO,  CC_CLOSE_TMO, CC_CSP_REQ,  CC_STAT_REQ,
+   CC_HTTP_ERR,       CC_EXCEPTIONS, CC_BYTES_INDAY, CC_BYTES_OUTDAY,
    // -------------------------------------------------------------------------
    // Handler and VirtualHost Persistence pointers
    // -------------------------------------------------------------------------
    US_REQUEST_DATA = 200, // Request-wide pointer
    US_HANDLER_DATA,       // Listener-wide pointer
-   US_VHOST_DATA,         // Virtual-Host-wide pointer
-   US_SERVER_DATA,        // global pointer
-   US_HANDLER_STATES      // states registered to get server-state notifications
+   US_VHOST_DATA,         // VirtualHost-wide pointer
+   US_SERVER_DATA,        // Server-wide pointer (global)
+   US_HANDLER_STATES,     // states registered to get server-state notifications
+   US_HANDLER_CTX_SIZE    // size of "Protocol Handler" per-connection context
 };
+
+// ============================================================================
+// Protocol Buffers: connection context structure (do not modify it)
+// ----------------------------------------------------------------------------
+typedef struct { u8  str[12]; u32 num; } ip_t;
+typedef struct
+{
+   ip_t   client_ip;    // "a.b.c.d" + IP address as u32
+   int    client_fd;    // client socket we accepted from client
+   u32    id       :20, // 0- 1m+, client_fd initial value, even after close()
+          state    :12, // 0- 4095, connection state
+          reserved :32; // do not modify!
+   void  *ctx;          // user-defined protocol-handler context
+} conn_t;
 
 // ============================================================================
 // HTTP response Headers
@@ -472,6 +527,16 @@ void server_report(xbuf_t *reply, int html); // see the report.c example
 void mpools_report(xbuf_t *reply);           // see the mpools.c example
 
 // ============================================================================
+// Run Command
+// ----------------------------------------------------------------------------
+// Let a G-WAN script run an external command like 'ping' and get a file
+// descriptor to read() the command's output. GLIBC's popen() does not fit
+// the task here because it buffers the command output.
+// see the stream3.c example
+//
+int run_cmd(const char *cmd, int argc, char *argv[]);
+
+// ============================================================================
 // Key-Value store
 // ----------------------------------------------------------------------------
 // example: (for more details, see the kv.c example)
@@ -494,35 +559,54 @@ void mpools_report(xbuf_t *reply);           // see the mpools.c example
 // kv_free(&store); // makes the above kv_del() redundant in this example
 // ----------------------------------------------------------------------------
 // the kv_init() flag options
-
+// (only KV_REFCOUNT and KV_NO_UPDATE are implemented in the kv code; the rest
+//  of these flags are there to let people keep KV callbacks and flags in the
+//  kv context rather than in a redundant structure - for those flags to have
+//  any effect, G-WAN users must write the corresponding code)
+//
 enum KV_OPTIONS
 {
-   KV_GC_ALLOC = 1,    // use garbage collection
-   KV_PERSISTANCE = 2, // periodic file I/O (using kv_recfn() call-back)
-   KV_INCR_KEY = 4,    // 1st field:primary key (automatically incremented)
-   KV_CUR_TIME = 8,    // 2nd field:time stamp  (automatically generated)
-   KV_NO_UPDATE = 16   // make kv_add() fail to update an existing entry
+   KV_REFCOUNT    =   1, // reference count, incremented by kv_get()
+   KV_PERSISTANCE =   2, // periodic file I/O (using kv_recfn() callback)
+   KV_INCR_KEY    =   4, // 1st field:primary key (automatically incremented)
+   KV_CUR_TIME    =   8, // 2nd field:time stamp  (automatically generated)
+   KV_NO_UPDATE   =  16, // make kv_add() fail to update an existing entry
+   KV_SHARED      =  32, // available outside of G-WAN
+   KV_DISTRIBUTED =  64, // relying on a distributed topology
+   
+   KV_PREFIX      = 128, // kv_get() will return best entry (not implemented)
+   KV_SIMILAR     = 256, // kv_get() will return best entry (not implemented)
+   KV_NEXT        = 512, // kv_get() will return best entry (not implemented)
+   KV_PREV        =1024  // kv_get() will return best entry (not implemented)
 };
 
 // a key-value store
 
 typedef struct
 {
-   char name[12];
-   u32  flags;
-   long root;
-   long nbr_items;
-   long ctx[5];
+   char  name[12];   // kv name (optional)
+   u32   flags;      // kv flags (optional)
+   long  root;       // kv storage
+   long  nbr_items;  // nbr of items in kv (atomically maintained)
+   long  lock;       // global kv lock (not used by G-WAN, only for users)
+   void *delfn;      // kv_del() callback (to free memory of custom records)
+   void *recfn;      // persistence callback (to format records saved to disk)
+   void *pool;       // if specified, used for memory allocations
 } kv_t;
 
 // a tuple (key-value, and key-value lengths)
 // if(!klen) then kv_add()/kv_get()/kv_del()/kv_do() do klen = strlen(klen);
+//
 typedef struct
 {
-   char *key,
-        *val;
-   long  flags;
-   u32   klen; // key length limit: 4 GB (value length has no limit)
+   char *key, *val;
+
+   union{
+   u32  flags;  // kv_add() flags: set to zero for compatibility
+   u32  in_use; // if(KV_REFCOUNT) ref_count atomically incr. by kv_get()
+   };           // (when update/delete, if(!in_use) free(val); )
+
+   u32  klen;   // 0:marked as to-be-deleted (when not in_use)
 } kv_item;
 
 // delfn is an user-defined function to free memory allocated for KV records
@@ -571,6 +655,35 @@ int kv_do(kv_t *store, const char *key, int klen, kv_proc_t kv_proc,
           void *user_defined_ctx);
 
 // ============================================================================
+// Memory pools
+// ----------------------------------------------------------------------------
+// This is useful to pre-allocate a heap that can be freed with mp_del();
+// without having to free() all the allocated blocks one by one and with
+// the desirable side effect to really release the memory to the system
+// (LIBC releases the memory to the application heap, not to the system).
+//
+// Also, if your initial pool size is too small to satisfy mp_malloc();
+// then the pool is automatically expanded. This is especially useful
+// with the G-WAN KV store:
+//
+// kv_t kv;
+// kv_init(&kv, ...);
+// kv.pool = mp_new(...); // useful to free the memory later (must be done!)
+//
+// Generic use:
+//
+// void *pool = mp_init(1024 * 1024); // 1 MB memory pool
+// char *str = mp_malloc(pool, 255);  // get some bytes
+// str[0] = 0;                        // use the bytes
+// mp_free(pool, str);                // free the bytes for another mp_malloc()
+// mp_del(pool);                      // delete the pool
+// ----------------------------------------------------------------------------
+void *mp_init  (size_t pool_size);
+void  mp_del   (void *pool);
+void *mp_malloc(void *pool, size_t size);
+void  mp_free  (void *pool, void *ptr);
+
+// ============================================================================
 // Garbage collector
 // ----------------------------------------------------------------------------
 // NOTE: this memory CANNOT BE SHARED between connections as allocated
@@ -593,7 +706,7 @@ void  gc_free  (char *argv[], void *ptr);
 // define which handler states we want to be notified in the handler's main():
 enum HANDLER_ACT
 {
-   HDL_INIT = 0,
+   HDL_INIT = 1,     // skip 0: +/- values for connection/protocol handlers
    HDL_AFTER_ACCEPT, // just after accept (only client IP address setup)
    HDL_AFTER_READ,   // each time a read was done until HTTP request OK
    HDL_BEFORE_PARSE, // HTTP verb/URI validated but HTTP headers are not
@@ -602,6 +715,7 @@ enum HANDLER_ACT
    HDL_STREAMING,    // when we are sending a reply progressively
    HDL_AFTER_WRITE,  // after a reply was sent
    HDL_HTTP_ERRORS,  // when G-WAN is going to reply with an HTTP error
+   HDL_BEFORE_CLOSE, // before closing a connection
    HDL_CLEANUP
 };
 
@@ -753,6 +867,7 @@ void jsn_free(jsn_t *node);
 // ----------------------------------------------------------------------------
 u32  url_encode   (u8 *dst, u8 *src, u32 maxdstlen);  // return len
 u32  escape_html  (u8 *dst, u8 *src, u32 maxdstlen);  // return len
+
 u32  unescape_html(u8 *str);                          // inplace, return len
 int  html2txt     (u8 *html, u8 *text, int maxtxlen); // return len
 
