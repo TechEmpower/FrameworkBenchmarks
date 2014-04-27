@@ -53,13 +53,13 @@ func main() {
 	}
 	db.SetMaxIdleConns(maxIdleConns)
 	if stmtWorld, err = db.Prepare(selectWorld); err != nil {
-		log.Fatal("Could not create statement for selecting from world.\n", err)
+		log.Fatalf("Could not create statement for selecting from world: %v.\n", err)
 	}
 	if stmtFortunes, err = db.Prepare(selectFortunes); err != nil {
-		log.Fatal("Could not create statement for selecting a fortune.\n", err)
+		log.Fatalf("Could not create statement for selecting a fortune: %v.\n", err)
 	}
 	if stmtUpdate, err = db.Prepare(updateWorld); err != nil {
-		log.Fatal("Could not create statement for updating world.\n", err)
+		log.Fatalf("Could not create statement for updating world: %v.\n", err)
 	}
 
 	martini.Env = martini.Prod
@@ -125,14 +125,14 @@ func handleMultipleQueries(r render.Render, req *http.Request) {
 func handleFortunes(res http.ResponseWriter, r render.Render) {
 	rows, err := stmtFortunes.Query()
 	if err != nil {
-		log.Fatalf("Error selecting fortunes: %s.\n", err.Error)
+		log.Fatalf("Error selecting fortunes: %v.\n", err)
 	}
 
 	fortunes := make(Fortunes, 0, 16)
 	for rows.Next() {
 		var fortune Fortune
 		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {
-			log.Fatalf("Error reading fortune: %s.\n", err.Error())
+			log.Fatalf("Error reading fortune: %v.\n", err)
 		}
 		fortunes = append(fortunes, &fortune)
 	}
@@ -150,7 +150,7 @@ func handleUpdates(r render.Render, req *http.Request) {
 		selectRandomWorld(&worlds[i])
 		newRandomNumber := uint16(rand.Intn(worldRowCount) + 1)
 		if _, err := stmtUpdate.Exec(worlds[i].RandomNumber, worlds[i].Id); err != nil {
-			log.Fatalf("Error while updating a world: %s.\n", err.Error())
+			log.Fatalf("Error while updating a world: %v.\n", err)
 		}
 		worlds[i].RandomNumber = newRandomNumber
 	}
@@ -171,7 +171,7 @@ func handlePlainText(res http.ResponseWriter) string {
 // Read a row from `world`
 func selectRandomWorld(world *World) {
 	if err := stmtWorld.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber); err != nil {
-		log.Fatalf("Error reading from world: %s.\n", err.Error())
+		log.Fatalf("Error reading from world: %v.\n", err)
 	}
 }
 
