@@ -62,6 +62,8 @@ func main() {
 		log.Fatal("Could not create statement for updating world.\n", err)
 	}
 
+	martini.Env = martini.Prod
+
 	http.ListenAndServe(":8080", makeMartini())
 }
 
