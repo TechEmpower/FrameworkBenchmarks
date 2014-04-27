@@ -107,18 +107,11 @@ func handleSimpleQuery(r render.Render) {
 
 // test 3: Multiple select in MySQL
 func handleMultipleQueries(r render.Render, req *http.Request) {
-	n := queries(req)
-	if n == 1 {
-		var world World
-		selectRandomWorld(&world)
-		r.JSON(200, &world)
-	} else {
-		worlds := make([]World, n)
-		for i := 0; i < len(worlds); i++ {
-			selectRandomWorld(&worlds[i])
-		}
-		r.JSON(200, &worlds)
+	worlds := make([]World, queries(req))
+	for i := 0; i < len(worlds); i++ {
+		selectRandomWorld(&worlds[i])
 	}
+	r.JSON(200, &worlds)
 }
 
 // test 4: Retrieve all fortunes
@@ -155,11 +148,7 @@ func handleUpdates(r render.Render, req *http.Request) {
 		worlds[i].RandomNumber = newRandomNumber
 	}
 
-	if len(worlds) == 1 {
-		r.JSON(200, &worlds[0])
-	} else {
-		r.JSON(200, &worlds)
-	}
+	r.JSON(200, &worlds)
 }
 
 // test 6: Plain text
