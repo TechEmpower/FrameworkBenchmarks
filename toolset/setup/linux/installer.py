@@ -197,11 +197,11 @@ class Installer:
     #
     # Ur/Web
     #
-    self.__run_command("hg clone http://hg.impredicative.com/urweb")
-    self.__run_command("./autogen.sh", cwd="urweb")
-    self.__run_command("./configure", cwd="urweb")
-    self.__run_command("make", cwd="urweb")
-    self.__run_command("sudo make install", cwd="urweb")
+    self.__download("http://www.impredicative.com/ur/urweb-20140426.tgz");
+    self.__run_command("tar xzf urweb-20140426.tgz");
+    self.__run_command("./configure", cwd="urweb-20140426")
+    self.__run_command("make", cwd="urweb-20140426")
+    self.__run_command("sudo make install", cwd="urweb-20140426")
     
     #
     # HHVM
