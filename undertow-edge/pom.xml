@@ -18,7 +18,7 @@
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
-            <version>1.0.0.Beta31</version>
+            <version>1.0.13.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.jboss.xnio</groupId>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.jboss.xnio</groupId>
             <artifactId>xnio-api</artifactId>
-            <version>3.2.0.Beta4</version>
+            <version>3.2.1.Final</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.xnio</groupId>
