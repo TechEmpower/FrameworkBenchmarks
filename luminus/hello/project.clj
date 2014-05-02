@@ -11,7 +11,8 @@
    [com.postspectacular/rotor "0.1.0"]
    [com.taoensso/tower "2.0.2"]
    [mysql/mysql-connector-java "5.1.28"]
-   [korma "0.3.0-RC5"]
+   [korma "0.3.0-RC6"]
+   [c3p0/c3p0 "0.9.1.2"]
    [log4j
     "1.2.17"
     :exclusions
