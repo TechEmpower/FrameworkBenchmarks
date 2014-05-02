@@ -3,7 +3,7 @@ class HelloWorldController < ActionController::Metal
   include ActionController::Renderers::All
 
   def json
-    render :json => {:message => "Hello, World!"}
+    render json: { message: "Hello, World!" }
   end
 
   def db
@@ -19,6 +19,12 @@ class HelloWorldController < ActionController::Metal
       results = World.find(Random.rand(10000) + 1)
     end
     
-    render :json => results
+    self.content_type = "text/json"
+    render json: results
+  end
+  
+  def render(opts = {})
+    self.content_type = "text/json"
+    self.response_body = opts[:json].to_json
   end
 end
