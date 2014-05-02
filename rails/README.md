@@ -12,7 +12,7 @@ This is the Ruby on Rails portion of a [benchmarking test suite](../) comparing 
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Ruby 2.0.0-p0](http://www.ruby-lang.org/)
+* [Ruby 2.1.1](http://www.ruby-lang.org/)
 * [JRuby 1.7.8](http://jruby.org/)
 * [Rails 4.1.0](http://rubyonrails.org/)
 * [Unicorn 4.8.2](http://unicorn.bogomips.org/)
