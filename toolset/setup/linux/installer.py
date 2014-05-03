@@ -71,8 +71,8 @@ class Installer:
     #
     # Dart
     #
-    self.__download("https://storage.googleapis.com/dart-editor-archive-integration/latest/dartsdk-linux-64.tar.gz")
-    self.__run_command("tar xzf dartsdk-linux-64.tar.gz")
+    self.__download("http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip")
+    self.__run_command("unzip dartsdk-linux-x64-release.zip")
 
     #
     # Erlang
@@ -86,22 +86,19 @@ class Installer:
     #
     # nodejs
     #
-
     self.__download("http://nodejs.org/dist/v0.10.8/node-v0.10.8-linux-x64.tar.gz")
     self.__run_command("tar xzf node-v0.10.8-linux-x64.tar.gz")
 
     #
     # Java
     #
-
     self.__run_command("sudo apt-get install openjdk-7-jdk", True)
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
 
     #
     # Ruby/JRuby
     #
-
-    self.__run_command("curl -L get.rvm.io | bash -s head")
+    self.__run_command("curl -L get.rvm.io | bash -s head --auto-dotfiles")
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler")
@@ -111,14 +108,12 @@ class Installer:
     #
     # go
     #
-
     self.__download("http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz");
     self.__run_command("tar xzf go1.2.linux-amd64.tar.gz")
 
     #
     # Perl
     #
-
     self.__download("http://downloads.activestate.com/ActivePerl/releases/5.16.3.1603/ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
     self.__run_command("tar xzf ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
     self.__run_command("sudo ./install.sh --license-accepted --prefix /opt/ActivePerl-5.16 --no-install-html", cwd="ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746", send_yes=True, retry=True)
@@ -129,8 +124,7 @@ class Installer:
     #
     # php
     #
-
-    self.__download("http://www.php.net/get/php-5.4.13.tar.gz/from/us1.php.net/mirror")
+    self.__download("http://museum.php.net/php5/php-5.4.13.tar.gz")
     self.__run_command("tar xzf php-5.4.13.tar.gz")
     self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
@@ -138,7 +132,6 @@ class Installer:
     self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13", retry=True)
     self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
-    self.__run_command("rm php-5.4.13.tar.gz")
 
     # Composer
     self.__download("https://getcomposer.org/installer", "composer-installer.php")
@@ -154,7 +147,6 @@ class Installer:
     #
     # Haskell
     #
-
     self.__run_command("sudo apt-get install ghc cabal-install", True)
 
     #
@@ -169,10 +161,10 @@ class Installer:
     # Mono
     #
     self.__run_command("git clone git://github.com/mono/mono", retry=True)
-    self.__run_command("git checkout mono-3.2.3", cwd="mono")
+    self.__run_command("git checkout mono-3.2.8-branch", cwd="mono")
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
     self.__run_command("make get-monolite-latest", cwd="mono")
-    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
+    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe", cwd="mono")
     self.__run_command("sudo make install", cwd="mono")
 
     self.__run_command("mozroots --import --sync", retry=True)
@@ -185,28 +177,39 @@ class Installer:
     #
     # Nimrod
     #
-    self.__download("http://www.nimrod-code.org/download/nimrod_0.9.2.zip")
-    self.__run_command("unzip nimrod_0.9.2.zip")
-    self.__run_command("chmod +x build.sh", cwd="nimrod")
-    self.__run_command("./build.sh", cwd="nimrod")
-    self.__run_command("chmod +x install.sh", cwd="nimrod")
-    self.__run_command("sudo ./install.sh /usr/bin", cwd="nimrod")
+    self.__run_command("git clone git://github.com/Araq/Nimrod.git nimrod", retry=True)
+    self.__run_command("git reset --hard \"43d12ef7495238977e4f236f6d25bce5bd687967\"", cwd="nimrod")
+    self.__run_command("git clone --depth 1 git://github.com/nimrod-code/csources.git", cwd="nimrod", retry=True)
+    self.__run_command("chmod +x build.sh", cwd="nimrod/csources")
+    self.__run_command("./build.sh", cwd="nimrod/csources")
+    self.__run_command("bin/nimrod c koch", cwd="nimrod")
+    self.__run_command("./koch boot -d:release", cwd="nimrod")
 
     #
     # Racket
     #
-
-    self.__run_command("sudo apt-get install racket", True)
+    self.__download("https://github.com/plt/racket/archive/v5.3.6.tar.gz", "racket-5.3.6.tar.gz")
+    self.__run_command("tar xzf racket-5.3.6.tar.gz")
+    self.__run_command("./configure", cwd="racket-5.3.6/src")
+    self.__run_command("make", cwd="racket-5.3.6/src")
+    self.__run_command("sudo make install", cwd="racket-5.3.6/src")
 
     #
     # Ur/Web
     #
-
-    self.__run_command("hg clone http://hg.impredicative.com/urweb/")
+    self.__run_command("hg clone http://hg.impredicative.com/urweb")
     self.__run_command("./autogen.sh", cwd="urweb")
     self.__run_command("./configure", cwd="urweb")
     self.__run_command("make", cwd="urweb")
     self.__run_command("sudo make install", cwd="urweb")
+    
+    #
+    # HHVM
+    #
+    self.__run_command("wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -")
+    self.__run_command("echo deb http://dl.hhvm.com/ubuntu precise main | sudo tee /etc/apt/sources.list.d/hhvm.list")
+    self.__run_command("sudo apt-get update")
+    self.__run_command("sudo apt-get install hhvm")
 
     #######################################
     # Webservers
@@ -222,13 +225,20 @@ class Installer:
     self.__run_command("sudo make install", cwd="nginx-1.4.1")
 
     #
-    # Openresty (nginx with openresty stuff)
+    # Openresty (nginx with lua stuff)
     #
-    self.__download("http://openresty.org/download/ngx_openresty-1.2.7.5.tar.gz")
-    self.__run_command("tar xzf ngx_openresty-1.2.7.5.tar.gz")
-    self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.2.7.5")
-    self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
-    self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
+    self.__download("http://openresty.org/download/ngx_openresty-1.5.8.1.tar.gz")
+    self.__run_command("tar xzf ngx_openresty-1.5.8.1.tar.gz")
+    self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.5.8.1")
+    self.__run_command("make", cwd="ngx_openresty-1.5.8.1")
+    self.__run_command("sudo make install", cwd="ngx_openresty-1.5.8.1")
+    
+    #
+    # Lapis
+    #
+    self.__run_command("sudo apt-get install luarocks")
+    self.__run_command("sudo luarocks install http://github.com/leafo/lapis/raw/master/lapis-dev-1.rockspec")
+
 
     #
     # Resin
@@ -245,6 +255,24 @@ class Installer:
     self.__run_command("mv conf/resin.xml conf/resin.xml.orig", cwd="resin-4.0.36")
     self.__run_command("cat ../config/resin.xml > resin-4.0.36/conf/resin.xml")
 
+    #
+    # Mongrel2
+    #
+    self.__download("http://download.zeromq.org/zeromq-4.0.3.tar.gz")
+    self.__run_command("tar xzf zeromq-4.0.3.tar.gz")
+    self.__run_command("./configure", cwd="zeromq-4.0.3")
+    self.__run_command("make", cwd="zeromq-4.0.3")
+    self.__run_command("sudo make install", cwd="zeromq-4.0.3")
+    self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev")
+    self.__run_command("sudo ldconfig -v")
+    self.__download("https://github.com/zedshaw/mongrel2/tarball/v1.8.1", "mongrel2.tar.gz")
+    self.__run_command("tar xvf mongrel2.tar.gz")
+    self.__run_command("mv zedshaw-mongrel2-aa2ecf8 mongrel2")
+    # for zmq4, we update the following file manually (not in v1.8.1)
+    self.__download("https://raw.github.com/zedshaw/mongrel2/9b565eeea003783c47502c2d350b99c9684ce97c/src/zmq_compat.h")
+    self.__run_command("mv -f zmq_compat.h mongrel2/src/")
+    self.__run_command("make clean all && sudo make install", cwd="mongrel2")
+
     ##############################################################
     # Frameworks
     ##############################################################
@@ -254,21 +282,18 @@ class Installer:
     #
     self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.3.zip")
     self.__run_command("unzip -o grails-2.3.3.zip")
-    self.__run_command("rm grails-2.3.3.zip")
 
     #
     # Play 2
     #
     self.__download("http://downloads.typesafe.com/play/2.2.0/play-2.2.0.zip")
     self.__run_command("unzip -o play-2.2.0.zip")
-    self.__run_command("rm play-2.2.0.zip")
 
     #
     # Play 1
     #
     self.__download("http://downloads.typesafe.com/releases/play-1.2.5.zip")
     self.__run_command("unzip -o play-1.2.5.zip")
-    self.__run_command("rm play-1.2.5.zip")
     self.__run_command("mv play-1.2.5/play play-1.2.5/play1")
 
     # siena
@@ -277,21 +302,21 @@ class Installer:
     #
     # TreeFrog Framework
     #
-    self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql g++", True)
-    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.4.tar.gz")
-    self.__run_command("tar xzf treefrog-1.7.4.tar.gz")
-    self.__run_command("rm treefrog-1.7.4.tar.gz")
-    self.__run_command("./configure", cwd="treefrog-1.7.4")
-    self.__run_command("make", cwd="treefrog-1.7.4/src")
-    self.__run_command("sudo make install", cwd="treefrog-1.7.4/src")
-    self.__run_command("make", cwd="treefrog-1.7.4/tools")
-    self.__run_command("sudo make install", cwd="treefrog-1.7.4/tools")
+    self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++", True)
+    self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.5.tar.gz")
+    self.__run_command("tar xzf treefrog-1.7.5.tar.gz")
+    self.__run_command("rm treefrog-1.7.5.tar.gz")
+    self.__run_command("./configure", cwd="treefrog-1.7.5")
+    self.__run_command("make", cwd="treefrog-1.7.5/src")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.5/src")
+    self.__run_command("make", cwd="treefrog-1.7.5/tools")
+    self.__run_command("sudo make install", cwd="treefrog-1.7.5/tools")
 
     #
     # Vert.x
     #
-    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1M2.tar.gz?direct=true", "vert.x-2.1M2.tar.gz")
-    self.__run_command("tar xzf vert.x-2.1M2.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1M3.tar.gz?direct=true", "vert.x-2.1M3.tar.gz")
+    self.__run_command("tar xzf vert.x-2.1M3.tar.gz")
 
     #
     # Yesod
@@ -303,6 +328,18 @@ class Installer:
     # Jester
     #
     self.__run_command("git clone git://github.com/dom96/jester.git jester/jester", retry=True)
+
+    #
+    # Onion
+    #
+    self.__run_command("git clone https://github.com/davidmoreno/onion.git")
+    self.__run_command("mkdir build", cwd="onion")
+    self.__run_command("cmake ..", cwd="onion/build")
+    self.__run_command("make", cwd="onion/build")
+
+    # nawak
+    #
+    self.__run_command("git clone git://github.com/idlewan/nawak.git nawak/nawak", retry=True)
 
     print("\nINSTALL: Finished installing server software\n")
   ############################################################
@@ -439,7 +476,6 @@ class Installer:
     sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
-    sudo -u benchmarkdbuser psql hello_world < create-postgres-urweb.sql
 
     sudo -u postgres -H /etc/init.d/postgresql stop
     sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf

@@ -22,7 +22,7 @@ class CacheNoCache implements ICache
 		return null;
 	}
 	
-	public function Set($key,$val,$flags=null,$timeout=null)
+	public function Set($key,$val,$flags=null,$timeout=0)
 	{
 	}
 

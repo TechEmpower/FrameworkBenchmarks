@@ -37,7 +37,7 @@ object Application extends Controller {
             try
                 transactional(transaction) {
                     val fortunes =
-                        ActivateFortune.all ++ List(new ActivateFortune(-1, "Additional fortune added at request time."))
+                        ActivateFortune.all ++ List(new ActivateFortune(0, "Additional fortune added at request time."))
                     Ok(views.html.fortune(fortunes))
                 }
             finally

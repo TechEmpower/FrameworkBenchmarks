@@ -40,7 +40,7 @@ dependencies {
     compile "mysql:mysql-connector-java:5.1.19"
     compile "org.hibernate:hibernate-core:3.6.3.Final"
     compile "org.apache.tapestry:tapestry-hibernate:5.3.6"
-    compile "com.fasterxml.jackson.core:jackson-databind:2.1.4"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.3.0"
 
     // This adds automatic compression of JavaScript and CSS in production mode:
     compile "org.apache.tapestry:tapestry-yuicompressor:5.3.6"

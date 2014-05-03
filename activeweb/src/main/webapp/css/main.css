@@ -1,0 +1,74 @@
+@charset "UTF-8";
+/* CSS Document */
+
+*{
+	margin:0;
+	padding:0;
+}
+
+html, body{
+	background:white;
+}
+
+a{
+	text-decoration:none;
+	outline:none;
+}
+
+a:hover{
+	text-decoration:underline;
+}
+
+p{
+	margin:10px 0;
+	line-height:16px;
+}
+
+
+.header{
+    background-color:#fafad2;
+    padding:20px;
+}
+
+.main{
+    padding:20px
+}
+
+.content{
+    padding:20px;
+}
+
+.error{
+    color:red;
+}
+
+.error_message{
+    background-color:#ffb6c1;
+
+    margin-top:10px;
+    margin-bottom:10px;
+    height:0;
+}
+
+.message{
+    background-color:#7fffd4;
+    
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.footer{
+    background-color:#fafad2;
+    padding:20px;
+}
+
+ul{
+    margin: 20px;
+}
+
+
+table tr td{
+    background-color:#dcdcdc;
+    padding:10px;
+}
+

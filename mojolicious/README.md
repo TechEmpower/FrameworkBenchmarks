@@ -7,7 +7,8 @@
 # Requirements
 
 * Mojolicious
-* Mojolicious::Plugin::Database
+* JSON::XS
+* DBI
 * DBD::mysql
 * Starman (if using Starman as web server)
 * Plack (for plackup)
@@ -23,10 +24,10 @@ Set production mode:
 
 Something along the lines of
 
-    plackup -s Starman --workers=2 -l /tmp/frameworks-benchmark.sock -a ./app.pl
+    plackup -s Starman --workers=8 -l /tmp/frameworks-benchmark.sock -a ./app.pl
 
 if you want to front it with nginx, otherwise
 
-    plackup -s Starman --port 8080 --workers=2 -a ./app.pl
+    plackup -s Starman --port 8080 --workers=8 -a ./app.pl
 
 or the equivalent Morbo or Hypnotoad commands.

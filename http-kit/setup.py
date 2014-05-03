@@ -6,6 +6,7 @@ import setup_util
 def start(args, logfile, errfile):
 
   try:
+    subprocess.check_call("lein clean", shell=True, cwd="http-kit/hello", stderr=errfile, stdout=logfile)
     subprocess.check_call("lein deps", shell=True, cwd="http-kit/hello", stderr=errfile, stdout=logfile)
     subprocess.check_call("rm -rf target", shell=True, cwd="http-kit/hello")
     # pack all dependencies into a single jar: target/http-kit-standalone.jar
