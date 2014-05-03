@@ -504,19 +504,20 @@ class Installer:
     ##############################
     # Apache Cassandra
     ##############################
-    wget http://www.apache.org/dist/cassandra/2.0.4/apache-cassandra-2.0.4-bin.tar.gz
-    tar xzf apache-cassandra-2.0.4-bin.tar.gz
-    rm apache-cassandra-2.0.4-bin.tar.gz
+    export CASS_V=2.0.7
+    wget http://www.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
+    tar xzf apache-cassandra-$CASS_V-bin.tar.gz
+    rm apache-cassandra-*-bin.tar.gz
     fuser -k -TERM /ssd/log/cassandra/system.log
     sleep 5
     rm -rf /ssd/cassandra
     rm /ssd/log/cassandra/system.log
-    cp cassandra/cassandra.yaml apache-cassandra-2.0.4/conf
-    cp cassandra/log4j-server.properties apache-cassandra-2.0.4/conf
-    pushd apache-cassandra-2.0.4
+    cp cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
+    cp cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
+    pushd apache-cassandra-$CASS_V
     ./bin/cassandra
     sleep 5
-    cat create-keyspace.cql | ./bin/cqlsh tfbdata
+    cat ../cassandra/create-keyspace.cql | ./bin/cqlsh tfbdata
     python ../cassandra/db-data-gen.py | ./bin/cqlsh tfbdata
     popd
     """
