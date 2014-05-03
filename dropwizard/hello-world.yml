@@ -1,12 +1,16 @@
-http:
-  port: 9000
+server:
+  type: simple
+  applicationContextPath: /
+  connector:
+    type: http
+    port: 9000
+    useServerHeader: true
 
   requestLog:
+    appenders: []
 
-    # Settings for logging to stdout.
-    console:
-      # If true, log requests to stdout.
-      enabled: false
+logging:
+  appenders: []
 
 database:
   # the name of your JDBC driver
@@ -28,9 +32,6 @@ database:
   # the maximum amount of time to wait on an empty pool before throwing an exception
   maxWaitForConnection: 1s
 
-  # the SQL query to run when validating a connection's liveness
-  validationQuery: "/* MyService Health Check */ SELECT 1"
-
   # the minimum number of connections to keep open
   minSize: 8
 
@@ -39,20 +40,3 @@ database:
 
   # whether or not idle connections should be validated
   checkConnectionWhileIdle: false
-
-  # how long a connection must be held before it can be validated
-  checkConnectionHealthWhenIdleFor: 10s
-
-  # the maximum lifetime of an idle connection
-  closeConnectionIfIdleFor: 1 minute
-
-logging:
-
-  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: OFF
-
-  console:
-
-    # If true, write log statements to stdout.
-    enabled: false
-

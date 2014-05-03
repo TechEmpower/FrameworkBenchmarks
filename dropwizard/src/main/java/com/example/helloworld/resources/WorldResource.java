@@ -1,41 +1,63 @@
 package com.example.helloworld.resources;
 
-import java.util.Random;
+import com.codahale.metrics.annotation.Timed;
+import com.example.helloworld.db.model.World;
+import com.example.helloworld.db.WorldDAO;
+import com.google.common.base.Optional;
+import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import com.example.helloworld.core.World;
-import com.example.helloworld.db.WorldDAO;
-import com.google.common.base.Optional;
-import com.yammer.dropwizard.hibernate.UnitOfWork;
+import java.util.Random;
 
 @Path("/db")
 @Produces(MediaType.APPLICATION_JSON)
-public class WorldResource
-{
-  private WorldDAO worldDAO = null;
+public class WorldResource {
 
-  public WorldResource(WorldDAO worldDAO)
-  {
-    this.worldDAO = worldDAO;
-  }
+    private static final Random RANDOM = new Random();
 
-  @GET
-  @UnitOfWork
-  public World[] dbTest(@QueryParam("queries") Optional<Integer> queries)
-  {
-    final int totalQueries = queries.or(1);
-    final World[] worlds = new World[queries.or(1)];
-    final Random random = new Random(System.currentTimeMillis());
+    private final WorldDAO worldDAO;
 
-    for (int i = 0; i < totalQueries; i++)
-    {
-      worlds[i] = this.worldDAO.findById((long)(random.nextInt(10000) + 1)).orNull();
+    public WorldResource(WorldDAO worldDAO) {
+        this.worldDAO = worldDAO;
     }
-    return worlds;
-  }
+
+    @GET
+    @Timed
+    @UnitOfWork
+    public World[] dbTest(@QueryParam("queries") Optional<Integer> queries) {
+        final int totalQueries = queries.or(1); // TODO: Should be bound [1,500]
+        final World[] worlds = new World[totalQueries];
+
+        // TODO: Is parallelising this cheating?
+        for (int i = 0; i < totalQueries; i++) {
+            final long worldId = RANDOM.nextInt(10_000) + 1;
+            worlds[i] = worldDAO.findById(worldId).orNull();
+        }
+
+        return worlds;
+    }
+
+    @GET
+    @Timed
+    @Path("/update")
+    @UnitOfWork
+    public World[] updateTest(@QueryParam("queries") Optional<Integer> queries) {
+        final int totalQueries = queries.or(1); // TODO: Should be bound [1,500]
+        final World[] worlds = new World[totalQueries];
+
+        // TODO: Is parallelising this cheating?
+        for (int i = 0; i < totalQueries; i++) {
+            final long worldId = RANDOM.nextInt(10_000) + 1;
+
+            final World world = worldDAO.findById(worldId).orNull();
+            world.setRandomNumber(RANDOM.nextInt(10_000) + 1);
+            worlds[i] = worldDAO.update(world);
+        }
+
+        return worlds;
+    }
 }

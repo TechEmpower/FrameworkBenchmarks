@@ -1,20 +1,19 @@
 package com.example.helloworld.resources;
 
 import com.codahale.metrics.annotation.Timed;
-import com.example.helloworld.resources.api.HelloMessage;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/json")
-@Produces(MediaType.APPLICATION_JSON)
-public class JsonResource {
+@Path("/plaintext")
+@Produces(MediaType.TEXT_PLAIN)
+public class TextResource {
 
     @GET
     @Timed
-    public HelloMessage sayHello() {
-        return new HelloMessage("Hello, World!");
+    public String sayHello() {
+        return "Hello, World!";
     }
 }
