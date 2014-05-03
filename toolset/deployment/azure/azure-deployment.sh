@@ -113,7 +113,7 @@ function azure_create_common_resources {
     # Create virtual network.
     echo ""
     echo "Creating virtual network $AZURE_DEPLOYMENT_NAME"
-    $AZURE_COMMAND network vnet show $AZURE_DEPLOYMENT_NAME || $AZURE_COMMAND network vnet create $AZURE_DEPLOYMENT_NAME --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual network $AZURE_DEPLOYMENT_NAME."
+    [[ -n `$AZURE_COMMAND network vnet list | grep $AZURE_DEPLOYMENT_NAME` ]] || $AZURE_COMMAND network vnet create $AZURE_DEPLOYMENT_NAME --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual network $AZURE_DEPLOYMENT_NAME."
 
     # Create directory for keys.
     echo ""
