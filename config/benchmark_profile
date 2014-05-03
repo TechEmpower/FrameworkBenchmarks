@@ -1,3 +1,5 @@
+# Start Benchmark profile
+
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
 export RESIN_HOME=~/FrameworkBenchmarks/installs/resin-4.0.36
 export GRAILS_HOME=~/FrameworkBenchmarks/installs/grails-2.3.3
@@ -20,10 +22,13 @@ export PATH="$PYTHON_HOME/bin:$PATH$JAVA_HOME/bin:$GRAILS_HOME/bin:$PLAY_HOME:$P
 
 export LD_LIBRARY_PATH='$LD_LIBRARY_PATH:/usr/local/apr/lib'
 
-export TFB_SERVER_HOST=172.16.98.122'
+export TFB_SERVER_HOST='172.16.98.122'
 export TFB_CLIENT_HOST='172.16.98.98'
 export TFB_CLIENT_USER='tfb'
 export TFB_CLIENT_IDENTITY_FILE='/home/tfb/.ssh/id_rsa-tfb-1'
 export TFB_DATABASE_HOST='172.16.98.118'
 
-source ~/.rvm/scripts/'rvm'
+export LC_ALL='en_US.UTF-8'
+
+export NUMCPUS=`grep -c '^processor' /proc/cpuinfo`
+export MAKEFLAGS="-j $NUMCPUS -l $NUMCPUS"

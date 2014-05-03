@@ -1,8 +1,1 @@
-deb http://binaries.erlang-solutions.com/debian quantal contrib
 deb http://binaries.erlang-solutions.com/debian precise contrib
-deb http://binaries.erlang-solutions.com/debian oneiric contrib
-deb http://binaries.erlang-solutions.com/debian natty contrib
-deb http://binaries.erlang-solutions.com/debian maverick contrib
-deb http://binaries.erlang-solutions.com/debian lucid contrib
-
-deb http://binaries.erlang-solutions.com/debian squeeze contrib
