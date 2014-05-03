@@ -7,7 +7,7 @@
 
 # The name of the cluster. This is mainly used to prevent machines in
 # one logical cluster from joining another.
-cluster_name: 'Test Cluster'
+cluster_name: 'Benchmark Cluster'
 
 # This defines the number of tokens randomly assigned to this node on the ring
 # The more tokens, relative to other nodes, the larger the proportion of data
@@ -94,10 +94,10 @@ partitioner: org.apache.cassandra.dht.Murmur3Partitioner
 # will spread data evenly across them, subject to the granularity of
 # the configured compaction strategy.
 data_file_directories:
-    - /var/lib/cassandra/data
+    - /ssd/cassandra/data
 
 # commit log
-commitlog_directory: /var/lib/cassandra/commitlog
+commitlog_directory: /ssd/cassandra/commitlog
 
 # policy for data disk failures:
 # stop_paranoid: shut down gossip and Thrift even for single-sstable errors.
@@ -181,7 +181,7 @@ row_cache_save_period: 0
 # memory_allocator: NativeAllocator
 
 # saved caches
-saved_caches_directory: /var/lib/cassandra/saved_caches
+saved_caches_directory: /ssd/cassandra/saved_caches
 
 # commitlog_sync may be either "periodic" or "batch." 
 # When in batch mode, Cassandra won't ack writes until the commit log
@@ -224,7 +224,7 @@ seed_provider:
       parameters:
           # seeds is actually a comma-delimited list of addresses.
           # Ex: "<ip1>,<ip2>,<ip3>"
-          - seeds: "127.0.0.1"
+          - seeds: "tfbdata"
 
 # For workloads with more data than can fit in memory, Cassandra's
 # bottleneck will be reads that need to fetch data from
@@ -294,7 +294,7 @@ ssl_storage_port: 7001
 # address associated with the hostname (it might not be).
 #
 # Setting this to 0.0.0.0 is always wrong.
-listen_address: localhost
+listen_address: tfbdata
 
 # Address to broadcast to other Cassandra nodes
 # Leaving this blank will set it to the same value as listen_address
@@ -332,7 +332,7 @@ start_rpc: true
 # Note that unlike ListenAddress above, it is allowed to specify 0.0.0.0
 # here if you want to listen on all interfaces, but that will break clients 
 # that rely on node auto-discovery.
-rpc_address: localhost
+rpc_address: tfbdata
 # port for Thrift to listen for clients on
 rpc_port: 9160
 
