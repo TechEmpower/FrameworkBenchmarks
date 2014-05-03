@@ -1,8 +1,7 @@
 package com.example.helloworld.resources;
 
-import com.codahale.metrics.annotation.Timed;
-import com.example.helloworld.db.model.World;
 import com.example.helloworld.db.WorldDAO;
+import com.example.helloworld.db.model.World;
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.UnitOfWork;
 
@@ -26,7 +25,6 @@ public class WorldResource {
     }
 
     @GET
-    @Timed
     @UnitOfWork
     public World[] dbTest(@QueryParam("queries") Optional<Integer> queries) {
         final int totalQueries = queries.or(1); // TODO: Should be bound [1,500]
@@ -42,7 +40,6 @@ public class WorldResource {
     }
 
     @GET
-    @Timed
     @Path("/update")
     @UnitOfWork
     public World[] updateTest(@QueryParam("queries") Optional<Integer> queries) {

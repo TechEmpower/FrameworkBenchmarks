@@ -1,6 +1,5 @@
 package com.example.helloworld.resources;
 
-import com.codahale.metrics.annotation.Timed;
 import com.example.helloworld.db.FortuneDAO;
 import com.example.helloworld.db.model.Fortune;
 import com.example.helloworld.resources.views.FortuneView;
@@ -25,7 +24,6 @@ public class FortuneResource {
     }
 
     @GET
-    @Timed
     @UnitOfWork
     public FortuneView dbTest() {
         final List<Fortune> fortunes = Lists.newArrayListWithExpectedSize(32);

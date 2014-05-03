@@ -1,6 +1,5 @@
 package com.example.helloworld.resources;
 
-import com.codahale.metrics.annotation.Timed;
 import com.example.helloworld.resources.api.HelloMessage;
 
 import javax.ws.rs.GET;
@@ -13,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 public class JsonResource {
 
     @GET
-    @Timed
     public HelloMessage sayHello() {
         return new HelloMessage("Hello, World!");
     }
