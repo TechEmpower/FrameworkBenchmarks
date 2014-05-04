@@ -225,7 +225,7 @@ class Installer:
     self.__run_command("sudo make install", cwd="nginx-1.4.1")
 
     #
-    # Openresty (nginx with lua stuff)
+    # OpenResty (Nginx with Lua stuff)
     #
     self.__download("http://openresty.org/download/ngx_openresty-1.5.12.1.tar.gz")
     self.__run_command("tar xzf ngx_openresty-1.5.12.1.tar.gz")
