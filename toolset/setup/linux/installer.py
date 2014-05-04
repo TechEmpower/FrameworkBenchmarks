@@ -232,7 +232,7 @@ class Installer:
     self.__run_command("./configure --with-luajit-xcflags=-DLUAJIT_NUMMODE=2 --with-cc-opt=-O2 --with-http_postgres_module -j2", cwd="ngx_openresty-1.5.12.1")
     self.__run_command("make -j2", cwd="ngx_openresty-1.5.12.1")
     self.__run_command("sudo make install", cwd="ngx_openresty-1.5.12.1")
-    
+
     #
     # Lapis
     #
