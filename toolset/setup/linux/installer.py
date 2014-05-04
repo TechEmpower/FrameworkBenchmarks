@@ -229,7 +229,7 @@ class Installer:
     #
     self.__download("http://openresty.org/download/ngx_openresty-1.5.12.1.tar.gz")
     self.__run_command("tar xzf ngx_openresty-1.5.12.1.tar.gz")
-    self.__run_command("./configure --with-http_postgres_module", cwd="ngx_openresty-1.5.12.1")
+    self.__run_command("./configure --with-cc-opt=-O2 --with-http_postgres_module", cwd="ngx_openresty-1.5.12.1")
     self.__run_command("make", cwd="ngx_openresty-1.5.12.1")
     self.__run_command("sudo make install", cwd="ngx_openresty-1.5.12.1")
     
