@@ -9,3 +9,5 @@ put config/postgresql.conf
 put config/pg_hba.conf
 put config/usr.sbin.mysqld
 put config/60-postgresql-shm.conf
+mkdir cassandra
+put -r cassandra

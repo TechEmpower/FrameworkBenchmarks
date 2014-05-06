@@ -11,7 +11,7 @@ object Main extends App {
   // the handler actor replies to incoming HttpRequests
   val handler = system.actorOf(Props[BenchmarkService], name = "handler")
 
-  val interface = system.settings.config.getString("app.interface")
-  val port = system.settings.config.getInt("app.port")
+  val interface = "127.0.0.1"//system.settings.config.getString("app.interface")
+  val port = 8080 //system.settings.config.getInt("app.port")
   IO(Http) ! Http.Bind(handler, interface, port)
 }

@@ -500,6 +500,26 @@ class Installer:
     sudo cp -R -p /var/lib/mongodb /ssd/
     sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo start mongodb
+
+    ##############################
+    # Apache Cassandra
+    ##############################
+    export CASS_V=2.0.7
+    wget http://www.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
+    tar xzf apache-cassandra-$CASS_V-bin.tar.gz
+    rm apache-cassandra-*-bin.tar.gz
+    fuser -k -TERM /ssd/log/cassandra/system.log
+    sleep 5
+    rm -rf /ssd/cassandra
+    rm /ssd/log/cassandra/system.log
+    cp cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
+    cp cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
+    pushd apache-cassandra-$CASS_V
+    ./bin/cassandra
+    sleep 5
+    cat ../cassandra/create-keyspace.cql | ./bin/cqlsh tfbdata
+    python ../cassandra/db-data-gen.py | ./bin/cqlsh tfbdata
+    popd
     """
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
