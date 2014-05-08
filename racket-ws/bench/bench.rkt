@@ -5,7 +5,7 @@
          json
          db)
 
-(define DEPLOY? #t)
+(define DEPLOY? (box #t))
 
 (define (response/json x)
   (response/output
@@ -20,7 +20,7 @@
 (define (go! db-host)
   (define c
     (cond
-      [DEPLOY?
+      [(unbox DEPLOY?)
        (virtual-connection
         (connection-pool
          (λ ()
@@ -73,11 +73,15 @@
    #:port 8000
    #:listen-ip #f
    #:command-line? #t
+   #:banner? (not (unbox DEPLOY?))
    #:servlet-regexp #rx""
    #:servlet-path "/"))
 
 (module+ main
   (require racket/cmdline)
   (command-line #:program "bench"
+                #:once-each
+                ["--test" "Run in test mode"
+                 (set-box! DEPLOY? #f)]
                 #:args (db-host-s)
                 (go! db-host-s)))
