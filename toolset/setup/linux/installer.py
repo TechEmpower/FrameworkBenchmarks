@@ -188,11 +188,10 @@ class Installer:
     #
     # Racket
     #
-    self.__download("https://github.com/plt/racket/archive/v5.3.6.tar.gz", "racket-5.3.6.tar.gz")
-    self.__run_command("tar xzf racket-5.3.6.tar.gz")
-    self.__run_command("./configure", cwd="racket-5.3.6/src")
-    self.__run_command("make", cwd="racket-5.3.6/src")
-    self.__run_command("sudo make install", cwd="racket-5.3.6/src")
+    self.__download("https://github.com/plt/racket/archive/stable.tar.gz", "racket-stable.tar.gz")
+    self.__run_command("tar xzf racket-stable.tar.gz")
+    self.__run_command("make", cwd="racket-stable")
+    self.__run_command("sudo make install", cwd="racket-stable")
 
     #
     # Ur/Web
