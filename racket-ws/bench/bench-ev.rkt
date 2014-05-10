@@ -10,9 +10,13 @@
   (define BUFFER (make-bytes BUFFER-SIZE))
   (define const-eof (λ (x) eof))
 
+  (define K 0)
+
   (define EVTS null)
   (define l (tcp-listen PORT 10 #t #f))
   (define (accept-f l)
+    (set! K (add1 K))
+    (printf "Conns: ~a\n" K) (flush-output)
     (define from (car l))
     (define to (cadr l))
     (define (read-f from)
