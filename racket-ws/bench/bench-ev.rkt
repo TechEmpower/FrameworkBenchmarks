@@ -6,25 +6,12 @@
 
 (define RESPONSE
   #"HTTP/1.1 200 OK
-Date: Mon, 23 May 2005 22:38:34 GMT
-Server: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)
-Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT
-Content-Type: text/html; charset=UTF-8
 Content-Length: 131
-Accept-Ranges: bytes
-Connection: close
 
-<html>
-<head>
-  <title>An Example Page</title>
-</head>
-<body>
-  Hello World, this is a very simple HTML document.
-</body>
-</html>
-
-")
+<html>\n<head>\n  <title>An Example Page</title>\n</head>\n<body>\n  Hello World, this is a very simple HTML document.\n</body>\n</html>\n\n")
 (define END (bytes-length RESPONSE))
+(define BUFFER-SIZE 64)
+(define BUFFER (make-bytes BUFFER-SIZE))
 
 (struct evt:echo (from to reading writing) #:mutable)
 
@@ -39,38 +26,26 @@ Connection: close
       (tcp-accept-evt l)
       (match-lambda
        [(list from to)
-        (loop (cons (evt:echo from to 'waiting-for-return #f) evts))]))
+        (loop (cons (evt:echo from to 0 #f) evts))]))
      (for/list ([e (in-list evts)])
        (match-define (evt:echo from to reading writing) e)
        (match writing
          [#f
           (handle-evt from
                       (λ (_)
-                        (define res (read-byte from))
-                        (flush-output)
+                        (define read-k
+                          (read-bytes-avail!* BUFFER from 0 BUFFER-SIZE))
                         (cond
-                          [(eof-object? res)
+                          [(eof-object? read-k)
                            (close-input-port from)
                            (close-output-port to)
                            (loop (remq e evts))]
-                          [(and (eq? reading 'waiting-for-newline-two)
-                                (= res (char->integer #\newline)))
-                           (set-evt:echo-writing! e 0)
-                           (loop evts)]
-                          [(and (eq? reading 'waiting-for-return-two)
-                                (= res (char->integer #\return)))
-                           (set-evt:echo-reading! e 'waiting-for-newline-two)
-                           (loop evts)]
-                          [(and (eq? reading 'waiting-for-newline)
-                                (= res (char->integer #\newline)))
-                           (set-evt:echo-reading! e 'waiting-for-return-two)
-                           (loop evts)]
-                          [(and (eq? reading 'waiting-for-return)
-                                (= res (char->integer #\return)))
-                           (set-evt:echo-reading! e 'waiting-for-newline)
-                           (loop evts)]
                           [else
-                           (set-evt:echo-reading! e 'waiting-for-return)
+                           (define new (+ read-k reading))
+                           (set-evt:echo-reading! e new)
+                           (when (= new 64)
+                             (set-evt:echo-writing! e 0)
+                             (set-evt:echo-reading! e 0))
                            (loop evts)])))]
          [start
           (handle-evt to
