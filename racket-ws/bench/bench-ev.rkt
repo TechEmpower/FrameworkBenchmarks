@@ -4,57 +4,49 @@
 (define RESPONSE #"HTTP/1.1 200 OK\r\nContent-Length: 1\r\n\r\n!")
 (define END (bytes-length RESPONSE))
 (define BUFFER-SIZE 64)
-(define BUFFER (make-bytes BUFFER-SIZE))
+(define const-eof (λ (x) eof))
 
-(struct evt:echo (from to writing) #:mutable)
+(struct mevt ([evt #:mutable])
+        #:property prop:evt (λ (e) (mevt-evt e)))
 
 (define (go! port)
-  (define l (tcp-listen port 10 #t #f))
+  (define BUFFER (make-bytes BUFFER-SIZE))
+  (define EVTS null)
+  (define l (tcp-listen port 10 #t #f))  
+  (define accept-evt
+    (handle-evt
+     (tcp-accept-evt l)
+     (lambda (l)
+       (define from (car l))
+       (define to (cadr l))
+       (define (write-f to)
+         (write-bytes-avail* RESPONSE to 0 END)
+         (set-mevt-evt! e read-evt))
+       (define write-evt
+         (handle-evt to write-f))
+       (define (read-f from)
+         (define read-k
+           ;; XXX This drops performance from about 100k to 88k, but
+           ;; is necessary because of crashes running the benchmarks
+           (with-handlers ([exn:fail? const-eof])
+             (read-bytes-avail!* BUFFER from 0 BUFFER-SIZE)))
+         (cond
+           [(eof-object? read-k)
+            (close-input-port from)
+            (close-output-port to)
+            (set! EVTS (remq e EVTS))]
+           [else
+            (set-mevt-evt! e write-evt)]))
+       (define read-evt
+         (handle-evt from read-f))
+       (define e
+         (mevt read-evt))
+       (set! EVTS (cons e EVTS)))))
   (printf "Ready\n")
   (flush-output)
-  (let loop ([evts null])
-    (apply
-     sync
-     (handle-evt
-      (tcp-accept-evt l)
-      (lambda (l)
-        (define from (car l))
-        (define to (cadr l))
-        (loop (cons (evt:echo from to #f) evts))))
-     (for/list ([e (in-list evts)])
-       (define from (evt:echo-from e))
-       (define to (evt:echo-to e))
-       (define write-start (evt:echo-writing e))
-       (cond
-         [write-start
-          (handle-evt to
-                      (λ (_)
-                        (define write-k
-                          (write-bytes-avail* RESPONSE to write-start END))
-                        (cond
-                          [(or (not write-k) (zero? write-k))
-                           (loop evts)]
-                          [else
-                           (define new (+ write-start write-k))
-                           (set-evt:echo-writing!
-                            e
-                            (if (= END new)
-                              #f
-                              new))
-                           (loop evts)])))]
-         [else
-          (handle-evt from
-                      (λ (_)
-                        (define read-k
-                          (read-bytes-avail!* BUFFER from 0 BUFFER-SIZE))
-                        (cond
-                          [(eof-object? read-k)
-                           (close-input-port from)
-                           (close-output-port to)
-                           (loop (remq e evts))]
-                          [else
-                           (set-evt:echo-writing! e 0)
-                           (loop evts)])))])))))
+  (let loop ()
+    (apply sync accept-evt EVTS)
+    (loop)))
 
 (module+ main
   (go! 8000))
