@@ -351,7 +351,8 @@ class Installer:
     pypy_bin   = "~/FrameworkBenchmarks/installs/pypy/bin"
     python_bin = "~/FrameworkBenchmarks/installs/py2/bin"
     python3_bin= "~/FrameworkBenchmarks/installs/py3/bin"
-    def easy_install(pkg, two=True, three=False, pypy=False):
+
+    def pip_install(pkg, two=True, three=False, pypy=False):
       cmd = "/pip install '" + pkg + "'"
       if two:   self.__run_command(python_bin + cmd, retry=True)
       if three: self.__run_command(python3_bin + cmd, retry=True)
@@ -376,42 +377,42 @@ class Installer:
     self.__run_command(python_bin + "/python get-pip.py")
     self.__run_command(python3_bin + "/python3 get-pip.py")
 
-    easy_install('mysqlclient==1.3.1', two=True, three=True, pypy=True)
-    easy_install('PyMySQL==0.6.2', two=True, three=True, pypy=True)
-    easy_install('psycopg2==2.5.2', three=True)
+    pip_install('mysqlclient==1.3.1', two=True, three=True, pypy=True)
+    pip_install('PyMySQL==0.6.2', two=True, three=True, pypy=True)
+    pip_install('psycopg2==2.5.2', three=True)
 
-    easy_install('simplejson==3.4.1', two=True, three=True, pypy=False)
-    easy_install('ujson==1.33', three=True)
-    easy_install('gevent==1.0')
-    easy_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
+    pip_install('simplejson==3.4.1', two=True, three=True, pypy=False)
+    pip_install('ujson==1.33', three=True)
+    pip_install('gevent==1.0.1')
+    pip_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
 
     # Gunicorn
-    easy_install('gunicorn==18.0', two=True, three=True, pypy=True)
+    pip_install('gunicorn==18.0', two=True, three=True, pypy=True)
     # meinheld HEAD supports gunicorn worker on Python 3
-    easy_install('https://github.com/mopemope/meinheld/archive/master.zip', two=True, three=True, pypy=True)
+    pip_install('https://github.com/mopemope/meinheld/archive/master.zip', two=True, three=True, pypy=True)
 
     # Tornado
-    easy_install('tornado==3.2.1', two=True, three=True, pypy=True)
-    easy_install('motor==0.2', two=True, three=True, pypy=True)
+    pip_install('tornado==3.2.1', two=True, three=True, pypy=True)
+    pip_install('motor==0.2', two=True, three=True, pypy=True)
     # pymongo is installed via motor dependency
 
     # Django
-    easy_install("Django==1.6.4", two=True, three=True, pypy=True)
+    pip_install("Django==1.6.4", two=True, three=True, pypy=True)
 
     # Flask
-    easy_install('Jinja2==2.7.2', two=True, three=True, pypy=True)
-    easy_install('Werkzeug==0.9.4', two=True, three=True, pypy=True)
-    easy_install('flask==0.10.1', two=True, three=True, pypy=True)
-    easy_install('SQLAlchemy==0.9.4', two=True, three=True, pypy=True)
-    easy_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
+    pip_install('Jinja2==2.7.2', two=True, three=True, pypy=True)
+    pip_install('Werkzeug==0.9.4', two=True, three=True, pypy=True)
+    pip_install('flask==0.10.1', two=True, three=True, pypy=True)
+    pip_install('SQLAlchemy==0.9.4', two=True, three=True, pypy=True)
+    pip_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
 
     # Bottle
-    easy_install('bottle==0.12.7', two=True, three=True, pypy=True)
-    easy_install('bottle-sqlalchemy==0.4.1', two=True, three=True, pypy=True)
+    pip_install('bottle==0.12.7', two=True, three=True, pypy=True)
+    pip_install('bottle-sqlalchemy==0.4.1', two=True, three=True, pypy=True)
 
     # Falcon
-    easy_install('Cython==0.20.1', two=True, three=True, pypy=True)
-    easy_install('falcon==0.1.8', two=True, three=True, pypy=True)
+    pip_install('Cython==0.20.1', two=True, three=True, pypy=True)
+    pip_install('falcon==0.1.8', two=True, three=True, pypy=True)
 
   ############################################################
   # __install_error
