@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>GWAN Test</title>
+    <script>
+        var urls = [ 'http://127.0.0.1:8088/?json.cpp',
+                'http://127.0.0.1:8088/?plaintext.cpp',
+                'http://127.0.0.1:8088/?my.cpp',
+                'http://127.0.0.1:8088/?my_multi.cpp&queries=',
+                'http://127.0.0.1:8088/?my_fortune.cpp',
+                'http://127.0.0.1:8088/?my_update.cpp&queries=',
+                'http://127.0.0.1:8088/?json.rb',
+                'http://127.0.0.1:8088/?plaintext.rb',
+                'http://127.0.0.1:8088/?my.rb',
+                'http://127.0.0.1:8088/?my_multi.rb&queries=',
+                'http://127.0.0.1:8088/?my_fortune.rb',
+                'http://127.0.0.1:8088/?my_update.rb&queries=',
+                'http://127.0.0.1:8088/?pg.rb',
+                'http://127.0.0.1:8088/?pg_multi.rb&queries=',
+                'http://127.0.0.1:8088/?pg_fortune.rb',
+                'http://127.0.0.1:8088/?pg_update.rb&queries=' ];
+        function init_list() {
+            var elem = document.getElementById('urls');
+            var str = '';
+            for(var z=0;z<urls.length;++z) {
+                str += '<li><a href="';
+                str += urls[z];
+                str += '">';
+                str += urls[z];
+                str += '</a></li>';
+            }
+            elem.innerHTML = str;
+        }
+    </script>
+</head>
+<body onload="init_list()">
+    <h3>Test URLs</h3>
+    <ul id="urls"></ul>
+</body>
+</html>

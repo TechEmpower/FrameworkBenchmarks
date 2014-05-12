@@ -5,7 +5,7 @@
 #include "gwan.h"
 #include "gwan-helper.h"
 #include <mysql/mysql.h>
-#include "db-connect.h"
+#include "db-connect-my.h"
 #include "json-obj.h"
 #include <cstring>
 #include <cstdlib>
