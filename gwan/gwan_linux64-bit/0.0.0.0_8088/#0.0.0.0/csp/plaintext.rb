@@ -5,4 +5,4 @@ require_relative 'gwan-helper'
 
 content = "Hello, World!"
 
-respond content, 'plain/text'
+respond content, 'text/plain'
