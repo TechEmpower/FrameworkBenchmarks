@@ -3,6 +3,7 @@ import subprocess
 
 def start(args, logfile, errfile):
   try:
+    subprocess.check_call("bundle install", shell=True, cwd="gwan", stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo ./gwan_linux64-bit/gwan -d", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
