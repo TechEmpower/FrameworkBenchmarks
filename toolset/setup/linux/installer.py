@@ -352,70 +352,66 @@ class Installer:
     python_bin = "~/FrameworkBenchmarks/installs/py2/bin"
     python3_bin= "~/FrameworkBenchmarks/installs/py3/bin"
     def easy_install(pkg, two=True, three=False, pypy=False):
-      cmd = "/easy_install -ZU '" + pkg + "'"
+      cmd = "/pip install '" + pkg + "'"
       if two:   self.__run_command(python_bin + cmd, retry=True)
       if three: self.__run_command(python3_bin + cmd, retry=True)
       if pypy:  self.__run_command(pypy_bin + cmd, retry=True)
 
-    self.__download("https://bitbucket.org/pypy/pypy/downloads/pypy-2.2-linux64.tar.bz2")
-    self.__run_command("tar xjf pypy-2.2-linux64.tar.bz2")
-    self.__run_command('ln -sf pypy-2.2-linux64 pypy')
+    self.__download("https://bitbucket.org/pypy/pypy/downloads/pypy-2.3-linux64.tar.bz2")
+    self.__run_command("tar xjf pypy-2.3-linux64.tar.bz2")
+    self.__run_command('ln -sf pypy-2.3-linux64 pypy')
     self.__download("http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz")
     self.__run_command("tar xzf Python-2.7.6.tgz")
-    self.__download("http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz")
-    self.__run_command("tar xJf Python-3.3.2.tar.xz")
+    self.__download("https://www.python.org/ftp/python/3.4.1/Python-3.4.1rc1.tar.xz")
+    self.__run_command("tar xJf Python-3.4.1rc1.tar.xz")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.6")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.3.2")
-    self.__run_command("make -j2", cwd="Python-2.7.6")
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.4.1rc1")
+    self.__run_command("make -j4", cwd="Python-2.7.6")
     self.__run_command("make install", cwd="Python-2.7.6")
-    self.__run_command("make -j2", cwd="Python-3.3.2")
-    self.__run_command("make install", cwd="Python-3.3.2")
+    self.__run_command("make -j4", cwd="Python-3.4.1rc1")
+    self.__run_command("make install", cwd="Python-3.4.1rc1")
 
-    self.__download("https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
-    self.__run_command(pypy_bin + "/pypy ez_setup.py")
-    self.__run_command(python_bin + "/python ez_setup.py")
-    self.__run_command(python3_bin + "/python3 ez_setup.py")
+    self.__download("https://bootstrap.pypa.io/get-pip.py")
+    self.__run_command(pypy_bin + "/pypy get-pip.py")
+    self.__run_command(python_bin + "/python get-pip.py")
+    self.__run_command(python3_bin + "/python3 get-pip.py")
 
-    easy_install('pip==1.4.1', two=True, three=True, pypy=True)
-    easy_install('MySQL-python==1.2.4', two=True, three=False, pypy=True)
-    easy_install('https://github.com/clelland/MySQL-for-Python-3/archive/master.zip', two=False, three=True, pypy=False)
-    easy_install('PyMySQL==0.6.1', two=True, three=True, pypy=True)
-    easy_install('psycopg2==2.5.1', three=True)
+    easy_install('mysqlclient==1.3.1', two=True, three=True, pypy=True)
+    easy_install('PyMySQL==0.6.2', two=True, three=True, pypy=True)
+    easy_install('psycopg2==2.5.2', three=True)
 
-    easy_install('simplejson==3.3.1', two=True, three=True, pypy=False)
+    easy_install('simplejson==3.4.1', two=True, three=True, pypy=False)
     easy_install('ujson==1.33', three=True)
     easy_install('gevent==1.0')
     easy_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
 
     # Gunicorn
-    easy_install('gunicorn==18', two=True, three=True, pypy=True)
+    easy_install('gunicorn==18.0', two=True, three=True, pypy=True)
     # meinheld HEAD supports gunicorn worker on Python 3
     easy_install('https://github.com/mopemope/meinheld/archive/master.zip', two=True, three=True, pypy=True)
 
     # Tornado
-    easy_install('tornado==3.1', two=True, three=True, pypy=True)
-    easy_install('motor==0.1.2', two=True, three=True, pypy=True)
-    easy_install('pymongo==2.5.2', two=True, three=True, pypy=True)
+    easy_install('tornado==3.2.1', two=True, three=True, pypy=True)
+    easy_install('motor==0.2', two=True, three=True, pypy=True)
+    # pymongo is installed via motor dependency
 
     # Django
-    easy_install("https://www.djangoproject.com/download/1.6/tarball/", two=True, three=True, pypy=True)
+    easy_install("Django==1.6.4", two=True, three=True, pypy=True)
 
     # Flask
+    easy_install('Jinja2==2.7.2', two=True, three=True, pypy=True)
     easy_install('Werkzeug==0.9.4', two=True, three=True, pypy=True)
     easy_install('flask==0.10.1', two=True, three=True, pypy=True)
-    easy_install('sqlalchemy==0.8.3', two=True, three=False, pypy=True)
-    # SQLAlchemy 0.9 supports C extension for Python 3
-    easy_install('https://bitbucket.org/zzzeek/sqlalchemy/downloads/SQLAlchemy-0.9.0b1.tar.gz', two=False, three=True)
-    easy_install('Jinja2==2.7.1', two=True, three=True, pypy=True)
+    easy_install('SQLAlchemy==0.9.4', two=True, three=True, pypy=True)
     easy_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
 
     # Bottle
-    easy_install('bottle==0.11.6', two=True, three=True, pypy=True)
-    easy_install('bottle-sqlalchemy==0.4', two=True, three=True, pypy=True)
+    easy_install('bottle==0.12.7', two=True, three=True, pypy=True)
+    easy_install('bottle-sqlalchemy==0.4.1', two=True, three=True, pypy=True)
 
     # Falcon
-    easy_install('Cython==0.19.2', two=True, three=True, pypy=True)
-    easy_install('falcon==0.1.7', two=True, three=True, pypy=True)
+    easy_install('Cython==0.20.1', two=True, three=True, pypy=True)
+    easy_install('falcon==0.1.8', two=True, three=True, pypy=True)
 
   ############################################################
   # __install_error
