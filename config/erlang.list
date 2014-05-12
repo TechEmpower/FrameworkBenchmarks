@@ -1,5 +1,6 @@
 deb http://binaries.erlang-solutions.com/debian quantal contrib
 deb http://binaries.erlang-solutions.com/debian precise contrib
+deb http://binaries.erlang-solutions.com/debian trusty contrib
 deb http://binaries.erlang-solutions.com/debian oneiric contrib
 deb http://binaries.erlang-solutions.com/debian natty contrib
 deb http://binaries.erlang-solutions.com/debian maverick contrib
