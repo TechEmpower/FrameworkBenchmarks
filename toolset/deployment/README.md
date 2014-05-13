@@ -18,12 +18,12 @@ For any hosting option, these are the operating systems and tools that should be
 **Linux client**
 
 * Runs the benchmark client and the Linux databases (e.g. MySQL, PostgreSQL, MongoDB).
-* Operating system: Ubuntu Server 12.04 LTS 64-bit.
+* Operating system: Ubuntu Server 14.04 LTS 64-bit.
 
 **Linux server**
 
 * Hosts the web frameworks under test on a Linux environment.
-* Operating system: Ubuntu Server 12.04 LTS 64-bit.
+* Operating system: Ubuntu Server 14.04 LTS 64-bit.
 
 **Windows server**
 

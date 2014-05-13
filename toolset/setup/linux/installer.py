@@ -41,7 +41,6 @@ class Installer:
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
-    self.__run_command("source ../../.profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
 
     ##############################################################
@@ -207,7 +206,7 @@ class Installer:
     # HHVM
     #
     self.__run_command("wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -")
-    self.__run_command("echo deb http://dl.hhvm.com/ubuntu precise main | sudo tee /etc/apt/sources.list.d/hhvm.list")
+    self.__run_command("echo deb http://dl.hhvm.com/ubuntu trusty main | sudo tee /etc/apt/sources.list.d/hhvm.list")
     self.__run_command("sudo apt-get update")
     self.__run_command("sudo apt-get install hhvm")
 
