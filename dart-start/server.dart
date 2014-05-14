@@ -82,7 +82,7 @@ main(List<String> args) {
       _fortunesTemplate = mustache.parse(template);
     })
   ]).then((_) {
-    start(host: arguments["address"], public: 'web', port: int.parse(arguments["port"]))
+    start(host: arguments["address"], port: int.parse(arguments["port"]))
       .then((Server app) {
         
         // JSON test
