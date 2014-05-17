@@ -347,70 +347,42 @@ class Installer:
   ############################################################
 
   def _install_python(self):
-    # .profile is not loaded yet. So we should use full path.
-    pypy_bin   = "~/FrameworkBenchmarks/installs/pypy/bin"
-    python_bin = "~/FrameworkBenchmarks/installs/py2/bin"
-    python3_bin= "~/FrameworkBenchmarks/installs/py3/bin"
-
-    def pip_install(pkg, two=True, three=False, pypy=False):
-      cmd = "/pip install '" + pkg + "'"
-      if two:   self.__run_command(python_bin + cmd, retry=True)
-      if three: self.__run_command(python3_bin + cmd, retry=True)
-      if pypy:  self.__run_command(pypy_bin + cmd, retry=True)
-
-    self.__download("https://bitbucket.org/pypy/pypy/downloads/pypy-2.3-linux64.tar.bz2")
-    self.__run_command("tar xjf pypy-2.3-linux64.tar.bz2")
+    """Install Python runtime, frameworks and libraries"""
+    # PyPy 2.3
+    f = "pypy-2.3-linux64.tar.bz2"
+    if not os.path.exists(f):
+      self.__download("https://bitbucket.org/pypy/pypy/downloads/" + f)
+    self.__run_command("tar xjf " + f)
     self.__run_command('ln -sf pypy-2.3-linux64 pypy')
-    self.__download("http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz")
-    self.__run_command("tar xzf Python-2.7.6.tgz")
-    self.__download("https://www.python.org/ftp/python/3.4.1/Python-3.4.1rc1.tar.xz")
-    self.__run_command("tar xJf Python-3.4.1rc1.tar.xz")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.6")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.4.1rc1")
+
+    # CPython 2.7.6
+    f = "Python-2.7.6.tgz"
+    if not os.path.exists(f):
+      self.__download("http://www.python.org/ftp/python/2.7.6/" + f)
+    self.__run_command("tar xf " + f)
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared", cwd="Python-2.7.6")
     self.__run_command("make -j4", cwd="Python-2.7.6")
     self.__run_command("make install", cwd="Python-2.7.6")
+
+    # CPython 3.4.1
+    f = "Python-3.4.1rc1.tar.xz"
+    if not os.path.exists(f):
+      self.__download("https://www.python.org/ftp/python/3.4.1/" + f)
+    self.__run_command("tar xf " + f)
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared", cwd="Python-3.4.1rc1")
     self.__run_command("make -j4", cwd="Python-3.4.1rc1")
     self.__run_command("make install", cwd="Python-3.4.1rc1")
 
-    self.__download("https://bootstrap.pypa.io/get-pip.py")
-    self.__run_command(pypy_bin + "/pypy get-pip.py")
-    self.__run_command(python_bin + "/python get-pip.py")
-    self.__run_command(python3_bin + "/python3 get-pip.py")
+    if not os.path.exists("get-pip.py"):
+      self.__download("https://bootstrap.pypa.io/get-pip.py")
+    self.__run_command("py2/bin/python get-pip.py")
+    self.__run_command("py3/bin/python3 get-pip.py")
+    self.__run_command("pypy/bin/pypy get-pip.py")
 
-    pip_install('mysqlclient==1.3.1', two=True, three=True, pypy=True)
-    pip_install('PyMySQL==0.6.2', two=True, three=True, pypy=True)
-    pip_install('psycopg2==2.5.2', three=True)
+    self.__run_command('py2/bin/pip install -r ../config/requirements.txt')
+    self.__run_command('py3/bin/pip install -r ../config/requirements.txt')
+    self.__run_command('pypy/bin/pip install -r ../config/requirements-pypy.txt')
 
-    pip_install('simplejson==3.4.1', two=True, three=True, pypy=False)
-    pip_install('ujson==1.33', three=True)
-    pip_install('gevent==1.0.1')
-    pip_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
-
-    pip_install('gunicorn==18.0', two=True, three=True, pypy=True)
-    pip_install('meinheld==0.5.6', two=True, three=True, pypy=True)
-
-    # Tornado
-    pip_install('tornado==3.2.1', two=True, three=True, pypy=True)
-    pip_install('motor==0.2', two=True, three=True, pypy=True)
-    # pymongo is installed via motor dependency
-
-    # Django
-    pip_install("Django==1.6.4", two=True, three=True, pypy=True)
-
-    # Flask
-    pip_install('Jinja2==2.7.2', two=True, three=True, pypy=True)
-    pip_install('Werkzeug==0.9.4', two=True, three=True, pypy=True)
-    pip_install('flask==0.10.1', two=True, three=True, pypy=True)
-    pip_install('SQLAlchemy==0.9.4', two=True, three=True, pypy=True)
-    pip_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
-
-    # Bottle
-    pip_install('bottle==0.12.7', two=True, three=True, pypy=True)
-    pip_install('bottle-sqlalchemy==0.4.1', two=True, three=True, pypy=True)
-
-    # Falcon
-    pip_install('Cython==0.20.1', two=True, three=True, pypy=True)
-    pip_install('falcon==0.1.8', two=True, three=True, pypy=True)
 
   ############################################################
   # __install_error
