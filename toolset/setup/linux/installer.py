@@ -386,10 +386,8 @@ class Installer:
     pip_install('gevent==1.0.1')
     pip_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
 
-    # Gunicorn
     pip_install('gunicorn==18.0', two=True, three=True, pypy=True)
-    # meinheld HEAD supports gunicorn worker on Python 3
-    pip_install('https://github.com/mopemope/meinheld/archive/master.zip', two=True, three=True, pypy=True)
+    pip_install('meinheld==0.5.6', two=True, three=True, pypy=True)
 
     # Tornado
     pip_install('tornado==3.2.1', two=True, three=True, pypy=True)
