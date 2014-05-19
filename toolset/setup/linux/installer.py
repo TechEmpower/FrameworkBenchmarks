@@ -365,13 +365,13 @@ class Installer:
     self.__run_command("make install", cwd="Python-2.7.6")
 
     # CPython 3.4.1
-    f = "Python-3.4.1rc1.tar.xz"
+    f = "Python-3.4.1.tar.xz"
     if not os.path.exists(f):
       self.__download("https://www.python.org/ftp/python/3.4.1/" + f)
     self.__run_command("tar xf " + f)
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared", cwd="Python-3.4.1rc1")
-    self.__run_command("make -j4", cwd="Python-3.4.1rc1")
-    self.__run_command("make install", cwd="Python-3.4.1rc1")
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared", cwd="Python-3.4.1")
+    self.__run_command("make -j4", cwd="Python-3.4.1")
+    self.__run_command("make install", cwd="Python-3.4.1")
 
     if not os.path.exists("get-pip.py"):
       self.__download("https://bootstrap.pypa.io/get-pip.py")
