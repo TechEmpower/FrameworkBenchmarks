@@ -13,9 +13,9 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.kolich.curacao" % "curacao" % "2.5.3" % "compile",
-  "com.kolich.curacao" % "curacao-gson" % "2.5.3" % "compile",
-  "org.eclipse.jetty" % "jetty-webapp" % "9.1.1.v20140108" % "compile",
+  "com.kolich.curacao" % "curacao" % "2.6.2" % "compile",
+  "com.kolich.curacao" % "curacao-gson" % "2.6.2" % "compile",
+  "org.eclipse.jetty" % "jetty-webapp" % "9.2.0.v20140526" % "compile",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
   "org.slf4j" % "slf4j-api" % "1.7.2" % "compile",
   "ch.qos.logback" % "logback-core" % "1.0.7" % "compile",
