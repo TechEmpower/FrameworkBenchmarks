@@ -13,7 +13,7 @@
       "language": "Perl",
       "orm": "Raw",
       "platform": "Plack",
-      "webserver": "Starman",
+      "webserver": "Starlet",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "plack",

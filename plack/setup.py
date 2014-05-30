@@ -8,7 +8,7 @@ def start(args, logfile, errfile):
   try:
     subprocess.check_call("curl -L http://cpanmin.us | perl - App::cpanminus", shell=True, cwd="plack", stderr=errfile, stdout=logfile)
     subprocess.check_call("cpanm --installdeps .", shell=True, cwd="plack", stderr=errfile, stdout=logfile)
-    pid = subprocess.Popen("plackup -E production -s Monoceros -l :8080 --max-workers=" + str(args.max_threads) + " app.psgi", shell=True, cwd="plack", stderr=errfile, stdout=logfile).pid
+    pid = subprocess.Popen("plackup -E production -s Starlet -l :8080 --max-keepalive-reqs 5000 --max-reqs-per-child 50000 --max-reqs-per-child 40000 --max-workers=" + str(args.max_threads+4) + " app.psgi", shell=True, cwd="plack", stderr=errfile, stdout=logfile).pid
     open('plack/app.pid', 'w').write(str(pid))
     return 0
   except subprocess.CalledProcessError:
