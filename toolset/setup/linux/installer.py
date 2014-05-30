@@ -27,7 +27,6 @@ class Installer:
   ############################################################
   def __install_server_software(self):
     print("\nINSTALL: Installing server software\n")
-
     #######################################
     # Prerequisites
     #######################################
@@ -41,7 +40,7 @@ class Installer:
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
-    self.__run_command("source ../../.profile")
+    self.__run_command(". ../../.profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
 
     ##############################################################
@@ -65,14 +64,13 @@ class Installer:
     #######################################
     # Languages
     #######################################
-
     self._install_python()
 
     #
     # Dart
     #
     self.__download("http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip")
-    self.__run_command("unzip dartsdk-linux-x64-release.zip")
+    self.__run_command("unzip -qqo dartsdk-linux-x64-release.zip")
 
     #
     # Erlang
@@ -129,7 +127,7 @@ class Installer:
     self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
     self.__run_command("sudo make install", cwd="php-5.4.13")
-    self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13", retry=True)
+    self.__run_command("printf \"\\n\" | sudo pecl install -f apc-beta", cwd="php-5.4.13", retry=True)
     self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
 
@@ -142,7 +140,7 @@ class Installer:
     self.__run_command("sudo ./install", cwd="cphalcon/build")
 
     # YAF
-    self.__run_command("sudo pecl install yaf")
+    self.__run_command("sudo pecl install -f yaf")
 
     #
     # Haskell
@@ -178,8 +176,9 @@ class Installer:
     # Nimrod
     #
     self.__run_command("git clone git://github.com/Araq/Nimrod.git nimrod", retry=True)
-    self.__run_command("git reset --hard \"43d12ef7495238977e4f236f6d25bce5bd687967\"", cwd="nimrod")
-    self.__run_command("git clone --depth 1 git://github.com/nimrod-code/csources.git", cwd="nimrod", retry=True)
+    self.__run_command("git checkout 987ac2439a87d74838233a7b188e4db340495ee5", cwd="nimrod")
+    self.__run_command("git clone git://github.com/nimrod-code/csources.git", cwd="nimrod", retry=True)
+    self.__run_command("git checkout 704015887981932c78a033dd5ede623b2ad6ae27", cwd="nimrod/csources")
     self.__run_command("chmod +x build.sh", cwd="nimrod/csources")
     self.__run_command("./build.sh", cwd="nimrod/csources")
     self.__run_command("bin/nimrod c koch", cwd="nimrod")
@@ -207,9 +206,9 @@ class Installer:
     # HHVM
     #
     self.__run_command("wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -")
-    self.__run_command("echo deb http://dl.hhvm.com/ubuntu precise main | sudo tee /etc/apt/sources.list.d/hhvm.list")
+    self.__run_command("echo deb http://dl.hhvm.com/ubuntu trusty main | sudo tee /etc/apt/sources.list.d/hhvm.list")
     self.__run_command("sudo apt-get update")
-    self.__run_command("sudo apt-get install hhvm")
+    self.__run_command("sudo apt-get install hhvm", True)
 
     #######################################
     # Webservers
@@ -236,7 +235,7 @@ class Installer:
     #
     # Lapis
     #
-    self.__run_command("sudo apt-get install luarocks")
+    self.__run_command("sudo apt-get install luarocks", True)
     self.__run_command("sudo luarocks install http://github.com/leafo/lapis/raw/master/lapis-dev-1.rockspec")
 
 
@@ -263,7 +262,7 @@ class Installer:
     self.__run_command("./configure", cwd="zeromq-4.0.3")
     self.__run_command("make", cwd="zeromq-4.0.3")
     self.__run_command("sudo make install", cwd="zeromq-4.0.3")
-    self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev")
+    self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev", True)
     self.__run_command("sudo ldconfig -v")
     self.__download("https://github.com/zedshaw/mongrel2/tarball/v1.8.1", "mongrel2.tar.gz")
     self.__run_command("tar xvf mongrel2.tar.gz")
@@ -357,12 +356,12 @@ class Installer:
       if three: self.__run_command(python3_bin + cmd, retry=True)
       if pypy:  self.__run_command(pypy_bin + cmd, retry=True)
 
-    self.__download("https://bitbucket.org/pypy/pypy/downloads/pypy-2.2-linux64.tar.bz2")
+    self.__download("https://bitbucket.org/pypy/pypy/downloads/pypy-2.2-linux64.tar.bz2", "pypy-2.2-linux64.tar.bz2")
     self.__run_command("tar xjf pypy-2.2-linux64.tar.bz2")
     self.__run_command('ln -sf pypy-2.2-linux64 pypy')
-    self.__download("http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz")
+    self.__download("http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz", "Python-2.7.6.tgz")
     self.__run_command("tar xzf Python-2.7.6.tgz")
-    self.__download("http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz")
+    self.__download("http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz", "Python-3.3.2.tar.xz")
     self.__run_command("tar xJf Python-3.3.2.tar.xz")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.6")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.3.2")
@@ -371,7 +370,7 @@ class Installer:
     self.__run_command("make -j2", cwd="Python-3.3.2")
     self.__run_command("make install", cwd="Python-3.3.2")
 
-    self.__download("https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
+    self.__download("https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py", "ez_setup.py")
     self.__run_command(pypy_bin + "/pypy ez_setup.py")
     self.__run_command(python_bin + "/python ez_setup.py")
     self.__run_command(python3_bin + "/python3 ez_setup.py")
@@ -405,7 +404,7 @@ class Installer:
     easy_install('flask==0.10.1', two=True, three=True, pypy=True)
     easy_install('sqlalchemy==0.8.3', two=True, three=False, pypy=True)
     # SQLAlchemy 0.9 supports C extension for Python 3
-    easy_install('https://bitbucket.org/zzzeek/sqlalchemy/downloads/SQLAlchemy-0.9.0b1.tar.gz', two=False, three=True)
+    easy_install('https://bitbucket.org/zzzeek/sqlalchemy/get/rel_0_9_0b1.tar.gz', two=False, three=True)
     easy_install('Jinja2==2.7.1', two=True, three=True, pypy=True)
     easy_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
 
@@ -416,7 +415,7 @@ class Installer:
     # Falcon
     easy_install('Cython==0.19.2', two=True, three=True, pypy=True)
     easy_install('falcon==0.1.7', two=True, three=True, pypy=True)
-
+    
   ############################################################
   # __install_error
   ############################################################
@@ -541,13 +540,25 @@ class Installer:
     make
     sudo cp wrk /usr/local/bin
     cd ~
+    
+    #############################
+    # pipeline.lua
+    #############################
+cat << EOF | tee pipeline.lua
+init = function(args)
+  wrk.init(args)
+  local r = {}
+  local depth = tonumber(args[1]) or 1
+  for i=1,depth do
+    r[i] = wrk.format()
+  end
+  req = table.concat(r)
+end
 
-    git clone https://github.com/wg/wrk.git wrk-pipeline
-    cd wrk-pipeline
-    git checkout pipeline
-    make
-    sudo cp wrk /usr/local/bin/wrk-pipeline
-    cd ~
+request = function()
+  return req
+end
+EOF
     """
     
     print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
@@ -577,6 +588,9 @@ class Installer:
       max_attempts = 1
     attempt = 1
     delay = 0
+    if send_yes:
+      command = "yes yes | " + command
+        
 
     print("\nINSTALL: %s (cwd=%s)" % (command, cwd))
 
@@ -584,14 +598,7 @@ class Installer:
       error_message = ""
       try:
         # Execute command.
-        if send_yes:
-          process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
-          process.communicate("yes")
-          returncode = process.returncode
-          if returncode:
-            raise subprocess.CalledProcessError(returncode, command)
-        else:
-          subprocess.check_call(command, shell=True, cwd=cwd)
+        subprocess.check_call(command, shell=True, cwd=cwd)
         break  # Exit loop if successful.
       except:
         exceptionType, exceptionValue, exceptionTraceBack = sys.exc_info()
