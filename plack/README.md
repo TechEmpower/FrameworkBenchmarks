@@ -11,8 +11,7 @@ Plack
 # Requirements
 
 * Plack
-* Monoceros or Starman
-* EV
+* Starlet
 * HTTP::Parser::XS
 * JSON::XS
 * DBI
@@ -20,6 +19,5 @@ Plack
 
 # Deployment
 
-    plackup -E production -s Starman --workers=2 -l :8080 app.psgi
-    - or -
-    plackup -E production -s Monoceros --max-workers=2 -l :8080 app.psgi
+    plackup -E production -s Starlet --max-keepalive-reqs 5000 \
+      --max-reqs-per-child 50000 --min-reqs-per-child 40000 --workers=2 -l :8080 app.psgi
