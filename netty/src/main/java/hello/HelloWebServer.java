@@ -11,8 +11,9 @@ import io.netty.util.ResourceLeakDetector;
 
 
 public class HelloWebServer {
+    private static int IO_THREADS = Runtime.getRuntime().availableProcessors() * 2;
     static {
-        ResourceLeakDetector.setEnabled(false);
+        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.DISABLED);
     }
 
     private final int port;
@@ -23,14 +24,18 @@ public class HelloWebServer {
 
     public void run() throws Exception {
         // Configure the server.
-        EventLoopGroup group = new NioEventLoopGroup();
+        EventLoopGroup group = new NioEventLoopGroup(IO_THREADS);
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(group)
-             .childHandler(new HelloServerInitializer())
+             .childHandler(new HelloServerInitializer(group.next()))
              .channel(NioServerSocketChannel.class)
              .option(ChannelOption.SO_BACKLOG, 1024)
-             .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+             .option(ChannelOption.SO_REUSEADDR, true)
+             .option(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE)
+             .childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true))
+             .childOption(ChannelOption.SO_REUSEADDR, true)
+             .childOption(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE);
              
             Channel ch = b.bind(port).sync().channel();
             ch.closeFuture().sync();
