@@ -33,7 +33,7 @@ public class HelloWebServer {
              .option(ChannelOption.SO_BACKLOG, 1024)
              .option(ChannelOption.SO_REUSEADDR, true)
              .option(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE)
-             .childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true, IO_THREADS, IO_THREADS, 8192, 11))
+             .childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true))
              .childOption(ChannelOption.SO_REUSEADDR, true)
              .childOption(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE);
              
