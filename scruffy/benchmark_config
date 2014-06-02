@@ -1,0 +1,26 @@
+{
+  "framework": "scruffy",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "plaintext_url": "/plaintext",
+      "query_url": "/queries?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "scruffy",
+      "language": "Scala",
+      "orm": "Raw",
+      "platform": "scruffy",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "scruffy",
+      "notes": "",
+      "versus": "servlet"
+    }
+  }]
+}
