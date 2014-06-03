@@ -432,8 +432,8 @@ class Installer:
   ############################################################
   def __install_database_software(self):
     print("\nINSTALL: Installing database software\n")
-
-    self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="config/database_sftp_batch"), True)
+ 
+    self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="../config/database_sftp_batch"), True)
 
     remote_script = """
 
@@ -453,9 +453,13 @@ class Installer:
     sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
     sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
 
-    yes | sudo apt-get install mysql-server
+    yes | sudo apt-get install mysql-server-5.6
 
     sudo stop mysql
+    # disable checking of disk size
+    sudo cp mysql /etc/init.d/mysql
+    sudo chmod +x /etc/init.d/mysql
+    sudo cp mysql.conf /etc/init/mysql.conf
     # use the my.cnf file to overwrite /etc/mysql/my.cnf
     sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
     sudo mv my.cnf /etc/mysql/my.cnf
@@ -477,10 +481,10 @@ class Installer:
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
 
     sudo -u postgres -H /etc/init.d/postgresql stop
-    sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
-    sudo mv pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
+    sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+    sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
-    sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/postgresql
+    sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
     sudo -u postgres -H /etc/init.d/postgresql start
     sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
@@ -525,11 +529,9 @@ class Installer:
     # Prerequisites
     ##############################
     yes | sudo apt-get update
-    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
+    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev 
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
-    sudo mkdir -p /ssd
-    sudo mkdir -p /ssd/log
 
     ##############################
     # wrk
