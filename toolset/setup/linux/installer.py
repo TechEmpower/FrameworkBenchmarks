@@ -348,21 +348,21 @@ class Installer:
 
   def _install_python(self):
     """Install Python runtime, frameworks and libraries"""
-    # PyPy 2.3
-    f = "pypy-2.3-linux64.tar.bz2"
+    # PyPy 2.3.1
+    f = "pypy-2.3.1-linux64.tar.bz2"
     if not os.path.exists(f):
       self.__download("https://bitbucket.org/pypy/pypy/downloads/" + f)
     self.__run_command("tar xjf " + f)
-    self.__run_command('ln -sf pypy-2.3-linux64 pypy')
+    self.__run_command('ln -sf pypy-2.3.1-linux64 pypy')
 
-    # CPython 2.7.6
-    f = "Python-2.7.6.tgz"
+    # CPython 2.7.7
+    f = "Python-2.7.7.tgz"
     if not os.path.exists(f):
-      self.__download("http://www.python.org/ftp/python/2.7.6/" + f)
+      self.__download("http://www.python.org/ftp/python/2.7.7/" + f)
     self.__run_command("tar xf " + f)
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared", cwd="Python-2.7.6")
-    self.__run_command("make -j4", cwd="Python-2.7.6")
-    self.__run_command("make install", cwd="Python-2.7.6")
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared", cwd="Python-2.7.7")
+    self.__run_command("make -j4", cwd="Python-2.7.7")
+    self.__run_command("make install", cwd="Python-2.7.7")
 
     # CPython 3.4.1
     f = "Python-3.4.1.tar.xz"
