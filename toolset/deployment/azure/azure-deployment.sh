@@ -49,6 +49,7 @@ function azure_set_variables {
     AZURE_PEM_FILE="${AZURE_SSH_DIR}/${AZURE_KEY_NAME}.x509.pub.pem"
     AZURE_CER_FILE="${AZURE_SSH_DIR}/${AZURE_KEY_NAME}.cer"
     CLIENT_VM_NAME="${AZURE_DEPLOYMENT_NAME}cli"
+    WINDOWS_VM_ADMIN="FBMAdmin"
     LINUX_SERVER_VM_NAME="${AZURE_DEPLOYMENT_NAME}lsr"
     WINDOWS_SERVER_VM_NAME="${AZURE_DEPLOYMENT_NAME}wsr"
     SQL_SERVER_VM_NAME="${AZURE_DEPLOYMENT_NAME}sql"
@@ -100,7 +101,7 @@ function azure_create_common_resources {
     # Create affinity group.
     echo ""
     echo "Creating affinity group $AZURE_DEPLOYMENT_NAME at $AZURE_DEPLOYMENT_LOCATION"
-    $AZURE_COMMAND account affinity-group create $AZURE_DEPLOYMENT_NAME --location "$AZURE_DEPLOYMENT_LOCATION" || fail "Error creating affinity group $AZURE_DEPLOYMENT_NAME."
+    $AZURE_COMMAND account affinity-group create "$AZURE_DEPLOYMENT_NAME" --location "$AZURE_DEPLOYMENT_LOCATION" --label "$AZURE_DEPLOYMENT_NAME" || fail "Error creating affinity group $AZURE_DEPLOYMENT_NAME."
 
     # Create storage account.
     echo ""
@@ -144,8 +145,9 @@ function azure_create_vms {
     # Get latest Ubuntu Server 12.04 daily VM image.
     echo ""
     echo "Latest Ubuntu Server 12.04 image:"
-    LATEST_UBUNTU_IMAGE=$($AZURE_COMMAND vm image list | grep Ubuntu_DAILY_BUILD-precise-12_04_2-LTS-amd64-server | sort | tail -1 | cut -c 10-120)
-    echo $LATEST_UBUNTU_IMAGE
+    LATEST_UBUNTU_IMAGE=$($AZURE_COMMAND vm image list | grep Ubuntu_DAILY_BUILD-precise-12_04_4-LTS-amd64-server | sort | tail -1 | cut -c 10-120)
+    if [ -z "$LATEST_UBUNTU_IMAGE" ]; then fail "Unable to find Ubuntu_DAILY_BUILD-precise-12_04 in Azure vm image list."; fi
+    echo "Found ubuntu image $LATEST_UBUNTU_IMAGE"
 
     # Create client VM.
     echo ""
@@ -166,7 +168,7 @@ function azure_create_vms {
     # Create Windows server VM.
     echo ""
     echo "Creating Windows server VM: $WINDOWS_SERVER_VM_NAME"
-    $AZURE_COMMAND vm create $WINDOWS_SERVER_VM_NAME $LATEST_WINDOWS_IMAGE Administrator $AZURE_WINDOWS_PASSWORD --vm-name $WINDOWS_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --rdp --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $WINDOWS_SERVER_VM_NAME."
+    $AZURE_COMMAND vm create $WINDOWS_SERVER_VM_NAME $LATEST_WINDOWS_IMAGE $WINDOWS_VM_ADMIN $AZURE_WINDOWS_PASSWORD --vm-name $WINDOWS_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --rdp --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $WINDOWS_SERVER_VM_NAME."
 
     # Create SQL Server VM.
     echo ""
@@ -175,7 +177,7 @@ function azure_create_vms {
     echo $SQL_SERVER_IMAGE
     echo ""
     echo "Creating SQL Server VM: $SQL_SERVER_VM_NAME"
-    $AZURE_COMMAND vm create $SQL_SERVER_VM_NAME $SQL_SERVER_IMAGE Administrator $AZURE_WINDOWS_PASSWORD --vm-name $SQL_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --rdp --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $SQL_SERVER_VM_NAME."
+    $AZURE_COMMAND vm create $SQL_SERVER_VM_NAME $SQL_SERVER_IMAGE $WINDOWS_VM_ADMIN $AZURE_WINDOWS_PASSWORD --vm-name $SQL_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --rdp --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $SQL_SERVER_VM_NAME."
 
     echo ""
 }
@@ -224,9 +226,9 @@ BENCHMARK_LINUX_SERVER_IP="$LINUX_SERVER_IP"
 BENCHMARK_LINUX_USER="$AZURE_LINUX_USER"
 BENCHMARK_SSH_KEY="$AZURE_KEY_FILE"
 BENCHMARK_WINDOWS_SERVER="$WINDOWS_SERVER_VM_NAME.cloudapp.net"
-BENCHMARK_WINDOWS_SERVER_USER="$WINDOWS_SERVER_VM_NAME\Administrator"
+BENCHMARK_WINDOWS_SERVER_USER="$WINDOWS_SERVER_VM_NAME\$WINDOWS_VM_ADMIN"
 BENCHMARK_SQL_SERVER="$SQL_SERVER_VM_NAME.cloudapp.net"
-BENCHMARK_SQL_SERVER_USER="$SQL_SERVER_VM_NAME\Administrator"
+BENCHMARK_SQL_SERVER_USER="$SQL_SERVER_VM_NAME\$WINDOWS_VM_ADMIN"
 BENCHMARK_WORKING_DIR="$BENCHMARK_WORKING_DIR"
 BENCHMARK_REPOSITORY="$BENCHMARK_REPOSITORY"
 BENCHMARK_BRANCH="$BENCHMARK_BRANCH"
