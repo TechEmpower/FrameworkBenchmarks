@@ -42,7 +42,7 @@ sudo apt-get upgrade -qq
 
 echo ""
 echo "Installing git"
-sudo apt-get install git -qq
+sudo apt-get install perl liberror-perl git -qq
 
 echo ""
 echo "Clone FrameworkBenchmarks repository"
