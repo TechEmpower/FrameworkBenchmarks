@@ -100,7 +100,7 @@ function azure_create_common_resources {
     # Create affinity group.
     echo ""
     echo "Creating affinity group $AZURE_DEPLOYMENT_NAME at $AZURE_DEPLOYMENT_LOCATION"
-    $AZURE_COMMAND account affinity-group create $AZURE_DEPLOYMENT_NAME --location "$AZURE_DEPLOYMENT_LOCATION" || fail "Error creating affinity group $AZURE_DEPLOYMENT_NAME."
+    $AZURE_COMMAND account affinity-group create "$AZURE_DEPLOYMENT_NAME" --location "$AZURE_DEPLOYMENT_LOCATION" --label "$AZURE_DEPLOYMENT_NAME" || fail "Error creating affinity group $AZURE_DEPLOYMENT_NAME."
 
     # Create storage account.
     echo ""
