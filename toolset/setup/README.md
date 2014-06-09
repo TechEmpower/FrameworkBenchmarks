@@ -59,6 +59,11 @@ $ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/
 $ tail -f nohup.out
 ```
 9. Reboot when the install is done
+9. Edit your ~/.bashrc file to change the following
+ * Change `TFB_SERVER_HOST=<ip address>` to the server's IP address
+ * Change `TFB_CLIENT_HOST=<ip address>` to the client's ip address
+ * Change `TFB_DATABASE_HOST=<ip address>` to the database's ip address.
+ * Change `TFB_CLIENT_IDENTITY_FILE=<path>` to the id file you specified when you ran ssh-keygen (probably /home/tfb/.ssh/id_rsa.pub if you don't know what it is)
 10. If you are setting up any other servers, do so before proceeding.
 11. Run the following commands
 ```bash
@@ -73,11 +78,10 @@ cd ..
 sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
 mongo --host database-private-ip < config/create.js
 ```
-12. Edit your ~/.bashrc file to change the following
- * Change `TFB_SERVER_HOST=<ip address>` to the server's IP address
- * Change `TFB_CLIENT_HOST=<ip address>` to the client's ip address
- * Change `TFB_DATABASE_HOST=<ip address>` to the database's ip address.
- * Change `TFB_CLIENT_IDENTITY_FILE=<path>` to the id file you specified when you ran ssh-keygen (probably /home/tfb/.ssh/id_rsa.pub if you don't know what it is)
+12. Before running the tests, do the following
+```bash
+$ source ~/.bashrc
+```
 
 ---
 
@@ -103,7 +107,7 @@ $ sudo -i
 ```
 8. On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
-$ toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -d <database hostname/ip> -u tfb --install-software --install database --list-tests
+$ toolset/run-tests.py --install-software --install database --list-tests
 ```
 
 ---
@@ -120,12 +124,12 @@ $ sudo apt-get update && sudo apt-get upgrade
 5. Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
 6. On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
-$ toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -d <database hostname/ip> -u tfb --install-software --install client --list-tests
+$ toolset/run-tests.py --install-software --install client --list-tests
 ```
 
 You can validate that the setup worked by running a smoke test like this:
 
-    toolset/run-tests.py -s server-private-ip -c client-private-ip -i path-to-ssh-key --max-threads 1 --name smoketest --test servlet-raw --type all -m verify
+    toolset/run-tests.py --max-threads 1 --name smoketest --test servlet-raw --type all -m verify
 
 This should run the verification step for a single framework.
 
