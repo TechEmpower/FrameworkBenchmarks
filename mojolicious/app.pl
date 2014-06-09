@@ -67,7 +67,8 @@ helper 'render_query' => sub {
   my $r  = [];
   my $tx = $self->tx;
 
-  my $delay = Mojo::IOLoop->delay(sub{
+  my $delay = Mojo::IOLoop->delay;
+  $delay->on(finish => sub{
     $self->render_json($r) unless $tx->is_finished;
   });
 
