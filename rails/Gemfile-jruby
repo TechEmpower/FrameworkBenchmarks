@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.18'
 gem 'activerecord-jdbcmysql-adapter', '1.2.6'
 
 group :server do
