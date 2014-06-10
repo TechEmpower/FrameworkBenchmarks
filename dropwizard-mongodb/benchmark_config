@@ -1,0 +1,25 @@
+{
+  "framework": "dropwizard",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "port": 9000,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MongoDB",
+      "framework": "dropwizard",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Jetty",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "dropwizard-mongodb",
+      "notes": "mongodb implementation of dropwizard example",
+      "versus": ""
+    }
+  }]
+}
