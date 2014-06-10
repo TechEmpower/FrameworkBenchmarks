@@ -1,6 +1,9 @@
 source 'http://rubygems.org'
 
-gem 'torqbox', '0.1.7'
+gem 'rack', '1.5.2'
 gem 'json', '1.7.6'
+
+gem 'torqbox', '0.1.7'
+
 gem "rubyzip", "~> 1.0.0"
 gem "zip-zip", "~> 0.1"
