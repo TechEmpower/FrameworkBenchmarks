@@ -345,13 +345,13 @@ class Installer:
     # Wt
     #
     self.__run_command("sudo apt-get install libboost1.48-all-dev", True)
-    self.__download("https://github.com/kdeforche/wt/archive/813a601f4fcdaae4b8af0c31b3f717b2809f922f.zip", filename="wt.zip")
-    self.__run_command("unzip wt.zip")
-    self.__run_command("rm wt.zip")
+    self.__download("http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz", filename="wt.tar.gz")
+    self.__run_command("tar xf wt.tar.gz")
+    self.__run_command("rm wt.tar.gz")
     self.__run_command("bash -c 'mv wt-* wt'")
     self.__run_command("mkdir build", cwd="wt")
     self.__run_command("cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release", cwd="wt/build")
-    self.__run_command("make -j 10", cwd="wt/build")
+    self.__run_command("make", cwd="wt/build")
     self.__run_command("sudo make install", cwd="wt/build")
 
     print("\nINSTALL: Finished installing server software\n")
