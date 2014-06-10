@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rack', '1.5.2'
-gem 'json', '1.7.6'
+gem 'json', '1.8.1'
 
 group :server do
   gem 'passenger', '4.0.44', :require => false
