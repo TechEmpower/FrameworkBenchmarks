@@ -23,49 +23,55 @@ Refer to [Benchmark Suite Deployment README file](../deployment/README.md) for t
 
 ## Linux server and client setup
 
+**NOTE:** If testing a pull request or doing development, it is usually adequate to only use one computer. In that case, your server, client, and database IPs will be 127.0.0.1
+
 ### Installing the Framework Benchmark App Server
 
-1. Install [Ubuntu 14.04](http://www.ubuntu.com/download/server) with username `tfb`
-2. If Ubuntu is already installed, run the following command and follow the prompts.
+* Install [Ubuntu 14.04](http://www.ubuntu.com/download/server) with username `tfb`. Ensure that OpenSSH is selected when you install. If not, run the following command
+```bash
+$ sudo apt-get install openssh-server
+```
+* If Ubuntu is already installed, run the following command and follow the prompts.
 ```bash
 $ sudo adduser tfb
 ```
-2. Log in as `tfb`
-3. Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
+* Log in as `tfb`
+* Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
 ```bash
 $ sudo apt-get update && sudo apt-get upgrade
 ```
-4. Run the command: `sudo visudo`
-5. Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
-6. Run the following (Don't enter a password, just hit enter when the prompt pops up). **NOTE** This is still necessary if the client and database are on the same computer as the server
+* Run the command: `sudo visudo`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Run the following **(Don't enter a password, just hit enter when the prompt pops up)**. **NOTE** This is still necessary if the client and database are on the same computer as the server
 ```bash
 $ ssh-keygen
 $ ssh-copy-id <database ip>
 $ ssh-copy-id <client ip>
 ```
-6. Install git and clone the Framework Benchmarks repository
+* Install git and clone the Framework Benchmarks repository
 ```bash
 $ sudo apt-get install git
 $ cd ~
 $ git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
 $ cd FrameworkBenchmarks
 ```
-7. Install the server software. This will take a long time
+* Install the server software. This will take a long time
 ```bash
 $ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install-software --install server --list-tests &
 ```
-8. If you want to view the process of installing, do the following. The session can be interrupted easily so no need to worry about keeping a connection.
+* If you want to view the process of installing, do the following. The session can be interrupted easily so no need to worry about keeping a connection.
 ```bash
 $ tail -f nohup.out
 ```
-9. Reboot when the install is done
-9. Edit your ~/.bashrc file to change the following
+* Reboot when the install is done
+* Edit your ~/.bashrc file to change the following
  * Change `TFB_SERVER_HOST=<ip address>` to the server's IP address
  * Change `TFB_CLIENT_HOST=<ip address>` to the client's ip address
  * Change `TFB_DATABASE_HOST=<ip address>` to the database's ip address.
- * Change `TFB_CLIENT_IDENTITY_FILE=<path>` to the id file you specified when you ran ssh-keygen (probably /home/tfb/.ssh/id_rsa.pub if you don't know what it is)
-10. If you are setting up any other servers, do so before proceeding.
-11. Run the following commands
+ * Change `TFB_CLIENT_IDENTITY_FILE=<path>` to the id file you specified when you ran ssh-keygen (probably /home/tfb/.ssh/id_rsa if you don't know what it is)
+ * Run the command `source ~/.bashrc`
+* If you are setting up any other servers, do so before proceeding.
+* Run the following commands
 ```bash
 cd ~/FrameworkBenchmarks
 source ~/.bash_profile
@@ -78,7 +84,7 @@ cd ..
 sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
 mongo --host database-private-ip < config/create.js
 ```
-12. Before running the tests, do the following
+* Before running the tests, do the following
 ```bash
 $ source ~/.bashrc
 ```
@@ -87,25 +93,15 @@ $ source ~/.bashrc
 
 ### Installing the Framework Benchmark Database Server
 
-1. Install [Ubuntu 14.04](http://www.ubuntu.com/download/server) with username `tfb`
-2. Log in as `tfb`
-3. Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
+* Install [Ubuntu 14.04](http://www.ubuntu.com/download/server) with username `tfb`
+* Log in as `tfb`
+* Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
 ```bash
 $ sudo apt-get update && sudo apt-get upgrade
 ```
-4. Run the command: `sudo visudo`
-5. Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
-6. Make the folder `/ssd`
-```bash
-$ sudo mkdir /ssd
-```
-7. Create a ramdisk on /ssd by executing the following commands:
-```bash
-$ sudo -i
-# echo "none     /ssd     ramfs  defaults   0     0" >> /etc/fstab
-# mount /ssd
-```
-8. On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
+* Run the command: `sudo visudo`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
 $ toolset/run-tests.py --install-software --install database --list-tests
 ```
@@ -114,15 +110,15 @@ $ toolset/run-tests.py --install-software --install database --list-tests
 
 ### Installing the Framework Benchmark Load Server
 
-1. Install [Ubuntu 14.04](http://www.ubuntu.com/download/server) with username `tfb`
-2. Log in as `tfb`
-3. Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
+* Install [Ubuntu 14.04](http://www.ubuntu.com/download/server) with username `tfb`
+* Log in as `tfb`
+* Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
 ```bash
 $ sudo apt-get update && sudo apt-get upgrade
 ```
-4. Run the command: `sudo visudo`
-5. Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
-6. On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
+* Run the command: `sudo visudo`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
 $ toolset/run-tests.py --install-software --install client --list-tests
 ```
