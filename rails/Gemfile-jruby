@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.18'
-gem 'activerecord-jdbcmysql-adapter', '1.2.6'
+gem 'activerecord-jdbc-adapter', '~> 1.3.7'
+gem 'jdbc-mysql', '5.1.30'
 
 group :server do
   gem 'torqbox', '0.1.7', :require => false
