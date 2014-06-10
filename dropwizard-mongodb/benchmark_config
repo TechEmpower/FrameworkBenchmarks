@@ -1,5 +1,5 @@
 {
-  "framework": "dropwizard",
+  "framework": "dropwizard-mongodb",
   "tests": [{
     "default": {
       "setup_file": "setup",

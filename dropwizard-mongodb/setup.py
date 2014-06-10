@@ -8,8 +8,8 @@ home = expanduser("~")
 
 def start(args, logfile, errfile):
     try:
-        subprocess.check_call("mvn clean package;", shell=True, cwd="dropwizard", stderr=errfile, stdout=logfile)
-        subprocess.Popen("java -jar target/dropwizard-mongodb-0.0.1-SNAPSHOT.jar server hello-world.yml", shell=True, cwd="dropwizard", stderr=errfile, stdout=logfile)
+        subprocess.check_call("mvn clean package;", shell=True, cwd="dropwizard-mongodb", stderr=errfile, stdout=logfile)
+        subprocess.Popen("java -jar target/dropwizard-mongodb-0.0.1-SNAPSHOT.jar server hello-world.yml", shell=True, cwd="dropwizard-mongodb", stderr=errfile, stdout=logfile)
         return 0
     except subprocess.CalledProcessError:
         return 1
