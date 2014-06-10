@@ -3,9 +3,6 @@ source 'http://rubygems.org'
 gem 'rack', '1.5.2'
 gem 'json', '1.7.6'
 
-gem "rubyzip", "~> 1.0.0"
-gem "zip-zip", "~> 0.1"
-
 group :server do
   gem 'torqbox', '0.1.7', :require => false
 end
