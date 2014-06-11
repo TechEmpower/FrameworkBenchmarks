@@ -4,8 +4,7 @@
     "default": {
       "setup_file": "setup_weber",
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/db?queries=",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -20,6 +19,6 @@
       "display_name": "weber",
       "notes": "",
       "versus": "",
-      "skip": "true"
+      "skip": "false"
   }}]
 }

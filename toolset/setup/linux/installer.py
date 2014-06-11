@@ -18,6 +18,7 @@ class Installer:
 
     if self.benchmarker.install == 'all' or self.benchmarker.install == 'client':
         self.__install_client_software()
+
   ############################################################
   # End install_software
   ############################################################
@@ -92,6 +93,14 @@ class Installer:
     #
     self.__run_command("sudo apt-get install openjdk-7-jdk", True)
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
+
+    #
+    # Elixir
+    #
+    self.__run_command("wget https://github.com/elixir-lang/elixir/archive/v0.13.3.tar.gz");
+    self.__run_command("sudo tar -zxf v0.13.3.tar.gz");
+    self.__run_command("sudo make clean", cwd="elixir-0.13.3");
+    self.__run_command("sudo make test", cwd="elixir-0.13.3");
 
     #
     # Ruby/JRuby
@@ -271,6 +280,13 @@ class Installer:
     self.__download("https://raw.github.com/zedshaw/mongrel2/9b565eeea003783c47502c2d350b99c9684ce97c/src/zmq_compat.h")
     self.__run_command("mv -f zmq_compat.h mongrel2/src/")
     self.__run_command("make clean all && sudo make install", cwd="mongrel2")
+
+    #
+    # Weber
+    #
+    self.__run_command("git clone https://github.com/elixir-web/weber.git");
+    self.__run_command("make", cwd="weber");
+    self.__run_command("make test", cwd="weber");
 
     ##############################################################
     # Frameworks
