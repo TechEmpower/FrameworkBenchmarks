@@ -27,7 +27,6 @@ class Installer:
   ############################################################
   def __install_server_software(self):
     print("\nINSTALL: Installing server software\n")
-
     #######################################
     # Prerequisites
     #######################################
@@ -41,7 +40,7 @@ class Installer:
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
-    self.__run_command("source ../../.profile")
+    self.__run_command(". ../../.profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
 
     ##############################################################
@@ -65,14 +64,13 @@ class Installer:
     #######################################
     # Languages
     #######################################
-
     self._install_python()
 
     #
     # Dart
     #
     self.__download("http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip")
-    self.__run_command("unzip dartsdk-linux-x64-release.zip")
+    self.__run_command("unzip -qqo dartsdk-linux-x64-release.zip")
 
     #
     # Erlang
@@ -129,7 +127,7 @@ class Installer:
     self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
     self.__run_command("sudo make install", cwd="php-5.4.13")
-    self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13", retry=True)
+    self.__run_command("printf \"\\n\" | sudo pecl install -f apc-beta", cwd="php-5.4.13", retry=True)
     self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
 
@@ -142,7 +140,7 @@ class Installer:
     self.__run_command("sudo ./install", cwd="cphalcon/build")
 
     # YAF
-    self.__run_command("sudo pecl install yaf")
+    self.__run_command("sudo pecl install -f yaf")
 
     #
     # Haskell
@@ -178,8 +176,9 @@ class Installer:
     # Nimrod
     #
     self.__run_command("git clone git://github.com/Araq/Nimrod.git nimrod", retry=True)
-    self.__run_command("git reset --hard \"43d12ef7495238977e4f236f6d25bce5bd687967\"", cwd="nimrod")
-    self.__run_command("git clone --depth 1 git://github.com/nimrod-code/csources.git", cwd="nimrod", retry=True)
+    self.__run_command("git checkout 987ac2439a87d74838233a7b188e4db340495ee5", cwd="nimrod")
+    self.__run_command("git clone git://github.com/nimrod-code/csources.git", cwd="nimrod", retry=True)
+    self.__run_command("git checkout 704015887981932c78a033dd5ede623b2ad6ae27", cwd="nimrod/csources")
     self.__run_command("chmod +x build.sh", cwd="nimrod/csources")
     self.__run_command("./build.sh", cwd="nimrod/csources")
     self.__run_command("bin/nimrod c koch", cwd="nimrod")
@@ -207,9 +206,9 @@ class Installer:
     # HHVM
     #
     self.__run_command("wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -")
-    self.__run_command("echo deb http://dl.hhvm.com/ubuntu precise main | sudo tee /etc/apt/sources.list.d/hhvm.list")
+    self.__run_command("echo deb http://dl.hhvm.com/ubuntu trusty main | sudo tee /etc/apt/sources.list.d/hhvm.list")
     self.__run_command("sudo apt-get update")
-    self.__run_command("sudo apt-get install hhvm")
+    self.__run_command("sudo apt-get install hhvm", True)
 
     #######################################
     # Webservers
@@ -236,7 +235,7 @@ class Installer:
     #
     # Lapis
     #
-    self.__run_command("sudo apt-get install luarocks")
+    self.__run_command("sudo apt-get install luarocks", True)
     self.__run_command("sudo luarocks install http://github.com/leafo/lapis/raw/master/lapis-dev-1.rockspec")
 
 
@@ -263,7 +262,7 @@ class Installer:
     self.__run_command("./configure", cwd="zeromq-4.0.3")
     self.__run_command("make", cwd="zeromq-4.0.3")
     self.__run_command("sudo make install", cwd="zeromq-4.0.3")
-    self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev")
+    self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev", True)
     self.__run_command("sudo ldconfig -v")
     self.__download("https://github.com/zedshaw/mongrel2/tarball/v1.8.1", "mongrel2.tar.gz")
     self.__run_command("tar xvf mongrel2.tar.gz")
@@ -351,14 +350,14 @@ class Installer:
     # PyPy 2.3.1
     f = "pypy-2.3.1-linux64.tar.bz2"
     if not os.path.exists(f):
-      self.__download("https://bitbucket.org/pypy/pypy/downloads/" + f)
+      self.__download("https://bitbucket.org/pypy/pypy/downloads/" + f, f)
     self.__run_command("tar xjf " + f)
     self.__run_command('ln -sf pypy-2.3.1-linux64 pypy')
 
     # CPython 2.7.7
     f = "Python-2.7.7.tgz"
     if not os.path.exists(f):
-      self.__download("http://www.python.org/ftp/python/2.7.7/" + f)
+      self.__download("http://www.python.org/ftp/python/2.7.7/" + f, f)
     self.__run_command("tar xf " + f)
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared", cwd="Python-2.7.7")
     self.__run_command("make -j4", cwd="Python-2.7.7")
@@ -367,22 +366,21 @@ class Installer:
     # CPython 3.4.1
     f = "Python-3.4.1.tar.xz"
     if not os.path.exists(f):
-      self.__download("https://www.python.org/ftp/python/3.4.1/" + f)
+      self.__download("https://www.python.org/ftp/python/3.4.1/" + f, f)
     self.__run_command("tar xf " + f)
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared", cwd="Python-3.4.1")
     self.__run_command("make -j4", cwd="Python-3.4.1")
     self.__run_command("make install", cwd="Python-3.4.1")
 
     if not os.path.exists("get-pip.py"):
-      self.__download("https://bootstrap.pypa.io/get-pip.py")
+      self.__download("https://bootstrap.pypa.io/get-pip.py", "get-pip.py")
     self.__run_command("py2/bin/python get-pip.py")
-    self.__run_command("py3/bin/python3 get-pip.py")
     self.__run_command("pypy/bin/pypy get-pip.py")
+    # Python 3.4.1 installs pip by default.
 
     self.__run_command('py2/bin/pip install -r ../config/requirements.txt')
     self.__run_command('py3/bin/pip install -r ../config/requirements.txt')
     self.__run_command('pypy/bin/pip install -r ../config/requirements-pypy.txt')
-
 
   ############################################################
   # __install_error
@@ -400,8 +398,8 @@ class Installer:
   ############################################################
   def __install_database_software(self):
     print("\nINSTALL: Installing database software\n")
-
-    self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="config/database_sftp_batch"), True)
+ 
+    self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="../config/database_sftp_batch"), True)
 
     remote_script = """
 
@@ -421,9 +419,13 @@ class Installer:
     sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
     sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
 
-    yes | sudo apt-get install mysql-server
+    yes | sudo apt-get install mysql-server-5.6
 
     sudo stop mysql
+    # disable checking of disk size
+    sudo cp mysql /etc/init.d/mysql
+    sudo chmod +x /etc/init.d/mysql
+    sudo cp mysql.conf /etc/init/mysql.conf
     # use the my.cnf file to overwrite /etc/mysql/my.cnf
     sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
     sudo mv my.cnf /etc/mysql/my.cnf
@@ -445,10 +447,10 @@ class Installer:
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
 
     sudo -u postgres -H /etc/init.d/postgresql stop
-    sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
-    sudo mv pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
+    sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+    sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
-    sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/postgresql
+    sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
     sudo -u postgres -H /etc/init.d/postgresql start
     sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
@@ -493,11 +495,9 @@ class Installer:
     # Prerequisites
     ##############################
     yes | sudo apt-get update
-    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
+    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev 
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
-    sudo mkdir -p /ssd
-    sudo mkdir -p /ssd/log
 
     ##############################
     # wrk
@@ -508,13 +508,25 @@ class Installer:
     make
     sudo cp wrk /usr/local/bin
     cd ~
+    
+    #############################
+    # pipeline.lua
+    #############################
+cat << EOF | tee pipeline.lua
+init = function(args)
+  wrk.init(args)
+  local r = {}
+  local depth = tonumber(args[1]) or 1
+  for i=1,depth do
+    r[i] = wrk.format()
+  end
+  req = table.concat(r)
+end
 
-    git clone https://github.com/wg/wrk.git wrk-pipeline
-    cd wrk-pipeline
-    git checkout pipeline
-    make
-    sudo cp wrk /usr/local/bin/wrk-pipeline
-    cd ~
+request = function()
+  return req
+end
+EOF
     """
     
     print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
@@ -544,6 +556,9 @@ class Installer:
       max_attempts = 1
     attempt = 1
     delay = 0
+    if send_yes:
+      command = "yes yes | " + command
+        
 
     print("\nINSTALL: %s (cwd=%s)" % (command, cwd))
 
@@ -551,14 +566,7 @@ class Installer:
       error_message = ""
       try:
         # Execute command.
-        if send_yes:
-          process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
-          process.communicate("yes")
-          returncode = process.returncode
-          if returncode:
-            raise subprocess.CalledProcessError(returncode, command)
-        else:
-          subprocess.check_call(command, shell=True, cwd=cwd)
+        subprocess.check_call(command, shell=True, cwd=cwd)
         break  # Exit loop if successful.
       except:
         exceptionType, exceptionValue, exceptionTraceBack = sys.exc_info()
