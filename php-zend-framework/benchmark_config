@@ -10,14 +10,14 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "ZendFramework",
+      "framework": "Zend",
       "language": "PHP",
       "orm": "Full",
       "platform": "PHP-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ZendFramework",
+      "display_name": "zend",
       "notes": "",
       "versus": "php"
     }
