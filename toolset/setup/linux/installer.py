@@ -356,6 +356,19 @@ class Installer:
     #
     self.__run_command("git clone git://github.com/idlewan/nawak.git nawak/nawak", retry=True)
 
+    #
+    # Wt
+    #
+    self.__run_command("sudo apt-get install libboost1.48-all-dev", True)
+    self.__download("http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz", filename="wt.tar.gz")
+    self.__run_command("tar xf wt.tar.gz")
+    self.__run_command("rm wt.tar.gz")
+    self.__run_command("bash -c 'mv wt-* wt'")
+    self.__run_command("mkdir build", cwd="wt")
+    self.__run_command("cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release", cwd="wt/build")
+    self.__run_command("make", cwd="wt/build")
+    self.__run_command("sudo make install", cwd="wt/build")
+
     print("\nINSTALL: Finished installing server software\n")
   ############################################################
   # End __install_server_software
