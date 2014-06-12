@@ -1,0 +1,7 @@
+/vendor
+/build
+/dist
+.DS_Store
+/tags
+.idea
+composer.lock
