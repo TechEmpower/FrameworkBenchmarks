@@ -144,9 +144,9 @@ struct DbStructNoTransaction {
   boost::random::uniform_int_distribution<int> distribution;
 
 #ifndef BENCHMARK_USE_POSTGRES
-  DbStructNoTransaction() : connection("hello_world", "benchmarkdbuser", "benchmarkdbpass", "precise2.local", 3306),
+  DbStructNoTransaction() : connection("hello_world", "benchmarkdbuser", "benchmarkdbpass", "INSERT_DB_HOST_HERE", 3306),
 #else
-  DbStructNoTransaction() : connection("host=precise2.local port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world"),
+  DbStructNoTransaction() : connection("host=INSERT_DB_HOST_HERE port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world"),
 #endif
       rng(clock()),
       distribution(1, 10000) {
