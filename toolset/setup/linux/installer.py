@@ -379,7 +379,7 @@ class Installer:
     # Python 3.4.1 installs pip by default.
 
     self.__run_command('py2/bin/pip install -r ../config/requirements.txt')
-    self.__run_command('py3/bin/pip install -r ../config/requirements.txt')
+    self.__run_command('py3/bin/pip3 install -r ../config/requirements-py3.txt')
     self.__run_command('pypy/bin/pip install -r ../config/requirements-pypy.txt')
 
   ############################################################
