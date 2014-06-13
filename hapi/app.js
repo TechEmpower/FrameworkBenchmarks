@@ -9,7 +9,7 @@ var cluster = require('cluster'),
 	mongoose = require('mongoose'),
 	async = require('async'),
 	conn = mongoose.connect('mongodb://localhost/hello_world'),
-	connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
+	connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost', charset: 'utf8' };
 
 var WorldSchema = new mongoose.Schema({
 		id          : Number,
