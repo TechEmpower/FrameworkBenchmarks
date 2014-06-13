@@ -159,10 +159,10 @@ class Installer:
     #
     # RingoJs
     #
-    self.__download("http://www.ringojs.org/downloads/ringojs_0.9-1_all.deb")
+    self.__download("http://www.ringojs.org/downloads/ringojs_0.10-1_all.deb")
     self.__run_command("sudo apt-get install jsvc", True)
-    self.__run_command("sudo dpkg -i ringojs_0.9-1_all.deb", True)
-    self.__run_command("rm ringojs_0.9-1_all.deb")
+    self.__run_command("sudo dpkg -i ringojs_0.10-1_all.deb", True)
+    self.__run_command("rm ringojs_0.10-1_all.deb")
 
     #
     # Mono
