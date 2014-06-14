@@ -10,9 +10,6 @@ defined('APPLICATION_ENV')
 
 set_include_path(realpath(dirname(__FILE__) . '/../vendor/zendframework/zendframework1/library'));
 
-/** Zend_Application */
-require_once 'Zend/Application.php';
-
 // Create application, bootstrap, and run
 $application = new Zend_Application(
     APPLICATION_ENV,
