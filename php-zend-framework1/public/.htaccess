@@ -1,4 +1,3 @@
-
 RewriteEngine On
 # The following rule tells Apache that if the requested filename
 # exists, simply serve it.
@@ -12,6 +11,6 @@ RewriteRule ^.*$ - [NC,L]
 # allow proper resolution of the index.php file; it will work
 # in non-aliased environments as well, providing a safe, one-size
 # fits all solution.
-RewriteCond %{REQUEST_URI}::$1 ^(/.+)(.+)::$
+RewriteCond %{REQUEST_URI}::$1 ^(/.+)(.+)::\2$
 RewriteRule ^(.*)$ - [E=BASE:%1]
 RewriteRule ^(.*)$ %{ENV:BASE}index.php [NC,L]
