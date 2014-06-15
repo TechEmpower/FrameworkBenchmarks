@@ -2,8 +2,7 @@
 
 <html>
 <head>
-    <title>Benchmark</title>
-    <meta charset=utf-8>
+    <title>Fortunes</title>
 </head>
 <body>
 {{ $content }}

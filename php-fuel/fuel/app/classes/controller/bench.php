@@ -4,7 +4,7 @@ class Controller_Bench extends Controller
 {
     public function action_json()
     {
-        return new Response(json_encode(array('message' => 'Hello World!')), 200, array(
+        return new Response(json_encode(array('message' => 'Hello, World!')), 200, array(
             'Content-Type' => 'application/json'
         ));
     }
@@ -16,6 +16,10 @@ class Controller_Bench extends Controller
 
         for($i = 0; $i < $queries; ++$i) {
             $worlds[] = Model_World::find(mt_rand(1, 10000))->toJson();
+        }
+
+        if($queries == 1) {
+            $worlds = $worlds[0];
         }
 
         return new Response(json_encode($worlds), 200, array(

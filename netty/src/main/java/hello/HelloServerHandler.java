@@ -2,16 +2,8 @@ package hello;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
-import com.fasterxml.jackson.databind.*;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -22,23 +14,56 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.CharsetUtil;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+
+@ChannelHandler.Sharable
 public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
-    private final SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
-    private CharSequence date;
+	private static final ThreadLocal<DateFormat> FORMAT = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        }
+    };
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    private final ByteBuf buffer = Unpooled.directBuffer().writeBytes("Hello, World!".getBytes(CharsetUtil.UTF_8));
-    private final CharSequence contentLength = HttpHeaders.newEntity(String.valueOf(buffer.readableBytes()));
+
+    private static final ByteBuf CONTENT_BUFFER = Unpooled.unreleasableBuffer(
+            Unpooled.directBuffer().writeBytes("Hello, World!".getBytes(CharsetUtil.UTF_8)));
+    private static final CharSequence contentLength = HttpHeaders.newEntity(
+            String.valueOf(CONTENT_BUFFER.readableBytes()));
 
     private static final CharSequence TYPE_PLAIN = HttpHeaders.newEntity("text/plain; charset=UTF-8");
     private static final CharSequence TYPE_JSON = HttpHeaders.newEntity("application/json; charset=UTF-8");
-
     private static final CharSequence SERVER_NAME = HttpHeaders.newEntity("Netty");
     private static final CharSequence CONTENT_TYPE_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.CONTENT_TYPE);
     private static final CharSequence DATE_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.DATE);
     private static final CharSequence CONTENT_LENGTH_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.CONTENT_LENGTH);
     private static final CharSequence SERVER_ENTITY = HttpHeaders.newEntity(HttpHeaders.Names.SERVER);
+    private static final ObjectMapper MAPPER;
+    
+    static{
+    	MAPPER = new ObjectMapper();
+    	MAPPER.registerModule(new AfterburnerModule());
+    }
+    
+    private volatile CharSequence date = HttpHeaders.newEntity(FORMAT.get().format(new Date()));
+
+    HelloServerHandler(ScheduledExecutorService service) {
+        service.scheduleWithFixedDelay(new Runnable() {
+            private final DateFormat format = FORMAT.get();
+            @Override
+            public void run() {
+                date = HttpHeaders.newEntity(format.format(new Date()));
+            }
+        }, 1000, 1000, TimeUnit.MILLISECONDS);
+
+    }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -47,11 +72,11 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
             String uri = request.getUri();
             switch (uri) {
                 case "/plaintext":
-                    writeResponse(ctx, request, buffer.duplicate().retain(), TYPE_PLAIN, contentLength);
+                    writeResponse(ctx, request, CONTENT_BUFFER.duplicate(), TYPE_PLAIN, contentLength);
                     return;
                 case "/json":
-                    byte[] json = MAPPER.writeValueAsBytes(Collections.singletonMap("message", "Hello, World!"));
-                    writeResponse(ctx, request, ctx.alloc().buffer(json.length).writeBytes(json), TYPE_JSON,
+                    byte[] json = MAPPER.writeValueAsBytes(new Message("Hello, World!"));
+                    writeResponse(ctx, request, Unpooled.wrappedBuffer(json), TYPE_JSON,
                             String.valueOf(json.length));
                     return;
             }
@@ -93,31 +118,5 @@ public class HelloServerHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         ctx.flush();
-    }
-
-    @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        super.handlerRemoved(ctx);
-        buffer.release();
-    }
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        date = HttpHeaders.newEntity(format.format(new Date()));
-
-        Channel channel = ctx.channel();
-        final ScheduledFuture<?> future = channel.eventLoop().scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                date = HttpHeaders.newEntity(format.format(new Date()));
-            }
-        }, 1000, 1000, TimeUnit.MILLISECONDS);
-
-        channel.closeFuture().addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                future.cancel(false);
-            }
-        });
     }
 }

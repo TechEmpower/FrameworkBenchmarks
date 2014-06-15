@@ -55,7 +55,14 @@ public class HelloDB
     String response = "";
     try
     {
-      response = HelloDB.mapper.writeValueAsString(worlds);
+      if (queries == 1)
+      {
+        response = HelloDB.mapper.writeValueAsString(worlds[0]); 
+      }
+      else
+      {
+        response = HelloDB.mapper.writeValueAsString(worlds);
+      }
     }
     catch (IOException ex)
     {

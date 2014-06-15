@@ -12,8 +12,10 @@ Server {
 
 # Enable debug logging
 Log {
+  UseLogFile = true
   UseSyslog = false
   Level = Verbose
+  File = /tmp/FrameworkBenchmarks/hhvm/error.log
 }
 
 # Enable jit for production mode

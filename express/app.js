@@ -61,7 +61,7 @@ if (cluster.isMaster) {
   // Routes
 
   app.get('/json', function(req, res) {
-    res.send({ message: 'Hello World!' })
+    res.send({ message: 'Hello, World!' })
   });
   
   app.get('/mongoose', function(req, res) {
@@ -79,6 +79,9 @@ if (cluster.isMaster) {
     }
 
     async.parallel(queryFunctions, function(err, results) {
+      if (queries == 1) {
+        worlds = worlds[0];
+      }
       res.send(worlds);
     });
   });
@@ -100,6 +103,9 @@ if (cluster.isMaster) {
     }
 
     async.parallel(queryFunctions, function(err, results) {
+      if (queries == 1) {
+        worlds = worlds[0];
+      }
       res.send(worlds);
     });
   });

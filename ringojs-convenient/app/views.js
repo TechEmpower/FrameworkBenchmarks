@@ -12,7 +12,7 @@ var app = exports.app = Application();
 app.configure("params", "route");
 
 app.get('/json', function() {
-   var helloObject = {message: "Hello, world"};
+   var helloObject = {message: "Hello, World!"};
    return response.json(helloObject);
 });
 
@@ -23,7 +23,10 @@ app.get('/db/:queries?', function(request, queries) {
    for (var i = 0; i < queries; i++) {
       randId = ((Math.random() * 10000) | 0) + 1;
       world = models.store.query('select World.* from World where World.id = :id', {id: randId})[0];
-      worlds.push(world.toJSON());
+      worlds.push({"id": world._id, "randomNumber" : world.randomNumber});
+   }
+   if (queries == 1) {
+      worlds = worlds[0];
    }
    return response.json(worlds);
 });
@@ -39,13 +42,7 @@ app.get('/fortune', function() {
 });
 
 app.get('/plaintext', function() {
-   // @@ not available in ringojs 0.9
-   // return response.text('Hello World');
-   return {
-     status: 200,
-     headers: {"Content-Type": 'text/plain'},
-     body: ['Hello World']
-   };
+   return response.text('Hello, World!');
 });
 
 app.get('/updates/:queries?', function(request, queries) {
@@ -68,7 +65,7 @@ app.get('/updates/:queries?', function(request, queries) {
          models.store.abortTransaction();
          return response.error('SQL error');
       }
-      worlds.push(world.toJSON());
+      worlds.push({"id": world._id, "randomNumber": world.randomNumber});
    }
    models.store.commitTransaction();
    return response.json(worlds);

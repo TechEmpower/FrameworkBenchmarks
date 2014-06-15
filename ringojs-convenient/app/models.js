@@ -6,8 +6,9 @@ var dbHost = '172.16.98.98';
 
 // create and configure store
 var connectionPool = module.singleton("connectionPool", function() {
+    var mysqlConnectionProperties = "?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useServerPrepStmts&enableQueryTimeouts=false&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false&cacheRSMetadata=true";
     return new ConnectionPool({
-        "url": "jdbc:mysql://" + dbHost + "/hello_world",
+        "url": "jdbc:mysql://" + dbHost + "/hello_world" + mysqlConnectionProperties,
         "driver": "com.mysql.jdbc.Driver",
         "username": "benchmarkdbuser",
         "password": "benchmarkdbpass"
@@ -22,6 +23,9 @@ store.setQueryCache(queryCache);
 // define entities in DB
 exports.World = store.defineEntity('World', {
 	table: 'World',
+  id: {
+    column: 'id'
+  },
 	properties: {
 		randomNumber: 'integer'
 	}

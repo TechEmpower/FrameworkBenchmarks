@@ -6,17 +6,30 @@ spring:
     url: jdbc:mysql://${database.host:localhost}:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true
     username: benchmarkdbuser
     password: benchmarkdbpass
+    maxActive: 256
+    maxIdle: 256    
   jpa:
     show_sql: false
     hibernate:
       naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
       ddl-auto: validate
+    open_in_view: false
 
 tomcat:
   connector:
-    maxThreads: 10000
+    # reduce context switching; Intel Xeons have 12 threads
+    maxThreads: 12
     connectionTimeout: 20000
-    maxConnections: -1
+    # maximum: 16K connections test
+    maxConnections: 20000
+    # handle initial connection spike
+    acceptCount: 20000
+    # avoid running out of ports due to connections stuck in TIME_WAIT state
+    maxKeepAliveRequests: -1
+
+server:
+  tomcat:
+    access_log_enabled: false
 
 ---
 spring:
@@ -26,6 +39,5 @@ spring:
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:framework_benchmark
   jpa:
-    show_sql: true
     hibernate:
       ddl-auto: create-drop

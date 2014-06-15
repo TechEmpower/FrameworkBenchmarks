@@ -12,8 +12,10 @@ Server {
 
 # Disable logging completely
 Log {
+  UseLogFile = false
   UseSyslog = false
   Level = Error
+  File = /tmp/FrameworkBenchmarks/hhvm/error.log
 }
 
 # Enable jit for production mode

@@ -9,7 +9,7 @@ var cluster = require('cluster'),
 	mongoose = require('mongoose'),
 	async = require('async'),
 	conn = mongoose.connect('mongodb://localhost/hello_world'),
-	connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost' };
+	connMap = { user: 'benchmarkdbuser', password: 'benchmarkdbpass', database: 'hello_world', host: 'localhost', charset: 'utf8' };
 
 var WorldSchema = new mongoose.Schema({
 		id          : Number,
@@ -49,7 +49,7 @@ if (cluster.isMaster) {
 		method: 'GET',
 		path: '/json',
 		handler: function(req) {
-			req.reply({ message: 'Hello World!' })
+			req.reply({ message: 'Hello, World!' })
 		}
 	});
 
@@ -69,6 +69,9 @@ if (cluster.isMaster) {
 			}
 
 			async.parallel(queryFunctions, function(err, results){
+				if (queries == 1) {
+					results = results[0];
+				}
 				req.reply(results).header('Server', 'hapi');
 			});
 		}
@@ -77,10 +80,10 @@ if (cluster.isMaster) {
 	server.route({
 		method: 'GET',
 		path: '/mysql-orm/{queries?}',
-		handler: function(req){
+		handler: function(req, reply){
 			if (windows) return req.reply(Hapi.error.internal('Not supported on windows'));
 
-			var queries = req.params.queries || 1,
+			var queries = isNaN(req.params.queries) ? 1 : parseInt(req.params.queries, 10),
 				queryFunctions = [];
 
 			queries = Math.min(Math.max(queries, 1), 500);
@@ -92,7 +95,10 @@ if (cluster.isMaster) {
 			}
 
 			async.parallel(queryFunctions, function(err, results){
-				req.reply(results).header('Server', 'hapi');
+				if (!req.params.queries) {
+					results = results[0];
+				}
+				reply(results).header('Server', 'hapi');
 			});
 		}
 	});

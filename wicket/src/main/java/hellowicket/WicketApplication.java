@@ -1,39 +1,48 @@
 package hellowicket;
 
+import hellowicket.plaintext.HelloTextReference;
+import hellowicket.dbupdates.HelloDbUpdatesReference;
+import hellowicket.fortune.FortunePage;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.settings.IRequestCycleSettings;
 
 /**
- * Application object for your web application. If you want to run this application without deploying, run the Start class.
- * 
- * @see hellowicket.Start#main(String[])
+ * Application object for your web application..
  */
 public class WicketApplication extends WebApplication
 {
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<HomePage> getHomePage()
 	{
 		return HomePage.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#init()
-	 */
 	@Override
 	public void init()
 	{
 		super.init();
 
-		// add your configuration here
-
 		// mount the resources under test
 		mountResource("/json", new HelloJsonReference());
 		mountResource("/db", new HelloDbReference());
+		mountResource("/updates", new HelloDbUpdatesReference());
+		mountResource("/plaintext", new HelloTextReference());
+
+		mountPage("/fortunes", FortunePage.class);
 
 		// disable response caching to be more close to other
 		// test applications' behavior
-		getRequestCycleSettings().setBufferResponse(false);
+		IRequestCycleSettings requestCycleSettings = getRequestCycleSettings();
+		requestCycleSettings.setBufferResponse(false);
+
+		// set UTF-8 for /fortunes test
+		requestCycleSettings.setResponseRequestEncoding("UTF-8");
+	}
+
+	@Override
+	public RuntimeConfigurationType getConfigurationType()
+	{
+		return RuntimeConfigurationType.DEPLOYMENT;
 	}
 }

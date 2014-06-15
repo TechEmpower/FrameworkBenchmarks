@@ -21,7 +21,7 @@ def stop(logfile, errfile):
     for line in out.splitlines():
       if 'torqbox' in line:
         pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
+        os.kill(pid, 15)
     subprocess.check_call("rm Gemfile", shell=True, cwd="sinatra", stderr=errfile, stdout=logfile)
     subprocess.check_call("rm Gemfile.lock", shell=True, cwd="sinatra", stderr=errfile, stdout=logfile)
     return 0

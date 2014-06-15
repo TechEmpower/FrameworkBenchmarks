@@ -11,23 +11,28 @@ def start(args, logfile, errfile):
   else:
     subprocess.check_call("./sbt assembly && rm -rf target/scala-2.10/cache", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
 
-  subprocess.Popen("java -server -da -dsa -Xrs -Xmx6g -Xmn4g -Xss8m -Xnoclassgc -XX:MaxPermSize=1g -XX:ReservedCodeCacheSize=384m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -jar target/scala-2.10/plain-benchmark-assembly-1.0.1.jar", cwd="plain", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.Popen("java -jar target/scala-2.10/plain-benchmark-assembly-1.0.1.jar", cwd="plain", shell=True, stderr=errfile, stdout=logfile)
   time.sleep(10)
   return 0
 
 def stop(logfile, errfile):
   if os.name == 'nt':
     subprocess.call("taskkill /f /im *plain-benchmark* > NUL", shell=True, stderr=errfile, stdout=logfile)
-    return 0
+  else:
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'plain-benchmark' in line:
+        try:
+          pid = int(line.split(None, 2)[1])
+          os.kill(pid, 15)
+        except OSError:
+          return 1
 
-  p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-  out, err = p.communicate()
-  for line in out.splitlines():
-    if 'plain-benchmark' in line:
-      try:
-        pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
-      except OSError:
-        pass
+  # Takes up so much disk space
+  if os.name == 'nt':
+    subprocess.check_call("del /f /s /q target && del /f /s /q project", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
+  else:
+    subprocess.check_call("rm -rf target && rm -rf project/.ivy && rm -rf project/.boot", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
   
   return 0

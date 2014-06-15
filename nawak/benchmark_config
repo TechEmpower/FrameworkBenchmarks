@@ -1,0 +1,28 @@
+{
+  "framework": "nawak",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 6767,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "nawak",
+      "language": "Nimrod",
+      "orm": "Raw",
+      "platform": "Nimrod",
+      "webserver": "mongrel2",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "nawak",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

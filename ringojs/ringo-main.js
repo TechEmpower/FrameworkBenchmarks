@@ -15,7 +15,7 @@ var fortuneTemplate = require('fs').read(module.resolve('./templates/fortune.mus
 exports.app = function(req) {
    var path = req.pathInfo;
    if (path === '/json') {
-      var helloObject = {message: "Hello, world"};
+      var helloObject = {message: "Hello, World!"};
       // JSON Response Test
       return {
          status: 200,
@@ -83,7 +83,7 @@ exports.app = function(req) {
       return {
         status: 200,
         headers: {"Content-Type": 'text/plain'},
-        body: ['Hello World']
+        body: ['Hello, World!']
       };
    } else if (path === '/updates') {
       var queryCount = parseInt(req.env.servletRequest.getParameter('queries'), 10);
@@ -120,7 +120,8 @@ exports.app = function(req) {
 
 
 var datasource = module.singleton('pooling-datasource', function() {
-  return sql.connect("jdbc:mysql://" + dbHost + "/hello_world", 'benchmarkdbuser', 'benchmarkdbpass');
+  var mysqlConnectionProperties = "?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useServerPrepStmts&enableQueryTimeouts=false&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false&cacheRSMetadata=true";
+  return sql.connect("jdbc:mysql://" + dbHost + "/hello_world" + mysqlConnectionProperties, 'benchmarkdbuser', 'benchmarkdbpass');
 });
 
 if (require.main == module) {

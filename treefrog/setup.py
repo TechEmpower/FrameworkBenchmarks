@@ -11,6 +11,7 @@ home = expanduser("~")
 ##############
 def start(args, logfile, errfile):
   setup_util.replace_text("treefrog/config/database.ini", "HostName=.*", "HostName=" + args.database_host)
+  setup_util.replace_text("treefrog/config/application.ini", "MultiProcessingModule=.*", "MultiProcessingModule=hybrid")
 
   # 1. Generate Makefile
   # 2. Compile applicaton

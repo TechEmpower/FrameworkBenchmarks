@@ -1,0 +1,4 @@
+All scripts are intended to be run from a root directory:
+
+$./scripts/instrument.sh
+
