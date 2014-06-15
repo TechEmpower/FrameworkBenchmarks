@@ -11,8 +11,6 @@ cwd = os.path.expanduser('~/FrameworkBenchmarks/tornado')
 
 
 def start(args, logfile, errfile):
-    subprocess.call(pip + ' install -r requirements.txt', cwd=cwd, shell=True, stderr=errfile, stdout=logfile)
-
     subprocess.Popen(
         python + ' server.py --port=8080 --postgres=%s --logging=error' % (args.database_host,),
         shell=True, cwd=cwd, stderr=errfile, stdout=logfile)
