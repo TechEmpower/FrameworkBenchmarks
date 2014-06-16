@@ -13,7 +13,7 @@ meinheld==0.5.6
 
 # Tornado
 tornado==3.2.2
-motor==0.2.1
+motor==0.3
 # pymongo is installed via motor dependency
 
 # Django
