@@ -33,3 +33,5 @@ bottle-sqlalchemy==0.4.1
 # Falcon
 Cython==0.20.1
 falcon==0.1.8
+
+Momoko==1.1.3
