@@ -5,7 +5,7 @@ PyMySQL==0.6.2
 
 #simplejson==3.4.1
 #ujson==1.33
-gevent==1.0.1
+#gevent==1.0.1
 # uwsgi is released too often to stick on single version.
 uwsgi
 
