@@ -330,8 +330,8 @@ class Installer:
     #
     # Vert.x
     #
-    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1M3.tar.gz?direct=true", "vert.x-2.1M3.tar.gz")
-    self.__run_command("tar xzf vert.x-2.1M3.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1RC3.tar.gz?direct=true", "vert.x-2.1RC3.tar.gz")
+    self.__run_command("tar xzf vert.x-2.1RC3.tar.gz")
 
     #
     # Yesod
