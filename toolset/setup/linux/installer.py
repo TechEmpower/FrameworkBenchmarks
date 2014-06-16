@@ -18,6 +18,7 @@ class Installer:
 
     if self.benchmarker.install == 'all' or self.benchmarker.install == 'client':
         self.__install_client_software()
+
   ############################################################
   # End install_software
   ############################################################
@@ -94,6 +95,14 @@ class Installer:
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
 
     #
+    # Elixir
+    #
+    self.__run_command("wget https://github.com/elixir-lang/elixir/archive/v0.13.3.tar.gz");
+    self.__run_command("sudo tar -zxf v0.13.3.tar.gz");
+    self.__run_command("sudo make clean", cwd="elixir-0.13.3");
+    self.__run_command("sudo make test", cwd="elixir-0.13.3");
+
+    #
     # Ruby/JRuby
     #
     self.__run_command("curl -L get.rvm.io | bash -s head --auto-dotfiles")
@@ -150,10 +159,10 @@ class Installer:
     #
     # RingoJs
     #
-    self.__download("http://www.ringojs.org/downloads/ringojs_0.9-1_all.deb")
+    self.__download("http://www.ringojs.org/downloads/ringojs_0.10-1_all.deb")
     self.__run_command("sudo apt-get install jsvc", True)
-    self.__run_command("sudo dpkg -i ringojs_0.9-1_all.deb", True)
-    self.__run_command("rm ringojs_0.9-1_all.deb")
+    self.__run_command("sudo dpkg -i ringojs_0.10-1_all.deb", True)
+    self.__run_command("rm ringojs_0.10-1_all.deb")
 
     #
     # Mono
@@ -272,6 +281,13 @@ class Installer:
     self.__run_command("mv -f zmq_compat.h mongrel2/src/")
     self.__run_command("make clean all && sudo make install", cwd="mongrel2")
 
+    #
+    # Weber
+    #
+    self.__run_command("git clone https://github.com/elixir-web/weber.git");
+    self.__run_command("make", cwd="weber");
+    self.__run_command("make test", cwd="weber");
+
     ##############################################################
     # Frameworks
     ##############################################################
@@ -279,8 +295,8 @@ class Installer:
     #
     # Grails
     #
-    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.3.zip")
-    self.__run_command("unzip -o grails-2.3.3.zip")
+    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.6.zip")
+    self.__run_command("unzip -o grails-2.3.6.zip")
 
     #
     # Play 2
@@ -314,8 +330,8 @@ class Installer:
     #
     # Vert.x
     #
-    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1M3.tar.gz?direct=true", "vert.x-2.1M3.tar.gz")
-    self.__run_command("tar xzf vert.x-2.1M3.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1RC3.tar.gz?direct=true", "vert.x-2.1RC3.tar.gz")
+    self.__run_command("tar xzf vert.x-2.1RC3.tar.gz")
 
     #
     # Yesod
@@ -340,6 +356,19 @@ class Installer:
     #
     self.__run_command("git clone git://github.com/idlewan/nawak.git nawak/nawak", retry=True)
 
+    #
+    # Wt
+    #
+    self.__run_command("sudo apt-get install libboost1.48-all-dev", True)
+    self.__download("http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz", filename="wt.tar.gz")
+    self.__run_command("tar xf wt.tar.gz")
+    self.__run_command("rm wt.tar.gz")
+    self.__run_command("bash -c 'mv wt-* wt'")
+    self.__run_command("mkdir build", cwd="wt")
+    self.__run_command("cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release", cwd="wt/build")
+    self.__run_command("make", cwd="wt/build")
+    self.__run_command("sudo make install", cwd="wt/build")
+
     print("\nINSTALL: Finished installing server software\n")
   ############################################################
   # End __install_server_software
@@ -351,7 +380,7 @@ class Installer:
     f = "pypy-2.3.1-linux64.tar.bz2"
     if not os.path.exists(f):
       self.__download("https://bitbucket.org/pypy/pypy/downloads/" + f, f)
-    self.__run_command("tar xjf " + f)
+    self.__run_command("tar xf " + f)
     self.__run_command('ln -sf pypy-2.3.1-linux64 pypy')
 
     # CPython 2.7.7
