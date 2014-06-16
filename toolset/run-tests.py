@@ -78,7 +78,8 @@ def main(argv=None):
     parser.add_argument('--database-identity-file', default=dbIdenFile, dest='database_identity_file',
                         help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
     parser.add_argument('-p', dest='password_prompt', action='store_true', help='Prompt for password')
-
+    parser.add_argument('--install-software', action='store_true', help='runs the installation script before running the rest of the commands')
+    
     # Install options
     parser.add_argument('--install', choices=['client', 'database', 'server', 'all'], default=None,
                         help='Runs installation script(s) before continuing on to execute the tests.')
