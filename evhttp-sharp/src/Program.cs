@@ -28,7 +28,7 @@ namespace EvHttpSharpBenchmark
 			if (!req.Uri.Contains("plaintext"))
 			{
 				var sw = new StringWriter();
-				Serializer.Serialize(sw, new {message = "Hello, world"});
+				Serializer.Serialize(sw, new {message = "Hello, World!"});
 				resp = sw.ToString();
 				headers["Content-Type"] = "application/json";
 			}
