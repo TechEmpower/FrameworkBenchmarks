@@ -1,1 +1,6 @@
-map requires($_), qw(JSON::XS HTTP::Parser::XS Plack DBI DBD::mysql DBI Starlet);
+requires 'JSON::XS', '3.01';
+requires 'HTTP::Parser::XS', '0.16';
+requires 'Plack', '1.0030';
+requires 'DBI', '1.631';
+requires 'DBD::mysql', '4.027';
+requires 'Starlet', '0.24';

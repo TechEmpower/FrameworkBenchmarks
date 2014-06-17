@@ -7,7 +7,7 @@ def start(args, logfile, errfile):
   setup_util.replace_text("plack/app.psgi", "localhost", ""+ args.database_host +"")
   try:
     subprocess.check_call("curl -L http://cpanmin.us | perl - App::cpanminus", shell=True, cwd="plack", stderr=errfile, stdout=logfile)
-    subprocess.check_call("cpanm --installdeps .", shell=True, cwd="plack", stderr=errfile, stdout=logfile)
+    subprocess.check_call("cpanm --notest --no-man-pages --installdeps .", shell=True, cwd="plack", stderr=errfile, stdout=logfile)
     pid = subprocess.Popen("plackup -E production -s Starlet -l :8080 --max-keepalive-reqs 5000 --max-reqs-per-child 50000 --min-reqs-per-child 40000 --max-workers=" + str(args.max_threads+4) + " app.psgi", shell=True, cwd="plack", stderr=errfile, stdout=logfile).pid
     open('plack/app.pid', 'w').write(str(pid))
     return 0
