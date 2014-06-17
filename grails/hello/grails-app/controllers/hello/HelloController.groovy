@@ -47,31 +47,25 @@ class HelloController {
         if(queries > 500) queries=500
         def random = ThreadLocalRandom.current()
 
-        List<Integer> worldIds = new ArrayList<Integer>(queries)
+        int[] worldIds = new int[queries]
         for (int i = 0; i < queries; i++) {
-            worldIds.add(random.nextInt(10000) + 1)
+            worldIds[i] = (random.nextInt(10000) + 1)
         }
-        List<World> worlds
+
+        List<World> worlds = new ArrayList<World>(queries)
         if (updateAlso) {
-            worlds = getAllLocked(worldIds as Serializable[])
-            for (World world : worlds) {
+            Arrays.sort(worldIds)
+            for (int id : worldIds) {
+                World world = World.lock(id)
                 world.randomNumber = random.nextInt(10000) + 1
+                worlds.add(world)
             }
         } else {
-            worlds = new ArrayList<World>(queries)
-            for (Integer id : worldIds) {
+            for (int id : worldIds) {
                 worlds.add(World.read(id))
             }
         }
         return worlds
-    }
-    
-    @CompileStatic(TypeCheckingMode.SKIP)
-    private List<World> getAllLocked(Serializable[] worldIds) {
-        World.withCriteria {
-            'in'('id', worldIds as Serializable[])
-            lock true
-        }
     }
     
     // Test type 4: Fortunes

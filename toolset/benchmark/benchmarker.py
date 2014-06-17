@@ -402,7 +402,7 @@ class Benchmarker:
     try:
       if os.name == 'nt':
         return True
-      subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
+      subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu[0-9]*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
       subprocess.check_call("sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535".rsplit(" "))
       subprocess.check_call("sudo sysctl -w net.core.somaxconn=65535".rsplit(" "))
       subprocess.check_call("sudo -s ulimit -n 65535".rsplit(" "))

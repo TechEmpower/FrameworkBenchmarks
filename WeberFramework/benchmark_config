@@ -1,0 +1,24 @@
+{
+  "framework": "weber",
+  "tests": [{
+    "default": {
+      "setup_file": "setup_weber",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "weber",
+      "language": "Elixir",
+      "orm": "Raw",
+      "platform": "Cowboy",
+      "webserver": "Cowboy",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "weber",
+      "notes": "",
+      "versus": "",
+      "skip": "false"
+  }}]
+}

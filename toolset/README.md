@@ -10,9 +10,9 @@ For deployment instructions, refer to the [Benchmark Suite Deployment README fil
 
 Assuming the deployment finished without error, we're ready to start the test suite. On the Linux server host, type:
 
-	nohup toolset/run-tests.py -s server-private-ip -d database-private-ip -c client-private-ip -i path-to-private-ssh-key -u username --max-threads 8 --duration 15 &
+	nohup toolset/run-tests.py -s server-private-ip -d database-private-ip -c client-private-ip -i path-to-private-ssh-key -u username --max-threads number-of-cores --duration 15 &
 
-For the number-of-cores parameter, you will need to know your application server's core count. For example, Amazon EC2 large instances have 2 cores.
+For the `number-of-cores` parameter, you will need to know your application server's core count. For example, Amazon EC2 large instances have 2 cores.
 
 `path-to-private-ssh-key` is the pathname of the private SSH key file of the Linux client's user. This file is set up during deployment.  `username` is the username associated with the private SSH key.
 

@@ -1,7 +1,7 @@
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
 export RESIN_HOME=~/FrameworkBenchmarks/installs/resin-4.0.36
-export GRAILS_HOME=~/FrameworkBenchmarks/installs/grails-2.3.3
-export VERTX_HOME=~/FrameworkBenchmarks/installs/vert.x-2.1M3
+export GRAILS_HOME=~/FrameworkBenchmarks/installs/grails-2.3.6
+export VERTX_HOME=~/FrameworkBenchmarks/installs/vert.x-2.1RC3
 export GOROOT=~/FrameworkBenchmarks/installs/go
 export GOPATH=~/FrameworkBenchmarks/go:~/FrameworkBenchmarks/webgo:~/FrameworkBenchmarks/revel
 export TOMCAT_HOME=~/FrameworkBenchmarks/installs/apache-tomcat-7.0.35
@@ -14,15 +14,17 @@ export DART_HOME=~/FrameworkBenchmarks/installs/dart-sdk
 export PYTHON_HOME=~/FrameworkBenchmarks/installs/python-2.7.5
 export RACKET_HOME=~/FrameworkBenchmarks/installs/racket-5.3.6
 export NIMROD_HOME=~/FrameworkBenchmarks/installs/nimrod
+export NGINX_HOME=/usr/local/nginx
+export ELIXIR_HOME=~/FrameworkBenchmarks/installs/elixir-0.13.3
 
-export PATH="$PYTHON_HOME/bin:$PATH$JAVA_HOME/bin:$GRAILS_HOME/bin:$PLAY_HOME:$PLAY1_HOME:$VERTX_HOME/bin:$GOROOT/bin:$NODE_HOME/bin:$HOME/FrameworkBenchmarks/installs/bin:$MAVEN_HOME/bin:$PERL_HOME/bin:$PERL_HOME/site/bin:$DART_HOME/bin:$RACKET_HOME/bin:$NIMROD_HOME/bin:$PATH"
+export PATH="$PYTHON_HOME/bin:$PATH$JAVA_HOME/bin:$GRAILS_HOME/bin:$PLAY_HOME:$PLAY1_HOME:$VERTX_HOME/bin:$GOROOT/bin:$NODE_HOME/bin:$HOME/FrameworkBenchmarks/installs/bin:$MAVEN_HOME/bin:$PERL_HOME/bin:$PERL_HOME/site/bin:$DART_HOME/bin:$RACKET_HOME/bin:$NIMROD_HOME/bin:$NGINX_HOME/sbin:$ELIXIR_HOME/bin:$PATH"
 
 export LD_LIBRARY_PATH='$LD_LIBRARY_PATH:/usr/local/apr/lib'
 
-export TFB_SERVER_HOST=172.16.98.122'
-export TFB_CLIENT_HOST='172.16.98.98'
+export TFB_SERVER_HOST='localhost'
+export TFB_CLIENT_HOST='localhost'
 export TFB_CLIENT_USER='tfb'
-export TFB_CLIENT_IDENTITY_FILE='/home/tfb/.ssh/id_rsa-tfb-1'
-export TFB_DATABASE_HOST='172.16.98.118'
+export TFB_CLIENT_IDENTITY_FILE='/home/tfb/.ssh/id_rsa'
+export TFB_DATABASE_HOST='localhost'
 
-source ~/.rvm/scripts/'rvm'
+. ~/.rvm/scripts/'rvm'

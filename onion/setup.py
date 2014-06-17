@@ -8,6 +8,7 @@ def start(args, logfile, errfile):
   os.putenv("ONION_LOG","noinfo")
   subprocess.call("rm *.o", cwd="onion", shell=True, stderr=errfile, stdout=logfile)
   subprocess.call("cp -R installs/onion/* onion/onion", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.call("rm CMakeCache.txt", shell=True, cwd="onion/onion/build", stderr=errfile, stdout=logfile)
   subprocess.Popen("make && ./hello", shell=True, cwd="onion", stderr=errfile, stdout=logfile)
   return 0
 

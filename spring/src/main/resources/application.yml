@@ -13,15 +13,23 @@ spring:
     hibernate:
       naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
       ddl-auto: validate
-    open_in_view: true
+    open_in_view: false
 
 tomcat:
   connector:
-    maxThreads: 200
-    minSpareThreads: 100
+    # reduce context switching; Intel Xeons have 12 threads
+    maxThreads: 12
     connectionTimeout: 20000
-    maxConnections: 200
-    maxKeepAliveRequests: 2000
+    # maximum: 16K connections test
+    maxConnections: 20000
+    # handle initial connection spike
+    acceptCount: 20000
+    # avoid running out of ports due to connections stuck in TIME_WAIT state
+    maxKeepAliveRequests: -1
+
+server:
+  tomcat:
+    access_log_enabled: false
 
 ---
 spring:
