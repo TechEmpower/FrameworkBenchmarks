@@ -43,7 +43,7 @@ class TestController extends Controller
 
 		$id = mt_rand(1, 10000);
 		$world = $this->Phreezer->Get("World",$id);
-		$this->RenderJSON($world);
+		$this->RenderJSON($world,'',true);
 	}
 	
 	
@@ -72,10 +72,8 @@ class TestController extends Controller
 				
 			$id = mt_rand(1, 10000);
 
-			$world = $this->Phreezer->Get("World",$id);
-
 			// convert the Phreezable object into a simple structure for output
-			$arr[] = array('id'=>$world->Id,'randomNumber'=>$world->Randomnumber);
+			$arr[] = $this->Phreezer->Get("World",$id)->ToObject();
 		}
 			
 		$this->RenderJSON($arr);

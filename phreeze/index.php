@@ -31,6 +31,8 @@ $route_map = array(
 
 $router = new SimpleRouter('/','Test.JSON',$route_map);
 
+Dispatcher::$FAST_LOOKUP = true;
+
 Dispatcher::Dispatch(
 	$phreezer,
 	null,
