@@ -12,7 +12,7 @@ require_once("verysimple/Util/ExceptionThrower.php");
  * @author     VerySimple Inc.
  * @copyright  1997-2007 VerySimple, Inc.
  * @license    http://www.gnu.org/licenses/lgpl.html  LGPL
- * @version    2.6
+ * @version    2.7
  */
 class Dispatcher
 {
@@ -21,6 +21,14 @@ class Dispatcher
 	 * @var boolean default = true
 	 */
 	static $IGNORE_DEPRECATED = true;
+	
+	/**
+	 * FAST_LOOKUP mode instructs the dispatcher to assume that the controller and method
+	 * supplied by the router are valid and not do any checking for the existance of
+	 * the controller file or the method before trying to call it
+	 * @var boolean use fast lookup mode if true 
+	 */
+	static $FAST_LOOKUP = false;
 
 	/**
 	 * This is a case-insensitive version of file_exists
@@ -59,16 +67,28 @@ class Dispatcher
 	 */
 	static function Dispatch($phreezer,$renderEngine,$action='',$context=null,$router=null)
 	{
-		if ($router == null)
-		{
+		if ($router == null) {
 			require_once('GenericRouter.php');
 			$router = new GenericRouter();
 		}
 
+		// get the route and normalize the controller name
 		list($controller_param,$method_param) = $router->GetRoute( $action );
-
-		// normalize the input
 		$controller_class = $controller_param."Controller";
+	
+		if (self::$FAST_LOOKUP) {
+
+			if (!class_exists($controller_class)) {
+				$controller_file = "Controller/$controller_class.php";
+				include_once $controller_file;
+			}
+			
+			$controller = new $controller_class($phreezer,$renderEngine,$context,$router);
+			$controller->$method_param();
+			
+			return true;
+		}
+		
 		
 		// if the controller was in a sub-directory, get rid of the directory path
 		$slashPos = strpos($controller_class,'/');
