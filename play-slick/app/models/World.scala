@@ -6,23 +6,24 @@ import play.api.db.slick.DB
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-class Worlds extends Table[World]("World") {
+class Worlds(tag: Tag) extends Table[World](tag, "World") {
   def id = column[Int]("id", O.PrimaryKey)
   def randomNumber = column[Long]("randomNumber")
-  def * = id ~ randomNumber <> (World.apply _, World.unapply _)
-
-  val byId = createFinderBy(_.id)
+  def * = (id, randomNumber) <> ((World.apply _).tupled, World.unapply _)
+}
+class WorldsTableQuery extends TableQuery(new Worlds(_)){
+  val byId = this.findBy(_.id)
 
   def findById(id: Int): Option[World] = DB.withSession { implicit session =>
       byId(id).firstOption
   }
 
+  val updateQuery = Compiled{ (id: Column[Int]) => this.where(_.id === id) }
   def updateRandom(world: World) {
     DB.withSession { implicit session: Session =>
-      this.where(_.id === world.id.bind).update(world)
+      updateQuery(world.id).update(world)
     }
-  }
-
+  }  
 }
 
 case class World(id: Int, randomNumber: Long)

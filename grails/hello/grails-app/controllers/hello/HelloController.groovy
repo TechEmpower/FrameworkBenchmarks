@@ -7,7 +7,8 @@ import groovy.transform.TypeCheckingMode;
 
 import java.util.concurrent.ThreadLocalRandom
 
-import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.hibernate.Session;
 
 @CompileStatic
 class HelloController {
@@ -28,7 +29,6 @@ class HelloController {
     }
 
     // Test type 2: Single database query
-    @Transactional(readOnly=true)
     def db() {
         def random = ThreadLocalRandom.current()
         def world = World.read(random.nextInt(10000) + 1)
@@ -36,7 +36,6 @@ class HelloController {
     }
     
     // Test type 3: Multiple database queries
-    @Transactional(readOnly=true)
     def queries(int queries) {
         def worlds = fetchRandomWorlds(queries, false)
         render worlds as JSON
@@ -55,10 +54,15 @@ class HelloController {
         List<World> worlds = new ArrayList<World>(queries)
         if (updateAlso) {
             Arrays.sort(worldIds)
-            for (int id : worldIds) {
-                World world = World.lock(id)
-                world.randomNumber = random.nextInt(10000) + 1
-                worlds.add(world)
+            World.withSession { Session session ->
+                for (int id : worldIds) {
+                    World world = World.get(id)
+                    world.randomNumber = random.nextInt(10000) + 1
+                    worlds.add(world)
+                    // flush changes
+                    session.flush()
+                    session.clear()
+                }
             }
         } else {
             for (int id : worldIds) {
@@ -69,7 +73,6 @@ class HelloController {
     }
     
     // Test type 4: Fortunes
-    @Transactional(readOnly=true)
     def fortunes() {
         def fortunes = Fortune.getAll()
         fortunes << new Fortune(id: 0, message: 'Additional fortune added at request time.')
@@ -83,7 +86,6 @@ class HelloController {
         render worlds as JSON
     }
 
-    @Transactional(isolation=Isolation.READ_COMMITTED)
     private List updateWorlds(int queries) {
         fetchRandomWorlds(queries, true)
     }
