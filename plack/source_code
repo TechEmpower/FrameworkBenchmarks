@@ -1,2 +1,4 @@
 ./plack/app.psgi
 ./plack/cpanfile
+./plack/nginx.conf
+
