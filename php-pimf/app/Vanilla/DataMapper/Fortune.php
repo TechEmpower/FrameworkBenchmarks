@@ -10,7 +10,7 @@ class Fortune extends Base
    */
   public function getAll()
   {
-    $sth = $this->pdo->prepare('SELECT * FROM Fortune');
+    $sth = $this->pdo->prepare('SELECT * FROM Fortune ORDER BY Fortune.message');
     $sth->execute();
 
     return $sth->fetchAll(\PDO::FETCH_ASSOC);
