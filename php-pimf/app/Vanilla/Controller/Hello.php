@@ -59,6 +59,8 @@ class Hello extends Base
       'message' => 'Additional fortune added at request time.'
     );
 
+    asort($fortunes);
+
     $view = new View('table.phtml', array('fortunes' => $fortunes));
 
     $this->response->asHTML()->send($view);
