@@ -424,8 +424,6 @@ class Installer:
     easy_install('tornado==3.1', two=True, three=True, pypy=True)
     easy_install('motor==0.1.2', two=True, three=True, pypy=True)
     easy_install('pymongo==2.5.2', two=True, three=True, pypy=True)
-    easy_install('psycopg2==2.5.3', two=True, three=True, pypy=True)
-    easy_install('Momoko==1.1.3', two=True, three=True, pypy=True)
 
     # Django
     easy_install("https://www.djangoproject.com/download/1.6/tarball/", two=True, three=True, pypy=True)

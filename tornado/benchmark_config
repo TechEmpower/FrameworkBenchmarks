@@ -22,27 +22,6 @@
       "notes": "CPython 2.7",
       "versus": ""
     },
-    "postgresql-raw": {
-      "setup_file": "setup_pg",
-      "json_url": "/json",
-      "db_url": "/dbraw",
-      "query_url": "/queriesraw?queries=",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "Postgres",
-      "framework": "tornado",
-      "language": "Python",
-      "orm": "Raw",
-      "platform": "Tornado",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "tornado",
-      "notes": "CPython 2.7",
-      "versus": ""
-    },
     "py3": {
       "setup_file": "setup_py3",
       "json_url": "/json",
