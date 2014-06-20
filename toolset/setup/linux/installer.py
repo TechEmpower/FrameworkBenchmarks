@@ -18,6 +18,7 @@ class Installer:
 
     if self.benchmarker.install == 'all' or self.benchmarker.install == 'client':
         self.__install_client_software()
+
   ############################################################
   # End install_software
   ############################################################
@@ -27,7 +28,6 @@ class Installer:
   ############################################################
   def __install_server_software(self):
     print("\nINSTALL: Installing server software\n")
-
     #######################################
     # Prerequisites
     #######################################
@@ -41,7 +41,7 @@ class Installer:
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
-    self.__run_command("source ../../.profile")
+    self.__run_command(". ../../.profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
 
     ##############################################################
@@ -65,14 +65,13 @@ class Installer:
     #######################################
     # Languages
     #######################################
-
     self._install_python()
 
     #
     # Dart
     #
     self.__download("http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip")
-    self.__run_command("unzip dartsdk-linux-x64-release.zip")
+    self.__run_command("unzip -qqo dartsdk-linux-x64-release.zip")
 
     #
     # Erlang
@@ -94,6 +93,14 @@ class Installer:
     #
     self.__run_command("sudo apt-get install openjdk-7-jdk", True)
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
+
+    #
+    # Elixir
+    #
+    self.__run_command("wget https://github.com/elixir-lang/elixir/archive/v0.13.3.tar.gz");
+    self.__run_command("sudo tar -zxf v0.13.3.tar.gz");
+    self.__run_command("sudo make clean", cwd="elixir-0.13.3");
+    self.__run_command("sudo make test", cwd="elixir-0.13.3");
 
     #
     # Ruby/JRuby
@@ -120,7 +127,6 @@ class Installer:
     self.__download("http://cpanmin.us", "cpanminus.pl")
     self.__run_command("perl cpanminus.pl --sudo App::cpanminus", retry=True)
     self.__run_command("cpanm -f -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros EV IO::Socket::IP IO::Socket::SSL", retry=True)
-    self.__run_command("sudo rm /usr/bin/perl")
 
     #
     # php
@@ -130,7 +136,7 @@ class Installer:
     self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl", cwd="php-5.4.13")
     self.__run_command("make", cwd="php-5.4.13")
     self.__run_command("sudo make install", cwd="php-5.4.13")
-    self.__run_command("printf \"\\n\" | sudo pecl install apc-beta", cwd="php-5.4.13", retry=True)
+    self.__run_command("printf \"\\n\" | sudo pecl install -f apc-beta", cwd="php-5.4.13", retry=True)
     self.__run_command("sudo cp ../config/php.ini /usr/local/lib/php.ini")
     self.__run_command("sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf")
 
@@ -143,7 +149,7 @@ class Installer:
     self.__run_command("sudo ./install", cwd="cphalcon/build")
 
     # YAF
-    self.__run_command("sudo pecl install yaf")
+    self.__run_command("sudo pecl install -f yaf")
 
     #
     # Haskell
@@ -153,20 +159,20 @@ class Installer:
     #
     # RingoJs
     #
-    self.__download("http://www.ringojs.org/downloads/ringojs_0.9-1_all.deb")
+    self.__download("http://www.ringojs.org/downloads/ringojs_0.10-1_all.deb")
     self.__run_command("sudo apt-get install jsvc", True)
-    self.__run_command("sudo dpkg -i ringojs_0.9-1_all.deb", True)
-    self.__run_command("rm ringojs_0.9-1_all.deb")
+    self.__run_command("sudo dpkg -i ringojs_0.10-1_all.deb", True)
+    self.__run_command("rm ringojs_0.10-1_all.deb")
 
     #
-    # Mono - TODO - this install script doesn't work.
+    # Mono
     #
-    #self.__run_command("git clone git://github.com/mono/mono", retry=True)
-    #self.__run_command("git checkout mono-3.2.3", cwd="mono")
-    #self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
-    #self.__run_command("make get-monolite-latest", cwd="mono")
-    #self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/gmcs.exe", cwd="mono")
-    #self.__run_command("sudo make install", cwd="mono")
+    self.__run_command("git clone git://github.com/mono/mono", retry=True)
+    self.__run_command("git checkout mono-3.2.8-branch", cwd="mono")
+    self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
+    self.__run_command("make get-monolite-latest", cwd="mono")
+    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe", cwd="mono")
+    self.__run_command("sudo make install", cwd="mono")
 
     self.__run_command("mozroots --import --sync", retry=True)
 
@@ -179,8 +185,9 @@ class Installer:
     # Nimrod
     #
     self.__run_command("git clone git://github.com/Araq/Nimrod.git nimrod", retry=True)
-    self.__run_command("git reset --hard \"43d12ef7495238977e4f236f6d25bce5bd687967\"", cwd="nimrod")
-    self.__run_command("git clone --depth 1 git://github.com/nimrod-code/csources.git", cwd="nimrod", retry=True)
+    self.__run_command("git checkout 987ac2439a87d74838233a7b188e4db340495ee5", cwd="nimrod")
+    self.__run_command("git clone git://github.com/nimrod-code/csources.git", cwd="nimrod", retry=True)
+    self.__run_command("git checkout 704015887981932c78a033dd5ede623b2ad6ae27", cwd="nimrod/csources")
     self.__run_command("chmod +x build.sh", cwd="nimrod/csources")
     self.__run_command("./build.sh", cwd="nimrod/csources")
     self.__run_command("bin/nimrod c koch", cwd="nimrod")
@@ -191,14 +198,14 @@ class Installer:
     #
     self.__download("https://github.com/plt/racket/archive/v5.3.6.tar.gz", "racket-5.3.6.tar.gz")
     self.__run_command("tar xzf racket-5.3.6.tar.gz")
-    self.__run_command("./configure", cwd="racket/src")
-    self.__run_command("make", cwd="racket/src")
-    self.__run_command("sudo make install", cwd="racket/src")
+    self.__run_command("./configure", cwd="racket-5.3.6/src")
+    self.__run_command("make", cwd="racket-5.3.6/src")
+    self.__run_command("sudo make install", cwd="racket-5.3.6/src")
 
     #
     # Ur/Web
     #
-    self.__run_command("hg clone -r3cc14f1e47d1 http://hg.impredicative.com/urweb")
+    self.__run_command("hg clone http://hg.impredicative.com/urweb")
     self.__run_command("./autogen.sh", cwd="urweb")
     self.__run_command("./configure", cwd="urweb")
     self.__run_command("make", cwd="urweb")
@@ -208,9 +215,9 @@ class Installer:
     # HHVM
     #
     self.__run_command("wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -")
-    self.__run_command("echo deb http://dl.hhvm.com/ubuntu precise main | sudo tee /etc/apt/sources.list.d/hhvm.list")
+    self.__run_command("echo deb http://dl.hhvm.com/ubuntu trusty main | sudo tee /etc/apt/sources.list.d/hhvm.list")
     self.__run_command("sudo apt-get update")
-    self.__run_command("sudo apt-get install hhvm")
+    self.__run_command("sudo apt-get install hhvm", True)
 
     #######################################
     # Webservers
@@ -226,13 +233,20 @@ class Installer:
     self.__run_command("sudo make install", cwd="nginx-1.4.1")
 
     #
-    # Openresty (nginx with openresty stuff)
+    # Openresty (nginx with lua stuff)
     #
-    self.__download("http://openresty.org/download/ngx_openresty-1.2.7.5.tar.gz")
-    self.__run_command("tar xzf ngx_openresty-1.2.7.5.tar.gz")
-    self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.2.7.5")
-    self.__run_command("make", cwd="ngx_openresty-1.2.7.5")
-    self.__run_command("sudo make install", cwd="ngx_openresty-1.2.7.5")
+    self.__download("http://openresty.org/download/ngx_openresty-1.5.8.1.tar.gz")
+    self.__run_command("tar xzf ngx_openresty-1.5.8.1.tar.gz")
+    self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.5.8.1")
+    self.__run_command("make", cwd="ngx_openresty-1.5.8.1")
+    self.__run_command("sudo make install", cwd="ngx_openresty-1.5.8.1")
+    
+    #
+    # Lapis
+    #
+    self.__run_command("sudo apt-get install luarocks", True)
+    self.__run_command("sudo luarocks install http://github.com/leafo/lapis/raw/master/lapis-dev-1.rockspec")
+
 
     #
     # Resin
@@ -257,13 +271,22 @@ class Installer:
     self.__run_command("./configure", cwd="zeromq-4.0.3")
     self.__run_command("make", cwd="zeromq-4.0.3")
     self.__run_command("sudo make install", cwd="zeromq-4.0.3")
-    self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev")
+    self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev", True)
     self.__run_command("sudo ldconfig -v")
-    self.__run_command("git clone git://github.com/zedshaw/mongrel2.git mongrel2", retry=True)
-    # for zmq4, we update the following file manually (not in the stable master branch yet)
+    self.__download("https://github.com/zedshaw/mongrel2/tarball/v1.8.1", "mongrel2.tar.gz")
+    self.__run_command("tar xvf mongrel2.tar.gz")
+    self.__run_command("mv zedshaw-mongrel2-aa2ecf8 mongrel2")
+    # for zmq4, we update the following file manually (not in v1.8.1)
     self.__download("https://raw.github.com/zedshaw/mongrel2/9b565eeea003783c47502c2d350b99c9684ce97c/src/zmq_compat.h")
     self.__run_command("mv -f zmq_compat.h mongrel2/src/")
     self.__run_command("make clean all && sudo make install", cwd="mongrel2")
+
+    #
+    # Weber
+    #
+    self.__run_command("git clone https://github.com/elixir-web/weber.git");
+    self.__run_command("make", cwd="weber");
+    self.__run_command("make test", cwd="weber");
 
     ##############################################################
     # Frameworks
@@ -272,8 +295,8 @@ class Installer:
     #
     # Grails
     #
-    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.3.zip")
-    self.__run_command("unzip -o grails-2.3.3.zip")
+    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.4.1.zip")
+    self.__run_command("unzip -o grails-2.4.1.zip")
 
     #
     # Play 2
@@ -307,8 +330,8 @@ class Installer:
     #
     # Vert.x
     #
-    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1M3.tar.gz?direct=true", "vert.x-2.1M3.tar.gz")
-    self.__run_command("tar xzf vert.x-2.1M3.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1RC3.tar.gz?direct=true", "vert.x-2.1RC3.tar.gz")
+    self.__run_command("tar xzf vert.x-2.1RC3.tar.gz")
 
     #
     # Yesod
@@ -333,6 +356,19 @@ class Installer:
     #
     self.__run_command("git clone git://github.com/idlewan/nawak.git nawak/nawak", retry=True)
 
+    #
+    # Wt
+    #
+    self.__run_command("sudo apt-get install libboost1.48-all-dev", True)
+    self.__download("http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz", filename="wt.tar.gz")
+    self.__run_command("tar xf wt.tar.gz")
+    self.__run_command("rm wt.tar.gz")
+    self.__run_command("bash -c 'mv wt-* wt'")
+    self.__run_command("mkdir build", cwd="wt")
+    self.__run_command("cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release", cwd="wt/build")
+    self.__run_command("make", cwd="wt/build")
+    self.__run_command("sudo make install", cwd="wt/build")
+
     print("\nINSTALL: Finished installing server software\n")
   ############################################################
   # End __install_server_software
@@ -349,12 +385,12 @@ class Installer:
       if three: self.__run_command(python3_bin + cmd, retry=True)
       if pypy:  self.__run_command(pypy_bin + cmd, retry=True)
 
-    self.__download("https://bitbucket.org/pypy/pypy/downloads/pypy-2.2-linux64.tar.bz2")
+    self.__download("https://bitbucket.org/pypy/pypy/downloads/pypy-2.2-linux64.tar.bz2", "pypy-2.2-linux64.tar.bz2")
     self.__run_command("tar xjf pypy-2.2-linux64.tar.bz2")
     self.__run_command('ln -sf pypy-2.2-linux64 pypy')
-    self.__download("http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz")
+    self.__download("http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz", "Python-2.7.6.tgz")
     self.__run_command("tar xzf Python-2.7.6.tgz")
-    self.__download("http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz")
+    self.__download("http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz", "Python-3.3.2.tar.xz")
     self.__run_command("tar xJf Python-3.3.2.tar.xz")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.6")
     self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.3.2")
@@ -363,7 +399,7 @@ class Installer:
     self.__run_command("make -j2", cwd="Python-3.3.2")
     self.__run_command("make install", cwd="Python-3.3.2")
 
-    self.__download("https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py")
+    self.__download("https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py", "ez_setup.py")
     self.__run_command(pypy_bin + "/pypy ez_setup.py")
     self.__run_command(python_bin + "/python ez_setup.py")
     self.__run_command(python3_bin + "/python3 ez_setup.py")
@@ -388,6 +424,8 @@ class Installer:
     easy_install('tornado==3.1', two=True, three=True, pypy=True)
     easy_install('motor==0.1.2', two=True, three=True, pypy=True)
     easy_install('pymongo==2.5.2', two=True, three=True, pypy=True)
+    easy_install('psycopg2==2.5.3', two=True, three=True, pypy=True)
+    easy_install('Momoko==1.1.3', two=True, three=True, pypy=True)
 
     # Django
     easy_install("https://www.djangoproject.com/download/1.6/tarball/", two=True, three=True, pypy=True)
@@ -397,7 +435,7 @@ class Installer:
     easy_install('flask==0.10.1', two=True, three=True, pypy=True)
     easy_install('sqlalchemy==0.8.3', two=True, three=False, pypy=True)
     # SQLAlchemy 0.9 supports C extension for Python 3
-    easy_install('https://bitbucket.org/zzzeek/sqlalchemy/downloads/SQLAlchemy-0.9.0b1.tar.gz', two=False, three=True)
+    easy_install('https://bitbucket.org/zzzeek/sqlalchemy/get/rel_0_9_0b1.tar.gz', two=False, three=True)
     easy_install('Jinja2==2.7.1', two=True, three=True, pypy=True)
     easy_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
 
@@ -408,7 +446,7 @@ class Installer:
     # Falcon
     easy_install('Cython==0.19.2', two=True, three=True, pypy=True)
     easy_install('falcon==0.1.7', two=True, three=True, pypy=True)
-
+    
   ############################################################
   # __install_error
   ############################################################
@@ -425,8 +463,8 @@ class Installer:
   ############################################################
   def __install_database_software(self):
     print("\nINSTALL: Installing database software\n")
-
-    self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="config/database_sftp_batch"), True)
+ 
+    self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="../config/database_sftp_batch"), True)
 
     remote_script = """
 
@@ -446,9 +484,13 @@ class Installer:
     sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
     sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
 
-    yes | sudo apt-get install mysql-server
+    yes | sudo apt-get install mysql-server-5.6
 
     sudo stop mysql
+    # disable checking of disk size
+    sudo cp mysql /etc/init.d/mysql
+    sudo chmod +x /etc/init.d/mysql
+    sudo cp mysql.conf /etc/init/mysql.conf
     # use the my.cnf file to overwrite /etc/mysql/my.cnf
     sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
     sudo mv my.cnf /etc/mysql/my.cnf
@@ -470,10 +512,10 @@ class Installer:
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
 
     sudo -u postgres -H /etc/init.d/postgresql stop
-    sudo mv postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
-    sudo mv pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
+    sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+    sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
-    sudo cp -R -p /var/lib/postgresql/9.1/main /ssd/postgresql
+    sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
     sudo -u postgres -H /etc/init.d/postgresql start
     sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
@@ -518,11 +560,9 @@ class Installer:
     # Prerequisites
     ##############################
     yes | sudo apt-get update
-    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
+    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev 
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
-    sudo mkdir -p /ssd
-    sudo mkdir -p /ssd/log
 
     ##############################
     # wrk
@@ -533,13 +573,25 @@ class Installer:
     make
     sudo cp wrk /usr/local/bin
     cd ~
+    
+    #############################
+    # pipeline.lua
+    #############################
+cat << EOF | tee pipeline.lua
+init = function(args)
+  wrk.init(args)
+  local r = {}
+  local depth = tonumber(args[1]) or 1
+  for i=1,depth do
+    r[i] = wrk.format()
+  end
+  req = table.concat(r)
+end
 
-    git clone https://github.com/wg/wrk.git wrk-pipeline
-    cd wrk-pipeline
-    git checkout pipeline
-    make
-    sudo cp wrk /usr/local/bin/wrk-pipeline
-    cd ~
+request = function()
+  return req
+end
+EOF
     """
     
     print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
@@ -569,6 +621,9 @@ class Installer:
       max_attempts = 1
     attempt = 1
     delay = 0
+    if send_yes:
+      command = "yes yes | " + command
+        
 
     print("\nINSTALL: %s (cwd=%s)" % (command, cwd))
 
@@ -576,14 +631,7 @@ class Installer:
       error_message = ""
       try:
         # Execute command.
-        if send_yes:
-          process = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, cwd=cwd)
-          process.communicate("yes")
-          returncode = process.returncode
-          if returncode:
-            raise subprocess.CalledProcessError(returncode, command)
-        else:
-          subprocess.check_call(command, shell=True, cwd=cwd)
+        subprocess.check_call(command, shell=True, cwd=cwd)
         break  # Exit loop if successful.
       except:
         exceptionType, exceptionValue, exceptionTraceBack = sys.exc_info()

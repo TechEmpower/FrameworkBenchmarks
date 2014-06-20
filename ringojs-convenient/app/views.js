@@ -23,7 +23,6 @@ app.get('/db/:queries?', function(request, queries) {
    for (var i = 0; i < queries; i++) {
       randId = ((Math.random() * 10000) | 0) + 1;
       world = models.store.query('select World.* from World where World.id = :id', {id: randId})[0];
-      //worlds.push(world.toJSON());
       worlds.push({"id": world._id, "randomNumber" : world.randomNumber});
    }
    if (queries == 1) {
@@ -43,13 +42,7 @@ app.get('/fortune', function() {
 });
 
 app.get('/plaintext', function() {
-   // @@ not available in ringojs 0.9
-   // return response.text('Hello World');
-   return {
-     status: 200,
-     headers: {"Content-Type": 'text/plain'},
-     body: ['Hello, World!']
-   };
+   return response.text('Hello, World!');
 });
 
 app.get('/updates/:queries?', function(request, queries) {
