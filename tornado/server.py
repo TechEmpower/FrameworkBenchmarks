@@ -4,7 +4,11 @@ import sys
 import json
 from random import randint
 
-import momoko
+try:
+    import momoko
+except ImportError:
+    momoko = None
+
 import motor
 import tornado.ioloop
 import tornado.web
