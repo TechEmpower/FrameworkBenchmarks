@@ -27,4 +27,4 @@ export TFB_CLIENT_USER='tfb'
 export TFB_CLIENT_IDENTITY_FILE='/home/tfb/.ssh/id_rsa'
 export TFB_DATABASE_HOST='localhost'
 
-[ -e ~/.rvm/scripts/'rvm' ] && . ~/.rvm/scripts/'rvm'
+[ -e ~/.rvm ] && . ~/.rvm/scripts/'rvm'
