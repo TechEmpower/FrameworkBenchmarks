@@ -39,19 +39,14 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper">
-      <HintPath>..\lib\Dapper.1.12.1\lib\net40\Dapper.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MySql.Data, Version=6.6.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+    <Reference Include="Nancy, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\MySql.Data.6.6.5\lib\net40\MySql.Data.dll</HintPath>
+      <HintPath>..\lib\Nancy.0.23.0\lib\net40\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy">
-      <HintPath>..\lib\Nancy.0.17.1\lib\net40\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Aspnet">
-      <HintPath>..\lib\Nancy.Hosting.Aspnet.0.17.1\lib\net40\Nancy.Hosting.Aspnet.dll</HintPath>
+    <Reference Include="Nancy.Hosting.Aspnet, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Nancy.Hosting.Aspnet.0.23.0\lib\net40\Nancy.Hosting.Aspnet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -73,12 +68,10 @@
     <None Include="Properties\PublishProfiles\IIS.pubxml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbModule.cs" />
     <Content Include="Global.asax" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="JsonModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -89,6 +82,12 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NancyModules\NancyModules.csproj">
+      <Project>{175c0589-e4cd-479e-ba24-bba54ca17dc8}</Project>
+      <Name>NancyModules</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

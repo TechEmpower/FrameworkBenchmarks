@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyBenchmark", "NancyBenchmark.csproj", "{80CF41AB-455B-4EB9-BFCC-3F8C4E1D8354}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C24E4BD-94BD-4AFD-B912-00A5FF825E6B}"
@@ -9,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibeventHost", "LibeventHost\LibeventHost.csproj", "{64A4525D-688B-4286-9126-78E0D06CFD83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyModules", "..\NancyModules\NancyModules.csproj", "{175C0589-E4CD-479E-BA24-BBA54CA17DC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +28,10 @@ Global
 		{64A4525D-688B-4286-9126-78E0D06CFD83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64A4525D-688B-4286-9126-78E0D06CFD83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64A4525D-688B-4286-9126-78E0D06CFD83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{175C0589-E4CD-479E-BA24-BBA54CA17DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{175C0589-E4CD-479E-BA24-BBA54CA17DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{175C0589-E4CD-479E-BA24-BBA54CA17DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{175C0589-E4CD-479E-BA24-BBA54CA17DC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
