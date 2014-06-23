@@ -295,8 +295,8 @@ class Installer:
     #
     # Grails
     #
-    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.3.6.zip")
-    self.__run_command("unzip -o grails-2.3.6.zip")
+    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.4.1.zip")
+    self.__run_command("unzip -o grails-2.4.1.zip")
 
     #
     # Play 2
@@ -359,7 +359,7 @@ class Installer:
     #
     # Wt
     #
-    self.__run_command("sudo apt-get install libboost1.48-all-dev", True)
+    self.__run_command("sudo apt-get install libboost1.54-all-dev", True)
     self.__download("http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz", filename="wt.tar.gz")
     self.__run_command("tar xf wt.tar.gz")
     self.__run_command("rm wt.tar.gz")

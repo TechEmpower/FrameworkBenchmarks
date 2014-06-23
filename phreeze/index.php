@@ -23,12 +23,15 @@ $route_map = array(
 		'GET:' => array('route' => 'Test.JSON'),
 		'GET:json' => array('route' => 'Test.JSON'),
 		'GET:db' => array('route' => 'Test.DB'),
+		'GET:query' => array('route' => 'Test.Query'),
 		'GET:fortunes' => array('route' => 'Test.Fortunes'),
 		'GET:updates' => array('route' => 'Test.Updates'),
 		'GET:plaintext' => array('route' => 'Test.PlainText')
 );
 
 $router = new SimpleRouter('/','Test.JSON',$route_map);
+
+Dispatcher::$FAST_LOOKUP = true;
 
 Dispatcher::Dispatch(
 	$phreezer,
