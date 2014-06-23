@@ -115,8 +115,8 @@ class Installer:
     #
     # go
     #
-    self.__download("http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz");
-    self.__run_command("tar xzf go1.2.linux-amd64.tar.gz")
+    self.__download("https://storage.googleapis.com/golang/go1.3.linux-amd64.tar.gz");
+    self.__run_command("tar xzf go1.3.linux-amd64.tar.gz")
 
     #
     # Perl
