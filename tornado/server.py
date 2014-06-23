@@ -85,5 +85,5 @@ if __name__ == "__main__":
     server = tornado.httpserver.HTTPServer(application)
     server.bind(options.port)
     server.start(0)
-    db = motor.MotorClient(options.mongo).open_sync().hello_world
+    db = motor.MotorClient(options.mongo).hello_world
     tornado.ioloop.IOLoop.instance().start()
