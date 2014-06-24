@@ -121,12 +121,11 @@ class Installer:
     #
     # Perl
     #
-    self.__download("http://downloads.activestate.com/ActivePerl/releases/5.16.3.1603/ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
-    self.__run_command("tar xzf ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
-    self.__run_command("sudo ./install.sh --license-accepted --prefix /opt/ActivePerl-5.16 --no-install-html", cwd="ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746", send_yes=True, retry=True)
+    self.__download("https://raw.githubusercontent.com/tokuhirom/Perl-Build/master/perl-build", "perl-build.pl")
+    self.__run_command("perl perl-build.pl -DDEBUGGING=-g 5.18.2 ~/FrameworkBenchmarks/installs/perl-5.18", retry=True)
     self.__download("http://cpanmin.us", "cpanminus.pl")
-    self.__run_command("perl cpanminus.pl --sudo App::cpanminus", retry=True)
-    self.__run_command("cpanm -f -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros EV IO::Socket::IP IO::Socket::SSL", retry=True)
+    self.__run_command("~/FrameworkBenchmarks/installs/perl-5.18/bin/perl cpanminus.pl --notest --no-man-page App::cpanminus", retry=True)
+    self.__run_command("~/FrameworkBenchmarks/installs/perl-5.18/bin/cpanm -f --notest --no-man-page DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros EV IO::Socket::IP IO::Socket::SSL Memoize", retry=True)
 
     #
     # php
