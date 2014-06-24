@@ -5,3 +5,4 @@
 ./netty/src/main/java/hello/HelloServerInitializer.java
 ./netty/src/main/java/hello/HelloWebServer.java
 ./netty/src/main/java/hello/HelloServerHandler.java
+./netty/src/main/java/hello/Message.java
