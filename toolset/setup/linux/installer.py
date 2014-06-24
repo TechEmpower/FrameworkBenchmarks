@@ -285,8 +285,8 @@ class Installer:
     # Weber
     #
     self.__run_command("git clone https://github.com/elixir-web/weber.git");
-    self.__run_command("make", cwd="weber");
-    self.__run_command("make test", cwd="weber");
+    self.__run_command("bash -c 'make'", cwd="weber");
+    self.__run_command("bash -c 'make test'", cwd="weber");
 
     ##############################################################
     # Frameworks
