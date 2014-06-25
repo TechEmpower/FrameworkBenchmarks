@@ -43,6 +43,12 @@ class SiteController extends Controller
         return $this->resJson($arr);
     }
 
+    private static function cmp($a, $b) {
+
+	return ($a["message"] < $b["message"]) ? -1 : 1;
+
+    }
+
     public function actionFortunes() {
         // Test Data
 //        $arr = [
@@ -68,7 +74,9 @@ class SiteController extends Controller
 
         $arr = Yii::$app->db->createCommand('select id, message from Fortune')->queryAll();
         $arr[] = ['id'=>0,'message'=>'Additional fortune added at request time.'];
-        asort($arr);
+
+	usort($arr, array($this, 'cmp'));	       
+
         header("Content-Type: text/html; charset=utf-8");
         echo <<<EOM
             <!DOCTYPE html>
