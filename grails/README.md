@@ -4,11 +4,7 @@ This is the Grails portion of a [benchmarking test suite](../) comparing a varie
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Grails 2.3.3](http://grails.org/)
-* [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Resin 4.0.34](http://www.caucho.com/)
-* [MySQL 5.5.29](https://dev.mysql.com/)
-
+* [Grails 2.4.1](http://grails.org/)
 
 ## Test URLs
 

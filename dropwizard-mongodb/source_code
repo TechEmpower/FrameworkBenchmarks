@@ -1,0 +1,11 @@
+./dropwizard-mongodb/src/main/java/com/example/helloworld/
+./dropwizard-mongodb/src/main/java/com/example/helloworld/db
+./dropwizard-mongodb/src/main/java/com/example/helloworld/db/MongoHealthCheck.java
+./dropwizard-mongodb/src/main/java/com/example/helloworld/db/MongoManaged.java
+./dropwizard-mongodb/src/main/java/com/example/helloworld/HelloWorldService.java
+./dropwizard-mongodb/src/main/java/com/example/helloworld/resources
+./dropwizard-mongodb/src/main/java/com/example/helloworld/resources/WorldResource.java
+./dropwizard-mongodb/src/main/java/com/example/helloworld/resources/JsonResource.java
+./dropwizard-mongodb/src/main/java/com/example/helloworld/core
+./dropwizard-mongodb/src/main/java/com/example/helloworld/core/World.java
+./dropwizard-mongodb/src/main/java/com/example/helloworld/HelloWorldConfiguration.java
