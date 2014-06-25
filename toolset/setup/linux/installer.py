@@ -153,7 +153,8 @@ class Installer:
     #
     # Haskell
     #
-    self.__run_command("sudo apt-get install ghc cabal-install", True)
+    self.__run_command("sudo apt-get -t experimental install ghc", True)
+    self.__run_command("sudo apt-get install cabal-install", True)
 
     #
     # RingoJs
