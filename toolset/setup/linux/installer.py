@@ -286,8 +286,9 @@ class Installer:
     self.__run_command("git clone https://github.com/elixir-web/weber.git");
     # To get the two make commands working, we need to hard code the path for elixir's "mix" and run it in bash
     self.__run_command("sed -i 's:$(MIX):/home/tfb/FrameworkBenchmarks/installs/elixir-0.13.3/bin/mix:' Makefile", cwd="weber")
-    self.__run_command("bash -i -c 'make'", cwd="weber");
-    self.__run_command("bash -i -c 'make test'", cwd="weber");
+    # Because of the way that we are running it, we can't just "send a yes" like normal
+    self.__run_command("bash -i -c 'yes | make'", cwd="weber");
+    self.__run_command("bash -i -c 'yes | make test'", cwd="weber");
 
     ##############################################################
     # Frameworks
