@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends play2 java
+fw_depends java sbt
