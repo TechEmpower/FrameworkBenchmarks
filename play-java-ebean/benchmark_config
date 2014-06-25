@@ -3,11 +3,12 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
       "port": 9000,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "None",
+      "database": "MySQL",
       "framework": "play2",
       "language": "Java",
       "orm": "Full",
@@ -15,7 +16,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play-java",
+      "display_name": "play-java-ebean",
       "notes": "",
       "versus": "netty"
     }
