@@ -1,0 +1,26 @@
+{
+  "framework": "wildfly-ee7",
+  "tests": [{
+    "mysql" : {
+      "setup_file": "setup",
+      "db_url": "/wildfly-ee7/rest/db",
+      "query_url": "/wildfly-ee7/rest/queries?queries=",
+      "fortune_url": "/wildfly-ee7/fortunes.xhtml",
+      "update_url": "/wildfly-ee7/rest/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "EE7",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "Wildfly",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "wildfly-ee7",
+      "notes": "",
+      "versus": ""
+    }   
+  }]
+}
