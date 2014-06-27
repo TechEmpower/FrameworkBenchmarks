@@ -76,7 +76,7 @@ class Installer:
     self.__download("http://binaries.erlang-solutions.com/debian/erlang_solutions.asc")
     self.__run_command("sudo apt-key add erlang_solutions.asc")
     self.__run_command("sudo apt-get update")
-    self.__run_command("sudo apt-get install esl-erlang", True)
+    self.__run_command("sudo apt-get -y install esl-erlang")
 
     #
     # nodejs
@@ -87,8 +87,8 @@ class Installer:
     #
     # Java
     #
-    self.__run_command("sudo apt-get install openjdk-7-jdk", True)
-    self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
+    self.__run_command("sudo apt-get -y install openjdk-7-jdk")
+    self.__run_command("sudo apt-get -y remove --purge openjdk-6-jre openjdk-6-jre-headless")
 
     #
     # Elixir
@@ -149,13 +149,13 @@ class Installer:
     #
     # Haskell
     #
-    self.__run_command("sudo apt-get install ghc cabal-install", True)
+    self.__run_command("sudo apt-get -y install ghc cabal-install")
 
     #
     # RingoJs
     #
     self.__download("http://www.ringojs.org/downloads/ringojs_0.10-1_all.deb")
-    self.__run_command("sudo apt-get install jsvc", True)
+    self.__run_command("sudo apt-get -y install jsvc")
     self.__run_command("sudo dpkg -i ringojs_0.10-1_all.deb", True)
     self.__run_command("rm ringojs_0.10-1_all.deb")
 
@@ -211,8 +211,8 @@ class Installer:
     #
     self.__run_command("wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -")
     self.__run_command("echo deb http://dl.hhvm.com/ubuntu trusty main | sudo tee /etc/apt/sources.list.d/hhvm.list")
-    self.__run_command("sudo apt-get update")
-    self.__run_command("sudo apt-get install hhvm", True)
+    self.__run_command("sudo apt-get -y update")
+    self.__run_command("sudo apt-get -y install hhvm")
 
     #######################################
     # Webservers
@@ -239,7 +239,7 @@ class Installer:
     #
     # Lapis
     #
-    self.__run_command("sudo apt-get install luarocks", True)
+    self.__run_command("sudo apt-get -y install luarocks")
     self.__run_command("sudo luarocks install http://github.com/leafo/lapis/raw/master/lapis-dev-1.rockspec")
 
 
@@ -266,7 +266,7 @@ class Installer:
     self.__run_command("./configure", cwd="zeromq-4.0.3")
     self.__run_command("make", cwd="zeromq-4.0.3")
     self.__run_command("sudo make install", cwd="zeromq-4.0.3")
-    self.__run_command("sudo apt-get install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev", True)
+    self.__run_command("sudo apt-get -y install sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev")
     self.__run_command("sudo ldconfig -v")
     self.__download("https://github.com/zedshaw/mongrel2/tarball/v1.8.1", "mongrel2.tar.gz")
     self.__run_command("tar xvf mongrel2.tar.gz")
@@ -315,7 +315,7 @@ class Installer:
     #
     # TreeFrog Framework
     #
-    self.__run_command("sudo apt-get install qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++", True)
+    self.__run_command("sudo apt-get -y install qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++")
     self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.5.tar.gz")
     self.__run_command("tar xzf treefrog-1.7.5.tar.gz")
     self.__run_command("rm treefrog-1.7.5.tar.gz")
@@ -357,7 +357,7 @@ class Installer:
     #
     # Wt
     #
-    self.__run_command("sudo apt-get install libboost1.54-all-dev", True)
+    self.__run_command("sudo apt-get -y install libboost1.54-all-dev")
     self.__download("http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz", filename="wt.tar.gz")
     self.__run_command("tar xf wt.tar.gz")
     self.__run_command("rm wt.tar.gz")
@@ -433,8 +433,8 @@ class Installer:
     ##############################
     # Prerequisites
     ##############################
-    yes | sudo apt-get update
-    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
+    sudo apt-get -y update
+    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
@@ -446,7 +446,7 @@ class Installer:
     sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
     sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
 
-    yes | sudo apt-get install mysql-server-5.6
+    sudo apt-get -y install mysql-server-5.6
 
     sudo stop mysql
     # disable checking of disk size
@@ -486,9 +486,9 @@ class Installer:
     ##############################
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
     sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
-    sudo apt-get update
-	yes | sudo apt-get remove mongodb-clients
-    yes | sudo apt-get install mongodb-10gen
+    sudo apt-get -y update
+    sudo apt-get -y remove mongodb-clients
+    sudo apt-get -y install mongodb-10gen
 
     sudo stop mongodb
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
@@ -521,8 +521,8 @@ class Installer:
     ##############################
     # Prerequisites
     ##############################
-    yes | sudo apt-get update
-    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev 
+    sudo apt-get -y update
+    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev 
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
 
