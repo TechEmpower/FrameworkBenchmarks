@@ -27,29 +27,29 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " {wrk} {headers} -d 5 -c 8 -t 8 \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d 5 -c 8 -t 8 "http://{server_host}:{port}{url}"
+    {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} -d {duration} -c {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d {duration} -c {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
+      echo " {wrk} {headers} -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
-      {wrk} {headers} -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      {wrk} {headers} -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
       sleep 2
     done
   """
@@ -59,29 +59,29 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " wrk {headers} -d 5 -c 8 -t 8 \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d 5 -c 8 -t 8 "http://{server_host}:{port}{url}2"
+    wrk {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}2"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
+    wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
     sleep 5
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
+      echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
-      wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
       sleep 2
     done
   """
