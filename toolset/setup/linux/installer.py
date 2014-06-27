@@ -522,7 +522,7 @@ class Installer:
     # Prerequisites
     ##############################
     sudo apt-get -y update
-    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev 
+    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
 
