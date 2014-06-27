@@ -1,3 +1,5 @@
+# Start Benchmark profile
+
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
 export RESIN_HOME=~/FrameworkBenchmarks/installs/resin-4.0.36
 export GRAILS_HOME=~/FrameworkBenchmarks/installs/grails-2.4.1
@@ -28,3 +30,6 @@ export TFB_CLIENT_IDENTITY_FILE='/home/tfb/.ssh/id_rsa'
 export TFB_DATABASE_HOST='localhost'
 
 [ -e ~/.rvm ] && . ~/.rvm/scripts/'rvm'
+export LC_ALL='en_US.UTF-8'
+export NUMCPUS=`grep -c '^processor' /proc/cpuinfo`
+export MAKEFLAGS="-j $NUMCPUS -l $NUMCPUS"

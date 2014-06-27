@@ -8,6 +8,7 @@ echo "Host:" `hostname`
 echo "Step 1: Install software on Linux server"
 
 export DEBIAN_FRONTEND=noninteractive
+export LC_ALL="en_US.UTF-8"
 
 echo ""
 source ~/benchmark-configuration.sh
@@ -27,9 +28,9 @@ echo "BENCHMARK_BRANCH: $BENCHMARK_BRANCH"
 
 echo ""
 echo "Configuring firewall"
-sudo iptables -A INPUT -j ACCEPT -m state --state ESTABLISHED,RELATED
-sudo iptables -A INPUT -j ACCEPT -m state --state NEW -p tcp --source 10.0.0.0/11
-sudo iptables -A OUTPUT -j ACCEPT -m state --state ESTABLISHED,RELATED
+sudo iptables -C INPUT -j ACCEPT -m state --state ESTABLISHED,RELATED || sudo iptables -A INPUT -j ACCEPT -m state --state ESTABLISHED,RELATED
+sudo iptables -C INPUT -j ACCEPT -m state --state NEW -p tcp --source 10.0.0.0/11 || sudo iptables -A INPUT -j ACCEPT -m state --state NEW -p tcp --source 10.0.0.0/11
+sudo iptables -C OUTPUT -j ACCEPT -m state --state ESTABLISHED,RELATED || sudo iptables -A OUTPUT -j ACCEPT -m state --state ESTABLISHED,RELATED
 sudo iptables -L
 
 echo ""
@@ -45,9 +46,17 @@ echo "Installing git"
 sudo apt-get install git -qq
 
 echo ""
-echo "Clone FrameworkBenchmarks repository"
-git clone $BENCHMARK_REPOSITORY "$BENCHMARK_HOME" || { echo "Error cloning repository at $BENCHMARK_REPOSITORY."; exit 1; }
-cd "$BENCHMARK_HOME"
+
+if [ ! -d "$BENCHMARK_HOME" ]; then
+	echo "Clone FrameworkBenchmarks repository"
+	git clone $BENCHMARK_REPOSITORY "$BENCHMARK_HOME" || { echo "Error cloning repository at $BENCHMARK_REPOSITORY."; exit 1; }
+	cd "$BENCHMARK_HOME"
+else
+	echo "Updating FrameworkBenchmarks repository"
+	cd "$BENCHMARK_HOME"
+	git pull || { echo "Error updating repository at $BENCHMARK_REPOSITORY."; exit 1; }
+fi
+
 git checkout $BENCHMARK_BRANCH || { echo "Error checking out $BENCHMARK_BRANCH branch."; exit 1; }
 git branch
 git log -1 --pretty=format:"%H %s"
@@ -55,7 +64,7 @@ echo ""
 
 echo ""
 echo "Installing benchmark software"
-toolset/run-tests.py -s "$BENCHMARK_SERVER_IP" -c "$BENCHMARK_CLIENT_IP" -i "$BENCHMARK_KEY_PATH" --install-software --install-error-action abort --list-tests || { echo "Error installing software."; exit 1; }
+toolset/run-tests.py -s "$BENCHMARK_SERVER_IP" -c "$BENCHMARK_CLIENT_IP" -i "$BENCHMARK_KEY_PATH" -u "$BENCHMARK_USER" --install-software --install-error-action abort --list-tests || { echo "Error installing software."; exit 1; }
 
 echo ""
 echo "End of step 1"

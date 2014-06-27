@@ -62,7 +62,7 @@ function retry {
 
 # Detect CYGWIN.
 function iscygwin {
-    if [ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ]; then
+    if [ $(uname -s | grep "CYGWIN") ]; then
         true
     else
         false
