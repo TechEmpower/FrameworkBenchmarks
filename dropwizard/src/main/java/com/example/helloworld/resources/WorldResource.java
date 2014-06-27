@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import com.example.helloworld.core.World;
 import com.example.helloworld.db.WorldDAO;
 import com.google.common.base.Optional;
-import com.yammer.dropwizard.hibernate.UnitOfWork;
+import io.dropwizard.hibernate.UnitOfWork;
 
 @Path("/db")
 @Produces(MediaType.APPLICATION_JSON)
