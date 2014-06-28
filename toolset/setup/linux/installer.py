@@ -111,6 +111,10 @@ class Installer:
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.8")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.8 do gem install bundler")
+    self.__run_command("sudo apt-add-repository -y ppa:brightbox/ruby-ng", True)
+    self.__run_command("sudo apt-get update", True)
+    self.__run_command("sudo apt-get install -y ruby2.1 ruby2.1-dev", True)
+    self.__run_command("sudo gem install bundler", True)
 
     #
     # go

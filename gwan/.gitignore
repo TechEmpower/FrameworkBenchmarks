@@ -1,0 +1,5 @@
+
+_logs/*
+*.pid
+trace
+*~
