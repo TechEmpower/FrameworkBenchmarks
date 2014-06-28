@@ -1,0 +1,5 @@
+CREATE TABLE  IF NOT EXISTS sessions (
+     id VARCHAR PRIMARY KEY NOT NULL UNIQUE,
+     last_activity INTEGER NOT NULL,
+     data TEXT NOT NULL
+);
