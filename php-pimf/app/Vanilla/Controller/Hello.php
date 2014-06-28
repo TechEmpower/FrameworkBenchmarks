@@ -18,7 +18,7 @@ class Hello extends Base
    */
   public function jsonAction()
   {
-    $this->response->asJSON()->send(array("message" => "Hello World!"));
+    $this->response->asJSON()->send(array("message" => "Hello, World!"));
   }
 
   /**
@@ -47,6 +47,11 @@ class Hello extends Base
     $this->response->asJSON()->send($worlds);
   }
 
+  private static function my_cmp($a, $b)
+  {
+    return  strcmp($a["message"], $b["message"]);
+  }
+
   /**
    * Test 4: Fortunes
    */
@@ -55,11 +60,11 @@ class Hello extends Base
     $fortunes = Registry::get('em')->fortune->getAll();
 
     $fortunes[] = array(
-      'id' => count($fortunes) + 1,
+      'id' => 0,
       'message' => 'Additional fortune added at request time.'
     );
 
-    asort($fortunes);
+    usort($fortunes, array($this, "my_cmp"));
 
     $view = new View('table.phtml', array('fortunes' => $fortunes));
 
@@ -99,6 +104,6 @@ class Hello extends Base
    */
   public function plaintextAction()
   {
-    $this->response->asTEXT()->send('Hello World!');
+    $this->response->asTEXT()->send('Hello, World!');
   }
 }

@@ -1,5 +1,5 @@
 {
     "require": {
-        "gjerokrsteski/pimf-framework": "1.8.*"
+        "gjerokrsteski/pimf": "dev-master"
     }
 }
