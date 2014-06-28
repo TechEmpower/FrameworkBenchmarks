@@ -32,12 +32,12 @@ class Installer:
     #######################################
     # Prerequisites
     #######################################
-    self.__run_command("sudo apt-get update", True)
-    self.__run_command("sudo apt-get upgrade", True)
-    self.__run_command("sudo apt-get install -y build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev mercurial mlton", True)
-    self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test", True)
-    self.__run_command("sudo apt-get update", True)
-    self.__run_command("sudo apt-get install -y gcc-4.8 g++-4.8", True)
+    self.__run_command("sudo apt-get -y update")
+    self.__run_command("sudo apt-get -y upgrade")
+    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev mercurial mlton", True)
+    self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y")
+    self.__run_command("sudo apt-get -y update")
+    self.__run_command("sudo apt-get install -y gcc-4.8 g++-4.8")
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
@@ -80,7 +80,7 @@ class Installer:
     #
     # Erlang
     #
-    if not self.__path_exists("/usr/bin/erl2221231"):
+    if not self.__path_exists("/usr/bin/erl"):
         self.__run_command("sudo cp ../config/erlang.list /etc/apt/sources.list.d/erlang.list")
         self.__download("http://binaries.erlang-solutions.com/debian/erlang_solutions.asc")
         self.__run_command("sudo apt-key add erlang_solutions.asc")
@@ -97,17 +97,18 @@ class Installer:
     #
     # Java
     #
-    self.__run_command("sudo apt-get install -y openjdk-7-jdk", True)
+    self.__run_command("sudo apt-get install -y openjdk-7-jdk")
     self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
 
     #
     # Elixir
     #
-    #if not self.__path_exists("v0.13.3.tar.gz"):
-    #  self.__run_command("wget https://github.com/elixir-lang/elixir/archive/v0.13.3.tar.gz");
-    #self.__run_command("sudo tar -zxf v0.13.3.tar.gz");
+    if not self.__path_exists("v0.13.3.tar.gz"):
+      self.__run_command("wget https://github.com/elixir-lang/elixir/archive/v0.13.3.tar.gz");
+    self.__run_command("sudo tar -zxf v0.13.3.tar.gz");
     #self.__run_command("sudo make clean", cwd="elixir-0.13.3");
-    #self.__run_command("sudo make test", cwd="elixir-0.13.3");
+    self.__run_command("sudo make test", cwd="elixir-0.13.3");
+    self.__run_command("sudo make clean", cwd="elixir-0.13.3");
 
     #
     # Ruby/JRuby
@@ -174,14 +175,14 @@ class Installer:
     # Haskell
     #
     if not self.__path_exists("/usr/bin/haskell-compiler"):       ##not sure if right
-      self.__run_command("sudo apt-get install -y ghc cabal-install", True)
+      self.__run_command("sudo apt-get install -y ghc cabal-install")
 
     #
     # RingoJs
     #
     if not self.__path_exists("/usr/share/ringojs"):
         self.__download("http://www.ringojs.org/downloads/ringojs_0.10-1_all.deb")
-        self.__run_command("sudo apt-get install -y jsvc", True)
+        self.__run_command("sudo apt-get install -y jsvc")
         self.__run_command("sudo dpkg -i ringojs_0.10-1_all.deb", True)
         self.__run_command("rm ringojs_0.10-1_all.deb")
 
@@ -360,7 +361,7 @@ class Installer:
     # TreeFrog Framework
     #
     if not self.__path_exists("/usr/bin/treefrog") or not self.__path_exists("/usr/bin/tspawn"):
-        self.__run_command("sudo apt-get install -y qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++", True)
+        self.__run_command("sudo apt-get install -y qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++")
         self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.5.tar.gz")
         self.__run_command("tar xzf treefrog-1.7.5.tar.gz")
         self.__run_command("rm treefrog-1.7.5.tar.gz")
@@ -409,7 +410,7 @@ class Installer:
     # Wt
     #
     if not self.__path_exists("nawak"):
-      self.__run_command("sudo apt-get install libboost1.54-all-dev", True)
+      self.__run_command("sudo apt-get install libboost1.54-all-dev")
       self.__download("http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz", filename="wt.tar.gz")
       self.__run_command("tar xf wt.tar.gz")
       self.__run_command("rm wt.tar.gz")
