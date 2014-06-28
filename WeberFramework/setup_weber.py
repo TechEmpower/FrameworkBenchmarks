@@ -4,7 +4,7 @@ import subprocess
 def start(args, logfile, errfile):
     try:
         subprocess.check_call("mix deps.get", cwd="WeberFramework", shell=True, stderr=errfile, stdout=logfile)
-        subprocess.check_call("mix compile --all --force", cwd="WeberFramework", shell=True, stderr=errfile, stdout=logfile)
+        subprocess.check_call("yes | mix compile --all --force", cwd="WeberFramework", shell=True, stderr=errfile, stdout=logfile)
         subprocess.check_call("./start.sh", cwd="WeberFramework", shell=True, stderr=errfile, stdout=logfile)
         return 0
     except subprocess.CalledProcessError:

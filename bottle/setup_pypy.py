@@ -15,7 +15,6 @@ def start(args, logfile, errfile):
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
         "app:app",
-        "-k", "tornado",
         "-b", "0.0.0.0:8080",
         '-w', str(NCPU*3),
         "--log-level=critical"],
