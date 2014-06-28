@@ -103,13 +103,13 @@ class Installer:
     #
     # Elixir
     #
-    if not self.__path_exists("v0.13.3.tar.gz"):
-      self.__run_command("wget https://github.com/elixir-lang/elixir/archive/v0.13.3.tar.gz");
-    self.__run_command("sudo tar -zxf v0.13.3.tar.gz");
+		## Should work if you run make clean test manually
+    #if not self.__path_exists("v0.13.3.tar.gz"):
+    #  self.__run_command("wget https://github.com/elixir-lang/elixir/archive/v0.13.3.tar.gz");
+    #self.__run_command("sudo tar -zxf v0.13.3.tar.gz");
     #self.__run_command("sudo make clean", cwd="elixir-0.13.3");
-    self.__run_command("sudo make test", cwd="elixir-0.13.3");
-    self.__run_command("sudo make clean", cwd="elixir-0.13.3");
-
+    #self.__run_command("sudo make test", cwd="elixir-0.13.3");
+			
     #
     # Ruby/JRuby
     #
@@ -322,6 +322,7 @@ class Installer:
     #
     # Weber
     #
+	
     #self.__run_command("git clone https://github.com/elixir-web/weber.git");
     # To get the two make commands working, we need to hard code the path for elixir's "mix"
     #self.__run_command("sed -i 's:$(MIX):/home/tfb/FrameworkBenchmarks/installs/elixir-0.13.3/bin/mix:' Makefile", cwd="weber")
