@@ -169,7 +169,7 @@ class Installer:
     #
     self.__download("http://download.mono-project.com/sources/mono/mono-3.2.8.tar.bz2", "mono-3.2.8.tar.bz2")
     self.__run_command("tar xf mono-3.2.8.tar.bz2")
-    self.__run_command("./configure --disable-nls --without-profile2 --prefix=/usr/local", cwd="mono-3.2.8")
+    self.__run_command("./configure --disable-nls --prefix=/usr/local", cwd="mono-3.2.8")
     self.__run_command("make get-monolite-latest", cwd="mono-3.2.8")
     self.__run_command("make -j4 EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe", cwd="mono-3.2.8")
     self.__run_command("sudo make install", cwd="mono-3.2.8")
