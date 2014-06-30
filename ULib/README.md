@@ -1,6 +1,6 @@
 #ULib Benchmarking Test
 
-This is the ULib portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the ULib portion of a [benchmarking test suite](https://github.com/TechEmpower/FrameworkBenchmarks) comparing a variety of web development platforms.
 
 ### JSON Encoding Test
 

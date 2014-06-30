@@ -13,20 +13,13 @@ home = expanduser("~")
 ##############
 def start(args, logfile, errfile):
 
-  # 1. Download ULib
-  # 2. Compile applicaton
-
   script = """
-  ############################################################################
-  # Prerequisites (mysql_config)
-  ############################################################################
-  (yes | sudo apt-get install libmariadbclient-dev libssl-dev) >/dev/null 2>&1
-  ############################################################################
-  # ULib
-  ###############################################
   if [ ! -d ~/FrameworkBenchmarks/ULib/www ]; then
-    sudo git clone https://github.com/stefanocasazza/ULib.git
-    cd ULib
+    # 1. Download ULib
+    sudo wget https://github.com/stefanocasazza/ULib/archive/master.zip 
+    # 2. Compile application (userver_tcp)
+    sudo unzip master.zip
+    cd ULib-master
     sudo LIBS="-lssl -lcrypto -lz" ./configure --disable-static --disable-log --without-libz --without-libuuid --without-magic --without-ssl --without-pcre --without-expat --with-mysql --enable-static-orm-driver=mysql --enable-static-server-plugin=http >/dev/null 2>&1
     sudo make install >/dev/null 2>&1
     cd src/ulib/net/server/plugin/usp
