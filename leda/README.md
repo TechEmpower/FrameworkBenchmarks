@@ -3,12 +3,12 @@
 
 ### Deployment
 
-Leda framework has to be built  and installed. 
+[Leda](https://github.com/sergeyzavadski/leda) framework has to be built  and installed. 
         
         git clone https://github.com/sergeyzavadski/leda.git
         ./configure
         make
-        sudo make install
+        sudo make install       
 
     
 ### JSON Encoding Test
@@ -19,7 +19,7 @@ Leda framework has to be built  and installed.
 ## Test URLs
 ### JSON Encoding 
 
-http://localhost:8080/
+http://localhost:8080/json
 
 
 
