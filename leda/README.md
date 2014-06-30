@@ -23,6 +23,6 @@ http://localhost:8080/json
 
 
 
-### Plaintext URL
+### Plaintext 
 
 http://localhost:8080/plaintext
