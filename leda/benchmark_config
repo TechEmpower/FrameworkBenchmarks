@@ -1,0 +1,24 @@
+{
+  "framework": "lapis",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/"json,
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "leda",
+      "language": "moonscript",
+      "orm": "Raw",
+      "platform": "libpropeller",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "leda",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
