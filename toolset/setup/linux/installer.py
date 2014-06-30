@@ -172,6 +172,7 @@ class Installer:
     self.__run_command("make get-monolite-latest", cwd="mono-3.2.8")
     self.__run_command("make -j4 EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe", cwd="mono-3.2.8")
     self.__run_command("sudo make install", cwd="mono-3.2.8")
+    self.__run_command("mv mono-3.2.8 mono");
 
     self.__run_command("mozroots --import --sync", retry=True)
 
