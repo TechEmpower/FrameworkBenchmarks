@@ -107,8 +107,8 @@ class Installer:
     #
     self.__run_command("curl -L get.rvm.io | bash -s head --auto-dotfiles")
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
-    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install 2.0.0-p0")
-    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm 2.0.0-p0 do gem install bundler")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install 2.1.1")
+    self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm use 2.1.1 do gem install bundler")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.8")
     self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.8 do gem install bundler")
 

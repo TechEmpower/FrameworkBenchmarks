@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.13'
-gem 'mysql2', '0.3.11'
-gem 'passenger',"4.0.19"
-gem "unicorn", "4.6.2"
+gem 'rails', '4.1.0'
+gem 'mysql2', '0.3.15'
+gem "unicorn", "4.8.2"
