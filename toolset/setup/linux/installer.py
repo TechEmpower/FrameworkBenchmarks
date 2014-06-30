@@ -115,18 +115,17 @@ class Installer:
     #
     # go
     #
-    self.__download("http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz");
-    self.__run_command("tar xzf go1.2.linux-amd64.tar.gz")
+    self.__download("https://storage.googleapis.com/golang/go1.3.linux-amd64.tar.gz");
+    self.__run_command("tar xzf go1.3.linux-amd64.tar.gz")
 
     #
     # Perl
     #
-    self.__download("http://downloads.activestate.com/ActivePerl/releases/5.16.3.1603/ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
-    self.__run_command("tar xzf ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746.tar.gz");
-    self.__run_command("sudo ./install.sh --license-accepted --prefix /opt/ActivePerl-5.16 --no-install-html", cwd="ActivePerl-5.16.3.1603-x86_64-linux-glibc-2.3.5-296746", send_yes=True, retry=True)
+    self.__download("https://raw.githubusercontent.com/tokuhirom/Perl-Build/master/perl-build", "perl-build.pl")
+    self.__run_command("perl perl-build.pl -DDEBUGGING=-g 5.18.2 ~/FrameworkBenchmarks/installs/perl-5.18", retry=True)
     self.__download("http://cpanmin.us", "cpanminus.pl")
-    self.__run_command("perl cpanminus.pl --sudo App::cpanminus", retry=True)
-    self.__run_command("cpanm -f -S DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros EV IO::Socket::IP IO::Socket::SSL", retry=True)
+    self.__run_command("~/FrameworkBenchmarks/installs/perl-5.18/bin/perl cpanminus.pl --notest --no-man-page App::cpanminus", retry=True)
+    self.__run_command("~/FrameworkBenchmarks/installs/perl-5.18/bin/cpanm -f --notest --no-man-page DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros EV IO::Socket::IP IO::Socket::SSL Memoize", retry=True)
 
     #
     # php
@@ -285,8 +284,11 @@ class Installer:
     # Weber
     #
     self.__run_command("git clone https://github.com/elixir-web/weber.git");
-    self.__run_command("make", cwd="weber");
-    self.__run_command("make test", cwd="weber");
+    # To get the two make commands working, we need to hard code the path for elixir's "mix" and run it in bash
+    self.__run_command("sed -i 's:$(MIX):/home/tfb/FrameworkBenchmarks/installs/elixir-0.13.3/bin/mix:' Makefile", cwd="weber")
+    # Because of the way that we are running it, we can't just "send a yes" like normal
+    self.__run_command("bash -i -c 'yes | make'", cwd="weber");
+    self.__run_command("bash -i -c 'yes | make test'", cwd="weber");
 
     ##############################################################
     # Frameworks
@@ -295,8 +297,8 @@ class Installer:
     #
     # Grails
     #
-    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.4.1.zip")
-    self.__run_command("unzip -o grails-2.4.1.zip")
+    self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.4.2.zip")
+    self.__run_command("unzip -o grails-2.4.2.zip")
 
     #
     # Play 2
@@ -330,8 +332,8 @@ class Installer:
     #
     # Vert.x
     #
-    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1RC3.tar.gz?direct=true", "vert.x-2.1RC3.tar.gz")
-    self.__run_command("tar xzf vert.x-2.1RC3.tar.gz")
+    self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1.1.tar.gz?direct=true", "vert.x-2.1.1.tar.gz")
+    self.__run_command("tar xzf vert.x-2.1.1.tar.gz")
 
     #
     # Yesod
@@ -359,7 +361,7 @@ class Installer:
     #
     # Wt
     #
-    self.__run_command("sudo apt-get install libboost1.48-all-dev", True)
+    self.__run_command("sudo apt-get install libboost1.54-all-dev", True)
     self.__download("http://downloads.sourceforge.net/witty/wt-3.3.3.tar.gz", filename="wt.tar.gz")
     self.__run_command("tar xf wt.tar.gz")
     self.__run_command("rm wt.tar.gz")
@@ -375,78 +377,42 @@ class Installer:
   ############################################################
 
   def _install_python(self):
-    # .profile is not loaded yet. So we should use full path.
-    pypy_bin   = "~/FrameworkBenchmarks/installs/pypy/bin"
-    python_bin = "~/FrameworkBenchmarks/installs/py2/bin"
-    python3_bin= "~/FrameworkBenchmarks/installs/py3/bin"
-    def easy_install(pkg, two=True, three=False, pypy=False):
-      cmd = "/easy_install -ZU '" + pkg + "'"
-      if two:   self.__run_command(python_bin + cmd, retry=True)
-      if three: self.__run_command(python3_bin + cmd, retry=True)
-      if pypy:  self.__run_command(pypy_bin + cmd, retry=True)
+    """Install Python runtime, frameworks and libraries"""
+    # PyPy 2.3.1
+    f = "pypy-2.3.1-linux64.tar.bz2"
+    if not os.path.exists(f):
+      self.__download("https://bitbucket.org/pypy/pypy/downloads/" + f, f)
+    self.__run_command("tar xf " + f)
+    self.__run_command('ln -sf pypy-2.3.1-linux64 pypy')
 
-    self.__download("https://bitbucket.org/pypy/pypy/downloads/pypy-2.2-linux64.tar.bz2", "pypy-2.2-linux64.tar.bz2")
-    self.__run_command("tar xjf pypy-2.2-linux64.tar.bz2")
-    self.__run_command('ln -sf pypy-2.2-linux64 pypy')
-    self.__download("http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz", "Python-2.7.6.tgz")
-    self.__run_command("tar xzf Python-2.7.6.tgz")
-    self.__download("http://www.python.org/ftp/python/3.3.2/Python-3.3.2.tar.xz", "Python-3.3.2.tar.xz")
-    self.__run_command("tar xJf Python-3.3.2.tar.xz")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared CC=gcc-4.8", cwd="Python-2.7.6")
-    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared CC=gcc-4.8", cwd="Python-3.3.2")
-    self.__run_command("make -j2", cwd="Python-2.7.6")
-    self.__run_command("make install", cwd="Python-2.7.6")
-    self.__run_command("make -j2", cwd="Python-3.3.2")
-    self.__run_command("make install", cwd="Python-3.3.2")
+    # CPython 2.7.7
+    f = "Python-2.7.7.tgz"
+    if not os.path.exists(f):
+      self.__download("http://www.python.org/ftp/python/2.7.7/" + f, f)
+    self.__run_command("tar xf " + f)
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py2 --disable-shared", cwd="Python-2.7.7")
+    self.__run_command("make -j4", cwd="Python-2.7.7")
+    self.__run_command("make install", cwd="Python-2.7.7")
 
-    self.__download("https://bitbucket.org/pypa/setuptools/downloads/ez_setup.py", "ez_setup.py")
-    self.__run_command(pypy_bin + "/pypy ez_setup.py")
-    self.__run_command(python_bin + "/python ez_setup.py")
-    self.__run_command(python3_bin + "/python3 ez_setup.py")
+    # CPython 3.4.1
+    f = "Python-3.4.1.tar.xz"
+    if not os.path.exists(f):
+      self.__download("https://www.python.org/ftp/python/3.4.1/" + f, f)
+    self.__run_command("tar xf " + f)
+    self.__run_command("./configure --prefix=$HOME/FrameworkBenchmarks/installs/py3 --disable-shared", cwd="Python-3.4.1")
+    self.__run_command("make -j4", cwd="Python-3.4.1")
+    self.__run_command("make install", cwd="Python-3.4.1")
 
-    easy_install('pip==1.4.1', two=True, three=True, pypy=True)
-    easy_install('MySQL-python==1.2.4', two=True, three=False, pypy=True)
-    easy_install('https://github.com/clelland/MySQL-for-Python-3/archive/master.zip', two=False, three=True, pypy=False)
-    easy_install('PyMySQL==0.6.1', two=True, three=True, pypy=True)
-    easy_install('psycopg2==2.5.1', three=True)
+    if not os.path.exists("get-pip.py"):
+      self.__download("https://bootstrap.pypa.io/get-pip.py", "get-pip.py")
+    self.__run_command("py2/bin/python get-pip.py")
+    self.__run_command("pypy/bin/pypy get-pip.py")
+    # Python 3.4.1 installs pip by default.
 
-    easy_install('simplejson==3.3.1', two=True, three=True, pypy=False)
-    easy_install('ujson==1.33', three=True)
-    easy_install('gevent==1.0')
-    easy_install('uwsgi', three=True)  # uwsgi is released too often to stick on single version.
+    self.__run_command('py2/bin/pip install -r ../config/requirements.txt')
+    self.__run_command('py3/bin/pip3 install -r ../config/requirements-py3.txt')
+    self.__run_command('pypy/bin/pip install -r ../config/requirements-pypy.txt')
 
-    # Gunicorn
-    easy_install('gunicorn==18', two=True, three=True, pypy=True)
-    # meinheld HEAD supports gunicorn worker on Python 3
-    easy_install('https://github.com/mopemope/meinheld/archive/master.zip', two=True, three=True, pypy=True)
-
-    # Tornado
-    easy_install('tornado==3.1', two=True, three=True, pypy=True)
-    easy_install('motor==0.1.2', two=True, three=True, pypy=True)
-    easy_install('pymongo==2.5.2', two=True, three=True, pypy=True)
-    easy_install('psycopg2==2.5.3', two=True, three=True, pypy=True)
-    easy_install('Momoko==1.1.3', two=True, three=True, pypy=True)
-
-    # Django
-    easy_install("https://www.djangoproject.com/download/1.6/tarball/", two=True, three=True, pypy=True)
-
-    # Flask
-    easy_install('Werkzeug==0.9.4', two=True, three=True, pypy=True)
-    easy_install('flask==0.10.1', two=True, three=True, pypy=True)
-    easy_install('sqlalchemy==0.8.3', two=True, three=False, pypy=True)
-    # SQLAlchemy 0.9 supports C extension for Python 3
-    easy_install('https://bitbucket.org/zzzeek/sqlalchemy/get/rel_0_9_0b1.tar.gz', two=False, three=True)
-    easy_install('Jinja2==2.7.1', two=True, three=True, pypy=True)
-    easy_install('Flask-SQLAlchemy==1.0', two=True, three=True, pypy=True)
-
-    # Bottle
-    easy_install('bottle==0.11.6', two=True, three=True, pypy=True)
-    easy_install('bottle-sqlalchemy==0.4', two=True, three=True, pypy=True)
-
-    # Falcon
-    easy_install('Cython==0.19.2', two=True, three=True, pypy=True)
-    easy_install('falcon==0.1.7', two=True, three=True, pypy=True)
-    
   ############################################################
   # __install_error
   ############################################################
