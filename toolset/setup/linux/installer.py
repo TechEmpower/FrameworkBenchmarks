@@ -166,16 +166,16 @@ class Installer:
     #
     # Mono
     #
-    self.__run_command("git clone git://github.com/mono/mono", retry=True)
-    self.__run_command("git checkout mono-3.2.8-branch", cwd="mono")
-    self.__run_command("./autogen.sh --prefix=/usr/local", cwd="mono")
-    self.__run_command("make get-monolite-latest", cwd="mono")
-    self.__run_command("make EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe", cwd="mono")
-    self.__run_command("sudo make install", cwd="mono")
+    self.__download("http://download.mono-project.com/sources/mono/mono-3.2.8.tar.bz2", "mono-3.2.8.tar.bz2")
+    self.__run_command("tar xf mono-3.2.8.tar.bz2")
+    self.__run_command("./configure --disable-nls --prefix=/usr/local", cwd="mono-3.2.8")
+    self.__run_command("make get-monolite-latest", cwd="mono-3.2.8")
+    self.__run_command("make -j4 EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe", cwd="mono-3.2.8")
+    self.__run_command("sudo make install", cwd="mono-3.2.8")
 
     self.__run_command("mozroots --import --sync", retry=True)
 
-    self.__run_command("git clone git://github.com/mono/xsp", retry=True)
+    self.__run_command("git clone --depth 1 git://github.com/mono/xsp", retry=True)
     self.__run_command("./autogen.sh --prefix=/usr/local", cwd="xsp")
     self.__run_command("make", cwd="xsp")
     self.__run_command("sudo make install", cwd="xsp")
@@ -639,6 +639,8 @@ EOF
   ############################################################
   def __download(self, uri, filename=""):
     if filename:
+      if os.path.exists(filename):
+        return
       filename_option = "-O %s " % filename
     else:
       filename_option = ""
