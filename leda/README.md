@@ -1,7 +1,19 @@
 # Leda  Benchmark Test
 
-Requires `leda` installed (see https://github.com/sergeyzavadski/leda for instructions)
+
+### Deployment
+
+Leda framework has to be built  and installed. 
+        
+        git clone https://github.com/sergeyzavadski/leda.git
+        ./configure
+        make
+        sudo make install
+
     
+### JSON Encoding Test
+
+* [Source](app.moon)    
 
 
 ## Test URLs
