@@ -1,0 +1,3 @@
+[submodule "pimf-framework"]
+	path = pimf-framework
+	url = https://github.com/gjerokrsteski/pimf-framework.git

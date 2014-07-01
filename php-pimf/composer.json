@@ -1,0 +1,5 @@
+{
+    "require": {
+        "gjerokrsteski/pimf": "dev-master"
+    }
+}
