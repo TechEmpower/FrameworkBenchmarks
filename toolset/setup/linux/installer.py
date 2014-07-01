@@ -34,7 +34,7 @@ class Installer:
     #######################################
     self.__run_command("sudo apt-get -y update")
     self.__run_command("sudo apt-get -y upgrade")
-    self.__run_command("sudo apt-get install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev mercurial mlton", True)
+    self.__run_command("sudo apt-get -y install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev mercurial mlton")
     self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y")
     self.__run_command("sudo apt-get -y update")
     self.__run_command("sudo apt-get install -y gcc-4.8 g++-4.8")
@@ -62,7 +62,7 @@ class Installer:
     # Maven
     #
     if not self.__path_exists("/usr/bin/mvn"):
-        self.__run_command("sudo apt-get install maven -qq")
+        self.__run_command("sudo apt-get -y install maven -qq")
         self.__run_command("mvn -version")
 
     #######################################
@@ -84,7 +84,7 @@ class Installer:
         self.__run_command("sudo cp ../config/erlang.list /etc/apt/sources.list.d/erlang.list")
         self.__download("http://binaries.erlang-solutions.com/debian/erlang_solutions.asc")
         self.__run_command("sudo apt-key add erlang_solutions.asc")
-        self.__run_command("sudo apt-get update")
+        self.__run_command("sudo apt-get -y update")
         self.__run_command("sudo apt-get install -y esl-erlang")
 
     #
@@ -98,7 +98,7 @@ class Installer:
     # Java
     #
     self.__run_command("sudo apt-get install -y openjdk-7-jdk")
-    self.__run_command("sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless", True)
+    self.__run_command("sudo apt-get remove -y --purge openjdk-6-jre openjdk-6-jre-headless")
 
     #
     # Elixir
@@ -106,7 +106,8 @@ class Installer:
 		## Should work if you run make clean test manually
     #if not self.__path_exists("v0.13.3.tar.gz"):
     #  self.__run_command("wget https://github.com/elixir-lang/elixir/archive/v0.13.3.tar.gz");
-    #self.__run_command("sudo tar -zxf v0.13.3.tar.gz");
+    #  self.__run_command("sudo tar -zxf v0.13.3.tar.gz");
+#      self.__run_command("bash -c -i 'sudo make install'", cwd="elixir-0.13.3");
     #self.__run_command("sudo make clean", cwd="elixir-0.13.3");
     #self.__run_command("sudo make test", cwd="elixir-0.13.3");
 			
@@ -244,7 +245,7 @@ class Installer:
     # HHVM
     #
     if not self.__path_exists("/usr/bin/hhvm"):
-        self.__run_command("sudo add-apt-repository ppa:mapnik/v2.2.0", True)
+        self.__run_command("sudo add-apt-repository -y ppa:mapnik/v2.2.0")
         self.__run_command("wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -")
         self.__run_command("echo deb http://dl.hhvm.com/ubuntu trusty main | sudo tee /etc/apt/sources.list.d/hhvm.list")
         self.__run_command("sudo apt-get update")
@@ -322,12 +323,14 @@ class Installer:
     #
     # Weber
     #
-	
-    #self.__run_command("git clone https://github.com/elixir-web/weber.git");
-    # To get the two make commands working, we need to hard code the path for elixir's "mix"
-    #self.__run_command("sed -i 's:$(MIX):/home/tfb/FrameworkBenchmarks/installs/elixir-0.13.3/bin/mix:' Makefile", cwd="weber")
-    #self.__run_command("bash -i -c 'make'", cwd="weber");
-    #self.__run_command("bash -i -c 'sudo make test'", cwd="weber");
+#    if not self.__path_exists("weber"):
+#        self.__run_command("git clone https://github.com/elixir-web/weber.git");
+        # To get the two make commands working, we need to hard code the path for elixir's "mix"
+        #self.__run_command("sed -i 's:$(MIX):/home/tfb/FrameworkBenchmarks/installs/elixir-0.13.3/bin/mix:' Makefile", cwd="weber")
+        #self.__run_command("bash -i -c 'make'", cwd="weber");
+#        self.__run_command("make", cwd="weber");
+        #self.__run_command("bash -i -c 'sudo make test'", cwd="weber");
+
 
     ##############################################################
     # Frameworks
@@ -491,8 +494,8 @@ class Installer:
     ##############################
     # Prerequisites
     ##############################
-    yes | sudo apt-get update
-    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
+    sudo apt-get -y update
+    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
@@ -504,7 +507,7 @@ class Installer:
     sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
     sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
 
-    yes | sudo apt-get install mysql-server-5.6
+    sudo apt-get -y install mysql-server-5.6
 
     sudo stop mysql
     # disable checking of disk size
@@ -544,9 +547,9 @@ class Installer:
     ##############################
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
     sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
-    sudo apt-get update
-	yes | sudo apt-get remove mongodb-clients
-    yes | sudo apt-get install mongodb-10gen
+    sudo apt-get -y update
+    sudo apt-get -y remove mongodb-clients
+    sudo apt-get -y install mongodb-10gen
 
     sudo stop mongodb
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
@@ -579,8 +582,8 @@ class Installer:
     ##############################
     # Prerequisites
     ##############################
-    yes | sudo apt-get update
-    yes | sudo apt-get install build-essential git libev-dev libpq-dev libreadline6-dev 
+    sudo apt-get -y update
+    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev 
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
 
