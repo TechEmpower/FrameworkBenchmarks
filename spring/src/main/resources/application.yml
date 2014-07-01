@@ -6,8 +6,6 @@ spring:
     url: jdbc:mysql://${database.host:localhost}:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true
     username: benchmarkdbuser
     password: benchmarkdbpass
-    maxActive: 256
-    maxIdle: 256    
   jpa:
     show_sql: false
     hibernate:
