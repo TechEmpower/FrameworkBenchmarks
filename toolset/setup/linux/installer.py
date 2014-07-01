@@ -35,14 +35,10 @@ class Installer:
     self.__run_command("sudo apt-get -y update")
     self.__run_command("sudo apt-get -y upgrade")
     self.__run_command("sudo apt-get -y install build-essential libpcre3 libpcre3-dev libpcrecpp0 libssl-dev zlib1g-dev python-software-properties unzip git-core libcurl4-openssl-dev libbz2-dev libmysqlclient-dev mongodb-clients libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev libgdbm-dev ncurses-dev automake libffi-dev htop libtool bison libevent-dev libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev libjson0-dev libmcrypt-dev libicu-dev cmake gettext curl libpq-dev mercurial mlton")
-    self.__run_command("sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y")
-    self.__run_command("sudo apt-get -y update")
-    self.__run_command("sudo apt-get install -y gcc-4.8 g++-4.8")
 
     self.__run_command("cp ../config/benchmark_profile ../../.bash_profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.profile")
     self.__run_command("cat ../config/benchmark_profile >> ../../.bashrc")
-    self.__run_command(". ../../.profile")
     self.__run_command("sudo sh -c \"echo '*               -    nofile          65535' >> /etc/security/limits.conf\"")
 
     ##############################################################
@@ -147,7 +143,7 @@ class Installer:
         self.__download("http://museum.php.net/php5/php-5.4.13.tar.gz")
         self.__run_command("tar xzf php-5.4.13.tar.gz")
         self.__run_command("./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl", cwd="php-5.4.13")
-        self.__run_command("make", cwd="php-5.4.13")
+        self.__run_command("make -j4", cwd="php-5.4.13")
         self.__run_command("sudo make install", cwd="php-5.4.13")
 
     if not self.__path_exists("/usr/local/lib/php/extensions/no-debug-non-zts-20100525/apc.so"):
@@ -262,7 +258,7 @@ class Installer:
         self.__download("http://nginx.org/download/nginx-1.4.1.tar.gz")
         self.__run_command("tar xzf nginx-1.4.1.tar.gz")
         self.__run_command("./configure", cwd="nginx-1.4.1")
-        self.__run_command("make", cwd="nginx-1.4.1")
+        self.__run_command("make -j4", cwd="nginx-1.4.1")
         self.__run_command("sudo make install", cwd="nginx-1.4.1")
 
     #
@@ -272,7 +268,7 @@ class Installer:
         self.__download("http://openresty.org/download/ngx_openresty-1.5.8.1.tar.gz")
         self.__run_command("tar xzf ngx_openresty-1.5.8.1.tar.gz")
         self.__run_command("./configure --with-luajit --with-http_postgres_module", cwd="ngx_openresty-1.5.8.1")
-        self.__run_command("make", cwd="ngx_openresty-1.5.8.1")
+        self.__run_command("make -j4", cwd="ngx_openresty-1.5.8.1")
         self.__run_command("sudo make install", cwd="ngx_openresty-1.5.8.1")
     
     #
@@ -291,7 +287,7 @@ class Installer:
         self.__download("http://www.caucho.com/download/resin-4.0.36.tar.gz")
         self.__run_command("tar xzf resin-4.0.36.tar.gz")
         self.__run_command("./configure --prefix=`pwd`", cwd="resin-4.0.36")
-        self.__run_command("make", cwd="resin-4.0.36")
+        self.__run_command("make -j4", cwd="resin-4.0.36")
         self.__run_command("make install", cwd="resin-4.0.36")
         self.__run_command("mv conf/resin.properties conf/resin.properties.orig", cwd="resin-4.0.36")
         self.__run_command("cat ../config/resin.properties > resin-4.0.36/conf/resin.properties")
@@ -420,7 +416,7 @@ class Installer:
       self.__run_command("bash -c 'mv wt-* wt'")
       self.__run_command("mkdir build", cwd="wt")
       self.__run_command("cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release", cwd="wt/build")
-      self.__run_command("make", cwd="wt/build")
+      self.__run_command("make -j4", cwd="wt/build")
       self.__run_command("sudo make install", cwd="wt/build")
 
     print("\nINSTALL: Finished installing server software\n")
@@ -577,19 +573,17 @@ class Installer:
     print("\nINSTALL: Installing client software\n")
 
     remote_script = """
-
     ##############################
     # Prerequisites
     ##############################
     sudo apt-get -y update
-    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev 
+    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
 
     ##############################
     # wrk
     ##############################
-
     git clone https://github.com/wg/wrk.git
     cd wrk
     make
