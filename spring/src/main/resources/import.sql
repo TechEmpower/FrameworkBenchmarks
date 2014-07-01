@@ -1,7 +1,3 @@
-
-
--- Uncomment the following lines to import sample data
-
 -- Fortunes
 insert into Fortune(message) values ('43rd Law of Computing: Anything that can go wr fortune: Segmentation violation -- Core dumped');
 insert into Fortune(message) values ('The proof of the pudding is in the eating. -- Miguel de Cervantes');
