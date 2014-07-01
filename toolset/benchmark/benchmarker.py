@@ -758,7 +758,7 @@ class Benchmarker:
     # Time to create parsed files
     # Aggregate JSON file
     with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
-      f.write(json.dumps(self.results))
+      f.write(json.dumps(self.results, indent=2))
 
   ############################################################
   # End __parse_results
