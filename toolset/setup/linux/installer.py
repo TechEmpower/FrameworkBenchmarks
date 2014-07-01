@@ -196,11 +196,11 @@ class Installer:
     #
     # Racket
     #
-    self.__download("https://github.com/plt/racket/archive/v5.3.6.tar.gz", "racket-5.3.6.tar.gz")
-    self.__run_command("tar xzf racket-5.3.6.tar.gz")
-    self.__run_command("./configure", cwd="racket-5.3.6/src")
-    self.__run_command("make", cwd="racket-5.3.6/src")
-    self.__run_command("sudo make install", cwd="racket-5.3.6/src")
+    self.__download("http://mirror.racket-lang.org/installers/recent/racket-src.tgz", "racket-src.tar.gz")
+    self.__run_command("tar xzf racket-src.tar.gz")
+    self.__run_command("./configure --prefix=/usr/local", cwd="racket/src")
+    self.__run_command("make", cwd="racket/src")
+    self.__run_command("sudo make install", cwd="racket/src")
 
     #
     # Ur/Web
