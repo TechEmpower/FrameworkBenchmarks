@@ -58,7 +58,7 @@ final class WorldDatabaseController {
 		return worlds;
 	}
 
-	private Integer boundQueryCount(Integer raw) {
+	private Integer boundQueryCount(final Integer raw) {
 		if (raw == null || raw < 1) {
 			return 1;
 		} else if (raw > 500) {

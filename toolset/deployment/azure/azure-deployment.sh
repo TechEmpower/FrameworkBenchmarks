@@ -43,6 +43,7 @@ function azure_check_configuration {
 function azure_set_variables {
     # Set variables used in several steps.
     AZURE_LINUX_USER="ubuntu"
+    AZURE_WINDOWS_USER="windows"
     AZURE_SSH_DIR="$HOME/.ssh"
     AZURE_KEY_NAME="id_rsa-${AZURE_DEPLOYMENT_NAME}"
     AZURE_KEY_FILE="${AZURE_SSH_DIR}/${AZURE_KEY_NAME}"
@@ -58,6 +59,8 @@ function azure_set_variables {
     AZURE_CONFIGURATION_OUTPUT_FILE="$BENCHMARK_WORKING_DIR/deployment-configuration.sh"
     BENCHMARK_REPOSITORY=${BENCHMARK_REPOSITORY:-"https://github.com/TechEmpower/FrameworkBenchmarks.git"}
     BENCHMARK_BRANCH=${BENCHMARK_BRANCH:-"master"}
+    UBUNTU_IMAGE_VERSION="12_04"
+    UBUNTU_IMAGE_TEMPLATE="Ubuntu_DAILY_BUILD-precise-${UBUNTU_IMAGE_VERSION}.*-LTS-amd64-server"
 
     # Under CYGWIN this script uses a helper function to call the Windows Azure command line program.
     if iscygwin; then
@@ -100,17 +103,17 @@ function azure_create_common_resources {
     # Create affinity group.
     echo ""
     echo "Creating affinity group $AZURE_DEPLOYMENT_NAME at $AZURE_DEPLOYMENT_LOCATION"
-    $AZURE_COMMAND account affinity-group create $AZURE_DEPLOYMENT_NAME --location "$AZURE_DEPLOYMENT_LOCATION" || fail "Error creating affinity group $AZURE_DEPLOYMENT_NAME."
+    $AZURE_COMMAND account affinity-group show $AZURE_DEPLOYMENT_NAME || $AZURE_COMMAND account affinity-group create $AZURE_DEPLOYMENT_NAME --label $AZURE_DEPLOYMENT_NAME --location "$AZURE_DEPLOYMENT_LOCATION" || fail "Error creating affinity group $AZURE_DEPLOYMENT_NAME."
 
     # Create storage account.
     echo ""
     echo "Creating storage account $AZURE_DEPLOYMENT_NAME"
-    $AZURE_COMMAND account storage create $AZURE_DEPLOYMENT_NAME --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating storage account $AZURE_DEPLOYMENT_NAME."
+    $AZURE_COMMAND account storage show $AZURE_DEPLOYMENT_NAME || $AZURE_COMMAND account storage create $AZURE_DEPLOYMENT_NAME --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating storage account $AZURE_DEPLOYMENT_NAME."
 
     # Create virtual network.
     echo ""
     echo "Creating virtual network $AZURE_DEPLOYMENT_NAME"
-    $AZURE_COMMAND network vnet create $AZURE_DEPLOYMENT_NAME --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual network $AZURE_DEPLOYMENT_NAME."
+    [[ -n `$AZURE_COMMAND network vnet list | grep $AZURE_DEPLOYMENT_NAME` ]] || $AZURE_COMMAND network vnet create $AZURE_DEPLOYMENT_NAME --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual network $AZURE_DEPLOYMENT_NAME."
 
     # Create directory for keys.
     echo ""
@@ -118,20 +121,26 @@ function azure_create_common_resources {
     mkdir -p ${AZURE_SSH_DIR} || fail "Error creating directory $AZURE_SSH_DIR."
 
     # Create key files.
-    echo "Creating key pair at $AZURE_KEY_FILE"
-    ssh-keygen -t rsa -b 2048 -f "$AZURE_KEY_FILE" -C "$AZURE_KEY_NAME" -q -N "" || fail "Error creating SSH key."
-    chmod 600 "$AZURE_KEY_FILE"
-    warning "-----------------------------------------------------------------------"
-    warning "Protect this key file. It has no passphrase and is stored in plaintext."
-    warning "-----------------------------------------------------------------------"
+    if [ ! -e "$AZURE_KEY_FILE" ]; then
+        echo "Creating key pair at $AZURE_KEY_FILE"
+        ssh-keygen -t rsa -b 2048 -f "$AZURE_KEY_FILE" -C "$AZURE_KEY_NAME" -q -N "" || fail "Error creating SSH key."
+        chmod 600 "$AZURE_KEY_FILE"
+        warning "-----------------------------------------------------------------------"
+        warning "Protect this key file. It has no passphrase and is stored in plaintext."
+        warning "-----------------------------------------------------------------------"
+    fi
 
-    echo "Creating PEM file at $AZURE_PEM_FILE"
-    openssl req -new -x509 -days 365 -subj "/CN=$AZURE_DEPLOYMENT_NAME/O=Web Framework Benchmarks" -key "$AZURE_KEY_FILE" -out "$AZURE_PEM_FILE" || fail "Error creating PEM file."
-    chmod 600 "$AZURE_PEM_FILE"
+    if [ ! -e "$AZURE_PEM_FILE" ]; then
+        echo "Creating PEM file at $AZURE_PEM_FILE"
+        openssl req -new -x509 -days 365 -subj "/CN=$AZURE_DEPLOYMENT_NAME/O=Web Framework Benchmarks" -key "$AZURE_KEY_FILE" -out "$AZURE_PEM_FILE" || fail "Error creating PEM file."
+        chmod 600 "$AZURE_PEM_FILE"
+    fi
 
-    echo "Creating CER file at $AZURE_CER_FILE"
-    openssl x509 -outform der -in "$AZURE_PEM_FILE" -out "$AZURE_CER_FILE" || fail "Error creating CER file."
-    chmod 600 "$AZURE_CER_FILE"
+    if [ ! -e "$AZURE_CER_FILE" ]; then
+        echo "Creating CER file at $AZURE_CER_FILE"
+        openssl x509 -outform der -in "$AZURE_PEM_FILE" -out "$AZURE_CER_FILE" || fail "Error creating CER file."
+        chmod 600 "$AZURE_CER_FILE"
+    fi
 
     echo ""
 }
@@ -144,18 +153,18 @@ function azure_create_vms {
     # Get latest Ubuntu Server 12.04 daily VM image.
     echo ""
     echo "Latest Ubuntu Server 12.04 image:"
-    LATEST_UBUNTU_IMAGE=$($AZURE_COMMAND vm image list | grep Ubuntu_DAILY_BUILD-precise-12_04_2-LTS-amd64-server | sort | tail -1 | cut -c 10-120)
+    LATEST_UBUNTU_IMAGE=$($AZURE_COMMAND vm image list | grep $UBUNTU_IMAGE_TEMPLATE | sort | tail -1 | cut -c 10-120)
     echo $LATEST_UBUNTU_IMAGE
 
     # Create client VM.
     echo ""
     echo "Creating client VM: $CLIENT_VM_NAME"
-    $AZURE_COMMAND vm create $CLIENT_VM_NAME $LATEST_UBUNTU_IMAGE $AZURE_LINUX_USER --ssh-cert "$AZURE_PEM_FILE" --no-ssh-password --vm-name $CLIENT_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --ssh --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $CLIENT_VM_NAME."
+    $AZURE_COMMAND vm list | grep $CLIENT_VM_NAME || $AZURE_COMMAND vm create $CLIENT_VM_NAME $LATEST_UBUNTU_IMAGE $AZURE_LINUX_USER --ssh-cert "$AZURE_PEM_FILE" --no-ssh-password --vm-name $CLIENT_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --ssh --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $CLIENT_VM_NAME."
 
     # Create Ubuntu server VM.
     echo ""
     echo "Creating Linux server VM: $LINUX_SERVER_VM_NAME"
-    $AZURE_COMMAND vm create $LINUX_SERVER_VM_NAME $LATEST_UBUNTU_IMAGE $AZURE_LINUX_USER --ssh-cert "$AZURE_PEM_FILE" --no-ssh-password --vm-name $LINUX_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --ssh --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $LINUX_SERVER_VM_NAME."
+    $AZURE_COMMAND vm list | grep $LINUX_SERVER_VM_NAME || $AZURE_COMMAND vm create $LINUX_SERVER_VM_NAME $LATEST_UBUNTU_IMAGE $AZURE_LINUX_USER --ssh-cert "$AZURE_PEM_FILE" --no-ssh-password --vm-name $LINUX_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --ssh --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $LINUX_SERVER_VM_NAME."
 
     # Get latest Windows Server 2012 Datacenter image.
     echo ""
@@ -166,7 +175,7 @@ function azure_create_vms {
     # Create Windows server VM.
     echo ""
     echo "Creating Windows server VM: $WINDOWS_SERVER_VM_NAME"
-    $AZURE_COMMAND vm create $WINDOWS_SERVER_VM_NAME $LATEST_WINDOWS_IMAGE Administrator $AZURE_WINDOWS_PASSWORD --vm-name $WINDOWS_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --rdp --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $WINDOWS_SERVER_VM_NAME."
+    $AZURE_COMMAND vm list | grep $WINDOWS_SERVER_VM_NAME || $AZURE_COMMAND vm create $WINDOWS_SERVER_VM_NAME $LATEST_WINDOWS_IMAGE $AZURE_WINDOWS_USER $AZURE_WINDOWS_PASSWORD --vm-name $WINDOWS_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --rdp --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $WINDOWS_SERVER_VM_NAME."
 
     # Create SQL Server VM.
     echo ""
@@ -175,7 +184,7 @@ function azure_create_vms {
     echo $SQL_SERVER_IMAGE
     echo ""
     echo "Creating SQL Server VM: $SQL_SERVER_VM_NAME"
-    $AZURE_COMMAND vm create $SQL_SERVER_VM_NAME $SQL_SERVER_IMAGE Administrator $AZURE_WINDOWS_PASSWORD --vm-name $SQL_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --rdp --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $SQL_SERVER_VM_NAME."
+    $AZURE_COMMAND vm list | grep $SQL_SERVER_VM_NAME || $AZURE_COMMAND vm create $SQL_SERVER_VM_NAME $SQL_SERVER_IMAGE $AZURE_WINDOWS_USER $AZURE_WINDOWS_PASSWORD --vm-name $SQL_SERVER_VM_NAME --vm-size $AZURE_DEPLOYMENT_VM_SIZE --virtual-network-name $AZURE_DEPLOYMENT_NAME --rdp --affinity-group $AZURE_DEPLOYMENT_NAME || fail "Error creating virtual machine $SQL_SERVER_VM_NAME."
 
     echo ""
 }
@@ -224,9 +233,9 @@ BENCHMARK_LINUX_SERVER_IP="$LINUX_SERVER_IP"
 BENCHMARK_LINUX_USER="$AZURE_LINUX_USER"
 BENCHMARK_SSH_KEY="$AZURE_KEY_FILE"
 BENCHMARK_WINDOWS_SERVER="$WINDOWS_SERVER_VM_NAME.cloudapp.net"
-BENCHMARK_WINDOWS_SERVER_USER="$WINDOWS_SERVER_VM_NAME\Administrator"
+BENCHMARK_WINDOWS_SERVER_USER="$WINDOWS_SERVER_VM_NAME\\$AZURE_WINDOWS_USER"
 BENCHMARK_SQL_SERVER="$SQL_SERVER_VM_NAME.cloudapp.net"
-BENCHMARK_SQL_SERVER_USER="$SQL_SERVER_VM_NAME\Administrator"
+BENCHMARK_SQL_SERVER_USER="$SQL_SERVER_VM_NAME\\$AZURE_WINDOWS_USER"
 BENCHMARK_WORKING_DIR="$BENCHMARK_WORKING_DIR"
 BENCHMARK_REPOSITORY="$BENCHMARK_REPOSITORY"
 BENCHMARK_BRANCH="$BENCHMARK_BRANCH"
@@ -260,11 +269,11 @@ ssh $AZURE_LINUX_USER@$LINUX_SERVER_VM_NAME.cloudapp.net -i $AZURE_KEY_FILE
 
 To connect to the Windows server VM:
 mstsc /v:$WINDOWS_SERVER_VM_NAME.cloudapp.net /admin /f
-User name: $WINDOWS_SERVER_VM_NAME\Administrator
+User name: $WINDOWS_SERVER_VM_NAME\\$AZURE_WINDOWS_USER
 
 To connect to the SQL Server VM:
 mstsc /v:$SQL_SERVER_VM_NAME.cloudapp.net /admin /f
-User name: $SQL_SERVER_VM_NAME\Administrator
+User name: $SQL_SERVER_VM_NAME\\$AZURE_WINDOWS_USER
 
 To manage the Windows Azure resources:
 https://manage.windowsazure.com

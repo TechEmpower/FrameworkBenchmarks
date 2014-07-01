@@ -73,6 +73,7 @@ ulimit -n 8192
 cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
 cd ..
 sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
+# Change database-private-ip to the database ip
 mongo --host database-private-ip < config/create.js
 ```
 * Before running the tests, do the following
