@@ -490,6 +490,7 @@ class Benchmarker:
           test_process = Process(target=self.__run_test, args=(test,))
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
+          self.__load_results()  # Load intermediate result from child process
           if(test_process.is_alive()):
             logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
@@ -571,7 +572,7 @@ class Benchmarker:
           p.communicate("""
             sudo restart mysql
             sudo restart mongodb
-  		      sudo /etc/init.d/postgresql restart
+            sudo /etc/init.d/postgresql restart
           """)
           time.sleep(10)
 
@@ -827,6 +828,15 @@ class Benchmarker:
   ############################################################
   # End __write_intermediate_results
   ############################################################
+
+  def __load_results(self):
+    try:
+      with open(os.path.join(self.latest_results_directory, 'results.json')) as f:
+        results = json.load(f)
+    except ValueError, IOError:
+      pass
+    else:
+      self.results = results
 
   ############################################################
   # __finish
