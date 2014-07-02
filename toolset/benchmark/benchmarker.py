@@ -523,7 +523,7 @@ class Benchmarker:
       out = open(os.path.join(logs, "dstat.txt"), "w")
       p = subprocess.Popen(["dstat",  "-cdim", "--nocolor", "3"], stdout=out)
       yield
-      p.tterminate()
+      p.terminate()
       out.close()
 
     with open(os.path.join(logs, 'out.txt'), 'w') as out, \
