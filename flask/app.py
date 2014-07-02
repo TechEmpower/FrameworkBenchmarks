@@ -166,6 +166,13 @@ def plaintext():
     return response
 
 
+try:
+    import meinheld
+    meinheld.server.set_access_logger(None)
+    meinheld.set_keepalive(120)
+except ImportError:
+    pass
+
 # entry point for debugging
 if __name__ == "__main__":
     app.run(debug=True)
