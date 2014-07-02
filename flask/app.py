@@ -22,7 +22,7 @@ except ImportError:
 # setup
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@localhost:3306/hello_world?charset=utf8'
+app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world?charset=utf8'
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], connect_args={'autocommit': True}, pool_reset_on_return=None)
@@ -165,6 +165,13 @@ def plaintext():
     response.content_type = 'text/plain'
     return response
 
+
+try:
+    import meinheld
+    meinheld.server.set_access_logger(None)
+    meinheld.set_keepalive(120)
+except ImportError:
+    pass
 
 # entry point for debugging
 if __name__ == "__main__":
