@@ -16,7 +16,7 @@
       "framework": "flask",
       "language": "Python",
       "orm": "Full",
-      "platform": "Gunicorn/Meinheld",
+      "platform": "Meinheld",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
@@ -37,7 +37,7 @@
       "framework": "flask",
       "language": "Python",
       "orm": "Raw",
-      "platform": "Gunicorn/Meinheld",
+      "platform": "Meinheld",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
@@ -88,7 +88,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "flask-pypy",
-      "notes": "PyPy 2.2",
+      "notes": "PyPy 2.3",
       "versus": "wsgi"
     },
     "pypy-mysql-raw": {
@@ -109,7 +109,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "flask-pypy-raw",
-      "notes": "PyPy 2.2",
+      "notes": "PyPy 2.3",
       "versus": "wsgi"
     },
     "nginx-uwsgi": {
