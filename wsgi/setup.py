@@ -27,7 +27,7 @@ def start(args, logfile, errfile):
                           cwd="wsgi", stderr=errfile, stdout=logfile, shell=True)
 
     with open("wsgi/circus.ini", "w") as f:
-        f.write(CIRCUS_INI.format(BIN=bin_dir, PROCS=NCPU*3))
+        f.write(CIRCUS_INI.format(BIN=bin_dir, PROCS=NCPU*2))
 
     proc = subprocess.Popen([bin_dir + "/circusd", "circus.ini"],
 		            cwd="wsgi", stderr=errfile, stdout=logfile)
