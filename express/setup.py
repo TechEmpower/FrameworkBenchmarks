@@ -43,7 +43,7 @@ def stop(logfile, errfile):
     if 'node app' in line:
       pid = int(line.split(None, 2)[1])
       try:
-        os.kill(pid, 9)
+        os.kill(pid, 15)
       except OSError:
         pass
   return 0

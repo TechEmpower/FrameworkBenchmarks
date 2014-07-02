@@ -17,15 +17,26 @@ sub dispatch_request {
     $queries ||= 1;
     my $rand;
     my @response;
-    for ( 1 .. $queries ) {
+    if ($queries == 1) {
         my $id = int(rand 10000) + 1;
         $sth->execute($id);
         $sth->bind_col(2, \$rand);
         if ( my @row = $sth->fetch ) {
-          push @response, { id => $id, randomNumber => $rand };
+            [ 200, [ 'Content-type' => 'application/json', ], 
+              [ encode_json({ id => $id, randomNumber => $rand })] ];
         }
     }
-    [ 200, [ 'Content-type' => 'application/json', ], [ encode_json(\@response)] ];
+    else {
+      for ( 1 .. $queries ) {
+          my $id = int(rand 10000) + 1;
+          $sth->execute($id);
+          $sth->bind_col(2, \$rand);
+          if ( my @row = $sth->fetch ) {
+              push @response, { id => $id, randomNumber => $rand };
+          }
+      }
+      [ 200, [ 'Content-type' => 'application/json', ], [ encode_json(\@response)] ];
+    }
   }
 }
 

@@ -27,7 +27,7 @@ class CacheRam implements ICache
 		return array_keys($this->ram);
 	}
 	
-	public function Set($key,$val,$flags=null,$timeout=null)
+	public function Set($key,$val,$flags=null,$timeout=0)
 	{
 		$this->ram[$key] = $val;
 	}

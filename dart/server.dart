@@ -32,7 +32,7 @@ class World {
 
   World(this.id, this.randomnumber);
 
-  toJson() => { 'id': id, 'randomnumber': randomnumber };
+  toJson() => { 'id': id, 'randomNumber': randomnumber };
 }
 
 /// The entity used in the fortunes test.

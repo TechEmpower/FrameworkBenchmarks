@@ -8,6 +8,7 @@ echo "Host:" `hostname`
 echo "Step 2: Additional setup"
 
 export DEBIAN_FRONTEND=noninteractive
+export LC_ALL="en_US.UTF-8"
 source ~/.bash_profile
 source ~/benchmark-configuration.sh
 source $BENCHMARK_HOME/toolset/deployment/common/bash-common.sh

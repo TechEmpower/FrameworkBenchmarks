@@ -27,6 +27,7 @@ dataSource {
         validationInterval=15000
         jdbcInterceptors="ConnectionState;StatementCache"
         defaultTransactionIsolation = java.sql.Connection.TRANSACTION_READ_UNCOMMITTED
+        defaultAutoCommit=true
         dbProperties = this.loadProperties("classpath:mysql-connection.properties")
     }
 }

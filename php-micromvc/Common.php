@@ -164,7 +164,8 @@ function token()
  */
 function log_message($message)
 {
-	$path = SP . 'Storage/Log/' . date('Y-m-d') . '.log';
+	//$path = SP . 'Storage/Log/' . date('Y-m-d') . '.log';
+	$path = 'stderr';
 
 	// Append date and IP to log message
 	return error_log(date('H:i:s ') . getenv('REMOTE_ADDR') . " $message\n", 3, $path);

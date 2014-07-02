@@ -12,11 +12,10 @@
  * @author	 VerySimple Inc.
  * @copyright  1997-2011 VerySimple, Inc. http://www.verysimple.com
  * @license	http://www.gnu.org/licenses/lgpl.html  LGPL
- * @version	1.3
+ * @version	1.4
  */
 class RequestUtil
 {
-
 
 	/** @var bool set to true and all non-ascii characters in request variables will be html encoded */
 	static $ENCODE_NON_ASCII = false;
@@ -441,12 +440,24 @@ class RequestUtil
 	* @param	string $fieldname
 	* @param	string $default value returned if $_REQUEST[$fieldname] is blank or null (default = empty string)
 	* @param	bool $escape if true htmlspecialchars($val) is returned (default = false)
+	* @param    bool $ignorecase if true then request fieldname will not be case sensitive (default = false)
 	* @return   string | array
 	*/
-	public static function Get($fieldname, $default = "", $escape = false)
+	public static function Get($fieldname, $default = "", $escape = false, $ignorecase = false)
 	{
-		$val = (isset($_REQUEST[$fieldname]) && $_REQUEST[$fieldname] != "") ? $_REQUEST[$fieldname] : $default;
-
+		
+		$val = null;
+		
+		if ($ignorecase)
+		{
+			$_REQUEST_LOWER = array_change_key_case($_REQUEST, CASE_LOWER);
+			$val = (isset($_REQUEST_LOWER[strtolower($fieldname)]) && $_REQUEST_LOWER[strtolower($fieldname)] != "") ? $_REQUEST_LOWER[strtolower($fieldname)] : $default;
+		}
+		else
+		{
+			$val = (isset($_REQUEST[$fieldname]) && $_REQUEST[$fieldname] != "") ? $_REQUEST[$fieldname] : $default;
+		}
+		
 		if ($escape)
 		{
 			$val = htmlspecialchars($val, ENT_COMPAT, null, false);

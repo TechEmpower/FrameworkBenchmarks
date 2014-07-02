@@ -14,12 +14,11 @@ my $header = [qw(Content-Type application/json)];
 
 builder {
     mount '/json' => sub { [ 200, $header, [ encode_json({ message => 'Hello, World!' })] ] },
-    mount '/db' => sub { [ 200, $header, [ encode_json([
-        map { id => $_->[0] + 0, randomNumber => $_->[1] },
-        grep exists $_->[1],
-        map [$_, $sth->execute($_) && $sth->fetchrow_array],
-        map int rand 10000 + 1,
-        1..Plack::Request->new(shift)->param('queries')//1
-    ]) ] ] } };
-
+    mount '/db' => sub {
+        my @rs = map { id => $_->[0] + 0, randomNumber => $_->[1] },
+            grep exists $_->[1],
+            map [$_, $sth->execute($_) && $sth->fetchrow_array],
+            map int rand 10000 + 1,
+            1..Plack::Request->new(shift)->param('queries')//1;
+        [ 200, $header, [ encode_json( @rs > 1 ? \@rs : $rs[0] ) ] ] } };
 

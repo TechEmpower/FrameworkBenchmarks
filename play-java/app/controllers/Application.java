@@ -53,7 +53,7 @@ public class Application extends Controller {
 
     public static Result json() {
         final ObjectNode result = OBJECT_MAPPER.createObjectNode();
-        result.put("message", "Hello World!");
+        result.put("message", "Hello, World!");
         return ok(result);
     }
 

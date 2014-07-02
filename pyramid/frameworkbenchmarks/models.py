@@ -54,7 +54,7 @@ class World(DatabaseBase):
     randomNumber = Column('randomnumber', Integer, nullable=False, server_default='0')
 
     def __json__(self):
-        return {'id': self.id, 'randomnumber': self.randomNumber}
+        return {'id': self.id, 'randomNumber': self.randomNumber}
 
 
 class Fortune(DatabaseBase):

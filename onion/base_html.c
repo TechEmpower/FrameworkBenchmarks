@@ -65,43 +65,42 @@ void base_html(onion_dict *context, onion_response *res){
   onion_response_write(res, "<!DOCTYPE html>\n"
       "<html>\n"
       "  <head>\n"
-      "    <meta content=\"text/html; charset=UTF-8\" http-equiv=\"content-type\"/>\n"
-      "    <title>", 116);
-#line 5
+      "    <title>", 43);
+#line 4
   {
-#line 5
+#line 4
     const char *tmp;
-#line 5
+#line 4
     tmp=onion_dict_get(context, "title");
-#line 5
+#line 4
     if (tmp)
-#line 5
+#line 4
       onion_response_write_html_safe(res, tmp);
-#line 5
+#line 4
   }
   onion_response_write(res, "</title>\n"
       "  </head>\n"
       "  <body>\n"
       "", 28);
-#line 8
+#line 7
   {
-#line 8
+#line 7
     void (*f)(onion_dict *context, onion_response *res);
-#line 8
+#line 7
     f=(void*)onion_dict_get(context, "__block_content__");
-#line 8
+#line 7
     if (f)
-#line 8
+#line 7
       f(context, res);
-#line 8
+#line 7
   }
   onion_response_write(res, "  \n"
       "  </body>\n"
       "</html>\n"
       "", 21);
-#line 11
+#line 10
   if (!has_context)
-#line 11
+#line 10
     onion_dict_free(context);
 #line 1
 }

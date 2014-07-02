@@ -99,6 +99,14 @@ public class WebServer extends Verticle implements Handler<HttpServerRequest> {
     } catch (NumberFormatException e) {
       e.printStackTrace();
     }
+    if (queriesParam < 1)
+    {
+      queriesParam = 1;
+    }
+    if (queriesParam > 500)
+    {
+      queriesParam = 500;
+    }
     final MongoHandler dbh = new MongoHandler(req, queriesParam);
     final Random random = ThreadLocalRandom.current();
     for (int i = 0; i < queriesParam; i++) {

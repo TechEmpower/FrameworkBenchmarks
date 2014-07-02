@@ -25,9 +25,15 @@ public:
     void setRandomNumber(int randomNumber);
     World &operator=(const World &other);
 
+    bool create() { return TAbstractModel::create(); }
+    bool update();
+    bool save()   { return TAbstractModel::save(); }
+    bool remove() { return TAbstractModel::remove(); }
+
     static World create(int randomNumber);
     static World create(const QVariantMap &values);
     static World get(uint id);
+    static int count();
     static QList<World> getAll();
 
 private:

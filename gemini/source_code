@@ -24,7 +24,7 @@
 ./gemini/Docroot/WEB-INF/lib
 ./gemini/Docroot/WEB-INF/lib/kryonet-1.04-all.jar
 ./gemini/Docroot/WEB-INF/lib/mysql-connector-java-5.1.23-bin.jar
-./gemini/Docroot/WEB-INF/lib/mustache-compiler-0.8.0.jar
+./gemini/Docroot/WEB-INF/lib/mustache-compiler-0.8.13.jar
 ./gemini/Docroot/WEB-INF/lib/mail.jar
 ./gemini/Docroot/WEB-INF/lib/activation.jar
 ./gemini/Docroot/WEB-INF/lib/guava-14.0.1.jar

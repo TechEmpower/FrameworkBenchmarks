@@ -8,7 +8,7 @@ def start(args, logfile, errfile):
   #setup_util.replace_text("yesod/bench/config/mysql.yml", "host: .*", "host: " + args.database_host)
   
   subprocess.check_call("cabal update", shell=True, cwd="yesod/bench", stderr=errfile, stdout=logfile)
-  subprocess.check_call("cabal install --only-dependencies", shell=True, cwd="yesod/bench", stderr=errfile, stdout=logfile)
+  subprocess.check_call("cabal install", shell=True, cwd="yesod/bench", stderr=errfile, stdout=logfile)
   subprocess.check_call("cabal configure", shell=True, cwd="yesod/bench", stderr=errfile, stdout=logfile)
   subprocess.check_call("cabal build", shell=True, cwd="yesod/bench", stderr=errfile, stdout=logfile)
 

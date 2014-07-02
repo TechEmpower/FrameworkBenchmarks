@@ -1,1 +1,1 @@
-<!DOCTYPE html><html><head><title>Fortunes</title><meta charset="utf-8"></head><body>{{ content() }}</body></html>
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body>{{ content() }}</body></html>

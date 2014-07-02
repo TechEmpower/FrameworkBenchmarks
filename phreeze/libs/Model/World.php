@@ -39,10 +39,19 @@ class World extends WorldDAO
 		// the controller create/update methods validate before saving.  this will be a
 		// redundant validation check, however it will ensure data integrity at the model
 		// level based on validation rules.  comment this line out if this is not desired
-		if (!$this->Validate()) throw new Exception('Unable to Save World: ' .  implode(', ', $this->GetValidationErrors()));
+		// if (!$this->Validate()) throw new Exception('Unable to Save World: ' .  implode(', ', $this->GetValidationErrors()));
 
 		// OnSave must return true or eles Phreeze will cancel the save operation
 		return true;
+	}
+	
+	/**
+	 * @return multitype:NULL boolean
+	 */
+	public function ToObject($options = null)
+	{
+		$obj = array('id'=>$this->Id,'randomNumber'=>$this->Randomnumber);
+		return $obj;
 	}
 
 }

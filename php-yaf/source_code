@@ -1,4 +1,3 @@
-./php-yaf/app/Bootstrap.php
 ./php-yaf/app/controllers/
 ./php-yaf/app/controllers/Index.php
 ./php-yaf/app/modules/
@@ -9,8 +8,8 @@
 ./php-yaf/app/modules/Bench/views/raw
 ./php-yaf/app/modules/Bench/views/raw/fortunes.phtml
 ./php-yaf/app/views/
-./php-yaf/app/views/layouts
-./php-yaf/app/views/layouts/fortunes.phtml
+./php-yaf/app/views/index/
+./php-yaf/app/views/index/index.phtml
 ./php-yaf/public/
 ./php-yaf/public/index.php
 ./php-yaf/public/favicon.ico

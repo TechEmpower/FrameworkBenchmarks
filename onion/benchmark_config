@@ -22,7 +22,7 @@
     "raw": {
       "setup_file": "setup",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/queries?queries=",
       "fortune_url": "/fortune",
       "port": 8080,
       "approach": "Realistic",

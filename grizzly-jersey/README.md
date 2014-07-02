@@ -16,7 +16,7 @@ This is the Grizzly+Jersey portion of a [benchmarking test suite](../) comparing
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
 * [Jersey 1.17.1](http://jersey.java.net/)
 * [Grizzly 2.3.2](http://grizzly.java.net/)
-* [Jackson 2.2.1](http://wiki.fasterxml.com/JacksonHome)
+* [Jackson 2.3.0](http://wiki.fasterxml.com/JacksonHome)
 * [Mustache.java 0.8.12](https://github.com/spullara/mustache.java)
 * [Jersey Mustache 1.0.0](https://github.com/trautonen/jersey-mustache)
 * [Hibernate 4.2.1](http://www.hibernate.org/)

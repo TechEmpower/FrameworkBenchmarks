@@ -10,7 +10,7 @@ def start(args, logfile, errfile):
   try:
     subprocess.check_call("sudo rm -rf /usr/share/ringojs/packages/*", shell=True, stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo ringo-admin install oberhamsi/sql-ringojs-client", shell=True, stderr=errfile, stdout=logfile)
-    subprocess.Popen("ringo --production -Dserver -DXmx=512m -DXms=512m ringo-main.js", shell=True, cwd="ringojs", stderr=errfile, stdout=logfile)
+    subprocess.Popen("ringo --production -J-server -J-Xmx1g -J-Xms1g ringo-main.js", shell=True, cwd="ringojs", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -21,7 +21,7 @@ def stop(logfile, errfile):
     if 'ringo-main.js' in line:
       pid = int(line.split(None, 2)[1])
       try:
-        os.kill(pid, 9)
+        os.kill(pid, 15)
       except OSError:
         pass
   return 0

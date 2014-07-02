@@ -7,6 +7,7 @@ def start(args, logfile, errfile):
   setup_util.replace_text("compojure/hello/src/hello/handler.clj", ":subname \"//.*:3306", ":subname \"//" + args.database_host + ":3306")
 
   try:
+    subprocess.check_call("lein clean", shell=True, cwd="compojure/hello", stderr=errfile, stdout=logfile)
     subprocess.check_call("lein ring uberwar", shell=True, cwd="compojure/hello", stderr=errfile, stdout=logfile)
     subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
     subprocess.check_call("cp compojure/hello/target/hello-compojure-standalone.war $RESIN_HOME/webapps/compojure.war", shell=True, stderr=errfile, stdout=logfile)

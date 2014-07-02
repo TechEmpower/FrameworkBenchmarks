@@ -25,9 +25,15 @@ public:
     void setMessage(const QString &message);
     Fortune &operator=(const Fortune &other);
 
+    bool create() { return TAbstractModel::create(); }
+    bool update() { return TAbstractModel::update(); }
+    bool save()   { return TAbstractModel::save(); }
+    bool remove() { return TAbstractModel::remove(); }
+
     static Fortune create(const QString &message);
     static Fortune create(const QVariantMap &values);
     static Fortune get(uint id);
+    static int count();
     static QList<Fortune> getAll();
 
 private:

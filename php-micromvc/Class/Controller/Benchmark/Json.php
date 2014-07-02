@@ -9,6 +9,6 @@ class Json extends \MyController
     public function send()
     {
         headers_sent() OR header('Content-type: application/json');
-        echo json_encode(array('message' => 'Hello World'));
+        echo json_encode(array('message' => 'Hello, World!'));
     }
 }

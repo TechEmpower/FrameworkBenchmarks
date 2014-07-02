@@ -14,7 +14,7 @@ $app->get('/json', function() {
     //
     // But JsonResponse does some checks that are unneeded for this benchmark
     // and therefore, a plain Response object is faster.
-    return new Response(json_encode(array('message' => 'Hello World!')), 200, array('Content-Type' => 'application/json'));
+    return new Response(json_encode(array('message' => 'Hello, World!')), 200, array('Content-Type' => 'application/json'));
 });
 
 // Test 2: Single database query

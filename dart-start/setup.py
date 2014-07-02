@@ -21,7 +21,7 @@ def start(args, logfile, errfile):
     #
     conf = []
     conf.append('worker_processes ' + str(args.max_threads) + ';')
-    conf.append('error_log /dev/null crit;')
+    conf.append('error_log /dev/null error;')
     conf.append('events {')
     conf.append('    worker_connections 1024;')
     conf.append('}')
@@ -52,7 +52,7 @@ def start(args, logfile, errfile):
     #
     # start nginx
     #
-    subprocess.Popen('sudo /usr/sbin/nginx -c `pwd`/nginx.conf', shell=True, cwd='dart-start', stderr=errfile, stdout=logfile);
+    subprocess.Popen('sudo /usr/local/nginx/sbin/nginx -c `pwd`/nginx.conf', shell=True, cwd='dart-start', stderr=errfile, stdout=logfile);
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -61,7 +61,7 @@ def stop(logfile, errfile):
   #
   # stop nginx
   #
-  subprocess.check_call('sudo /usr/sbin/nginx -c `pwd`/nginx.conf -s stop', shell=True, cwd='dart-start', stderr=errfile, stdout=logfile)
+  subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c `pwd`/nginx.conf -s stop', shell=True, cwd='dart-start', stderr=errfile, stdout=logfile)
   os.remove('dart-start/nginx.conf')
   #
   # stop dart servers
@@ -71,5 +71,5 @@ def stop(logfile, errfile):
   for line in out.splitlines():
     if 'dart' in line and 'run-tests' not in line:
       pid = int(line.split(None, 2)[1])
-      os.kill(pid, 9)
+      os.kill(pid, 15)
   return 0

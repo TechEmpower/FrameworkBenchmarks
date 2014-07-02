@@ -7,7 +7,8 @@ import groovy.transform.TypeCheckingMode;
 
 import java.util.concurrent.ThreadLocalRandom
 
-import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.hibernate.Session;
 
 @CompileStatic
 class HelloController {
@@ -22,13 +23,12 @@ class HelloController {
     // Test type 1: JSON serialization
     def json() {
         def msg = [
-            message: "Hello, world"
+            message: "Hello, World!"
         ]
         render msg as JSON
     }
 
     // Test type 2: Single database query
-    @Transactional(readOnly=true)
     def db() {
         def random = ThreadLocalRandom.current()
         def world = World.read(random.nextInt(10000) + 1)
@@ -36,7 +36,6 @@ class HelloController {
     }
     
     // Test type 3: Multiple database queries
-    @Transactional(readOnly=true)
     def queries(int queries) {
         def worlds = fetchRandomWorlds(queries, false)
         render worlds as JSON
@@ -47,38 +46,36 @@ class HelloController {
         if(queries > 500) queries=500
         def random = ThreadLocalRandom.current()
 
-        List<Integer> worldIds = new ArrayList<Integer>(queries)
+        int[] worldIds = new int[queries]
         for (int i = 0; i < queries; i++) {
-            worldIds.add(random.nextInt(10000) + 1)
+            worldIds[i] = (random.nextInt(10000) + 1)
         }
-        List<World> worlds
+
+        List<World> worlds = new ArrayList<World>(queries)
         if (updateAlso) {
-            worlds = getAllLocked(worldIds as Serializable[])
-            for (World world : worlds) {
-                world.randomNumber = random.nextInt(10000) + 1
+            Arrays.sort(worldIds)
+            World.withSession { Session session ->
+                for (int id : worldIds) {
+                    World world = World.get(id)
+                    world.randomNumber = random.nextInt(10000) + 1
+                    worlds.add(world)
+                    // flush changes
+                    session.flush()
+                    session.clear()
+                }
             }
         } else {
-            worlds = new ArrayList<World>(queries)
-            for (Integer id : worldIds) {
+            for (int id : worldIds) {
                 worlds.add(World.read(id))
             }
         }
         return worlds
     }
     
-    @CompileStatic(TypeCheckingMode.SKIP)
-    private List<World> getAllLocked(Serializable[] worldIds) {
-        World.withCriteria {
-            'in'('id', worldIds as Serializable[])
-            lock true
-        }
-    }
-    
     // Test type 4: Fortunes
-    @Transactional(readOnly=true)
     def fortunes() {
         def fortunes = Fortune.getAll()
-        fortunes << new Fortune(message: 'Additional fortune added at request time.')
+        fortunes << new Fortune(id: 0, message: 'Additional fortune added at request time.')
         fortunes.sort(true){Fortune it -> it.message}
         [fortunes: fortunes]
     }
@@ -89,13 +86,12 @@ class HelloController {
         render worlds as JSON
     }
 
-    @Transactional(isolation=Isolation.READ_COMMITTED)
     private List updateWorlds(int queries) {
         fetchRandomWorlds(queries, true)
     }
     
     // Test type 6: Plaintext
     def plaintext() {
-        render text:'Hello, world', contentType:'text/plain'
+        render text:'Hello, World!', contentType:'text/plain'
     }
 }

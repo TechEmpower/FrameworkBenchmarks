@@ -23,24 +23,24 @@
 (defn get-world-raw []
   (let [id (inc (rand-int 9999))] ; Num between 1 and 10,000
     (jdbc/with-connection (db-raw)
-      (jdbc/with-query-results rs [(str "select * from world where id = ?") id]
-        (doall rs)))))
+      ; Set a naming strategy to preserve column name case
+      (jdbc/with-naming-strategy {:keyword identity}
+        (jdbc/with-query-results rs [(str "select * from world where id = ?") id]
+          (doall rs))))))
 
 ; Run the specified number of queries, return the results
 (defn run-queries [queries]
-  (vec ; Return as a vector
    (flatten ; Make it a list of maps
     (take
      queries ; Number of queries to run
-     (repeatedly get-world)))))
+     (repeatedly get-world))))
 
 ; Run the specified number of queries, return the results
 (defn run-queries-raw [queries]
-  (vec ; Return as a vector
    (flatten ; Make it a list of maps
     (take
      queries ; Number of queries to run
-     (repeatedly get-world-raw)))))
+     (repeatedly get-world-raw))))
 
 (defn get-query-count [queries]
   "Parse provided string value of query count, clamping values to between 1 and 500."

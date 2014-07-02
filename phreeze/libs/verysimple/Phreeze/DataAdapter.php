@@ -174,7 +174,7 @@ class DataAdapter implements IObservable
 				$msg = 'Error Opening DB: ' . $ex->getMessage() . ' (retry attempts: '.$this->_num_retries.')';
 					
 				$this->Observe($msg,OBSERVE_FATAL);
-				throw new Exception($msg,$ex->getCode(),$ex->getPrevious());
+				throw new Exception($msg,$ex->getCode());
 			}
 			
 			$this->_dbopen = true;
@@ -261,7 +261,7 @@ class DataAdapter implements IObservable
 			$msg = 'Error Selecting SQL: ' . $ex->getMessage() . ' (retry attempts: '.$this->_num_retries.')';
 			
 			$this->Observe($msg,OBSERVE_FATAL);
-			throw new Exception($msg,$ex->getCode(),$ex->getPrevious());
+			throw new Exception($msg,$ex->getCode());
 		}
 		
 		return $rs;
@@ -299,10 +299,43 @@ class DataAdapter implements IObservable
 			$msg = 'Error Executing SQL: ' . $ex->getMessage() . ' (retry attempts: '.$this->_num_retries.')';
 			
 			$this->Observe($msg,OBSERVE_FATAL);
-			throw new Exception($msg,$ex->getCode(),$ex->getPrevious());
+			throw new Exception($msg,$ex->getCode());
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * Start a DB transaction, disabling auto-commit if necessar)
+	 * @access public
+	 */
+	function StartTransaction()
+	{
+		$this->RequireConnection(true);
+		$this->Observe("(DataAdapter.StartTransaction)", OBSERVE_QUERY);
+		return $this->_driver->StartTransaction($this->_dbconn);
+	}
+	
+	/**
+	 * Commit the current DB transaction and re-enable auto-commit if necessary
+	 * @access public
+	 */
+	function CommitTransaction()
+	{
+		$this->RequireConnection(true);
+		$this->Observe("(DataAdapter.CommitTransaction)", OBSERVE_QUERY);
+		return $this->_driver->CommitTransaction($this->_dbconn);
+	}
+	
+	/**
+	 * Rollback the current DB transaction and re-enable auto-commit if necessary
+	 * @access public
+	 */
+	function RollbackTransaction()
+	{
+		$this->RequireConnection(true);
+		$this->Observe("(DataAdapter.RollbackTransaction)", OBSERVE_QUERY);
+		return $this->_driver->RollbackTransaction($this->_dbconn);
 	}
 	
 	/**

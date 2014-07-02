@@ -6,24 +6,38 @@ import os
 bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
 NCPU = multiprocessing.cpu_count()
 
+CIRCUS_INI = """\
+[watcher:app]
+cmd = {BIN}/chaussette --fd=$(circus.sockets.app) --backend=meinheld app.app
+use_sockets = True
+numprocesses = {PROCS}
+
+[socket:app]
+host = 0.0.0.0
+port = 8080
+"""
+
+proc = None
 
 def start(args, logfile, errfile):
+    global proc
+
+    subprocess.check_call(bin_dir + "/pip install -r requirements.txt",
+                          cwd="flask", stderr=errfile, stdout=logfile, shell=True)
+
+    with open("flask/circus.ini", "w") as f:
+        f.write(CIRCUS_INI.format(BIN=bin_dir, PROCS=NCPU*3))
+
     setup_util.replace_text("flask/app.py", "DBHOSTNAME", args.database_host)
-    subprocess.Popen([
-        bin_dir + "/gunicorn",
-        "app:app",
-        "-k", "meinheld.gmeinheld.MeinheldWorker",
-        "-b", "0.0.0.0:8080",
-        '-w', str(NCPU*3),
-        "--log-level=critical"],
-        cwd="flask", stderr=errfile, stdout=logfile)
+    proc = subprocess.Popen([bin_dir + "/circusd", "circus.ini"],
+		            cwd="flask", stderr=errfile, stdout=logfile)
     return 0
 
 def stop(logfile, errfile):
-    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    for line in out.splitlines():
-      if 'FrameworkBenchmarks/installs/py2/bin/' in line:
-        pid = int(line.split(None,2)[1])
-        os.kill(pid, 9)
+    global proc
+    if proc is None:
+        return 0
+    proc.terminate()
+    proc.wait()
+    proc = None
     return 0

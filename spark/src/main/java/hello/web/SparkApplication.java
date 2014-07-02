@@ -42,13 +42,28 @@ public class SparkApplication implements spark.servlet.SparkApplication {
                 for (int i = 0; i < queries; i++) {
                     worlds[i] = (World) session.byId(World.class).load(random.nextInt(DB_ROWS) + 1);
                 }
-
-                return worlds;
+                
+                return (request.queryParams("queries") == null ? worlds[0] : worlds);
             }
             
             private int getQueries(final Request request) {
-                String param = request.queryParams("queries");
-                return (param == null ? 1 : Integer.parseInt(param));
+                try {
+                    String param = request.queryParams("queries");
+                    if (param == null) {
+                        return 1;
+                    }
+                    
+                    int queries = Integer.parseInt(param);
+                    if (queries < 1) {
+                        return 1;
+                    }
+                    if (queries > 500) {
+                        return 500;
+                    }
+                    return queries;
+                } catch (NumberFormatException ex) {
+                    return 1;
+                }
             }
         });
         get(new Route("/plaintext") {

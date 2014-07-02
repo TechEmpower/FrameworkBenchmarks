@@ -42,7 +42,7 @@ try {
 
     $app->map('/json', function() {
         header("Content-Type: application/json");
-        echo json_encode(array('message' => 'Hello World!'));
+        echo json_encode(array('message' => 'Hello, World!'));
     });
 
     //
@@ -56,6 +56,10 @@ try {
 
         for ($i = 0; $i < $queries; ++$i) {
             $worlds[] = $db->fetchOne('SELECT * FROM world WHERE id = ' . mt_rand(1, 10000), Phalcon\Db::FETCH_ASSOC);
+        }
+
+        if ($queries == 1) {
+            $worlds = $worlds[0];
         }
 
         echo json_encode($worlds);

@@ -8,6 +8,10 @@ return new \Phalcon\Config(array(
         'password' => 'benchmarkdbpass',
         'name'     => 'hello_world',
     ),
+    'mongodb'     => array(
+        'url'     => 'mongodb://localhost:27017',
+        'db'      => 'hello_world'
+    ),
     'application' => array(
         'controllersDir' => APP_PATH . '/app/controllers/',
         'modelsDir'      => APP_PATH . '/app/models/',

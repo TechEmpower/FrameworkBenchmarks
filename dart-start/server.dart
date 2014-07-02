@@ -50,7 +50,7 @@ class World {
 
   World(this.id, this.randomnumber);
 
-  toJson() => { "id": id, "randomnumber": randomnumber };
+  toJson() => { "id": id, "randomNumber": randomnumber };
 }
 
 main(List<String> args) {
@@ -225,7 +225,7 @@ main(List<String> args) {
           _mongoQuery().then((data) {
             request.response.json({
               "id": data["_id"],
-              "randomnumber": data["randomNumber"]
+              "randomNumber": data["randomNumber"]
             });
           });
         });
@@ -248,7 +248,7 @@ main(List<String> args) {
               var results = response.map((world) {
                 return {
                   "id": world["_id"],
-                  "randomnumber": world["randomNumber"]
+                  "randomNumber": world["randomNumber"]
                 };
               });
               request.response.send(JSON.encode(results.toList()));

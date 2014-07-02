@@ -15,7 +15,7 @@ The tests were run with:
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
 * [Resin 4.0.34](http://www.caucho.com/)
-* [Jackson 2.1.1](http://wiki.fasterxml.com/JacksonHome)
+* [Jackson 2.3.0](http://wiki.fasterxml.com/JacksonHome)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## Test URLs

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Welcome to Weber!</title>
+  <link href="img/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Default */
+    body {
+      font: normal 13px proxima-nova, sans-serif;
+      color: #666;
+    }
+
+    a {
+      color: #4c0066;
+    }
+
+    code, pre {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      display: block;
+      font-family: monospace;
+      margin: 5px 0;
+      padding: 20px 0 20px 30px;
+      white-space: pre;
+    }
+
+    blockquote {
+      background: #f9f9f9;
+      border-left: 10px solid #eee;
+      border-radius: 3px;
+      color: #888;
+      margin: 20px 0 20px 20px;
+      padding: 10px 12px;
+      quotes: "\201C""\201D""\2018""\2019";
+    }
+
+    blockquote:before {
+      color: #ccc;
+      content: open-quote;
+      font-size: 55px;
+      line-height: 1px;
+      margin-right: 15px;
+      vertical-align: -25px;
+    }
+
+    blockquote p {
+      display: inline;
+    }
+
+    p {
+      font-size: 120%;
+      line-height: 25px;
+      margin: 10px 0;
+    }
+
+    /* Classes */
+    .content {
+      margin: 0 auto;
+      padding: 0 10px;
+      width: 960px;
+    }
+
+    /* Structure */
+    header:after, main:after,
+    header:before, main:before {
+      content: " ";
+      display: table;
+    }
+
+    header:after, main:after {
+      clear: both;
+    }
+
+    header {
+      background: #4c0066;
+      height: 150px;
+      margin-bottom: 50px;
+    }
+
+    header .logo {
+      border-radius: 100%;
+      display: block;
+      float: left;
+      padding-top: 25px;
+    }
+
+    header .title {
+      color: #fff;
+      float: left;
+      line-height: 30px;
+      margin: 101px 0 0;
+      text-align: right;
+      width: 660px;
+    }
+
+    header .title h1 {
+      font-size: 100px;
+    }
+
+    main .guide {
+      float: right;
+      width: 610px;
+    }
+
+    main .guide article {
+      margin-bottom: 50px;
+    }
+
+    main .guide h3 {
+      color: #4c0066;
+      font-size: 150%;
+      text-transform: uppercase;
+    }
+
+    main aside {
+      float: left;
+      margin-right: 50px;
+      width: 300px;
+    }
+
+    .sidebar-box {
+      margin: 25px 20px;
+    }
+
+    .sidebar-box h3 {
+      font-size: 110%;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-box p {
+      font-size: 90%;
+      line-height: 100%;
+      margin: 0;
+    }
+
+    .sidebar-box ol {
+      background: #f9f9f9;
+      border: 1px solid #eee;
+      border-radius: 3px;
+      list-style: none;
+    }
+    
+    .sidebar-box ol a {
+      border-bottom: 1px solid #eee;
+      display: block;
+      padding: 10px 10px;
+      text-decoration: none;
+    }
+    
+    .sidebar-box ol li:last-child a {
+      border-bottom: none;
+    }
+
+    .sidebar-box ol a:hover {
+      background: #f5f5f5;
+    }
+
+    li {
+      margin-left: 20px;
+      font-size: 120%;
+    }
+
+    h4 {
+      font-size: 120%;
+    }
+
+
+  </style>
+</head>
+
+<body>
+  <header role="banner">
+    <div class="content">
+      <a class="logo" href="http://0xAX.github.io/weber" target="_blank">
+        <svg height="300" width="300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <g>
+            <circle cx="150" cy="150" fill="#4c0066" r="147" stroke="#ffffff" stroke-width="6" />
+            <path d="M191.75,213.42l34.57-126.24c2.39-8.71-4.36-15.78-15.08-15.78c-10.721,0-21.02,7.06-23.01,15.78l-28.82,126.24c-1.99,8.71,3.47,15.78,12.21,15.78C180.35,229.2,189.359,222.141,191.75,213.42z" fill="#ffffff" />
+            <path d="M148.77,213.42l26.74-126.24c1.85-8.71-5.289-15.78-15.939-15.78c-10.66,0-20.47,7.06-21.92,15.78l-21.03,126.24c-1.45,8.71,4.41,15.78,13.09,15.78S146.92,222.141,148.77,213.42z" fill="#ffffff" />
+            <path d="M106.05,213.45l4.78-31.511c1.33-8.689-5.28-15.739-14.76-15.739c-9.47,0-17.9,7.05-18.82,15.739l-3.36,31.511c-0.92,8.7,5.36,15.75,14.05,15.75C96.62,229.2,104.73,222.15,106.05,213.45z" fill="#ffffff" />
+          </g>
+        </svg>
+      </a>
+
+      <div class="title">
+        <h1 style="margin-top: -20px;">Weber</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="content" role="main">
+    <div class="guide">
+      <article id="getting-started">
+        <h3>Getting started</h3>
+        <p>Welcome to the default <a href="https://github.com/0xAX/weber">Weber's</a> page. Weber is a MVC Rails like web framework which was built with <a href="http://elixir-lang.org/">Elixir</a> programming language. Build web applications quickly and efficiently as possible. Let's build Web with Elixir.</p>
+        <h4>Weber features:</h4>
+        <br/>
+        <ul>
+          <li>MVC web framework;</li>
+          <li>New project generation;</li>
+          <li>Json generation with exjson;</li>
+          <li>Websocket support;</li>
+          <li>HTML helpers;</li>
+          <li>Site internationalization</li>
+          <li>Sessions support;</li>
+          <li>and many more</li>
+        </ul>
+      </article>
+    </div>
+    
+    <aside role="contentinfo">
+      <div class="sidebar-box">
+        <h3>Links</h3>
+        <ol>
+          <li><a href="https://github.com/0xAX/weber">Weber source code</a></li>
+          <li><a href="http://0xax.github.io/weber/index.html">Weber site</a></li>
+          <li><a href="http://elixir-lang.org/">Elixir</a></li>
+        </ol>
+      </div>
+    </aside>
+  </main>
+</body>
+
+</html>

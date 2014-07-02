@@ -131,6 +131,24 @@ interface IDataDriver
 	 * @param string name of table to optimize
 	 */
  	function Optimize($connection,$table);
+ 	
+ 	/**
+ 	 * Start a database transaction and disable auto-commit if necessary
+ 	 * @param mixed connection reference
+ 	 */
+ 	function StartTransaction($connection);
+ 	
+ 	/**
+ 	 * Commit the current database transaction and re-enable auto-commit
+ 	 * @param mixed connection reference
+ 	 */
+ 	function CommitTransaction($connection);
+ 	
+ 	/**
+ 	 * Rollback the current database transaction and re-enable auto-commit
+ 	 * @param mixed connection reference
+ 	 */
+ 	function RollbackTransaction($connection);
 }
 
 ?>

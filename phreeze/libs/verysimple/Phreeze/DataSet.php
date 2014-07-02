@@ -18,7 +18,7 @@ require_once("DataPage.php");
  * @author     VerySimple Inc. <noreply@verysimple.com>
  * @copyright  1997-2007 VerySimple Inc.
  * @license    http://www.gnu.org/licenses/lgpl.html  LGPL
- * @version    1.1
+ * @version    1.2
  */
 class DataSet implements Iterator // @TODO implement Countable, ArrayAccess
 {
@@ -93,7 +93,7 @@ class DataSet implements Iterator // @TODO implement Countable, ArrayAccess
     	{
     		require_once("verysimple/Util/ExceptionFormatter.php");
     		$info = ExceptionFormatter::FormatTrace(debug_backtrace());
-    		$this->_phreezer->Observe("(DataSet.Next: unable to cache query with cursor) " . $info . "  " . $this->_sql,OBSERVE_QUERY);
+    		$this->_phreezer->Observe("(DataSet.Next: unable to cache query with cursor) " . $info . "  " . $this->_sql,OBSERVE_DEBUG);
 
     		// use this line to discover where an uncachable query is coming from
     		// throw new Exception("WTF");
@@ -206,18 +206,19 @@ class DataSet implements Iterator // @TODO implement Countable, ArrayAccess
 			// if no cache, go to the db
 			if ($this->_totalcount != null)
 			{
-				$this->_phreezer->Observe("(DataSet.Count: skipping query because cache exists) " . $this->_sql,OBSERVE_QUERY);
+				$this->_phreezer->Observe("DataSet.Count: skipping count query because cache exists",OBSERVE_DEBUG);
 			}
 			else
 			{
 				$this->LockCache($cachekey);
 
-				$this->_phreezer->Observe("(DataSet.Count: query does not exist in cache) " . $this->_sql,OBSERVE_QUERY);
+				
 				$sql = "";
 
 				// if a custom counter sql query was provided, use that because it should be more efficient
 				if ($this->CountSQL)
 				{
+					$this->_phreezer->Observe("DataSet.Count: using CountSQL to obtain total number of records",OBSERVE_DEBUG);
 					$sql = $this->CountSQL;
 				}
 				else
@@ -260,7 +261,7 @@ class DataSet implements Iterator // @TODO implement Countable, ArrayAccess
 		if ($arr != null)
 		{
 			// we have a cache value, so we will repopulate from that
-			$this->_phreezer->Observe("(DataSet.ToObjectArray: skipping query because cache exists) " . $this->_sql,OBSERVE_QUERY);
+			$this->_phreezer->Observe("(DataSet.ToObjectArray: skipping query because cache exists) " . $this->_sql,OBSERVE_DEBUG);
 			if (!$asSimpleObject)
 			{
 				foreach ($arr as $obj)
@@ -374,18 +375,25 @@ class DataSet implements Iterator // @TODO implement Countable, ArrayAccess
     }
 
     /**
-     * Returns a DataPage object suitable for binding to the smarty PageView plugin
+     * Returns a DataPage object suitable for binding to the smarty PageView plugin.
+     * If $countrecords is true then the total number of records will be eagerly fetched
+     * using a count query.  This is necessary in order to calculate the total number of
+     * results and total number of pages.  If you do not care about pagination and simply
+     * want to limit the results, then this can be set to false to supress the count 
+     * query.  However, the pagination settings will not be correct and the total number
+     * of rows will be -1
      *
      * @access     public
      * @param int $pagenum which page of the results to view
      * @param int $pagesize the size of the page (or zero to disable paging).
+     * @param bool $countrecords will eagerly fetch the total number of records with a count query
      * @return DataPage
      */
-    function GetDataPage($pagenum, $pagesize)
+    function GetDataPage($pagenum, $pagesize, $countrecords = true)
     {
 		// check the cache
 		// $cachekey = md5($this->_sql . " PAGE=".$pagenum." SIZE=" . $pagesize);
-		$cachekey = $this->_sql . " PAGE=".$pagenum." SIZE=" . $pagesize;
+		$cachekey = $this->_sql . " PAGE=".$pagenum." SIZE=" . $pagesize." COUNT=" . ($countrecords ? '1' : '0');
 
 		$page = $this->GetDelayedCache($cachekey);
 
@@ -410,27 +418,35 @@ class DataSet implements Iterator // @TODO implement Countable, ArrayAccess
 			$page->ObjectInstance = new $this->_objectclass($this->_phreezer);
 			$page->PageSize = $pagesize;
 			$page->CurrentPage = $pagenum;
-			$page->TotalResults = $this->Count();
-
-
-			// first check if we have less than or exactly the same number of
-			// results as the pagesize.  if so, don't bother doing the math.
-			// we know we just have one page
-			if ($page->TotalPages > 0 && $page->TotalPages <= $page->PageSize)
+			
+			if ($countrecords) 
 			{
-				$page->TotalPages = 1;
+				$page->TotalResults = $this->Count();
+	
+				// first check if we have less than or exactly the same number of
+				// results as the pagesize.  if so, don't bother doing the math.
+				// we know we just have one page
+				if ($page->TotalPages > 0 && $page->TotalPages <= $page->PageSize)
+				{
+					$page->TotalPages = 1;
+				}
+				else if ($pagesize == 0)
+				{
+					// we don't want paging to occur in this case
+					$page->TotalPages = 1;
+				}
+				else
+				{
+					// we have more than one page.  we always need to round up
+					// here because 5.1 pages means we are spilling out into
+					// a 6th page.  (this will also handle zero results properly)
+					$page->TotalPages = ceil( $page->TotalResults / $pagesize );
+				}
 			}
-			else if ($pagesize == 0)
+			else 
 			{
-				// we don't want paging to occur in this case
+				$page->TotalResults = $pagesize; // this will get adjusted after we run the query
 				$page->TotalPages = 1;
-			}
-			else
-			{
-				// we have more than one page.  we always need to round up
-				// here because 5.1 pages means we are spilling out into
-				// a 6th page.  (this will also handle zero results properly)
-				$page->TotalPages = ceil( $page->TotalResults / $pagesize );
 			}
 
 			// now enumerate through the rows in the page that we want.
@@ -461,6 +477,12 @@ class DataSet implements Iterator // @TODO implement Countable, ArrayAccess
 			{
 				$page->Rows[$i++] = $obj;
 			}
+			
+			if (!$countrecords) 
+			{
+				// we don't know the total count so just set it to the total number of rows in this page
+				$page->TotalResults = $i;
+			}
 
 			$this->_phreezer->SetValueCache($cachekey, $page, $this->_cache_timeout);
 
@@ -485,13 +507,9 @@ class DataSet implements Iterator // @TODO implement Countable, ArrayAccess
 
         $obj = $this->_phreezer->GetValueCache($cachekey);
 
-        $lockfile = $this->_phreezer->LockFilePath
-			? $this->_phreezer->LockFilePath . md5($cachekey) . ".lock"
-			: "";
-
     	// no cache, so try three times with a delay to prevent a cache stampede
     	$counter = 1;
-		while ( $counter < 4 && $obj == null && $lockfile && file_exists($lockfile) )
+		while ( $counter < 4 && $obj == null && $this->IsLocked($cachekey) )
 		{
 			$this->_phreezer->Observe("(DataSet.GetDelayedCache: flood prevention. delayed attempt ".$counter." of 3...) " . $cachekey,OBSERVE_DEBUG);
 			usleep(50000); // 5/100th of a second

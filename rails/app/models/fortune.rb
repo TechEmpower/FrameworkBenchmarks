@@ -1,4 +1,4 @@
 class Fortune < ActiveRecord::Base
   self.table_name = "Fortune"
-  attr_accessible :message
+  attr_accessible :id, :message
 end

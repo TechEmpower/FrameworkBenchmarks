@@ -23,7 +23,7 @@ def kill_running_process():
   try:
     with open("./play-scala/RUNNING_PID") as f:
       pid = int(f.read())
-      os.kill(pid, 9)
+      os.kill(pid, 15)
   except:
   	pass
 

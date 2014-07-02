@@ -1,0 +1,47 @@
+{
+  "framework": "wt",
+  "tests": [{
+     "default": {
+     	"setup_file": "setup",
+     	"json_url": "/json",
+     	"db_url": "/db",
+     	"query_url": "/queries?queries=",
+     	"fortune_url": "/fortune",
+     	"update_url": "/updates?queries=",
+     	"plaintext_url": "/plaintext",
+     	"port": 8080,
+     	"approach": "Realistic",
+     	"classification": "Fullstack",
+     	"database": "MySQL",
+     	"framework": "wt",
+     	"language": "C++",
+     	"orm": "Full",
+     	"platform": "Wt",
+     	"webserver": "None",
+     	"os": "Linux",
+     	"database_os": "Linux",
+     	"display_name": "wt",
+     	"notes": ""
+     },
+     "postgres": {
+     	"setup_file": "setup_postgres",
+     	"db_url": "/db",
+     	"query_url": "/queries?queries=",
+     	"fortune_url": "/fortune",
+     	"update_url": "/updates?queries=",
+     	"port": 8080,
+     	"approach": "Realistic",
+     	"classification": "Fullstack",
+     	"database": "Postgres",
+     	"framework": "wt",
+     	"language": "C++",
+     	"orm": "Full",
+     	"platform": "Wt",
+     	"webserver": "None",
+     	"os": "Linux",
+     	"database_os": "Linux",
+     	"display_name": "wt-postgres",
+     	"notes": ""
+     }
+  }]
+}

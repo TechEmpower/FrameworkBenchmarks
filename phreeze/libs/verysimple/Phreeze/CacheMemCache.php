@@ -32,6 +32,7 @@ class CacheMemCache implements ICache
 		$this->_memcache = $memcache;
 		$this->_prefix = $uniquePrefix ? $uniquePrefix . "-" : "";
 		$this->_suppressServerErrors = $suppressServerErrors;
+		$this->LastServerError;
 	}
 	
 	/**
@@ -49,6 +50,7 @@ class CacheMemCache implements ICache
 		catch (Exception $ex)
 		{
 			ExceptionThrower::Stop();
+			$this->LastServerError = $ex->getMessage();
 			if (!$this->_suppressServerErrors) throw $ex;
 		}
 
@@ -58,7 +60,7 @@ class CacheMemCache implements ICache
 	/**
 	 * @inheritdocs
 	 */
-	public function Set($key,$val,$flags=null,$timeout=null)
+	public function Set($key,$val,$flags=null,$timeout=0)
 	{
 		$result = null;
 		try
@@ -70,6 +72,7 @@ class CacheMemCache implements ICache
 		catch (Exception $ex)
 		{
 			ExceptionThrower::Stop();
+			$this->LastServerError = $ex->getMessage();
 			if (!$this->_suppressServerErrors) throw $ex;
 		}
 		
@@ -91,6 +94,7 @@ class CacheMemCache implements ICache
 		catch (Exception $ex)
 		{
 			ExceptionThrower::Stop();
+			$this->LastServerError = $ex->getMessage();
 			if (!$this->_suppressServerErrors) throw $ex;
 		}
 		

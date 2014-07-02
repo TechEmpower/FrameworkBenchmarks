@@ -21,6 +21,10 @@ public final class World {
         this.randomNumber = randomNumber;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public Integer getRandomNumber() {
         return randomNumber;
     }

@@ -9,11 +9,11 @@ import (
 )
 
 type MessageStruct struct {
-	Message string
+	Message string `json:"message"`
 }
 
 func hello(val string) string {
-	m := MessageStruct{"Hello, world"}
+	m := MessageStruct{"Hello, World!"}
 	j, _ := json.Marshal(m)
 	return string(j)
 }

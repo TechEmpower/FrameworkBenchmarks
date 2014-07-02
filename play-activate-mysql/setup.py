@@ -22,24 +22,22 @@ def start(args, logfile, errfile):
 
   return 0
 def stop(logfile, errfile):
-  if os.name == 'nt':
+  try:
     with open("./play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/RUNNING_PID") as f:
       pid = int(f.read())
-      os.kill(pid, 9)
-  else:
-    kill_running_process()
+      os.kill(pid,15)
+  except:
+    return 1
 
   try:
     os.remove("play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/RUNNING_PID")
   except OSError:
-    pass
+    return 1
+
+  # Takes up so much disk space
+  if os.name == 'nt':
+    subprocess.check_call("del /f /s /q target", shell=True, cwd="play-activate-mysql", stderr=errfile, stdout=logfile)
+  else:
+    subprocess.check_call("rm -rf target", shell=True, cwd="play-activate-mysql", stderr=errfile, stdout=logfile)
 
   return 0
-
-def kill_running_process():
-  try:
-    with open("./play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/RUNNING_PID") as f:
-      pid = int(f.read())
-      os.kill(pid,9)
-  except:
-    pass

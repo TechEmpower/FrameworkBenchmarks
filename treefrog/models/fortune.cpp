@@ -4,7 +4,9 @@
 
 Fortune::Fortune()
     : TAbstractModel(), d(new FortuneObject)
-{ }
+{
+    d->id = 0;
+}
 
 Fortune::Fortune(const Fortune &other)
     : TAbstractModel(), d(new FortuneObject(*other.d))
@@ -67,9 +69,24 @@ Fortune Fortune::get(uint id)
     return Fortune(mapper.findByPrimaryKey(id));
 }
 
+int Fortune::count()
+{
+    TSqlORMapper<FortuneObject> mapper;
+    return mapper.findCount();
+}
+
 QList<Fortune> Fortune::getAll()
 {
-    return tfGetModelListByCriteria<Fortune, FortuneObject>(TCriteria());
+    TSqlQueryORMapper<FortuneObject> mapper;
+    mapper.prepare("SELECT * from Fortune");
+
+    QList<Fortune> fortunes;
+    if (mapper.exec()) {
+        while (mapper.next()) {
+            fortunes << Fortune(mapper.value());
+        }
+    }
+    return fortunes;
 }
 
 TModelObject *Fortune::modelData()

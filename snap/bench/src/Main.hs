@@ -18,6 +18,7 @@ import Snap.Core
 import Snap.Http.Server
 import System.Random
 
+import qualified Data.HashMap.Lazy as HM
 import qualified Data.ByteString.Char8 as B
 
 data RandQuery = RQ !Int !Int
@@ -70,7 +71,7 @@ site pool = route
 jsonHandler :: Snap ()
 jsonHandler = do
     modifyResponse (setContentType "application/json")
-    writeLBS $ encode [ "message" .= ("Hello, World!" :: Text) ]
+    writeLBS $ encode ( Object $ HM.singleton "message" (String "Hello, World!") )
 
 dbHandler :: Pool Connection -> Snap ()
 dbHandler pool = do
@@ -79,6 +80,10 @@ dbHandler pool = do
     runAll pool $ maybe 1 fst (qs >>= B.readInt)
 
 runAll :: Pool Connection -> Int -> Snap ()
+runAll pool 1 = do
+    !rs <- take 1 . randomRs (1, 10000) <$> liftIO newStdGen
+    qry <- liftIO $ withResource pool (forM rs . runOne)
+    writeLBS $ encode $ head qry
 runAll pool i = do
     !rs <- take i . randomRs (1, 10000) <$> liftIO newStdGen
     qry <- liftIO $ withResource pool (forM rs . runOne)

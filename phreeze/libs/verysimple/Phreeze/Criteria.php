@@ -14,7 +14,7 @@ require_once("verysimple/IO/Includer.php");
  * @author     VerySimple Inc.
  * @copyright  1997-2007 VerySimple, Inc.
  * @license    http://www.gnu.org/licenses/lgpl.html  LGPL
- * @version    2.2
+ * @version    2.3
  */
 class Criteria
 {
@@ -305,8 +305,11 @@ class Criteria
 						$this->_where .= $this->_where_delim . " (" . $dbfield ." ". $val . ")";
 						$this->_where_delim = " and";
 					}
-					elseif (substr($prop,-3) == "_In" && isset($val) && is_array($val))
+					elseif (substr($prop,-3) == "_In" && isset($val))
 					{
+						// if a string was passed in then treat it as comma-delimited
+						if  (!is_array($val)) $val = explode(',', $val);
+						
 						// if the count is zero, technically the user is saying that they don't
 						// want any results.  the only way to do that is to make the criteria
 						// something that will for sure not match any existing records.  we cannot
@@ -328,8 +331,11 @@ class Criteria
 						$this->_where .= ")";
 						$this->_where_delim = " and";
 					}
-					elseif (substr($prop,-6) == "_NotIn" && isset($val) && is_array($val))
+					elseif (substr($prop,-6) == "_NotIn" && isset($val))
 					{
+						// if a string was passed in then treat it as comma-delimited
+						if  (!is_array($val)) $val = explode(',', $val);
+						
 						// if the count is zero, technically the user is saying that they don't
 						// want any results.  the only way to do that is to make the criteria
 						// something that will for sure not match any existing records.  we cannot
@@ -366,6 +372,19 @@ class Criteria
 				$this->_order = $this->_set_order;	
 			}
 
+			// if any of the filters have an order by then add those
+			if (is_array($this->Filters)) {
+				$orderDelim = $this->_order ? ',' : '';
+				foreach ($this->Filters as $filter)
+				{
+					$filterOrder = $filter->GetOrder($this);
+					if ($filterOrder) {
+						$this->_order .= $orderDelim . $filterOrder;
+						$orderDelim = ', ';
+					}
+				}
+			}
+			
 			if ($this->_order)
 			{
 				$this->_order = " order by " . $this->_order;

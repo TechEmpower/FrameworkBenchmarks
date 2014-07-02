@@ -57,7 +57,7 @@ class ExceptionListenerTest extends \PHPUnit_Framework_TestCase
     public function testHandleWithoutLogger($event, $event2)
     {
         // store the current error_log, and disable it temporarily
-        $errorLog = ini_set('error_log', file_exists('/dev/null') ? '/dev/null' : 'nul');
+        $errorLog = ini_set('error_log', file_exists('stderr') ? 'stderr' : 'stderr');
 
         $l = new ExceptionListener('foo');
         $l->onKernelException($event);
