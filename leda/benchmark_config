@@ -10,7 +10,7 @@
       "classification": "Micro",
       "database": "None",
       "framework": "leda",
-      "language": "moonscript",
+      "language": "lua",
       "orm": "Raw",
       "platform": "libpropeller",
       "webserver": "None",
