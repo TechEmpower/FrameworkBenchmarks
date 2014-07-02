@@ -24,7 +24,7 @@ public class HelloJsonControllerTest extends NinjaDocTester {
         
         assertThat(
             response.payloadAs(Message.class).message, 
-            is("Hello, world"));
+            is("Hello, World!"));
         
     }
     
