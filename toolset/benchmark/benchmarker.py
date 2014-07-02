@@ -833,7 +833,7 @@ class Benchmarker:
     try:
       with open(os.path.join(self.latest_results_directory, 'results.json')) as f:
         results = json.load(f)
-    except ValueError, IOError:
+    except (ValueError, IOError):
       pass
     else:
       self.results = results
