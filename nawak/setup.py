@@ -9,16 +9,15 @@ home = expanduser("~")
 def start(args, logfile, errfile):
   # compile the app
   setup_util.replace_text("nawak/nawak_app.nim", "host=.* port=5432", "host=" + args.database_host + " port=5432")
-  subprocess.check_call("nimrod c -d:release --path:../installs/nawak/nawak nawak_app.nim",
+  subprocess.check_call("nimrod c --threads:on -d:release --path:../installs/nawak/nawak nawak_app.nim",
                         shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
   # launch mongrel2
   subprocess.check_call("mkdir -p run logs tmp", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
   subprocess.check_call("sudo m2sh load -config mongrel2.conf", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
   subprocess.check_call("sudo m2sh start -name test", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
   
-  for i in range(1, 43):
-    # launch workers
-    subprocess.Popen("./nawak_app " + str(i), shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
+  # launch workers
+  subprocess.Popen("./nawak_app", shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
   return 0
 
 def stop(logfile, errfile):

@@ -1,5 +1,6 @@
 import strtabs, strutils, math, algorithm
 import nawak_mongrel, jdump
+import model, fortunes_tmpl
 
 # The following import belongs to the stdlib, but has been updated to support
 # queries with parameters (that are safer to counter SQL injections) and
@@ -7,34 +8,28 @@ import nawak_mongrel, jdump
 # It will be merged eventually. For now, I included it in the repository.
 import lib/db_postgres_redone
 
-type THello = tuple[message: string]
-type TWorld = tuple[id: int, randomNumber: int]
-type TFortune* = tuple[id: int, message: string]
 
-proc unrowTWorld(x: TRow): TWorld =
-    result.id = parseInt(x[0])
-    result.randomNumber = parseInt(x[1])
-proc unrowTFortune(x: TRow): TFortune =
-    return (x[0].parseInt, x[1])
-
-import fortunes_tmpl  # Needs TFortune to be defined first
-
-var db = open("", "benchmarkdbuser", "benchmarkdbpass", "host=localhost port=5432 dbname=hello_world")
+var db {.threadvar.}: TDbConn
+var qworld_prepared {.threadvar.}: TPreparedId
+var qfortunes_prepared {.threadvar.}: TPreparedId
+var qupdates_prepared {.threadvar.}: TPreparedId
 
 const qworld = "SELECT id, randomNumber FROM World WHERE id = $1"
 const qfortunes = "SELECT id, message FROM Fortune"
 const qupdates = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 
-# prepare queries
-let qworld_prepared = db.prepare("world", qworld, 1)
-let qfortunes_prepared = db.prepare("fortunes", qfortunes, 0)
-let qupdates_prepared = db.prepare("updates", qupdates, 2)
+proc init() =
+    db = open("", "benchmarkdbuser", "benchmarkdbpass", "host=localhost port=5432 dbname=hello_world")
+    # prepare queries
+    qworld_prepared = db.prepare("world", qworld, 1)
+    qfortunes_prepared = db.prepare("fortunes", qfortunes, 0)
+    qupdates_prepared = db.prepare("updates", qupdates, 2)
 
 
 get "/json":
     var j: THello
     j.message = "Hello, World!"
-    # jdump serialize any tuple as json
+    # jdump serialize the tuples of the model as json
     return response(jdump(j), "application/json")
 
 get "/plaintext":
@@ -99,5 +94,9 @@ get "/updates":
 
     return response(jdump(world), "application/json")
 
+custom_page 404:
+    # customize the content of the 404 page
+    return response(404, """Nah, I've got nothing.<br>
+                            Here's a <b>404 Page Not Found</b> error for you.""")
 
-run()
+run(init=init, nb_threads=256)
