@@ -1,3 +1,4 @@
+#!/bin/bash
 . ../toolset/setup/linux/bash_functions.sh
 
 fw_exists mono-3.2.8

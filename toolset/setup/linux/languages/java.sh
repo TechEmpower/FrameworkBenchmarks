@@ -1,3 +1,4 @@
+#!/bin/bash
 . ../toolset/setup/linux/bash_functions.sh
 
 # TODO include a check before we do all this, because it's 

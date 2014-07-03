@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . ../toolset/setup/linux/bash_functions.sh
 
@@ -42,7 +42,7 @@ fw_exists ~/.bash_profile.bak
 cp ../config/benchmark_profile ~/.bash_profile
 cat ../config/benchmark_profile >> ~/.profile
 cat ../config/benchmark_profile >> ~/.bashrc
-. ../../.profile
+. ~/.profile
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
 touch fwbm_prereqs_installed

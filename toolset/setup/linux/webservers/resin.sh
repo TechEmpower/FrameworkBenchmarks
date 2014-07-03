@@ -1,3 +1,4 @@
+#!/bin/bash
 . ../toolset/setup/linux/bash_functions.sh
 
 fw_exists resin-4.0.36/conf/resin.xml

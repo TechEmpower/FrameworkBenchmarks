@@ -1,3 +1,4 @@
+#!/bin/bash
 . ../toolset/setup/linux/bash_functions.sh
 
 # TODO double check this, it's logically different from original python code.

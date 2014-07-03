@@ -1,3 +1,4 @@
+#!/bin/bash
 . ../toolset/setup/linux/bash_functions.sh
 
 fw_exists node-v0.10.8-linux-x64

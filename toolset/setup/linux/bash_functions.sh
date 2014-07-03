@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # If you are running a large number of installs back to back 
 # (e.g. for FwBm development), then setting this variable 
@@ -29,19 +29,19 @@ fw_depends() {
     echo Searching for $depend
     if [ -f ../toolset/setup/linux/systools/${depend}.sh ]; then
       echo Installing system tool: $depend 
-      sh ../toolset/setup/linux/systools/${depend}.sh
+      bash ../toolset/setup/linux/systools/${depend}.sh
     fi
     if [ -f ../toolset/setup/linux/languages/${depend}.sh ]; then
       echo Installing language: $depend 
-      sh ../toolset/setup/linux/languages/${depend}.sh
+      bash ../toolset/setup/linux/languages/${depend}.sh
     fi
     if [ -f ../toolset/setup/linux/webservers/${depend}.sh ]; then
       echo Installing webserver: $depend 
-      sh ../toolset/setup/linux/webservers/${depend}.sh
+      bash ../toolset/setup/linux/webservers/${depend}.sh
     fi
     if [ -f ../toolset/setup/linux/frameworks/${depend}.sh ]; then
       echo Installing framework: $depend
-      sh ../toolset/setup/linux/frameworks/${depend}.sh
+      bash ../toolset/setup/linux/frameworks/${depend}.sh
     fi
   done  
 }

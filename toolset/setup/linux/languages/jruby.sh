@@ -1,3 +1,4 @@
+#!/bin/bash
 . ../toolset/setup/linux/bash_functions.sh
 
 fw_exists ~/.rvm/rubies/jruby-1.7.8/

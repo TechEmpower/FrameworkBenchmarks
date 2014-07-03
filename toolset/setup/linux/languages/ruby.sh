@@ -1,3 +1,4 @@
+#!/bin/bash
 . ../toolset/setup/linux/bash_functions.sh
 
 curl -L get.rvm.io | bash -s head --auto-dotfiles
