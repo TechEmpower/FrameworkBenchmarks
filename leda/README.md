@@ -3,7 +3,7 @@
 
 ### Deployment
 
-[Leda](https://github.com/sergeyzavadski/leda) framework has to be built  and installed. 
+[Leda](https://github.com/sergeyzavadski/leda) framework has to set up. 
         
         git clone https://github.com/sergeyzavadski/leda.git
         ./configure
@@ -13,7 +13,7 @@
     
 ### JSON Encoding Test
 
-* [Source](app.moon)    
+* [Source](app.lua)    
 
 
 ## Test URLs
