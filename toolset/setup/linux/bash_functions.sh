@@ -1,8 +1,11 @@
 #!/bin/sh
 
-# Setting this variable will cause apt-get and wget to 
-# your proxy server. Yay!
-export http_proxy=http://10.0.1.0:3128
+# If you are running a large number of installs back to back 
+# (e.g. for FwBm development), then setting this variable 
+# will cause apt-get and wget to use your proxy server. If 
+# your proxy server has a cache for static content, this can 
+# save you quite a lot of download time
+# export http_proxy=http://10.0.1.0:3128
 
 fw_get () {
   wget --no-check-certificate --trust-server-names "$@"
