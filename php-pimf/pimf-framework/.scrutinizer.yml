@@ -1,0 +1,68 @@
+imports:
+    - php
+
+tools:
+
+    # Code Coverage
+    external_code_coverage:
+        enabled: true
+        filter:
+            excluded_paths:
+                - 'tests/*'
+
+    # Copy/Paste Detector
+    php_cpd:
+        enabled:              true
+        command:              phpcpd
+        excluded_dirs:
+            - tests
+        
+    
+    # PHP CS Fixer (http://http://cs.sensiolabs.org/).
+    php_cs_fixer:
+        enabled:              true
+        command:              php-cs-fixer
+        config:
+            level:            psr2
+        filter:
+            excluded_paths:
+                - 'tests/*'
+        
+    
+    # Analyzes the size and structure of a PHP project.
+    php_loc:
+        enabled:              true
+        command:              phploc
+        excluded_dirs:
+            - tests
+        
+    
+    # PHP Mess Detector (http://phpmd.org).
+    php_mess_detector:
+        enabled:              true
+        command:              phpmd
+        config:
+            rulesets:
+                - codesize
+                - unusedcode
+                - naming
+                - design
+        filter:
+            excluded_paths:
+                - 'tests/*'
+        
+    
+    # Analyzes the size and structure of a PHP project.
+    php_pdepend:
+        enabled:              true
+        command:              pdepend
+        excluded_dirs:
+            - tests
+        
+    # Runs Scrutinizer's PHP Analyzer Tool
+    php_analyzer:
+        enabled:              true
+        filter:
+            excluded_paths:
+                - 'tests/*'
+

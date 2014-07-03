@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<h:body xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html">
+	<table>
+		<tr>
+			<th>id</th>
+			<th>message</th>
+		</tr>
+		<ui:repeat var="_f" value="#{fortunes.data}">
+			<tr>
+				<td><h:outputText value="#{_f.id}" /></td>
+				<td><h:outputText value="#{_f.message}" /></td>
+			</tr>
+		</ui:repeat>
+	</table>
+</h:body>
+</html>

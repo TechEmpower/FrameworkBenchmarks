@@ -43,7 +43,7 @@ class PlaintextHandler(BaseHandler):
 class DBTestHandler(BaseHandler):
     @gen.coroutine
     def get(self):
-        world = yield motor.Op(db.World.find_one, randint(1, 10000))
+        world = yield db.World.find_one(randint(1, 10000))
         # Get first postion on arguments, and so first postion in mongo return
         world['id'] = str(world.pop('_id'))
         response = json.dumps(world)
@@ -64,7 +64,7 @@ class QueryTestHandler(BaseHandler):
             elif queries > 500:
                 queries = 500
 
-        worlds = yield [motor.Op(db.World.find_one, randint(1, 10000))
+        worlds = yield [db.World.find_one(randint(1, 10000))
                         for _ in xrange(queries)]
         for world in worlds:
             # Get first postion on arguments, and so first postion in mongo return
@@ -134,5 +134,5 @@ if __name__ == "__main__":
         dsn = "user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world host=%s" % options.postgres
         application.db = momoko.Pool(dsn, size=1)
     else:
-        db = motor.MotorClient(options.mongo).open_sync().hello_world
+        db = motor.MotorClient(options.mongo).hello_world
     tornado.ioloop.IOLoop.instance().start()
