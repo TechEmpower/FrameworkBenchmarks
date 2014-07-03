@@ -14,7 +14,7 @@ def start(args, logfile, errfile):
   subprocess.call("go get -u github.com/martini/martini", shell=True, cwd="martini", env=env, stderr=errfile, stdout=logfile)
   subprocess.call("go get -u github.com/martini-contrib/render", shell=True, cwd="martini", env=env, stderr=errfile, stdout=logfile)
   subprocess.call("go get ./...", shell=True, cwd="martini", stderr=errfile, stdout=logfile) 
-  subprocess.call("go run src/app/app.go src/app/models.go".rsplit(" "), shell=True, cwd="martini", stderr=errfile, stdout=logfile)
+  subprocess.Popen("go run src/app/app.go src/app/models.go", shell=True, cwd="martini", stderr=errfile, stdout=logfile)
   return 0
 def stop(logfile, errfile):
   if os.name == 'nt':
