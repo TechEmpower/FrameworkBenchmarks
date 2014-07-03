@@ -13,7 +13,7 @@ def start(args, logfile, errfile):
                         shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
   # launch mongrel2
   subprocess.check_call("mkdir -p run logs tmp", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
-  subprocess.check_call("m2sh load -config mongrel2.conf", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
+  subprocess.check_call("sudo m2sh load -config mongrel2.conf", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
   subprocess.check_call("sudo m2sh start -name test", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
   
   for i in range(1, 43):
