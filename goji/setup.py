@@ -13,7 +13,7 @@ def start(args, logfile, errfile):
   # get the goji dependencies
   subprocess.call("go get -u github.com/zenazn/goji", shell=True, cwd="goji", env=env, stderr=errfile, stdout=logfile)
   subprocess.call("go get ./...", shell=True, cwd="goji", stderr=errfile, stdout=logfile) 
-  subprocess.call("go run src/app/app.go src/app/models.go".rsplit(" "), shell=True, cwd="goji", stderr=errfile, stdout=logfile)
+  subprocess.Popen("go run src/app/app.go src/app/models.go", shell=True, cwd="goji", stderr=errfile, stdout=logfile)
   return 0
 def stop(logfile, errfile):
   if os.name == 'nt':
