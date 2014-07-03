@@ -6,6 +6,7 @@
 [Leda](https://github.com/sergeyzavadski/leda) framework has to set up. 
         
         git clone https://github.com/sergeyzavadski/leda.git
+        cd leda
         ./configure
         make
         sudo make install       
