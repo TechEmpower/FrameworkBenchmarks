@@ -9,7 +9,7 @@ PyMySQL==0.6.2
 # uwsgi is released too often to stick on single version.
 uwsgi
 
-gunicorn==19.0
+gunicorn==18.0
 meinheld==0.5.6
 
 # Tornado
