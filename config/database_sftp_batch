@@ -12,5 +12,5 @@ put config/usr.sbin.mysqld
 put config/60-postgresql-shm.conf
 put config/mysql
 put config/mysql.conf
-mkdir cassandra
-put -r cassandra
+-mkdir cassandra
+put -r config/cassandra
