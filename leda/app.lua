@@ -2,7 +2,7 @@ local http = require('leda.http')
 
 local server = http.Server(8080, '')
 
-server:request(function(request, response)
+server:request(function(server, request, response)
     if request:url():find('/json') then
         response.body =  {message= 'Hello, World!'}
     end
