@@ -3,6 +3,8 @@
 fw_exists /usr/local/bin/mongrel2
 [ $? -ne 0 ] || { echo "Mongrel2 is installed!"; return 0; }
 
+fw_depends zeromq
+
 # Dependencies
 sudo apt-get install -y sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev
 
