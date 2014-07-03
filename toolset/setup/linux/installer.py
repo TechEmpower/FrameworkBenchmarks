@@ -30,11 +30,6 @@ class Installer:
   ############################################################
   def __install_server_software(self):
     print("\nINSTALL: Installing server software\n")
-
-    for c in components:
-        print 'installing component '+c
-    sys.exit(0)
-
     #######################################
     # Prerequisites
     #######################################
@@ -76,6 +71,10 @@ class Installer:
     #######################################
     self._install_python()
 
+    # install all components configured in the config file
+    for c in self.components:
+        print 'installing component '+c
+        getattr(Installer, '_install_'+c)(self)
 
   #
   # Dart
