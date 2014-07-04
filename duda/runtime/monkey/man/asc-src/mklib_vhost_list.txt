@@ -1,0 +1,49 @@
+mklib_vhost_list(3)
+===================
+
+NAME
+----
+mklib_vhost_list - list all existing virtual hosts
+
+SYNOPSIS
+--------
+*#include <libmonkey.h>*
+
+[verse]
+*struct mklib_vhost {
+    const char *'name';
+    const char *'document_root';
+    const char *'server_names';
+};*
+
+*mklib_vhost_foreach(struct mklib_vhost *'cur', struct mklib_vhost `**`'list')*
+
+*struct mklib_vhost **mklib_vhost_list(mklib_ctx 'ctx');*
+
+DESCRIPTION
+-----------
+*mklib_vhost_list*() returns a list of all existing virtual hosts.
+
+The 'name' member is a unique identifier.
+
+The 'document_root' member gives the path to this vhost's root.
+
+The 'server_names' member is a space-separated list of the names the vhost
+can be accessed as.
+
+
+The *mklib_vhost_foreach* convenience macro may be used to loop over all the virtual hosts.
+
+RETURN VALUE
+------------
+On success, returns a NULL-terminated list. On failure NULL is returned.
+
+SEE ALSO
+--------
+*mklib_config*(3), *mklib_init*(3), *mklib_start*(3), *mklib_stop*(3), 
+*mklib_callback_set*(3), *mklib_scheduler_worker_info*(3), *mklib_mimetype_add*(3)
+
+RESOURCES
+---------
+See http://monkey-project.com
+

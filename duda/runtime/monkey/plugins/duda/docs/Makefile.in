@@ -1,0 +1,5 @@
+all:
+	./generator
+
+clean:
+	rm -rf html/*.html *~

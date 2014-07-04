@@ -1,0 +1,109 @@
+Source: monkey
+Section: httpd
+Priority: optional
+Maintainer: Eduardo Silva <edsiper@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), autotools-dev, libpolarssl-dev
+Standards-Version: 3.9.1
+Homepage: http://monkey-project.com
+Vcs-Git: git://git.monkey-project.com/monkey
+Vcs-Browser: http://git.monkey-project.com/?p=monkey
+
+Package: monkey
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, monkey-liana, monkey-logger
+Description: Fast and lightweight Web Server for Linux.
+ Monkey HTTP Daemon has been designed to be very scalable with low memory 
+ and CPU consumption, the perfect solution for embedded environments. It 
+ also provides a flexible API and plugins interface.
+
+Package: monkey-auth
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, monkey
+Description: Basic Authentication plugin for Monkey Web Server.
+ This plugin add Basic Authentication support to Monkey Web Server, it also
+ includes the mk_passwd utility to generate password files.
+
+Package: monkey-cgi
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, monkey
+Description: CGI support/plugin for Monkey Web Server.
+ This plugin add CGI support to Monkey, it allows the execution binary 
+ programs or scripting files through a specified interpreter. 
+
+Package: monkey-cheetah
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, monkey
+Description: Shell interface plugin for Monkey Web Server.
+ Cheetah! is a shell interface to query the server about setup and different
+ internal statuses. It can run in a Unix or TCP socket.
+
+Package: monkey-dirlisting
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, monkey
+Description: Directory Listing plugin for Monkey Web Server.
+ This plugin adds directory listing capabilities to the server when a 
+ directory is the target request, it will create and index page with the 
+ directory content.
+
+Package: monkey-fastcgi
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, monkey
+Description: FastCGI support/plugin for Monkey Web Server.
+ This plugin add FastCGI support to Monkey allowing the execution of remote
+ binaries or scripts programs based in a FastCGI server. Consider this plugin
+ a FastCGI client.
+
+Package: monkey-liana
+Architecture: any
+Suggests: monkey-polarssl
+Depends: ${shlibs:Depends}, ${misc:Depends}, monkey
+Description: Networking layer for Monkey Web Server.
+ Monkey as a small core requires a plugin that provides the transport or
+ networking capabilities. Liana plugin provides a transport layer based in
+ plain sockets.
+
+Package: monkey-logger
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, monkey
+Description: Logger plugin for Monkey Web Server.
+ The logger plugin allow to register every access and error events under 
+ a specific HTTP request. It also implements a feature called MasterLog
+ to register the server output into the file system.
+
+Package: monkey-mandril
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, monkey
+Description: Security plugin for Monkey Web Server.
+ Mandril provides security rules to Monkey Web Server allowing to restrict
+ by incoming connections from specified sub-networks or by matching the HTTP
+ request string.
+
+Package: monkey-polarssl
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, monkey
+Description: SSL transport layer for Monkey Web Server based in PolarSSL.
+ This plugin enable Monkey Web Server with SSL encryption through the third 
+ party PolarSSL library.
+
+Package: monkey-dev
+Architecture: any
+Depends: ${misc:Depends}, monkey (= ${binary:Version})
+Description: Monkey HTTP Daemon development files
+ This package distributes the C headers files required to perform 
+ the development of a Monkey plugin. This package is not related to the 
+ library version of Monkey.
+
+Package: monkey-doc
+Section: doc
+Architecture: all
+Description: Monkey documentation
+ Monkey HTTP Daemon documentation.
+
+Package: libmonkey
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Monkey HTTP Daemon library
+ LibMonkey is the shared library version of Monkey HTTP daemon, it
+ can be linked by third party programs that requires to use a fast web server or
+ HTTP stack in their main program.
+

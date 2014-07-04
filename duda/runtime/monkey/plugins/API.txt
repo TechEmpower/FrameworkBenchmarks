@@ -1,0 +1,300 @@
+** Revision 0.8 **
+
+Changelog:
+----------
+0.8: Add plugins API definition
+0.7: Add functions definition
+0.6: Add a list of Monkey functions exported to each plugin
+0.5: Add _mkp_init() and _mkp_exit() hook functions
+0.4: Add hook function names
+0.3: Add 'TOC' and 'About' sections
+0.2: Add Plugin code definition example
+0.1: Initial draft
+
+
+** Table of Content **
+----------------------
+|-About
+|-Monkey API
+  |-Monkey Plugins
+    |-Mandatory calls
+    |-Plugin type
+      |-Core
+      |-Stage
+      |-Networking
+    |-Plugin definition
+  |-Monkey exported functions
+  
+
+** About **
+-----------
+This draft specified the Plugin API for Monkey HTTP Daemon v0.11.0.
+
+
+** Monkey API **
+----------------
+The Monkey API allows to extend the Monkey features and behavior through plugins, 
+which are shared libraries loaded on startup. It also provides a set of specific 
+functions to make easier the developer work.
+
+Monkey Plugins
+--------------
+A plugin is composed by a set of mandatory plus optional function calls that act
+like hooks that are called from Monkey Core.
+
+Mandatory hook calls
+--------------------
+A plugin must contains at least the following hooks functions:
+
+------------------+---------------------------------------------------------------
+ Hook function    | Description
+------------------+---------------------------------------------------------------
+  _mkp_init()     | Function called when registering the plugin, it also allows 
+                  | to set basic configuration.
+------------------+---------------------------------------------------------------
+  _mkp_exit()     | Function called before to unload the plugin, the plugin
+                  | must free the used memory resources
+------------------+---------------------------------------------------------------
+
+Definitions
+-----------
+void _mkp_init(struct plugin_api **api, char *confdir)
+void _mkp_exit()
+
+
+Optional hook calls
+-------------------
+These hook functions are invoked when a epoll event has been set through 
+event_add() by the plugin
+---------------------+------------------------------------------------------------
+ Hook function       | Description
+---------------------+------------------------------------------------------------
+  _mkp_event_read    | FD set is ready to read
+---------------------+------------------------------------------------------------
+  _mkp_event_write   | FD set is ready to write
+---------------------+------------------------------------------------------------
+  _mkp_event_close   | FD has been closed
+---------------------+------------------------------------------------------------
+  _mkp_event_error   | An error has been detected in the file descriptor
+---------------------+------------------------------------------------------------
+  _mkp_event_timeout | Timeout detected in the file descriptor
+---------------------+------------------------------------------------------------
+
+Definitions
+-----------
+int _mkp_event_read(struct client_request *cr, struct request *sr)
+int _mkp_event_write(struct client_request *cr, struct request *sr)
+int _mkp_event_close(struct client_request *cr, struct request *sr)
+int _mkp_event_error(struct client_request *cr, struct request *sr)
+int _mkp_event_timeout(struct client_request *cr, struct request *sr)
+
+
+Plugin and Function Hooks
+-------------------------
+The following sections defines the type of plugin and each hook function associated. A
+plugin can be registered to use multiple hooks just adding the right identifiers. 
+
+-------+
+ Core  |
+-------+---------------------------------------------------------------------------------
+ The Core plugins allow other plugins to define some data in the process context or 
+ thread context depending of it needs.
+---------+-----------------------+-------------------+-----------------------------------
+ Context |  Identified by        | Hook function     | Description
+---------+-----------------------+-------------------+-----------------------------------   
+ Process | MK_PLUGIN_CORE_PRCTX  | _mkp_core_prctx() | Process context, no server loop
+---------+-----------------------+-------------------+-----------------------------------
+ Thread  | MK_PLUGIN_CORE_THCTX  | _mkp_core_thctx() | Thread context, no server loop
+---------+-----------------------+-------------------+-----------------------------------
+
+Definitions
+-----------
+void _mkp_core_prctx()
+void _mkp_core_thctx()
+
+-------+
+ Stage |
+-------+-----------------------------------------------------------------------------------------
+ Every single http request is placed in a cycle of stages. The request pass around five stages
+ and each one provides a hook function which is invoked by Monkey. 
+---------+----------------------+------------------+---------------------------------------------
+ Stage # |    Identified by     | Hook function    | Description
+---------+----------------------+------------------+---------------------------------------------
+   10    |  MK_PLUGIN_STAGE_10  | _mkp_stage_10()  | Connection just accept()ed, not assigned
+1---------+----------------------+------------------+---------------------------------------------
+   20    |  MK_PLUGIN_STAGE_20  | _mkp_stage_20()  | HTTP Request stream just received
+---------+----------------------+------------------+---------------------------------------------
+   30    |  MK_PLUGIN_STAGE_30  | _mkp_stage_30()  | Object handler, what to do with the request?
+---------+----------------------+------------------+---------------------------------------------
+   40    |  MK_PLUGIN_STAGE_40  | _mkp_stage_40()  | Request ended, content served
+---------+----------------------+------------------+---------------------------------------------
+   50    |  MK_PLUGIN_STAGE_50  | _mkp_stage_50()  | Remote connection has been closed
+---------+----------------------+------------------+---------------------------------------------
+
+Definitions
+-----------
+int _mkp_stage_10(int sockfd)
+int _mkp_stage_20(struct client_request *cr, struct request *sr)
+int _mkp_stage_30(struct client_request *cr, struct request *sr)
+int _mkp_stage_40(struct client_request *cr, struct request *sr)
+int _mkp_stage_50(int sockfd)
+
+------------+
+ Networking |
+------------+------------------------------------------------------------------------------------
+ Networking plugins act like hooks for specific calls from the core, so it basically provides a 
+ mechanism to replace the I/O and IP related functions. Just one running plugin can exists for
+ each type.
+---------+-----------------------+-----------------------------+---------------------------------
+  Type   |    Identified by      | Hook function               | Description
+---------+-----------------------+-----------------------------+---------------------------------
+   io    | MK_PLUGIN_NETWORK_IO  | _mkp_network_io_accept()    | Accept conx
+         |                       +-----------------------------+---------------------------------
+         |                       | _mkp_network_io_read()      | Read socket
+         |                       +-----------------------------+---------------------------------
+         |                       | _mkp_network_io_write()     | Write to socket
+         |                       +-----------------------------+---------------------------------
+         |                       | _mkp_network_io_writev()    | Write iov to socket
+         |                       +-----------------------------+---------------------------------
+         |                       | _mkp_network_io_close()     | Close socket
+         |                       +-----------------------------+---------------------------------
+         |                       | _mkp_network_io_connect()   | Connect to
+         |                       +-----------------------------+---------------------------------
+         |                       | _mkp_network_io_send_file() | Send file
+---------+-----------------------+-----------------------------+---------------------------------
+   ip    | MK_PLUGIN_NETWORK_IP  | _mkp_network_ip_addr()      | Get IP address from socket
+         |                       +---------------------------------------------------------------
+         |                       | _mkp_network_ip_maxlen()    | Get Max IP address length
+---------+-----------------------+-----------------------------+---------------------------------
+
+Definitions
+-----------
+int _mkp_network_io_accept(int server_fd, struct sockaddr_in sockaddr)
+int _mkp_network_io_read(int sockfd, void *buf, int count)
+int _mkp_network_io_write(int sockfd, const void *buf, size_t count)
+int _mkp_network_io_writev(int sockfd, struct mk_iov *mk_io)
+int _mkp_network_io_close(int sockfd)
+int _mkp_network_io_connect(const char *host, int port)
+int _mkp_network_io_send_file(int sockfd, int filefd, off_t *file_offset, size_t file_count)
+
+char *_mkp_network_ip_addr(int sockfd)
+int _mkp_network_ip_maxlen()
+
+Plugin definition
+-----------------
+A plugin *must* define it self with the following information:
+
+  #include "plugin.h"
+
+  mkp_data_t _shortname = "shortname";
+  mkp_data_t _name      = "My Super Plugin";
+  mkp_data_t _version   = "0.2";
+  mkp_type_t _types     = MK_PLUGIN_CORE_PRCTX | MK_PLUGIN_NETWORK_IO |
+                          MK_PLUGIN_STAGE_10 | MK_PLUGIN_STAGE_40;
+
+Field description:
+
+ _shortname : A simple word defining the Plugin 
+ _name      : Full plugin name
+ _version   : Plugin version
+ _types     : Type of plugin and events associated, it can be a mix of
+              types.
+
+
+Monkey exported functions
+-------------------------
+When Monkey load a plugin and calls the _mkp_init() function, it passed a 
+structure which contains mapped Monkey functions for different purposes.
+
+Considering 'api' as the API structure, we have the following available
+function calls:
+
+-------------------------------------------------------+---------------------------------------------------------
+ Function                                              | Description
+-------------------------------------------------------+---------------------------------------------------------
+  void *mem_alloc(size_t size)                         | Alloc a memory space
+-------------------------------------------------------+---------------------------------------------------------
+  void *mem_alloc_z(size_t size)                       | Alloc a memory space and set it to zero 
+-------------------------------------------------------+---------------------------------------------------------
+  void mem_free(void *ptr)                             | Free a memory space
+-------------------------------------------------------+---------------------------------------------------------
+  char *str_build(char **buffer, unsigned long *len,   | Builds a memory buffer formatting the string parameters
+                  const char *format, ...)             |
+-------------------------------------------------------+---------------------------------------------------------
+  char *str_dup(const char *s)                         | Duplicate a string buffer
+-------------------------------------------------------+---------------------------------------------------------
+  int str_search(const char *haystack,                 | Return the position of a pattern inside the string
+                 const char *needle)                   |
+-------------------------------------------------------+---------------------------------------------------------
+  int str_search_n(const char *haystack,               | Search a pattern inside a string with limit in N
+                   const char *needle)                 |
+-------------------------------------------------------+---------------------------------------------------------
+  char *str_copy_substr(const char *s, int pos_init,   | Copy a substring to a new memory buffer
+                        int pos_end)                   |
+-------------------------------------------------------+---------------------------------------------------------
+  struct mk_string_line *str_split_line(const char *s) | Split a line using as separator the space character
+-------------------------------------------------------+---------------------------------------------------------
+  char *file_to_buffer(const char *path)               | Reads an entire file into a string buffer
+-------------------------------------------------------+---------------------------------------------------------
+  struct file_info file_get_info(const char *path)     | Get file information
+-------------------------------------------------------+---------------------------------------------------------
+  int header_send(int sockfd,                          | Send header information to the client
+                  struct client_request *cr,           |
+                  struct request *sr,                  |
+                  struct log_info *s_log)              |
+-------------------------------------------------------+---------------------------------------------------------
+  struct mk_iov *iov_create(int len, int offset)       | Alloc an iov structure
+--------------------------------+----------------------+----------------------------------
+  void iov_free(struct mk_iov *mk_io)                  | Free iov structure
+-------------------------------------------------------+---------------------------------------------------------
+  int iov_add_entry(struct mk_iov *mk_io,              | Add an entry to the iov structure
+                    char *buf,                         |
+                    int len,                           |
+                    mk_pointer sep,                    |
+                    int free)                          |
+-------------------------------------------------------+---------------------------------------------------------
+  int iov_set_entry(struct mk_iov *mk_io,              | Add an entry to the iov structure in a specific position
+                    char *buf,                         |
+                    int len,                           |
+                    int free,                          |
+                    int idx)                           |
+-------------------------------------------------------+---------------------------------------------------------
+  ssize_t iov_send(int fd,                             | Send iov structure
+                   struct mk_iov *mk_io)               |
+-------------------------------------------------------+---------------------------------------------------------
+  void iov_print(struct mk_iov *mk_io)                 | Print iov structure content
+-------------------------------------------------------+---------------------------------------------------------
+  void pointer_set(mk_pointer *p, char *data)          | Set values to a Monkey pointer
+-------------------------------------------------------+---------------------------------------------------------
+  void pointer_print(mk_pointer *p)                    | Print to stdout the data contained in a Monkey pointer
+-------------------------------------------------------+---------------------------------------------------------
+  int socket_cork_flag(int sockfd, int state)          | Enable/Disable socket CORK_FLAG
+-------------------------------------------------------+---------------------------------------------------------
+  int socket_connect(int sockfd, char *host, int port) | Connect to a specific host and port
+-------------------------------------------------------+---------------------------------------------------------
+  int socket_set_tcp_nodelay(int sockfd)               | Set TCP socket on TCP_NODELAY mode
+-------------------------------------------------------+---------------------------------------------------------
+  int socket_set_nonblocking(int sockfd)               | Set socket to non-blocking mode
+-------------------------------------------------------+---------------------------------------------------------
+  int socket_create()                                  | Create a TCP socket
+-------------------------------------------------------+---------------------------------------------------------
+  struct mk_config *config_create(const char *file)    | Create a context for a configuration file
+-------------------------------------------------------+---------------------------------------------------------
+  void config_free(struct mk_config *cnf)              | Free context of a configuration file
+-------------------------------------------------------+---------------------------------------------------------
+  void *config_getval(struct mk_config *cnf,           | Retrieve a specific configuration key value
+                      const char *key,                 |
+                      int mode)                        |
+-------------------------------------------------------+---------------------------------------------------------
+  struct sched_connection                              | Get connection scheduler details
+  *sched_get_connection(struct sched_list_node *sched, |
+                        int remote_fd)                 |
+-------------------------------------------------------+---------------------------------------------------------
+  int event_add(int sockfd,                            | Register an event handler for a specific file 
+                struct plugin *handler,                | descriptor, this event is listened in the thread epoll 
+                struct client_request *cr,             | loop
+                struct request *sr)                    |
+-------------------------------------------------------+---------------------------------------------------------
+  int event_socket_change_mode(int sockfd,             | Change the EPOLL event mode for an event added 
+                               int mode)               | with api->event_add()
+-------------------------------------------------------+---------------------------------------------------------

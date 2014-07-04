@@ -1,0 +1,36 @@
+mklib_start(3)
+=============
+
+NAME
+----
+mklib_start, mklib_stop - start/stop a monkey server instance
+
+SYNOPSIS
+--------
+*#include <libmonkey.h>*
+
+*int mklib_start(mklib_ctx 'ctx');*
+
+*int mklib_stop(mklib_ctx 'ctx');*
+
+DESCRIPTION
+-----------
+The *mklib_start*() function starts the server instance identified by
+the context 'ctx'. It runs in a thread in the current process.
+
+The *mklib_stop*() function stops the server instance 'ctx' and frees
+all memory associated with it. 'ctx' is invalid after the call.
+
+RETURN VALUE
+------------
+On success, these functions return MKLIB_TRUE. On failure MKLIB_FALSE is returned.
+
+SEE ALSO
+--------
+*mklib_config*(3), *mklib_vhost_config*(3), *mklib_init*(3), *mklib_callback_set*(3),
+*mklib_vhost_list*(3), *mklib_scheduler_worker_info*(3), *mklib_mimetype_add*(3)
+
+RESOURCES
+---------
+See http://monkey-project.com
+

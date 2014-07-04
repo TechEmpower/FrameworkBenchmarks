@@ -1,0 +1,6 @@
+# Plugins setup
+debian/tmp/etc/monkey/plugins/logger/*
+
+# Plugins / Libraries
+debian/tmp/usr/lib/monkey/monkey-logger.so
+

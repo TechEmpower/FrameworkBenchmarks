@@ -1,0 +1,5 @@
+Duda - Web Services Framework
+=============================
+Duda provides a powerful web services framework allowing the integration
+and deployment of custom applications. It provides a high level API built
+on top of Monkey features.

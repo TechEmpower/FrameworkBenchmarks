@@ -1,0 +1,154 @@
+'\" t
+.\"     Title: mklib_callback_set
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 05/20/2013
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "MKLIB_CALLBACK_SET" "3" "05/20/2013" "\ \&" "\ \&"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mklib_callback_set \- sets up a callback function
+.SH "SYNOPSIS"
+.sp
+\fB#include <libmonkey\&.h>\fR
+.sp
+\fBint (*cb_ipcheck)(const char *\fR\fB\fIip\fR\fR\fB);\fR
+.sp
+\fBint (*cb_urlcheck)(const char *\fR\fB\fIurl\fR\fR\fB);\fR
+.sp
+.nf
+\fBint (*cb_data)(const mklib_session *\fR\fB\fIsr\fR\fR\fB, const char *\fR\fB\fIvhost\fR\fR\fB, const char *\fR\fB\fIurl\fR\fR\fB,
+              const char *\fR\fB\fIget\fR\fR\fB, unsigned long \fR\fB\fIget_len\fR\fR\fB,
+              const char *\fR\fB\fIpost\fR\fR\fB, unsigned long \fR\fB\fIpost_len\fR\fR\fB,
+              unsigned int *\fR\fB\fIstatus\fR\fR\fB, const char \fR\fB**\fR\fB\fIcontent\fR\fR\fB,
+              unsigned long *\fR\fB\fIcontent_len\fR\fR\fB, char *\fR\fB\fIheader\fR\fR\fB);\fR
+.fi
+.sp
+\fBvoid (*cb_close)(const mklib_session *\fR\fB\fIsr\fR\fR\fB);\fR
+.sp
+\fBint mklib_callback_set(mklib_ctx \fR\fB\fIctx\fR\fR\fB, enum mklib_cb \fR\fB\fIcb\fR\fR\fB, void *\fR\fB\fIfunc\fR\fR\fB);\fR
+.SH "DESCRIPTION"
+.sp
+The \fBmklib_callback_set\fR() function binds the passed function as the passed callback\&.
+.sp
+You may use NULL for the \fIfunc\fR argument to reset it\&. There can be only one callback of each type\&.
+.SH "VALID OPTIONS"
+.PP
+\fBMKCB_IPCHECK\fR
+.RS 4
+The
+\fIfunc\fR
+argument is a function compliant with the
+\fBcb_ipcheck\fR
+declaration\&.
+.RE
+.PP
+\fBMKCB_URLCHECK\fR
+.RS 4
+The
+\fIfunc\fR
+argument is a function compliant with the
+\fBcb_urlcheck\fR
+declaration\&.
+.RE
+.PP
+\fBMKCB_DATA\fR
+.RS 4
+The
+\fIfunc\fR
+argument is a function compliant with the
+\fBcb_data\fR
+declaration\&.
+.RE
+.PP
+\fBMKCB_CLOSE\fR
+.RS 4
+The
+\fIfunc\fR
+argument is a function compliant with the
+\fBcb_close\fR
+declaration\&.
+.RE
+.SH "CALLBACKS"
+.sp
+The \fBcb_ipcheck\fR() callback is called right after a new connection is established\&. It is given the IP in text form, and is expected to return \fIMKLIB_FALSE\fR if the connection is to be dropped\&.
+.sp
+The \fBcb_urlcheck\fR() callback is called when the requested URL is known\&. You may use this callback to check whether the URL is valid\&. Return \fIMKLIB_FALSE\fR to drop this connection\&.
+.sp
+The \fBcb_data\fR() callback is the main entry point for dynamic applications\&. Return \fIMKLIB_FALSE\fR if you don\(cqt want to handle this connection, and \fIMKLIB_TRUE\fR if you sent any data\&.
+.PP
+\fBInput arguments\fR
+.RS 4
+The
+\fIsr\fR
+argument is a unique identifier for this request\&. You may use it to match any dynamically allocated memory later in the
+\fBcb_close\fR() callback\&.
+
+The
+\fIvhost\fR
+argument is a unique string identifying this virtual host\&. It is "default" for the default/fallback virtual host\&.
+
+The
+\fIurl\fR
+argument contains the request url, same as passed to the
+\fBcb_urlcheck\fR() callback\&.
+
+The
+\fIget\fR
+and
+\fIpost\fR
+arguments contain data sent via HTTP GET and POST, if any\&. They are NULL if no data was sent via that channel\&.
+.RE
+.PP
+\fBOutput arguments\fR
+.RS 4
+The
+\fIstatus\fR
+argument will be sent as the HTTP status code\&. If not set, it defaults to 200 "OK"\&.
+
+The
+\fIcontent\fR
+argument will contain the main response you want to send for this request\&. It must stay available until the
+\fBcb_close\fR() callback is called\&.
+
+The
+\fIcontent_len\fR
+argument will contain the length of
+\fIcontent\fR, in bytes\&.
+
+The
+\fIheader\fR
+argument has 256 bytes of static space for any custom headers\&. For example, one could write the content type there: "Content\-type: text/html"
+.RE
+.sp
+The \fBcb_close\fR() callback is called after all data for this request is served\&. You may use the callback for freeing any per\-request dynamic memory, for example\&.
+.SH "RETURN VALUE"
+.sp
+On success, returns \fIMKLIB_TRUE\fR\&. On failure \fIMKLIB_FALSE\fR is returned\&.
+.SH "SEE ALSO"
+.sp
+\fBmklib_config\fR(3), \fBmklib_vhost_config\fR(3), \fBmklib_start\fR(3), \fBmklib_stop\fR(3), \fBmklib_init\fR(3), \fBmklib_vhost_list\fR(3), \fBmklib_scheduler_worker_info\fR(3), \fBmklib_mimetype_add\fR(3)
+.SH "RESOURCES"
+.sp
+See http://monkey\-project\&.com

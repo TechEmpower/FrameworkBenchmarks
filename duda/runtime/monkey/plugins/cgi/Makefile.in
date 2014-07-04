@@ -1,0 +1,14 @@
+all: monkey-cgi.so
+include ../Make.common
+
+CC	= @echo "  CC   $(_PATH)/$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS	= $CFLAGS
+LDFLAGS = $LDFLAGS
+DEFS    = $DEFS
+OBJECTS = cgi.o request.o event.o
+
+-include $(OBJECTS:.o=.d)
+
+monkey-cgi.so: $(OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEFS) -shared -o $@ $^ -lc

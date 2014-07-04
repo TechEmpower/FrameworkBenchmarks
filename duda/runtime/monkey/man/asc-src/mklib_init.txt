@@ -1,0 +1,49 @@
+mklib_init(3)
+=============
+
+NAME
+----
+mklib_init - sets up a libmonkey context
+
+SYNOPSIS
+--------
+*#include <libmonkey.h>*
+
+[verse]
+*mklib_ctx mklib_init(const char *'address', unsigned int 'port',
+                     unsigned int 'plugins', const char *'documentroot');*
+
+DESCRIPTION
+-----------
+The *mklib_init*() function creates a libmonkey context with the given settings.
+
+You may use NULL for the char */function pointer and 0 for the int arguments to
+use the defaults for each.
+
+The 'address' argument gives the IP to which to bind. The default is to bind to all.
+
+The 'port' argument gives the port to bind to. The default is 2001. Note that ports
+`<=` 1024 require root permissions.
+
+The 'plugins' argument is an OR'ed result of valid, library-compliant plugins.
+Currently the allowed options are 'MKLIB_LIANA' and 'MKLIB_LIANA_SSL'. The default is
+'MKLIB_LIANA'.
+
+The 'documentroot' argument gives the path from where to serve pages. The default is
+none, that is, no files will be served no matter the request. This often makes sense
+if you plan to serve all requests dynamically yourself via the data callback.
+
+RETURN VALUE
+------------
+On success, returns a valid mklib_ctx. On failure NULL is returned.
+
+SEE ALSO
+--------
+*mklib_config*(3), *mklib_vhost_config*(3), *mklib_start*(3), *mklib_stop*(3), 
+*mklib_callback_set*(3), *mklib_vhost_list*(3), *mklib_scheduler_worker_info*(3),
+*mklib_mimetype_add*(3)
+
+RESOURCES
+---------
+See http://monkey-project.com
+

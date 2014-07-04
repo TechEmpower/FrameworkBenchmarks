@@ -1,0 +1,15 @@
+# Library
+debian/tmp/usr/lib/libmonkey.so.1.4
+debian/tmp/usr/lib/libmonkey.so
+
+# Manpages
+debian/tmp/usr/share/man/man3/mklib_start.3
+debian/tmp/usr/share/man/man3/mklib_mimetype_add.3
+debian/tmp/usr/share/man/man3/mklib_mimetype_list.3
+debian/tmp/usr/share/man/man3/mklib_callback_set.3
+debian/tmp/usr/share/man/man3/mklib_vhost_config.3
+debian/tmp/usr/share/man/man3/mklib_config.3
+debian/tmp/usr/share/man/man3/mklib_scheduler_worker_info.3
+debian/tmp/usr/share/man/man3/mklib_vhost_list.3
+debian/tmp/usr/share/man/man3/mklib_init.3
+debian/tmp/usr/share/man/man3/mklib_stop.3

@@ -1,0 +1,72 @@
+Ideas and roadmap for Monkey v1.4
+=================================
+
+This is just a draft of ideas to implement in the development phase of
+Monkey v1.4.
+
+Core
+------------
+[+] declarations cleanup: all specific global structures and variables must be
+    prefixed with 'mk_'. We should move the code to use typedef structs to drop
+    long references, e.g:
+
+      struct client_session  -> mk_client_session_t
+      struct session_request -> mk_session_request_t
+
+[+] configure script/plugins: the configure script must be able to link a specific
+    plugin with a fixed path, and not only perform lookups in the plugins/ directory,
+    something like:
+
+      ./configure --include-plugin=/path/to/plugin_source
+
+Internal API
+------------
+
+[+] Mapping URIs to plugins: right now every plugin decides if it will work or not
+    an incoming connection, the optimal solution would be to decide in the virtual
+    host configuration through a regex or similar who should handle what.
+
+Plugin API
+------------
+
+[+] session request + plugin data: some plugins requires to associate specific data
+    to a session_request. The current solution is to let the plugin handle it own
+    list through pthread keys which is too dirty and redundant solution across the
+    other plugins.
+
+    the solution proposed is an API function to link specific plugin data or context
+    to the request in question. It requires session_request modification for it purpose:
+
+       void mk_api->data_set(struct session_request *sr,
+                             void *data,
+                             int (*cleanup_callback) (struct session_request *sr));
+
+       void *mk_api->data_get(struct session_request *sr);
+
+    so inside a plugin, some data can be associated easily and when the core decides
+    to finish the work of that specific session, it should invoke the cleanup_callback()
+    so the plugin can release any resources associated.
+
+[+] Kernel modules style to register callbacks: would be great to use a static structure
+    to define the callback functions that a plugin exposes to the core. Right now
+    everything is done through fixed named functions like _mkp_...().
+
+    The Linux modules uses a static struct for that purpose and looks more elegant.
+
+[+] Streams: implement a streams mechanism to hook different sources of data and stream
+    them out to the client. Some streams to support should be:
+
+     - function: be able to define a function who provide a stream based in some
+       computed data, e.g: gzip, video encoding frames, etc.
+
+     - file descriptors: this include sockets, pipes, files, everything associated to
+       a fd.
+
+Plugins
+-----------
+[+] gzip compression: easy to do but would be good to implement this over a 'stream' like
+    mechanism to avoid blocking for large data processing.
+
+[+] proxy reverse: proxy back connections for HTTP, HTTPS and Websockets
+
+[+] SPDY support.

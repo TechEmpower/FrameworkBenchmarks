@@ -1,0 +1,46 @@
+mklib_scheduler_worker_info(3)
+==============================
+
+NAME
+----
+mklib_scheduler_worker_info - list all worker threads and their stats
+
+SYNOPSIS
+--------
+*#include <libmonkey.h>*
+
+[verse]
+*struct mklib_worker_info {
+    unsigned long long 'active_connections';
+    int 'pid';
+};*
+
+*mklib_worker_info_foreach(struct mklib_worker_info *'cur', struct mklib_worker_info `**`'list')*
+
+*struct mklib_worker_info **mklib_vhost_list(mklib_ctx 'ctx');*
+
+DESCRIPTION
+-----------
+*mklib_vhost_list*() returns a list of all existing worker threads.
+
+The 'active_connections' member has the number of currently ongoing connections to this 
+worker.
+
+The 'pid' member has the thread ID of this worker.
+
+
+The *mklib_worker_info_foreach* convenience macro may be used to loop over all the workers.
+
+RETURN VALUE
+------------
+On success, returns a NULL-terminated list. On failure NULL is returned.
+
+SEE ALSO
+--------
+*mklib_config*(3), *mklib_init*(3), *mklib_start*(3), *mklib_stop*(3), 
+*mklib_callback_set*(3), *mklib_vhost_list*(3), *mklib_mimetype_add*(3)
+
+RESOURCES
+---------
+See http://monkey-project.com
+

@@ -1,0 +1,95 @@
+mklib_callback_set(3)
+=====================
+
+NAME
+----
+mklib_callback_set - sets up a callback function
+
+SYNOPSIS
+--------
+*#include <libmonkey.h>*
+
+*int (*cb_ipcheck)(const char *'ip');*
+
+*int (*cb_urlcheck)(const char *'url');*
+
+[verse]
+*int (*cb_data)(const mklib_session *'sr', const char *'vhost', const char *'url',
+              const char *'get', unsigned long 'get_len',
+              const char *'post', unsigned long 'post_len',
+              unsigned int *'status', const char `**`'content',
+              unsigned long *'content_len', char *'header');*
+
+*void (*cb_close)(const mklib_session *'sr');*
+
+*int mklib_callback_set(mklib_ctx 'ctx', enum mklib_cb 'cb', void *'func');*
+
+DESCRIPTION
+-----------
+The *mklib_callback_set*() function binds the passed function as the passed callback.
+
+You may use NULL for the 'func' argument to reset it. There can be only one callback
+of each type.
+
+VALID OPTIONS
+-------------
+*MKCB_IPCHECK*::
+	The 'func' argument is a function compliant with the *cb_ipcheck* declaration.
+*MKCB_URLCHECK*::
+	The 'func' argument is a function compliant with the *cb_urlcheck* declaration.
+*MKCB_DATA*::
+	The 'func' argument is a function compliant with the *cb_data* declaration.
+*MKCB_CLOSE*::
+	The 'func' argument is a function compliant with the *cb_close* declaration.
+
+CALLBACKS
+---------
+
+The *cb_ipcheck*() callback is called right after a new connection is established.
+It is given the IP in text form, and is expected to return MKLIB_FALSE if the connection
+is to be dropped.
+
+The *cb_urlcheck*() callback is called when the requested URL is known. You may use this
+callback to check whether the URL is valid. Return MKLIB_FALSE to drop this connection.
+
+The *cb_data*() callback is the main entry point for dynamic applications.
+Return MKLIB_FALSE if you don't want to handle this connection, and MKLIB_TRUE if you
+sent any data.
+
+*Input arguments*::
+	The 'sr' argument is a unique identifier for this request. You may use it to match
+	any dynamically allocated memory later in the *cb_close*() callback. +
+	The 'vhost' argument is a unique string identifying this virtual host. It is
+	"default" for the default/fallback virtual host. +
+	The 'url' argument contains the request url, same as passed to the *cb_urlcheck*()
+	callback. +
+	The 'get' and 'post' arguments contain data sent via HTTP GET and POST, if any. They
+	are NULL if no data was sent via that channel.
+
+*Output arguments*::
+	The 'status' argument will be sent as the HTTP status code. If not set, it defaults
+	to 200 "OK". +
+	The 'content' argument will contain the main response you want to send for this
+	request. It must stay available until the *cb_close*() callback is called. +
+	The 'content_len' argument will contain the length of 'content', in bytes. +
+	The 'header' argument has 256 bytes of static space for any custom headers.
+	For example, one could write the content type there: "Content-type: text/html"
+
+
+The *cb_close*() callback is called after all data for this request is served. You may use
+the callback for freeing any per-request dynamic memory, for example.
+
+RETURN VALUE
+------------
+On success, returns MKLIB_TRUE. On failure MKLIB_FALSE is returned.
+
+SEE ALSO
+--------
+*mklib_config*(3), *mklib_vhost_config*(3), *mklib_start*(3), *mklib_stop*(3), 
+*mklib_init*(3), *mklib_vhost_list*(3), *mklib_scheduler_worker_info*(3),
+*mklib_mimetype_add*(3)
+
+RESOURCES
+---------
+See http://monkey-project.com
+

@@ -1,0 +1,63 @@
+'\" t
+.\"     Title: mklib_scheduler_worker_info
+.\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: 05/20/2013
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "MKLIB_SCHEDULER_WORK" "3" "05/20/2013" "\ \&" "\ \&"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+mklib_scheduler_worker_info \- list all worker threads and their stats
+.SH "SYNOPSIS"
+.sp
+\fB#include <libmonkey\&.h>\fR
+.sp
+.nf
+\fBstruct mklib_worker_info {
+    unsigned long long \fR\fB\fIactive_connections\fR\fR\fB;
+    int \fR\fB\fIpid\fR\fR\fB;
+};\fR
+.fi
+.sp
+\fBmklib_worker_info_foreach(struct mklib_worker_info *\fR\fB\fIcur\fR\fR\fB, struct mklib_worker_info \fR\fB**\fR\fB\fIlist\fR\fR\fB)\fR
+.sp
+\fBstruct mklib_worker_info **mklib_vhost_list(mklib_ctx \fR\fB\fIctx\fR\fR\fB);\fR
+.SH "DESCRIPTION"
+.sp
+\fBmklib_vhost_list\fR() returns a list of all existing worker threads\&.
+.sp
+The \fIactive_connections\fR member has the number of currently ongoing connections to this worker\&.
+.sp
+The \fIpid\fR member has the thread ID of this worker\&.
+.sp
+The \fBmklib_worker_info_foreach\fR convenience macro may be used to loop over all the workers\&.
+.SH "RETURN VALUE"
+.sp
+On success, returns a NULL\-terminated list\&. On failure NULL is returned\&.
+.SH "SEE ALSO"
+.sp
+\fBmklib_config\fR(3), \fBmklib_init\fR(3), \fBmklib_start\fR(3), \fBmklib_stop\fR(3), \fBmklib_callback_set\fR(3), \fBmklib_vhost_list\fR(3), \fBmklib_mimetype_add\fR(3)
+.SH "RESOURCES"
+.sp
+See http://monkey\-project\&.com

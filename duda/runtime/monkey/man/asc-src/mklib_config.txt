@@ -1,0 +1,95 @@
+mklib_config(3)
+=============
+
+NAME
+----
+mklib_config - configure your libmonkey instance
+
+SYNOPSIS
+--------
+*#include <libmonkey.h>*
+
+*int mklib_config(mklib_ctx 'ctx', ...);*
+
+DESCRIPTION
+-----------
+*mklib_config*() is a NULL-terminated call for configuring the libmonkey context.
+
+You may call it several times with different options or all at once.
+
+VALID OPTIONS
+-------------
+*MKC_WORKERS*::
+	How many worker threads to spawn, the next argument is an int. Default 1.
+
+*MKC_TIMEOUT*::
+	How many seconds to wait for a response, the next argument is an int. Default 15.
+
+*MKC_USERDIR*::
+	What is the users' www space named. The next argument is a char *.
+	The default is NULL, that is, no www space is allowed.
+
+	Example: set it to "public_html", and /~user redirects to /home/user/public_html.
+
+*MKC_INDEXFILE*::
+	A space-delimited list of accepted index files. The next argument is a char *.
+	The default is NULL, that is, when trying to access a directory, a 403 forbidden is
+	returned.
+
+	Example: "index.html index.htm"
+
+*MKC_HIDEVERSION*::
+	Whether to hide the libmonkey version in headers and error pages. The next argument
+	is either MKLIB_TRUE or MKLIB_FALSE. The default is MKLIB_TRUE, no version is shown.
+
+*MKC_RESUME*::
+	Whether to support resuming. The next argument is either MKLIB_TRUE or MKLIB_FALSE.
+	The default is MKLIB_TRUE.
+
+*MKC_KEEPALIVE*::
+	Whether to support keep-alives. The next argument is either MKLIB_TRUE or
+	MKLIB_FALSE. The default is MKLIB_TRUE.
+
+*MKC_KEEPALIVETIMEOUT*::
+	How many seconds to keep a keep-alive connection open. The next argument is an int.
+	The default is 15.
+
+*MKC_MAXKEEPALIVEREQUEST*::
+	How many keep-alive requests to handle at once. The next argument is an int.
+	The default is 50.
+
+*MKC_MAXREQUESTSIZE*::
+	The maximum size of a request, in KiB. The next argument is an int.
+	The default is 32 KiB.
+
+*MKC_SYMLINK*::
+	Whether to support symlinks. The next argument is either MKLIB_TRUE or MKLIB_FALSE.
+	The default is MKLIB_FALSE.
+
+*MKC_DEFAULTMIMETYPE*::
+	The default mimetype when a file has an unknown extension. The next argument is a
+	char *.
+	The default is "text/plain".
+
+EXAMPLE
+-------
+[verse]
+`//` Set workers to 3
+mklib_config(ctx, MKC_WORKERS, 3, NULL);
+`//` Set timeout and keep-alive timeout to 5s
+mklib_config(ctx, MKC_TIMEOUT, 5, MKC_KEEPALIVETIMEOUT, 5, NULL);
+
+RETURN VALUE
+------------
+On success, returns MKLIB_TRUE. On failure MKLIB_FALSE is returned.
+
+SEE ALSO
+--------
+*mklib_init*(3), *mklib_vhost_config*(3), *mklib_start*(3), *mklib_stop*(3), 
+*mklib_callback_set*(3), *mklib_vhost_list*(3), *mklib_scheduler_worker_info*(3),
+*mklib_mimetype_add*(3)
+
+RESOURCES
+---------
+See http://monkey-project.com
+

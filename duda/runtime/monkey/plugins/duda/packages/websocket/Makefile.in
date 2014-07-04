@@ -1,0 +1,23 @@
+_PATH   = $(patsubst $(monkey_root)/%, %, $(CURDIR))
+CC      = @echo "  CC   $(_PATH)/$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS  = $CFLAGS
+LDFLAGS = $LDFLAGS
+DEFS    = $DEFS
+INCDIR  = ../../../../src/include -I../../src
+OBJECTS = duda_package.o base64.o sha1.o websocket.o request.o broadcast.o callbacks.o
+SOURCES = duda_package.c base64.c sha1.c websocket.c request.c broadcast.c callbacks.c
+
+all: ../websocket.dpkg
+
+-include $(OBJECTS:.o=.d)
+
+../websocket.dpkg: $(OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEFS) -shared -o $@ $^ -lc -lm
+
+.c.o:
+	$(CC) $(CFLAGS) $(DEFS) -I$(INCDIR) -fPIC -c $<
+	$(CC_QUIET) -MM -MP $(CFLAGS) $(DEFS) -I$(INCDIR) $*.c -o $*.d > /dev/null &2>&1
+
+clean:
+	rm -rf *~ *.o *.d

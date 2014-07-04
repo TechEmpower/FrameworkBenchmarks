@@ -1,0 +1,6 @@
+# Plugins setup
+debian/tmp/etc/monkey/plugins/fastcgi/*
+
+# Plugins / Libraries
+debian/tmp/usr/lib/monkey/monkey-fastcgi.so
+

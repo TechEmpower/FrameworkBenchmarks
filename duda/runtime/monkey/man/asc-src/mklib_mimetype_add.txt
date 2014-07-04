@@ -1,0 +1,52 @@
+mklib_mimetype_add(3)
+=====================
+
+NAME
+----
+mklib_mimetype_add, mklib_mimetype_list - add a mimetype, list the mimetypes
+
+SYNOPSIS
+--------
+*#include <libmonkey.h>*
+
+[verse]
+*struct mklib_mime {
+    const char *'name';
+    const char *'type';
+};*
+
+*int mklib_mimetype_add(mklib_ctx 'ctx', char *'name', char *'type');*
+
+*struct mklib_mime **mklib_mimetype_list(mklib_ctx 'ctx');*
+
+*mklib_mimetype_foreach(struct mklib_mime *'cur', struct mklib_mime `**`'list')*
+
+DESCRIPTION
+-----------
+The *mklib_mimetype_add*() function adds this mimetype to the internal array, if it is not 
+added already. The 'name' argument is the file extension, for example "html". The 'type' 
+argument is the mime type, for example "text/html".
+
+The *mklib_mimetype_list*() function returns a list of all known mime types. Note that the 
+'type' member is pre-processed to contain CRLF after it, so for matching 'type' use only the 
+beginning of the string.
+
+The convenience macro *mklib_mimetype_foreach* may be used to loop over a list of such mime 
+types.
+
+RETURN VALUE
+------------
+On success, *mklib_mimetype_add*() returns MKLIB_TRUE. On failure MKLIB_FALSE is returned.
+
+On success, *mklib_mimetype_list*() returns a NULL-terminated list. On failure NULL 
+is returned.
+
+SEE ALSO
+--------
+*mklib_config*(3), *mklib_vhost_config*(3), *mklib_init*(3), *mklib_callback_set*(3),
+*mklib_vhost_list*(3), *mklib_scheduler_worker_info*(3)
+
+RESOURCES
+---------
+See http://monkey-project.com
+

@@ -1,0 +1,11 @@
+WebSocket Duda Package
+======================
+This package adds the WebSocket protocol support into
+Duda, the code is based in RFC6455:
+
+   http://tools.ietf.org/html/rfc6455
+
+Author
+======
+Written by Eduardo Silva <edsiper@gmail.com>
+

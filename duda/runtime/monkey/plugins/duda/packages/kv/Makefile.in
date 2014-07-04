@@ -1,0 +1,23 @@
+_PATH   = $(patsubst $(monkey_root)/%, %, $(CURDIR))
+CC      = @echo "  CC   $(_PATH)/$@"; $CC
+CC_QUIET= @echo -n; $CC
+CFLAGS  = $CFLAGS -Wno-unused -Wno-unused-but-set-parameter
+LDFLAGS = $LDFLAGS
+DEFS    = $DEFS -DJX9_DISABLE_BUILTIN_FUNC -DJX9_DISABLE_DISK_IO -DUNQLITE_ENABLE_THREADS
+INCDIR  = ../../../../src/include -I../../src
+OBJECTS = duda_package.o unqlite.o
+SOURCES = duda_package.c unqlite.c
+
+all: ../kv.dpkg
+
+-include $(OBJECTS:.o=.d)
+
+../kv.dpkg: $(OBJECTS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(DEFS) -shared -o $@ $^ -lc
+
+.c.o: $(SOURCES)
+	$(CC) $(CFLAGS) $(DEFS) -I$(INCDIR) -fPIC -c $<
+	$(CC_QUIET) -MM -MP $(CFLAGS) $(DEFS) -I$(INCDIR) $*.c -o $*.d > /dev/null &2>&1
+
+clean:
+	rm -rf *~ *.o *.d

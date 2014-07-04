@@ -1,0 +1,157 @@
+Revision    : 0.2
+Last updated: Feb 12th, 2012
+
+Changelog
+---------
+Rev 0.2: 
+       - Add introduction to web services and components
+       - Support for incoming data through POST + JSON
+
+Rev 0.1: 
+       - Initial draft
+
+Web services
+============
+A web service is a server side resource which expose HTTP[0] interfaces to instruct
+the server to perform different actions like to provide specific data or execute 
+some action.
+
+The purpose of the following design, is the ability to provide a web interface that
+can be managed by a HTML5 or Javascript engine from the client side in a easy manner.
+
+This web service spec propose the URI (Uniform Resource Identifier) as the unique
+public resource to listen for incoming commands. Also there are four main concepts 
+to understand the behavior of the web service:
+
+ a) Application: the application URI name identifies the web service to be accessed.
+
+ b) Interface: the interface to group a set of methods or calls available.
+
+ c) Method: a specific call which is mapped internally to a programming function
+
+ d) Parameters: A method can receive multiple parameters through the URI, each parameter
+                must not exceed the 32 bytes length and each byte must be in the range
+                of A-Z, a-z or 0-9.
+
+ e) Data: if the web service requires to get large amount of data that does not fill 
+          like a normal parameter, this can be done using the POST HTTP method and sending
+          the body in some format (like JSON).
+
+
+This is an example of the request URI:
+
+   URI: /application/interfaces/methods/param_1/param_2/param_N
+             |         |           |       |      |      |
+             |         |           |       +------+------+
+             |         |           |              |          
+             |         |           |              +----> N values/parameters
+             |         |           | 
+             |         |           +---> each interface have N methods/calls
+             |         |             
+             |         +--> setup
+             |              archive
+             |              status
+             |
+             +---> Unique application name (e.g: foo)
+
+
+An interface have N methods, and each method can listen for multiple
+parameters. For simple requests we can use GET HTTP method through the
+URL, but if you need to send more data than normal, you could use POST.
+
+
+Application Example
+-------------------
+App name : foo
+interface: archive (return archived data)
+methods  :
+          - list: 
+                 desc  : return a list of archived files available
+                 params: None
+          - get : 
+                 desc  : retrieve an archived file (it requires a param)
+                 params: 20120212110304.txt
+
+
+If we wanted to get a list of the archived files of our application we could
+invoke the interface 'archive' and it's 'list' method in the following way:
+
+    URI = /foo/archive/list
+
+this spec does not define which format is used for the response data, just like 
+an example, the results could be provided in JSON format like:
+
+    {"list":
+        [
+            { "filename": "20120212113200.txt", "size": "86537" },
+	    { "filename": "20120212113300.txt", "size": "83283" },
+	    { "filename": "20120212113400.txt", "size": "57925" },
+        ]
+    }
+
+
+so in order to request a specific file like '201220212113300.txt, the URI command
+would be:
+
+    URI = /foo/archive/get/20120212113300.txt
+
+from an internal point of view, the function which maps the methods and it
+parameters will locate the file and send an HTTP response plus the body of it.
+
+
+Security
+========
+
+The web services works on top of HTTP protocol, so all base security aspects such as
+SSL and Basic Auth are provided by the web server. 
+
+Additional security checks can be added in the web service as required.
+
+
+How it works / Web Server
+===============+=========
+
+The web services interface is a plugin built on top of Monkey HTTP Daemon project [1],
+which is a fast and lightweight web server for Linux.
+
+The plugin uses Monkey API to accomplish the goals. It works like a wrapper and expose
+a new API for web services applications. 
+
+   +------------------+  +-------------------+  +------------------+
+   |  Application #1  |  |   Application #2  |  |  Application #N  |
+   +--------+---------+  +---------+---------+  +--------+---------+
+            |                      |                     |
+            +----------------------+---------------------+
+                                   |
+                  +----------------+-----------------+
+                  |  Plugin: web services interface  |
+                  +----------------+-----------------+ 
+                                   |
+                     +-------------+--------------+   
+                     |  Monkey HTTP Daemon / API  |
+                     +----------------------------+
+ 
+
+Each web service application is a shared library and independent from others, it 
+lives in a specific directory with it configuration files.
+
+
+Programming Language
+====================
+
+All described components and interfaces are made in C. The performance obtained by this
+approach is hundred times faster than CGI, PHP or any other available option.
+
+
+Hardware Architecure
+====================
+
+All software is made to be compatible with x86 and x64 architectures as well
+with ARM processors.
+
+
+References
+==========
+[0] http://www.ietf.org/rfc/rfc2616.txt
+[1] http://monkey-project.com
+
