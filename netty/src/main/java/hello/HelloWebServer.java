@@ -6,6 +6,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.ServerChannel;
+import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -28,12 +29,8 @@ public class HelloWebServer {
 
     public void run() throws Exception {
 		// Configure the server.
-
-		String os = System.getProperty("os.name").toLowerCase();
-
-		boolean is_linux = os.contains("linux");
 		
-		if (is_linux) {
+		if (Epoll.isAvailable()) {
 			doRun( new EpollEventLoopGroup(), EpollServerSocketChannel.class);
 		}
 		else {
