@@ -7,7 +7,7 @@ scalaVersion := "2.11.1"
 version := "1.0.1"
 
 libraryDependencies ++= Seq(
-  "com.sksamuel.scruffy" %% "scruffy-server" % "1.4.14",
+  "com.sksamuel.scruffy" %% "scruffy-server" % "1.4.15",
   "org.mongodb" %% "casbah-core" % "2.7.1"
 )
 
