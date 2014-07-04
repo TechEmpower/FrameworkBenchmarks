@@ -1,5 +1,5 @@
 {
-  "framework": "scruffy",
+  "framework": "Scruffy",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -11,16 +11,16 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MongoDB",
-      "framework": "scruffy",
+      "framework": "Scruffy",
       "language": "Scala",
       "orm": "Raw",
-      "platform": "scruffy",
+      "platform": "Netty",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "scruffy",
+      "display_name": "Scruffy",
       "notes": "",
-      "versus": "servlet"
+      "versus": "Netty"
     }
   }]
 }
