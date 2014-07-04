@@ -10,8 +10,11 @@ def start(args, logfile, errfile):
   else:
     subprocess.check_call("../sbt/sbt assembly", shell=True, cwd="scruffy", stderr=errfile, stdout=logfile)
     
-  subprocess.Popen("java -jar target/scala-2.11/scruffy-benchmark-assembly-1.0.jar", cwd="scruffy", shell=True,
-                   stderr=errfile, stdout=logfile)
+  subprocess.Popen("java -jar target/scala-2.11/scruffy-benchmark-assembly-1.0.1.jar -Dhostname" + args.database_host,
+                    cwd="scruffy",
+                    shell=True,
+                    stderr=errfile,
+                    stdout=logfile)
   time.sleep(5)
   return 0
 

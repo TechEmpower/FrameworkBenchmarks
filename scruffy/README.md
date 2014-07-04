@@ -2,23 +2,33 @@
 
 This is the Scruffy portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-### JSON Encoding Test
-This example uses the built-in Jackson for json support.
-
-* [JSON test source](src/main/scala/scruffy/examples/Test1Endpoint.scala)
-
 ## Infrastructure Software Versions
+
 The tests were run with:
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Scruffy 1.4.14](http://scruffy-project.github.io/)
+* [Scruffy 1.4.15](http://scruffy-project.github.io/)
 
 ## Test URLs
 
-### JSON Encoding Test
+### Test type 1: JSON serialization
 
 http://localhost:8080/json
 
-### Plain Text Test
+This example uses the built-in Jackson for json support.
+
+* [Test 1 source](src/main/scala/scruffy/examples/Test1Endpoint.scala)
+
+### Test type 2: Single database query
+
+This example uses casbah for Mongo queries. Future improvement would be to switch to a nonblocking library.
+
+* [Test 2 source](src/main/scala/scruffy/examples/Test2Endpoint.scala)
+
+http://localhost:8080/db
+
+### Test type 6: Plaintext
 
 http://localhost:8080/plaintext
+
+* [Test 6 source](src/main/scala/scruffy/examples/Test6Endpoint.scala)
