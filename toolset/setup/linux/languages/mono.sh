@@ -1,11 +1,9 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists mono-3.2.8
 [ $? -ne 0 ] || { \
-  echo "Mono is installed, installing RootCAs from Mozilla..."; 
+  echo "Installing RootCAs from Mozilla..."; 
   mozroots --import --sync;
-  echo "Mono is installed!"
   return 0; }
 
 fw_get http://download.mono-project.com/sources/mono/mono-3.2.8.tar.bz2 -O mono-3.2.8.tar.bz2

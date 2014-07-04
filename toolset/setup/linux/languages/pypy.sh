@@ -1,8 +1,7 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists pypy
-[ $? -ne 0 ] || { echo "pypy is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 fw_get https://bitbucket.org/pypy/pypy/downloads/pypy-2.3.1-linux64.tar.bz2 -O pypy-2.3.1-linux64.tar.bz2
 tar vxf pypy-2.3.1-linux64.tar.bz2

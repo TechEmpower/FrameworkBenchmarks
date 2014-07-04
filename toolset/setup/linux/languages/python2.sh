@@ -1,8 +1,7 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists py2
-[ $? -ne 0 ] || { echo "Python2 is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 # fw_get http://www.python.org/ftp/python/2.7.7/Python-2.7.7.tgz
 # tar vxf Python-2.7.7.tgz

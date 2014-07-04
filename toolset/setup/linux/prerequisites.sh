@@ -1,13 +1,9 @@
 #!/bin/bash
 
-. ../toolset/setup/linux/bash_functions.sh
-
 fw_exists fwbm_prereqs_installed
 [ $? -ne 0 ] || { \
   echo "Prerequisites installed!"; 
-  # Source files to be sure
-  . ~/.profile
-  return 0; 
+  return 0;
 }
 
 sudo apt-get -y update
@@ -42,7 +38,6 @@ fw_exists ~/.bash_profile.bak
 cp ../config/benchmark_profile ~/.bash_profile
 cat ../config/benchmark_profile >> ~/.profile
 cat ../config/benchmark_profile >> ~/.bashrc
-. ~/.profile
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
 touch fwbm_prereqs_installed

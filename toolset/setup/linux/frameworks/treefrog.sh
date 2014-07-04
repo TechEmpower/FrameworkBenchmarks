@@ -1,15 +1,12 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists /usr/bin/treefrog
 ret1=$?
 fw_exists /usr/bin/tspawn
 ret2=$?
 if [ $ret1 -eq 0 ] && [ $ret2 -eq 0 ]; then 
-  echo "Treefrog is installed!"; 
   return 0;
 fi
-
 
 sudo apt-get install -y qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++
 

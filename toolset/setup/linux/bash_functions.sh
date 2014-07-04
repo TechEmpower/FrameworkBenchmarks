@@ -20,30 +20,71 @@ fw_unzip() {
   unzip "$@"
 }
 
+# Was there an error for the current dependency?
+FW_dep_error=0
+# Have we seen any errors?
+FW_any_errors=0
+fw_traperror () {
+  depend=$1
+  err=$2 # error status
+  line=$3 # LINENO
+  command="$4"
+  FW_dep_error=1
+  FW_any_errors=1
+
+  echo "ERROR: ${depend}.sh at line $line - command '$command' exited with status: $err"
+}
+
 # Requires dependencies to come in order e.g. Nimrod before
 # Jester, etc. Users should be know this 
 # fairly well (e.g. you can't use Yaf without PHP)
 fw_depends() {
+
+  # Turn on errtrace (-E), so that our ERR
+  # trap is passed on to any subshells
+  set -E
+
   for depend in "$@"
   do
+    depend=$(echo $depend | awk '{print tolower($0)}')
     echo Searching for $depend
+    trap 'fw_traperror $depend $? $LINENO "$BASH_COMMAND"'  ERR
+    retcode=0
     if [ -f ../toolset/setup/linux/systools/${depend}.sh ]; then
       echo Installing system tool: $depend 
-      bash ../toolset/setup/linux/systools/${depend}.sh
-    fi
-    if [ -f ../toolset/setup/linux/languages/${depend}.sh ]; then
+      . ../toolset/setup/linux/systools/${depend}.sh
+    elif [ -f ../toolset/setup/linux/languages/${depend}.sh ]; then
       echo Installing language: $depend 
-      bash ../toolset/setup/linux/languages/${depend}.sh
-    fi
-    if [ -f ../toolset/setup/linux/webservers/${depend}.sh ]; then
+      . ../toolset/setup/linux/languages/${depend}.sh
+    elif [ -f ../toolset/setup/linux/webservers/${depend}.sh ]; then
       echo Installing webserver: $depend 
-      bash ../toolset/setup/linux/webservers/${depend}.sh
-    fi
-    if [ -f ../toolset/setup/linux/frameworks/${depend}.sh ]; then
+      . ../toolset/setup/linux/webservers/${depend}.sh
+    elif [ -f ../toolset/setup/linux/frameworks/${depend}.sh ]; then
       echo Installing framework: $depend
-      bash ../toolset/setup/linux/frameworks/${depend}.sh
+      . ../toolset/setup/linux/frameworks/${depend}.sh
+    else
+      echo WARN: No installer found for $depend
+      continue
     fi
-  done  
+
+    # For a sourced script to pass, all internal commands must return
+    # non-zero. If you want to intentionally cause a failed install
+    # message, just return a non-zero status from the sourced script
+    if [ $FW_dep_error -ne 0 ]; then
+      echo ERROR: $depend may not be installed properly
+
+      # Reset variable for the next dependencies
+      FW_dep_error=0
+    else
+      echo $depend is installed!
+    fi
+  done
+
+  # Politely clean up our trap and trace
+  set +E
+  trap - ERR
+
+  return $FW_any_errors
 }
 
 # Exits 0 if file or directory exists

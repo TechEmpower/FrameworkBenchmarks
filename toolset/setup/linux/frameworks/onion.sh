@@ -1,8 +1,7 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists onion
-[ $? -ne 0 ] || { echo "onion is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 git clone https://github.com/davidmoreno/onion.git
 

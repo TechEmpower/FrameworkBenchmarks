@@ -1,9 +1,8 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 echo "WARN: Weber is not working"
 #fw_exists weber
-#[ $? -ne 0 ] || { echo "weber is installed!"; return 0; }
+#[ $? -ne 0 ] || { return 0; }
 
 #git clone https://github.com/elixir-web/weber.git
 

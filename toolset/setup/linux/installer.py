@@ -32,7 +32,9 @@ class Installer:
   def __install_server_software(self):
     print("\nINSTALL: Installing server software\n")
     
-    self.__run_command("sh ../toolset/setup/linux/prerequisites.sh")
+    bash_functions_path='../toolset/setup/linux/bash_functions.sh'
+    prereq_path='../toolset/setup/linux/prerequisites.sh'
+    self.__run_command(". %s && . %s" % (bash_functions_path, prereq_path))
 
     # Pull in benchmarker include and exclude list
     exclude = self.benchmarker.exclude
@@ -265,27 +267,12 @@ EOF
     while attempt <= max_attempts:
       error_message = ""
       try:
-	##print "working in " + cwd + " on " + command
         # Execute command.
-        """if command == "make clean":
-          print "make clean if statment"
-	  time.sleep(5)
-	  subprocess.check_call("make clean", shell=False, cwd=cwd)
-	  break"""
-        subprocess.check_call(command, shell=True, cwd=cwd)
-        """if send_yes:
-          process = subprocess.Popen(["/bin/bash", "-c", command], shell=False, stdin=subprocess.PIPE, cwd=cwd)
-          process.communicate("yes")
-          returncode = process.returncode
-          if returncode:
-            raise subprocess.CalledProcessError(returncode, command)
-        else:
-          subprocess.check_call(["/bin/bash", "-c", command], shell=False, cwd=cwd)"""
+        subprocess.check_call(command, shell=True, cwd=cwd, executable='/bin/bash')
         break  # Exit loop if successful.
       except:
         exceptionType, exceptionValue, exceptionTraceBack = sys.exc_info()
         error_message = "".join(traceback.format_exception_only(exceptionType, exceptionValue))
-        print error_message
 
       # Exit if there are no more attempts left.
       attempt += 1

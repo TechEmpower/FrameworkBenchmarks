@@ -1,13 +1,12 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
-# TODO double check this, it's logically different from original python code.
-# Two path checks would both always run in python. In this code the check 
+# TODO double check this, it's logically different from original php code.
+# Two path checks would both always run in php. In this code the check 
 # for apc.so only happens if the check for php fails. Is that ok? 
 
 fw_exists /usr/local/bin/php
 [ $? -ne 0 ] || { \
-  echo "PHP is installed!"; 
+  echo "Moving PHP config files into place"; 
   sudo cp ../config/php.ini /usr/local/lib/php.ini
   sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf
   return 0; }
@@ -21,7 +20,7 @@ sudo make install
 
 cd ..
 fw_exists /usr/local/lib/php/extensions/no-debug-non-zts-20100525/apc.so
-[ $? -ne 0 ] || { echo "PHP is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 cd php-5.4.13
 printf "\n" | sudo pecl install apc-beta

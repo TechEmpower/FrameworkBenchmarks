@@ -1,8 +1,7 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists /usr/bin/erl
-[ $? -ne 0 ] || { echo "Erlang is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 sudo cp ../config/erlang.list /etc/apt/sources.list.d/erlang.list
 

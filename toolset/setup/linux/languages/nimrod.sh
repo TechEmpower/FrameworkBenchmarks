@@ -1,8 +1,7 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists nimrod/bin/nimrod
-[ $? -ne 0 ] || { echo "Nimrod is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 test -d nimrod || git clone git://github.com/Araq/Nimrod.git nimrod
 cd nimrod 
@@ -16,7 +15,7 @@ chmod +x build.sh
 
 cd ../..
 fw_exists nimrod/koch
-[ $? -ne 0 ] || { echo "Nimrod Koch is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 cd nimrod
 bin/nimrod c koch

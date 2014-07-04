@@ -1,8 +1,7 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists resin-4.0.36/conf/resin.xml
-[ $? -ne 0 ] || { echo "resin is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 fw_depends java
 sudo cp -r /usr/lib/jvm/java-1.7.0-openjdk-amd64/include /usr/lib/jvm/java-1.7.0-openjdk-amd64/jre/bin/

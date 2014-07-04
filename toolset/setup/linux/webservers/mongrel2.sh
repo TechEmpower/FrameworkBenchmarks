@@ -1,8 +1,7 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists /usr/local/bin/mongrel2
-[ $? -ne 0 ] || { echo "Mongrel2 is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 fw_depends zeromq
 

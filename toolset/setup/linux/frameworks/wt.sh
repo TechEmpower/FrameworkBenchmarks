@@ -1,8 +1,7 @@
 #!/bin/bash
-. ../toolset/setup/linux/bash_functions.sh
 
 fw_exists wt
-[ $? -ne 0 ] || { echo "wt is installed!"; return 0; }
+[ $? -ne 0 ] || { return 0; }
 
 # TODO can this be changed based on the OS we are using? This is not
 # available on 12.04 (libboost-all-dev is available, but requires some
