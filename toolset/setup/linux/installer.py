@@ -365,14 +365,14 @@ class Installer:
     #
     if not self.__path_exists("/usr/bin/treefrog") or not self.__path_exists("/usr/bin/tspawn"):
         self.__run_command("sudo apt-get install -y qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++")
-        self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.5.tar.gz")
-        self.__run_command("tar xzf treefrog-1.7.5.tar.gz")
-        self.__run_command("rm treefrog-1.7.5.tar.gz")
-        self.__run_command("./configure", cwd="treefrog-1.7.5")
-        self.__run_command("make", cwd="treefrog-1.7.5/src")
-        self.__run_command("sudo make install", cwd="treefrog-1.7.5/src")
-        self.__run_command("make", cwd="treefrog-1.7.5/tools")
-        self.__run_command("sudo make install", cwd="treefrog-1.7.5/tools")
+        self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.7.tar.gz")
+        self.__run_command("tar xzf treefrog-1.7.7.tar.gz")
+        self.__run_command("rm treefrog-1.7.7.tar.gz")
+        self.__run_command("./configure", cwd="treefrog-1.7.7")
+        self.__run_command("make", cwd="treefrog-1.7.7/src")
+        self.__run_command("sudo make install", cwd="treefrog-1.7.7/src")
+        self.__run_command("make", cwd="treefrog-1.7.7/tools")
+        self.__run_command("sudo make install", cwd="treefrog-1.7.7/tools")
 
     #
     # Vert.x
