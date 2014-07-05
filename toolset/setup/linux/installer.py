@@ -4,6 +4,7 @@ import os.path
 import time
 import traceback
 import sys
+import ConfigParser
 
 class Installer:
 
@@ -29,6 +30,11 @@ class Installer:
   ############################################################
   def __install_server_software(self):
     print("\nINSTALL: Installing server software\n")
+
+    for c in components:
+        print 'installing component '+c
+    sys.exit(0)
+
     #######################################
     # Prerequisites
     #######################################
@@ -70,16 +76,19 @@ class Installer:
     #######################################
     self._install_python()
 
-    #
-    # Dart
-    #
+
+  #
+  # Dart
+  #
+  def _install_dart(self):
     if not self.__path_exists("dart-sdk"):
         self.__download("http://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip")
         self.__run_command("unzip dartsdk-linux-x64-release.zip")
 
-    #
-    # Erlang
-    #
+  #
+  # Erlang
+  #
+  def _install_erlang(self):
     if not self.__path_exists("/usr/bin/erl"):
         self.__run_command("sudo cp ../config/erlang.list /etc/apt/sources.list.d/erlang.list")
         self.__download("http://binaries.erlang-solutions.com/debian/erlang_solutions.asc")
@@ -87,16 +96,18 @@ class Installer:
         self.__run_command("sudo apt-get -y update")
         self.__run_command("sudo apt-get install -y esl-erlang")
 
-    #
-    # nodejs
-    #
+  #
+  # nodejs
+  #
+  def _install_nodejs(self):
     if not self.__path_exists("node-v0.10.8-linux-x64"):
         self.__download("http://nodejs.org/dist/v0.10.8/node-v0.10.8-linux-x64.tar.gz")
         self.__run_command("tar xzf node-v0.10.8-linux-x64.tar.gz")
 
-    #
-    # Java
-    #
+  #
+  # Java
+  #
+  def _install_java7(self):
     self.__run_command("sudo apt-get install -y openjdk-7-jdk")
     self.__run_command("sudo apt-get remove -y --purge openjdk-6-jre openjdk-6-jre-headless")
 
@@ -111,9 +122,10 @@ class Installer:
     #self.__run_command("sudo make clean", cwd="elixir-0.13.3");
     #self.__run_command("sudo make test", cwd="elixir-0.13.3");
 			
-    #
-    # Ruby/JRuby
-    #
+  #
+  # Ruby/JRuby
+  #
+  def _install_ruby(self):
     self.__run_command("curl -L get.rvm.io | bash -s head --auto-dotfiles")
     self.__run_command("echo rvm_auto_reload_flag=2 >> ~/.rvmrc")
     if not self.__path_exists("../../.rvm/rubies/ruby-2.0.0-p0/"):
@@ -123,16 +135,18 @@ class Installer:
       self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm install jruby-1.7.8")
       self.__bash_from_string("source ~/.rvm/scripts/'rvm' && rvm jruby-1.7.8 do gem install bundler")
 
-    #
-    # go
-    #
+  #
+  # go
+  #
+  def _install_go(self):
     if not self.__path_exists("go"):
         self.__download("https://storage.googleapis.com/golang/go1.3.linux-amd64.tar.gz");
         self.__run_command("tar xzf go1.3.linux-amd64.tar.gz")
 
-    #
-    # Perl
-    #
+  #
+  # Perl
+  #
+  def _install_perl(self):
     if not self.__path_exists("perl-5.18"):
       self.__download("https://raw.githubusercontent.com/tokuhirom/Perl-Build/master/perl-build", "perl-build.pl")
       self.__run_command("perl perl-build.pl -DDEBUGGING=-g 5.18.2 ~/FrameworkBenchmarks/installs/perl-5.18", retry=True)
@@ -140,9 +154,10 @@ class Installer:
       self.__run_command("~/FrameworkBenchmarks/installs/perl-5.18/bin/perl cpanminus.pl --notest --no-man-page App::cpanminus", retry=True)
       self.__run_command("~/FrameworkBenchmarks/installs/perl-5.18/bin/cpanm -f --notest --no-man-page DBI DBD::mysql Kelp Dancer Mojolicious Kelp::Module::JSON::XS Dancer::Plugin::Database Starman Plack JSON Web::Simple DBD::Pg JSON::XS EV HTTP::Parser::XS Monoceros EV IO::Socket::IP IO::Socket::SSL Memoize", retry=True)
 
-    #
-    # php
-    #
+  #
+  # php
+  #
+  def _install_php(self):
     if not self.__path_exists("/usr/local/bin/php"):
         self.__download("http://museum.php.net/php5/php-5.4.13.tar.gz")
         self.__run_command("tar xzf php-5.4.13.tar.gz")
@@ -170,25 +185,27 @@ class Installer:
     if not self.__path_exists("/usr/local/lib/php/extensions/no-debug-non-zts-20100525/yaf.so"):
         self.__run_command("sudo pecl install -f yaf")
 
-    #
-    # Haskell
-    #
+  #
+  # Haskell
+  #
+  def _install_haskell(self):
     if not self.__path_exists("/usr/bin/haskell-compiler"):       ##not sure if right
         self.__run_command("sudo apt-get install -y ghc cabal-install")
 
-    #
-    # RingoJs
-    #
+  #
+  # RingoJs
+  #
+  def _install_ringojs(self):
     if not self.__path_exists("/usr/share/ringojs"):
         self.__download("http://www.ringojs.org/downloads/ringojs_0.10-1_all.deb")
         self.__run_command("sudo apt-get install -y jsvc")
         self.__run_command("sudo dpkg -i ringojs_0.10-1_all.deb", True)
         self.__run_command("rm ringojs_0.10-1_all.deb")
 
-    #
-    # Mono
-    #
-
+  #
+  # Mono
+  #
+  def _install_mono(self):
     if not self.__path_exists("mono-3.2.8"):
         self.__download("http://download.mono-project.com/sources/mono/mono-3.2.8.tar.bz2", "mono-3.2.8.tar.bz2")
         self.__run_command("tar xf mono-3.2.8.tar.bz2")
@@ -206,9 +223,10 @@ class Installer:
         self.__run_command("make", cwd="xsp")
         self.__run_command("sudo make install", cwd="xsp")
 
-    #
-    # Nimrod
-    #
+  #
+  # Nimrod
+  #
+  def _install_nimrod(self):
     if not self.__path_exists("nimrod/bin/nimrod"):
         self.__run_command("test -d nimrod || git clone git://github.com/Araq/Nimrod.git nimrod", retry=True)
         self.__run_command("git checkout 987ac2439a87d74838233a7b188e4db340495ee5", cwd="nimrod")
@@ -221,9 +239,10 @@ class Installer:
         self.__run_command("bin/nimrod c koch", cwd="nimrod")
         self.__run_command("./koch boot -d:release", cwd="nimrod")
 
-    #
-    # Racket
-    #
+  #
+  # Racket
+  #
+  def _install_racket(self):
     if not self.__path_exists("racket-5.3.6/bin/racket") or not self.__path_exists("racket-5.3.6/collects/racket"):
         self.__download("https://github.com/plt/racket/archive/v5.3.6.tar.gz", "racket-5.3.6.tar.gz")
         self.__run_command("tar xzf racket-5.3.6.tar.gz")
@@ -231,9 +250,10 @@ class Installer:
         self.__run_command("make", cwd="racket-5.3.6/src")
         self.__run_command("sudo make install", cwd="racket-5.3.6/src")
 
-    #
-    # Ur/Web
-    #
+  #
+  # Ur/Web
+  #
+  def _install_urweb(self):
     if not self.__path_exists("/usr/local/bin/urweb"):
         self.__run_command("hg clone http://hg.impredicative.com/urweb")
         self.__run_command("./autogen.sh", cwd="urweb")
@@ -241,9 +261,10 @@ class Installer:
         self.__run_command("make", cwd="urweb")
         self.__run_command("sudo make install", cwd="urweb")
     
-    #
-    # HHVM
-    #
+  #
+  # HHVM
+  #
+  def _install_hhvm(self):
     if not self.__path_exists("/usr/bin/hhvm"):
         self.__run_command("sudo add-apt-repository -y ppa:mapnik/v2.2.0")
         self.__run_command("wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -")
@@ -255,9 +276,10 @@ class Installer:
     # Webservers
     #######################################
 
-    #
-    # Nginx
-    #
+  #
+  # Nginx
+  #
+  def _install_nginx(self):
     if not self.__path_exists("/usr/local/nginx/sbin/nginx"):
         self.__download("http://nginx.org/download/nginx-1.4.1.tar.gz")
         self.__run_command("tar xzf nginx-1.4.1.tar.gz")
@@ -265,9 +287,10 @@ class Installer:
         self.__run_command("make", cwd="nginx-1.4.1")
         self.__run_command("sudo make install", cwd="nginx-1.4.1")
 
-    #
-    # Openresty (nginx with lua stuff)
-    #
+  #
+  # Openresty (nginx with lua stuff)
+  #
+  def _install_openresty(self):
     if not self.__path_exists("/usr/local/openresty/nginx/sbin/nginx"):
         self.__download("http://openresty.org/download/ngx_openresty-1.5.8.1.tar.gz")
         self.__run_command("tar xzf ngx_openresty-1.5.8.1.tar.gz")
@@ -275,17 +298,19 @@ class Installer:
         self.__run_command("make", cwd="ngx_openresty-1.5.8.1")
         self.__run_command("sudo make install", cwd="ngx_openresty-1.5.8.1")
     
-    #
-    # Lapis
-    #
+  #
+  # Lapis
+  #
+  def _install_lapis(self):
     if not self.__path_exists("/usr/local/bin/lapis"):
         self.__run_command("sudo apt-get install -y luarocks")
         self.__run_command("sudo luarocks install http://github.com/leafo/lapis/raw/master/lapis-dev-1.rockspec")
 
 
-    #
-    # Resin
-    #
+  #
+  # Resin
+  #
+  def _install_resin(self):
     if not self.__path_exists("resin-4.0.36/conf/resin.xml"):
         self.__run_command("sudo cp -r /usr/lib/jvm/java-1.7.0-openjdk-amd64/include /usr/lib/jvm/java-1.7.0-openjdk-amd64/jre/bin/")
         self.__download("http://www.caucho.com/download/resin-4.0.36.tar.gz")
@@ -298,9 +323,10 @@ class Installer:
         self.__run_command("mv conf/resin.xml conf/resin.xml.orig", cwd="resin-4.0.36")
         self.__run_command("cat ../config/resin.xml > resin-4.0.36/conf/resin.xml")
 
-    #
-    # Mongrel2
-    #
+  #
+  # Mongrel2
+  #
+  def _install_mongrel(self):
     if not self.__path_exists("/usr/local/lib/libzmq.a"):
         self.__download("http://download.zeromq.org/zeromq-4.0.3.tar.gz")
         self.__run_command("tar xzf zeromq-4.0.3.tar.gz")
@@ -335,23 +361,26 @@ class Installer:
     # Frameworks
     ##############################################################
 
-    #
-    # Grails
-    #
+  #
+  # Grails
+  #
+  def _install_grails(self):
     if not self.__path_exists("grails-2.4.2"):
         self.__download("http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-2.4.2.zip")
         self.__run_command("unzip -o grails-2.4.2.zip")
 
-    #
-    # Play 2
-    #
+  #
+  # Play 2
+  #
+  def _install_play2(self):
     if not self.__path_exists("play-2.2.0"):
         self.__download("http://downloads.typesafe.com/play/2.2.0/play-2.2.0.zip")
         self.__run_command("unzip -o play-2.2.0.zip")
 
-    #
-    # Play 1
-    #
+  #
+  # Play 1
+  #
+  def _install_play1(self):
     if not self.__path_exists("play-1.2.5"):
         self.__download("http://downloads.typesafe.com/releases/play-1.2.5.zip")
         self.__run_command("unzip -o play-1.2.5.zip")
@@ -360,9 +389,10 @@ class Installer:
     # siena
     self.__run_command("yes | play-1.2.5/play1 install siena")
 
-    #
-    # TreeFrog Framework
-    #
+  #
+  # TreeFrog Framework
+  #
+  def _install_treefrog(self):
     if not self.__path_exists("/usr/bin/treefrog") or not self.__path_exists("/usr/bin/tspawn"):
         self.__run_command("sudo apt-get install -y qt4-qmake libqt4-dev libqt4-sql-mysql libqt4-sql-psql g++")
         self.__download("http://downloads.sourceforge.net/project/treefrog/src/treefrog-1.7.5.tar.gz")
@@ -374,36 +404,41 @@ class Installer:
         self.__run_command("make", cwd="treefrog-1.7.5/tools")
         self.__run_command("sudo make install", cwd="treefrog-1.7.5/tools")
 
-    #
-    # Vert.x
-    #
+  #
+  # Vert.x
+  #
+  def _install_vertx(self):
     if not self.__path_exists("vert.x-2.1.1"):
         self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1.1.tar.gz?direct=true", "vert.x-2.1.1.tar.gz")
         self.__run_command("tar xzf vert.x-2.1.1.tar.gz")
 
-    #
-    # Yesod
-    #
+  #
+  # Yesod
+  #
+  def _install_yesod(self):
     self.__run_command("cabal update", retry=True)
     self.__run_command("cabal install yesod persistent-mysql", retry=True)
 
-    #
-    # Jester
-    #
+  #
+  # Jester
+  #
+  def _install_jester(self):
     if not self.__path_exists("jester"):
         self.__run_command("git clone git://github.com/dom96/jester.git jester/jester", retry=True)
 
-    #
-    # Onion
-    #
+  #
+  # Onion
+  #
+  def _install_onion(self):
     if not self.__path_exists("onion"):
         self.__run_command("git clone https://github.com/davidmoreno/onion.git")
         self.__run_command("mkdir build", cwd="onion")
         self.__run_command("cmake ..", cwd="onion/build")
         self.__run_command("make", cwd="onion/build")
 
-    # nawak
-    #
+  # nawak
+  #
+  def _install_nawak(self):
     if not self.__path_exists("nawak"):
         self.__run_command("git clone git://github.com/idlewan/nawak.git nawak/nawak", retry=True)
 
@@ -742,6 +777,10 @@ EOF
   def __init__(self, benchmarker):
     self.benchmarker = benchmarker
     self.install_dir = "installs"
+
+    conf = ConfigParser.ConfigParser()
+    conf.read("toolset/setup/config.ini")
+    self.components = conf.get('installer', 'components').split()
 
     try:
       os.mkdir(self.install_dir)
