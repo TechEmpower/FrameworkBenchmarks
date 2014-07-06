@@ -35,9 +35,6 @@ fw_exists ~/.bash_profile.bak
   mv ~/.bash_profile ~/.bash_profile.bak
 }
 
-cp ../config/benchmark_profile ~/.bash_profile
-cat ../config/benchmark_profile >> ~/.profile
-cat ../config/benchmark_profile >> ~/.bashrc
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
 touch fwbm_prereqs_installed

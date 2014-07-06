@@ -6,6 +6,7 @@ import traceback
 import sys
 import glob
 import logging
+import setup_util
 
 class Installer:
 
@@ -32,8 +33,9 @@ class Installer:
   def __install_server_software(self):
     print("\nINSTALL: Installing server software\n")
     
-    bash_functions_path='../toolset/setup/linux/bash_functions.sh'
-    prereq_path='../toolset/setup/linux/prerequisites.sh'
+    # Install global prerequisites
+    bash_functions_path='$FWROOT/toolset/setup/linux/bash_functions.sh'
+    prereq_path='$FWROOT/toolset/setup/linux/prerequisites.sh'
     self.__run_command(". %s && . %s" % (bash_functions_path, prereq_path))
 
     # Pull in benchmarker include and exclude list
@@ -42,25 +44,47 @@ class Installer:
     if exclude == None:
         exclude = []
 
-    # Assume we are running from FrameworkBenchmarks
-    install_files = glob.glob('*/install.sh')
+    # Locate all known tests
+    install_files = glob.glob("%s/*/install.sh" % self.root)
 
-    for install_file in install_files:
-        test = os.path.dirname(install_file)
-        
-        if test in exclude:
-            logging.debug("%s has been excluded", test)
+    # Run install for selected tests
+    for test_install_file in install_files:
+        test_dir = os.path.dirname(test_install_file)
+        test_name = os.path.basename(test_dir)
+        test_rel_dir = self.__path_relative_to_root(test_dir)
+
+        if test_name in exclude:
+            logging.debug("%s has been excluded", test_name)
             continue
-        elif include is not None and test not in include:
-            logging.debug("%s not in include list", test)
+        elif include is not None and test_name not in include:
+            logging.debug("%s not in include list", test_name)
             continue
         else:
-            logging.debug("Running installer for %s", test)
-            bash_functions_path="../toolset/setup/linux/bash_functions.sh"
-            self.__run_command(". %s && . ../%s" % (bash_functions_path, install_file))
+            logging.info("Running installation for %s"%test_name)
 
-    self.__run_command("sudo apt-get -y autoremove");
-    
+            # Find installation directory e.g. FWROOT/go/installs
+            test_install_dir="%s/%s" % (test_dir, self.install_dir)
+            test_rel_install_dir=self.__path_relative_to_root(test_install_dir)
+            if not os.path.exists(test_install_dir):
+              os.makedirs(test_install_dir)
+
+            # Load profile for this installation
+            test_profile_file="%s/bash_profile.sh" % test_dir
+            if os.path.exists(test_profile_file):
+              setup_util.replace_environ(config=test_profile_file)
+            else:
+              logging.warning("Framework %s does not have a bash_profile"%test_name)
+
+            # Find relative installation file
+            test_rel_install_file = "$FWROOT%s"%self.__path_relative_to_root(test_install_file)
+
+            # Then run test installer file
+            # Give all installers FWROOT, IROOT, and bash_functions
+            self.__run_command("IROOT=$FWROOT%s . %s && . %s" % 
+              (test_rel_install_dir, bash_functions_path, test_rel_install_file),
+                cwd=test_install_dir)
+
+    self.__run_command("sudo apt-get -y autoremove");    
 
     print("\nINSTALL: Finished installing server software\n")
   ############################################################
@@ -247,10 +271,8 @@ EOF
   # __run_command
   ############################################################
   def __run_command(self, command, send_yes=False, cwd=None, retry=False):
-    try:
-      cwd = os.path.join(self.install_dir, cwd)
-    except AttributeError:
-      cwd = self.install_dir
+    if cwd is None: 
+        cwd = self.install_dir
 
     if retry:
       max_attempts = 5
@@ -261,12 +283,13 @@ EOF
     if send_yes:
       command = "yes yes | " + command
         
-
-    print("\nINSTALL: %s (cwd=%s)" % (command, cwd))
+    rel_cwd = self.__path_relative_to_root(cwd)
+    print("INSTALL: %s (cwd=%s)" % (command, rel_cwd))
 
     while attempt <= max_attempts:
       error_message = ""
       try:
+
         # Execute command.
         subprocess.check_call(command, shell=True, cwd=cwd, executable='/bin/bash')
         break  # Exit loop if successful.
@@ -304,6 +327,20 @@ EOF
   ############################################################
 
   ############################################################
+  # __path_relative_to_root
+  # Returns path minus the FWROOT prefix. Useful for clean 
+  # presentation of paths 
+  # e.g. /foo/bar/benchmarks/go/bash_profile.sh
+  # v.s. FWROOT/go/bash_profile.sh 
+  ############################################################
+  def __path_relative_to_root(self, path):
+    # Requires bash shell parameter expansion
+    return subprocess.check_output("D=%s && printf ${D#%s}"%(path, self.root), shell=True, executable='/bin/bash')
+  ############################################################
+  # End __path_relative_to_root
+  ############################################################
+
+  ############################################################
   # __download
   # Downloads a file from a URI.
   ############################################################
@@ -326,6 +363,7 @@ EOF
   def __init__(self, benchmarker):
     self.benchmarker = benchmarker
     self.install_dir = "installs"
+    self.root = subprocess.check_output('printf $FWROOT', shell=True)
     
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)

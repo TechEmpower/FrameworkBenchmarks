@@ -8,6 +8,7 @@ import subprocess
 from pprint import pprint 
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
+from setup.linux import setup_util
 
 ###################################################################################################
 # Main
@@ -20,11 +21,14 @@ def main(argv=None):
     # Enable unbuffered output so messages will appear in the proper order with subprocess output.
     sys.stdout=Unbuffered(sys.stdout)
 
-    # Ensure the current directory (which should be the benchmark home directory) is in the path so that the tests can be imported.
+    # Update python environment
+    # 1) Ensure the current directory (which should be the benchmark home directory) is in the path so that the tests can be imported.
     sys.path.append('.')
-
-    # Ensure toolset/setup/linux is in the path so that the tests can "import setup_util".
+    # 2) Ensure toolset/setup/linux is in the path so that the tests can "import setup_util".
     sys.path.append('toolset/setup/linux')
+
+    # Update environment for shell scripts
+    setup_util.replace_environ(config='config/benchmark_profile', root=os.getcwd())
 
     conf_parser = argparse.ArgumentParser(
         description=__doc__,
@@ -129,35 +133,8 @@ def main(argv=None):
     if args.verbose:
         print 'Configuration options: '
         pprint(args)
+
     benchmarker = Benchmarker(vars(args))
-
-    # Ensure a consistent environment for any subprocesses run during
-    # the lifetime of this program
-    # Note: This will not work if your command starts with 'sudo', you
-    # will need sudo sh -c ". config/benchmark_profile && your_command"
-    setup_env = '. config/benchmark_profile && env'
-    mini_environ = os.environ.copy()
-    mini_environ.clear()
-    mini_environ['HOME']=os.environ['HOME']
-    mini_environ['PATH']=os.environ['PATH']
-    mini_environ['USER']=os.environ['USER']
-    fwroot=subprocess.check_output("pwd", shell=True)
-    mini_environ['FWROOT']=fwroot
-    os.environ.clear()
-    env = subprocess.check_output(setup_env, shell=True, env=mini_environ)
-    for line in env.split('\n'):
-        try:
-            split=line.index('=')
-            key=line[:split]
-            value=line[split+1:]
-            os.environ[key]=value
-        except:
-            print "WARN: Cannot parse %s from config/benchmark_profile" % line
-            continue
-
-    out = subprocess.check_output('env', shell=True)
-    print 'Checking environment'
-    print out
 
     # Run the benchmarker in the specified mode
     if benchmarker.list_tests:

@@ -1,4 +1,5 @@
 from benchmark.fortune_html_parser import FortuneHTMLParser
+from setup.linux import setup_util
 
 import importlib
 import os
@@ -285,6 +286,8 @@ class FrameworkTest:
   # Start the test using it's setup file
   ############################################################
   def start(self, out, err):
+    profile="%s/bash_profile.sh" % self.directory
+    setup_util.replace_environ(config=profile, command="IROOT=$FWROOT/go/installs")
     return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
   # End start
