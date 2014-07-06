@@ -25,14 +25,20 @@ FW_dep_error=0
 # Have we seen any errors?
 FW_any_errors=0
 fw_traperror () {
-  depend=$1
-  err=$2 # error status
-  line=$3 # LINENO
-  command="$4"
+  depend=$1      # Dependency being installed
+  err=$2         # error status
+  line=$3        # Current line
+  command="$4"   # Bash command
+  IFS=':' read -a funcstack <<< "$5" # Stack (function names)
+  IFS=':' read -a bashstack <<< "$6" # Stack (file names)
+  IFS=':' read -a linestack <<< "$7" # Stack (line numbers)
   FW_dep_error=1
   FW_any_errors=1
-
-  echo "ERROR: ${depend}.sh at line $line - command '$command' exited with status: $err"
+  
+  echo "ERROR: $(echo ${bashstack[1]#$FWROOT}): Command '$command' exited with status $err (dependency=$depend)"
+  #echo "  Function stack    : ${funcstack[@]}"
+  #echo "  Bash source stack : ${bashstack[@]}"
+  #echo "  Bash line stack   : ${linestack[@]}"
 }
 
 # Requires dependencies to come in order e.g. Nimrod before
@@ -48,7 +54,7 @@ fw_depends() {
   do
     depend=$(echo $depend | awk '{print tolower($0)}')
     echo Searching for $depend
-    trap 'fw_traperror $depend $? $LINENO "$BASH_COMMAND"'  ERR
+    trap 'fw_traperror $depend $? $LINENO "$BASH_COMMAND" $(printf ":%s" ${FUNCNAME[@]}) $(printf ":%s" ${BASH_SOURCE[@]}) $(printf ":%s" ${BASH_LINENO[@]})'  ERR
     retcode=0
     if [ -f ../toolset/setup/linux/systools/${depend}.sh ]; then
       echo Installing system tool: $depend 
@@ -87,12 +93,14 @@ fw_depends() {
   return $FW_any_errors
 }
 
-# Exits 0 if file or directory exists
+# Echo's 0 if file or directory exists
+# To be used with or || blocks, avoids triggering our ERR 
+# trap with a return 1 statement
 fw_exists() {
   if [ -f $1 ] || [ -d $1 ]; then
-    return 0
+    echo 0
   else
-    return 1
+    echo 1
   fi 
 }
 
