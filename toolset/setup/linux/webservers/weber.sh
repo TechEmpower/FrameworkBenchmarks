@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "WARN: Weber is not working"
+return 1
 #fw_exists weber
 #[ $? -ne 0 ] || { return 0; }
 

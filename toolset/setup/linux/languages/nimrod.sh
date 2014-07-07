@@ -1,7 +1,7 @@
 #!/bin/bash
 
-fw_exists nimrod/bin/nimrod
-[ $? -ne 0 ] || { return 0; }
+RETCODE=$(fw_exists nimrod/bin/nimrod)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
 test -d nimrod || git clone git://github.com/Araq/Nimrod.git nimrod
 cd nimrod 
@@ -14,8 +14,8 @@ chmod +x build.sh
 ./build.sh
 
 cd ../..
-fw_exists nimrod/koch
-[ $? -ne 0 ] || { return 0; }
+RETCODE=$(fw_exists nimrod/koch)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
 cd nimrod
 bin/nimrod c koch

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-fw_exists /usr/local/bin/mongrel2
-[ $? -ne 0 ] || { return 0; }
+RETCODE=$(fw_exists /usr/local/bin/mongrel2)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_depends zeromq
 

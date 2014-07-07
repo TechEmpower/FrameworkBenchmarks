@@ -1,10 +1,8 @@
 #!/bin/bash
 
-fw_exists racket-5.3.6/bin/racket
-ret1=$?
-fw_exists racket-5.3.6/collects/racket
-ret2=$?
-if [ $ret1 -eq 0 ] && [$ret2 -eq 0 ]; then 
+RET1=$(fw_exists racket-5.3.6/bin/racket)
+RET2=$(fw_exists racket-5.3.6/collects/racket)
+if [ "$RET1" == 0 ] && [ "$RET2" == 0 ]; then 
   return 0;
 fi
 

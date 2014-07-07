@@ -1,7 +1,7 @@
 #!/bin/bash
 
-fw_exists /usr/bin/hhvm
-[ $? -ne 0 ] || { return 0; }
+RETCODE=$(fw_exists /usr/bin/hhvm)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
 sudo add-apt-repository -y ppa:mapnik/v2.2.0
 wget -O - http://dl.hhvm.com/conf/hhvm.gpg.key | sudo apt-key add -

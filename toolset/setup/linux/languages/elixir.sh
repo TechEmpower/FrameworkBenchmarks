@@ -2,6 +2,7 @@
 
 # TODO seems to be broken installation
 echo "WARN: Elixir does not install"
+return 1
 
 # fw_exists v0.13.3.tar.gz
 # [ $? -ne 0 ] || { return 0; }

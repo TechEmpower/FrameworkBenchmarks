@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_exists nawak
-[ $? -ne 0 ] || { return 0; }
+RETCODE=$(fw_exists nawak)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
 git clone git://github.com/idlewan/nawak.git nawak/nawak

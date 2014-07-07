@@ -1,7 +1,8 @@
 #!/bin/bash
 
-fw_exists mono-3.2.8
-[ $? -ne 0 ] || { \
+
+RETCODE=$(fw_exists mono-3.2.8)
+[ ! "$RETCODE" == 0 ] || { \
   echo "Installing RootCAs from Mozilla..."; 
   mozroots --import --sync;
   return 0; }
@@ -14,6 +15,5 @@ make get-monolite-latest
 make -j4 EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe
 sudo make install
 
-mv mono-3.2.8 mono
-
+echo "Installing RootCAs from Mozilla..."; 
 mozroots --import --sync;

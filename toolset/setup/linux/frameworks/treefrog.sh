@@ -1,10 +1,8 @@
 #!/bin/bash
 
-fw_exists /usr/bin/treefrog
-ret1=$?
-fw_exists /usr/bin/tspawn
-ret2=$?
-if [ $ret1 -eq 0 ] && [ $ret2 -eq 0 ]; then 
+RET1=$(fw_exists /usr/bin/treefrog)
+RET2=$(fw_exists /usr/bin/tspawn)
+if [ "$RET1" == 0 ] && [ "$RET2" == 0 ]; then 
   return 0;
 fi
 

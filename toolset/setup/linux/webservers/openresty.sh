@@ -1,7 +1,7 @@
 #!/bin/bash
 
-fw_exists /usr/local/openresty/nginx/sbin/nginx
-[ $? -ne 0 ] || { return 0; }
+RETCODE=$(fw_exists /usr/local/openresty/nginx/sbin/nginx)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_depends nginx
 fw_get http://openresty.org/download/ngx_openresty-1.5.8.1.tar.gz

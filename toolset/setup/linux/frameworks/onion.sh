@@ -1,13 +1,13 @@
 #!/bin/bash
 
-fw_exists onion
-[ $? -ne 0 ] || { return 0; }
+RETCODE=$(fw_exists onion)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
 git clone https://github.com/davidmoreno/onion.git
 
 
 cd onion
-mkdir build
+mkdir -p build
 cd build
 cmake ..
 make
