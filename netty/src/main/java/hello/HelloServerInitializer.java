@@ -11,14 +11,16 @@ import java.util.concurrent.ScheduledExecutorService;
 public class HelloServerInitializer extends ChannelInitializer<SocketChannel> {
 
     private ScheduledExecutorService service;
-	public HelloServerInitializer(ScheduledExecutorService service) {
-        this.service = service;
+
+    public HelloServerInitializer(ScheduledExecutorService service) {
+	this.service = service;
     }
+
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
-        ChannelPipeline p = ch.pipeline();
-        p.addLast("encoder", new HttpResponseEncoder());
-        p.addLast("decoder", new HttpRequestDecoder(4096, 8192, 8192, false));
-        p.addLast("handler", new HelloServerHandler(service));
+	ChannelPipeline p = ch.pipeline();
+	p.addLast("encoder", new HttpResponseEncoder());
+	p.addLast("decoder", new HttpRequestDecoder(4096, 8192, 8192, false));
+	p.addLast("handler", new HelloServerHandler(service));
     }
 }
