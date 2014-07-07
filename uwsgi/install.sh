@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends uwsgi python uwsgi wsgi
+fw_depends python2 nginx

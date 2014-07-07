@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends lapis lua nginx openresty
+fw_depends lapis nginx openresty

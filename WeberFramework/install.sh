@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends weber elixir cowboy cowboy
+fw_depends weber elixir

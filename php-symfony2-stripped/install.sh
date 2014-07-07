@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends symfony2-stripped php nginx php-fpm
+fw_depends php nginx

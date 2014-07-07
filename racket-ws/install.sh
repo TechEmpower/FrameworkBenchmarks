@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends racket-ws racket racket
+fw_depends racket

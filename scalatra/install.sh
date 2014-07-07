@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends scalatra scala resin servlet
+fw_depends resin

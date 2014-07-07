@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends restexpress java netty
+fw_depends java

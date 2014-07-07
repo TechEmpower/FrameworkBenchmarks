@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends gemini java resin servlet
+fw_depends java resin

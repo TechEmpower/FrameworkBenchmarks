@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends play-slick scala netty
+fw_depends play2

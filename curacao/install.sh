@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends curacao java curacao
+fw_depends java

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends rack ruby unicorn rack
+fw_depends ruby

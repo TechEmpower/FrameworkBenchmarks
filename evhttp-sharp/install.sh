@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends evhttp-sharp c# mono
+fw_depends mono

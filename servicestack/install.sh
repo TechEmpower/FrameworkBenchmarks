@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends servicestack c# iis net
+fw_depends nginx xsp 

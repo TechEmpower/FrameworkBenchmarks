@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends play1 java netty
+fw_depends play1 java

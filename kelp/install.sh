@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends kelp perl starman plack
+fw_depends perl

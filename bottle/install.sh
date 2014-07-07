@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends bottle python gunicornmeinheld
+fw_depends python2 python3 pypy

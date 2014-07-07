@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends undertow java undertow
+fw_depends java

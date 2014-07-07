@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends play-activate-mysql scala netty
+fw_depends java

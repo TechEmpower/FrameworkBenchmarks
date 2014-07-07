@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends play1siena java netty
+fw_depends play1 siena java 

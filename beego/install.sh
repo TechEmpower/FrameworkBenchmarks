@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends beego go go
+fw_depends go

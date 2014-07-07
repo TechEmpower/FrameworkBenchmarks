@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends netty java netty
+fw_depends java

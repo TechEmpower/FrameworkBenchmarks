@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends spray scala spray
+fw_depends scala

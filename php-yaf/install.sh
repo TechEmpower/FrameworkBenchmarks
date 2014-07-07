@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends yaf php nginx php-fpm
+fw_depends yaf php nginx

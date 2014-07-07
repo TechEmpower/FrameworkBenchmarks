@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends php php nginx php-fpm
+fw_depends php nginx

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends wildfly-ee7 java wildfly servlet
+fw_depends java

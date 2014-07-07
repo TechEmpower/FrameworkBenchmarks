@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends grizzly-jersey java grizzly servlet
+fw_depends java 

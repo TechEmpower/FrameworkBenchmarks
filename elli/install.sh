@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends elli erlang elli
+fw_depends erlang

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends php-phalcon-micro php nginx php-fpm
+fw_depends phalcon php nginx

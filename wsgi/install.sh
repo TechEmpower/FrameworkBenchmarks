@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends wsgi python gunicornmeinheld
+fw_depends python2 nginx

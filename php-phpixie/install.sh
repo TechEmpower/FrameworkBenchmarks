@@ -1,3 +1,1 @@
-#!/bin/bash
-
-fw_depends php-phpixie php nginx php-fpm
+#!/bin/bashfw_depends php nginx

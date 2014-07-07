@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends codeigniter php nginx php-fpm
+fw_depends php nginx

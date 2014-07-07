@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends urweb ur urweb
+fw_depends urweb

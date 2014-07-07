@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends snap haskell snap
+fw_depends haskell

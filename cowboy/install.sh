@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends cowboy erlang cowboy
+fw_depends erlang

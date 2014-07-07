@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends compojure clojure resin servlet
+fw_depends resin java

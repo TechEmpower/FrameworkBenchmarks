@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends wai haskell warp wai
+fw_depends haskell

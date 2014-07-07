@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends django python gunicornmeinheld
+fw_depends python2 python3

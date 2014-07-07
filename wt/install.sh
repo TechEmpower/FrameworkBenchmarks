@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends wt c++ wt
+fw_depends wt
