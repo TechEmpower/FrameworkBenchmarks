@@ -333,10 +333,25 @@ class FrameworkTest:
     setup_util.replace_environ(config=profile, command=set_iroot)
 
     (out, err) = WrapLogger(logger, logging.INFO), WrapLogger(logger, logging.ERROR)
-    return self.setup_module.start(self.benchmarker, out, err)
+    return self.setup_module.start(self, out, err)
   ############################################################
   # End start
   ############################################################
+
+  ############################################################
+  # run(command)
+  # Runs a shell command for my self.setup_module 
+  ############################################################
+  def run(self, command, **kwargs):
+    if 'cwd' in kwargs: 
+      self.stdout.write("RUN: %s (cwd=%s)\n"%(command, kwargs['cwd']))  
+    else:
+      self.stdout.write("RUN: %s\n"%command)
+    self.stdout.flush()
+    subprocess.check_call(command, shell=True, stderr=self.stderr, stdout=self.stdout, **kwargs)
+  ############################################################
+  # End run
+  ############################################################  
 
   ############################################################
   # stop(benchmarker)
