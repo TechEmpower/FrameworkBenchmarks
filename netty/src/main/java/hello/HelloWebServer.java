@@ -16,7 +16,7 @@ import io.netty.util.ResourceLeakDetector.Level;
 
 
 public class HelloWebServer {
-	private static int IO_THREADS = Runtime.getRuntime().availableProcessors() * 2;
+
     static {
         ResourceLeakDetector.setLevel(Level.DISABLED);
     }
@@ -45,7 +45,7 @@ public class HelloWebServer {
 			b.option(ChannelOption.SO_REUSEADDR, true);
 			b.group(loupGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer(loupGroup.next()));			
             b.option(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE);
-            b.childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true, IO_THREADS, IO_THREADS, 8192, 11));
+            b.childOption(ChannelOption.ALLOCATOR, new PooledByteBufAllocator(true));
             b.childOption(ChannelOption.SO_REUSEADDR, true);
             b.childOption(ChannelOption.MAX_MESSAGES_PER_READ, Integer.MAX_VALUE);
 
@@ -67,3 +67,4 @@ public class HelloWebServer {
         new HelloWebServer(port).run();
     }
 }
+
