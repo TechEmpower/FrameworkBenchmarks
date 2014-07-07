@@ -82,9 +82,17 @@ class Installer:
             test_rel_install_file = "$FWROOT%s" % setup_util.path_relative_to_root(test_install_file)
 
             # Then run test installer file
-            # Give all installers FWROOT, IROOT, and bash_functions
-            self.__run_command("IROOT=$FWROOT%s . %s && . %s" % 
-              (test_rel_install_dir, bash_functions_path, test_rel_install_file),
+            # Give all installers a number of variables
+            # FWROOT - Path of the FwBm root
+            # IROOT  - Path of this test's install directory
+            # TROOT  - Path to this test's directory 
+            self.__run_command('''
+              export TROOT=$FWROOT%s && 
+              export IROOT=$FWROOT%s && 
+              . %s && 
+              . %s''' % 
+              (test_rel_dir, test_rel_install_dir, 
+                bash_functions_path, test_rel_install_file),
                 cwd=test_install_dir)
 
     self.__run_command("sudo apt-get -y autoremove");    
@@ -287,7 +295,7 @@ EOF
       command = "yes yes | " + command
         
     rel_cwd = setup_util.path_relative_to_root(cwd)
-    print("INSTALL: %s (cwd=%s)" % (command, rel_cwd))
+    print("INSTALL: %s (cwd=$FWROOT%s)" % (command, rel_cwd))
 
     while attempt <= max_attempts:
       error_message = ""

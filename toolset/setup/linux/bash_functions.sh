@@ -56,18 +56,22 @@ fw_depends() {
     echo Searching for $depend
     trap 'fw_traperror $depend $? $LINENO "$BASH_COMMAND" $(printf ":%s" ${FUNCNAME[@]}) $(printf ":%s" ${BASH_SOURCE[@]}) $(printf ":%s" ${BASH_LINENO[@]})'  ERR
     retcode=0
-    if [ -f ../toolset/setup/linux/systools/${depend}.sh ]; then
-      echo Installing system tool: $depend 
-      . ../toolset/setup/linux/systools/${depend}.sh
-    elif [ -f ../toolset/setup/linux/languages/${depend}.sh ]; then
-      echo Installing language: $depend 
-      . ../toolset/setup/linux/languages/${depend}.sh
-    elif [ -f ../toolset/setup/linux/webservers/${depend}.sh ]; then
-      echo Installing webserver: $depend 
-      . ../toolset/setup/linux/webservers/${depend}.sh
-    elif [ -f ../toolset/setup/linux/frameworks/${depend}.sh ]; then
-      echo Installing framework: $depend
-      . ../toolset/setup/linux/frameworks/${depend}.sh
+
+    wd=$(pwd)
+    relative_wd=\$FWROOT${wd#$FWROOT}
+
+    if [ -f $FWROOT/toolset/setup/linux/systools/${depend}.sh ]; then
+      echo Installing system tool: $depend in $relative_wd
+      . $FWROOT/toolset/setup/linux/systools/${depend}.sh
+    elif [ -f $FWROOT/toolset/setup/linux/languages/${depend}.sh ]; then
+      echo Installing language: $depend in $relative_wd
+      . $FWROOT/toolset/setup/linux/languages/${depend}.sh
+    elif [ -f $FWROOT/toolset/setup/linux/webservers/${depend}.sh ]; then
+      echo Installing webserver: $depend in $relative_wd
+      . $FWROOT/toolset/setup/linux/webservers/${depend}.sh
+    elif [ -f $FWROOT/toolset/setup/linux/frameworks/${depend}.sh ]; then
+      echo Installing framework: $depend in $relative_wd
+      . $FWROOT/toolset/setup/linux/frameworks/${depend}.sh
     else
       echo WARN: No installer found for $depend
       continue
