@@ -1,4 +1,6 @@
 from setup.linux.installer import Installer
+from setup.linux import setup_util
+
 from benchmark import framework_test
 
 import os
@@ -861,6 +863,9 @@ class Benchmarker:
     if self.database_host == None: self.database_host = self.client_host
     if self.database_identity_file == None: self.database_identity_file = self.client_identity_file
 
+    # Remember root directory
+    self.fwroot = setup_util.get_fwroot()
+
     # setup results and latest_results directories 
     self.result_directory = os.path.join("results", self.name)
     self.latest_results_directory = self.latest_results_directory()
@@ -968,8 +973,8 @@ class Benchmarker:
     if self.client_identity_file != None:
       self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
 
-    if self.install_software:
-      install = Installer(self)
+    if self.install is not None:
+      install = Installer(self, self.install_strategy)
       install.install_software()
 
   ############################################################

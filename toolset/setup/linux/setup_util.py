@@ -11,15 +11,13 @@ def replace_text(file, to_replace, replacement):
         f.write(replaced_text)
 
 # Replaces the current process environment with the one found in 
-# config file. Retains original HOME/PATH/USER by default (although)
-# this can be overwritten by config if desired
+# config file. Retains a few original vars (HOME,PATH, etc) by default. 
+# Optionally allows specification of a command to be run before loading
+# the environment, to allow the framework to set environment variables
+# Note: This command *cannot* print to stdout!
 #
-# Note: This will not work if the command you are running from python
-# starts with sudo (e.g. subprocess.check_call("sudo <command>")). 
-# If you must do this, consider sudo sh -c ". <config> && your_command"
-#
-# This will work if you run a command that internally calls sudo, 
-# as long as your /etc/sudoers correctly has the NOPASSWD option set
+# Note: This will not replace the sudo environment (e.g. subprocess.check_call("sudo <command>")). 
+# If you must use sudo, consider sudo sh -c ". <config> && your_command"
 def replace_environ(config=None, root=None, print_result=False, command='true'):
     # Source file and print resulting environment
     setup_env = "%s && . %s && env" % (command, config)
@@ -59,3 +57,23 @@ def replace_environ(config=None, root=None, print_result=False, command='true'):
         out = subprocess.check_output('env', shell=True, executable='/bin/bash')
         print "Environment after loading %s" %config
         print out
+
+# Queries the shell for the value of FWROOT
+def get_fwroot():
+    try:
+        # Use printf to avoid getting a newline
+        # Redirect to avoid stderr printing
+        fwroot = subprocess.check_output('printf $FWROOT 2> /dev/null', shell=True, executable='/bin/bash')
+        return fwroot
+    except subprocess.CalledProcessError:
+        return "";
+
+# Turns absolute path into path relative to FWROOT
+# Assumes path is underneath FWROOT, not above
+# 
+# Useful for clean presentation of paths 
+# e.g. /foo/bar/benchmarks/go/bash_profile.sh
+# v.s. FWROOT/go/bash_profile.sh 
+def path_relative_to_root(path):
+    # Requires bash shell parameter expansion
+    return subprocess.check_output("D=%s && printf ${D#%s}"%(path, get_fwroot()), shell=True, executable='/bin/bash')

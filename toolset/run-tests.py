@@ -28,7 +28,10 @@ def main(argv=None):
     sys.path.append('toolset/setup/linux')
 
     # Update environment for shell scripts
-    setup_util.replace_environ(config='config/benchmark_profile', root=os.getcwd())
+    fwroot = setup_util.get_fwroot()
+    if not fwroot: 
+        fwroot = os.getcwd()
+    setup_util.replace_environ(config='config/benchmark_profile', root=fwroot)
 
     conf_parser = argparse.ArgumentParser(
         description=__doc__,
@@ -83,12 +86,15 @@ def main(argv=None):
     parser.add_argument('--database-identity-file', default=dbIdenFile, dest='database_identity_file',
                         help='The key to use for SSH to the database instance.  If not provided, defaults to the value of --client-identity-file.')
     parser.add_argument('-p', dest='password_prompt', action='store_true', help='Prompt for password')
-    parser.add_argument('--install-software', action='store_true', help='runs the installation script before running the rest of the commands')
+    
     
     # Install options
     parser.add_argument('--install', choices=['client', 'database', 'server', 'all'], default=None,
                         help='Runs installation script(s) before continuing on to execute the tests.')
     parser.add_argument('--install-error-action', choices=['abort', 'continue'], default='continue', help='action to take in case of error during installation')
+    parser.add_argument('--install-strategy', choices=['unified', 'pertest'], default='pertest', 
+        help='''Affects `--install server`: With unified, all server software is installed into a single directory. 
+        With pertest each test gets its own installs directory, but installation takes longer''')
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')

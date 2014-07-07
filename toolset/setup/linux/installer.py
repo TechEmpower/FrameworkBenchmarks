@@ -31,7 +31,7 @@ class Installer:
   # __install_server_software
   ############################################################
   def __install_server_software(self):
-    print("\nINSTALL: Installing server software\n")
+    print("\nINSTALL: Installing server software (strategy=%s)\n"%self.strategy)
     
     # Install global prerequisites
     bash_functions_path='$FWROOT/toolset/setup/linux/bash_functions.sh'
@@ -45,13 +45,13 @@ class Installer:
         exclude = []
 
     # Locate all known tests
-    install_files = glob.glob("%s/*/install.sh" % self.root)
+    install_files = glob.glob("%s/*/install.sh" % self.fwroot)
 
     # Run install for selected tests
     for test_install_file in install_files:
         test_dir = os.path.dirname(test_install_file)
         test_name = os.path.basename(test_dir)
-        test_rel_dir = self.__path_relative_to_root(test_dir)
+        test_rel_dir = setup_util.path_relative_to_root(test_dir)
 
         if test_name in exclude:
             logging.debug("%s has been excluded", test_name)
@@ -63,8 +63,11 @@ class Installer:
             logging.info("Running installation for %s"%test_name)
 
             # Find installation directory e.g. FWROOT/go/installs
-            test_install_dir="%s/%s" % (test_dir, self.install_dir)
-            test_rel_install_dir=self.__path_relative_to_root(test_install_dir)
+            if self.strategy is 'pertest':
+              test_install_dir="%s/%s" % (test_dir, self.install_dir)
+            else:
+              test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
+            test_rel_install_dir=setup_util.path_relative_to_root(test_install_dir)
             if not os.path.exists(test_install_dir):
               os.makedirs(test_install_dir)
 
@@ -76,7 +79,7 @@ class Installer:
               logging.warning("Framework %s does not have a bash_profile"%test_name)
 
             # Find relative installation file
-            test_rel_install_file = "$FWROOT%s"%self.__path_relative_to_root(test_install_file)
+            test_rel_install_file = "$FWROOT%s" % setup_util.path_relative_to_root(test_install_file)
 
             # Then run test installer file
             # Give all installers FWROOT, IROOT, and bash_functions
@@ -283,7 +286,7 @@ EOF
     if send_yes:
       command = "yes yes | " + command
         
-    rel_cwd = self.__path_relative_to_root(cwd)
+    rel_cwd = setup_util.path_relative_to_root(cwd)
     print("INSTALL: %s (cwd=%s)" % (command, rel_cwd))
 
     while attempt <= max_attempts:
@@ -327,20 +330,6 @@ EOF
   ############################################################
 
   ############################################################
-  # __path_relative_to_root
-  # Returns path minus the FWROOT prefix. Useful for clean 
-  # presentation of paths 
-  # e.g. /foo/bar/benchmarks/go/bash_profile.sh
-  # v.s. FWROOT/go/bash_profile.sh 
-  ############################################################
-  def __path_relative_to_root(self, path):
-    # Requires bash shell parameter expansion
-    return subprocess.check_output("D=%s && printf ${D#%s}"%(path, self.root), shell=True, executable='/bin/bash')
-  ############################################################
-  # End __path_relative_to_root
-  ############################################################
-
-  ############################################################
   # __download
   # Downloads a file from a URI.
   ############################################################
@@ -360,10 +349,11 @@ EOF
   ############################################################
   # __init__(benchmarker)
   ############################################################
-  def __init__(self, benchmarker):
+  def __init__(self, benchmarker, install_strategy):
     self.benchmarker = benchmarker
     self.install_dir = "installs"
-    self.root = subprocess.check_output('printf $FWROOT', shell=True)
+    self.fwroot = benchmarker.fwroot
+    self.strategy = install_strategy
     
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)

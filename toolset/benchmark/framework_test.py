@@ -286,8 +286,13 @@ class FrameworkTest:
   # Start the test using it's setup file
   ############################################################
   def start(self, out, err):
+    # First replace the environment with the one defined in 
+    # this tests bash_profile.sh
     profile="%s/bash_profile.sh" % self.directory
-    setup_util.replace_environ(config=profile, command="IROOT=$FWROOT/go/installs")
+    
+    set_iroot="IROOT=%s" % self.install_root
+    setup_util.replace_environ(config=profile, command=set_iroot)
+
     return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
   # End start
@@ -903,6 +908,13 @@ class FrameworkTest:
     self.directory = directory
     self.benchmarker = benchmarker
     self.runTests = runTests
+    self.fwroot = benchmarker.fwroot
+    
+    if benchmarker.install_strategy is 'pertest':
+      self.install_root = "%s/%s" % (directory, "installs")
+    else:
+      self.install_root = "%s/%s" % (self.fwroot, "installs")
+
     self.__dict__.update(args)
 
     # ensure directory has __init__.py file so that we can use it as a Python package
