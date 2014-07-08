@@ -9,6 +9,6 @@ Framework permutation based on the following technology stack
 * Apache Cassandra database
 * Jackson 2 for JSON processing
 
-Currently implements test types 1, 2, 3, and 6.
+Currently implements test types 1, 2, 3, 5 and 6.
 
 
