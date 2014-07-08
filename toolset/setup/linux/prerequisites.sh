@@ -1,9 +1,9 @@
 #!/bin/bash
 
-fw_exists fwbm_prereqs_installed
-[ $? -ne 0 ] || { \
+RETCODE=$(fw_exists fwbm_prereqs_installed)
+[ ! "$RETCODE" == 0 ] || { \
   echo "Prerequisites installed!"; 
-  return 0;
+  return 0; 
 }
 
 sudo apt-get -y update
