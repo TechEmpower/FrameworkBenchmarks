@@ -76,4 +76,4 @@ def get_fwroot():
 # v.s. FWROOT/go/bash_profile.sh 
 def path_relative_to_root(path):
     # Requires bash shell parameter expansion
-    return subprocess.check_output("D=%s && printf ${D#%s}"%(path, get_fwroot()), shell=True, executable='/bin/bash')
+    return subprocess.check_output("D=%s && printf \"${D#%s}\""%(path, get_fwroot()), shell=True, executable='/bin/bash')
