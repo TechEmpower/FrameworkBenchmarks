@@ -30,9 +30,9 @@ sudo apt-get install -y gcc-4.8 g++-4.8
 RETCODE=$(fw_exists ~/.bash_profile.bak)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Backing up your original ~/.bash_profile, ~/.profile, ~/.bashrc"
-  mv ~/.bash_profile ~/.bash_profile.bak
-  mv ~/.bash_profile ~/.bash_profile.bak
-  mv ~/.bash_profile ~/.bash_profile.bak
+  mv ~/.bash_profile ~/.bash_profile.bak || true
+  mv ~/.profile ~/.profile.bak || true
+  mv ~/.bashrc ~/.bashrc.bak || true
 }
 
 cp ../config/benchmark_profile ~/.bash_profile
