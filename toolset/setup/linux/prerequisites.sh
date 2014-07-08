@@ -19,7 +19,7 @@ sudo apt-get -y install build-essential \
   libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 \
   liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev \
   libjson0-dev libmcrypt-dev libicu-dev cmake gettext \
-  curl libpq-dev mercurial mlton cloc
+  curl libpq-dev mercurial mlton cloc wget
 
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt-get -y update

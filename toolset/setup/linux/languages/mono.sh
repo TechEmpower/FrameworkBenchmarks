@@ -15,5 +15,6 @@ make get-monolite-latest
 make -j4 EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe
 sudo make install
 
+sudo apt-get -y install mono-devel
 echo "Installing RootCAs from Mozilla..."; 
 mozroots --import --sync;
