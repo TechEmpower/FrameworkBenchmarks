@@ -17,11 +17,11 @@ cd php-5.4.13
 ./configure --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl
 make
 sudo make install
+cd ..
 
 sudo cp ../config/php.ini /usr/local/lib/php.ini
 sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf
 
-cd ..
 RETCODE=$(fw_exists /usr/local/lib/php/extensions/no-debug-non-zts-20100525/apc.so)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
