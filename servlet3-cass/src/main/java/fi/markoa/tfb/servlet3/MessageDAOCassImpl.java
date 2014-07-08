@@ -45,17 +45,18 @@ public class MessageDAOCassImpl implements MessageDAO {
     session = cluster.connect(conf.getProperty("cassandra.keyspace"));
 
     Map<String, PreparedStatement> stmts = new HashMap<>();
-    stmts.put("get_by_id", session.prepare("SELECT id, randomnumber FROM world WHERE id = ?"));
+    stmts.put("get_by_id", session.prepare("SELECT randomnumber FROM world WHERE id=?"));
+    stmts.put("update_by_id", session.prepare("UPDATE world SET randomnumber=? WHERE id=?"));
     statements = Collections.unmodifiableMap(stmts);
   }
 
   @Override
-  public ListenableFuture<World> read(int id) {
+  public ListenableFuture<World> read(final int id) {
     Function<ResultSet, World> transformation = new Function<ResultSet, World>() {
       @Override
       public World apply(ResultSet results) {
         Row r = results.one();
-        return new World(r.getInt("id"), r.getInt("randomnumber"));
+        return new World(id, r.getInt("randomnumber"));
       }
     };
     ResultSetFuture rsf = session.executeAsync(statements.get("get_by_id").bind(id));
@@ -67,6 +68,13 @@ public class MessageDAOCassImpl implements MessageDAO {
     for(Integer id : ids)
       futures.add(read(id));
     return Futures.allAsList(futures);
+  }
+
+  public void update(List<World> worlds) {
+    BatchStatement bs = new BatchStatement(BatchStatement.Type.UNLOGGED);
+    for(World w : worlds)
+      bs.add(statements.get("update_by_id").bind(w.getId(), w.getRandomNumber()));
+    session.execute(bs);
   }
 
   @Override

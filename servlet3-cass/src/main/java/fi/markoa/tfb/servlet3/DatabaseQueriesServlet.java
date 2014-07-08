@@ -10,24 +10,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Web Framework Benchmarks
- * Test type 2: Single database query
+ * Test type 3: Multiple database queries
  *
  * @author marko asplund
  */
-@WebServlet(urlPatterns={"/db"}, asyncSupported=true)
-public class DatabaseQueryServlet extends DatabaseBaseServlet {
-  private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseQueryServlet.class);
+@WebServlet(urlPatterns={"/queries"}, asyncSupported=true)
+public class DatabaseQueriesServlet extends DatabaseBaseServlet {
+  private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseQueriesServlet.class);
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     resp.setContentType(MEDIATYPE_APPLICATION_JSON);
-    AsyncContext asyncContext = req.startAsync();
-    int randId = ThreadLocalRandom.current().nextInt(WORLD_LEAST_VALUE, WORLD_BOUND_VALUE+1);
-    ListenableFuture<?> future = dao.read(randId);
+    final AsyncContext asyncContext = req.startAsync();
+    ListenableFuture<?> future = dao.read(generateRandomNumbers(getQueries(req.getParameter("queries")),
+      WORLD_LEAST_VALUE, WORLD_BOUND_VALUE+1));
     addResponseCallback(asyncContext, future, executorService);
   }
 

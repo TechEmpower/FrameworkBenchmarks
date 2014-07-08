@@ -13,6 +13,14 @@ public class World {
     return id;
   }
 
+  @Override
+  public String toString() {
+    return "World{" +
+      "id=" + id +
+      ", randomNumber=" + randomNumber +
+      '}';
+  }
+
   public int getRandomNumber() {
     return randomNumber;
   }
