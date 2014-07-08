@@ -43,6 +43,16 @@ def start(args, logfile, errfile):
     fi
     cd ~
   fi
+  cat <<END >$DIR/ULib/benchmark.cfg
+userver {
+  PORT 8080
+  PREFORK_CHILD 8
+  LISTEN_BACKLOG 16384
+  MAX_KEEP_ALIVE 16384
+  DOCUMENT_ROOT ~/FrameworkBenchmarks/ULib/www
+  PID_FILE ~/FrameworkBenchmarks/ULib/userver_tcp.pid
+}
+END
   """
 
   p = subprocess.Popen(['sh'], stdin=subprocess.PIPE)
