@@ -330,6 +330,19 @@ class Installer:
     self.__run_command("sudo make install", cwd="treefrog-1.7.5/tools")
 
     #
+    # Ulib Framework
+    #
+    f = "v1.4.0.tar.gz"
+    if not os.path.exists(f):
+      self.__download("https://github.com/stefanocasazza/ULib/archive/" + f, f)
+    self.__run_command("tar xzf " + f)
+    self.__run_command("LIBS=\"-lssl -lcrypto -lz\" ./configure --prefix=$HOME/FrameworkBenchmarks/installs/ulib --disable-static --without-libz --without-libuuid --without-magic --without-ssl --without-pcre --without-expat --with-mysql --enable-static-orm-driver=mysql --enable-static-server-plugin=http", cwd="ULib-1.4.0")
+    self.__run_command("make -j1 install", cwd="ULib-1.4.0")
+    self.__run_command("make -j1 db.la fortunes.la json.la plaintext.la queries.la updates.la", cwd="ULib-1.4.0/src/ulib/net/server/plugin/usp")
+    self.__bash_from_string("mkdir -p $HOME/FrameworkBenchmarks/ULib/www")
+    self.__run_command("cp .libs/db.so .libs/fortunes.so .libs/json.so .libs/plaintext.so .libs/queries.so .libs/updates.so $HOME/FrameworkBenchmarks/ULib/www", cwd="ULib-1.4.0/src/ulib/net/server/plugin/usp")
+
+    #
     # Vert.x
     #
     self.__download("http://dl.bintray.com/vertx/downloads/vert.x-2.1.1.tar.gz?direct=true", "vert.x-2.1.1.tar.gz")

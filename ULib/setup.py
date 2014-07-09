@@ -43,7 +43,8 @@ def start(args, logfile, errfile):
     fi
     cd ~
   fi
-  cat <<END >$DIR/ULib/benchmark.cfg
+  if [ ! -f $DIR/ULib/benchmark.cfg ]; then
+     cat <<EOF >$DIR/ULib/benchmark.cfg
 userver {
   PORT 8080
   PREFORK_CHILD 8
@@ -52,22 +53,36 @@ userver {
   DOCUMENT_ROOT ~/FrameworkBenchmarks/ULib/www
   PID_FILE ~/FrameworkBenchmarks/ULib/userver_tcp.pid
 }
-END
+EOF
+  fi
+  exit 0
   """
 
   p = subprocess.Popen(['sh'], stdin=subprocess.PIPE)
   p.communicate(script)
+  if p.returncode != 0:
+    print("\nstart: ULib script failed\n")
 
   # 3. Start ULib Server (userver_tcp)
   try:
+    fconf = home + "/FrameworkBenchmarks/ULib/benchmark.cfg"
+    if not os.path.exists(fconf):
+      print("\nstart: ULib configuration file " + fconf + " not exist\n")
+
     threads = str(args.max_threads)
-    setup_util.replace_text(home + "/FrameworkBenchmarks/ULib/benchmark.cfg", "PREFORK_CHILD *", "PREFORK_CHILD " + threads)
+    setup_util.replace_text(fconf, "PREFORK_CHILD *", "PREFORK_CHILD " + threads)
+
+    fprg = home + "/FrameworkBenchmarks/installs/ulib/bin/userver_tcp"
+    if not os.path.exists(fprg):
+      print("\nstart: ULib server program " + fprg + " not exist\n")
 
     os.putenv("ORM_DRIVER","mysql")
     os.putenv("ORM_OPTION","host=" + args.database_host + " user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world")
     os.putenv("UMEMPOOL", "1583,1507,-19,43,1038,523,-27,-14,27")
 
-    subprocess.check_call(home + "/FrameworkBenchmarks/installs/ulib/bin/userver_tcp -c " + home + "/FrameworkBenchmarks/ULib/benchmark.cfg", shell=True, stderr=errfile, stdout=logfile)
+    print("\nstart: trying to start ULib server " + fprg + " -c " + fconf + "\n")
+
+    subprocess.check_call(fprg + " -c " + fconf + " >" + home + "/FrameworkBenchmarks/installs/ulib/ULIB_SERVER_OUTPUT.txt 2>&1", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
