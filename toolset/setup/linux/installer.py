@@ -62,11 +62,11 @@ class Installer:
         else:
             logging.info("Running installation for %s"%test_name)
 
-            # Find installation directory e.g. FWROOT/go/installs
+            # Find installation directory 
+            # e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
+            test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
             if self.strategy is 'pertest':
-              test_install_dir="%s/%s" % (test_dir, self.install_dir)
-            else:
-              test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
+              test_install_dir="%s/pertest/%s" % (test_install_dir, test_name)
             test_rel_install_dir=setup_util.path_relative_to_root(test_install_dir)
             if not os.path.exists(test_install_dir):
               os.makedirs(test_install_dir)

@@ -910,10 +910,9 @@ class FrameworkTest:
     self.runTests = runTests
     self.fwroot = benchmarker.fwroot
     
+    self.install_root="%s/%s" % (self.fwroot, "installs")
     if benchmarker.install_strategy is 'pertest':
-      self.install_root = "%s/%s" % (directory, "installs")
-    else:
-      self.install_root = "%s/%s" % (self.fwroot, "installs")
+      self.install_root="%s/pertest/%s" % (self.install_root, name)
 
     self.__dict__.update(args)
 
