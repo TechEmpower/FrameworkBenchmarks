@@ -290,7 +290,7 @@ class FrameworkTest:
     # this tests bash_profile.sh
     profile="%s/bash_profile.sh" % self.directory
     
-    set_iroot="IROOT=%s" % self.install_root
+    set_iroot="export IROOT=%s" % self.install_root
     setup_util.replace_environ(config=profile, command=set_iroot)
 
     return self.setup_module.start(self.benchmarker, out, err)
