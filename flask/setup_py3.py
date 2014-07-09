@@ -3,21 +3,36 @@ import setup_util
 import multiprocessing
 import os
 
-bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py3/bin')
+PY2BIN = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
+PY3BIN = os.path.expanduser('~/FrameworkBenchmarks/installs/py3/bin')
 NCPU = multiprocessing.cpu_count()
+
+CIRCUS_INI = """\
+[watcher:app]
+cmd = {BIN}/chaussette --fd=$(circus.sockets.app) --backend=meinheld app.app
+use_sockets = True
+numprocesses = {PROCS}
+
+[socket:app]
+host = 0.0.0.0
+port = 8080
+"""
+
+proc = None
 
 
 def start(args, logfile, errfile):
     global proc
+
+    subprocess.check_call(PY3BIN + "/pip3 install -r requirements.txt",
+                          cwd="flask", stderr=errfile, stdout=logfile, shell=True)
+
+    with open("flask/circus.ini", "w") as f:
+        f.write(CIRCUS_INI.format(BIN=PY3BIN, PROCS=NCPU*3))
+
     setup_util.replace_text("flask/app.py", "DBHOSTNAME", args.database_host)
-    proc = subprocess.Popen([
-        bin_dir + "/gunicorn",
-        "app:app",
-        "-k", "meinheld.gmeinheld.MeinheldWorker",
-        "-b", "0.0.0.0:8080",
-        '-w', str(NCPU*3),
-        "--log-level=critical"],
-        cwd="flask", stderr=errfile, stdout=logfile)
+    proc = subprocess.Popen([PY2BIN + "/circusd", "circus.ini"],
+		            cwd="flask", stderr=errfile, stdout=logfile)
     return 0
 
 def stop(logfile, errfile):

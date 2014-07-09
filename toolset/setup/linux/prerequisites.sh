@@ -37,12 +37,12 @@ sudo apt-get install -y gcc-4.8 g++-4.8
 
 # Stop permanently overwriting people's files just for 
 # trying out our software!
-fw_exists ~/.bash_profile.bak
-[ $? -eq 0 ] || { \
+RETCODE=$(fw_exists ~/.bash_profile.bak)
+[ ! "$RETCODE" == 0 ] || { \
   echo "Backing up your original ~/.bash_profile, ~/.profile, ~/.bashrc"
-  mv ~/.bash_profile ~/.bash_profile.bak
-  mv ~/.bash_profile ~/.bash_profile.bak
-  mv ~/.bash_profile ~/.bash_profile.bak
+  mv ~/.bash_profile ~/.bash_profile.bak || true
+  mv ~/.profile ~/.profile.bak || true
+  mv ~/.bashrc ~/.bashrc.bak || true
 }
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
