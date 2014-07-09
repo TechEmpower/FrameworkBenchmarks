@@ -34,8 +34,11 @@ fw_traperror () {
   IFS=':' read -a linestack <<< "$7" # Stack (line numbers)
   FW_dep_error=1
   FW_any_errors=1
+
+  wd=$(pwd)
+  relative_wd=\$FWROOT${wd#$FWROOT}
   
-  echo "ERROR: $(echo ${bashstack[1]#$FWROOT}): Command '$command' exited with status $err (dependency=$depend)"
+  echo "ERROR: $(echo ${bashstack[1]#$FWROOT}): Command '$command' exited with status $err (dependency=$depend) (cwd=$relative_wd)"
   #echo "  Function stack    : ${funcstack[@]}"
   #echo "  Bash source stack : ${bashstack[@]}"
   #echo "  Bash line stack   : ${linestack[@]}"
