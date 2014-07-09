@@ -72,12 +72,11 @@ class Installer:
               os.makedirs(test_install_dir)
 
             # Load profile for this installation
-            test_profile_file="%s/bash_profile.sh" % test_dir
-            if os.path.exists(test_profile_file):
-              setup_util.replace_environ(config=test_profile_file)
-            else:
+            profile="%s/bash_profile.sh" % test_dir
+            if not os.path.exists(profile):
               logging.warning("Framework %s does not have a bash_profile"%test_name)
-              setup_util.replace_environ(config="$FWROOT/config/benchmark_profile")
+              profile="$FWROOT/config/benchmark_profile"
+            setup_util.replace_environ(config=profile)
 
             # Find relative installation file
             test_rel_install_file = "$FWROOT%s" % setup_util.path_relative_to_root(test_install_file)
