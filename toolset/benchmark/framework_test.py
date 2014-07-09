@@ -11,6 +11,7 @@ import sys
 import traceback
 import json
 import textwrap
+import logging
 
 class FrameworkTest:
   ##########################################################################################
@@ -913,6 +914,9 @@ class FrameworkTest:
     self.benchmarker = benchmarker
     self.runTests = runTests
     self.fwroot = benchmarker.fwroot
+    
+    # setup logging
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     
     self.install_root="%s/%s" % (self.fwroot, "installs")
     if benchmarker.install_strategy is 'pertest':
