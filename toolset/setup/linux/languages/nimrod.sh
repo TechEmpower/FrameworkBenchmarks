@@ -5,11 +5,11 @@ RETCODE=$(fw_exists nimrod/bin/nimrod)
 
 test -d nimrod || git clone git://github.com/Araq/Nimrod.git nimrod
 cd nimrod 
-git checkout 987ac2439a87d74838233a7b188e4db340495ee5
+git checkout 887a1ebe688a01259263ad6e11c9061cfc940456
 test -d csources || git clone git://github.com/nimrod-code/csources.git
 
 cd csources
-git checkout 704015887981932c78a033dd5ede623b2ad6ae27
+git checkout 0a6e5758ed16bf906fcfdb9e64086edd9b60c5c0
 chmod +x build.sh
 ./build.sh
 
@@ -20,3 +20,4 @@ RETCODE=$(fw_exists nimrod/koch)
 cd nimrod
 bin/nimrod c koch
 ./koch boot -d:release
+sudo ./koch install /usr/bin
