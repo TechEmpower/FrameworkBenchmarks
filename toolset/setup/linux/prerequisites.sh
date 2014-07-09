@@ -8,18 +8,28 @@ RETCODE=$(fw_exists fwbm_prereqs_installed)
 
 sudo apt-get -y update
 sudo apt-get -y upgrade
-sudo apt-get -y install build-essential \
-  libpcre3 libpcre3-dev libpcrecpp0 \
-  libssl-dev zlib1g-dev python-software-properties \
-  unzip git-core libcurl4-openssl-dev libbz2-dev \
-  libmysqlclient-dev mongodb-clients libreadline6-dev \
-  libyaml-dev libsqlite3-dev sqlite3 libxml2-dev \
-  libxslt-dev libgdbm-dev ncurses-dev automake \
+
+# WARNING: DONT PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
+sudo apt-get -y install \
+  cmake build-essential automake    `# Needed for building code` \
+  curl wget unzip                   `# Common tools` \
+  software-properties-common        `# Needed for add-apt-repository` \
+  git-core mercurial                `# Version control systems` \
+  libpcre3 libpcre3-dev libpcrecpp0 `# Regular expression support` \
+  libssl-dev libcurl4-openssl-dev   `# SSL libraries` \
+  libmysqlclient-dev \
+  mongodb-clients \
+  libsqlite3-dev sqlite3            `# Database libraries` \
+  zlib1g-dev python-software-properties \
+  libreadline6-dev \
+  libbz2-dev \
+  libyaml-dev libxml2-dev \
+  libxslt-dev libgdbm-dev ncurses-dev  \
   libffi-dev htop libtool bison libevent-dev \
   libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 \
   liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev \
-  libjson0-dev libmcrypt-dev libicu-dev cmake gettext \
-  curl libpq-dev mercurial mlton cloc wget
+  libjson0-dev libmcrypt-dev libicu-dev gettext \
+  libpq-dev mlton cloc
 
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt-get -y update
