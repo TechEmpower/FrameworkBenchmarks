@@ -286,9 +286,13 @@ class FrameworkTest:
   # Start the test using it's setup file
   ############################################################
   def start(self, out, err):
-    # First replace the environment with the one defined in 
-    # this tests bash_profile.sh
-    profile="%s/bash_profile.sh" % self.directory
+    # Load profile for this installation
+    test_profile="%s/bash_profile.sh" % self.directory
+    if os.path.exists(test_profile):
+      setup_util.replace_environ(config=test_profile)
+    else:
+      logging.warning("Framework %s does not have a bash_profile" % test_name)
+      setup_util.replace_environ(config="$FWROOT/config/benchmark_profile")
     
     set_iroot="export IROOT=%s" % self.install_root
     setup_util.replace_environ(config=profile, command=set_iroot)

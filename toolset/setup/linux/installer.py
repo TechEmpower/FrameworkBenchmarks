@@ -77,6 +77,7 @@ class Installer:
               setup_util.replace_environ(config=test_profile_file)
             else:
               logging.warning("Framework %s does not have a bash_profile"%test_name)
+              setup_util.replace_environ(config="$FWROOT/config/benchmark_profile")
 
             # Find relative installation file
             test_rel_install_file = "$FWROOT%s" % setup_util.path_relative_to_root(test_install_file)
