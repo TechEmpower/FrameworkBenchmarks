@@ -29,7 +29,7 @@ This is the ULib portion of a [benchmarking test suite](https://github.com/TechE
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [ULib Version 1.4.0](https://github.com/stefanocasazza/ULib/archive/v1.4.0.tar.gz)
+* [ULib Version 1.4.1](https://github.com/stefanocasazza/ULib/archive/v1.4.1.tar.gz)
 
 Output
 ======

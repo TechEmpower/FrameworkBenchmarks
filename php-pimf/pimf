@@ -1,0 +1,4 @@
+#!/usr/bin/php
+<?php
+require 'index.php';
+?>

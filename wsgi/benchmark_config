@@ -12,7 +12,7 @@
       "framework": "wsgi",
       "language": "Python",
       "orm": "Raw",
-      "platform": "Gunicorn/Meinheld",
+      "platform": "Meinheld",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",

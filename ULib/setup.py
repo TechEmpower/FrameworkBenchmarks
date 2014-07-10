@@ -15,53 +15,18 @@ def start(args, logfile, errfile):
 
   script = """
   DIR=$HOME/FrameworkBenchmarks
+  PREFIX=$DIR/installs/ulib
   DOCUMENT_ROOT=$DIR/ULib/www
-  if [ ! -d $DOCUMENT_ROOT ]; then
-    # 1. Download ULib
-    wget -nc https://github.com/stefanocasazza/ULib/archive/v1.4.0.tar.gz
-    # 2. Compile application (userver_tcp)
-    tar xzf v1.4.0.tar.gz
-    cd ULib-1.4.0
-    # ======================================================================================================
-    # TO AVOID configure: error: newly created file is older than distributed files! Check your system clock
-    # ======================================================================================================
-    find . -exec touch {} \;
-    # ======================================================================================================
-    PREFIX=$DIR/installs/ulib
-    if [ ! -d $PREFIX ]; then
-       mkdir -p $PREFIX
-    fi
-    DATE=`date '+%Y%m%d'` # 20140117
-    BUILD_OUTPUT=$PREFIX/ULIB_BUILD_OUTPUT-$DATE.txt
-    LIBS="-lssl -lcrypto -lz" ./configure --prefix=$PREFIX --disable-static --without-libz --without-libuuid --without-magic --without-ssl --without-pcre --without-expat --with-mysql --enable-static-orm-driver=mysql --enable-static-server-plugin=http >$BUILD_OUTPUT 2>&1
-    make -j1 install >>$BUILD_OUTPUT 2>&1
-    cd src/ulib/net/server/plugin/usp
-    make -j1 db.la fortunes.la json.la plaintext.la queries.la updates.la >>$BUILD_OUTPUT 2>&1
-    if [ -e .libs/db.so ]; then
-       mkdir -p $DOCUMENT_ROOT
-       cp .libs/db.so .libs/fortunes.so .libs/json.so .libs/plaintext.so .libs/queries.so .libs/updates.so $DOCUMENT_ROOT
-    fi
-    cd ~
+  if [ -x "$PREFIX/bin/userver_tcp" ] && [ -d "$DOCUMENT_ROOT" ] && [ -e "$DOCUMENT_ROOT/db.so" ] && [ -f $DIR/ULib/benchmark.cfg ]; then
+    return 0;
   fi
-  if [ ! -f $DIR/ULib/benchmark.cfg ]; then
-     cat <<EOF >$DIR/ULib/benchmark.cfg
-userver {
-  PORT 8080
-  PREFORK_CHILD 8
-  LISTEN_BACKLOG 16384
-  MAX_KEEP_ALIVE 16384
-  DOCUMENT_ROOT ~/FrameworkBenchmarks/ULib/www
-  PID_FILE ~/FrameworkBenchmarks/ULib/userver_tcp.pid
-}
-EOF
-  fi
-  exit 0
+  return 1;
   """
 
   p = subprocess.Popen(['sh'], stdin=subprocess.PIPE)
   p.communicate(script)
   if p.returncode != 0:
-    print("\nstart: ULib script failed\n")
+    print("\nstart: ULib install script failed\n")
 
   # 3. Start ULib Server (userver_tcp)
   try:
@@ -78,7 +43,7 @@ EOF
 
     os.putenv("ORM_DRIVER","mysql")
     os.putenv("ORM_OPTION","host=" + args.database_host + " user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world")
-    os.putenv("UMEMPOOL", "1583,1507,-19,43,1038,523,-27,-14,27")
+    os.putenv("UMEMPOOL", "1583,1507,-19,45,16458,523,-27,-14,27")
 
     print("\nstart: trying to start ULib server " + fprg + " -c " + fconf + "\n")
 
