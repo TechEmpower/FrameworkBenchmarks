@@ -1,5 +1,5 @@
 {
-  "framework": "lapis",
+  "framework": "leda",
   "tests": [{
     "default": {
       "setup_file": "setup",
