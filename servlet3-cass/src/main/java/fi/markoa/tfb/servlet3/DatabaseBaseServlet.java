@@ -9,6 +9,7 @@ import javax.servlet.AsyncContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,19 +54,22 @@ public abstract class DatabaseBaseServlet extends HttpServlet {
           mapper.writeValue(asyncContext.getResponse().getOutputStream(), world);
         } catch (IOException ex) {
           LOGGER.error("failed to get output stream", ex);
-          throw new RuntimeException("failed to get output stream", ex);
         }
         asyncContext.complete();
       }
 
       @Override
       public void onFailure(Throwable th) {
-        // TODO
-        LOGGER.error("failed to get data, "+th);
-        asyncContext.complete();
-        throw new RuntimeException(th);
+        LOGGER.error("failed to read data", th);
+        errorDispatch(asyncContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "failed to read data: "+th.getMessage());
       }
     }, executor);
+  }
+
+  protected void errorDispatch(AsyncContext asyncContext, int statusCode, String message) {
+    asyncContext.getRequest().setAttribute("statusCode", statusCode);
+    asyncContext.getRequest().setAttribute("message", message);
+    asyncContext.dispatch("/jsp/error.jsp");
   }
 
   protected int getQueries(String queries) {

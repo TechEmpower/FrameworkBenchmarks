@@ -47,7 +47,8 @@ public class DatabaseUpdatesServlet extends DatabaseBaseServlet {
           newRandoms = newRandomsFuture.get();
         } catch (InterruptedException | ExecutionException ex) {
           LOGGER.error("failed to generate random numbers", ex);
-          throw new RuntimeException("failed to generate random numbers", ex);
+          errorDispatch(asyncContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "failed to generate random numbers"+ex.getMessage());
+          return;
         }
         List<World> newWorlds = new ArrayList<>();
         for(int i = 0; i < worlds.size(); i++)
@@ -58,7 +59,6 @@ public class DatabaseUpdatesServlet extends DatabaseBaseServlet {
           mapper.writeValue(asyncContext.getResponse().getOutputStream(), newWorlds);
         } catch (IOException ex) {
           LOGGER.error("failed to get output stream", ex);
-          throw new RuntimeException("failed to get output stream", ex);
         }
         asyncContext.complete();
 
@@ -68,6 +68,7 @@ public class DatabaseUpdatesServlet extends DatabaseBaseServlet {
       @Override
       public void onFailure(Throwable th) {
         LOGGER.error("update failed", th);
+        errorDispatch(asyncContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "update failed: "+th.getMessage());
       }
     }, executorService);
 
