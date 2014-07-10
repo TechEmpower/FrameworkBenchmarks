@@ -1,9 +1,7 @@
 import subprocess
-import multiprocessing
 import os
 
 bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/pypy/bin')
-NCPU = multiprocessing.cpu_count()
 
 proc = None
 
@@ -13,17 +11,21 @@ def start(args, logfile, errfile):
     proc = subprocess.Popen([
         bin_dir + "/gunicorn",
         "app:app",
-        '-k', 'tornado',
-        "-b", "0.0.0.0:8080",
-        '-w', str(NCPU*3),
-        "--log-level=critical"],
+        "-c", "gunicorn_conf.py"],
         cwd="falcon", stderr=errfile, stdout=logfile)
     return 0
 
 def stop(logfile, errfile):
     global proc
-    if proc is None:
-        return 0
-    proc.terminate()
-    proc = None
+    if proc:
+        proc.terminate()
+        proc = None
+
+    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'installs/pypy/bin/' in line:
+        errfile.write("Killing: " + line + "\n")
+        pid = int(line.split()[1])
+        os.kill(pid, 15)
     return 0
