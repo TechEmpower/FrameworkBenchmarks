@@ -19,7 +19,7 @@ final class FortuneController {
     private FortuneRepository fortuneRepository;
 
     @RequestMapping(value = "/fortunes")
-     String fortunes(ModelMap modelMap) {
+    String fortunes(ModelMap modelMap) {
         List<Fortune> fortunes = this.fortuneRepository.findAll();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);

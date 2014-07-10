@@ -1,0 +1,20 @@
+language: php
+
+php:
+  - 5.6
+  - 5.5
+  - 5.4
+  - 5.3
+
+before_script:
+  - phpenv rehash
+
+script:
+  - phpunit --configuration phpunit.xml --coverage-clover=coverage.clover
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+notifications:
+  email:
+    - gjero@krsteski.de
+
