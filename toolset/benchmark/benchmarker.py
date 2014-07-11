@@ -832,11 +832,9 @@ class Benchmarker:
   def __load_results(self):
     try:
       with open(os.path.join(self.latest_results_directory, 'results.json')) as f:
-        results = json.load(f)
+        self.results = json.load(f)
     except (ValueError, IOError):
       pass
-    else:
-      self.results = results
 
   ############################################################
   # __finish
