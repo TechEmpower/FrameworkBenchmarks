@@ -575,8 +575,8 @@ class Installer:
     pushd apache-cassandra-$CASS_V
     nohup ./bin/cassandra
     sleep 10
-    cat ../cassandra/create-keyspace.cql | ./bin/cqlsh tfbdata
-    python ../cassandra/db-data-gen.py | ./bin/cqlsh tfbdata
+    cat ../cassandra/create-keyspace.cql | ./bin/cqlsh $TFB_DATABASE_HOST
+    python ../cassandra/db-data-gen.py | ./bin/cqlsh $TFB_DATABASE_HOST
     popd
     """
     
