@@ -19,24 +19,18 @@ def replace_text(file, to_replace, replacement):
 # Note: This will not replace the sudo environment (e.g. subprocess.check_call("sudo <command>")). 
 # If you must use sudo, consider sudo sh -c ". <config> && your_command"
 def replace_environ(config=None, root=None, print_result=False, command='true'):
+    
     # Clean up our current environment, preserving some important items
-    mini_environ = os.environ.copy()
-    mini_environ.clear()
-    if 'HOME' in os.environ.keys():
-        mini_environ['HOME']=os.environ['HOME']
-    if 'PATH' in os.environ.keys():
-        mini_environ['PATH']=os.environ['PATH']
-    if 'USER' in os.environ.keys():
-        mini_environ['USER']=os.environ['USER']
-    if 'LD_LIBRARY_PATH' in os.environ.keys():
-        mini_environ['LD_LIBRARY_PATH'] = os.environ['LD_LIBRARY_PATH']
-    if 'PYTHONPATH' in os.environ.keys():
-        mini_environ['PYTHONPATH'] = os.environ['PYTHONPATH']
+    mini_environ = {}
+    for envname in ['HOME', 'PATH', 'USER', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'FWROOT']:
+      if envname in os.environ:
+        mini_environ[envname] = os.environ[envname]
+    os.environ.clear()
+
+    # Use FWROOT if explicitely provided
     if root is not None: 
       mini_environ['FWROOT']=root
-    elif 'FWROOT' in os.environ.keys():
-        mini_environ['FWROOT']=os.environ['FWROOT']
-    os.environ.clear()
+    
 
     # Run command, source config file, and store resulting environment
     setup_env = "%s && . %s && env" % (command, config)
@@ -44,9 +38,7 @@ def replace_environ(config=None, root=None, print_result=False, command='true'):
       executable='/bin/bash')
     for line in env.split('\n'):
         try:
-            split=line.index('=')
-            key=line[:split]
-            value=line[split+1:]
+            key, value = line.split('=', 1)
             os.environ[key]=value
         except:
             if not line: # Don't warn for empty line
