@@ -36,7 +36,7 @@ public abstract class DatabaseBaseServlet extends HttpServlet {
   @Override
   public void init(ServletConfig config) throws ServletException {
     dao = new MessageDAOCassImpl();
-    dao.init();
+    dao.init(executorService);
   }
 
   /**
@@ -84,7 +84,7 @@ public abstract class DatabaseBaseServlet extends HttpServlet {
     }
     if(q > 500)
       return 500;
-    if(q < 1)
+    else if(q < 1)
       return 1;
 
     return q;
@@ -100,5 +100,6 @@ public abstract class DatabaseBaseServlet extends HttpServlet {
   @Override
   public void destroy() {
     dao.destroy();
+    executorService.shutdown();
   }
 }

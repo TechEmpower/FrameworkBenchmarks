@@ -4,6 +4,7 @@ import com.datastax.driver.core.*;
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ public class MessageDAOCassImpl implements MessageDAO {
   private Map<String, PreparedStatement> statements;
 
   @Override
-  public void init() {
+  public void init(ListeningExecutorService executorService) {
     LOGGER.debug("init()");
 
     Properties conf;
@@ -59,8 +60,7 @@ public class MessageDAOCassImpl implements MessageDAO {
         return new World(id, r.getInt("randomnumber"));
       }
     };
-    ResultSetFuture rsf = session.executeAsync(statements.get("get_by_id").bind(id));
-    return Futures.transform(rsf, transformation);
+    return Futures.transform(session.executeAsync(statements.get("get_by_id").bind(id)), transformation);
   }
 
   public ListenableFuture<List<World>> read(List<Integer> ids) {
@@ -70,11 +70,17 @@ public class MessageDAOCassImpl implements MessageDAO {
     return Futures.allAsList(futures);
   }
 
-  public void update(List<World> worlds) {
+  public ListenableFuture<Void> update(List<World> worlds) {
+    Function<ResultSet, Void> transformation = new Function<ResultSet, Void>() {
+      @Override
+      public Void apply(ResultSet rows) {
+        return null;
+      }
+    };
     BatchStatement bs = new BatchStatement(BatchStatement.Type.UNLOGGED);
     for(World w : worlds)
       bs.add(statements.get("update_by_id").bind(w.getId(), w.getRandomNumber()));
-    session.execute(bs);
+    return Futures.transform(session.executeAsync(bs), transformation);
   }
 
   @Override

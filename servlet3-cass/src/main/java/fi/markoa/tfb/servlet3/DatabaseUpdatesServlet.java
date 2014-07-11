@@ -36,7 +36,7 @@ public class DatabaseUpdatesServlet extends DatabaseBaseServlet {
     final AsyncContext asyncContext = req.startAsync();
     ListenableFuture<List<World>> readFuture = dao.read(generateRandomNumbers(queries,
       WORLD_LEAST_VALUE, WORLD_BOUND_VALUE+1));
-    final Future<List<Integer>> newRandomsFuture = generateRandomNumbersFuture(queries,
+    final ListenableFuture<List<Integer>> newRandomsFuture = generateRandomNumbersFuture(queries,
       WORLD_LEAST_VALUE, WORLD_BOUND_VALUE+1);
 
     Futures.addCallback(readFuture, new FutureCallback<List<World>>() {
@@ -74,7 +74,7 @@ public class DatabaseUpdatesServlet extends DatabaseBaseServlet {
 
   }
 
-  protected Future<List<Integer>> generateRandomNumbersFuture(final int count, final int least, final int bound) {
+  protected ListenableFuture<List<Integer>> generateRandomNumbersFuture(final int count, final int least, final int bound) {
     return executorService.submit(new Callable<List<Integer>>() {
       @Override
       public List<Integer> call() throws Exception {
