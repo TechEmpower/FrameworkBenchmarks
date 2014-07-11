@@ -4,8 +4,9 @@ import ConfigParser
 import sys
 import os
 import multiprocessing
+import logging
+log = logging.getLogger('run-tests')
 import subprocess
-from pprint import pprint 
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
@@ -55,7 +56,7 @@ def main(argv=None):
             defaults = dict(config.items("Defaults"))
     except IOError:
         if args.conf_file != 'benchmark.cfg':
-            print 'Configuration file not found!'
+            log.warn('Configuration file not found!')
         defaults = { "client-host":"localhost"}
 
     ##########################################################
@@ -127,15 +128,21 @@ def main(argv=None):
 
     # Misc Options
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
-    parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
+    parser.add_argument('--log', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='ERROR', help='Set the logging level')
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
+    # Set up our initial logging level
+    numeric_level = getattr(logging, args.log.upper(), logging.ERROR)
+    if not isinstance(numeric_level, int):
+        raise ValueError('Invalid log level: %s' % loglevel)
+    logging.basicConfig(level=numeric_level)
+
     # Verify and massage options
     if args.client_user is None:
-      print 'Usernames (e.g. --client-user and --database-user) are required!'
-      print 'The system will SSH into the client and the database for the install stage'
-      print 'Aborting'
+      log.critical('Usernames (e.g. --client-user and --database-user) are required!')
+      log.critical('The system will SSH into the client and the database for the install stage')
+      log.critical('Aborting')
       exit(1)
 
     if args.database_user is None:
@@ -144,9 +151,7 @@ def main(argv=None):
     if args.database_host is None:
       args.database_host = args.client_host
 
-    if args.verbose:
-        print 'Configuration options: '
-        pprint(args)
+    log.info("Configuration: %s" % str(args))
 
     benchmarker = Benchmarker(vars(args))
 

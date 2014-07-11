@@ -12,6 +12,7 @@ import pprint
 import csv
 import sys
 import logging
+log = logging.getLogger('benchmarker')
 import socket
 import glob
 from multiprocessing import Process
@@ -74,6 +75,7 @@ class Benchmarker:
   # Re-parses the raw data for a given timestamp
   ############################################################
   def parse_timestamp(self):
+    log.info("parse_timestamp")
     all_tests = self.__gather_tests
 
     for test in all_tests:
@@ -95,6 +97,8 @@ class Benchmarker:
   # running benchmarks against them.
   ############################################################
   def run(self):
+    log.info("run")
+
     ##########################
     # Get a list of all known
     # tests that we can run.
@@ -192,6 +196,7 @@ class Benchmarker:
   # test_type timestamp/test_type/test_name/raw 
   ############################################################
   def get_output_file(self, test_name, test_type):
+    log.debug("get_output_file")
     return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "raw")
   ############################################################
   # End get_output_file
@@ -203,6 +208,7 @@ class Benchmarker:
   # timestamp/test_type/test_name/raw 
   ############################################################
   def output_file(self, test_name, test_type):
+    log.debug("output_file")
     path = self.get_output_file(test_name, test_type)
     try:
       os.makedirs(os.path.dirname(path))
@@ -244,6 +250,7 @@ class Benchmarker:
   # full_results_directory
   ############################################################
   def full_results_directory(self):
+    log.debug("full_results_directory")
     path = os.path.join(self.result_directory, self.timestamp)
     try:
       os.makedirs(path)
@@ -259,6 +266,7 @@ class Benchmarker:
   ############################################################
 
   def latest_results_directory(self):
+    log.debug("latest_results_directory")
     path = os.path.join(self.result_directory,"latest")
     try:
       os.makedirs(path)
@@ -270,6 +278,9 @@ class Benchmarker:
   # report_results
   ############################################################
   def report_results(self, framework, test, results):
+    log.info("report_results: %s - %s" % (framework.name, test))
+    log.debug("report_results: %s" % results)
+
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
 
@@ -301,6 +312,7 @@ class Benchmarker:
   ############################################################
   @property
   def __gather_tests(self):
+    log.info("__gather_tests")
     tests = []
 
     # Assume we are running from FrameworkBenchmarks
@@ -332,7 +344,7 @@ class Benchmarker:
         try:
           config = json.load(config_file)
         except:
-          print("Error loading '%s'." % config_file_name)
+          log.error("Error loading '%s'" % config_file_name)
           raise
 
       if config is None:
@@ -358,6 +370,8 @@ class Benchmarker:
   # Gathers all the frameworks
   ############################################################
   def __gather_frameworks(self):
+    log.info("__gather_frameworks")
+
     frameworks = []
     # Loop through each directory (we assume we're being run from the benchmarking root)
     for dirname, dirnames, filenames in os.walk('.'):
@@ -401,6 +415,7 @@ class Benchmarker:
   # http://redmine.lighttpd.net/projects/weighttp/wiki#Troubleshooting
   ############################################################
   def __setup_server(self):
+    log.info("__setup_server")
     try:
       if os.name == 'nt':
         return True
@@ -425,6 +440,7 @@ class Benchmarker:
   # changes.
   ############################################################
   def __setup_database(self):
+    log.info("__setup_database")
     p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
       sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
@@ -446,6 +462,7 @@ class Benchmarker:
   # changes.
   ############################################################
   def __setup_client(self):
+    log.info("__setup_client")
     p = subprocess.Popen(self.client_ssh_string, stdin=subprocess.PIPE, shell=True)
     p.communicate("""
       sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
@@ -472,15 +489,15 @@ class Benchmarker:
   ############################################################
 
   def __run_tests(self, tests):
-    logging.debug("Start __run_tests.")
-    logging.debug("__name__ = %s",__name__)
+    log.info("__run_tests")
+    log.debug("__run_tests with __name__ = %s",__name__)
 
     if self.os.lower() == 'windows':
-      logging.debug("Executing __run_tests on Windows")
+      log.info("Executing __run_tests on Windows")
       for test in tests:
         self.__run_test(test)
     else:
-      logging.debug("Executing __run_tests on Linux")
+      log.info("Executing __run_tests on Linux")
       # These features do not work on Windows
       for test in tests:
         if __name__ == 'benchmark.benchmarker':
@@ -494,10 +511,10 @@ class Benchmarker:
           test_process.join(self.run_test_timeout_seconds)
           self.__load_results()  # Load intermediate result from child process
           if(test_process.is_alive()):
-            logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
+            log.warn("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
             test_process.terminate()
-    logging.debug("End __run_tests.")
+    log.info("End __run_tests")
 
   ############################################################
   # End __run_tests
@@ -514,6 +531,7 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __run_test(self, test):
+    log.info("__run_test")
     try:
       os.makedirs(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name)))
     except:
@@ -753,6 +771,8 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __parse_results(self, tests):
+    log.info("__parse_results")
+    
     # Run the method to get the commmit count of each framework.
     self.__count_commits()
    # Call the method which counts the sloc for each framework
@@ -760,7 +780,10 @@ class Benchmarker:
 
     # Time to create parsed files
     # Aggregate JSON file
-    with open(os.path.join(self.full_results_directory(), "results.json"), "w") as f:
+    results_file=os.path.join(self.full_results_directory(), "results.json")
+    log.debug("Writing results to %s"%results_file)
+    log.debug("Results: %s" % json.dumps(self.results))
+    with open(results_file, "w") as f:
       f.write(json.dumps(self.results))
 
   ############################################################
@@ -773,6 +796,7 @@ class Benchmarker:
   # This is assumed to be run from the benchmark root directory
   #############################################################
   def __count_sloc(self):
+    log.info("__count_sloc")
     all_frameworks = self.__gather_frameworks()
     jsonResult = {}
 
@@ -798,6 +822,7 @@ class Benchmarker:
   # __count_commits
   ############################################################
   def __count_commits(self):
+    log.info("__count_commits")
     all_frameworks = self.__gather_frameworks()
 
     jsonResult = {}
@@ -820,12 +845,15 @@ class Benchmarker:
   # __write_intermediate_results
   ############################################################
   def __write_intermediate_results(self,test_name,status_message):
+    log.info("__write_intermediate_results: %s reports %s" % (test_name, status_message))
     try:
       self.results["completed"][test_name] = status_message
-      with open(os.path.join(self.latest_results_directory, 'results.json'), 'w') as f:
+      latest_results = os.path.join(self.latest_results_directory, 'results.json')
+      log.debug("Dumping to %s: %s" % (latest_results, json.dumps(self.results)))
+      with open(latest_results, 'w') as f:
         f.write(json.dumps(self.results))
     except (IOError):
-      logging.error("Error writing results.json")
+      log.error("Error writing results.json")
 
   ############################################################
   # End __write_intermediate_results
@@ -842,6 +870,7 @@ class Benchmarker:
   # __finish
   ############################################################
   def __finish(self):
+    log.info("__finish")
     print "Time to complete: " + str(int(time.time() - self.start_time)) + " seconds"
     print "Results are saved in " + os.path.join(self.result_directory, self.timestamp)
 
@@ -862,9 +891,6 @@ class Benchmarker:
     self.__dict__.update(args)
     self.start_time = time.time()
     self.run_test_timeout_seconds = 3600
-
-    # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     
     # setup some additional variables
     if self.database_user == None: self.database_user = self.client_user
@@ -928,7 +954,7 @@ class Benchmarker:
         #Load json file into results object
         self.results = json.load(f)
     except IOError:
-      logging.warn("results.json for test %s not found.",self.name) 
+      log.warn("results.json for test %s not found.",self.name) 
     
     if self.results == None:
       self.results = dict()
