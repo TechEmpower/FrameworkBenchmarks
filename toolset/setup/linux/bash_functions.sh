@@ -12,8 +12,7 @@ fw_get () {
 }
 
 fw_untar() {
-  # tar xzf "$@"
-  tar xvzf "$@"
+  tar xvf "$@"
 }
 
 fw_unzip() {
