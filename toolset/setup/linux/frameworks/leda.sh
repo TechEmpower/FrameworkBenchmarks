@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists leda)
+RETCODE=$(fw_exists leda-0.4.1)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 wget http://sergeyzavadski.github.io/leda/releases/leda-0.4.1/leda-0.4.1.tar.gz
