@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /php-zend-framework/ "/home/ubuntu/FrameworkBenchmarks/php-zend-framework/public/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/php-zend-framework/public/>
+          Options Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>

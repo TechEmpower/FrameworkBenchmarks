@@ -4,7 +4,7 @@
   (:require [noir.util.middleware :as middleware]
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
-            [com.postspectacular.rotor :as rotor]))
+            [taoensso.timbre.appenders.rotor :as rotor]))
 
 (defroutes app-routes
   (route/resources "/")
@@ -25,11 +25,11 @@
      :enabled? true
      :async? false ; should be always false for rotor
      :max-message-per-msecs nil
-     :fn rotor/append})
+     :fn rotor/appender-fn})
 
   (timbre/set-config!
     [:shared-appender-config :rotor]
-    {:path "hello.log" :max-size 10000 :backlog 10})
+    {:path "{{sanitized}}.log" :max-size (* 512 1024) :backlog 10})
 
   (timbre/info "hello started successfully"))
 

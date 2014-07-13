@@ -18,7 +18,7 @@ import Snap.Core
 import Snap.Http.Server
 import System.Random
 
-import qualified Data.HashMap as HM
+import qualified Data.HashMap.Lazy as HM
 import qualified Data.ByteString.Char8 as B
 
 data RandQuery = RQ !Int !Int
