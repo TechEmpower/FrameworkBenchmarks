@@ -1,10 +1,11 @@
 #!/bin/bash
 
-DIR=$HOME/FrameworkBenchmarks
-PREFIX=$DIR/installs/ulib
-DOCUMENT_ROOT=$DIR/ULib/www
+# FWROOT=${HOME}/FrameworkBenchmarks
+#  IROOT=${FWROOT}/ulib/installs
 
-RET1=$(fw_exists $PREFIX/bin/userver_tcp)
+DOCUMENT_ROOT=$FWROOT/ULib/www
+
+RET1=$(fw_exists $IROOT/bin/userver_tcp)
 RET2=$(fw_exists $DOCUMENT_ROOT/db.so)
 
 if [ "$RET1" == 0 ] && [ "$RET2" == 0 ]; then
@@ -22,12 +23,12 @@ cd ULib-$VERSION
 # ======================================================================================================
 find . -exec touch {} \;
 # ======================================================================================================
-if [ ! -d $PREFIX ]; then
-   mkdir -p $PREFIX
+if [ ! -d $IROOT ]; then
+   mkdir -p $IROOT
 fi
 DATE=`date '+%Y%m%d'` # 20140117
-BUILD_OUTPUT=$PREFIX/ULIB_BUILD_OUTPUT-$DATE.txt
-LIBS="-lssl -lcrypto -lz" ./configure --prefix=$PREFIX --disable-static --without-libz --without-libuuid --without-magic --without-ssl --without-pcre --without-expat --with-mysql --enable-static-orm-driver=mysql --enable-static-server-plugin=http >$BUILD_OUTPUT 2>&1
+BUILD_OUTPUT=$IROOT/ULIB_BUILD_OUTPUT-$DATE.txt
+LIBS="-lssl -lcrypto -lz" ./configure --prefix=$IROOT --disable-static --without-libz --without-libuuid --without-magic --without-ssl --without-pcre --without-expat --with-mysql --enable-static-orm-driver=mysql --enable-static-server-plugin=http >$BUILD_OUTPUT 2>&1
 make -j1 install >>$BUILD_OUTPUT 2>&1
 cd src/ulib/net/server/plugin/usp
 make -j1 db.la fortunes.la json.la plaintext.la queries.la updates.la >>$BUILD_OUTPUT 2>&1
@@ -37,8 +38,8 @@ if [ -e .libs/db.so ]; then
 else
 	return 1;
 fi
-if [ ! -f $DIR/ULib/benchmark.cfg ]; then
-  cat <<EOF >$DIR/ULib/benchmark.cfg
+if [ ! -f $FWROOT/ULib/benchmark.cfg ]; then
+  cat <<EOF >$FWROOT/ULib/benchmark.cfg
 userver {
   PORT 8080
   PREFORK_CHILD 8

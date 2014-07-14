@@ -13,11 +13,12 @@ home = expanduser("~")
 ##############
 def start(args, logfile, errfile):
 
+# FWROOT=${HOME}/FrameworkBenchmarks
+#  IROOT=${FWROOT}/ulib/installs
+
   script = """
-  DIR=$HOME/FrameworkBenchmarks
-  PREFIX=$DIR/installs/ulib
-  DOCUMENT_ROOT=$DIR/ULib/www
-  if [ -x "$PREFIX/bin/userver_tcp" ] && [ -d "$DOCUMENT_ROOT" ] && [ -e "$DOCUMENT_ROOT/db.so" ] && [ -f $DIR/ULib/benchmark.cfg ]; then
+  DOCUMENT_ROOT=$FWROOT/ULib/www
+  if [ -x "$IROOT/ulib/bin/userver_tcp" ] && [ -d "$DOCUMENT_ROOT" ] && [ -e "$DOCUMENT_ROOT/db.so" ] && [ -f $FWROOT/ULib/benchmark.cfg ]; then
     return 0;
   fi
   return 1;
