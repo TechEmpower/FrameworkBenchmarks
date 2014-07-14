@@ -10,7 +10,7 @@ Join in the conversation at our Google Group: https://groups.google.com/forum/?f
 
 Before starting setup, all the required hosts must be provisioned, with the respective operating system and required software installed, and with connectivity for remote management (SSH on Linux, RDP and WinRM on Windows).
 
-Refer to [Benchmark Suite Deployment README file](../deployment/README.md) for the provisioning procedures documentation.
+Refer to [Benchmark Suite Deployment README file](toolset/deployment/README.md) for the provisioning procedures documentation.
 
 ### App, load, and database servers
 
@@ -304,7 +304,9 @@ When running a benchmark script, the script needs to modify each framework's con
 
 For example:
 
-    setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+```python
+setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+```
 
 Using `localhost` in the raw configuration file is not a requirement as long as the `replace_text` call properly injects the database host provided to the benchmarker toolset as a command line argument.
 
@@ -312,46 +314,48 @@ Using `localhost` in the raw configuration file is not a requirement as long as 
 
 Here is an example of Wicket's setup file.
 
-    import subprocess
-    import sys
-    import setup_util
+```python
+import subprocess
+import sys
+import setup_util
 
-    ##################################################
-    # start(args, logfile, errfile)
-    #
-    # Starts the server for Wicket
-    # returns 0 if everything completes, 1 otherwise
-    ##################################################
-    def start(args, logfile, errfile):
+##################################################
+# start(args, logfile, errfile)
+#
+# Starts the server for Wicket
+# returns 0 if everything completes, 1 otherwise
+##################################################
+def start(args, logfile, errfile):
 
-    # setting the database url
-    setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+# setting the database url
+setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 
-    # 1. Compile and package
-    # 2. Clean out possible old tests
-    # 3. Copy package to Resin's webapp directory
-    # 4. Start resin
-    try:
-      subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket", stderr=errfile, stdout=logfile)
-      subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
-      subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True, stderr=errfile, stdout=logfile)
-      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
-      return 0
-    except subprocess.CalledProcessError:
-      return 1
+# 1. Compile and package
+# 2. Clean out possible old tests
+# 3. Copy package to Resin's webapp directory
+# 4. Start resin
+try:
+  subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket", stderr=errfile, stdout=logfile)
+  subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
+  return 0
+except subprocess.CalledProcessError:
+  return 1
 
-    ##################################################
-    # stop(logfile, errfile)
-    #
-    # Stops the server for Wicket
-    # returns 0 if everything completes, 1 otherwise
-    ##################################################
-    def stop(logfile):
-    try:
-      subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True, stderr=errfile, stdout=logfile)
-      return 0
-    except subprocess.CalledProcessError:
-      return 1
+##################################################
+# stop(logfile, errfile)
+#
+# Stops the server for Wicket
+# returns 0 if everything completes, 1 otherwise
+##################################################
+def stop(logfile):
+try:
+  subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True, stderr=errfile, stdout=logfile)
+  return 0
+except subprocess.CalledProcessError:
+  return 1
+```
       
 ### A tool to generate your setup file ###
  
