@@ -5,7 +5,7 @@ import os
 bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
 config_dir = os.path.expanduser('~/FrameworkBenchmarks/config')
 NCPU = multiprocessing.cpu_count()
-NGINX_COMMAND = '/usr/local/nginx/sbin/nginx -c ' + config_dir + '/nginx_uwsgi.conf'
+NGINX_COMMAND = 'sudo /usr/local/nginx/sbin/nginx -c ' + config_dir + '/nginx_uwsgi.conf'
 
 def start(args, logfile, errfile):
     try:
