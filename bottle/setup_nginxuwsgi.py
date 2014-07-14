@@ -1,27 +1,36 @@
 import subprocess
 import multiprocessing
 import os
-import setup_util
+
 
 bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
 config_dir = os.path.expanduser('~/FrameworkBenchmarks/config')
 NCPU = multiprocessing.cpu_count()
+NGINX_COMMAND = '/usr/local/nginx/sbin/nginx -c ' + config_dir + '/nginx_uwsgi.conf'
+
 
 def start(args, logfile, errfile):
-    setup_util.replace_text("bottle/app.py", "DBHOSTNAME", args.database_host)
     try:
-        subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c ' +
-            config_dir + '/nginx_uwsgi.conf', shell=True, stderr=errfile, stdout=logfile)
+        subprocess.call(
+            NGINX_COMMAND,
+            shell=True, stdout=logfile, stderr=errfile)
+
         # Run in the background, but keep stdout/stderr for easy debugging
-        subprocess.Popen(bin_dir + '/uwsgi --ini ' + config_dir + '/uwsgi.ini' +
-            ' --processes ' + str(NCPU * 3) +
-            ' --wsgi app:app',
+        subprocess.Popen(
+            "{0}/uwsgi --ini {1}/uwsgi.ini --processes {2} --env DBHOSTNAME={3} --wsgi app:app".format(
+                bin_dir, config_dir, NCPU*3, args.database_host),
             shell=True, cwd='bottle', stderr=errfile, stdout=logfile)
+
         return 0
     except subprocess.CalledProcessError:
         return 1
 
+
 def stop(logfile, errfile):
-    subprocess.call('sudo /usr/local/nginx/sbin/nginx -s stop', shell=True, stderr=errfile, stdout=logfile)
-    subprocess.call(bin_dir + '/uwsgi --ini ' + config_dir + '/uwsgi_stop.ini', shell=True, stderr=errfile, stdout=logfile)
+    subprocess.call(
+        NGINX_COMMAND + ' -s stop',
+        shell=True, stdout=logfile, stderr=errfile)
+
+    subprocess.call(bin_dir + '/uwsgi --ini ' + config_dir + '/uwsgi_stop.ini',
+                    shell=True, stderr=errfile, stdout=logfile)
     return 0

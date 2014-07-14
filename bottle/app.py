@@ -1,26 +1,36 @@
+from functools import partial
+from operator import attrgetter, itemgetter
+from random import randint
+import os
+import sys
+
 from bottle import Bottle, route, request, run, template, response
 from bottle.ext import sqlalchemy 
 from sqlalchemy import create_engine, Column, Integer, Unicode
 from sqlalchemy.ext.declarative import declarative_base
-from random import randint
-import sys
-from operator import attrgetter, itemgetter
-from functools import partial
 
 try:
     import ujson as json
 except ImportError:
     import json
 
-app = Bottle()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://benchmarkdbuser:benchmarkdbpass@localhost:3306/hello_world?charset=utf8'
-Base = declarative_base()
-db_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-plugin = sqlalchemy.Plugin(db_engine, keyword='db', )
-app.install(plugin)
-
 if sys.version_info[0] == 3:
     xrange = range
+
+
+DBHOSTNAME = os.environ.get('DBHOSTNAME', 'localhost')
+DATABASE_URI = 'mysql://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % DBHOSTNAME
+
+app = Bottle()
+Base = declarative_base()
+db_engine = create_engine(DATABASE_URI)
+plugin = sqlalchemy.Plugin(db_engine, keyword='db')
+app.install(plugin)
+
+# Engine for raw operation. Use autocommit.
+raw_engine = create_engine(DATABASE_URI,
+                           connect_args={'autocommit': True},
+                           pool_reset_on_return=None)
 
 
 class World(Base):
@@ -28,14 +38,13 @@ class World(Base):
   id = Column(Integer, primary_key=True)
   randomNumber = Column(Integer)
 
-  # http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
-  @property
   def serialize(self):
      """Return object data in easily serializeable format"""
      return {
-         'id'         : self.id,
-         'randomNumber': self.randomNumber
+         'id': self.id,
+         'randomNumber': self.randomNumber,
      }
+
 
 class Fortune(Base):
   __tablename__ = "Fortune"
@@ -49,60 +58,77 @@ def hello():
     resp = {"message": "Hello, World!"}
     return json.dumps(resp)
 
-@app.route("/db")
-def get_random_world(db):
-    num_queries = request.query.get('queries', 1, type=int)
-    worlds = []
-    rp = partial(randint, 1, 10000)
-    for i in xrange(num_queries):
-        worlds.append(db.query(World).get(rp()).serialize)
-    response.content_type = 'application/json'
-    return json.dumps(worlds)
 
-@app.route("/dbs")
+@app.route("/db")
 def get_random_world_single(db):
+    """Test Type 2: Single Database Query"""
     wid = randint(1, 10000)
-    world = db.query(World).get(wid).serialize
+    world = db.query(World).get(wid).serialize()
     response.content_type = 'application/json'
     return json.dumps(world)
-  
-@app.route("/dbraw")
-def get_random_world_raw():
-    connection = db_engine.connect()
+
+
+@app.route("/raw-db")
+def get_random_world_single_raw():
+    connection = raw_engine.connect()
+    wid = randint(1, 10000)
+    try:
+        result = connection.execute("SELECT id, randomNumber FROM world WHERE id = " + str(wid)).fetchone()
+        world = {'id': result[0], 'randomNumber': result[1]}
+        response.content_type = 'application/json'
+        return json.dumps(world)
+    finally:
+        connection.close()
+
+
+@app.route("/queries")
+def get_random_world(db):
+    """Test Type 3: Multiple database queries"""
     num_queries = request.query.get('queries', 1, type=int)
-    worlds = []
+    if num_queries > 500:
+        num_queries = 500
     rp = partial(randint, 1, 10000)
-    for i in xrange(int(num_queries)):
-        result = connection.execute("SELECT * FROM world WHERE id = " + str(rp())).fetchone()
-        worlds.append({'id': result[0], 'randomNumber': result[1]})
-    connection.close()
+    get = db.query(World).get
+    worlds = [get(rp()).serialize() for _ in xrange(num_queries)]
     response.content_type = 'application/json'
     return json.dumps(worlds)
 
-@app.route("/dbsraw")
-def get_random_world_single_raw():
-    connection = db_engine.connect()
-    wid = randint(1, 10000)
-    result = connection.execute("SELECT * FROM world WHERE id = " + str(wid)).fetchone()
-    worlds = {'id': result[0], 'randomNumber': result[1]}
-    connection.close()
+
+@app.route("/raw-queries")
+def get_random_world_raw():
+    num_queries = request.query.get('queries', 1, type=int)
+    if num_queries > 500:
+        num_queries = 500
+    worlds = []
+    rp = partial(randint, 1, 10000)
+    connection = raw_engine.connect()
+    try:
+        for i in xrange(num_queries):
+            result = connection.execute("SELECT id, randomNumber FROM world WHERE id = " + str(rp())).fetchone()
+            worlds.append({'id': result[0], 'randomNumber': result[1]})
+    finally:
+        connection.close()
     response.content_type = 'application/json'
     return json.dumps(worlds)
+
 
 @app.route("/fortune")
 def fortune_orm(db):
   fortunes=db.query(Fortune).all()
   fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
-  fortunes=sorted(fortunes, key=attrgetter('message'))
+  fortunes.sort(key=attrgetter('message'))
   return template('fortune-obj', fortunes=fortunes)
 
-@app.route("/fortuneraw")
+
+@app.route("/raw-fortune")
 def fortune_raw():
-    connection = db_engine.connect()
-    fortunes=[(f.id, f.message) for f in connection.execute("SELECT * FROM Fortune")]
-    fortunes.append((0, u'Additional fortune added at request time.'))
-    fortunes=sorted(fortunes, key=itemgetter(1))
-    connection.close()
+    connection = raw_engine.connect()
+    try:
+        fortunes=[(f.id, f.message) for f in connection.execute("SELECT * FROM Fortune")]
+        fortunes.append((0, u'Additional fortune added at request time.'))
+        fortunes=sorted(fortunes, key=itemgetter(1))
+    finally:
+        connection.close()
     return template('fortune', fortunes=fortunes)
 
 
@@ -120,7 +146,7 @@ def updates(db):
     for id in ids:
         world = db.query(World).get(id)
         world.randomNumber = rp()
-        worlds.append(world.serialize)
+        worlds.append(world.serialize())
 
     response.content_type = 'application/json'
     return json.dumps(worlds)
@@ -133,7 +159,7 @@ def raw_updates():
     if num_queries > 500:
         num_queries = 500
 
-    conn = db_engine.connect()
+    conn = raw_engine.connect()
 
     worlds = []
     rp = partial(randint, 1, 10000)

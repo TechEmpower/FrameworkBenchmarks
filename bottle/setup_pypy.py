@@ -1,26 +1,21 @@
 import subprocess
-import setup_util
-import multiprocessing
 import os
 
-bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/pypy/bin')
-NCPU = multiprocessing.cpu_count()
+BIN = os.path.expanduser('~/FrameworkBenchmarks/installs/pypy/bin')
 
 proc = None
 
 
 def start(args, logfile, errfile):
     global proc
-    setup_util.replace_text("bottle/app.py", "DBHOSTNAME", args.database_host)
-    proc = subprocess.Popen([
-        bin_dir + "/gunicorn",
-        "app:app",
-        "-k", "tornado",
-        "-b", "0.0.0.0:8080",
-        '-w', str(NCPU*3),
-        "--log-level=critical"],
+    proc = subprocess.Popen(
+        [BIN + "/gunicorn",
+         "-c", "gunicorn_conf.py",
+         "-e", "DBHOSTNAME=" + args.database_host,
+         "app:app"],
         cwd="bottle", stderr=errfile, stdout=logfile)
     return 0
+
 
 def stop(logfile, errfile):
     global proc
@@ -30,4 +25,3 @@ def stop(logfile, errfile):
     proc.wait()
     proc = None
     return 0
-
