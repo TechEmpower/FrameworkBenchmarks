@@ -14,6 +14,7 @@ import textwrap
 import logging
 log = logging.getLogger('framework_test')
 
+from utils import WrapLogger
 class FrameworkTest:
   """
   Represents a framework test, including all types (JSON, plaintext, DB, etc)
@@ -958,19 +959,3 @@ def parse_config(config, directory, benchmarker):
 ##############################################################
 # End parse_config
 ##############################################################
-
-import tempfile
-class WrapLogger():
-  def __init__(self, logger, level):
-    self.logger = logger
-    self.level = level
-    self.file = tempfile.TemporaryFile()
-
-  def write(self, message):
-    self.logger.log(self.level, message)
-
-  def __getattr__(self, name):
-    return getattr(self.file, name)
-
-
-
