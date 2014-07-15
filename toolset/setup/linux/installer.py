@@ -200,10 +200,12 @@ class Installer:
     rm apache-cassandra-*-bin.tar.gz
     fuser -k -TERM /ssd/log/cassandra/system.log
     sleep 5
-    rm -rf /ssd/cassandra /ssd/log/cassandra
+    sudo rm -rf /ssd/cassandra /ssd/log/cassandra
     sudo mkdir -p /ssd/cassandra /ssd/log/cassandra
     sudo chown tfb:tfb /ssd/cassandra /ssd/log/cassandra
-    sed -e "s/TFB_DATABASE_HOST/$TFB_DATABASE_HOST/" -i'' cassandra/cassandra.yaml
+    sed -i "s/^.*seeds:.*/          - seeds: \"%s\"/" cassandra/cassandra.yaml
+    sed -i "s/^listen_address:.*/listen_address: %s/" cassandra/cassandra.yaml
+    sed -i "s/^rpc_address:.*/rpc_address: %s/" cassandra/cassandra.yaml
     cp cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
     cp cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
     pushd apache-cassandra-$CASS_V
@@ -212,7 +214,7 @@ class Installer:
     cat ../cassandra/create-keyspace.cql | ./bin/cqlsh $TFB_DATABASE_HOST
     python ../cassandra/db-data-gen.py | ./bin/cqlsh $TFB_DATABASE_HOST
     popd
-    """
+    """ % (os.environ["TFB_DATABASE_HOST"], os.environ["TFB_DATABASE_HOST"], os.environ["TFB_DATABASE_HOST"])
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
     p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" "), stdin=subprocess.PIPE)
