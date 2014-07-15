@@ -10,11 +10,12 @@ import pprint
 import sys
 import traceback
 import json
-import textwrap
 import logging
 log = logging.getLogger('framework_test')
 
 from utils import WrapLogger
+from utils import Header
+
 class FrameworkTest:
   """
   Represents a framework test, including all types (JSON, plaintext, DB, etc)
@@ -360,11 +361,7 @@ class FrameworkTest:
 
     # JSON
     if self.runTests[self.JSON]:
-      logger.info(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING JSON ({url})
-        -----------------------------------------------------""".format(url = self.json_url)))
-
+      logger.info(Header("VERIFYING JSON (%s)" % self.json_url))
       url = self.benchmarker.generate_url(self.json_url, self.port)
       output = self.__curl_url(url, self.JSON, logger)
       logger.info("VALIDATING JSON ... ")
@@ -377,11 +374,7 @@ class FrameworkTest:
 
     # DB
     if self.runTests[self.DB]:
-      logger.info(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING DB ({url})
-        -----------------------------------------------------""".format(url = self.db_url)))
-
+      logger.info(Header("VERIFYING DB (%s)" % self.db_url))
       url = self.benchmarker.generate_url(self.db_url, self.port)
       output = self.__curl_url(url, self.DB, logger)
       if self.validateDb(output, logger):
@@ -404,11 +397,7 @@ class FrameworkTest:
 
     # Query
     if self.runTests[self.QUERY]:
-      logger.info(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING QUERY ({url})
-        -----------------------------------------------------""".format(url=self.query_url+"2")))
-
+      logger.info(Header("VERIFYING QUERY (%s)" % self.query_url+"2"))
       url = self.benchmarker.generate_url(self.query_url + "2", self.port)
       output = self.__curl_url(url, self.QUERY, logger)
       if self.validateQuery(output, logger):
@@ -457,11 +446,7 @@ class FrameworkTest:
 
     # Fortune
     if self.runTests[self.FORTUNE]:
-      logger.info(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING FORTUNE ({url})
-        -----------------------------------------------------""".format(url = self.fortune_url)))
-
+      logger.info(Header("VERIFYING FORTUNE (%s)" % self.fortune_url))
       url = self.benchmarker.generate_url(self.fortune_url, self.port)
       output = self.__curl_url(url, self.FORTUNE, logger)
       logger.info("VALIDATING FORTUNE ... ")
@@ -474,12 +459,7 @@ class FrameworkTest:
 
     # Update
     if self.runTests[self.UPDATE]:
-      logger.info(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING UPDATE ({url})
-        -----------------------------------------------------
-        """.format(url = self.update_url)))
-
+      logger.info(Header("VERIFYING UPDATE (%s)" % self.update_url))
       url = self.benchmarker.generate_url(self.update_url + "2", self.port)
       output = self.__curl_url(url, self.UPDATE, logger)
       logger.info("VALIDATING UPDATE ... ")
@@ -492,11 +472,7 @@ class FrameworkTest:
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
-      logger.info(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING PLAINTEXT ({url})
-        -----------------------------------------------------""".format(url = self.plaintext_url)))
-
+      logger.info(Header("VERIFYING PLAINTEXT (%s)" % self.plaintext_url))
       url = self.benchmarker.generate_url(self.plaintext_url, self.port)
       output = self.__curl_url(url, self.PLAINTEXT, logger)
       logger.info("VALIDATING PLAINTEXT ... ")
