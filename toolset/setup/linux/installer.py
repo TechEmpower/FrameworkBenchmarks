@@ -203,13 +203,14 @@ class Installer:
     rm -rf /ssd/cassandra /ssd/log/cassandra
     sudo mkdir -p /ssd/cassandra /ssd/log/cassandra
     sudo chown tfb:tfb /ssd/cassandra /ssd/log/cassandra
+    sed -e "s/TFB_DATABASE_HOST/$TFB_DATABASE_HOST/" -i'' cassandra/cassandra.yaml
     cp cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
     cp cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
     pushd apache-cassandra-$CASS_V
     nohup ./bin/cassandra
     sleep 10
-    cat ../cassandra/create-keyspace.cql | ./bin/cqlsh tfbdata
-    python ../cassandra/db-data-gen.py | ./bin/cqlsh tfbdata
+    cat ../cassandra/create-keyspace.cql | ./bin/cqlsh $TFB_DATABASE_HOST
+    python ../cassandra/db-data-gen.py | ./bin/cqlsh $TFB_DATABASE_HOST
     popd
     """
     
