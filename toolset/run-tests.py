@@ -165,5 +165,13 @@ def main(argv=None):
     else:
       benchmarker.run()
 
+# Integrate uncaught exceptions into our logging system
+# Note: This doesn't work if the exception happens in a 
+# thread (e.g. inside benchmark#__run_test). This is a 
+# python issue at http://bugs.python.org/issue1230540
+def handleException(excType, excValue, traceback, logger=log):
+    logger.error("Uncaught exception", exc_info=(excType, excValue, traceback))
+sys.excepthook = handleException
+
 if __name__ == "__main__":
     sys.exit(main())
