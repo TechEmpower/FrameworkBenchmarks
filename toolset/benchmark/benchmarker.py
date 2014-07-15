@@ -506,7 +506,7 @@ class Benchmarker:
               Running Test: {name} ...
             -----------------------------------------------------
             """.format(name=test.name))
-          test_process = Process(target=self.__run_test, args=(test,))
+          test_process = Process(target=self.__run_test, name="Test Runner (%s)" % test.name, args=(test,))
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
           self.__load_results()  # Load intermediate result from child process
@@ -522,13 +522,9 @@ class Benchmarker:
 
   ############################################################
   # __run_test
-  # 2013-10-02 ASB  Previously __run_tests.  This code now only
-  #                 processes a single test.
   #
-  # Ensures that the system has all necessary software to run
-  # the tests. This does not include that software for the individual
-  # test, but covers software such as curl and weighttp that
-  # are needed.
+  # Checks test prerequisites, makes calls into framework_test
+  # to orchestrate benchmarking this test, and stores results
   ############################################################
   def __run_test(self, test):
     log.info("__run_test")
@@ -696,7 +692,7 @@ class Benchmarker:
       self.__finish()
       sys.exit()
   ############################################################
-  # End __run_tests
+  # End __run_test
   ############################################################
 
   ############################################################
