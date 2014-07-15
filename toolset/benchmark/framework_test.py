@@ -15,9 +15,22 @@ import logging
 log = logging.getLogger('framework_test')
 
 class FrameworkTest:
-  ##########################################################################################
-  # Class variables
-  ##########################################################################################
+  """
+  Represents a framework test, including all types (JSON, plaintext, DB, etc)
+  defined in that test. Used by Benchmarker to start, verify, benchmark, and 
+  stop tests. Calls into the test's setup.py as needed. 
+
+  Note: Any method in this class called from Benchmarker#__run_test is run 
+        inside a thread
+  Note: Many methods have a parameter 'logger' passed in from Benchmarker. 
+        This uses python's logging module to support writing output to both a 
+        file and stdout concurrently. If you wish to print something to stdout,
+        regardless of the current global log level, use logger.info("Something"). 
+        If you wish to respect the current global log level, use the logger 
+        defined for this class e.g. log.info("Something else"). If you would 
+        like to use this 'logger' with subprocess, see class WrapLogger
+  """
+
   headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
   headers_full_template = "-H 'Host: localhost' -H '{accept}' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive'"
  
@@ -137,7 +150,7 @@ class FrameworkTest:
   # and a "randomNumber" key, and that both keys map to 
   # integers.
   ############################################################
-  def validateDb(self, jsonString, out, err):
+  def validateDb(self, jsonString, logger=log):
     try:
       obj = json.loads(jsonString)
 
@@ -156,7 +169,7 @@ class FrameworkTest:
       pass
     return False
 
-  def validateDbStrict(self, jsonString, out, err):
+  def validateDbStrict(self, jsonString, logger=log):
     try:
       obj = json.loads(jsonString)
 
@@ -177,7 +190,7 @@ class FrameworkTest:
   # each object has an "id" and a "randomNumber" key, and that
   # both keys map to integers.
   ############################################################
-  def validateQuery(self, jsonString, out, err):
+  def validateQuery(self, jsonString, logger=log):
     try:
       arr = json.loads(jsonString)
 
@@ -196,7 +209,7 @@ class FrameworkTest:
   # each object has an "id" and a "randomNumber" key, and that
   # both keys map to integers.
   ############################################################
-  def validateQueryOneOrLess(self, jsonString, out, err):
+  def validateQueryOneOrLess(self, jsonString, logger=log):
     try:
       arr = json.loads(jsonString)
 
@@ -221,7 +234,7 @@ class FrameworkTest:
   # each object has an "id" and a "randomNumber" key, and that
   # both keys map to integers.
   ############################################################
-  def validateQueryFiveHundredOrMore(self, jsonString, out, err):
+  def validateQueryFiveHundredOrMore(self, jsonString, logger=log):
     try:
       arr = json.loads(jsonString)
 
@@ -244,7 +257,7 @@ class FrameworkTest:
   # Parses the given HTML string and asks a FortuneHTMLParser
   # whether the parsed string is a valid fortune return.
   ############################################################
-  def validateFortune(self, htmlString, out, err):
+  def validateFortune(self, htmlString, logger=log):
     try:
       parser = FortuneHTMLParser()
       parser.feed(htmlString)
@@ -260,7 +273,7 @@ class FrameworkTest:
   # each object has an "id" and a "randomNumber" key, and that
   # both keys map to integers.
   ############################################################
-  def validateUpdate(self, jsonString, out, err):
+  def validateUpdate(self, jsonString, logger=log):
     try:
       arr = json.loads(jsonString)
 
@@ -276,7 +289,7 @@ class FrameworkTest:
   ############################################################
   #
   ############################################################
-  def validatePlaintext(self, jsonString, out, err):
+  def validatePlaintext(self, jsonString, logger=log):
     try:
       return jsonString.lower().strip() == "hello, world!"
     except:
@@ -293,13 +306,13 @@ class FrameworkTest:
     # Load profile for this installation
     profile="%s/bash_profile.sh" % self.directory
     if not os.path.exists(profile):
-      logging.warning("Framework %s does not have a bash_profile" % self.name)
+      logger.warning("Framework %s does not have a bash_profile", self.name)
       profile="$FWROOT/config/benchmark_profile"
     
     set_iroot="export IROOT=%s" % self.install_root
     setup_util.replace_environ(config=profile, command=set_iroot)
 
-    (out, err) = WrapLogger(logger, 'out'), WrapLogger(logger, 'err')
+    (out, err) = WrapLogger(logger, logging.INFO), WrapLogger(logger, logging.ERROR)
     return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
   # End start
@@ -310,8 +323,8 @@ class FrameworkTest:
   # Stops the test using it's setup file
   ############################################################
   def stop(self, logger=log):
-    logger.info("stop")
-    (out, err) = WrapLogger(logger, 'out'), WrapLogger(logger, 'err')
+    log.info("stop")
+    (out, err) = WrapLogger(logger, logging.INFO), WrapLogger(logger, logging.ERROR)
     return self.setup_module.stop(out, err)
   ############################################################
   # End stop
@@ -325,178 +338,155 @@ class FrameworkTest:
   # or not it passed
   ############################################################
   def verify_urls(self, logger=log):
-    (out, err) = WrapLogger(logger, 'out'), WrapLogger(logger, 'err')
 
     # JSON
     if self.runTests[self.JSON]:
-      out.write(textwrap.dedent("""
+      logger.info(textwrap.dedent("""
         -----------------------------------------------------
           VERIFYING JSON ({url})
-        -----------------------------------------------------
-        """.format(url = self.json_url)))
-      out.flush()
+        -----------------------------------------------------""".format(url = self.json_url)))
 
       url = self.benchmarker.generate_url(self.json_url, self.port)
-      output = self.__curl_url(url, self.JSON, out, err)
-      out.write("VALIDATING JSON ... ")
-      if self.validateJson(output, out, err):
+      output = self.__curl_url(url, self.JSON, logger)
+      logger.info("VALIDATING JSON ... ")
+      if self.validateJson(output, log):
         self.json_url_passed = True
-        out.write("PASS\n\n")
+        logger.info("PASS")
       else:
         self.json_url_passed = False
-        out.write("FAIL\n\n")
-      out.flush
+        logger.info("FAIL")
 
     # DB
     if self.runTests[self.DB]:
-      out.write(textwrap.dedent("""
+      logger.info(textwrap.dedent("""
         -----------------------------------------------------
           VERIFYING DB ({url})
-        -----------------------------------------------------
-        """.format(url = self.db_url)))
-      out.flush()
+        -----------------------------------------------------""".format(url = self.db_url)))
 
       url = self.benchmarker.generate_url(self.db_url, self.port)
-      output = self.__curl_url(url, self.DB, out, err)
-      if self.validateDb(output, out, err):
+      output = self.__curl_url(url, self.DB, logger)
+      if self.validateDb(output, logger):
         self.db_url_passed = True
       else:
         self.db_url_passed = False
-      if self.validateDbStrict(output, out, err):
+      if self.validateDbStrict(output, logger):
         self.db_url_warn = False
       else:
         self.db_url_warn = True
 
-      out.write("VALIDATING DB ... ")
+      logger.info("VALIDATING DB ... ")
       if self.db_url_passed:
-        out.write("PASS")
         if self.db_url_warn:
-          out.write(" (with warnings)")
-        out.write("\n\n")
+          logger.info("PASS (with warnings)")
+        else:
+          logger.info("PASS")
       else:
-        out.write("FAIL\n\n")
-      out.flush
+        logger.info("FAIL")
 
     # Query
     if self.runTests[self.QUERY]:
-      out.write(textwrap.dedent("""
+      logger.info(textwrap.dedent("""
         -----------------------------------------------------
           VERIFYING QUERY ({url})
-        -----------------------------------------------------
-        """.format(url=self.query_url+"2")))
-      out.flush()
+        -----------------------------------------------------""".format(url=self.query_url+"2")))
 
       url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-      output = self.__curl_url(url, self.QUERY, out, err)
-      if self.validateQuery(output, out, err):
+      output = self.__curl_url(url, self.QUERY, logger)
+      if self.validateQuery(output, logger):
         self.query_url_passed = True
-        out.write(self.query_url + "2 - PASS\n\n")
+        logger.info(self.query_url + "2 - PASS")
       else:
         self.query_url_passed = False
-        out.write(self.query_url + "2 - FAIL\n\n")
-      out.write("-----------------------------------------------------\n\n")
-      out.flush()
-
+        logger.info(self.query_url + "2 - FAIL")
+      logger.info("-----------------------------------------------------")
+      
       self.query_url_warn = False
       url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
-      output2 = self.__curl_url(url2, self.QUERY, out, err)
-      if not self.validateQueryOneOrLess(output2, out, err):
+      output2 = self.__curl_url(url2, self.QUERY, logger)
+      if not self.validateQueryOneOrLess(output2, logger):
         self.query_url_warn = True
-        out.write(self.query_url + "0 - WARNING\n\n")
+        logger.info(self.query_url + "0 - WARNING")
       else:
-        out.write(self.query_url + "0 - PASS\n\n")
-      out.write("-----------------------------------------------------\n\n")
-      out.flush()
+        logger.info(self.query_url + "0 - PASS")
+      logger.info("-----------------------------------------------------")
 
       url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
-      output3 = self.__curl_url(url3, self.QUERY, out, err)
-      if not self.validateQueryOneOrLess(output3, out, err):
+      output3 = self.__curl_url(url3, self.QUERY, logger)
+      if not self.validateQueryOneOrLess(output3, logger):
         self.query_url_warn = True
-        out.write(self.query_url + "foo - WARNING\n\n")
+        logger.info(self.query_url + "foo - WARNING")
       else:
-        out.write(self.query_url + "foo - PASS\n\n")
-      out.write("-----------------------------------------------------\n\n")
-      out.flush()
+        logger.info(self.query_url + "foo - PASS")
+      logger.info("-----------------------------------------------------")  
 
       url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
-      output4 = self.__curl_url(url4, self.QUERY, out, err)
-      if not self.validateQueryFiveHundredOrMore(output4, out, err):
+      output4 = self.__curl_url(url4, self.QUERY, logger)
+      if not self.validateQueryFiveHundredOrMore(output4, logger):
         self.query_url_warn = True
-        out.write(self.query_url + "501 - WARNING\n\n")
+        logger.info(self.query_url + "501 - WARNING")
       else:
-        out.write(self.query_url + "501 - PASS\n\n")
-      out.write("-----------------------------------------------------\n\n\n")
-      out.flush()
+        logger.info(self.query_url + "501 - PASS")
+      logger.info("-----------------------------------------------------")
 
-      out.write("VALIDATING QUERY ... ")
-      if self.query_url_passed:
-        out.write("PASS")
-        if self.query_url_warn:
-          out.write(" (with warnings)")
-        out.write("\n\n")
+      logger.info("VALIDATING QUERY ... ")
+      if self.query_url_passed and self.query_url_warn:
+        logger.info("PASS (with warnings)")
+      elif self.query_url_passed:
+        logger.info("PASS")
       else:
-        out.write("FAIL\n\n")
-      out.flush
+        logger.info("FAIL")
 
     # Fortune
     if self.runTests[self.FORTUNE]:
-      out.write(textwrap.dedent("""
+      logger.info(textwrap.dedent("""
         -----------------------------------------------------
           VERIFYING FORTUNE ({url})
-        -----------------------------------------------------
-        """.format(url = self.fortune_url)))
-      out.flush()
+        -----------------------------------------------------""".format(url = self.fortune_url)))
 
       url = self.benchmarker.generate_url(self.fortune_url, self.port)
-      output = self.__curl_url(url, self.FORTUNE, out, err)
-      out.write("VALIDATING FORTUNE ... ")
-      if self.validateFortune(output, out, err):
+      output = self.__curl_url(url, self.FORTUNE, logger)
+      logger.info("VALIDATING FORTUNE ... ")
+      if self.validateFortune(output, logger):
         self.fortune_url_passed = True
-        out.write("PASS\n\n")
+        logger.info("PASS")
       else:
         self.fortune_url_passed = False
-        out.write("FAIL\n\n")
-      out.flush
+        logger.info("FAIL")
 
     # Update
     if self.runTests[self.UPDATE]:
-      out.write(textwrap.dedent("""
+      logger.info(textwrap.dedent("""
         -----------------------------------------------------
           VERIFYING UPDATE ({url})
         -----------------------------------------------------
         """.format(url = self.update_url)))
-      out.flush()
 
       url = self.benchmarker.generate_url(self.update_url + "2", self.port)
-      output = self.__curl_url(url, self.UPDATE, out, err)
-      out.write("VALIDATING UPDATE ... ")
-      if self.validateUpdate(output, out, err):
+      output = self.__curl_url(url, self.UPDATE, logger)
+      logger.info("VALIDATING UPDATE ... ")
+      if self.validateUpdate(output, logger):
         self.update_url_passed = True
-        out.write("PASS\n\n")
+        logger.info("PASS")
       else:
         self.update_url_passed = False
-        out.write("FAIL\n\n")
-      out.flush
+        logger.info("FAIL")
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
-      out.write(textwrap.dedent("""
+      logger.info(textwrap.dedent("""
         -----------------------------------------------------
           VERIFYING PLAINTEXT ({url})
-        -----------------------------------------------------
-        """.format(url = self.plaintext_url)))
-      out.flush()
+        -----------------------------------------------------""".format(url = self.plaintext_url)))
 
       url = self.benchmarker.generate_url(self.plaintext_url, self.port)
-      output = self.__curl_url(url, self.PLAINTEXT, out, err)
-      out.write("VALIDATING PLAINTEXT ... ")
-      if self.validatePlaintext(output, out, err):
+      output = self.__curl_url(url, self.PLAINTEXT, logger)
+      logger.info("VALIDATING PLAINTEXT ... ")
+      if self.validatePlaintext(output, logger):
         self.plaintext_url_passed = True
-        out.write("PASS\n\n")
+        logger.info("PASS")
       else:
         self.plaintext_url_passed = False
-        out.write("FAIL\n\n")
-      out.flush
+        logger.info("FAIL")
 
   ############################################################
   # End verify_urls
@@ -535,13 +525,11 @@ class FrameworkTest:
   # JSON/DB/Query.
   ############################################################
   def benchmark(self, logger=log):
-    (out, err) = WrapLogger(logger, 'out'), WrapLogger(logger, 'err')
     
     # JSON
     if self.runTests[self.JSON]:
       try:
-        out.write("BENCHMARKING JSON ... ") 
-        out.flush()
+        logger.info("BENCHMARKING JSON ... ") 
         results = None
         output_file = self.benchmarker.output_file(self.name, self.JSON)
         if not os.path.exists(output_file):
@@ -550,19 +538,17 @@ class FrameworkTest:
             pass
         if self.json_url_passed:
           remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
-          self.__run_benchmark(remote_script, output_file, err)
+          self.__run_benchmark(remote_script, output_file, logger)
         results = self.__parse_test(self.JSON)
         self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
+        logger.info("Complete")
       except AttributeError:
         pass
 
     # DB
     if self.runTests[self.DB]:
       try:
-        out.write("BENCHMARKING DB ... ") 
-        out.flush()
+        logger.info("BENCHMARKING DB ... ") 
         results = None
         output_file = self.benchmarker.output_file(self.name, self.DB)
         warning_file = self.benchmarker.warning_file(self.name, self.DB)
@@ -575,18 +561,17 @@ class FrameworkTest:
             pass
         if self.db_url_passed:
           remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
-          self.__run_benchmark(remote_script, output_file, err)
+          self.__run_benchmark(remote_script, output_file, logger)
         results = self.__parse_test(self.DB)
         self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
-        out.write( "Complete\n" )
+        logger.info("Complete")
       except AttributeError:
         pass
 
     # Query
     if self.runTests[self.QUERY]:
       try:
-        out.write("BENCHMARKING Query ... ")
-        out.flush()
+        logger.info("BENCHMARKING Query ...")
         results = None
         output_file = self.benchmarker.output_file(self.name, self.QUERY)
         warning_file = self.benchmarker.warning_file(self.name, self.QUERY)
@@ -599,19 +584,17 @@ class FrameworkTest:
             pass
         if self.query_url_passed:
           remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
-          self.__run_benchmark(remote_script, output_file, err)
+          self.__run_benchmark(remote_script, output_file, logger)
         results = self.__parse_test(self.QUERY)
         self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
+        logger.info("Complete")
       except AttributeError:
         pass
 
     # fortune
     if self.runTests[self.FORTUNE]:
       try:
-        out.write("BENCHMARKING Fortune ... ") 
-        out.flush()
+        logger.info("BENCHMARKING Fortune ... ") 
         results = None
         output_file = self.benchmarker.output_file(self.name, self.FORTUNE)
         if not os.path.exists(output_file):
@@ -620,19 +603,17 @@ class FrameworkTest:
             pass
         if self.fortune_url_passed:
           remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
-          self.__run_benchmark(remote_script, output_file, err)
+          self.__run_benchmark(remote_script, output_file, logger)
         results = self.__parse_test(self.FORTUNE)
         self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
+        logger.info("Complete")
       except AttributeError:
         pass
 
     # update
     if self.runTests[self.UPDATE]:
       try:
-        out.write("BENCHMARKING Update ... ") 
-        out.flush()
+        logger.info("BENCHMARKING Update ... ") 
         results = None
         output_file = self.benchmarker.output_file(self.name, self.UPDATE)
         if not os.path.exists(output_file):
@@ -641,19 +622,17 @@ class FrameworkTest:
             pass
         if self.update_url_passed:
           remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
-          self.__run_benchmark(remote_script, output_file, err)
+          self.__run_benchmark(remote_script, output_file, logger)
         results = self.__parse_test(self.UPDATE)
         self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
+        logger.info( "Complete" )
       except AttributeError:
         pass
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
       try:
-        out.write("BENCHMARKING Plaintext ... ")
-        out.flush()
+        logger.info("BENCHMARKING Plaintext ... ")
         results = None
         output_file = self.benchmarker.output_file(self.name, self.PLAINTEXT)
         if not os.path.exists(output_file):
@@ -665,10 +644,9 @@ class FrameworkTest:
           self.__run_benchmark(remote_script, output_file, err)
         results = self.__parse_test(self.PLAINTEXT)
         self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
+        logger.info( "Complete" )
       except AttributeError:
-        traceback.print_exc()
+        logger.exception("Error Running Benchmark for %s", self.name)
         pass
 
   ############################################################
@@ -819,12 +797,11 @@ class FrameworkTest:
   # template that uses weighttp to run the test. All the results
   # outputed to the output_file.
   ############################################################
-  def __run_benchmark(self, script, output_file, err):
+  def __run_benchmark(self, script, output_file, logger):
+    err = WrapLogger(logger, logging.ERROR)
     with open(output_file, 'w') as raw_file:
-	  
       p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=err)
       p.communicate(script)
-      err.flush()
   ############################################################
   # End __run_benchmark
   ############################################################
@@ -880,7 +857,10 @@ class FrameworkTest:
   # Dump HTTP response and headers. Throw exception if there
   # is an HTTP error.
   ############################################################
-  def __curl_url(self, url, testType, out, err):
+  def __curl_url(self, url, testType, logger=log):
+    # Send output to our benchmark's logger for archival to file,
+    # but only show err on stdout by default
+    (out, err) = WrapLogger(logger, logging.DEBUG), WrapLogger(logger, logging.ERROR)
     output = None
     try:
       # Use -m 15 to make curl stop trying after 15sec.
@@ -890,10 +870,6 @@ class FrameworkTest:
       # error output for sure in stdout.
       # Use -sS to hide progress bar, but show errors.
       subprocess.check_call(["curl", "-m", "15", "-i", "-sS", url], stderr=err, stdout=out)
-      # HTTP output may not end in a newline, so add that here.
-      out.write( "\n\n" )
-      out.flush()
-      err.flush()
 
       # We need to get the respond body from the curl and return it.
       p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=subprocess.PIPE)
@@ -924,10 +900,7 @@ class FrameworkTest:
     self.benchmarker = benchmarker
     self.runTests = runTests
     self.fwroot = benchmarker.fwroot
-    
-    # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    
+        
     self.install_root="%s/%s" % (self.fwroot, "installs")
     if benchmarker.install_strategy is 'pertest':
       self.install_root="%s/pertest/%s" % (self.install_root, name)
@@ -993,14 +966,8 @@ class WrapLogger():
     self.level = level
     self.file = tempfile.TemporaryFile()
 
-  def write(self, str):
-    if self.level == "out":
-      self.logger.info(str)
-    elif self.level == "err":
-      self.logger.error(str)
-    else:
-      self.logger.error("Unknown level %s" % self.level)
-      self.logger.error(str)
+  def write(self, message):
+    self.logger.log(self.level, message)
 
   def __getattr__(self, name):
     return getattr(self.file, name)
