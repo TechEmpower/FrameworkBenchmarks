@@ -132,11 +132,18 @@ def main(argv=None):
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
-    # Set up our initial logging level
+    # Set up logging
+
     numeric_level = getattr(logging, args.log.upper(), logging.ERROR)
     if not isinstance(numeric_level, int):
         raise ValueError('Invalid log level: %s' % loglevel)
-    logging.basicConfig(level=numeric_level)
+    stdout = logging.StreamHandler()
+    stdout.setLevel(numeric_level)
+    stdout.setFormatter(logging.Formatter("%(name)-12s: %(levelname)-8s %(message)s"))
+    rootlogger = logging.getLogger()
+    rootlogger.setLevel(logging.DEBUG)  # Pass all messages to all handlers
+    rootlogger.addHandler(stdout)
+    logging.captureWarnings(True)
 
     # Verify and massage options
     if args.client_user is None:
