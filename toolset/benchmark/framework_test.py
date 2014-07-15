@@ -136,13 +136,15 @@ class FrameworkTest:
   # Validates the jsonString is a JSON object with a 'message'
   # key with the value "hello, world!" (case-insensitive).
   ############################################################
-  def validateJson(self, jsonString, out, err):
+  def validateJson(self, jsonString, logger=log):
     try:
       obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if  obj["message"].lower() == "hello, world!":
         return True
     except:
+      logger.debug("Expected: %s", "{'message':'hello, world!'}")
+      logger.debug("Got: '%s'", jsonString)
       pass
     return False
 
@@ -167,6 +169,8 @@ class FrameworkTest:
           type(float(obj["randomnumber"])) == float):
         return True
     except:
+      # logger.debug("Expected: %s", "")
+      logger.debug("Got: %s", jsonString)
       pass
     return False
 
@@ -181,6 +185,8 @@ class FrameworkTest:
           type(float(obj["randomnumber"])) == float):
         return True
     except:
+      # logger.debug("Expected: %s", "")
+      logger.debug("Got: %s", jsonString)
       pass
     return False
 
@@ -201,6 +207,8 @@ class FrameworkTest:
           type(float(arr[1]["randomnumber"])) == float):
         return True
     except:
+      # logger.debug("Expected: %s", "")
+      logger.debug("Got: %s", jsonString)
       pass
     return False
 
@@ -226,6 +234,8 @@ class FrameworkTest:
       # By here, it's passed validation
       return True
     except:
+      # logger.debug("Expected: %s", "")
+      logger.debug("Got: %s", jsonString)
       pass
     return False
 
@@ -251,6 +261,8 @@ class FrameworkTest:
       # By here, it's passed validation
       return True
     except:
+      # logger.debug("Expected: %s", "")
+      logger.debug("Got: %s", jsonString)
       pass
     return False
 
@@ -265,6 +277,8 @@ class FrameworkTest:
 
       return parser.isValidFortune()
     except:
+      # logger.debug("Expected: %s", "")
+      logger.debug("Got: %s", htmlString)
       pass
     return False
 
@@ -284,6 +298,8 @@ class FrameworkTest:
           type(float(arr[1]["randomnumber"])) == float):
         return True
     except:
+      # logger.debug("Expected: %s", "")
+      logger.debug("Got: %s", jsonString)
       pass
     return False
 
@@ -294,6 +310,8 @@ class FrameworkTest:
     try:
       return jsonString.lower().strip() == "hello, world!"
     except:
+      logger.debug("Expected: %s", "hello, world!")
+      logger.debug("Got: %s", jsonString)
       pass
     return False
 
