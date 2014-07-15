@@ -67,40 +67,40 @@ Date: Wed, 17 Apr 2013 12:00:00 GMT
 #define AS_cpoll_cppsp_DO
 
 #ifndef AS_cpoll_cppsp_DO
-static UValue* pvalue;
+static UValue*	pvalue;
 #endif
-static World*         pworld;
-static UOrmSession*   psql;
-static UOrmStatement* pstmt;
+static World*			 pworld_db;
+static UOrmSession*	 psql_db;
+static UOrmStatement* pstmt_db;
 
-static void usp_init()
+static void usp_init_db()
 {
-   U_TRACE(5, "::usp_init()")
+	U_TRACE(5, "::usp_init_db()")
 
-   psql  = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
-   pstmt = U_NEW(UOrmStatement(*psql, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
+	psql_db	= U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
+	pstmt_db	= U_NEW(UOrmStatement(*psql_db, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
 
-   if (pstmt == 0) U_ERROR("usp_init(): we cound't connect to db, exiting...");
+	if (pstmt_db == 0) U_ERROR("usp_init_db(): we cound't connect to db, exiting...");
 
-   pworld = U_NEW(World);
+	pworld_db = U_NEW(World);
 
-   pstmt->use( pworld->id);
-   pstmt->into(pworld->randomNumber);
+	pstmt_db->use( pworld_db->id);
+	pstmt_db->into(pworld_db->randomNumber);
 
 #ifndef AS_cpoll_cppsp_DO
-   pvalue = U_NEW(UValue(OBJECT_VALUE));
+	pvalue = U_NEW(UValue(OBJECT_VALUE));
 #endif
 }
 
-static void usp_end()
+static void usp_end_db()
 {
-   U_TRACE(5, "::usp_end()")
+	U_TRACE(5, "::usp_end_db()")
 
-   delete pstmt;
-   delete psql;
-   delete pworld;
+	delete pstmt_db;
+	delete psql_db;
+	delete pworld_db;
 #ifndef AS_cpoll_cppsp_DO
-   delete pvalue;
+	delete pvalue;
 #endif
 }
 -->
@@ -108,13 +108,13 @@ static void usp_end()
 Content-Type: application/json; charset=UTF-8
 -->
 <!--#code
-pworld->id = u_get_num_random(10000);
+pworld_db->id = u_get_num_random(10000);
 
-pstmt->execute();
+pstmt_db->execute();
 
 #ifdef AS_cpoll_cppsp_DO
-USP_PRINTF_ADD("{\"id\":%d,\"randomNumber\":%d}", pworld->id, pworld->randomNumber);
+USP_PRINTF_ADD("{\"id\":%d,\"randomNumber\":%d}", pworld_db->id, pworld_db->randomNumber);
 #else
-USP_JSON_stringify(*pvalue, World, *pworld);
+USP_JSON_stringify(*pvalue, World, *pworld_db);
 #endif
 -->

@@ -55,20 +55,20 @@ Date: Wed, 17 Apr 2013 12:00:00 GMT
 static UString* pkey;
 static UString* pvalue;
 
-static void usp_init()
+static void usp_init_json()
 {
-   U_TRACE(5, "::usp_init()")
+	U_TRACE(5, "::usp_init_json()")
 
-   pkey   = U_NEW(U_STRING_FROM_CONSTANT("message"));
-   pvalue = U_NEW(U_STRING_FROM_CONSTANT("Hello, World!"));
+	pkey   = U_NEW(U_STRING_FROM_CONSTANT("message"));
+	pvalue = U_NEW(U_STRING_FROM_CONSTANT("Hello, World!"));
 }
 
-static void usp_end()
+static void usp_end_json()
 {
-   U_TRACE(5, "::usp_end()")
+	U_TRACE(5, "::usp_end_json()")
 
-   delete pkey;
-   delete pvalue;
+	delete pkey;
+	delete pvalue;
 }
 -->
 <!--#header

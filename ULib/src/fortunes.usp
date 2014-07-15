@@ -25,7 +25,7 @@ Requirements
 
 8.  The list of Fortune objects must be sorted by the order of the message field. No ORDER BY clause is permitted in the
     database query (ordering within the query would be of negligible value anyway since a newly instantiated Fortune is
-    added to the list prior to sorting).
+	 added to the list prior to sorting).
 
 9.  The sorted list must be provided to a server-side template and rendered to simple HTML (see below for minimum template).
     The resulting HTML table displays each Fortune's id number and message text.
@@ -46,7 +46,7 @@ Requirements
 
 17. The implementation is encouraged to use best practices for templates such as layout inheritence, separate header and
     footer files, and so on. However, this is not required. We request that implementations do not manage assets (JavaScript,
-    CSS, images). We are deferring asset management until we can craft a more suitable test.
+	 CSS, images). We are deferring asset management until we can craft a more suitable test.
 
 18. The response content type must be set to text/html.
 
@@ -91,62 +91,62 @@ Date: Wed, 17 Apr 2013 12:00:00 GMT
 <!--#declaration
 #include "fortune.h"
 
-static UOrmSession*       psql;
-static UOrmStatement*     pstmt;
-static UString*           pmessage;
-static Fortune*           pfortune;
+static UOrmSession*		  psql_fortune;
+static UOrmStatement*	  pstmt_fortune;
+static UString*			  pmessage;
+static Fortune*			  pfortune;
 static UVector<Fortune*>* pvfortune;
 
-static void usp_init()
+static void usp_init_fortunes()
 {
-   U_TRACE(5, "::usp_init()")
+	U_TRACE(5, "::usp_init_fortunes()")
 
-   psql  = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
-   pstmt = U_NEW(UOrmStatement(*psql, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
+	psql_fortune  = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
+	pstmt_fortune = U_NEW(UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
-   if (pstmt == 0) U_ERROR("usp_init(): we cound't connect to db, exiting...");
+	if (pstmt_fortune == 0) U_ERROR("usp_init_fortunes(): we cound't connect to db, exiting...");
 
-   pfortune  = U_NEW(Fortune);
-   pvfortune = U_NEW(UVector<Fortune*>);
-   pmessage  = U_NEW(UString(U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+	pfortune  = U_NEW(Fortune);
+	pvfortune = U_NEW(UVector<Fortune*>);
+	pmessage	 = U_NEW(UString(U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
 
-   pstmt->into(*pfortune);
+	pstmt_fortune->into(*pfortune);
 }
 
-static void usp_end()
+static void usp_end_fortunes()
 {
-   U_TRACE(5, "::usp_end()")
+	U_TRACE(5, "::usp_end_fortunes()")
 
-   delete pstmt;
-   delete psql;
-   delete pvfortune;
-   delete pfortune;
-   delete pmessage;
+	delete pstmt_fortune;
+	delete psql_fortune;
+	delete pvfortune;
+	delete pfortune;
+	delete pmessage;
 }
 -->
 <!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
 Fortune* elem;
 unsigned char encoded[1024];
 
-pstmt->execute();
+pstmt_fortune->execute();
 
-do { pvfortune->push_back(U_NEW(Fortune(*pfortune))); } while (pstmt->nextRow());
+do	{ pvfortune->push_back(U_NEW(Fortune(*pfortune))); } while (pstmt_fortune->nextRow());
 
 pvfortune->sort(Fortune::cmp_obj);
 
 for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
-   {
-   elem = (*pvfortune)[i];
+	{
+	elem = (*pvfortune)[i];
 
-   (void) u_xml_encode((const unsigned char*)U_STRING_TO_PARAM(elem->message), encoded, false);
+	(void) u_xml_encode((const unsigned char*)U_STRING_TO_PARAM(elem->message), encoded, false);
 
-   USP_PRINTF_ADD(
-      "<tr>"
-      "<td>%d</td>"
-      "<td>%s</td>"
-      "</tr>",
-      elem->id, encoded);
-   }
+	USP_PRINTF_ADD(
+		"<tr>"
+		"<td>%d</td>"
+		"<td>%s</td>"
+		"</tr>",
+		elem->id, encoded);
+	}
 
 pvfortune->clear();
 --></table></body></html>

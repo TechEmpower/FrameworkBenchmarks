@@ -15,8 +15,8 @@ public:
 	U_MEMORY_ALLOCATOR
 	U_MEMORY_DEALLOCATOR
 
-	UString message;
 	int id;
+	UString message;
 
 	// CONSTRUCTOR
 
@@ -25,19 +25,16 @@ public:
 		U_TRACE_REGISTER_OBJECT(5, Fortune, "")
 		}
 
-	Fortune(int _id, const UString& _message) : message(_message), id(_id)
+	Fortune(int _id, const UString& _message) : id(_id), message(_message)
 		{
 		U_TRACE_REGISTER_OBJECT(5, Fortune, "%d,%.*S", _id, U_STRING_TO_TRACE(_message))
 		}
 
-	Fortune(const Fortune& f)
+	Fortune(const Fortune& f) : id(f.id), message((void*)U_STRING_TO_PARAM(f.message))
 		{
 		U_TRACE_REGISTER_OBJECT(5, Fortune, "%p", &f)
 
 		U_MEMORY_TEST_COPY(f)
-
-		message = f.message;
-		id		  = f.id;
 		}
 
 	~Fortune()
@@ -87,16 +84,16 @@ public:
 		{
 		U_TRACE(0, "UOrmTypeHandler<Fortune>::bindParam(%p)", stmt)
 
-		stmt->bindParam(U_ORM_TYPE_HANDLER(Fortune, message, UString));
 		stmt->bindParam(U_ORM_TYPE_HANDLER(Fortune, id,		  int));
+		stmt->bindParam(U_ORM_TYPE_HANDLER(Fortune, message, UString));
 		}
 
 	void bindResult(UOrmStatement* stmt)
 		{
 		U_TRACE(0, "UOrmTypeHandler<Fortune>::bindResult(%p)", stmt)
 
-		stmt->bindResult(U_ORM_TYPE_HANDLER(Fortune, message, UString));
 		stmt->bindResult(U_ORM_TYPE_HANDLER(Fortune, id,		int));
+		stmt->bindResult(U_ORM_TYPE_HANDLER(Fortune, message, UString));
 		}
 };
 
@@ -110,16 +107,16 @@ public:
 		{
 		U_TRACE(0, "UJsonTypeHandler<Fortune>::toJSON(%p)", &json)
 
-		json.toJSON(U_JSON_TYPE_HANDLER(Fortune, message, UString));
 		json.toJSON(U_JSON_TYPE_HANDLER(Fortune, id,		  int));
+		json.toJSON(U_JSON_TYPE_HANDLER(Fortune, message, UString));
 		}
 
 	void fromJSON(UValue& json)
 		{
 		U_TRACE(0, "UJsonTypeHandler<Fortune>::fromJSON(%p)", &json)
 
-		json.fromJSON(U_JSON_TYPE_HANDLER(Fortune, message, UString));
 		json.fromJSON(U_JSON_TYPE_HANDLER(Fortune, id,		 int));
+		json.fromJSON(U_JSON_TYPE_HANDLER(Fortune, message, UString));
 		}
 };
 

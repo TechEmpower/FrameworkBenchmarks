@@ -24,14 +24,11 @@ public:
 		U_TRACE_REGISTER_OBJECT(5, World, "")
 		}
 
-	World(const World& w)
+	World(const World& w) : id(w.id), randomNumber(w.randomNumber)
 		{
 		U_TRACE_REGISTER_OBJECT(5, World, "%p", &w)
 
 		U_MEMORY_TEST_COPY(w)
-
-		id				 = w.id;
-		randomNumber = w.randomNumber;
 		}
 
 	~World()
