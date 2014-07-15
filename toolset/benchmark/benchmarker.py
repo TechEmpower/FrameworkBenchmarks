@@ -2,6 +2,7 @@ from setup.linux.installer import Installer
 from setup.linux import setup_util
 
 from benchmark import framework_test
+from utils import WrapLogger
 
 import os
 import json
@@ -278,7 +279,7 @@ class Benchmarker:
   # report_results
   ############################################################
   def report_results(self, framework, test, results):
-    log.info("report_results: %s - %s" % (framework.name, test))
+    log.debug("report_results: %s - %s" % (framework.name, test))
     log.debug("report_results: %s" % results)
 
     if test not in self.results['rawData'].keys():
@@ -419,14 +420,18 @@ class Benchmarker:
     try:
       if os.name == 'nt':
         return True
-      subprocess.check_call(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu[0-9]*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
-      subprocess.check_call("sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w net.core.somaxconn=65535".rsplit(" "))
-      subprocess.check_call("sudo -s ulimit -n 65535".rsplit(" "))
-      subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
-      subprocess.check_call("sudo sysctl net.ipv4.tcp_tw_recycle=1".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w kernel.shmmax=134217728".rsplit(" "))
-      subprocess.check_call("sudo sysctl -w kernel.shmall=2097152".rsplit(" "))
+      (out, err) = WrapLogger(log, logging.DEBUG), WrapLogger(log, logging.ERROR)
+      def check(command):
+        subprocess.check_call(command, shell=True, stdout=out, stderr=err)
+
+      check(["sudo","bash","-c","cd /sys/devices/system/cpu; ls -d cpu[0-9]*|while read x; do echo performance > $x/cpufreq/scaling_governor; done"])
+      check("sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535".rsplit(" "))
+      check("sudo sysctl -w net.core.somaxconn=65535".rsplit(" "))
+      check("sudo -s ulimit -n 65535".rsplit(" "))
+      check("sudo sysctl net.ipv4.tcp_tw_reuse=1".rsplit(" "))
+      check("sudo sysctl net.ipv4.tcp_tw_recycle=1".rsplit(" "))
+      check("sudo sysctl -w kernel.shmmax=134217728".rsplit(" "))
+      check("sudo sysctl -w kernel.shmall=2097152".rsplit(" "))
     except subprocess.CalledProcessError:
       return False
   ############################################################
@@ -441,7 +446,8 @@ class Benchmarker:
   ############################################################
   def __setup_database(self):
     log.info("__setup_database")
-    p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
+    (out, err) = WrapLogger(log, logging.DEBUG), WrapLogger(log, logging.ERROR)
+    p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=out, stderr=err)
     p.communicate("""
       sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
       sudo sysctl -w net.core.somaxconn=65535
@@ -463,7 +469,8 @@ class Benchmarker:
   ############################################################
   def __setup_client(self):
     log.info("__setup_client")
-    p = subprocess.Popen(self.client_ssh_string, stdin=subprocess.PIPE, shell=True)
+    (out, err) = WrapLogger(log, logging.DEBUG), WrapLogger(log, logging.ERROR)
+    p = subprocess.Popen(self.client_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=out, stderr=err)
     p.communicate("""
       sudo sysctl -w net.ipv4.tcp_max_syn_backlog=65535
       sudo sysctl -w net.core.somaxconn=65535
@@ -514,6 +521,7 @@ class Benchmarker:
             log.warn("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
             test_process.terminate()
+          log.handlers = []  # Clean up handlers left by __run_test
     log.info("End __run_tests")
 
   ############################################################
@@ -541,6 +549,26 @@ class Benchmarker:
     logHandler.setFormatter(f)
     logHandler.setLevel(logging.DEBUG)
     log.addHandler(logHandler)
+
+    # Ensure messages of level info will be sent to stdout
+    # This is a bit tricky, because we pass our logger to 
+    # framework_test, so this means anything logged to it 
+    # at INFO or greater is always shown in stdout. This is 
+    # good for some things (e.g. validate) and bad for others 
+    # (e.g. "in function foo"). Ensure you use logger vs log
+    # in framework test properly
+    rootStreamHandler = logging.getLogger().handlers[0]
+    if rootStreamHandler.level > logging.INFO:
+      #class FileFilter(logging.Filter):
+      #  def filter(self, record):
+      #    if record.filename == "benchmarker.py":
+      ##      return True
+      #    return False
+      streamHandler = logging.StreamHandler()
+      streamHandler.setFormatter(logging.Formatter("%(message)s"))
+      streamHandler.setLevel(logging.INFO)
+      # streamHandler.addFilter(FileFilter())
+      log.addHandler(streamHandler)
 
     if hasattr(test, 'skip') and test.skip.lower() == "true":
       log.info("Skipping %s: benchmark_config specifies to skip this test", test.name)
@@ -570,19 +598,18 @@ class Benchmarker:
     log.info(textwrap.dedent("""
       =====================================================
         Beginning {name}
-      -----------------------------------------------------
-      """.format(name=test.name)))
+      -----------------------------------------------------""".format(name=test.name)))
 
     # Start this test
     log.info(textwrap.dedent("""
       -----------------------------------------------------
         Starting {name}
-      -----------------------------------------------------
-      """.format(name=test.name)))
+      -----------------------------------------------------""".format(name=test.name)))
 
     try:
       if test.requires_database():
-        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
+        (out, err) = WrapLogger(log, logging.DEBUG), WrapLogger(log, logging.ERROR)
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True, stdout=out, stderr=err)
         log.debug("Restarting database")
         p.communicate("""
           sudo restart mysql
@@ -596,8 +623,7 @@ class Benchmarker:
         log.error( textwrap.dedent("""
           ---------------------------------------------------------
             Error: Port {port} is not available, cannot start {name}
-          ---------------------------------------------------------
-          """.format(name=test.name, port=str(test.port))) )
+          ---------------------------------------------------------""".format(name=test.name, port=str(test.port))) )
         return
 
       result = test.start(log)
@@ -608,12 +634,11 @@ class Benchmarker:
         log.error(textwrap.dedent("""
           -----------------------------------------------------
             Stopped {name}
-          -----------------------------------------------------
-          """.format(name=test.name)) )
+          -----------------------------------------------------""".format(name=test.name)) )
         self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
         return
       
-      log.debug("Sleeping for %s" % self.sleep)
+      log.info("Sleeping for %s", self.sleep)
       time.sleep(self.sleep)
 
       # Verify URLs
@@ -624,16 +649,14 @@ class Benchmarker:
         log.info( textwrap.dedent("""
           -----------------------------------------------------
             Benchmarking {name} ...
-          -----------------------------------------------------
-          """.format(name=test.name)) )
+          -----------------------------------------------------""".format(name=test.name)) )
         test.benchmark(log)
 
       # Stop this test
       log.info( textwrap.dedent("""
         -----------------------------------------------------
           Stopping {name}
-        -----------------------------------------------------
-        """.format(name=test.name)) )
+        -----------------------------------------------------""".format(name=test.name)) )
       test.stop(log)
       time.sleep(5)
 
@@ -642,15 +665,14 @@ class Benchmarker:
         log.error( textwrap.dedent("""
           -----------------------------------------------------
             Error: Port {port} was not released by stop {name}
-          -----------------------------------------------------
-          """.format(name=test.name, port=str(test.port))) )
+          -----------------------------------------------------""".format(name=test.name, port=str(test.port))) )
+        log.handlers = []
         return
 
       log.info( textwrap.dedent("""
         -----------------------------------------------------
           Stopped {name}
-        -----------------------------------------------------
-        """.format(name=test.name)) )
+        -----------------------------------------------------""".format(name=test.name)) )
       time.sleep(5)
 
       ##########################################################
@@ -660,8 +682,7 @@ class Benchmarker:
       log.info( textwrap.dedent("""
         ----------------------------------------------------
         Saving results through {name}
-        ----------------------------------------------------
-        """.format(name=test.name)) )
+        ----------------------------------------------------""".format(name=test.name)) )
       self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
     except (OSError, IOError, subprocess.CalledProcessError) as e:
       self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
@@ -687,8 +708,7 @@ class Benchmarker:
       log.info( """
         -----------------------------------------------------
           Cleaning up....
-        -----------------------------------------------------
-        """)
+        -----------------------------------------------------""")
       self.__finish()
       sys.exit()
   ############################################################
@@ -814,7 +834,7 @@ class Benchmarker:
   # __write_intermediate_results
   ############################################################
   def __write_intermediate_results(self,test_name,status_message):
-    log.info("__write_intermediate_results: %s reports %s" % (test_name, status_message))
+    log.debug("__write_intermediate_results: %s reports %s" % (test_name, status_message))
     try:
       self.results["completed"][test_name] = status_message
       latest_results = os.path.join(self.latest_results_directory, 'results.json')
