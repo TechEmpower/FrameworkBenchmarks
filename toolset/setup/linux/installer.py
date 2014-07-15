@@ -127,7 +127,7 @@ class Installer:
     # Prerequisites
     ##############################
     sudo apt-get -y update
-    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev postgresql
+    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev postgresql redis-server
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
     sudo mkdir -p /ssd
@@ -190,7 +190,6 @@ class Installer:
     sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo start mongodb
 
-
     ##############################
     # Apache Cassandra
     ##############################
@@ -215,6 +214,15 @@ class Installer:
     cat ../cassandra/create-keyspace.cql | ./bin/cqlsh $TFB_DATABASE_HOST
     python ../cassandra/db-data-gen.py | ./bin/cqlsh $TFB_DATABASE_HOST
     popd
+
+    ##############################
+    # Redis
+    ##############################
+    sudo service redis-server stop
+    sudo cp redis.conf /etc/redis/redis.conf
+    sudo service redis-server start
+    bash create-redis.sh
+
     """ % (self.benchmarker.database_host, self.benchmarker.database_host, self.benchmarker.database_host)
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
