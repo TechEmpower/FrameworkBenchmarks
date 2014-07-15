@@ -532,196 +532,169 @@ class Benchmarker:
   ############################################################
   def __run_test(self, test):
     log.info("__run_test")
+
+    logfile = os.path.join(self.latest_results_directory, 'logs', test.name, 'output.log')
     try:
-      os.makedirs(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name)))
+      os.makedirs(os.path.dirname(logfile))
     except:
       pass
-    with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
-         open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
-      if hasattr(test, 'skip'):
-        if test.skip.lower() == "true":
-          out.write("Test {name} benchmark_config specifies to skip this test. Skipping.\n".format(name=test.name))
-          return
 
-      if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
-        # the operating system requirements of this test for the
-        # application server or the database server don't match
-        # our current environment
-        out.write("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.\n")
-        return 
-      
-      # If the test is in the excludes list, we skip it
-      if self.exclude != None and test.name in self.exclude:
-        out.write("Test {name} has been added to the excludes list. Skipping.\n".format(name=test.name))
-        return
-      
-      # If the test does not contain an implementation of the current test-type, skip it
-      if self.type != 'all' and not test.contains_type(self.type):
-        out.write("Test type {type} does not contain an implementation of the current test-type. Skipping.\n".format(type=self.type))
-        return
+    # Create handler for file logging
+    logHandler = logging.FileHandler(logfile, mode='w')
+    f = logging.Formatter("%(asctime)s: %(name)-12s: %(levelname)-8s %(message)s")
+    logHandler.setFormatter(f)
+    logHandler.setLevel(logging.DEBUG)
+    log.addHandler(logHandler)
 
-      out.write("test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".format(os=test.os.lower(),dbos=test.database_os.lower()))
-      out.write("self.results['frameworks'] != None: {val}\n".format(val=str(self.results['frameworks'] != None)))
-      out.write("test.name: {name}\n".format(name=str(test.name)))
-      out.write("self.results['completed']: {completed}\n".format(completed=str(self.results['completed'])))
-      if self.results['frameworks'] != None and test.name in self.results['completed']:
-        out.write('Framework {name} found in latest saved data. Skipping.\n'.format(name=str(test.name)))
-        return
+    if hasattr(test, 'skip') and test.skip.lower() == "true":
+      log.info("Skipping %s: benchmark_config specifies to skip this test", test.name)
+      return
 
-      out.flush()
+    if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
+      log.info("Skipping %s: OS or Database OS specified in benchmark_config does not match the current environment", test.name)
+      return 
+    
+    if self.exclude != None and test.name in self.exclude:
+      log.info("Excluding %s: Added to the excludes list", test.name)
+      return
+    
+    if self.type != 'all' and not test.contains_type(self.type):
+      log.info("Skipping %s: Does not contain test for %s", test.name, self.type)
+      return
 
-      out.write( textwrap.dedent("""
+    log.debug("test.os.lower() = %s  test.database_os.lower() = %s", test.os.lower(), test.database_os.lower())
+    log.debug("self.results['frameworks'] != None: %s", self.results['frameworks'] != None)
+    log.debug("test.name: %s", test.name)
+    log.debug("self.results['completed']: %s", self.results['completed'])
+
+    #if self.results['frameworks'] != None and test.name in self.results['completed']:
+    #  log.debug("Skipping %s: Found in latest saved data", test.name)
+    #  return
+
+    log.info(textwrap.dedent("""
       =====================================================
         Beginning {name}
       -----------------------------------------------------
-      """.format(name=test.name)) )
-      out.flush()
+      """.format(name=test.name)))
 
-      ##########################
-      # Start this test
-      ##########################  
-      out.write( textwrap.dedent("""
+    # Start this test
+    log.info(textwrap.dedent("""
       -----------------------------------------------------
         Starting {name}
       -----------------------------------------------------
-      """.format(name=test.name)) )
-      out.flush()
-      try:
-        if test.requires_database():
-          p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=err, shell=True)
-          p.communicate("""
-            sudo restart mysql
-            sudo restart mongodb
-            sudo /etc/init.d/postgresql restart
-          """)
-          time.sleep(10)
+      """.format(name=test.name)))
 
-        if self.__is_port_bound(test.port):
-          self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-          err.write( textwrap.dedent("""
-            ---------------------------------------------------------
-              Error: Port {port} is not available before start {name}
-            ---------------------------------------------------------
-            """.format(name=test.name, port=str(test.port))) )
-          err.flush()
-          return
+    try:
+      if test.requires_database():
+        p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, shell=True)
+        log.debug("Restarting database")
+        p.communicate("""
+          sudo restart mysql
+          sudo restart mongodb
+		      sudo /etc/init.d/postgresql restart
+        """)
+        time.sleep(10)
 
-        result = test.start(out, err)
-        if result != 0: 
-          test.stop(out, err)
-          time.sleep(5)
-          err.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
-          err.write( textwrap.dedent("""
-            -----------------------------------------------------
-              Stopped {name}
-            -----------------------------------------------------
-            """.format(name=test.name)) )
-          err.flush()
-          self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
-          return
-        
-        time.sleep(self.sleep)
+      if self.__is_port_bound(test.port):
+        self.__write_intermediate_results(test.name, "port %s is not available before start" % test.port)
+        log.error( textwrap.dedent("""
+          ---------------------------------------------------------
+            Error: Port {port} is not available, cannot start {name}
+          ---------------------------------------------------------
+          """.format(name=test.name, port=str(test.port))) )
+        return
 
-        ##########################
-        # Verify URLs
-        ##########################
-        test.verify_urls(out, err)
-        out.flush()
-        err.flush()
+      result = test.start(log)
+      if result != 0: 
+        test.stop(log)
+        time.sleep(5)
+        log.error("ERROR: Problem starting %s", test.name)
+        log.error(textwrap.dedent("""
+          -----------------------------------------------------
+            Stopped {name}
+          -----------------------------------------------------
+          """.format(name=test.name)) )
+        self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
+        return
+      
+      log.debug("Sleeping for %s" % self.sleep)
+      time.sleep(self.sleep)
 
-        ##########################
-        # Benchmark this test
-        ##########################
-        if self.mode == "benchmark":
-          out.write( textwrap.dedent("""
-            -----------------------------------------------------
-              Benchmarking {name} ...
-            -----------------------------------------------------
-            """.format(name=test.name)) )
-          out.flush()
-          test.benchmark(out, err)
-          out.flush()
-          err.flush()
+      # Verify URLs
+      test.verify_urls(log)
 
-        ##########################
-        # Stop this test
-        ##########################
-        out.write( textwrap.dedent("""
+      # Benchmark
+      if self.mode == "benchmark":
+        log.info( textwrap.dedent("""
+          -----------------------------------------------------
+            Benchmarking {name} ...
+          -----------------------------------------------------
+          """.format(name=test.name)) )
+        test.benchmark(log)
+
+      # Stop this test
+      log.info( textwrap.dedent("""
         -----------------------------------------------------
           Stopping {name}
         -----------------------------------------------------
         """.format(name=test.name)) )
-        out.flush()
-        test.stop(out, err)
-        out.flush()
-        err.flush()
-        time.sleep(5)
+      test.stop(log)
+      time.sleep(5)
 
-        if self.__is_port_bound(test.port):
-          self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-          err.write( textwrap.dedent("""
-            -----------------------------------------------------
-              Error: Port {port} was not released by stop {name}
-            -----------------------------------------------------
-            """.format(name=test.name, port=str(test.port))) )
-          err.flush()
-          return
+      if self.__is_port_bound(test.port):
+        self.__write_intermediate_results(test.name, "port %s was not released by stop" % test.port)
+        log.error( textwrap.dedent("""
+          -----------------------------------------------------
+            Error: Port {port} was not released by stop {name}
+          -----------------------------------------------------
+          """.format(name=test.name, port=str(test.port))) )
+        return
 
-        out.write( textwrap.dedent("""
+      log.info( textwrap.dedent("""
         -----------------------------------------------------
           Stopped {name}
         -----------------------------------------------------
         """.format(name=test.name)) )
-        out.flush()
-        time.sleep(5)
+      time.sleep(5)
 
-        ##########################################################
-        # Save results thus far into toolset/benchmark/latest.json
-        ##########################################################
+      ##########################################################
+      # Save results thus far into toolset/benchmark/latest.json
+      ##########################################################
 
-        out.write( textwrap.dedent("""
+      log.info( textwrap.dedent("""
         ----------------------------------------------------
         Saving results through {name}
         ----------------------------------------------------
         """.format(name=test.name)) )
-        out.flush()
-        self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
-      except (OSError, IOError, subprocess.CalledProcessError) as e:
-        self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
-        err.write( textwrap.dedent("""
+      self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
+    except (OSError, IOError, subprocess.CalledProcessError) as e:
+      self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
+      log.error( textwrap.dedent("""
         -----------------------------------------------------
           Subprocess Error {name}
         -----------------------------------------------------
         {err}
-        {trace}
-        """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
-        err.flush()
-        try:
-          test.stop(out, err)
-        except (subprocess.CalledProcessError) as e:
-          self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
-          err.write( textwrap.dedent("""
+        {trace}""".format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
+      log.debug("Subprocess Error Details", exc_info=True)
+      try:
+        test.stop(log)
+      except (subprocess.CalledProcessError) as e:
+        self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
+        log.error( textwrap.dedent("""
           -----------------------------------------------------
             Subprocess Error: Test .stop() raised exception {name}
           -----------------------------------------------------
           {err}
-          {trace}
-          """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
-          err.flush()
-      except (KeyboardInterrupt, SystemExit) as e:
-        test.stop(out)
-        out.write( """
+          {trace}""".format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
+    except (KeyboardInterrupt, SystemExit) as e:
+      test.stop(log)
+      log.info( """
         -----------------------------------------------------
           Cleaning up....
         -----------------------------------------------------
         """)
-        out.flush()
-        self.__finish()
-        sys.exit()
-
-      out.close()
-      err.close()
-
+      self.__finish()
+      sys.exit()
   ############################################################
   # End __run_tests
   ############################################################
