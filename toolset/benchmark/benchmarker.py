@@ -3,12 +3,12 @@ from setup.linux import setup_util
 
 from benchmark import framework_test
 from utils import WrapLogger
+from utils import Header
 
 import os
 import json
 import subprocess
 import time
-import textwrap
 import pprint
 import csv
 import sys
@@ -109,11 +109,7 @@ class Benchmarker:
     ##########################
     # Setup client/server
     ##########################
-    print textwrap.dedent("""
-      =====================================================
-        Preparing Server, Database, and Client ...
-      =====================================================
-      """)
+    print Header("Preparing Server, Database, and Client ...", top='=', bottom='=')
     self.__setup_server()
     self.__setup_database()
     self.__setup_client()
@@ -125,22 +121,14 @@ class Benchmarker:
     ##########################
     # Run tests
     ##########################
-    print textwrap.dedent("""
-      =====================================================
-        Running Tests ...
-      =====================================================
-      """)
+    print Header("Running Tests...", top='=', bottom='=')
     self.__run_tests(all_tests)
 
     ##########################
     # Parse results
     ##########################  
     if self.mode == "benchmark":
-      print textwrap.dedent("""
-      =====================================================
-        Parsing Results ...
-      =====================================================
-      """)
+      print Header("Parsing Results ...", top='=', bottom='=')
       self.__parse_results(all_tests)
 
     self.__finish()
@@ -508,11 +496,7 @@ class Benchmarker:
       # These features do not work on Windows
       for test in tests:
         if __name__ == 'benchmark.benchmarker':
-          print textwrap.dedent("""
-            -----------------------------------------------------
-              Running Test: {name} ...
-            -----------------------------------------------------
-            """.format(name=test.name))
+          print Header("Running Test: %s" % test.name)
           test_process = Process(target=self.__run_test, name="Test Runner (%s)" % test.name, args=(test,))
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
@@ -595,16 +579,10 @@ class Benchmarker:
     #  log.debug("Skipping %s: Found in latest saved data", test.name)
     #  return
 
-    log.info(textwrap.dedent("""
-      =====================================================
-        Beginning {name}
-      -----------------------------------------------------""".format(name=test.name)))
+    log.info(Header("Beginning %s" % test.name, top='='))
 
     # Start this test
-    log.info(textwrap.dedent("""
-      -----------------------------------------------------
-        Starting {name}
-      -----------------------------------------------------""".format(name=test.name)))
+    log.info(Header("Starting %s" % test.name))
 
     try:
       if test.requires_database():
@@ -620,10 +598,7 @@ class Benchmarker:
 
       if self.__is_port_bound(test.port):
         self.__write_intermediate_results(test.name, "port %s is not available before start" % test.port)
-        log.error( textwrap.dedent("""
-          ---------------------------------------------------------
-            Error: Port {port} is not available, cannot start {name}
-          ---------------------------------------------------------""".format(name=test.name, port=str(test.port))) )
+        log.error(Header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
         return
 
       result = test.start(log)
@@ -631,10 +606,7 @@ class Benchmarker:
         test.stop(log)
         time.sleep(5)
         log.error("ERROR: Problem starting %s", test.name)
-        log.error(textwrap.dedent("""
-          -----------------------------------------------------
-            Stopped {name}
-          -----------------------------------------------------""".format(name=test.name)) )
+        log.error(Header("Stopped %s" % test.name))
         self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
         return
       
@@ -646,69 +618,45 @@ class Benchmarker:
 
       # Benchmark
       if self.mode == "benchmark":
-        log.info( textwrap.dedent("""
-          -----------------------------------------------------
-            Benchmarking {name} ...
-          -----------------------------------------------------""".format(name=test.name)) )
+        log.info(Header("Benchmarking %s" % test.name))
         test.benchmark(log)
 
       # Stop this test
-      log.info( textwrap.dedent("""
-        -----------------------------------------------------
-          Stopping {name}
-        -----------------------------------------------------""".format(name=test.name)) )
+      log.info(Header("Stopping %s" % test.name))
       test.stop(log)
       time.sleep(5)
 
       if self.__is_port_bound(test.port):
         self.__write_intermediate_results(test.name, "port %s was not released by stop" % test.port)
-        log.error( textwrap.dedent("""
-          -----------------------------------------------------
-            Error: Port {port} was not released by stop {name}
-          -----------------------------------------------------""".format(name=test.name, port=str(test.port))) )
-        log.handlers = []
+        log.error(Header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
         return
 
-      log.info( textwrap.dedent("""
-        -----------------------------------------------------
-          Stopped {name}
-        -----------------------------------------------------""".format(name=test.name)) )
+      log.info(Header("Stopped %s" % test.name))
       time.sleep(5)
 
       ##########################################################
       # Save results thus far into toolset/benchmark/latest.json
       ##########################################################
 
-      log.info( textwrap.dedent("""
-        ----------------------------------------------------
-        Saving results through {name}
-        ----------------------------------------------------""".format(name=test.name)) )
+      log.info(Header("Saving results through %s" % test.name))
       self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
     except (OSError, IOError, subprocess.CalledProcessError) as e:
       self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
-      log.error( textwrap.dedent("""
-        -----------------------------------------------------
-          Subprocess Error {name}
-        -----------------------------------------------------
-        {err}
-        {trace}""".format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
+      log.error(Header("Subprocess Error %s" % test.name))
+      log.error("%s" % e)
+      log.error("%s" % sys.exc_info()[:2])
       log.debug("Subprocess Error Details", exc_info=True)
       try:
         test.stop(log)
       except (subprocess.CalledProcessError) as e:
         self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
-        log.error( textwrap.dedent("""
-          -----------------------------------------------------
-            Subprocess Error: Test .stop() raised exception {name}
-          -----------------------------------------------------
-          {err}
-          {trace}""".format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
+        log.error(Header("Subprocess Error: Test .stop() raised exception %s" % test.name))
+        log.error("%s" % e)
+        log.error("%s" % sys.exc_info()[:2])
+        log.debug("Subprocess Error Details", exc_info=True)
     except (KeyboardInterrupt, SystemExit) as e:
       test.stop(log)
-      log.info( """
-        -----------------------------------------------------
-          Cleaning up....
-        -----------------------------------------------------""")
+      log.info(Header("Cleaning up..."))
       self.__finish()
       sys.exit()
   ############################################################
