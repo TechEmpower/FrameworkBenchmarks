@@ -365,7 +365,7 @@ class FrameworkTest:
       url = self.benchmarker.generate_url(self.json_url, self.port)
       output = self.__curl_url(url, self.JSON, logger)
       logger.info("VALIDATING JSON ... ")
-      if self.validateJson(output, log):
+      if self.validateJson(output, logger):
         self.json_url_passed = True
         logger.info("PASS")
       else:
