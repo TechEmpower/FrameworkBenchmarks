@@ -287,7 +287,7 @@ class FrameworkTest:
   # start(benchmarker)
   # Start the test using it's setup file
   ############################################################
-  def start(self, out, err):
+  def start(self, logger=log):
     log.info("start")
 
     # Load profile for this installation
@@ -299,6 +299,7 @@ class FrameworkTest:
     set_iroot="export IROOT=%s" % self.install_root
     setup_util.replace_environ(config=profile, command=set_iroot)
 
+    (out, err) = WrapLogger(logger, 'out'), WrapLogger(logger, 'err')
     return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
   # End start
@@ -308,8 +309,9 @@ class FrameworkTest:
   # stop(benchmarker)
   # Stops the test using it's setup file
   ############################################################
-  def stop(self, out, err):
-    log.info("stop")
+  def stop(self, logger=log):
+    logger.info("stop")
+    (out, err) = WrapLogger(logger, 'out'), WrapLogger(logger, 'err')
     return self.setup_module.stop(out, err)
   ############################################################
   # End stop
@@ -322,7 +324,9 @@ class FrameworkTest:
   # For each url, a flag will be set on this object for whether
   # or not it passed
   ############################################################
-  def verify_urls(self, out, err):
+  def verify_urls(self, logger=log):
+    (out, err) = WrapLogger(logger, 'out'), WrapLogger(logger, 'err')
+
     # JSON
     if self.runTests[self.JSON]:
       out.write(textwrap.dedent("""
@@ -530,7 +534,9 @@ class FrameworkTest:
   # Runs the benchmark for each type of test that it implements
   # JSON/DB/Query.
   ############################################################
-  def benchmark(self, out, err):
+  def benchmark(self, logger=log):
+    (out, err) = WrapLogger(logger, 'out'), WrapLogger(logger, 'err')
+    
     # JSON
     if self.runTests[self.JSON]:
       try:
@@ -913,7 +919,6 @@ class FrameworkTest:
   # Constructor
   ##########################################################################################  
   def __init__(self, name, directory, benchmarker, runTests, args):
-    log.debug("__init__: %s in %s" % (name, directory))
     self.name = name
     self.directory = directory
     self.benchmarker = benchmarker
@@ -980,3 +985,25 @@ def parse_config(config, directory, benchmarker):
 ##############################################################
 # End parse_config
 ##############################################################
+
+import tempfile
+class WrapLogger():
+  def __init__(self, logger, level):
+    self.logger = logger
+    self.level = level
+    self.file = tempfile.TemporaryFile()
+
+  def write(self, str):
+    if self.level == "out":
+      self.logger.info(str)
+    elif self.level == "err":
+      self.logger.error(str)
+    else:
+      self.logger.error("Unknown level %s" % self.level)
+      self.logger.error(str)
+
+  def __getattr__(self, name):
+    return getattr(self.file, name)
+
+
+
