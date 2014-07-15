@@ -37,5 +37,5 @@ class Header():
     topheader = topheader[:80]
     bottomheader = self.bottom * 80
     bottomheader = bottomheader[:80]
-    return "%s\n  %s\n%s" % (topheader, self.message, bottomheader)
+    return "\n%s\n  %s\n%s" % (topheader, self.message, bottomheader)
 
