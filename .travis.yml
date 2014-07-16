@@ -24,6 +24,8 @@ before_install:
   - ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa  
   - cat /home/travis/.ssh/id_rsa.pub > /home/travis/.ssh/authorized_keys
   - chmod 600 /home/travis/.ssh/authorized_keys
+    # Setup the root account to be what TFB expects
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('secret') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
 install:
   - pip install docker-py
   - pip install coveralls
