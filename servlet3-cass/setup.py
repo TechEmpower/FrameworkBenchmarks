@@ -5,6 +5,7 @@ import os
 import setup_util
 
 def start(args, logfile, errfile):
+  setup_util.replace_text("servlet3-cass/src/main/resources/application.properties", "localhost", args.database_host)
 
   try:
     subprocess.check_call("mvn clean compile war:war", shell=True, cwd="servlet3-cass", stderr=errfile, stdout=logfile)
