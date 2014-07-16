@@ -42,7 +42,11 @@ def replace_environ(config=None, root=None, print_result=False, command='true'):
     for line in env.split('\n'):
         try:
             key, value = line.split('=', 1)
-            os.environ[key]=value
+            # If we already have this TFB_ variable, do not overwrite
+            if key.startswith('TFB_') and key in mini_environ:
+                os.environ[key]=mini_environ[key]
+            else:
+                os.environ[key]=value    
         except:
             if not line: # Don't warn for empty line
                 continue 
