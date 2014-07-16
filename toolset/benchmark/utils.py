@@ -22,6 +22,14 @@ class WrapLogger():
   def __getattr__(self, name):
     return getattr(self.file, name)
 
+  def __del__(self):
+    """Grabs any output that was written directly to the file (e.g. bypassing 
+    the write method). Subprocess.call, Popen, etc have a habit of accessing 
+    the file directly for faster writing. See http://bugs.python.org/issue1631
+    """
+    self.file.seek(0)
+    for line in self.file.readlines():
+      self.logger.log(self.level, line.rstrip('\n'))
 
 class Header():
   """
