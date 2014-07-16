@@ -14,6 +14,13 @@ from setup.linux import setup_util
 # Main
 ###################################################################################################
 def main(argv=None):
+    ''' Runs the program. There are three ways to pass arguments 
+    1) environment variables TFB_*
+    2) configuration file benchmark.cfg
+    3) command line flags
+    In terms of precedence, 3 > 2 > 1, so config file trumps environment variables
+    but command line flags have the final say
+    '''
     # Do argv default this way, as doing it in the functional declaration sets it at compile time
     if argv is None:
         argv = sys.argv
