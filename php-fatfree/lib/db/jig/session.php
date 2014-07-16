@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -17,6 +17,10 @@ namespace DB\Jig;
 
 //! Jig-managed session handler
 class Session extends Mapper {
+
+	protected
+		//! Session ID
+		$sid;
 
 	/**
 	*	Open session
@@ -42,7 +46,8 @@ class Session extends Mapper {
 	*	@param $id string
 	**/
 	function read($id) {
-		$this->load(array('@session_id==?',$id));
+		if ($id!=$this->sid)
+			$this->load(array('@session_id=?',$this->sid=$id));
 		return $this->dry()?FALSE:$this->get('data');
 	}
 
@@ -54,10 +59,15 @@ class Session extends Mapper {
 	**/
 	function write($id,$data) {
 		$fw=\Base::instance();
+		$sent=headers_sent();
 		$headers=$fw->get('HEADERS');
-		$this->load(array('@session_id==?',$id));
+		if ($id!=$this->sid)
+			$this->load(array('@session_id=?',$this->sid=$id));
+		$csrf=$fw->hash($fw->get('ROOT').$fw->get('BASE')).'.'.
+			$fw->hash(mt_rand());
 		$this->set('session_id',$id);
 		$this->set('data',$data);
+		$this->set('csrf',$sent?$this->csrf():$csrf);
 		$this->set('ip',$fw->get('IP'));
 		$this->set('agent',
 			isset($headers['User-Agent'])?$headers['User-Agent']:'');
@@ -72,7 +82,10 @@ class Session extends Mapper {
 	*	@param $id string
 	**/
 	function destroy($id) {
-		$this->erase(array('@session_id==?',$id));
+		$this->erase(array('@session_id=?',$id));
+		setcookie(session_name(),'',strtotime('-1 year'));
+		unset($_COOKIE[session_name()]);
+		header_remove('Set-Cookie');
 		return TRUE;
 	}
 
@@ -87,32 +100,34 @@ class Session extends Mapper {
 	}
 
 	/**
-	*	Return IP address associated with specified session ID
+	*	Return anti-CSRF token
 	*	@return string|FALSE
-	*	@param $id string
 	**/
-	function ip($id=NULL) {
-		$this->load(array('@session_id==?',$id?:session_id()));
+	function csrf() {
+		return $this->dry()?FALSE:$this->get('csrf');
+	}
+
+	/**
+	*	Return IP address
+	*	@return string|FALSE
+	**/
+	function ip() {
 		return $this->dry()?FALSE:$this->get('ip');
 	}
 
 	/**
-	*	Return Unix timestamp associated with specified session ID
+	*	Return Unix timestamp
 	*	@return string|FALSE
-	*	@param $id string
 	**/
-	function stamp($id=NULL) {
-		$this->load(array('@session_id==?',$id?:session_id()));
+	function stamp() {
 		return $this->dry()?FALSE:$this->get('stamp');
 	}
 
 	/**
-	*	Return HTTP user agent associated with specified session ID
+	*	Return HTTP user agent
 	*	@return string|FALSE
-	*	@param $id string
 	**/
-	function agent($id=NULL) {
-		$this->load(array('@session_id==?',$id?:session_id()));
+	function agent() {
 		return $this->dry()?FALSE:$this->get('agent');
 	}
 
@@ -132,6 +147,22 @@ class Session extends Mapper {
 			array($this,'cleanup')
 		);
 		register_shutdown_function('session_commit');
+		@session_start();
+		$fw=\Base::instance();
+		$headers=$fw->get('HEADERS');
+		if (($ip=$this->ip()) && $ip!=$fw->get('IP') ||
+			($agent=$this->agent()) &&
+			(!isset($headers['User-Agent']) ||
+				$agent!=$headers['User-Agent'])) {
+			session_destroy();
+			$fw->error(403);
+		}
+		$csrf=$fw->hash($fw->get('ROOT').$fw->get('BASE')).'.'.
+			$fw->hash(mt_rand());
+		if ($this->load(array('@session_id=?',$this->sid=session_id()))) {
+			$this->set('csrf',$csrf);
+			$this->save();
+		}
 	}
 
 }

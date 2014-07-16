@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -27,6 +27,14 @@ class Mapper extends \DB\Cursor {
 		$id,
 		//! Document contents
 		$document=array();
+
+	/**
+	*	Return database type
+	*	@return string
+	**/
+	function dbtype() {
+		return 'Jig';
+	}
 
 	/**
 	*	Return TRUE if field is defined
@@ -67,7 +75,8 @@ class Mapper extends \DB\Cursor {
 	*	@param $key string
 	**/
 	function clear($key) {
-		unset($this->document[$key]);
+		if ($key!='_id')
+			unset($this->document[$key]);
 	}
 
 	/**
@@ -83,6 +92,8 @@ class Mapper extends \DB\Cursor {
 		foreach ($row as $field=>$val)
 			$mapper->document[$field]=$val;
 		$mapper->query=array(clone($mapper));
+		if (isset($mapper->trigger['load']))
+			\Base::instance()->call($mapper->trigger['load'],$mapper);
 		return $mapper;
 	}
 
@@ -150,10 +161,14 @@ class Mapper extends \DB\Cursor {
 		$cache=\Cache::instance();
 		$db=$this->db;
 		$now=microtime(TRUE);
+		$data=array();
 		if (!$fw->get('CACHE') || !$ttl || !($cached=$cache->exists(
-			$hash=$fw->hash($fw->stringify(array($filter,$options))).'.jig',
-				$data)) || $cached[0]+$ttl<microtime(TRUE)) {
+			$hash=$fw->hash($this->db->dir().
+				$fw->stringify(array($filter,$options))).'.jig',$data)) ||
+			$cached[0]+$ttl<microtime(TRUE)) {
 			$data=$db->read($this->file);
+			if (is_null($data))
+				return FALSE;
 			foreach ($data as $id=>&$doc) {
 				$doc['_id']=$id;
 				unset($doc);
@@ -248,7 +263,7 @@ class Mapper extends \DB\Cursor {
 			$out[]=$this->factory($id,$doc);
 			unset($doc);
 		}
-		if ($log) {
+		if ($log && isset($args)) {
 			if ($filter)
 				foreach ($args as $key=>$val) {
 					$vals[]=$fw->stringify(is_array($val)?$val[0]:$val);
@@ -265,10 +280,11 @@ class Mapper extends \DB\Cursor {
 	*	Count records that match criteria
 	*	@return int
 	*	@param $filter array
+	*	@param $ttl int
 	**/
-	function count($filter=NULL) {
+	function count($filter=NULL,$ttl=0) {
 		$now=microtime(TRUE);
-		$out=count($this->find($filter,NULL,FALSE));
+		$out=count($this->find($filter,NULL,$ttl,FALSE));
 		$this->db->jot('('.sprintf('%.1f',1e3*(microtime(TRUE)-$now)).'ms) '.
 			$this->file.' [count] '.($filter?json_encode($filter):''));
 		return $out;
@@ -283,6 +299,8 @@ class Mapper extends \DB\Cursor {
 	function skip($ofs=1) {
 		$this->document=($out=parent::skip($ofs))?$out->document:array();
 		$this->id=$out?$out->id:NULL;
+		if ($this->document && isset($this->trigger['load']))
+			\Base::instance()->call($this->trigger['load'],$this);
 		return $out;
 	}
 
@@ -295,16 +313,23 @@ class Mapper extends \DB\Cursor {
 			return $this->update();
 		$db=$this->db;
 		$now=microtime(TRUE);
-		while (($id=uniqid()) &&
+		while (($id=uniqid(NULL,TRUE)) &&
 			($data=$db->read($this->file)) && isset($data[$id]) &&
 			!connection_aborted())
 			usleep(mt_rand(0,100));
 		$this->id=$id;
 		$data[$id]=$this->document;
+		$pkey=array('_id'=>$this->id);
+		if (isset($this->trigger['beforeinsert']))
+			\Base::instance()->call($this->trigger['beforeinsert'],
+				array($this,$pkey));
 		$db->write($this->file,$data);
-		parent::reset();
 		$db->jot('('.sprintf('%.1f',1e3*(microtime(TRUE)-$now)).'ms) '.
 			$this->file.' [insert] '.json_encode($this->document));
+		if (isset($this->trigger['afterinsert']))
+			\Base::instance()->call($this->trigger['afterinsert'],
+				array($this,$pkey));
+		$this->load(array('@_id=?',$this->id));
 		return $this->document;
 	}
 
@@ -317,9 +342,15 @@ class Mapper extends \DB\Cursor {
 		$now=microtime(TRUE);
 		$data=$db->read($this->file);
 		$data[$this->id]=$this->document;
+		if (isset($this->trigger['beforeupdate']))
+			\Base::instance()->call($this->trigger['beforeupdate'],
+				array($this,array('_id'=>$this->id)));
 		$db->write($this->file,$data);
 		$db->jot('('.sprintf('%.1f',1e3*(microtime(TRUE)-$now)).'ms) '.
 			$this->file.' [update] '.json_encode($this->document));
+		if (isset($this->trigger['afterupdate']))
+			\Base::instance()->call($this->trigger['afterupdate'],
+				array($this,array('_id'=>$this->id)));
 		return $this->document;
 	}
 
@@ -332,10 +363,12 @@ class Mapper extends \DB\Cursor {
 		$db=$this->db;
 		$now=microtime(TRUE);
 		$data=$db->read($this->file);
+		$pkey=array('_id'=>$this->id);
 		if ($filter) {
-			$data=$this->find($filter,NULL,FALSE);
-			foreach (array_keys(array_reverse($data)) as $id)
-				unset($data[$id]);
+			foreach ($this->find($filter,NULL,FALSE) as $mapper)
+				if (!$mapper->erase())
+					return FALSE;
+			return TRUE;
 		}
 		elseif (isset($this->id)) {
 			unset($data[$this->id]);
@@ -344,6 +377,9 @@ class Mapper extends \DB\Cursor {
 		}
 		else
 			return FALSE;
+		if (isset($this->trigger['beforeerase']))
+			\Base::instance()->call($this->trigger['beforeerase'],
+				array($this,$pkey));
 		$db->write($this->file,$data);
 		if ($filter) {
 			$args=isset($filter[1]) && is_array($filter[1])?
@@ -359,6 +395,9 @@ class Mapper extends \DB\Cursor {
 		$db->jot('('.sprintf('%.1f',1e3*(microtime(TRUE)-$now)).'ms) '.
 			$this->file.' [erase] '.
 			($filter?preg_replace($keys,$vals,$filter[0],1):''));
+		if (isset($this->trigger['aftererase']))
+			\Base::instance()->call($this->trigger['aftererase'],
+				array($this,$pkey));
 		return TRUE;
 	}
 
@@ -376,9 +415,13 @@ class Mapper extends \DB\Cursor {
 	*	Hydrate mapper object using hive array variable
 	*	@return NULL
 	*	@param $key string
+	*	@param $func callback
 	**/
-	function copyfrom($key) {
-		foreach (\Base::instance()->get($key) as $key=>$val)
+	function copyfrom($key,$func=NULL) {
+		$var=\Base::instance()->get($key);
+		if ($func)
+			$var=call_user_func($func,$var);
+		foreach ($var as $key=>$val)
 			$this->document[$key]=$val;
 	}
 
@@ -391,6 +434,14 @@ class Mapper extends \DB\Cursor {
 		$var=&\Base::instance()->ref($key);
 		foreach ($this->document as $key=>$field)
 			$var[$key]=$field;
+	}
+
+	/**
+	*	Return field names
+	*	@return array
+	**/
+	function fields() {
+		return array_keys($this->document);
 	}
 
 	/**

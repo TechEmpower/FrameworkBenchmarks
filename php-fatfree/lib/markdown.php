@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -279,11 +279,12 @@ class Markdown extends Prefab {
 	protected function _p($str) {
 		$str=trim($str);
 		if (strlen($str)) {
-			if (preg_match('/(.+?\n)([>#].+)/',$str,$parts))
+			if (preg_match('/^(.+?\n)([>#].+)$/s',$str,$parts))
 				return $this->_p($parts[1]).$this->build($parts[2]);
 			$self=$this;
 			$str=preg_replace_callback(
-				'/([^<>\[]+)?(<.+?>|\[.+?\]\s*\(.+?\))([^<>\]]+)?|(.+)/s',
+				'/([^<>\[]+)?(<[\?%].+?[\?%]>|<.+?>|\[.+?\]\s*\(.+?\))|'.
+				'(.+)/s',
 				function($expr) use($self) {
 					$tmp='';
 					if (isset($expr[4]))
@@ -470,14 +471,14 @@ class Markdown extends Prefab {
 				'setext'=>'/^\h*(.+?)\h*\n([=-])+\h*(?:\n+|$)/',
 				'li'=>'/^(?:(?:[*+-]|\d+\.)\h.+?(?:\n+|$)'.
 					'(?:(?: {4}|\t)+.+?(?:\n+|$))*)+/s',
-				'raw'=>'/^((?:<!--.+?-->|<\?.+?\?>|<%.+?%>|'.
+				'raw'=>'/^((?:<!--.+?-->|'.
 					'<(address|article|aside|audio|blockquote|canvas|dd|'.
 					'div|dl|fieldset|figcaption|figure|footer|form|h\d|'.
 					'header|hgroup|hr|noscript|object|ol|output|p|pre|'.
 					'section|table|tfoot|ul|video).*?'.
 					'(?:\/>|>(?:(?>[^><]+)|(?R))*<\/\2>))'.
-					'\h*(?:\n{2,}|\n?$))/s',
-				'p'=>'/^(.+?(?:\n{2,}|\n?$))/s'
+					'\h*(?:\n{2,}|\n*$)|<[\?%].+?[\?%]>\h*(?:\n?$|\n*))/s',
+				'p'=>'/^(.+?(?:\n{2,}|\n*$))/s'
 			);
 		}
 		$self=$this;

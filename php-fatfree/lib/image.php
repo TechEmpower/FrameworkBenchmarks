@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -19,7 +19,8 @@ class Image {
 	//@{ Messages
 	const
 		E_Color='Invalid color specified: %s',
-		E_Font='CAPTCHA font not found';
+		E_Font='CAPTCHA font not found',
+		E_Length='Invalid CAPTCHA length: %s';
 	//@}
 
 	//@{ Positional cues
@@ -32,7 +33,7 @@ class Image {
 		POS_Bottom=32;
 	//@}
 
-	private
+	protected
 		//! Source filename
 		$file,
 		//! Image resource
@@ -269,11 +270,16 @@ class Image {
 	*	Apply an image overlay
 	*	@return object
 	*	@param $img object
-	*	@param $align int
+	*	@param $align int|array
+	*	@param $alpha int
 	**/
-	function overlay(Image $img,$align=NULL) {
+	function overlay(Image $img,$align=NULL,$alpha=100) {
 		if (is_null($align))
 			$align=self::POS_Right|self::POS_Bottom;
+		if (is_array($align)) {
+			list($posx,$posy)=$align;
+			$align = 0;
+		}
 		$ovr=imagecreatefromstring($img->dump());
 		imagesavealpha($ovr,TRUE);
 		$imgw=$this->width();
@@ -296,7 +302,14 @@ class Image {
 			$posx=0;
 		if (empty($posy))
 			$posy=0;
-		imagecopy($this->data,$ovr,$posx,$posy,0,0,$ovrw,$ovrh);
+		if ($alpha==100)
+			imagecopy($this->data,$ovr,$posx,$posy,0,0,$ovrw,$ovrh);
+		else {
+			$cut=imagecreatetruecolor($ovrw,$ovrh);
+			imagecopy($cut,$this->data,0,0,$posx,$posy,$ovrw,$ovrh);
+			imagecopy($cut,$ovr,0,0,0,0,$ovrw,$ovrh);
+			imagecopymerge($this->data,$cut,$posx,$posy,0,0,$ovrw,$ovrh,$alpha);
+		}
 		return $this->save();
 	}
 
@@ -326,11 +339,11 @@ class Image {
 			array(0,.5,.5,.5,.5,0,1,0,.5,.5,1,.5,.5,1,.5,.5,0,1),
 			array(0,0,1,0,.5,.5,.5,0,0,.5,1,.5,.5,1,.5,.5,0,1)
 		);
+		$hash=sha1($str);
 		$this->data=imagecreatetruecolor($size,$size);
-		list($r,$g,$b)=$this->rgb(mt_rand(0x333,0xCCC));
+		list($r,$g,$b)=$this->rgb(hexdec(substr($hash,-3)));
 		$fg=imagecolorallocate($this->data,$r,$g,$b);
 		imagefill($this->data,0,0,IMG_COLOR_TRANSPARENT);
-		$hash=sha1($str);
 		$ctr=count($sprites);
 		$dim=$blocks*floor($size/$blocks)*2/$blocks;
 		for ($j=0,$y=ceil($blocks/2);$j<$y;$j++)
@@ -366,12 +379,21 @@ class Image {
 	*	@param $len int
 	*	@param $key string
 	*	@param $path string
+	*	@param $fg int
+	*	@param $bg int
 	**/
-	function captcha($font,$size=24,$len=5,$key=NULL,$path='') {
+	function captcha($font,$size=24,$len=5,
+		$key=NULL,$path='',$fg=0xFFFFFF,$bg=0x000000) {
+		if ((!$ssl=extension_loaded('openssl')) && ($len<4 || $len>13)) {
+			user_error(sprintf(self::E_Length,$len));
+			return FALSE;
+		}
 		$fw=Base::instance();
-		foreach ($fw->split($path?:$fw->get('UI')) as $dir)
+		foreach ($fw->split($path?:$fw->get('UI').';./') as $dir)
 			if (is_file($path=$dir.$font)) {
-				$seed=strtoupper(substr(uniqid(),-$len));
+				$seed=strtoupper(substr(
+					$ssl?bin2hex(openssl_random_pseudo_bytes($len)):uniqid(),
+					-$len));
 				$block=$size*3;
 				$tmp=array();
 				for ($i=0,$width=0,$height=0;$i<$len;$i++) {
@@ -380,10 +402,10 @@ class Image {
 					$w=$box[2]-$box[0];
 					$h=$box[1]-$box[5];
 					$char=imagecreatetruecolor($block,$block);
-					imagefill($char,0,0,0);
+					imagefill($char,0,0,$bg);
 					imagettftext($char,$size*2,0,
 						($block-$w)/2,$block-($block-$h)/2,
-						0xFFFFFF,$path,$seed[$i]);
+						$fg,$path,$seed[$i]);
 					$char=imagerotate($char,mt_rand(-30,30),
 						imagecolorallocatealpha($char,0,0,0,127));
 					// Reduce to normal size
@@ -511,6 +533,18 @@ class Image {
 	}
 
 	/**
+	*	Load string
+	*	@return object
+	*	@param $str string
+	**/
+	function load($str) {
+		$this->data=imagecreatefromstring($str);
+		imagesavealpha($this->data,TRUE);
+		$this->save();
+		return $this;
+	}
+
+	/**
 	*	Instantiate image
 	*	@param $file string
 	*	@param $flag bool
@@ -522,12 +556,9 @@ class Image {
 			$fw=Base::instance();
 			// Create image from file
 			$this->file=$file;
-			foreach ($fw->split($path?:$fw->get('UI')) as $dir)
-				if (is_file($dir.$file)) {
-					$this->data=imagecreatefromstring($fw->read($dir.$file));
-					imagesavealpha($this->data,TRUE);
-					$this->save();
-				}
+			foreach ($fw->split($path?:$fw->get('UI').';./') as $dir)
+				if (is_file($dir.$file))
+					return $this->load($fw->read($dir.$file));
 		}
 	}
 

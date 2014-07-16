@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -13,8 +13,8 @@
 	Please see the license.txt file for more information.
 */
 
-//! Template engine
-class Template extends View {
+//! XML-style template engine
+class Template extends Preview {
 
 	//@{ Error messages
 	const
@@ -22,45 +22,10 @@ class Template extends View {
 	//@}
 
 	protected
-		//! MIME type
-		$mime,
 		//! Template tags
 		$tags,
 		//! Custom tag handlers
 		$custom=array();
-
-	/**
-	*	Convert token to variable
-	*	@return string
-	*	@param $str string
-	**/
-	function token($str) {
-		$self=$this;
-		$str=preg_replace_callback(
-			'/(?<!\w)@(\w(?:[\w\.\[\]]|\->|::)*)/',
-			function($var) use($self) {
-				// Convert from JS dot notation to PHP array notation
-				return '$'.preg_replace_callback(
-					'/(\.\w+)|\[((?:[^\[\]]*|(?R))*)\]/',
-					function($expr) use($self) {
-						$fw=Base::instance();
-						return
-							'['.
-							($expr[1]?
-								$fw->stringify(substr($expr[1],1)):
-								(preg_match('/^\w+/',
-									$mix=$self->token($expr[2]))?
-									$fw->stringify($mix):
-									$mix)).
-							']';
-					},
-					$var[1]
-				);
-			},
-			$str
-		);
-		return trim(preg_replace('/{{(.+?)}}/',trim('\1'),$str));
-	}
 
 	/**
 	*	Template -set- tag handler
@@ -71,7 +36,7 @@ class Template extends View {
 		$out='';
 		foreach ($node['@attrib'] as $key=>$val)
 			$out.='$'.$key.'='.
-				(preg_match('/{{(.+?)}}/',$val)?
+				(preg_match('/\{\{(.+?)\}\}/',$val)?
 					$this->token($val):
 					Base::instance()->stringify($val)).'; ';
 		return '<?php '.$out.'?>';
@@ -84,14 +49,19 @@ class Template extends View {
 	**/
 	protected function _include(array $node) {
 		$attrib=$node['@attrib'];
+		$hive=isset($attrib['with']) &&
+			($attrib['with']=preg_match('/\{\{(.+?)\}\}/',$attrib['with'])?$this->token($attrib['with']):Base::instance()->stringify($attrib['with'])) &&
+			preg_match_all('/(\w+)\h*=\h*(.+?)(?=,|$)/',$attrib['with'],$pairs,PREG_SET_ORDER)?
+				'array('.implode(',',array_map(function($pair){return "'$pair[1]'=>$pair[2]";},$pairs)).')+get_defined_vars()':
+				'get_defined_vars()';
 		return
 			'<?php '.(isset($attrib['if'])?
 				('if ('.$this->token($attrib['if']).') '):'').
 				('echo $this->render('.
-					(preg_match('/{{(.+?)}}/',$attrib['href'])?
+					(preg_match('/\{\{(.+?)\}\}/',$attrib['href'])?
 						$this->token($attrib['href']):
 						Base::instance()->stringify($attrib['href'])).','.
-					'$this->mime,get_defined_vars()); ?>');
+					'$this->mime,'.$hive.'); ?>');
 	}
 
 	/**
@@ -217,7 +187,7 @@ class Template extends View {
 		$attrib=$node['@attrib'];
 		unset($node['@attrib']);
 		return
-			'<?php case '.(preg_match('/{{(.+?)}}/',$attrib['value'])?
+			'<?php case '.(preg_match('/\{\{(.+?)\}\}/',$attrib['value'])?
 				$this->token($attrib['value']):
 				Base::instance()->stringify($attrib['value'])).': ?>'.
 				$this->build($node).
@@ -244,20 +214,8 @@ class Template extends View {
 	*	@param $node array|string
 	**/
 	protected function build($node) {
-		if (is_string($node)) {
-			$self=$this;
-			return preg_replace_callback(
-				'/{{(.+?)}}/s',
-				function($expr) use($self) {
-					$str=trim($self->token($expr[1]));
-					if (preg_match('/^(.+?)\h*\|\h*(raw|esc|format)$/',
-						$str,$parts))
-						$str='Base::instance()->'.$parts[2].'('.$parts[1].')';
-					return '<?php echo '.$str.'; ?>';
-				},
-				$node
-			);
-		}
+		if (is_string($node))
+			return parent::build($node);
 		$out='';
 		foreach ($node as $key=>$val)
 			$out.=is_int($key)?$this->build($val):$this->{'_'.$key}($val);
@@ -290,103 +248,86 @@ class Template extends View {
 	}
 
 	/**
-	*	Render template
-	*	@return string
-	*	@param $file string
-	*	@param $mime string
-	*	@param $hive array
+	*	Parse string for template directives and tokens
+	*	@return string|array
+	*	@param $text string
 	**/
-	function render($file,$mime='text/html',array $hive=NULL) {
-		$fw=Base::instance();
-		if (!is_dir($tmp=$fw->get('TEMP')))
-			mkdir($tmp,Base::MODE,TRUE);
-		foreach ($fw->split($fw->get('UI')) as $dir)
-			if (is_file($view=$fw->fixslashes($dir.$file))) {
-				if (!is_file($this->view=($tmp.
-					$fw->hash($fw->get('ROOT').$fw->get('BASE')).'.'.
-					$fw->hash($view).'.php')) ||
-					filemtime($this->view)<filemtime($view)) {
-					// Remove PHP code and comments
-					$text=preg_replace('/<\?(?:php)?.+?\?>|{{\*.+?\*}}/is','',
-						$fw->read($view));
-					// Build tree structure
-					for ($ptr=0,$len=strlen($text),$tree=array(),$node=&$tree,
-						$stack=array(),$depth=0,$tmp='';$ptr<$len;)
-						if (preg_match('/^<(\/?)(?:F3:)?('.$this->tags.')\b'.
-							'((?:\h+\w+\h*=\h*(?:"(?:.+?)"|\'(?:.+?)\'))*)'.
-							'\h*(\/?)>/is',substr($text,$ptr),$match)) {
-							if (strlen($tmp))
-								$node[]=$tmp;
-							// Element node
-							if ($match[1]) {
-								// Find matching start tag
-								$save=$depth;
-								$found=FALSE;
-								while ($depth>0) {
-									$depth--;
-									foreach ($stack[$depth] as $item)
-										if (is_array($item) &&
-											isset($item[$match[2]])) {
-											// Start tag found
-											$found=TRUE;
-											break 2;
-										}
-								}
-								if (!$found)
-									// Unbalanced tag
-									$depth=$save;
-								$node=&$stack[$depth];
+	function parse($text) {
+		// Build tree structure
+		for ($ptr=0,$len=strlen($text),$tree=array(),$node=&$tree,
+			$stack=array(),$depth=0,$tmp='';$ptr<$len;)
+			if (preg_match('/^<(\/?)(?:F3:)?'.
+				'('.$this->tags.')\b((?:\h+[\w-]+'.
+				'(?:\h*=\h*(?:"(?:.+?)"|\'(?:.+?)\'))?|'.
+				'\h*\{\{.+?\}\})*)\h*(\/?)>/is',
+				substr($text,$ptr),$match)) {
+				if (strlen($tmp))
+					$node[]=$tmp;
+				// Element node
+				if ($match[1]) {
+					// Find matching start tag
+					$save=$depth;
+					$found=FALSE;
+					while ($depth>0) {
+						$depth--;
+						foreach ($stack[$depth] as $item)
+							if (is_array($item) && isset($item[$match[2]])) {
+								// Start tag found
+								$found=TRUE;
+								break 2;
 							}
-							else {
-								// Start tag
-								$stack[$depth]=&$node;
-								$node=&$node[][$match[2]];
-								if ($match[3]) {
-									// Process attributes
-									preg_match_all(
-										'/\b([\w-]+)\h*=\h*'.
-										'(?:"(.+?)"|\'(.+?)\')/s',
-										$match[3],$attr,PREG_SET_ORDER);
-									foreach ($attr as $kv)
-										$node['@attrib'][$kv[1]]=
-											$kv[2]?:$kv[3];
-								}
-								if ($match[4])
-									// Empty tag
-									$node=&$stack[$depth];
-								else
-									$depth++;
-							}
-							$tmp='';
-							$ptr+=strlen($match[0]);
-						}
-						else {
-							// Text node
-							$tmp.=substr($text,$ptr,1);
-							$ptr++;
-						}
-					if (strlen($tmp))
-						// Append trailing text
-						$node[]=$tmp;
-					// Break references
-					unset($node);
-					unset($stack);
-					$fw->write($this->view,$this->build($tree));
+					}
+					if (!$found)
+						// Unbalanced tag
+						$depth=$save;
+					$node=&$stack[$depth];
 				}
-				if (isset($_COOKIE[session_name()]))
-					@session_start();
-				$fw->sync('SESSION');
-				if (!$hive)
-					$hive=$fw->hive();
-				$this->hive=$fw->get('ESCAPE')?$fw->esc($hive):$hive;
-				if (PHP_SAPI!='cli')
-					header('Content-Type: '.($this->mime=$mime).'; '.
-						'charset='.$fw->get('ENCODING'));
-				return $this->sandbox();
+				else {
+					// Start tag
+					$stack[$depth]=&$node;
+					$node=&$node[][$match[2]];
+					if ($match[3]) {
+						// Process attributes
+						preg_match_all(
+							'/(?:\b([\w-]+)\h*'.
+							'(?:=\h*(?:"(.+?)"|\'(.+?)\'))?|'.
+							'(\{\{.+?\}\}))/s',
+							$match[3],$attr,PREG_SET_ORDER);
+						foreach ($attr as $kv)
+							if (isset($kv[4]))
+								$node['@attrib'][]=$kv[4];
+							else
+								$node['@attrib'][$kv[1]]=
+									(empty($kv[2])?
+										(empty($kv[3])?NULL:$kv[3]):$kv[2]);
+					}
+					if ($match[4])
+						// Empty tag
+						$node=&$stack[$depth];
+					else
+						$depth++;
+				}
+				$tmp='';
+				$ptr+=strlen($match[0]);
 			}
-		user_error(sprintf(Base::E_Open,$file));
+			else {
+				// Text node
+				$tmp.=substr($text,$ptr,1);
+				$ptr++;
+			}
+		if (strlen($tmp))
+			// Append trailing text
+			$node[]=$tmp;
+		// Break references
+		unset($node);
+		unset($stack);
+		return $tree;
 	}
 
+	/**
+	*	Class constructor
+	*	return object
+	**/
 	function __construct() {
 		$ref=new ReflectionClass(__CLASS__);
 		$this->tags='';

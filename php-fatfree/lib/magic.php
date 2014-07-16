@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -46,14 +46,14 @@ abstract class Magic implements ArrayAccess {
 	abstract function clear($key);
 
 	/**
-	*	Return TRUE if property has public visibility
+	*	Return TRUE if property has public/protected visibility
 	*	@return bool
 	*	@param $key string
 	**/
 	private function visible($key) {
 		if (property_exists($this,$key)) {
 			$ref=new ReflectionProperty(get_class($this),$key);
-			$out=$ref->ispublic();
+			$out=!$ref->isprivate();
 			unset($ref);
 			return $out;
 		}

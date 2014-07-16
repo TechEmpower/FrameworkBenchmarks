@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -16,16 +16,38 @@
 namespace DB;
 
 //! MongoDB wrapper
-class Mongo extends \MongoDB {
+class Mongo {
 
 	//@{
 	const
 		E_Profiler='MongoDB profiler is disabled';
 	//@}
 
-	private
+	protected
+		//! UUID
+		$uuid,
+		//! Data source name
+		$dsn,
+		//! MongoDB object
+		$db,
 		//! MongoDB log
 		$log;
+
+	/**
+	*	Return data source name
+	*	@return string
+	**/
+	function dsn() {
+		return $this->dsn;
+	}
+
+	/**
+	*	Return UUID
+	*	@return string
+	**/
+	function uuid() {
+		return $this->uuid;
+	}
 
 	/**
 	*	Return MongoDB profiler results
@@ -51,9 +73,19 @@ class Mongo extends \MongoDB {
 	*	@return int
 	**/
 	function drop() {
-		$out=parent::drop();
+		$out=$this->db->drop();
 		$this->setprofilinglevel(2);
 		return $out;
+	}
+
+	/**
+	*	Redirect call to MongoDB object
+	*	@return mixed
+	*	@param $func string
+	*	@param $args array
+	**/
+	function __call($func,array $args) {
+		return call_user_func_array(array($this->db,$func),$args);
 	}
 
 	/**
@@ -63,8 +95,9 @@ class Mongo extends \MongoDB {
 	*	@param $options array
 	**/
 	function __construct($dsn,$dbname,array $options=NULL) {
+		$this->uuid=\Base::instance()->hash($this->dsn=$dsn);
 		$class=class_exists('\MongoClient')?'\MongoClient':'\Mongo';
-		parent::__construct(new $class($dsn,$options?:array()),$dbname);
+		$this->db=new \MongoDB(new $class($dsn,$options?:array()),$dbname);
 		$this->setprofilinglevel(2);
 	}
 

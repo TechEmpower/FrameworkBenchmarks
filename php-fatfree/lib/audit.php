@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -51,7 +51,7 @@ class Audit extends Prefab {
 	*	@param $addr string
 	**/
 	function ipv4($addr) {
-		return filter_var($addr,FILTER_VALIDATE_IP,FILTER_FLAG_IPV4);
+		return (bool)filter_var($addr,FILTER_VALIDATE_IP,FILTER_FLAG_IPV4);
 	}
 
 	/**
@@ -163,7 +163,7 @@ class Audit extends Prefab {
 
 	/**
 	*	Return entropy estimate of a password (NIST 800-63)
-	*	@return int
+	*	@return int|float
 	*	@param $str string
 	**/
 	function entropy($str) {

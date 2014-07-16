@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -17,6 +17,26 @@
 class UTF extends Prefab {
 
 	/**
+	*	Get string length
+	*	@return int
+	*	@param $str string
+	**/
+	function strlen($str) {
+		preg_match_all('/./us',$str,$parts);
+		return count($parts[0]);
+	}
+
+	/**
+	*	Reverse a string
+	*	@return string
+	*	@param $str string
+	**/
+	function strrev($str) {
+		preg_match_all('/./us',$str,$parts);
+		return implode('',array_reverse($parts[0]));
+	}
+
+	/**
 	*	Find position of first occurrence of a string (case-insensitive)
 	*	@return int|FALSE
 	*	@param $stack string
@@ -28,16 +48,6 @@ class UTF extends Prefab {
 	}
 
 	/**
-	*	Get string length
-	*	@return int
-	*	@param $str string
-	**/
-	function strlen($str) {
-		preg_match_all('/./u',$str,$parts);
-		return count($parts[0]);
-	}
-
-	/**
 	*	Find position of first occurrence of a string
 	*	@return int|FALSE
 	*	@param $stack string
@@ -46,42 +56,9 @@ class UTF extends Prefab {
 	*	@param $case bool
 	**/
 	function strpos($stack,$needle,$ofs=0,$case=FALSE) {
-		preg_match('/^(.*?)'.preg_quote($needle,'/').'/u'.($case?'i':''),
-			$this->substr($stack,$ofs),$match);
-		return isset($match[1])?$this->strlen($match[1]):FALSE;
-	}
-
-	/**
-	*	Finds position of last occurrence of a string (case-insensitive)
-	*	@return int|FALSE
-	*	@param $stack string
-	*	@param $needle string
-	*	@param $ofs int
-	**/
-	function strripos($stack,$needle,$ofs=0) {
-		return $this->strrpos($stack,$needle,$ofs,TRUE);
-	}
-
-	/**
-	*	Find position of last occurrence of a string
-	*	@return int|FALSE
-	*	@param $stack string
-	*	@param $needle string
-	*	@param $ofs int
-	*	@param $case bool
-	**/
-	function strrpos($stack,$needle,$ofs=0,$case=FALSE) {
-		if (!$needle)
-			return FALSE;
-		$len=$this->strlen($stack);
-		for ($ptr=$ofs;$ptr<$len;$ptr+=$this->strlen($match[0])) {
-			$sub=$this->substr($stack,$ptr);
-			if (!$sub || !preg_match('/^(.*?)'.
-				preg_quote($needle,'/').'/u'.($case?'i':''),$sub,$match))
-				break;
-			$ofs=$ptr+$this->strlen($match[1]);
-		}
-		return $sub?$ofs:FALSE;
+		return preg_match('/^(.{'.$ofs.'}.*?)'.
+			preg_quote($needle,'/').'/us'.($case?'i':''),$stack,$match)?
+			$this->strlen($match[1]):FALSE;
 	}
 
 	/**
@@ -93,7 +70,7 @@ class UTF extends Prefab {
 	*	@param $before bool
 	**/
 	function stristr($stack,$needle,$before=FALSE) {
-		return strstr($stack,$needle,$before,TRUE);
+		return $this->strstr($stack,$needle,$before,TRUE);
 	}
 
 	/**
@@ -108,7 +85,7 @@ class UTF extends Prefab {
 	function strstr($stack,$needle,$before=FALSE,$case=FALSE) {
 		if (!$needle)
 			return FALSE;
-		preg_match('/^(.*?)'.preg_quote($needle,'/').'/u'.($case?'i':''),
+		preg_match('/^(.*?)'.preg_quote($needle,'/').'/us'.($case?'i':''),
 			$stack,$match);
 		return isset($match[1])?
 			($before?
@@ -125,13 +102,11 @@ class UTF extends Prefab {
 	*	@param $len int
 	**/
 	function substr($str,$start,$len=0) {
-		if ($start<0) {
-			$len=-$start;
+		if ($start<0)
 			$start=$this->strlen($str)+$start;
-		}
 		if (!$len)
 			$len=$this->strlen($str)-$start;
-		return preg_match('/^.{'.$start.'}(.{0,'.$len.'})/u',$str,$match)?
+		return preg_match('/^.{'.$start.'}(.{0,'.$len.'})/us',$str,$match)?
 			$match[1]:FALSE;
 	}
 
@@ -142,7 +117,7 @@ class UTF extends Prefab {
 	*	@param $needle string
 	**/
 	function substr_count($stack,$needle) {
-		preg_match_all('/'.preg_quote($needle,'/').'/u',$stack,
+		preg_match_all('/'.preg_quote($needle,'/').'/us',$stack,
 			$matches,PREG_SET_ORDER);
 		return count($matches);
 	}
@@ -180,6 +155,38 @@ class UTF extends Prefab {
 	**/
 	function bom() {
 		return chr(0xef).chr(0xbb).chr(0xbf);
+	}
+
+	/**
+	*	Convert code points to Unicode symbols
+	*	@return string
+	*	@param $str string
+	**/
+	function translate($str) {
+		return html_entity_decode(
+			preg_replace('/\\\\u([[:xdigit:]]+)/i','&#x\1;',$str));
+	}
+
+	/**
+	*	Translate emoji tokens to Unicode font-supported symbols
+	*	@return string
+	*	@param $str string
+	**/
+	function emojify($str) {
+		$map=array(
+			':('=>'\u2639', // frown
+			':)'=>'\u263a', // smile
+			'<3'=>'\u2665', // heart
+			':D'=>'\u1f603', // grin
+			'XD'=>'\u1f606', // laugh
+			';)'=>'\u1f609', // wink
+			':P'=>'\u1f60b', // tongue
+			':,'=>'\u1f60f', // think
+			':/'=>'\u1f623', // skeptic
+			'8O'=>'\u1f632', // oops
+		)+Base::instance()->get('EMOJI');
+		return $this->translate(str_replace(array_keys($map),
+			array_values($map),$str));
 	}
 
 }

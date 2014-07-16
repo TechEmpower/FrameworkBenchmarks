@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (c) 2009-2013 F3::Factory/Bong Cosca, All rights reserved.
+	Copyright (c) 2009-2014 F3::Factory/Bong Cosca, All rights reserved.
 
 	This file is part of the Fat-Free Framework (http://fatfree.sf.net).
 
@@ -72,21 +72,36 @@ class Basket {
 	}
 
 	/**
-	*	Return item that matches key/value pair
+	*	Return items that match key/value pair;
+	*	If no key/value pair specified, return all items
+	*	@return array|FALSE
+	*	@param $key string
+	*	@param $val mixed
+	**/
+	function find($key=NULL,$val=NULL) {
+		if (isset($_SESSION[$this->key])) {
+			$out=array();
+			foreach ($_SESSION[$this->key] as $id=>$item)
+				if (!isset($key) ||
+					array_key_exists($key,$item) && $item[$key]==$val) {
+					$obj=clone($this);
+					$obj->id=$id;
+					$obj->item=$item;
+					$out[]=$obj;
+				}
+			return $out;
+		}
+		return FALSE;
+	}
+
+	/**
+	*	Return first item that matches key/value pair
 	*	@return object|FALSE
 	*	@param $key string
 	*	@param $val mixed
 	**/
-	function find($key,$val) {
-		if (isset($_SESSION[$this->key]))
-			foreach ($_SESSION[$this->key] as $id=>$item)
-				if (array_key_exists($key,$item) && $item[$key]==$val) {
-					$obj=clone($this);
-					$obj->id=$id;
-					$obj->item=$item;
-					return $obj;
-				}
-		return FALSE;
+	function findone($key,$val) {
+		return ($data=$this->find($key,$val))?$data[0]:FALSE;
 	}
 
 	/**
@@ -97,8 +112,8 @@ class Basket {
 	**/
 	function load($key,$val) {
 		if ($found=$this->find($key,$val)) {
-			$this->id=$found->id;
-			return $this->item=$found->item;
+			$this->id=$found[0]->id;
+			return $this->item=$found[0]->item;
 		}
 		$this->reset();
 		return array();
@@ -126,9 +141,8 @@ class Basket {
 	**/
 	function save() {
 		if (!$this->id)
-			$this->id=uniqid();
+			$this->id=uniqid(NULL,TRUE);
 		$_SESSION[$this->key][$this->id]=$this->item;
-		session_commit();
 		return $this->item;
 	}
 
@@ -140,9 +154,8 @@ class Basket {
 	**/
 	function erase($key,$val) {
 		$found=$this->find($key,$val);
-		if ($found && $id=$found->id) {
+		if ($found && $id=$found[0]->id) {
 			unset($_SESSION[$this->key][$id]);
-			session_commit();
 			if ($id==$this->id)
 				$this->reset();
 			return TRUE;
@@ -165,7 +178,6 @@ class Basket {
 	**/
 	function drop() {
 		unset($_SESSION[$this->key]);
-		session_commit();
 	}
 
 	/**
