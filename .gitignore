@@ -72,3 +72,6 @@ beego/pkg/*
 
 # urweb
 urweb/*.exe
+
+# storage file for https://coveralls.io/
+.coverage

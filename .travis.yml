@@ -21,12 +21,13 @@ before_install:
   - chmod 600 /home/travis/.ssh/authorized_keys
 install:
   - pip install docker-py
+  - pip install coveralls
 before_script:
   - echo about to script
 script: 
-  - ./toolset/run-tests.py -s localhost -c localhost -d localhost -u travis -i /home/travis/.ssh/id_rsa --database-user travis --database-host localhost --database-identity-file /home/travis/.ssh/id_rsa --mode verify --log DEBUG --install server --type json --test $TEST
+  - coverage run --omit installs,results toolset/run-tests.py -s localhost -c localhost -d localhost -u travis -i /home/travis/.ssh/id_rsa --database-user travis --database-host localhost --database-identity-file /home/travis/.ssh/id_rsa --mode verify --log DEBUG --install server --type json --test $TEST
 after_success:
-  - echo Yay
+  - coveralls
 after_failure:
   - echo Nien
 after_script:
