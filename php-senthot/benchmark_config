@@ -1,0 +1,26 @@
+{
+  "framework": "senthot",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/bench/rawjson",
+      "db_url": "/bench/rawdb",
+      "query_url": "/bench/rawdb?queries=",
+      "fortune_url": "/bench/rawfortunes",
+      "port": 80,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "senthot",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "senthot",
+      "notes": "",
+      "versus": "php" 
+    }
+  }]
+}

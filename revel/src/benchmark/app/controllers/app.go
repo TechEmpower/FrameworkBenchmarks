@@ -65,7 +65,7 @@ type App struct {
 }
 
 func (c App) Json() revel.Result {
-	return c.RenderJson(MessageStruct{"Hello, world"})
+	return c.RenderJson(MessageStruct{"Hello, World!"})
 }
 
 func (c App) Plaintext() revel.Result {

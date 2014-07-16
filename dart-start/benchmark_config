@@ -1,0 +1,49 @@
+{
+  "framework": "start",
+  "tests": [{
+    "postgresql-raw": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "start",
+      "language": "Dart",
+      "orm": "Raw",
+      "platform": "Dart",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "start",
+      "notes": "",
+      "versus": "dart"
+    },
+    "mongodb-raw": {
+      "setup_file": "setup",
+      "db_url": "/db-mongo",
+      "query_url": "/queries-mongo?queries=",
+      "fortune_url": "/fortunes-mongo",
+      "update_url": "/updates-mongo?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "start",
+      "language": "Dart",
+      "orm": "Raw",
+      "platform": "Dart",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "start",
+      "notes": "",
+      "versus": "dart"
+    }
+  }]
+}

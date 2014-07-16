@@ -208,6 +208,32 @@ class DataDriverMySQL implements IDataDriver
 		return $result;
 	}
 	
+	/**
+	 * @inheritdocs
+	 */
+	function StartTransaction($connection)
+	{
+		$this->Execute($connection, "SET AUTOCOMMIT=0");
+		$this->Execute($connection, "START TRANSACTION");
+	}
+	
+	/**
+	 * @inheritdocs
+	 */
+	function CommitTransaction($connection)
+	{
+		$this->Execute($connection, "COMMIT");
+		$this->Execute($connection, "SET AUTOCOMMIT=1");
+	}
+	
+	/**
+	 * @inheritdocs
+	 */
+	function RollbackTransaction($connection)
+	{
+		$this->Execute($connection, "ROLLBACK");
+		$this->Execute($connection, "SET AUTOCOMMIT=1");
+	}
 }
 
 ?>

@@ -1,0 +1,11 @@
+./play-slick/app/
+./play-slick/app/controllers
+./play-slick/app/controllers/Application.scala
+./play-slick/app/views
+./play-slick/app/views/main.scala.html
+./play-slick/app/views/fortune.scala.html
+./play-slick/app/utils
+./play-slick/app/utils/PredicatedAction.scala
+./play-slick/app/models
+./play-slick/app/models/Fortune.scala
+./play-slick/app/models/World.scala

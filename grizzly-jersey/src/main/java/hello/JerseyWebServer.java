@@ -34,10 +34,17 @@ public class JerseyWebServer {
     rc.setPropertiesAndFeatures(properties());
     rc.getContainerResponseFilters().add(new ServerResponseFilter());
     HttpServer server = GrizzlyServerFactory.createHttpServer(baseUri, rc);
-    
-    System.err.print("Server started. Press ENTER to stop.");
-    System.in.read();
-    server.stop();
+
+    try {
+        server.start();
+
+        System.err.print("Server started.\n");
+        synchronized (JerseyWebServer.class) {
+            JerseyWebServer.class.wait();
+        }
+    } finally {
+        server.stop();
+    }
   }
 
   private Map<String, Object> properties() {

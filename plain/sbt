@@ -1,1 +1,1 @@
-java -Xmx3g -Xms2g -Xmn1g -Xss8M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=384M -Dsbt.global.base=project/.sbtboot -Dsbt.boot.directory=project/.boot -Dsbt.ivy.home=project/.ivy -jar `dirname $0`/sbt-launch.jar "$@"
+java -server -Xnoclassgc -XX:MaxPermSize=1g -XX:ReservedCodeCacheSize=384m -Xmx8g -Xss8m -Xmn4g -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=384M -Dsbt.global.base=project/.sbtboot -Dsbt.boot.directory=project/.boot -Dsbt.ivy.home=project/.ivy -jar `dirname $0`/sbt-launch.jar "$@"

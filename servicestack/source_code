@@ -1,0 +1,13 @@
+./servicestack/src
+./servicestack/src/NuGet.config
+./servicestack/src/Web.config
+./servicestack/src/Web.Debug.config
+./servicestack/src/Web.Release.config
+./servicestack/src/ServiceStackBenchmark.csproj
+./servicestack/src/Global.asax
+./servicestack/src/JsonService.cs
+./servicestack/src/Global.asax.cs
+./servicestack/src/DbService.cs
+./servicestack/src/ServiceStackBenchmark.sln
+./servicestack/src/packages.config
+./servicestack/src/AppHost.cs

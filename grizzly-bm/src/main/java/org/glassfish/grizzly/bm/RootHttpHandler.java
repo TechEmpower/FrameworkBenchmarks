@@ -1,8 +1,8 @@
 package org.glassfish.grizzly.bm;
 
-import java.util.concurrent.ExecutorService;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
+import org.glassfish.grizzly.http.server.RequestExecutorProvider;
 import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.grizzly.http.util.DataChunk;
 
@@ -10,7 +10,11 @@ import org.glassfish.grizzly.http.util.DataChunk;
  * Root {@link HttpHandler} to be used to avoid mapping overhead
  */
 public class RootHttpHandler extends HttpHandler {
-    private final HttpHandler plainTextHandler = new PlainTextHttpHandler();
+//  Uncomment for real text benchmark
+//    private final HttpHandler plainTextHandler = new PlainTextHttpHandler();
+    
+//  Binary PlainText handler  
+    private final HttpHandler plainTextHandler = new PlainText2HttpHandler();
     private final HttpHandler jsonHandler = new JsonHttpHandler();
     
     @Override
@@ -28,7 +32,7 @@ public class RootHttpHandler extends HttpHandler {
     }
     
     @Override
-    protected ExecutorService getThreadPool(Request request) {
-        return null;
+    public RequestExecutorProvider getRequestExecutorProvider() {
+        return Server.EXECUTOR_PROVIDER;
     }
 }

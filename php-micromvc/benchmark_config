@@ -7,7 +7,19 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 70
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "micromvc",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "micromvc",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

@@ -5,14 +5,38 @@
       "setup_file": "setup",
       "json_url": "/json",
       "port": 8080,
-      "sort": 76
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "dancer",
+      "language": "Perl",
+      "orm": "Full",
+      "platform": "Plack",
+      "webserver": "Starman",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "dancer",
+      "notes": "",
+      "versus": ""
     },
     "raw": {
       "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 77
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "dancer",
+      "language": "Perl",
+      "orm": "Raw",
+      "platform": "Plack",
+      "webserver": "Starman",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "dancer",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

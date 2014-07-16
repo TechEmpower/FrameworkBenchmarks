@@ -1,6 +1,6 @@
 parameters:
     database_driver: pdo_mysql
-    database_host: 192.168.100.102
+    database_host: tfbdata
     database_port: null
     database_name: hello_world
     database_user: benchmarkdbuser

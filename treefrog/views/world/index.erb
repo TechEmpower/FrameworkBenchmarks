@@ -14,14 +14,14 @@
 <table border="1" cellpadding="5" style="border: 1px #d0d0d0 solid; border-collapse: collapse;">
   <tr>
     <th>ID</th>
-    <th>Randomnumber</th>
+    <th>RandomNumber</th>
   </tr>
 <% tfetch(QList<World>, worldList); %>
 <% for (QListIterator<World> it(worldList); it.hasNext(); ) {
      const World &i = it.next(); %>
   <tr>
     <td><%= i.id() %></td>
-    <td><%= i.randomnumber() %></td>
+    <td><%= i.randomNumber() %></td>
     <td>
       <%== linkTo("Show", urla("show", i.id())) %>
       <%== linkTo("Edit", urla("edit", i.id())) %>

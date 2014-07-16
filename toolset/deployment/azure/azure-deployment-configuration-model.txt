@@ -1,0 +1,54 @@
+#
+# Windows Azure deployment configuration.
+#
+# This is a model file. Instructions:
+# - Copy this file to a new file named "azure-deployment-configuration.sh" in the same directory.
+# - Configure as documented below.
+#
+
+# Full pathname of the Windows Azure account publish settings file.
+# This file can be downloaded with the "azure account download" command.
+# For more information refer to http://www.windowsazure.com/en-us/manage/linux/other-resources/command-line-tools/
+AZURE_DEPLOYMENT_PUBLISHSETTINGS_LOCATION=""
+
+# Name of the Windows Azure subscription where the resources will be created.
+# Most Windows Azure accounts have a single subscription, but they can have many.
+# To list the available subscriptions use the command "azure account import publishsettingsfile.publishsettings"
+# where "publishsettingsfile.publishsettings" is the publish settings file downloaded previously.
+AZURE_DEPLOYMENT_SUBSCRIPTION=""
+
+# Region where the resources will be created.
+# To see a list of locations available for your subscription, execute the command "azure vm location list".
+# Some choices may be "East US", "West US", "North Europe", "West Europe", "East Asia", "Southeast Asia".
+AZURE_DEPLOYMENT_LOCATION="East US"
+
+# Name of the deployment on Windows Azure.
+# It will be used as a prefix to name resources such as virtual machines.
+# It has to be globally unique within Windows Azure and it can be at most 12 characters long.
+# Suggestion: use the form "wfbMMDDHHmm" where:
+#    wfb stands for "Web Framework Benchmarks"
+#    MM is the current month with 2 digits
+#    DD is the current day with 2 digits
+#    HH is the hour part of the current time with 2 digits
+#    MM is the minutes part of the current time with 2 digits
+#    For example, for a deployment created at 4:23 pm, Aug 9th 2013:
+#    AZURE_DEPLOYMENT_NAME="wfb08091623"
+AZURE_DEPLOYMENT_NAME=""
+
+# Password for Windows servers.
+# Must be at least 10 characters long with mixed case, digits and special symbols.
+AZURE_WINDOWS_PASSWORD=""
+
+# Size of the virtual machines to be created.
+# Valid values include: extrasmall, small, medium, large, extralarge, a6, a7.
+# Warning: To use extralarge or bigger you may have to ask Windows Azure support
+# to increase the core limit of your subscription. It's initially limited to 20 cores.
+AZURE_DEPLOYMENT_VM_SIZE="large"
+
+# Benchmark repository to use.
+# Set this variable to use a custom repository. Its default value is the official repository.
+# BENCHMARK_REPOSITORY=""
+
+# Benchmark repository branch to use.
+# Set this variable to use a custom branch. Its default value  is "master".
+# BENCHMARK_BRANCH=""

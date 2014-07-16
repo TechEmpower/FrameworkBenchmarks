@@ -1,23 +1,27 @@
 import subprocess
-import sys
-import setup_util
 import os
 
-def start(args):
-  setup_util.replace_text("bottle/app.py", "DBHOSTNAME", args.database_host)
-  subprocess.Popen("gunicorn app:app --worker-class=\"egg:meinheld#gunicorn_worker\" -b 0.0.0.0:8080 -w " + str((args.max_threads * 2)) + " --preload --log-level=critical", shell=True, cwd="bottle")
-  
-  return 0
+BIN = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
 
-def stop():
-  p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-  out, err = p.communicate()
-  for line in out.splitlines():
-    if 'gunicorn' in line:
-      try:
-        pid = int(line.split(None, 2)[1])
-        os.kill(pid, 9)
-      except OSError:
-        pass
-  
-  return 0
+proc = None
+
+
+def start(args, logfile, errfile):
+    global proc
+    proc = subprocess.Popen(
+        [BIN + "/gunicorn",
+         "-c", "gunicorn_conf.py",
+         "-e", "DBHOSTNAME=" + args.database_host,
+         "app:app"],
+        cwd="bottle", stderr=errfile, stdout=logfile)
+    return 0
+
+
+def stop(logfile, errfile):
+    global proc
+    if proc is None:
+        return 0
+    proc.terminate()
+    proc.wait()
+    proc = None
+    return 0

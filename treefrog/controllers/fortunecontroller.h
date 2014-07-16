@@ -10,6 +10,8 @@ class T_CONTROLLER_EXPORT FortuneController : public ApplicationController
 public:
     FortuneController() { }
     FortuneController(const FortuneController &other);
+    bool sessionEnabled() const { return false; }
+    bool transactionEnabled() const { return false; }
 
 public slots:
     void index();

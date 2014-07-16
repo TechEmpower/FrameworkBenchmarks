@@ -4,7 +4,9 @@
 
 Fortune::Fortune()
     : TAbstractModel(), d(new FortuneObject)
-{ }
+{
+    d->id = 0;
+}
 
 Fortune::Fortune(const Fortune &other)
     : TAbstractModel(), d(new FortuneObject(*other.d))
@@ -46,7 +48,7 @@ Fortune Fortune::create(const QString &message)
     FortuneObject obj;
     obj.message = message;
     if (!obj.create()) {
-        obj.clear();
+        return Fortune();
     }
     return Fortune(obj);
 }
@@ -61,23 +63,38 @@ Fortune Fortune::create(const QVariantMap &values)
     return model;
 }
 
-Fortune Fortune::get(const uint &id)
+Fortune Fortune::get(uint id)
 {
     TSqlORMapper<FortuneObject> mapper;
     return Fortune(mapper.findByPrimaryKey(id));
 }
 
-QList<Fortune> Fortune::getAll()
+int Fortune::count()
 {
-    return tfGetModelListByCriteria<Fortune, FortuneObject>(TCriteria());
+    TSqlORMapper<FortuneObject> mapper;
+    return mapper.findCount();
 }
 
-TSqlObject *Fortune::data()
+QList<Fortune> Fortune::getAll()
+{
+    TSqlQueryORMapper<FortuneObject> mapper;
+    mapper.prepare("SELECT * from Fortune");
+
+    QList<Fortune> fortunes;
+    if (mapper.exec()) {
+        while (mapper.next()) {
+            fortunes << Fortune(mapper.value());
+        }
+    }
+    return fortunes;
+}
+
+TModelObject *Fortune::modelData()
 {
     return d.data();
 }
 
-const TSqlObject *Fortune::data() const
+const TModelObject *Fortune::modelData() const
 {
     return d.data();
 }

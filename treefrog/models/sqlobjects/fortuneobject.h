@@ -16,9 +16,9 @@ public:
         Message,
     };
 
-    QString tableName() const { return QLatin1String("Fortune"); }
     int primaryKeyIndex() const { return Id; }
     int autoValueIndex() const { return Id; }
+    QString tableName() const { return QLatin1String("Fortune"); }
 
 private:    /*** Don't modify below this line ***/
     Q_OBJECT

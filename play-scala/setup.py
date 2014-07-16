@@ -1,28 +1,33 @@
-
-import subprocess
-import sys
 import setup_util
+import subprocess
 import os
 
-def start(args):
+def start(args, logfile, errfile):
+  kill_running_process() # Kill the running process and delete the 
+                         # RUNNING_PID file (if any). With any luck no 
+                         # new process has picked up the same PID.
+
+  play_cmd = "play"
+  if args.os.lower() == "windows":
+    play_cmd = "play.bat"
+  
   setup_util.replace_text("play-scala/conf/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
-
-  subprocess.check_call("play dist", shell=True, cwd="play-scala")
-  subprocess.check_call("unzip play-scala-1.0-SNAPSHOT.zip", shell=True, cwd="play-scala/dist")
-  subprocess.check_call("chmod +x start", shell=True, cwd="play-scala/dist/play-scala-1.0-SNAPSHOT")
-  subprocess.Popen("./start", shell=True, cwd="play-scala/dist/play-scala-1.0-SNAPSHOT")
-
+  subprocess.Popen([play_cmd,"start"], stdin=subprocess.PIPE, cwd="play-scala", stderr=errfile, stdout=logfile)
   return 0
-def stop():
-  p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-  out, err = p.communicate()
-  for line in out.splitlines():
-    if './start' in line or ('play' in line and 'java' in line):
-      pid = int(line.split(None, 2)[1])
-      os.kill(pid, 9)
+
+def stop(logfile, errfile):
+  kill_running_process()  
+  return 0
+
+def kill_running_process():
+  try:
+    with open("./play-scala/RUNNING_PID") as f:
+      pid = int(f.read())
+      os.kill(pid, 15)
+  except:
+  	pass
+
   try:
     os.remove("play-scala/RUNNING_PID")
   except OSError:
-    pass
-
-  return 0
+    pass  

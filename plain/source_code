@@ -1,0 +1,3 @@
+./plain/src/main/scala/com/ibm/techempower/
+./plain/src/main/scala/com/ibm/techempower/PlainTextResource.scala
+./plain/src/main/scala/com/ibm/techempower/JsonResource.scala

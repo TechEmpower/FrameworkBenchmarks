@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>EnyimMemcached</id>
+    <version>2.12</version>
+    <authors>Attila Kiskó</authors>
+    <owners>Attila Kiskó</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/enyim/EnyimMemcached</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Memcached client library for .NET based languages.</description>
+    <tags>memcached enyim cache caching</tags>
+  </metadata>
+</package>

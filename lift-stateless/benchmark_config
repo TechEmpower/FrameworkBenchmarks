@@ -7,7 +7,19 @@
       "db_url": "/db",
       "query_url": "/db/",
       "port": 8080,
-      "sort": 45
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "lift",
+      "language": "Scala",
+      "orm": "Full",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "lift-stateless",
+      "notes": "",
+      "versus": "netty"
     }
   }]
 }

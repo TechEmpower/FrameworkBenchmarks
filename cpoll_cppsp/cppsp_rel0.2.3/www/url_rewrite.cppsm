@@ -1,0 +1,17 @@
+<%#
+//example cppsp module that rewrites all urls to /100.html, and treats it as
+//a dynamic page
+
+DelegateChain<void(Request&, Response&, Delegate<void()>)>::item* it;
+Server* server;
+void handleRequest(void*, Request& req, Response& resp, Delegate<void()> cb) {
+	server->handleDynamicRequest("/100.html",req,resp,cb);
+}
+extern "C" void initModule(Server* s) {
+	server=s;
+	it=s->handleRequest.attach(&handleRequest);
+}
+extern "C" void deinitModule() {
+	server->handleRequest.detach(it);
+}
+%>

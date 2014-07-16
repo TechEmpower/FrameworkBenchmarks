@@ -8,14 +8,14 @@ For raw Servlets there is no broad consensus on JSON encoding so we have selecte
 * [JSON test source](src/main/java/hello/JsonServlet.java)
 
 ### Data-Store/Database Mapping Test
-* [DB test source](src/main/java/hello/DBServlet.java)
+* [DB test source](src/main/java/hello/DbPoolServlet.java)
 
 ## Infrastructure Software Versions
 The tests were run with:
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
 * [Resin 4.0.34](http://www.caucho.com/)
-* [Jackson 2.1.1](http://wiki.fasterxml.com/JacksonHome)
+* [Jackson 2.3.0](http://wiki.fasterxml.com/JacksonHome)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## Test URLs

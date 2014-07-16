@@ -30,7 +30,7 @@ public class Application extends Controller {
 
 	public static void json() {
 		Map<String, String> result = new HashMap<String, String>();
-		result.put("message", "Hello World!");
+		result.put("message", "Hello, World!");
 		renderJSON(result);
 	}
 

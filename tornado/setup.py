@@ -1,30 +1,30 @@
+from os.path import expanduser
+from os import kill
 import subprocess
 import sys
-import setup_util
-import os
-from os.path import expanduser
-
-home = expanduser("~")
-cwd = "%s/FrameworkBenchmarks/tornado" % home
+import time
 
 
-def start(args):
-    setup_util.replace_text(
-        cwd + "/server.py", "localhost", args.database_host)
+python = expanduser('~/FrameworkBenchmarks/installs/py2/bin/python')
+cwd = expanduser('~/FrameworkBenchmarks/tornado')
 
-    subprocess.Popen("python %s/FrameworkBenchmarks/tornado/server.py --port=8080 --logging=error" % home, shell=True, cwd=cwd)
+
+def start(args, logfile, errfile):
+    subprocess.Popen(
+        python + " server.py --port=8080 --mongo=%s --logging=error" % (args.database_host,),
+        shell=True, cwd=cwd, stderr=errfile, stdout=logfile)
     return 0
 
-
-def stop():
-    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    for line in out.splitlines():
-        if 'server.py' in line:
-            #try:
-            pid = int(line.split(None, 2)[1])
-            os.kill(pid, 9)
-            #except OSError:
-            #    pass
-
+def stop(logfile, errfile):
+    for line in subprocess.check_output(["ps", "aux"]).splitlines():
+        if 'server.py --port=8080' in line:
+            pid = int(line.split(None,2)[1])
+            kill(pid, 9)
     return 0
+
+if __name__ == '__main__':
+    class DummyArg:
+        database_host = 'localhost'
+    start(DummyArg(), sys.stderr, sys.stderr)
+    time.sleep(1)
+    stop(sys.stderr, sys.stderr)

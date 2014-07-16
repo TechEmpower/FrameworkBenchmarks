@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /php-symfony2/ "/home/ubuntu/FrameworkBenchmarks/php-symfony2/web/"
+  <Directory /home/ubuntu/FrameworkBenchmarks/php-symfony2/web/>
+          Options Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>

@@ -5,7 +5,7 @@ import play.api.mvc._
 import play.api.libs.json.Json
 import java.util.concurrent._
 import scala.concurrent._
-import models.{Worlds, World, Fortunes, Fortune}
+import models.{Worlds, World, Fortunes, Fortune, WorldsTableQuery, FortunesTableQuery}
 import utils._
 import scala.concurrent.Future
 
@@ -29,8 +29,8 @@ object Application extends Controller {
     new NamedThreadFactory("dbEc"))
   private val dbEc = ExecutionContext.fromExecutorService(tpe)
 
-  private val worldsTable = new Worlds
-  private val fortunesTable = new Fortunes
+  private val worldsTable = new WorldsTableQuery
+  private val fortunesTable = new FortunesTableQuery
 
   // A predicate for checking our ability to service database requests is determined by ensuring that the request
   // queue doesn't fill up beyond a certain threshold. For convenience we use the max number of connections * the max
@@ -40,60 +40,54 @@ object Application extends Controller {
   def isDbAvailable: Boolean = (tpe.getQueue.size() < maxConnections * MaxQueriesPerRequest)
 
   def db(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
-    Action {
-      Async {
-        val random = ThreadLocalRandom.current()
+    Action.async {
+      val random = ThreadLocalRandom.current()
 
-        val _worlds = Future.sequence((for {
-          _ <- 1 to queries
-        } yield Future(worldsTable.findById(random.nextInt(TestDatabaseRows) + 1))(dbEc)
-          ).toList)
+      val _worlds = Future.sequence((for {
+        _ <- 1 to queries
+      } yield Future(worldsTable.findById(random.nextInt(TestDatabaseRows) + 1))(dbEc)
+        ).toList)
 
-        _worlds map {
-          w => Ok(Json.toJson(w))
-        }
+      _worlds map {
+        w => Ok(Json.toJson(w))
       }
     }
   }
 
   def fortunes() = PredicatedAction(isDbAvailable, ServiceUnavailable) {
-    Action {
-      Async {
-        Future(fortunesTable.getAll())(dbEc).map { fs =>
-          val fortunes =  Fortune(-1, "Additional fortune added at request time.") +: fs
-          Ok(views.html.fortune(fortunes))
-        }
+    Action.async {
+      Future(fortunesTable.getAll())(dbEc).map { fs =>
+        val fortunes =  Fortune(0, "Additional fortune added at request time.") +: fs
+        Ok(views.html.fortune(fortunes))
       }
     }
   }
 
   def update(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
-    Action {
-      Async {
-        val random = ThreadLocalRandom.current()
+    Action.async {
+      val random = ThreadLocalRandom.current()
 
-        val boundsCheckedQueries = queries match {
-          case q if q > 500 => 500
-          case q if q <   1 => 1
-          case _ => queries
-        }
+      val boundsCheckedQueries = queries match {
+        case q if q > 500 => 500
+        case q if q <   1 => 1
+        case _ => queries
+      }
 
-        val worlds = Future.sequence((for {
-          _ <- 1 to boundsCheckedQueries
-        } yield Future {
-            for {
-              world <- worldsTable.findById(random.nextInt(TestDatabaseRows) + 1) 
-            } yield {
-              val updatedWorld = world.copy(randomNumber = random.nextInt(TestDatabaseRows) + 1)
-              worldsTable.updateRandom(updatedWorld)
-              updatedWorld
-            }
-          }(dbEc)
-        ).toList)
+      val worlds = Future.sequence((for {
+        _ <- 1 to boundsCheckedQueries
+      } yield Future {
+          for {
+            world <- worldsTable.findById(random.nextInt(TestDatabaseRows) + 1) 
+          } yield {
+            val updatedWorld = world.copy(randomNumber = random.nextInt(TestDatabaseRows) + 1)
+            worldsTable.updateRandom(updatedWorld)
+            updatedWorld
+          }
+        }(dbEc)
+      ).toList)
 
-        worlds.map {
-          w => Ok(Json.toJson(w)).withHeaders("Server" -> "Netty")
-        }
+      worlds.map {
+        w => Ok(Json.toJson(w)).withHeaders("Server" -> "Netty")
       }
     }
   }

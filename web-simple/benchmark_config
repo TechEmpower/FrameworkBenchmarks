@@ -5,14 +5,38 @@
       "setup_file": "setup",
       "json_url": "/json",
       "port": 8080,
-      "sort":106 
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "web-simple",
+      "language": "Perl",
+      "orm": "Raw",
+      "platform": "Plack",
+      "webserver": "Starman",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "web-simple",
+      "notes": "",
+      "versus": ""
     },
     "raw": {
       "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 117
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "web-simple",
+      "language": "Perl",
+      "orm": "Raw",
+      "platform": "Plack",
+      "webserver": "Starman",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "web-simple",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

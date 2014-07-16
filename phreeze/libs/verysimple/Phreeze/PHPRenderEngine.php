@@ -32,7 +32,7 @@ class PHPRenderEngine implements IRenderEngine
 	{
 		$this->templatePath = $templatePath;
 
-		if (substr($path,-1) != '/' && substr($path,-1) != '\\') $this->templatePath .= "/";
+		if (substr($this->templatePath,-1) != '/' && substr($this->templatePath,-1) != '\\') $this->templatePath .= "/";
 	}
 
 	/**

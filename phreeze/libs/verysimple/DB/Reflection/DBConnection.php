@@ -5,6 +5,7 @@
 require_once("DBEventHandler.php");
 require_once("DBConnectionString.php");
 require_once('verysimple/DB/DatabaseException.php');
+require_once('verysimple/Phreeze/DataAdapter.php');
 
 /**
  * DBConnection provides connectivity to a MySQL Server
@@ -24,6 +25,8 @@ class DBConnection
 	public $DBName;
 
 	private $dbconn;
+	private $csetting;
+	private $adapter;
 	private $handler;
 	private $dbopen;
 
@@ -38,11 +41,20 @@ class DBConnection
 	{
 
         $this->dbopen = false;
+        
 		$this->Host = $dbconnstring->Host;
 		$this->Port = $dbconnstring->Port;
 		$this->Username = $dbconnstring->Username;
 		$this->Password = $dbconnstring->Password;
 		$this->DBName = $dbconnstring->DBName;
+		
+		// TODO: this is redundant after switching to the DataAdapter
+		$this->csetting = new ConnectionSetting();
+		$this->csetting->ConnectionString = $dbconnstring->Host . ($dbconnstring->Port ? ':' . $dbconnstring->Port : '');
+		$this->csetting->DBName = $dbconnstring->DBName;
+		$this->csetting->Username = $dbconnstring->Username;
+		$this->csetting->Password = $dbconnstring->Password;
+		$this->csetting->Type = $dbconnstring->Type;
 
 		if ($handler)
 		{
@@ -81,14 +93,13 @@ class DBConnection
 		}
 		else
 		{
-			if ( !$this->dbconn = mysql_connect($this->Host . ":" . $this->Port, $this->Username, $this->Password) )
-			{
-				$this->handler->Crash(DatabaseException::$CONNECTION_ERROR,"Error connecting to database: " . mysql_error());
+			$this->adapter = new DataAdapter($this->csetting);
+			
+			try {
+				$this->adapter->Open();
 			}
-
-			if (!mysql_select_db($this->DBName, $this->dbconn))
-			{
-				$this->handler->Crash(DatabaseException::$CONNECTION_ERROR,"Unable to select database " . $this->DBName);
+			catch (Exception $ex) {
+				$this->handler->Crash(DatabaseException::$CONNECTION_ERROR,$ex->getMessage());
 			}
 
 			$this->handler->Log(DBH_LOG_INFO, "Connection Open");
@@ -128,7 +139,7 @@ class DBConnection
 
 		if ($this->dbopen)
 		{
-			mysql_close($this->dbconn);
+			$this->adapter->Close();
 			$this->dbopen = false;
 			$this->handler->Log(DBH_LOG_INFO, "Connection closed");
 		}
@@ -150,13 +161,8 @@ class DBConnection
 		$this->RequireConnection(true);
 
 		$this->handler->Log(DBH_LOG_QUERY, "Executing Query", $sql);
-
-		if ( !$rs = mysql_query($sql, $this->dbconn) )
-		{
-		   $this->handler->Crash(DatabaseException::$ERROR_IN_QUERY, 'Error executing SQL: ' . mysql_error());
-		}
-
-		return $rs;
+		
+		return $this->adapter->Select($sql);
 	}
 
 	/**
@@ -168,11 +174,8 @@ class DBConnection
 	function Update($sql)
 	{
 		$this->RequireConnection(true);
-
-		if ( !$result = mysql_query($sql, $this->dbconn) )
-		{
-		   $this->handler->Crash(DatabaseException::$ERROR_IN_QUERY,'Error executing SQL: ' . mysql_error());
-		}
+		
+		return $this->adapter->Escape($sql);
 	}
 
 	/**
@@ -185,9 +188,10 @@ class DBConnection
 	function Next($rs)
 	{
 		$this->RequireConnection();
-
+		
 		$this->handler->Log(DBH_LOG_DEBUG, "Fetching next result as array");
-		return mysql_fetch_assoc($rs);
+		return $this->adapter->Fetch($rs);
+
 	}
 
 	/**
@@ -201,7 +205,7 @@ class DBConnection
 		$this->RequireConnection();
 
 		$this->handler->Log(DBH_LOG_DEBUG, "Releasing result resources");
-		mysql_free_result($rs);
+		return $this->adapter->Release($rs);
 	}
 
 }

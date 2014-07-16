@@ -36,7 +36,7 @@ $app = new \Slim\Slim();
 
 $app->get('/json', function () use($app) {
     $app->contentType('application/json');
-    echo json_encode(array('message' => 'Hello World!'));
+    echo json_encode(array('message' => 'Hello, World!'));
 });
 
 $app->get('/db', function () use($app) {

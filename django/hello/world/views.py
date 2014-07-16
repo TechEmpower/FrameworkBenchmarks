@@ -7,9 +7,12 @@ from world.models import World, Fortune
 from django.shortcuts import render
 from ujson import dumps as uj_dumps
 import random
+import sys
 from operator import attrgetter
-import numpy.random as nprnd
 from functools import partial
+
+if sys.version_info[0] == 3:
+  xrange = range
 
 def json(request):
   response = {
@@ -31,24 +34,25 @@ def db(request):
   # one can eliminate dereferences by storing the end dereferenced thing in an identifier
   g = World.objects.get
   #r = random.randint
-  # but wait! there's more!
-  #http://stackoverflow.com/questions/4172131/create-random-list-of-integers-in-python
-  #r = nprnd.randint
   # but wait!  there's more!  if we're calling a function over and over with the same parameters, 
   # we can use even more function magic.
-  rp = partial(nprnd.randint, 1, 10000)
+  rp = partial(random.randint, 1, 10000)
   # now we're ready to write our awesome query iterator thingy
   # first of all, we know the id's correspond to the random number we're picking, so we can create
   # dictionaries on the fly instead of serializing later
   # by creating dicts, we don't need to user the model serializer, which is probably slow and only appropriate
   # for complicated serializations of joins and crazy query sets etc
   # test xrange vs range if the query number is gigantic
-  worlds = uj_dumps([{'id' : r, 'randomNumber' : g(id=r).randomnumber} for r in [rp() for q in xrange(queries)]])  
+  if queries == 1:
+    r = random.randint(1,10000)
+    worlds = uj_dumps({'id' : r, 'randomNumber' : g(id=r).randomnumber})
+  else:
+    worlds = uj_dumps([{'id' : r, 'randomNumber' : g(id=r).randomnumber} for r in [rp() for q in xrange(queries)]])
   return HttpResponse(worlds, mimetype="application/json")
 
 def fortunes(request):
   fortunes = list(Fortune.objects.all())
-  fortunes.append(Fortune(id=0, message="Additional message added at runtime."))
+  fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
 
   fortunes = sorted(fortunes, key=attrgetter('message'))
 
@@ -58,7 +62,7 @@ def fortunes(request):
 def update(request):
   queries = int(request.GET.get('queries', 1))
   g = World.objects.get
-  rp = partial(nprnd.randint, 1, 10000)
+  rp = partial(random.randint, 1, 10000)
   
   worlds = []
   for r in [rp() for q in xrange(queries)]:
@@ -68,4 +72,4 @@ def update(request):
 
     worlds.append({'id' : r, 'randomNumber' : w.randomnumber})
 
-  return HttpResponse(worlds, mimetype="application/json")
+  return HttpResponse(uj_dumps(worlds), mimetype="application/json")

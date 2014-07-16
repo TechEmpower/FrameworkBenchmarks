@@ -1,0 +1,14 @@
+./src/main/java/app/config/AppControllerConfig.java
+./src/main/java/app/config/RouteConfig.java
+./src/main/java/app/config/FreeMarkerConfig.java
+./src/main/java/app/config/DbConfig.java
+./src/main/java/app/config/AppBootstrap.java
+./src/main/java/app/models/World.java
+./src/main/java/app/models/Fortune.java
+./src/main/java/app/controllers/PlaintextController.java
+./src/main/java/app/controllers/JsonController.java
+./src/main/java/app/controllers/DatabaseController.java
+./src/main/java/app/controllers/FortunesController.java
+./src/main/java/app/controllers/QueriesController.java
+./src/main/java/app/controllers/HomeController.java
+./src/main/java/app/controllers/UpdatesController.java

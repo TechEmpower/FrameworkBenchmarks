@@ -31,23 +31,18 @@ public class FortunesServlet extends HttpServlet
     // Set content type to JSON
     res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_HTML);
 
-    // Reference the data source.
-    final DataSource source = mysqlDataSource;
-
-    List<Fortune> fortunes = new ArrayList<>();
+    final List<Fortune> fortunes = new ArrayList<>();
     
-    try (Connection conn = source.getConnection())
+    try (
+         Connection conn = mysqlDataSource.getConnection();
+         PreparedStatement statement = conn.prepareStatement(DB_QUERY, 
+             ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+         ResultSet results = statement.executeQuery()
+        )
     {
-      try (PreparedStatement statement = conn.prepareStatement(DB_QUERY, 
-          ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY))
+      while (results.next())
       {
-        try (ResultSet results = statement.executeQuery())
-        {
-          while (results.next())
-          {
-            fortunes.add(new Fortune(results.getInt("id"), results.getString("message")));
-          }
-        }
+        fortunes.add(new Fortune(results.getInt("id"), results.getString("message")));
       }
     }
     catch (SQLException sqlex)

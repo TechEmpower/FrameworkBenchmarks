@@ -1,0 +1,15 @@
+./cpoll_cppsp/Makefile
+./cpoll_cppsp/www/
+./cpoll_cppsp/www/db
+./cpoll_cppsp/www/connectioninfo.H
+./cpoll_cppsp/www/plaintext
+./cpoll_cppsp/www/db_pg_async
+./cpoll_cppsp/www/fortune
+./cpoll_cppsp/www/generic_pool.H
+./cpoll_cppsp/www/forcedynamic.cppsm
+./cpoll_cppsp/www/update
+./cpoll_cppsp/www/db_old
+./cpoll_cppsp/www/json
+./cpoll_cppsp/www/world.H
+./cpoll_cppsp/www/fortune_old
+./cpoll_cppsp/www/db_pg_threadpool

@@ -1,0 +1,5 @@
+./php-silex-orm/deploy/php-silex-orm
+./php-silex-orm/src/
+./php-silex-orm/src/Entity
+./php-silex-orm/src/Entity/World.php
+./php-silex-orm/web/index.php

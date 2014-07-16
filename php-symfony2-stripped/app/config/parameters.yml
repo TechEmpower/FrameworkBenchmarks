@@ -1,0 +1,14 @@
+parameters:
+    database_driver: pdo_mysql
+    database_host: 192.168.100.102
+    database_port: null
+    database_name: hello_world
+    database_user: benchmarkdbuser
+    database_password: benchmarkdbpass
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: 2d50e353f5d24683c46e298ec0aead14
+    database_path: null

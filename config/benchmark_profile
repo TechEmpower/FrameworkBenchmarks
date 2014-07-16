@@ -1,20 +1,44 @@
+# This is auto-loaded from toolset/run-tests.py
+
+# Always reference ROOT for other vars
+if [ -z "${FWROOT}" ]; then
+  # Default value
+  FWROOT=~/FrameworkBenchmarks
+else
+  # Re-declare so it can be used in this script
+  FWROOT=$(echo $FWROOT)
+fi
+IROOT=${FWROOT}/installs
+
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
-export RESIN_HOME=~/FrameworkBenchmarks/installs/resin-4.0.36
-export GRAILS_HOME=~/FrameworkBenchmarks/installs/grails-2.1.1
-export VERTX_HOME=~/FrameworkBenchmarks/installs/vert.x-1.3.1.final
-export GOROOT=~/FrameworkBenchmarks/installs/go
-export GOPATH=~/FrameworkBenchmarks/go:~/FrameworkBenchmarks/webgo:~/FrameworkBenchmarks/revel
-export TOMCAT_HOME=~/FrameworkBenchmarks/installs/apache-tomcat-7.0.35
-export NODE_HOME=~/FrameworkBenchmarks/installs/node-v0.10.8-linux-x64
-export PLAY_HOME=~/FrameworkBenchmarks/installs/play-2.1.2-RC1
-export PLAY1_HOME=~/FrameworkBenchmarks/installs/play-1.2.5
-export MAVEN_HOME=~/FrameworkBenchmarks/installs/apache-maven-3.0.5
-export PERL_HOME=/opt/ActivePerl-5.16
-export DART_HOME=~/FrameworkBenchmarks/installs/dart-sdk
-export PYTHON_HOME=~/FrameworkBenchmarks/installs/python-2.7.5
-export PATH="$PYTHON_HOME/bin:$PATH"
-export PATH="$JAVA_HOME/bin:$GRAILS_HOME/bin:$PLAY_HOME:$PLAY1_HOME:$VERTX_HOME/bin:$GOROOT/bin:$NODE_HOME/bin:$HOME/FrameworkBenchmarks/installs/bin:$MAVEN_HOME/bin:$PERL_HOME/bin:$PERL_HOME/site/bin:$DART_HOME/bin:$PATH"
+export RESIN_HOME=${IROOT}/resin-4.0.36
+export GRAILS_HOME=${IROOT}/grails-2.4.2
+export VERTX_HOME=${IROOT}/vert.x-2.1.1
+export GOROOT=${IROOT}/go
+export GOPATH=${FWROOT}/go:${FWROOT}/webgo:${FWROOT}/revel
+export TOMCAT_HOME=${IROOT}/apache-tomcat-7.0.35
+export NODE_HOME=${IROOT}/node-v0.10.8-linux-x64
+export PLAY_HOME=${IROOT}/play-2.2.0
+export PLAY1_HOME=${IROOT}/play-1.2.5
+export MAVEN_HOME=${IROOT}/apache-maven-3.0.5
+export PERL_HOME=${IROOT}/perl-5.18
+export DART_HOME=${IROOT}/dart-sdk
+export RACKET_HOME=${IROOT}/racket-5.3.6
+export NIMROD_HOME=${IROOT}/nimrod
+export NGINX_HOME=/usr/local/nginx
+export ELIXIR_HOME=${IROOT}/elixir-0.13.3
+
+export PATH="$JAVA_HOME/bin:$GRAILS_HOME/bin:$PLAY_HOME:$PLAY1_HOME:$VERTX_HOME/bin:$GOROOT/bin:$NODE_HOME/bin:$HOME/FrameworkBenchmarks/installs/bin:$MAVEN_HOME/bin:$PERL_HOME/bin:$DART_HOME/bin:$RACKET_HOME/bin:$NIMROD_HOME/bin:$NGINX_HOME/sbin:$ELIXIR_HOME/bin:$PATH"
 
 export LD_LIBRARY_PATH='$LD_LIBRARY_PATH:/usr/local/apr/lib'
 
-source ~/.rvm/scripts/'rvm'
+export TFB_SERVER_HOST='localhost'
+export TFB_CLIENT_HOST='localhost'
+export TFB_CLIENT_USER='tfb'
+export TFB_CLIENT_IDENTITY_FILE='/home/tfb/.ssh/id_rsa'
+export TFB_DATABASE_HOST='localhost'
+
+[ -e ~/.rvm ] && . ~/.rvm/scripts/'rvm'
+export LC_ALL='en_US.UTF-8'
+export NUMCPUS=`grep -c '^processor' /proc/cpuinfo`
+export MAKEFLAGS="-j $NUMCPUS -l $NUMCPUS"

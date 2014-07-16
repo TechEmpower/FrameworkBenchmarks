@@ -1,0 +1,4 @@
+#!/bin/bash
+num_cpus=`grep vendor_id /proc/cpuinfo | wc -l`
+./cppsp_standalone -r "$(pwd)"/www -l 0.0.0.0:16969 -c -fPIC -c -I"$(pwd)"/include -c -pthread -c -Ofast -c -march=native -c "$(pwd)"/cpoll.o -c "$(pwd)"/cppsp.o -t "$num_cpus" -f $@
+

@@ -1,0 +1,3 @@
+./flask/app.py
+./flask/templates/
+./flask/templates/fortunes.html

@@ -9,7 +9,7 @@ class BenchController extends Controller {
 
     public function json() {
         return $this->render(array(
-            'json' => array('message' => 'Hello World!')
+            'json' => array('message' => 'Hello, World!')
         ));
     }
 

@@ -1,0 +1,14 @@
+./aspnet-stripped/src/App_Code/
+./aspnet-stripped/src/App_Code/MyModule.cs
+./aspnet-stripped/src/App_Code/UpdatesHandler.cs
+./aspnet-stripped/src/App_Code/FortunesPage.cs
+./aspnet-stripped/src/App_Code/Models
+./aspnet-stripped/src/App_Code/Models/Fortune.cs
+./aspnet-stripped/src/App_Code/Models/MongoDB.cs
+./aspnet-stripped/src/App_Code/Models/World.cs
+./aspnet-stripped/src/App_Code/Common.cs
+./aspnet-stripped/src/App_Code/MongoDBHandlers.cs
+./aspnet-stripped/src/App_Code/PlaintextHandler.cs
+./aspnet-stripped/src/App_Code/DbHandler.cs
+./aspnet-stripped/src/App_Code/JsonHandler.cs
+./aspnet-stripped/src/App_Code/NoAspxHandlerFactory.cs

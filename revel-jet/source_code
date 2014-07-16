@@ -1,0 +1,10 @@
+./revel-jet/src/benchmark/app/
+./revel-jet/src/benchmark/app/db
+./revel-jet/src/benchmark/app/db/jet.go
+./revel-jet/src/benchmark/app/controllers
+./revel-jet/src/benchmark/app/controllers/app.go
+./revel-jet/src/benchmark/app/views
+./revel-jet/src/benchmark/app/views/footer.html
+./revel-jet/src/benchmark/app/views/App
+./revel-jet/src/benchmark/app/views/App/Fortune.html
+./revel-jet/src/benchmark/app/views/header.html

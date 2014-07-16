@@ -1,0 +1,17 @@
+./scalatra/src/
+./scalatra/src/main
+./scalatra/src/main/webapp
+./scalatra/src/main/webapp/WEB-INF
+./scalatra/src/main/webapp/WEB-INF/resin-web.xml
+./scalatra/src/main/webapp/WEB-INF/web.xml
+./scalatra/src/main/scala
+./scalatra/src/main/scala/ScalatraBootstrap.scala
+./scalatra/src/main/scala/hello
+./scalatra/src/main/scala/hello/DbSetup.scala
+./scalatra/src/main/scala/hello/JsonController.scala
+./scalatra/src/main/scala/hello/model
+./scalatra/src/main/scala/hello/model/JdbcQuery.scala
+./scalatra/src/main/scala/hello/model/World.scala
+./scalatra/src/main/scala/hello/DbController.scala
+./scalatra/src/main/scala/hello/JsonSetup.scala
+./scalatra/src/main/scala/hello/DataSourceProvider.scala

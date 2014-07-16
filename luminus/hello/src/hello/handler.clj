@@ -4,7 +4,7 @@
   (:require [noir.util.middleware :as middleware]
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
-            [com.postspectacular.rotor :as rotor]))
+            [taoensso.timbre.appenders.rotor :as rotor]))
 
 (defroutes app-routes
   (route/resources "/")
@@ -25,12 +25,12 @@
      :enabled? true
      :async? false ; should be always false for rotor
      :max-message-per-msecs nil
-     :fn rotor/append})
-  
+     :fn rotor/appender-fn})
+
   (timbre/set-config!
     [:shared-appender-config :rotor]
-    {:path "hello.log" :max-size 10000 :backlog 10})
-  
+    {:path "{{sanitized}}.log" :max-size (* 512 1024) :backlog 10})
+
   (timbre/info "hello started successfully"))
 
 (defn destroy
@@ -39,12 +39,15 @@
   []
   (timbre/info "hello is shutting down..."))
 
-;;append your application routes to the all-routes vector
-(def all-routes [home-routes app-routes])
 
-(def app (-> all-routes
-             middleware/app-handler
-             ;;add your middlewares here
-             ))
-
-(def war-handler (middleware/war-handler app))
+(def app (middleware/app-handler
+           ;; add your application routes here
+           [home-routes app-routes]
+           ;; add custom middleware here
+           :middleware []
+           ;; add access rules here
+           :access-rules []
+           ;; serialize/deserialize the following data formats
+           ;; available formats:
+           ;; :json :json-kw :yaml :yaml-kw :edn :yaml-in-html
+           :formats [:json-kw :edn]))

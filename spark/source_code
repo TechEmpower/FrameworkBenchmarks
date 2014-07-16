@@ -1,0 +1,12 @@
+./spark/src/main/webapp/
+./spark/src/main/webapp/WEB-INF
+./spark/src/main/webapp/WEB-INF/resin-web.xml
+./spark/src/main/webapp/WEB-INF/web.xml
+./spark/src/main/java/
+./spark/src/main/java/hello
+./spark/src/main/java/hello/web
+./spark/src/main/java/hello/web/SparkApplication.java
+./spark/src/main/java/hello/web/HibernateUtil.java
+./spark/src/main/java/hello/domain
+./spark/src/main/java/hello/domain/World.java
+./spark/src/main/java/hello/domain/Message.java

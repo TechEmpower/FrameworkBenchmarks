@@ -1,6 +1,9 @@
 <?php
 /** @package	verysimple::String */
 
+
+require_once("util/html2text.php");
+
 /**
  * A set of utility functions for working with simple template files
  *
@@ -24,9 +27,7 @@ class SimpleTemplate
 	 */
 	static function HtmlToText($html)
 	{
-		require_once("class.html2text.php");
-		$h2t = new html2text($html);
-		return $h2t->get_text(); 
+		return convert_html_to_text($html);
 	}
 	
 	/**

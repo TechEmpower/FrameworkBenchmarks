@@ -4,10 +4,22 @@
     "default": {
       "setup_file": "setup",
       "json_url": "/http-kit/json",
-      "db_url": "/http-kit/db/1",
+      "db_url": "/http-kit/db",
       "query_url": "/http-kit/db/",
       "port": 8080,
-      "sort": 36
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "http-kit",
+      "language": "Clojure",
+      "orm": "Raw",
+      "platform": "http-kit",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "http-kit",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

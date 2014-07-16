@@ -28,7 +28,7 @@ public class MysqlController
 		this.mysqlDataSource = dataSource;
 	}
 
-	public World[] read(Request request, Response response)
+	public Object read(Request request, Response response)
 	throws SQLException
 	{
 		final DataSource source = mysqlDataSource;
@@ -74,6 +74,11 @@ public class MysqlController
 					worlds[i] = new World(id, results.getInt("randomNumber"));
 				}
 			}
+		}
+
+		if (count == 1)
+		{
+			return worlds[0];
 		}
 
 		return worlds;

@@ -21,7 +21,7 @@ public slots:
     void staticInitialize();
 
 protected:
-    virtual bool preFilter();    
+    virtual bool preFilter();
 };
 
 T_DECLARE_CONTROLLER(ApplicationController, applicationcontroller)

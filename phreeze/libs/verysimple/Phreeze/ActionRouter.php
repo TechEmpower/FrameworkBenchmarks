@@ -32,7 +32,7 @@ class ActionRouter implements IRouter
 	 */
 	public function __construct($format = "%s.%s.page?%s", $mode = UrlWriterMode::WEB, $appRoot = '', $defaultRoute = '')
 	{
-		$this->_format = $format;
+		self::$_format = $format;
 		$this->_mode = $mode;
 		$this->_appRoot = $appRoot;
 		$this->_defaultRoute = $defaultRoute;
@@ -59,7 +59,8 @@ class ActionRouter implements IRouter
 	*/
 	public function GetUrlParam($key, $default = '')
 	{
-		return RequestUtil::Get($key,$default);
+		// make the route params case insensitive
+		return RequestUtil::Get($key,$default,false,true);
 	}
 
 	/**
@@ -67,7 +68,7 @@ class ActionRouter implements IRouter
 	*/
 	public function GetUrl($controller,$method,$params='',$requestMethod='')
 	{
-		$format = str_replace("{delim}",$this->delim,$this->_format);
+		$format = str_replace("{delim}",$this->delim,self::$_format);
 
 		$qs = "";
 		$d = "";
@@ -125,7 +126,7 @@ class ActionRouter implements IRouter
 
 		$method_param = isset($params[1]) && $params[1] ? $params[1] : "";
 		if ( !$method_param ) $method_param = "DefaultAction";
-		
+
 		return array($controller_param,$method_param);
 	}
 

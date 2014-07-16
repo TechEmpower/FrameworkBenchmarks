@@ -1,0 +1,82 @@
+<%#
+//cppsp module to enable directory listing
+
+#include <sys/stat.h>
+#define TO_C_STR(in,inLen,out) char out[inLen+1];\
+		memcpy(out,in,inLen);\
+		out[inLen]=0;
+DelegateChain<void(Request&, Response&, Delegate<void()>)>::item* it;
+Server* server;
+void handleRequest(void*, Request& req, Response& resp, Delegate<void()> cb) {
+	struct stat st;
+	String s=server->mapPath(req.path,*req.sp);
+	TO_C_STR(s.data(),s.length(),tmp);
+	if(::stat(tmp,&st)>=0 && S_ISDIR(st.st_mode)) {
+		server->handleDynamicRequest("/dir_list.cppsm",req,resp,cb);
+		return;
+	}
+	(*it->prev)(req,resp,cb);
+}
+extern "C" void initModule(Server* s) {
+	server=s;
+	it=s->handleRequest.attach(&handleRequest);
+}
+extern "C" void deinitModule() {
+	server->handleRequest.detach(it);
+}
+%>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Index of <% htmlEscape(request->path,output); %></title>
+</head>
+<body>
+<h1 style="margin-top: 2px;">Index of <% htmlEscape(request->path,output); %></h1>
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Last modified</th>
+		<th>Size</th>
+	</tr>
+	<tr>
+		<th colspan="5"><hr /></th>
+	</tr>
+	
+<%
+string path=server->mapPath(request->path.toSTDString());
+vector<string> list;
+auto tmp=[&](const char* name) {
+	list.push_back(name);
+};
+listDirectory(path.c_str(), &tmp);
+std::sort(list.begin(),list.end());
+for(int i=0;i<list.size();i++) {
+	string name=list[i];
+	struct stat st;
+	char p[path.length()+name.length()+1];
+	p[combinePath(path.c_str(),name.c_str(),p)]=0;
+	if(stat(p,&st)<0) return;
+	time_t rawtime=st.st_mtime;
+	struct tm * timeinfo;
+	char buffer[256];
+	timeinfo = localtime (&rawtime);
+	strftime(buffer,sizeof(buffer),"%F %r",timeinfo);
+	%>
+	<tr>
+		<td>
+			<a href="<% htmlAttributeEscape(name.c_str(),output); %><%if(S_ISDIR(st.st_mode)){%>/<%}%>">
+				<% htmlEscape(name.c_str(),output); %><%if(S_ISDIR(st.st_mode)){%>/<%}%>
+			</a>
+		</td>
+		<td align="right"><%=buffer%></td>
+		<td align="right"><%=(int64_t)st.st_size%></td>
+	</tr>
+	<tr>
+		<td></td>
+	</tr>
+	<%
+}
+%>
+</table>
+</body>
+</html>

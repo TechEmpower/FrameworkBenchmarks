@@ -10,7 +10,19 @@
       "update_url": "/update?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "sort": 112
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "revel",
+      "language": "Go",
+      "orm": "Raw",
+      "platform": "Go",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "revel",
+      "notes": "",
+      "versus": "go"
     }
   }]
 }

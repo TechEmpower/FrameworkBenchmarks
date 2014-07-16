@@ -1,6 +1,6 @@
 <VirtualHost *:8080>
-  Alias /cake/ "/home/ubuntu/FrameworkBenchmarks/cake/app/webroot/"
-  <Directory /home/ubuntu/FrameworkBenchmarks/cake/app/webroot/>
+  Alias /cake/ "/home/hyoung/FrameworkBenchmarks/cake/app/webroot/"
+  <Directory /home/hyoung/FrameworkBenchmarks/cake/app/webroot/>
           Options Indexes FollowSymLinks MultiViews
           #AllowOverride None
           Order allow,deny

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>ServiceStack.Caching.Memcached</id>
+    <version>3.9.55</version>
+    <title>ServiceStack.Caching.Memcached</title>
+    <authors>Demis Bellot,  Thomas Grassauer and ServiceStack contributors</authors>
+    <owners>Demis Bellot,  Thomas Grassauer and ServiceStack contributors</owners>
+    <licenseUrl>https://github.com/ServiceStack/ServiceStack/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/ServiceStack/ServiceStack.OrmLite</projectUrl>
+    <iconUrl>http://www.servicestack.net/logo-100x100.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An Memcached cache client implementing ServiceStack's ICacheClient:
+        https://github.com/ServiceStack/ServiceStack/wiki/Caching</description>
+    <releaseNotes />
+    <copyright>ServiceStack 2013 and contributors</copyright>
+    <language>en-US</language>
+    <tags>ServiceStack Caching Memcached Cache CacheClient POCO Code-First</tags>
+    <dependencies>
+      <dependency id="ServiceStack.Common" />
+      <dependency id="EnyimMemcached" version="2.12.0" />
+    </dependencies>
+  </metadata>
+</package>

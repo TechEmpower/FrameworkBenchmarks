@@ -17,7 +17,7 @@
     <grizzly.version>2.3.2</grizzly.version>
     <jersey.version>1.17.1</jersey.version>
     <jersey-mustache.version>1.0.0</jersey-mustache.version>
-    <jackson.version>2.2.1</jackson.version>
+    <jackson.version>2.3.0</jackson.version>
     <mustache.version>0.8.12</mustache.version>
     <hibernate.version>4.2.1.Final</hibernate.version>
     <mysql-connector.version>5.1.25</mysql-connector.version>

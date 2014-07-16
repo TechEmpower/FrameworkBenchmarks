@@ -8,7 +8,19 @@
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
-      "sort": 67
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "fuel",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "fuel",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

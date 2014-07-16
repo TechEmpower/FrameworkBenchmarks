@@ -22,7 +22,7 @@ public class MongodbController
 		this.worldRepo = worldsRepository;
 	}
 
-	public World[] read(Request request, Response response)
+	public Object read(Request request, Response response)
 	{
 		// Get the count of queries to run.
 		int count = 1;
@@ -50,6 +50,11 @@ public class MongodbController
 		for (int i = 0; i < count; i++)
 		{
 			worlds[i] = worldRepo.find(random.nextInt(DB_ROWS) + 1);
+		}
+
+		if (count == 1)
+		{
+			return worlds[0];
 		}
 
 		return worlds;

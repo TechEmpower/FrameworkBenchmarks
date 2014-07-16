@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>WindowsAzure.Caching</id>
+    <version>1.7.0.0</version>
+    <title>Windows Azure Shared Caching</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=235167</licenseUrl>
+    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=235165</projectUrl>
+    <iconUrl>http://www.gravatar.com/avatar/c24270713c524575b0308e05c7e9ff61?s=128</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Windows Azure Shared Caching enables you to easily provision a cache in the cloud to be used from any applications or services that could benefit from caching. Caching increases performance by temporarily storing information from other backend sources. High performance is achieved by maintaining this cache in-memory across multiple cache servers. For a Windows Azure solution, caching can reduce the costs associated with database transactions in the cloud.</description>
+    <summary>A client library for Windows Azure Shared Caching - a distributed, in-memory, application cache service for Windows Azure and SQL Azure applications.</summary>
+    <tags>Microsoft Azure Shared Cache Distributed In-Memory SQL windowsazureofficial</tags>
+  </metadata>
+</package>

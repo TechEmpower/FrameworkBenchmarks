@@ -177,6 +177,29 @@ class DataDriverSQLite implements IDataDriver
 		$this->Execute($connection,"VACUUM");
 	}
 	
+	/**
+	 * @inheritdocs
+	 */
+	function StartTransaction($connection)
+	{
+		throw new Exception('Transaction support is not implemented for this DataDriver');
+	}
+	
+	/**
+	 * @inheritdocs
+	 */
+	function CommitTransaction($connection)
+	{
+		throw new Exception('Transaction support is not implemented for this DataDriver');
+	}
+	
+	/**
+	 * @inheritdocs
+	 */
+	function RollbackTransaction($connection)
+	{
+		throw new Exception('Transaction support is not implemented for this DataDriver');
+	}
 }
 
 ?>

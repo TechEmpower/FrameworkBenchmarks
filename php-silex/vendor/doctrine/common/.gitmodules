@@ -1,0 +1,3 @@
+[submodule "lib/vendor/doctrine-build-common"]
+	path = lib/vendor/doctrine-build-common
+	url = git://github.com/doctrine/doctrine-build-common.git

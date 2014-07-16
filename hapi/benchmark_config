@@ -5,7 +5,19 @@
       "setup_file": "setup",
       "json_url": "/json",
       "port": 8080,
-      "sort": 121
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "hapi",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hapi",
+      "notes": "",
+      "versus": "node"
     },
     "mongodb": {
       "setup_file": "setup",
@@ -13,7 +25,19 @@
       "query_url": "/mongoose/",
       "update_url": "/mongoose-update/",
       "port": 8080,
-      "sort": 122
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MongoDB",
+      "framework": "hapi",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hapi",
+      "notes": "",
+      "versus": "node"
     },
     "mysql": {
       "setup_file": "setup",
@@ -22,7 +46,19 @@
       "fortune_url": "/fortune",
       "update_url": "/mysql-orm-update/",
       "port": 8080,
-      "sort": 123
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "hapi",
+      "language": "JavaScript",
+      "orm": "Raw",
+      "platform": "Node.js",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hapi",
+      "notes": "",
+      "versus": "node"
     }
   }]
 }

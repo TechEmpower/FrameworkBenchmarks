@@ -1,0 +1,31 @@
+[Defaults]
+# Available Keys: 
+# client_host='localhost'
+# client_identity_file=None
+# client_user=None
+# database_host=None
+# database_identity_file=None
+# database_os='linux'
+# database_user=None
+# duration=60
+# exclude=None
+# install='all'
+# install_error_action='continue'
+# install_software=False
+# list_test_metadata=False
+# list_tests=False
+# max_concurrency=256
+# max_queries=20
+# max_threads=8
+# mode='benchmark'
+# name='ec2'
+# os='linux'
+# parse=None
+# password_prompt=False
+# query_interval=5
+# server_host='localhost'
+# sleep=60
+# starting_concurrency=8
+# test=None
+# type='all'
+# verbose=True

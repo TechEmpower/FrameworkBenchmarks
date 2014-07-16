@@ -1,0 +1,10 @@
+./revel-qbs/src/benchmark/app/
+./revel-qbs/src/benchmark/app/db
+./revel-qbs/src/benchmark/app/db/qbs.go
+./revel-qbs/src/benchmark/app/controllers
+./revel-qbs/src/benchmark/app/controllers/app.go
+./revel-qbs/src/benchmark/app/views
+./revel-qbs/src/benchmark/app/views/footer.html
+./revel-qbs/src/benchmark/app/views/App
+./revel-qbs/src/benchmark/app/views/App/Fortune.html
+./revel-qbs/src/benchmark/app/views/header.html

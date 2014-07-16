@@ -1,0 +1,43 @@
+<%#
+#include <iostream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdexcept>
+#include <cppsp/common.H>
+#include <delegate.H>
+#include <iostream>
+%>
+<%$
+void init() {
+	doReadPost=true;
+}
+%>
+form:
+<table border="1">
+<%
+for(auto it=request->form.begin();it!=request->form.end();it++) {
+	%>
+	<tr>
+		<td><%=htmlEscape((*it).first.toSTDString())%></td>
+		<td><%=htmlEscape((*it).second.toSTDString())%></td>
+	</tr>
+	<%
+}
+%>
+</table>
+querystring:
+<table border="1">
+<%
+for(auto it=request->queryString.begin();it!=request->queryString.end();it++) {
+	%>
+	<tr>
+		<td><%=htmlEscape((*it).first.toSTDString())%></td>
+		<td><%=htmlEscape((*it).second.toSTDString())%></td>
+	</tr>
+	<%
+}
+%>
+</table>
+
+
+

@@ -1,0 +1,5 @@
+#!/bin/bash
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH":"$(pwd)"
+./socketd_exampleconf > socketd_example.conf
+./socketd_bin socketd_example.conf
+

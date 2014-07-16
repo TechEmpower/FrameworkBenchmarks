@@ -1,0 +1,98 @@
+Version scheme
+================
+	MAJOR.MINOR[.BUGFIX | .rcN]
+	for example, (in order from earliest to latest)
+		rel0.1-rc1: 0.1 initial release candidate
+		rel0.1: release 0.1 initial release
+		rel0.1.1: release 0.1, 1st bugfix release
+		stab0.1.10: release 0.1, 10th bugfix release, stable
+	* A prefix of "rel" means it is a release version (as opposed to development version), and is suitable for testing on non-critical sites. You can consider this the "testing" stage. The "rel" prefix may be omitted in filenames, and is implied when there is no prefix.
+	* Once a release has gone through about 8 cycles of bugfixes, and/or the number and severity of bugs has declined to a very low point, it is considered "stable" and its prefix will be changed to "stab". The bugfix number is not reset, however.
+
+API/ABI stability
+	* For performance reasons, only API compability will be maintained. Expect ABI breakages even between different bugfix numbers of the same release.
+	* For version 1.0 or higher, API compatibility is maintained for all non-rc releases. For versions below 1.0, API compatibility is maintained for stable releases only.
+
+RELEASE OVERVIEW
+================
+(as of 2013/07/23)
+latest stable release: 0.1.12
+latest testing release: 0.2.3
+latest release candidate: none
+"maintained" means API is to be kept unchanged
+
+0.2:
+	* current status: released; maintained
+0.1:
+	* current status: stable; maintained
+
+CHANGELOG
+================
+0.2: (based on cad1a3c8cb8887472c88b93e70ad4eeacf011a81)
+	notable changes included so far (from 0.1):
+		* socketd is now included
+		* static file serving is now supported
+		* added module support; removed "default handler" (superseded by loading a module which does url rewriting)
+		* many optimizations
+		* SO_REUSEPORT support (requires kernel 3.9 or above)
+		* thread pool implementation (in cpoll)
+		* compilation no longer needs to be repeated for every worker thread
+	rel0.2.3: (2013/07/23)
+		* added "date" HTTP response header (as required by http spec)
+	rel0.2.2: (2013/07/08)
+		* switched to NewEPoll for default Poll type because it performed better in many benchmarks
+		* fixed read/writev stall in NewEPoll (bad5745192ee7d5d347e1fa99ffebd7286d2292f)
+	rel0.2.1: (2013/06/03)
+		* expose internal API; check for file existence before allocating data structures to avoid DoS (261486b40386417b2175d47da3220897ef498d01)
+		* API additions (ad0eacf49a7557acdeebe2fb4502b6fbdca067ef)
+		* revert back to EPoll class for default Poll type
+		* added automatic cpu affinity configuration (c12ed66e2873f88fe396c0498213b75bf1bafe1a)
+		* cpoll API additions (String::indexOf, etc) (e1fb9288e43293bd2d32b091996cadf8fee3f095)
+		* completed websocket support (b679ce12a898b68f8ebfa398be3bf268465425cf)
+		* minor bugfix (442a75159185b4284b753eeaca6f7aa143dd0b05)
+		* fixed infinite recursion (6f5f33cc39f87e8b5fdbb07c080e839f8ba66399)
+	rel0.2: (2013/05/24)
+		* sync to tip of git repo (c70bb26a56a3da589a5ce099f1861b0113b734f7)
+	0.2-rc9: (2013/05/20)
+		* 0a74c054fb8940f78515e83a454387fac8645856
+		* 376c9208adbc4de08d6a43402c157b76606e3cd0
+		* 17c7892d98c79f22c5358abe8f59cb29aa7d5648
+	0.2-rc8: (2013/05/19)
+		* ea4f175a2ad6aa0784b80664258496b670bfbb3e
+		* a368b2e786fe9813aa420b76813fdd6c8db96c76
+		* 4a340d50b7e7428efca5a7397ec142a02cf45d9a
+		* eeb74f8d4c148dbf6b54d0936798c28c5de643a6
+		* 1cf4c149832a3132fb6d912341576ba54d11064d
+		* 5f6407cddbe05c52e547bcca81edfff91e1435ed
+	0.2-rc7: (2013/05/17)
+		* 1ec535514582fe8a414b87e233a9d445d39588a0
+		* 809f759e331555ecaa0a2248fd700858ac014532
+		* ad3dbc0eb3b244fd43dfbcadf9d58f6735d9e457
+		* 2d6dbb01581d4f87e1c76064012919f78b6de486
+		* 123746212b2bf85182a45862035c7ae203e1b59c
+	0.2-rc6: (2013/05/15)
+		* 9b0539776d955fad26b377a9628f38f052d0468d
+		* 3276e2abaecc07f258425110ec707a97e724914d
+		* 537e679d2f905d872f19d67ef9fbf6a485b21fb5
+	0.2-rc5: (2013/05/15)
+		* e7fafaa82e767b806edd8373f9abcee6649a1c76
+		* eb2e4e85f278b0b1c3a8ea7421dfd7fb361ce4cd
+		* f3e92cacb6174d8b94357ec6d774cea7e3657d69
+		* 349a1a26ebd799a333e4f3ec770f214ad1382ddc
+		* f87625e51889c374b44892620169bc9ec9c4959b
+		* e23e0e3b032ba53467917f9d401913d400e649c1
+		* ca43ab7cfd2ed9b55ed2fb51bd2d8b6fa55bdcf7
+		* 06f0a4c2f8891e204f477f2cb72ea0f98d008648
+		* 0df5947f2372214b322c884a36be70c73a8343b9
+	0.2-rc4: (2013/05/14)
+		* fe021cd5ca8e27a51c0e9bea4e8ad2395f5aeab7
+	0.2-rc3: (2013/05/12)
+		* f3abae8dd1e68d46028ba5237d8932624f88aefc
+		* 519e710d082a1a03fd4b9609cd4fb4879240dcca
+	0.2-rc2: (2013/05/11)
+		* 26e3705016e16c6e22d5a694a59fa0281abcdc77
+		* 579e5f4cd09b3a620922152c894b02e4bba62fab
+	0.2-rc1: (2013/05/11)
+		* initial release candidate
+
+

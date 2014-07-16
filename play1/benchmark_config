@@ -7,7 +7,19 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 65
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "play1",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "Netty",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "play1",
+      "notes": "",
+      "versus": "netty"
     }
   }]
 }

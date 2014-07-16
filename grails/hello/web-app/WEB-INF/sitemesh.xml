@@ -1,4 +1,5 @@
 <sitemesh>
+    <excludes file="/WEB-INF/sitemesh-excludes.xml" />
     <page-parsers>
         <parser content-type="text/html"
             class="org.codehaus.groovy.grails.web.sitemesh.GrailsHTMLPageParser" />

@@ -12,6 +12,8 @@ using System.Web.Script.Serialization;
 using MongoDB.Driver.Builders;
 
 using Benchmarks.AspNet.Models;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace HttpListener
 {
@@ -110,6 +112,10 @@ namespace HttpListener
             try
             {
                 listener.Start();
+
+                // Increase the HTTP.SYS backlog queue from the default of 1000 to 65535.
+                // To verify that this works, run `netsh http show servicestate`.
+                Network.Utils.HttpApi.SetRequestQueueLength(listener, 65535);
 
                 for (;;)
                 {
@@ -399,5 +405,52 @@ namespace HttpListener
             return new JavaScriptSerializer().Serialize(
                 worlds.Count > 1 ? (Object)worlds : (Object)worlds[0]);
         }
+    }
+}
+
+// Adapted from:
+// http://stackoverflow.com/questions/15417062/changing-http-sys-kernel-queue-limit-when-using-net-httplistener
+namespace Network.Utils
+{
+    public static class HttpApi
+    {
+        public static void SetRequestQueueLength(System.Net.HttpListener listener, uint len)
+        {
+            var listenerType = typeof(System.Net.HttpListener);
+            var requestQueueHandleProperty = listenerType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance).First(p => p.Name == "RequestQueueHandle");
+
+            var requestQueueHandle = (CriticalHandle)requestQueueHandleProperty.GetValue(listener);
+            var result = HttpSetRequestQueueProperty(requestQueueHandle, HTTP_SERVER_PROPERTY.HttpServerQueueLengthProperty, ref len, (uint)Marshal.SizeOf(len), 0, IntPtr.Zero);
+
+            if (result != 0)
+            {
+                throw new HttpListenerException((int)result);
+            }
+        }
+
+        internal enum HTTP_SERVER_PROPERTY
+        {
+            HttpServerAuthenticationProperty,
+            HttpServerLoggingProperty,
+            HttpServerQosProperty,
+            HttpServerTimeoutsProperty,
+            HttpServerQueueLengthProperty,
+            HttpServerStateProperty,
+            HttpServer503VerbosityProperty,
+            HttpServerBindingProperty,
+            HttpServerExtendedAuthenticationProperty,
+            HttpServerListenEndpointProperty,
+            HttpServerChannelBindProperty,
+            HttpServerProtectionLevelProperty,
+        }
+
+        [DllImport("httpapi.dll", CallingConvention = CallingConvention.StdCall)]
+        internal static extern uint HttpSetRequestQueueProperty(
+            CriticalHandle requestQueueHandle,
+            HTTP_SERVER_PROPERTY serverProperty,
+            ref uint pPropertyInfo,
+            uint propertyInfoLength,
+            uint reserved,
+            IntPtr pReserved);
     }
 }

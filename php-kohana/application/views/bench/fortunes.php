@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>Benchmark</title>
+    <title>Fortunes</title>
 </head>
 <body>
 

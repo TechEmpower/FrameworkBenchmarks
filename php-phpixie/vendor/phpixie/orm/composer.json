@@ -1,0 +1,26 @@
+{
+    "name": "phpixie/orm",
+    "description": "ORM library for PHPixie",
+    "keywords": ["orm", "database"],
+    "homepage": "http://phpixie.com",
+    "type": "library",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Roman Tsiupa",
+            "email": "draconyster@gmail.com",
+            "homepage": "http://dracony.org"
+        }
+    ],
+    "require": {
+        "phpixie/db": "2.*@dev"
+    },
+    "autoload": {
+        "psr-0": {"PHPixie": "classes/"}
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        }
+    }
+}

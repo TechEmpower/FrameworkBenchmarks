@@ -53,6 +53,8 @@ class HttpRequest
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $qs);
 				break;
 		}
+		
+		curl_setopt($ch,		CURLOPT_HTTPHEADER, array("Expect:  ") );  //Fixes the HTTP/1.1 417 Expectation Failed Bug
 
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -293,6 +295,8 @@ class HttpRequest
 			$ch = curl_init($full_url);
 		}
 
+		curl_setopt($ch,		CURLOPT_HTTPHEADER, array("Expect:  ") );  //Fixes the HTTP/1.1 417 Expectation Failed Bug
+		
 		curl_setopt($ch,		CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch,		CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch,		CURLOPT_VERBOSE, 0); ########### debug

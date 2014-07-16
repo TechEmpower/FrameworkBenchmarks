@@ -6,172 +6,164 @@ Read more and see the results of our tests on Amazon EC2 and physical hardware a
 
 Join in the conversation at our Google Group: https://groups.google.com/forum/?fromgroups=#!forum/framework-benchmarks
 
-## Running the test suite
+### Prerequisites
 
-We ran our tests using two dedicated i7 2600k machines as well as two EC2 m1.large instances. Below you will find instructions on how to replicate our tests using either EC2 or your own dedicated machines.
+Before starting setup, all the required hosts must be provisioned, with the respective operating system and required software installed, and with connectivity for remote management (SSH on Linux, RDP and WinRM on Windows).
 
-###EC2 Instructions
+Refer to [Benchmark Suite Deployment README file](toolset/deployment/README.md) for the provisioning procedures documentation.
 
-#### 1. Create EC2 Instances
+### App, load, and database servers
 
-Create two EC2 instances running Ubuntu Server 12.04.1 LTS 64-bit. We tested on m1.large instances, but feel free to experiment with different configurations. Give the instance that will act as the application server more then the default 8GB of disk capacity (we used 20GB).
+**NOTE:** If testing a pull request or doing development, it is usually adequate to only use one computer. In that case, your server, client, and database IPs will be 127.0.0.1
 
-##### Security Group
+#### Installing the Framework Benchmark App Server
 
-When propmted to create a security group for the instances, here are the ports that you'll need to open.
+* Install [Ubuntu 14.04](http://www.ubuntu.com/download/server) with username `tfb`. Ensure that OpenSSH is selected when you install. If not, run the following command
+```bash
+$ sudo apt-get install openssh-server
+```
+* If Ubuntu is already installed, run the following command and follow the prompts.
+```bash
+$ sudo adduser tfb
+$ sudo usermod -a -G sudo tfb
+```
+* Log in as `tfb`
+* Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
+```bash
+$ sudo apt-get update && sudo apt-get upgrade
+```
+* Run the command: `sudo visudo`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Run the following **(Don't enter a password, just hit enter when the prompt pops up)**. **NOTE** This is still necessary if the client and database are on the same computer as the server
+```bash
+$ ssh-keygen
+$ ssh-copy-id <database ip>
+$ ssh-copy-id <client ip>
+```
+* Install git and clone the Framework Benchmarks repository
+```bash
+$ sudo apt-get install git
+$ cd ~
+$ git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
+$ cd FrameworkBenchmarks
+```
+* Install the server software. This will take a long time
+```bash
+$ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install-software --install server --list-tests &
+```
+* If you want to view the process of installing, do the following. The session can be interrupted easily so no need to worry about keeping a connection.
+```bash
+$ tail -f nohup.out
+```
+* Reboot when the install is done
+* Edit your ~/.bashrc file to change the following
+ * Change `TFB_SERVER_HOST=<ip address>` to the server's IP address
+ * Change `TFB_CLIENT_HOST=<ip address>` to the client's ip address
+ * Change `TFB_DATABASE_HOST=<ip address>` to the database's ip address.
+ * Change `TFB_CLIENT_IDENTITY_FILE=<path>` to the id file you specified when you ran ssh-keygen (probably /home/tfb/.ssh/id_rsa if you don't know what it is)
+ * Run the command `source ~/.bashrc`
+* If you are setting up any other servers, do so before proceeding.
+* Run the following commands
+```bash
+cd ~/FrameworkBenchmarks
+source ~/.bash_profile
+# For your first time through the tests, set the ulimit for open files
+ulimit -n 8192
+# Most software is installed automatically by the script, but running the mongo command below from
+# the install script was causing some errors. For now this needs to be run manually.
+cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
+cd ..
+sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
+# Change database-private-ip to the database ip
+mongo --host database-private-ip < config/create.js
+```
+* Before running the tests, do the following
+```bash
+$ source ~/.bashrc
+```
 
-* 22 (SSH)
-* 8080 (Most of the tests run on 8080)
-* 3306 (MySQL)
-* 5432 (PostgreSQL)
-* 9000 (Play Framework)
-* 27017 (MongoDB)
-* 3000 (yesod)
-* 8000 (snap)
-* 16969 (cpoll)
+---
 
+#### Installing the Framework Benchmark Database Server
 
-#### 2. Setting up the servers
+* Install [Ubuntu 14.04](http://www.ubuntu.com/download/server) with username `tfb`
+* Log in as `tfb`
+* Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
+```bash
+$ sudo apt-get update && sudo apt-get upgrade
+```
+* Run the command: `sudo visudo`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
+```bash
+$ toolset/run-tests.py --install-software --install database --list-tests
+```
 
-To coordinate the tests via scripting, the servers need to be able to work together. So once the instances are running, the first thing you'll want to do is copy your ssh key to the application server instance so that you can ssh between the two machines:
+---
 
-	sftp -i path-to-pem-file ubuntu@server-instance-ip
-	put path-to-pem-file .ssh/
-	exit
+#### Installing the Framework Benchmark Load Server
 
-Now ssh into the server instance and clone the latest from this repository (the scripts we use to run the tests expect that you'll clone the repository into your home directory):
+* Install [Ubuntu 14.04](http://www.ubuntu.com/download/server) with username `tfb`
+* Log in as `tfb`
+* Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
+```bash
+$ sudo apt-get update && sudo apt-get upgrade
+```
+* Run the command: `sudo visudo`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
+```bash
+$ toolset/run-tests.py --install-software --install client --list-tests
+```
 
-	ssh -i path-to-pem-file ubuntu@server-instance-ip
-	yes | sudo apt-get install git-core
-	git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
-	cd FrameworkBenchmarks
+You can validate that the setup worked by running a smoke test like this:
 
-Next, we're going to setup the servers with all the necessary software:
+    toolset/run-tests.py --max-threads 1 --name smoketest --test servlet-raw --type all -m verify
 
-	./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --install-software --list-tests
-    source ~/.bash_profile
-    # For your first time through the tests, set the ulimit for open files
-    ulimit -n 8192
-    # Most software is installed autormatically by the script, but running the mongo command below from 
-    # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
-    cd target && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
-    cd ../../..
-    cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
-    cd ..
-    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
-	  mongo --host client-private-ip < config/create.js
+This should run the verification step for a single framework.
 
-Assuming the above finished without error, we're ready to start the test suite:
+---
 
-	nohup ./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --max-threads number-of-cores &
+#### Windows server setup
 
-For the number-of-cores parameter, you will need to know your application server's core count. For example, Amazon EC2 large instances have 2 cores.
+* Connect to the Windows server via Remote Desktop.
+* Copy `installer-bootstrap.ps1` from "toolset/setup/windows" to the server (use CTRL-C and CTRL-V).
+* Copy your Linux client private key too.
+* Right click on the installer script and select `Run with PowerShell`.
+* Press Enter to confirm.
+* It will install git and then launch `installer.ps1` from the repository, which will install everything else.
+* The installation takes about 20 minutes.
+* Then you have a working console: try `python`, `git`, `ssh`, `curl`, `node` etc. and verify that everything works + PowerShell goodies.
 
-This script will run the full set of tests. Results of all the tests will output to ~/FrameworkBenchmarks/results/ec2/*timestamp*. If you use a different configuration than two m1.large instances, please use the --name option to name the results appropriately.
+The client/database machine is still assumed to be a Linux box. You can install just the client software via
 
-	nohup ./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --max-threads cores --name ec2-servertype-clienttype &
+    python toolset\run-tests.py -s server-private-ip -c client-private-ip -i "C:\Users\Administrator\Desktop\client.key" --install-software --install client --list-tests
 
-So if you were running an m1.large and an m1.medium, it would look like this:
-
-	nohup ./run-tests.py -s server-private-ip -c client-private-ip -i path-to-pem --max-threads cores --name ec2-m1.large-m1.medium &
-
-This will allow us to differentiate results.
-
-Be aware that on Large instances, if you include the slower frameworks (and they are included by default), the total runtime of a full suite of tests can be measured in days, not just hours. The EC2 bill isn't going to break the bank, but it's also not going to be chump change.
-
-### Dedicated Hardware Instructions
-
-If you have two servers or workstations lying around, then you can install and run the tests on physical hardware. Please be aware that these setup instructions can overwrite software and settings, It's best to follow these instructions on clean hardware. We assume that both machines are running Ubuntu Server 12.04 64-bit.
-
-#### 1. Prerequisites
-
-Before you get started, there are a couple of steps you can take to make running the tests easier on yourself. Since the tests can run for several hours, it helps to set everything up so that once the tests are running, you can leave the machines unattended and don't need to be around to enter ssh or sudo passwords.
-
-1. Setup an ssh key for the client machine
-2. Edit your sudoers file so that you do not need to enter your password for sudo access
-
-#### 2. Setting up the servers
-
-As it currently stands, the script that runs the tests makes some assumptions about where the code is placed, we assume that the FrameworkBenchmarks repository will be located in your home directory.
-
-Check out the latest from github:
-
-	cd ~
-	git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
-	cd FrameworkBenchmarks
-
-Next, we're going to setup the servers with all the necessary software:
-
-	./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --install-software --list-tests
-    source ~/.bash_profile
-    # For your first time through the tests, set the ulimit for open files
-    # Most software is installed autormatically by the script, but running the mongo command below from
-    # the install script was causing some errors. For now this needs to be run manually.
-    cd installs/jruby-rack && rvm jruby-1.7.4 do jruby -S bundle exec rake clean gem SKIP_SPECS=true
-    cd target && rvm jruby-1.7.4 do gem install jruby-rack-1.2.0.SNAPSHOT.gem
-    cd ../../..
-    cd installs && curl -sS https://getcomposer.org/installer | php -- --install-dir=bin
-    cd ..
-    sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
-    mongo --host client-ip < config/create.js
-
-Assuming this finished without error, we're ready to start the test suite:
-
-	nohup ./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --max-threads cores --name unique-machine-name &
-
-This will run the full set of tests. Results of all the tests will output to ~/FrameworkBenchmarks/results/unique-machine-name/*timestamp*.
-
-### Windows Instructions
-Generously provided by [@pdonald](https://github.com/pdonald)
-
-Server installation scripts for Windows Server 2012 R2 on Amazon EC2.
-
-Instructions:
-
-* Create an instance from the `Microsoft Windows Server 2012 Base` image on Amazon EC2
-* Connect to it via Remote Desktop
-* Copy `installer-bootstrap.ps1` from this repo to the server (for files CTRL-C + CTRL-V works alright)
-* Copy your client private key too while you're at it
-* Right click on the installer script and select `Run with PowerShell`
-* It will ask something, just hit enter
-* It will install git and then launch `installer.ps1` from the repo which will install everything else
-* Installation shouldn't take more than 5 to 10 minutes
-* Then you have a working console: try `python`, `git`, `ssh`, `curl`, `node` etc. everything works + PowerShell goodies
-
-The client/database machine is still assumed to be a Linux box, you can install just the client software via
-
-    python run-tests.py -s server-ip -c client-ip -i "C:\Users\Administrator\Desktop\client.key" --install-software --install client --list-tests
+but this step is not required if you already installed the Linux server and client as described above.
 
 Now you can run tests:
 
-    python run-tests.py -s server-ip -c client-ip -i "C:\Users\Administrator\Desktop\client.key" --max-threads 2 --duration 30 --sleep 5 --name win --test aspnet --type all
+    python toolset\run-tests.py -s server-private-ip -c client-private-ip -i "C:\Users\Administrator\Desktop\client.key" --max-threads 2 --duration 30 --sleep 5 --name win --test aspnet --type all
 
+---
 
-### SQL Server on Windows Instructions
+#### SQL Server setup
 
-Server installation scripts for Windows Server 2012 with SQL Server 2012 Standard on Amazon EC2.
+* Connect to the SQL Server host via Remote Desktop.
+* Run a `Command Prompt` as Administrator.
+* Enter this command:
 
-Instructions:
+        powershell -ExecutionPolicy Bypass -Command "iex (New-Object Net.WebClient).DownloadString('https://raw.github.com/TechEmpower/FrameworkBenchmarks/master/toolset/setup/sqlserver/setup-sqlserver-bootstrap.ps1')"
 
-* Create an instance from the [Windows Server 2012 RTM English 64-bit SQL 2012 Standard](https://aws.amazon.com/amis/amazon-ebs-backed-windows-server-2012-rtm-english-64-bit-sql-2012-standard) image on Amazon EC2
-* Connect to it via Remote Desktop
-* Run a `Command Prompt` as Administrator
-* Enter `powershell -ExecutionPolicy Bypass -Command "iex (New-Object Net.WebClient).DownloadString('https://raw.github.com/TechEmpower/FrameworkBenchmarks/master/setup-sqlserver-bootstrap.ps1')"`
 * This will configure SQL Server, the Windows Firewall, and populate the database.
 
-Now, when running `python run-tests.py`, just add `-d <ip of SQL Server instance>`. This works for the (Windows Server-based) `aspnet-sqlserver-raw` and `aspnet-sqlserver-entityframework` tests.
+Now, when running `run-tests.py`, just add `-d <ip of SQL Server instance>`. This works for the (Windows Server-based) `aspnet-sqlserver-raw` and `aspnet-sqlserver-entityframework` tests.
 
+---
 
-## Result Files
+## Running the test suite
 
-After a test run, the directory ~/FrameworkBenchmarks/results/machine-name/timestamp will contains all the result files. In this folder are four files: three CSV files, one for each of the test types (json, db, query), and a single results.json file that contains all the results as well as some additional information. The results.json file is what we use to drive our blog post, and may or may not be useful to you. There are three subdirectories: one for each of the test types (json, db, query), each of these directories contain the raw weighttp results for each framework.
-
-## Benchmarking a Single Test
-
-If you are making changes to any of the tests, or you simply want to verify a single test, you can run the script with the --test flag. For example, if you only wanted to run the JRuby tests:
-
-	nohup ./run-tests.py -s server-ip -c client-ip -i path-to-ssh-key --max-threads cores --name unique-machine-name --test rack-jruby sinatra-jruby rails-jruby
+We ran our tests using three dedicated i7 2600k machines, three EC2 m1.large instances, and three servers from Peak Hosting
 
 ## Updating Tests
 
@@ -187,7 +179,7 @@ Also, if you do change the dependency of any test, please update the README file
 
 If you would like to update any of the software used, again, please be as specific as possible, while we still install some software via apt-get and don't specify a version, we would like to have as much control over the versions as possible.
 
-The main file that installs all the software is in installer.py. It's broken up into two sections, server software and client software.
+The main file that installs all the software is in `toolset/setup/linux/installer.py`. It's broken up into two sections, server software and client software.
 
 Additionally, it may be necessary to update the setup.py file in the framework's directory to use this new version.
 
@@ -201,143 +193,170 @@ When adding a new framework or new test to an existing framework, please follow 
 * Update/add [setup file](#setup-files)
 * When creating a database test, please use the MySQL table hello_world.World, or the MongoDB collection hello_world.world
 
-There are three different tests that we currently run:
+### The Tests
 
-* JSON Response
-* Database (single query)
-* Database (multiple query)
-
-The single query database test can be treated as a special case of the multiple query test with the query-count parameter set to 1.
-
-### JSON Response
-
-This test needs to follow the following conventions:
-
-* The message object should be instantiated as a new object for each request.
-* The test should use a JSON serializer to render the newly instantiated object to JSON.
-* Set the response Content-Type to application/json.
-* The response should be {"message": "Hello, World!"}
-* White space in the response does not matter.
-
-Pseudo-code:
-
-	obj = { message : "Hello, World!" }
-	render json.encode(obj)
-
-### Database (single query)
-
-This test will:
-
-* Access a database table or collection named "World" that is known to contain 10,000 rows/entries.
-* Query for a single row from the table or collection using a randomly generated id (the ids range from 1 to 10,000).
-* Set the response Content-Type to application/json.
-* Serialize the row to JSON and send the resulting string as the response.
-
-By convention, if the test does not use an ORM, and instead uses the raw database connectivity provided by the platform (e.g., JDBC), we append a "-raw" to the test name in the [benchmark_config](#the-benchmark_config-file) file.  For example, "php-raw".
-
-Pseudo-code:
-
-	random_id = random(1, 10000)
-	world = World.find(random_id)
-	render json.encode(world)
-
-### Database (multiple queries)
-
-This test is very similar to the single query test, and in some cases it will be implemented using the same code. A URL parameter is made available to specify the number of queries to run per request. The response is a list of objects resulting from the queries for random rows.
-
-Pseudo-code:
-
-	number_of_queries = get("queries")
-	worlds = []
-	for i = 0; i < number_of_queries; i++
-        random_id = random(1, 10000)
-        worlds[i] = World.find(random_id)
-	render json.encode(worlds)
+For descriptions of the test types that we run against each framework, see the [test requirements section of the Results web site](http://www.techempower.com/benchmarks/#section=code).
 
 ## The benchmark_config File
 
-The benchmark_config file is used by our run script to identify the available tests to be run. This file should exist at the root of the test directory. Here is its basic structure:
+The benchmark_config file is used by our scripts to both identify the available tests and to extract metadata describing each test.
 
-	{
-      "framework": "my-framework",
+This file should exist at the root of the test directory.
+
+Here is the basic structure of benchmark_config, using the Compojure framework as an example.  Compojure has two test *permutations*, which are identified as the "tests" list in the JSON structure below.
+
+    {
+      "framework": "compojure",
       "tests": [{
         "default": {
-          "setup_file": "setup.py"
-          "json_url": "/json",
-          "db_url": "/db",
-          "query_url": "/db?queries=",
+          "setup_file": "setup",
+          "json_url": "/compojure/json",
+          "db_url": "/compojure/db/1",
+          "query_url": "/compojure/db/",
+          "fortune_url": "/compojure/fortune-hiccup",
+          "plaintext_url": "/compojure/plaintext",
           "port": 8080,
-          "sort": 32
-      }, {
-        "alternative": {
-          "setup_file": "alternate_setup.py"
-          "json_url": "/json",
-          "db_url": "/db",
-          "query_url": "/db?queries=",
+          "approach": "Realistic",
+          "classification": "Micro",
+          "database": "MySQL",
+          "framework": "compojure",
+          "language": "Clojure",
+          "orm": "Micro",
+          "platform": "Servlet",
+          "webserver": "Resin",
+          "os": "Linux",
+          "database_os": "Linux",
+          "display_name": "compojure",
+          "notes": "",
+          "versus": "servlet"
+        },
+        "raw": {
+          "setup_file": "setup",
+          "db_url": "/compojure/dbraw/1",
+          "query_url": "/compojure/dbraw/",
           "port": 8080,
-          "sort": 33
+          "approach": "Realistic",
+          "classification": "Micro",
+          "database": "MySQL",
+          "framework": "compojure",
+          "language": "Clojure",
+          "orm": "Raw",
+          "platform": "Servlet",
+          "webserver": "Resin",
+          "os": "Linux",
+          "database_os": "Linux",
+          "display_name": "compojure-raw",
+          "notes": "",
+          "versus": "servlet"
         }
       }]
-	}
+    }
 
 * framework: Specifies the framework name.
-* tests: An array of tests that can be run for this framework. In most cases, this contains a single element for the "default" test, but additional tests can be specified.
+* tests: An list of tests that can be run for this framework. In many cases, this contains a single element for the "default" test, but additional tests can be specified.  Each test name must be unique when concatenated with the framework name.
   * setup_file: The location of the [setup file](#setup-files) that can start and stop the test. By convention this is just setup.py.
-  * json_url (optional): The relative URL path to the JSON test
-  * db_url (optional): The relative URL path to the database test
-  * query_url (optional): The relative URL path to the variable query test. The URL must be set up so that an integer can be applied to the end of the url to specify the number of queries to run, i.e. /db?queries= or /db/
-  * port: The port the server is listneing on
-  * sort: The sort order. This is important for our own blog post which relies on consistent ordering of the frameworks. You can get the next available sort order by running:
-    ./run-tests.py --next-sort
+  * json_url (optional): The URI to the JSON test, typically `/json`
+  * db_url (optional): The URI to the database test, typically `/db`
+  * query_url (optional): The URI to the variable query test. The URI must be set up so that an integer can be applied to the end of the URI to specify the number of queries to run.  For example, "/query?queries=" (to yield /query?queries=20" or "/query/" to yield "/query/20".
+  * fortune_url (optional): the URI to the fortunes test, typically `/fortune`
+  * update_url (optional): the URI to the updates test, setup in a manner similar to the query_url described above.
+  * plaintext_url (optional): the URI of the plaintext test, typically `/plaintext`
+  * port: The port the server is listening on
+  * approach (metadata): `Realistic` or `Stripped` (see results web site for description of all metadata attributes)
+  * classification (metadata): `Full`, `Micro`, or `Platform`
+  * database (metadata): `MySQL`, `Postgres`, `MongoDB`, `SQLServer`, or `None`
+  * framework (metadata): name of the framework
+  * language (metadata): name of the language
+  * orm (metadata): `Full`, `Micro`, or `Raw`
+  * platform (metadata): name of the platform
+  * webserver (metadata): name of the web-server (also referred to as the "front-end server")
+  * os (metadata): The application server's operating system, `Linux` or `Windows`
+  * database_os (metadata): The database server's operating system, `Linux` or `Windows`
+  * display_name (metadata): How to render this test permutation's name in the results web site.  Some permutation names can be really long, so the display_name is provided in order to provide something more succinct.
+  * versus (optional): The name of another test (elsewhere in this project) that is a subset of this framework.  This allows for the generation of the framework efficiency chart in the results web site.  For example, Compojure is compared to "servlet" since Compojure is built on the Servlets platform.
+
+### Testing on both Windows and Linux
+
+If your framework and platform can execute on both Windows and Linux, we encourage you to specify tests for both operating systems.  This increases the amount of testing you should do before submitting your pull-request, however, so we understand if you start with just one of the two.
+
+The steps involved are:
+
+* Assuming you have implemeneted the Linux test already, add a new test permutation to your `benchmark_config` file for the Windows test (or vice-versa).  When the benchmark script runs on Linux, it skips tests where the Application Operating System (`os` in the file) is specified as Linux.  When running on Windows, it skips tests where the `os` field is Linux.
+* Add the necessary tweaks to your [setup file](#setup-files) to start and stop on the new operating system.  See, for example, [the script for Go](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/go/setup.py).
+* Test on Windows and Linux to make sure everything works as expected.
 
 ## Setup Files
 
 The setup file is responsible for starting and stopping the test. This script is responsible for (among other things):
 
-* Setting the database host to the correct IP
-* Compiling/packaging the code
+* Modifying the framework's configuration to point to the correct database host
+* Compiling and/or packaging the code
 * Starting the server
 * Stopping the server
 
-The setup file is a python file that contains a start() and a stop() function. Here is an example of Wicket's setup file.
+The setup file is a python script that contains a start() and a stop() function.  The start function should build the source, make any necessary changes to the framework's configuration, and then start the server.  The stop function should shutdown the server, including all sub-processes as applicable.
 
-	import subprocess
-	import sys
-	import setup_util
+### Configuring database connectivity in start()
 
-	##################################################
-	# start(args)
-	#
-	# Starts the server for Wicket
-	# returns 0 if everything completes, 1 otherwise
-	##################################################
-	def start(args):
+By convention, the configuration files used by a framework should specify the database server as `localhost` so that developing tests in a single-machine environment can be done in an ad hoc fashion, without using the benchmark scripts.
 
-    # setting the database url
-    setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+When running a benchmark script, the script needs to modify each framework's configuration so that the framework connects to a database host provided as a command line argument.  In order to do this, use setup_util.replace_text() to make necessary modifications prior to starting the server.
 
-    # 1. Compile and package
-    # 2. Clean out possible old tests
-    # 3. Copy package to Resin's webapp directory
-    # 4. Start resin
-    try:
-      subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket")
-      subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True)
-      subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True)
-      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True)
-      return 0
-    except subprocess.CalledProcessError:
-      return 1
+For example:
 
-	##################################################
-	# stop()
-	#
-	# Stops the server for Wicket
-	# returns 0 if everything completes, 1 otherwise
-	##################################################
-	def stop():
-    try:
-      subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True)
-      return 0
-    except subprocess.CalledProcessError:
-      return 1
+```python
+setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+```
+
+Using `localhost` in the raw configuration file is not a requirement as long as the `replace_text` call properly injects the database host provided to the benchmarker toolset as a command line argument.
+
+### A full example
+
+Here is an example of Wicket's setup file.
+
+```python
+import subprocess
+import sys
+import setup_util
+
+##################################################
+# start(args, logfile, errfile)
+#
+# Starts the server for Wicket
+# returns 0 if everything completes, 1 otherwise
+##################################################
+def start(args, logfile, errfile):
+
+# setting the database url
+setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+
+# 1. Compile and package
+# 2. Clean out possible old tests
+# 3. Copy package to Resin's webapp directory
+# 4. Start resin
+try:
+  subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket", stderr=errfile, stdout=logfile)
+  subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
+  return 0
+except subprocess.CalledProcessError:
+  return 1
+
+##################################################
+# stop(logfile, errfile)
+#
+# Stops the server for Wicket
+# returns 0 if everything completes, 1 otherwise
+##################################################
+def stop(logfile):
+try:
+  subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True, stderr=errfile, stdout=logfile)
+  return 0
+except subprocess.CalledProcessError:
+  return 1
+```
+      
+### A tool to generate your setup file ###
+ 
+A contributor named [@kpacha](https://github.com/kpacha) has built a pure JavaScript tool for generating the `setup.py` file for a new framework via an in-browser form.  Check out his [FrameworkBenchmarks Setup Builder](http://kpacha.github.io/FrameworkBenchmarks-setup-builder/).

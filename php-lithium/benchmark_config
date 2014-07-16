@@ -7,7 +7,19 @@
       "db_url": "/db",
       "query_url": "/db?queries=",
       "port": 8080,
-      "sort": 57
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "lithium",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "lithium",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

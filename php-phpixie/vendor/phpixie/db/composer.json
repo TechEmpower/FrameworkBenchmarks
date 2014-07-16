@@ -1,0 +1,26 @@
+{
+    "name": "phpixie/db",
+    "description": "PHPixie Database library",
+    "keywords": ["database", "mysql", "postgresql", "sqlite"],
+    "homepage": "http://phpixie.com",
+    "type": "library",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Roman Tsiupa",
+            "email": "draconyster@gmail.com",
+            "homepage": "http://dracony.org"
+        }
+    ],
+    "require": {
+        "phpixie/core": "2.*@dev"
+    },
+    "autoload": {
+        "psr-0": {"PHPixie": "classes/"}
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        }
+    }
+}

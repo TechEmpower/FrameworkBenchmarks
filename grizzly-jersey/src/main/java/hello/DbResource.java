@@ -39,7 +39,7 @@ public class DbResource {
     }
     
     session.close();
-    return worlds;
+    return queries == 1 ? worlds[0] : worlds;
   }
   
 }

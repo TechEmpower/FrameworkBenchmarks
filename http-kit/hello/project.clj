@@ -12,4 +12,4 @@
   :main hello.handler
   :aot [hello.handler]
   :uberjar-name "http-kit-standalone.jar"
-  :profiles {:dev {:dependencies [[ring-mock "0.1.3"]]}})
+  :profiles {:dev {:dependencies [[ring-mock "0.1.5"]]}})

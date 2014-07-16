@@ -5,7 +5,8 @@
 World::World()
     : TAbstractModel(), d(new WorldObject)
 {
-    d->randomnumber = 0;
+    d->id = 0;
+    d->randomNumber = 0;
 }
 
 World::World(const World &other)
@@ -27,14 +28,14 @@ uint World::id() const
     return d->id;
 }
 
-int World::randomnumber() const
+int World::randomNumber() const
 {
-    return d->randomnumber;
+    return d->randomNumber;
 }
 
-void World::setRandomnumber(int randomnumber)
+void World::setRandomNumber(int randomNumber)
 {
-    d->randomnumber = randomnumber;
+    d->randomNumber = randomNumber;
 }
 
 World &World::operator=(const World &other)
@@ -43,12 +44,20 @@ World &World::operator=(const World &other)
     return *this;
 }
 
-World World::create(int randomnumber)
+bool World::update()
+{
+    TSqlQueryORMapper<WorldObject> mapper;
+    mapper.prepare("UPDATE World SET randomNumber=? WHERE id=?");
+    mapper.addBind(randomNumber()).addBind(id());
+    return mapper.exec();
+}
+
+World World::create(int randomNumber)
 {
     WorldObject obj;
-    obj.randomnumber = randomnumber;
+    obj.randomNumber = randomNumber;
     if (!obj.create()) {
-        obj.clear();
+        return World();
     }
     return World(obj);
 }
@@ -63,10 +72,18 @@ World World::create(const QVariantMap &values)
     return model;
 }
 
-World World::get(const uint &id)
+World World::get(uint id)
+{
+    TSqlQueryORMapper<WorldObject> mapper;
+    mapper.prepare("SELECT * from World WHERE id=?");
+    mapper.addBind(id);
+    return World(mapper.execFirst());
+}
+
+int World::count()
 {
     TSqlORMapper<WorldObject> mapper;
-    return World(mapper.findByPrimaryKey(id));
+    return mapper.findCount();
 }
 
 QList<World> World::getAll()
@@ -74,12 +91,12 @@ QList<World> World::getAll()
     return tfGetModelListByCriteria<World, WorldObject>(TCriteria());
 }
 
-TSqlObject *World::data()
+TModelObject *World::modelData()
 {
     return d.data();
 }
 
-const TSqlObject *World::data() const
+const TModelObject *World::modelData() const
 {
     return d.data();
 }
