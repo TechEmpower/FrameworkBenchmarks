@@ -3,8 +3,8 @@
 RETCODE=$(fw_exists leda-0.5.0)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
-sudo apt-get install -y g++
-sudo apt-get install -y luarocks
+sudo apt-get install -y --fix-missing g++
+sudo apt-get install -y --fix-missing luarocks
 
 sudo luarocks install lua-cjson
 
