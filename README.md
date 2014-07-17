@@ -24,8 +24,7 @@ $ sudo apt-get install openssh-server
 ```
 * If Ubuntu is already installed, run the following command and follow the prompts.
 ```bash
-$ sudo adduser tfb
-$ sudo usermod -a -G sudo tfb
+$ sudo useradd -m -G sudo tfb
 ```
 * Log in as `tfb`
 * Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
