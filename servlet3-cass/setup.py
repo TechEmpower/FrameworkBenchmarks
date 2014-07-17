@@ -16,7 +16,7 @@ def start(args, logfile, errfile):
       subprocess.check_call("C:\\Java\\resin\\bin\\start.bat", shell=True, stderr=errfile, stdout=logfile)
       return 0
     subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
-    subprocess.check_call("cp servlet/target/servlet3-cass.war $RESIN_HOME/webapps/", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("cp servlet3-cass/target/servlet3-cass.war $RESIN_HOME/webapps/", shell=True, stderr=errfile, stdout=logfile)
     subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
