@@ -191,9 +191,11 @@ class Installer:
     sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo start mongodb
 
+
     ##############################
     # Apache Cassandra
     ##############################
+    sudo apt-get install -qqy openjdk-7-jdk
     export CASS_V=2.0.7
     wget http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
     tar xzf apache-cassandra-$CASS_V-bin.tar.gz
@@ -217,7 +219,7 @@ class Installer:
     """ % (self.benchmarker.database_host, self.benchmarker.database_host, self.benchmarker.database_host)
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
-    p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" "), stdin=subprocess.PIPE)
+    p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
     p.communicate(remote_script)
     returncode = p.returncode
     if returncode != 0:
