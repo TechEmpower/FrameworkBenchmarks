@@ -13,12 +13,14 @@ def start(args, logfile, errfile):
     global proc
     setup_util.replace_text("flask/app.py", "DBHOSTNAME", args.database_host)
     proc = subprocess.Popen([
-        bin_dir + "/pypy", "serve_tornado.py",
-        "--port=8080",
-        "--procs="+ str(NCPU*3)],
+        bin_dir + "/gunicorn",
+        "app:app",
+        "-k", "tornado",
+        "-b", "0.0.0.0:8080",
+        '-w', str(NCPU*3),
+        "--log-level=critical"],
         cwd="flask", stderr=errfile, stdout=logfile)
     return 0
-
 
 def stop(logfile, errfile):
     global proc

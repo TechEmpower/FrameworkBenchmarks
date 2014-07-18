@@ -1,4 +1,5 @@
 from benchmark.fortune_html_parser import FortuneHTMLParser
+from setup.linux import setup_util
 
 import importlib
 import os
@@ -10,6 +11,7 @@ import sys
 import traceback
 import json
 import textwrap
+import logging
 
 class FrameworkTest:
   ##########################################################################################
@@ -27,29 +29,29 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " {wrk} {headers} -d 5 -c 8 -t 8 \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d 5 -c 8 -t 8 "http://{server_host}:{port}{url}"
+    {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} -d {duration} -c {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d {duration} -c {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
+      echo " {wrk} {headers} -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
-      {wrk} {headers} -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      {wrk} {headers} -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
       sleep 2
     done
   """
@@ -59,29 +61,29 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " wrk {headers} -d 5 -c 8 -t 8 \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d 5 -c 8 -t 8 "http://{server_host}:{port}{url}2"
+    wrk {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}2"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
+    wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
     sleep 5
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
+      echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
-      wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
       sleep 2
     done
   """
@@ -121,7 +123,7 @@ class FrameworkTest:
   ############################################################
   def validateJson(self, jsonString, out, err):
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if  obj["message"].lower() == "hello, world!":
         return True
@@ -136,7 +138,7 @@ class FrameworkTest:
   ############################################################
   def validateDb(self, jsonString, out, err):
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       # We are allowing the single-object array for the DB 
       # test for now, but will likely remove this later.
@@ -147,7 +149,7 @@ class FrameworkTest:
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
       if (type(float(obj["id"])) == float and 
-          type(float(obj["randomNumber"])) == float):
+          type(float(obj["randomnumber"])) == float):
         return True
     except:
       pass
@@ -155,13 +157,13 @@ class FrameworkTest:
 
   def validateDbStrict(self, jsonString, out, err):
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
       if (type(float(obj["id"])) == float and 
-          type(float(obj["randomNumber"])) == float):
+          type(float(obj["randomnumber"])) == float):
         return True
     except:
       pass
@@ -176,12 +178,12 @@ class FrameworkTest:
   ############################################################
   def validateQuery(self, jsonString, out, err):
     try:
-      arr = json.loads(jsonString)
+      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
 
       if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[0]["randomnumber"])) == float and 
           type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomNumber"])) == float):
+          type(float(arr[1]["randomnumber"])) == float):
         return True
     except:
       pass
@@ -195,16 +197,16 @@ class FrameworkTest:
   ############################################################
   def validateQueryOneOrLess(self, jsonString, out, err):
     try:
-      arr = json.loads(jsonString)
+      arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if len(arr) != 1:
         return False
 
       for obj in arr:
         if (type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float or
+            type(float(obj["randomnumber"])) != float or
             type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float):
+            type(float(obj["randomnumber"])) != float):
           return False
       # By here, it's passed validation
       return True
@@ -220,16 +222,16 @@ class FrameworkTest:
   ############################################################
   def validateQueryFiveHundredOrMore(self, jsonString, out, err):
     try:
-      arr = json.loads(jsonString)
+      arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if len(arr) != 500:
         return False
 
       for obj in arr:
         if (type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float or
+            type(float(obj["randomnumber"])) != float or
             type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float):
+            type(float(obj["randomnumber"])) != float):
           return False
       # By here, it's passed validation
       return True
@@ -259,12 +261,12 @@ class FrameworkTest:
   ############################################################
   def validateUpdate(self, jsonString, out, err):
     try:
-      arr = json.loads(jsonString)
+      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
 
       if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[0]["randomnumber"])) == float and 
           type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomNumber"])) == float):
+          type(float(arr[1]["randomnumber"])) == float):
         return True
     except:
       pass
@@ -285,6 +287,15 @@ class FrameworkTest:
   # Start the test using it's setup file
   ############################################################
   def start(self, out, err):
+    # Load profile for this installation
+    profile="%s/bash_profile.sh" % self.directory
+    if not os.path.exists(profile):
+      logging.warning("Framework %s does not have a bash_profile" % self.name)
+      profile="$FWROOT/config/benchmark_profile"
+    
+    set_iroot="export IROOT=%s" % self.install_root
+    setup_util.replace_environ(config=profile, command=set_iroot)
+
     return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
   # End start
@@ -900,6 +911,15 @@ class FrameworkTest:
     self.directory = directory
     self.benchmarker = benchmarker
     self.runTests = runTests
+    self.fwroot = benchmarker.fwroot
+    
+    # setup logging
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    
+    self.install_root="%s/%s" % (self.fwroot, "installs")
+    if benchmarker.install_strategy is 'pertest':
+      self.install_root="%s/pertest/%s" % (self.install_root, name)
+
     self.__dict__.update(args)
 
     # ensure directory has __init__.py file so that we can use it as a Python package

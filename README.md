@@ -10,7 +10,7 @@ Join in the conversation at our Google Group: https://groups.google.com/forum/?f
 
 Before starting setup, all the required hosts must be provisioned, with the respective operating system and required software installed, and with connectivity for remote management (SSH on Linux, RDP and WinRM on Windows).
 
-Refer to [Benchmark Suite Deployment README file](../deployment/README.md) for the provisioning procedures documentation.
+Refer to [Benchmark Suite Deployment README file](toolset/deployment/README.md) for the provisioning procedures documentation.
 
 ### App, load, and database servers
 
@@ -24,7 +24,7 @@ $ sudo apt-get install openssh-server
 ```
 * If Ubuntu is already installed, run the following command and follow the prompts.
 ```bash
-$ sudo adduser tfb
+$ sudo useradd -m -G sudo tfb
 ```
 * Log in as `tfb`
 * Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
@@ -32,7 +32,7 @@ $ sudo adduser tfb
 $ sudo apt-get update && sudo apt-get upgrade
 ```
 * Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * Run the following **(Don't enter a password, just hit enter when the prompt pops up)**. **NOTE** This is still necessary if the client and database are on the same computer as the server
 ```bash
 $ ssh-keygen
@@ -48,7 +48,7 @@ $ cd FrameworkBenchmarks
 ```
 * Install the server software. This will take a long time
 ```bash
-$ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install-software --install server --list-tests &
+$ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install server --list-tests &
 ```
 * If you want to view the process of installing, do the following. The session can be interrupted easily so no need to worry about keeping a connection.
 ```bash
@@ -76,10 +76,6 @@ sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
 # Change database-private-ip to the database ip
 mongo --host database-private-ip < config/create.js
 ```
-* Before running the tests, do the following
-```bash
-$ source ~/.bashrc
-```
 
 ---
 
@@ -92,10 +88,10 @@ $ source ~/.bashrc
 $ sudo apt-get update && sudo apt-get upgrade
 ```
 * Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
-$ toolset/run-tests.py --install-software --install database --list-tests
+$ toolset/run-tests.py --install database --list-tests
 ```
 
 ---
@@ -109,10 +105,10 @@ $ toolset/run-tests.py --install-software --install database --list-tests
 $ sudo apt-get update && sudo apt-get upgrade
 ```
 * Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
-$ toolset/run-tests.py --install-software --install client --list-tests
+$ toolset/run-tests.py --install client --list-tests
 ```
 
 You can validate that the setup worked by running a smoke test like this:
@@ -190,6 +186,8 @@ When adding a new framework or new test to an existing framework, please follow 
 
 * Update/add [benchmark_config](#the-benchmark_config-file)
 * Update/add [setup file](#setup-files)
+* Update/add [install.sh file](#install-file)
+* (Optional) Update/add [bash_profile.sh file](#bash-environment-file)
 * When creating a database test, please use the MySQL table hello_world.World, or the MongoDB collection hello_world.world
 
 ### The Tests
@@ -284,6 +282,95 @@ The steps involved are:
 * Add the necessary tweaks to your [setup file](#setup-files) to start and stop on the new operating system.  See, for example, [the script for Go](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/go/setup.py).
 * Test on Windows and Linux to make sure everything works as expected.
 
+## Install File
+
+The `install.sh` file for each framework starts the bash process which will 
+install that framework. Typically, the first thing done is to call `fw_depends` 
+to run installations for any necessary software that TFB has already 
+created installation scripts for. TFB provides a reasonably wide range of 
+core software, so your `install.sh` may only need to call `fw_depends` and 
+exit. Note: `fw_depends` does not guarantee dependency installation, so 
+list software in the proper order e.g. if `foo` depends on `bar`
+use `fw_depends bar foo`.
+
+Here are some example `install.sh` files
+
+```bash
+#!/bin/bash
+
+# My server only needs nodejs
+fw_depends nodejs
+```
+
+```bash
+#!/bin/bash
+
+# My server is weird and needs nodejs and mono and go
+fw_depends nodejs mono go
+```
+
+```bash
+#!/bin/bash
+
+# My server needs nodejs...
+fw_depends nodejs mono go
+
+# ...and some other software that there is no installer script for.
+# Note: Use IROOT variable to put software in the right folder. 
+#       You can also use FWROOT to refer to the project root, or 
+#       TROOT to refer to the root of your framework
+# Please see guidelines on writing installation scripts
+wget mystuff.tar.gz -O mystuff.tar.gz
+untar mystuff.tar.gz
+cd mystuff
+make --prefix=$IROOT && sudo make install
+```
+
+To see what TFB provides installations for, look in `toolset/setup/linux`
+in the folders `frameworks`, `languages`, `systools`, and `webservers`. 
+You should pass the filename, without the ".sh" extension, to fw_depends. 
+Here is a listing as of July 2014: 
+
+```bash
+$ ls frameworks                                                                
+grails.sh  nawak.sh  play1.sh  siena.sh     vertx.sh  yesod.sh
+jester.sh  onion.sh  play2.sh  treefrog.sh  wt.sh
+$ ls languages
+composer.sh  erlang.sh   hhvm.sh   mono.sh    perl.sh     pypy.sh     racket.sh   urweb.sh
+dart.sh      go.sh       java.sh   nimrod.sh  phalcon.sh  python2.sh  ringojs.sh  xsp.sh
+elixir.sh    haskell.sh  jruby.sh  nodejs.sh  php.sh      python3.sh  ruby.sh     yaf.sh
+$ ls systools
+leiningen.sh  maven.sh
+$ ls webservers
+lapis.sh  mongrel2.sh  nginx.sh  openresty.sh  resin.sh  weber.sh  zeromq.sh
+```
+
+## Bash Environment File
+
+The `bash_profile.sh` file is sourced before installing software or before
+running the framework test. This is mostly used when running your 
+framework, to perform actions such as updating `PATH` or defining environment 
+variables your framework requires e.g. `GOROOT`. You can use these 
+variables: 
+
+* FWROOT: Root of project
+* IROOT: Root of installation for the current framework
+* TROOT: Root directory for the current framework 
+
+Example of `bash_profile.sh`: 
+
+```bash
+# Set the root of our go installation
+export GOROOT=${IROOT}/go
+
+# Where to find the go executable
+export PATH="$GOROOT/bin:$PATH"
+
+export GOPATH=${FWROOT}/go
+```
+
+Do not cause any output, such as using `echo`, inside of `bash_profile.sh`
+
 ## Setup Files
 
 The setup file is responsible for starting and stopping the test. This script is responsible for (among other things):
@@ -303,7 +390,9 @@ When running a benchmark script, the script needs to modify each framework's con
 
 For example:
 
-    setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+```python
+setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+```
 
 Using `localhost` in the raw configuration file is not a requirement as long as the `replace_text` call properly injects the database host provided to the benchmarker toolset as a command line argument.
 
@@ -311,46 +400,48 @@ Using `localhost` in the raw configuration file is not a requirement as long as 
 
 Here is an example of Wicket's setup file.
 
-    import subprocess
-    import sys
-    import setup_util
+```python
+import subprocess
+import sys
+import setup_util
 
-    ##################################################
-    # start(args, logfile, errfile)
-    #
-    # Starts the server for Wicket
-    # returns 0 if everything completes, 1 otherwise
-    ##################################################
-    def start(args, logfile, errfile):
+##################################################
+# start(args, logfile, errfile)
+#
+# Starts the server for Wicket
+# returns 0 if everything completes, 1 otherwise
+##################################################
+def start(args, logfile, errfile):
 
-    # setting the database url
-    setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+# setting the database url
+setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 
-    # 1. Compile and package
-    # 2. Clean out possible old tests
-    # 3. Copy package to Resin's webapp directory
-    # 4. Start resin
-    try:
-      subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket", stderr=errfile, stdout=logfile)
-      subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
-      subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True, stderr=errfile, stdout=logfile)
-      subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
-      return 0
-    except subprocess.CalledProcessError:
-      return 1
+# 1. Compile and package
+# 2. Clean out possible old tests
+# 3. Copy package to Resin's webapp directory
+# 4. Start resin
+try:
+  subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket", stderr=errfile, stdout=logfile)
+  subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
+  return 0
+except subprocess.CalledProcessError:
+  return 1
 
-    ##################################################
-    # stop(logfile, errfile)
-    #
-    # Stops the server for Wicket
-    # returns 0 if everything completes, 1 otherwise
-    ##################################################
-    def stop(logfile):
-    try:
-      subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True, stderr=errfile, stdout=logfile)
-      return 0
-    except subprocess.CalledProcessError:
-      return 1
+##################################################
+# stop(logfile, errfile)
+#
+# Stops the server for Wicket
+# returns 0 if everything completes, 1 otherwise
+##################################################
+def stop(logfile):
+try:
+  subprocess.check_call("$RESIN_HOME/bin/resinctl shutdown", shell=True, stderr=errfile, stdout=logfile)
+  return 0
+except subprocess.CalledProcessError:
+  return 1
+```
       
 ### A tool to generate your setup file ###
  

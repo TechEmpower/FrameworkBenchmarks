@@ -1,6 +1,9 @@
 source 'http://rubygems.org'
 
-gem 'rack', '1.5.1'
-gem 'json', '1.7.6'
-gem 'passenger', '4.0.19'
-gem "unicorn", "4.6.2"
+gem 'rack', '1.5.2'
+gem 'json', '1.8.1'
+
+group :server do
+  gem 'passenger', '4.0.44', :require => false
+  gem 'unicorn', '4.8.3', :require => false
+end

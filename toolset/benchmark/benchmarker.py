@@ -1,4 +1,6 @@
 from setup.linux.installer import Installer
+from setup.linux import setup_util
+
 from benchmark import framework_test
 
 import os
@@ -490,6 +492,7 @@ class Benchmarker:
           test_process = Process(target=self.__run_test, args=(test,))
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
+          self.__load_results()  # Load intermediate result from child process
           if(test_process.is_alive()):
             logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
@@ -571,7 +574,7 @@ class Benchmarker:
           p.communicate("""
             sudo restart mysql
             sudo restart mongodb
-  		      sudo /etc/init.d/postgresql restart
+            sudo /etc/init.d/postgresql restart
           """)
           time.sleep(10)
 
@@ -828,6 +831,13 @@ class Benchmarker:
   # End __write_intermediate_results
   ############################################################
 
+  def __load_results(self):
+    try:
+      with open(os.path.join(self.latest_results_directory, 'results.json')) as f:
+        self.results = json.load(f)
+    except (ValueError, IOError):
+      pass
+
   ############################################################
   # __finish
   ############################################################
@@ -860,6 +870,9 @@ class Benchmarker:
     if self.database_user == None: self.database_user = self.client_user
     if self.database_host == None: self.database_host = self.client_host
     if self.database_identity_file == None: self.database_identity_file = self.client_identity_file
+
+    # Remember root directory
+    self.fwroot = setup_util.get_fwroot()
 
     # setup results and latest_results directories 
     self.result_directory = os.path.join("results", self.name)
@@ -968,8 +981,8 @@ class Benchmarker:
     if self.client_identity_file != None:
       self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
 
-    if self.install_software:
-      install = Installer(self)
+    if self.install is not None:
+      install = Installer(self, self.install_strategy)
       install.install_software()
 
   ############################################################

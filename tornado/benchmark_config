@@ -63,6 +63,6 @@
       "display_name": "tornado-py3",
       "notes": "CPython 3.3",
       "versus": ""
-    },
+    }
   }]
 }
