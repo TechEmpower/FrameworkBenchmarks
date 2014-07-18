@@ -216,7 +216,7 @@ class Installer:
     cat ../cassandra/create-keyspace.cql | ./bin/cqlsh $TFB_DATABASE_HOST
     python ../cassandra/db-data-gen.py | ./bin/cqlsh $TFB_DATABASE_HOST
     popd
-    """ % (os.environ["TFB_DATABASE_HOST"], os.environ["TFB_DATABASE_HOST"], os.environ["TFB_DATABASE_HOST"])
+    """ % (self.benchmarker.database_host, self.benchmarker.database_host, self.benchmarker.database_host)
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
     p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
