@@ -8,9 +8,9 @@ sudo apt-get install -y  luarocks
 
 sudo luarocks install lua-cjson
 
-wget http://sergeyzavadski.github.io/leda/releases/leda-0.5.1/leda-0.5.1.tar.gz
-tar xvf leda-0.5.1.tar.gz
-cd leda-0.5.1
+wget http://sergeyzavadski.github.io/leda/releases/leda-0.5.2/leda-0.5.2.tar.gz
+tar xvf leda-0.5.2.tar.gz
+cd leda-0.5.2
 
 ./configure
 make 
