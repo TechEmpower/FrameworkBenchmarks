@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists leda-0.5.1)
+RETCODE=$(fw_exists leda-0.5.2)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 sudo apt-get install -y  g++
