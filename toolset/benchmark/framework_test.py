@@ -123,7 +123,7 @@ class FrameworkTest:
   ############################################################
   def validateJson(self, jsonString, out, err):
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if  obj["message"].lower() == "hello, world!":
         return True
@@ -138,7 +138,7 @@ class FrameworkTest:
   ############################################################
   def validateDb(self, jsonString, out, err):
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       # We are allowing the single-object array for the DB 
       # test for now, but will likely remove this later.
@@ -149,7 +149,7 @@ class FrameworkTest:
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
       if (type(float(obj["id"])) == float and 
-          type(float(obj["randomNumber"])) == float):
+          type(float(obj["randomnumber"])) == float):
         return True
     except:
       pass
@@ -157,13 +157,13 @@ class FrameworkTest:
 
   def validateDbStrict(self, jsonString, out, err):
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
       if (type(float(obj["id"])) == float and 
-          type(float(obj["randomNumber"])) == float):
+          type(float(obj["randomnumber"])) == float):
         return True
     except:
       pass
@@ -178,12 +178,12 @@ class FrameworkTest:
   ############################################################
   def validateQuery(self, jsonString, out, err):
     try:
-      arr = json.loads(jsonString)
+      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
 
       if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[0]["randomnumber"])) == float and 
           type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomNumber"])) == float):
+          type(float(arr[1]["randomnumber"])) == float):
         return True
     except:
       pass
@@ -197,16 +197,16 @@ class FrameworkTest:
   ############################################################
   def validateQueryOneOrLess(self, jsonString, out, err):
     try:
-      arr = json.loads(jsonString)
+      arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if len(arr) != 1:
         return False
 
       for obj in arr:
         if (type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float or
+            type(float(obj["randomnumber"])) != float or
             type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float):
+            type(float(obj["randomnumber"])) != float):
           return False
       # By here, it's passed validation
       return True
@@ -222,16 +222,16 @@ class FrameworkTest:
   ############################################################
   def validateQueryFiveHundredOrMore(self, jsonString, out, err):
     try:
-      arr = json.loads(jsonString)
+      arr = {k.lower(): v in json.loads(jsonString).items()}
 
       if len(arr) != 500:
         return False
 
       for obj in arr:
         if (type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float or
+            type(float(obj["randomnumber"])) != float or
             type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float):
+            type(float(obj["randomnumber"])) != float):
           return False
       # By here, it's passed validation
       return True
@@ -261,12 +261,12 @@ class FrameworkTest:
   ############################################################
   def validateUpdate(self, jsonString, out, err):
     try:
-      arr = json.loads(jsonString)
+      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
 
       if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[0]["randomnumber"])) == float and 
           type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomNumber"])) == float):
+          type(float(arr[1]["randomnumber"])) == float):
         return True
     except:
       pass
