@@ -53,13 +53,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NancyBenchmark.csproj">
-      <Project>{80cf41ab-455b-4eb9-bfcc-3f8c4e1d8354}</Project>
-      <Name>NancyBenchmark</Name>
-    </ProjectReference>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\..\NancyModules\NancyModules.csproj">
+      <Project>{175c0589-e4cd-479e-ba24-bba54ca17dc8}</Project>
+      <Name>NancyModules</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
