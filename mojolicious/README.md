@@ -1,20 +1,15 @@
 # Setup
 
 * Perl 5.16.3
-* MySQL 5.5
+* MongoDB 2.4.9
 * Wrk 2.0
 
 # Requirements
 
 * Mojolicious
+* Mango
 * JSON::XS
-* DBI
-* DBD::mysql
-* Starman (if using Starman as web server)
-* Plack (for plackup)
-* nginx (if you want to front Mojolicious
-with nginx, nginx.conf provided)
-* Morbo and Hypnotoad provided by Mojolicious
+* Hypnotoad provided by Mojolicious
 
 # Deployment
 
@@ -22,12 +17,11 @@ Set production mode:
 
     export MOJO_MODE=production
 
-Something along the lines of
+Start with Mojolicious' non-blocking preforking server
 
-    plackup -s Starman --workers=8 -l /tmp/frameworks-benchmark.sock -a ./app.pl
+    hypnotoad app.pl
 
-if you want to front it with nginx, otherwise
+To stop again, simply run
 
-    plackup -s Starman --port 8080 --workers=8 -a ./app.pl
+    hypnotoad -s app.pl
 
-or the equivalent Morbo or Hypnotoad commands.
