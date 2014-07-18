@@ -32,7 +32,6 @@ class Installer:
   ############################################################
   def __install_server_software(self):
     print("\nINSTALL: Installing server software (strategy=%s)\n"%self.strategy)
-    
     # Install global prerequisites
     bash_functions_path='$FWROOT/toolset/setup/linux/bash_functions.sh'
     prereq_path='$FWROOT/toolset/setup/linux/prerequisites.sh'
