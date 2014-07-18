@@ -8,8 +8,6 @@ sudo apt-get install -y  luarocks
 
 sudo luarocks install lua-cjson
 
-sudo rm -rf /usr/local/include/event2
-sudo rm -rf /usr/include/event2
 
 wget http://sergeyzavadski.github.io/leda/releases/leda-0.5.2/leda-0.5.2.tar.gz
 tar xvf leda-0.5.2.tar.gz
