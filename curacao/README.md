@@ -1,10 +1,11 @@
 # Curacao Benchmarking Test
 
-This is the Curacao portion of TechEmpower's [benchmarking test suite](../) comparing a variety of web development platforms.
+Curacao is an open-source toolkit for building REST/HTTP-based integration layers on top of asynchronous Servlets.
 
 ## Versions
 
-Curacao 2.0-M10 https://github.com/markkolich/curacao
+Curacao 2.6.2
+https://github.com/markkolich/curacao
 
 ## Tests
 

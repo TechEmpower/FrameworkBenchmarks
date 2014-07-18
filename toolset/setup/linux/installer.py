@@ -6,6 +6,7 @@ import traceback
 import sys
 import glob
 import logging
+import setup_util
 
 class Installer:
 
@@ -30,10 +31,11 @@ class Installer:
   # __install_server_software
   ############################################################
   def __install_server_software(self):
-    print("\nINSTALL: Installing server software\n")
+    print("\nINSTALL: Installing server software (strategy=%s)\n"%self.strategy)
 
-    bash_functions_path='../toolset/setup/linux/bash_functions.sh'
-    prereq_path='../toolset/setup/linux/prerequisites.sh'
+    # Install global prerequisites
+    bash_functions_path='$FWROOT/toolset/setup/linux/bash_functions.sh'
+    prereq_path='$FWROOT/toolset/setup/linux/prerequisites.sh'
     self.__run_command(". %s && . %s" % (bash_functions_path, prereq_path))
 
     # Pull in benchmarker include and exclude list
@@ -42,24 +44,59 @@ class Installer:
     if exclude is None:
         exclude = []
 
-    # Assume we are running from FrameworkBenchmarks
-    install_files = glob.glob('*/install.sh')
+    # Locate all known tests
+    install_files = glob.glob("%s/*/install.sh" % self.fwroot)
 
-    for install_file in install_files:
-        test = os.path.dirname(install_file)
+    # Run install for selected tests
+    for test_install_file in install_files:
+        test_dir = os.path.dirname(test_install_file)
+        test_name = os.path.basename(test_dir)
+        test_rel_dir = setup_util.path_relative_to_root(test_dir)
 
-        if test in exclude:
-            logging.debug("%s has been excluded", test)
+        if test_name in exclude:
+            logging.debug("%s has been excluded", test_name)
             continue
-        elif include is not None and test not in include:
-            logging.debug("%s not in include list", test)
+        elif include is not None and test_name not in include:
+            logging.debug("%s not in include list", test_name)
             continue
         else:
-            logging.debug("Running installer for %s", test)
-            bash_functions_path="../toolset/setup/linux/bash_functions.sh"
-            self.__run_command(". %s && . ../%s" % (bash_functions_path, install_file))
+            logging.info("Running installation for %s"%test_name)
 
-    self.__run_command("sudo apt-get -y autoremove");
+            # Find installation directory
+            # e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
+            test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
+            if self.strategy is 'pertest':
+              test_install_dir="%s/pertest/%s" % (test_install_dir, test_name)
+            test_rel_install_dir=setup_util.path_relative_to_root(test_install_dir)
+            if not os.path.exists(test_install_dir):
+              os.makedirs(test_install_dir)
+
+            # Load profile for this installation
+            profile="%s/bash_profile.sh" % test_dir
+            if not os.path.exists(profile):
+              logging.warning("Framework %s does not have a bash_profile"%test_name)
+              profile="$FWROOT/config/benchmark_profile"
+            setup_util.replace_environ(config=profile)
+
+            # Find relative installation file
+            test_rel_install_file = "$FWROOT%s" % setup_util.path_relative_to_root(test_install_file)
+
+            # Then run test installer file
+            # Give all installers a number of variables
+            # FWROOT - Path of the FwBm root
+            # IROOT  - Path of this test's install directory
+            # TROOT  - Path to this test's directory
+            self.__run_command('''
+              export TROOT=$FWROOT%s && 
+              export IROOT=$FWROOT%s && 
+              . %s && 
+              . %s''' % 
+              (test_rel_dir, test_rel_install_dir, 
+                bash_functions_path, test_rel_install_file),
+                cwd=test_install_dir)
+
+    self.__run_command("sudo apt-get -y autoremove");    
+
     print("\nINSTALL: Finished installing server software\n")
   ############################################################
   # End __install_server_software
@@ -153,10 +190,36 @@ class Installer:
     sudo cp -R -p /var/lib/mongodb /ssd/
     sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo start mongodb
-    """
+
+
+    ##############################
+    # Apache Cassandra
+    ##############################
+    sudo apt-get install -qqy openjdk-7-jdk
+    export CASS_V=2.0.7
+    wget http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
+    tar xzf apache-cassandra-$CASS_V-bin.tar.gz
+    rm apache-cassandra-*-bin.tar.gz
+    fuser -k -TERM /ssd/log/cassandra/system.log
+    sleep 5
+    sudo rm -rf /ssd/cassandra /ssd/log/cassandra
+    sudo mkdir -p /ssd/cassandra /ssd/log/cassandra
+    sudo chown tfb:tfb /ssd/cassandra /ssd/log/cassandra
+    sed -i "s/^.*seeds:.*/          - seeds: \"%s\"/" cassandra/cassandra.yaml
+    sed -i "s/^listen_address:.*/listen_address: %s/" cassandra/cassandra.yaml
+    sed -i "s/^rpc_address:.*/rpc_address: %s/" cassandra/cassandra.yaml
+    cp cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
+    cp cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
+    pushd apache-cassandra-$CASS_V
+    nohup ./bin/cassandra
+    sleep 10
+    cat ../cassandra/create-keyspace.cql | ./bin/cqlsh $TFB_DATABASE_HOST
+    python ../cassandra/db-data-gen.py | ./bin/cqlsh $TFB_DATABASE_HOST
+    popd
+    """ % (self.benchmarker.database_host, self.benchmarker.database_host, self.benchmarker.database_host)
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
-    p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" "), stdin=subprocess.PIPE)
+    p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
     p.communicate(remote_script)
     returncode = p.returncode
     if returncode != 0:
@@ -245,10 +308,8 @@ EOF
   # __run_command
   ############################################################
   def __run_command(self, command, send_yes=False, cwd=None, retry=False):
-    try:
-      cwd = os.path.join(self.install_dir, cwd)
-    except AttributeError:
-      cwd = self.install_dir
+    if cwd is None: 
+        cwd = self.install_dir
 
     if retry:
       max_attempts = 5
@@ -259,12 +320,13 @@ EOF
     if send_yes:
       command = "yes yes | " + command
         
-
-    print("\nINSTALL: %s (cwd=%s)" % (command, cwd))
+    rel_cwd = setup_util.path_relative_to_root(cwd)
+    print("INSTALL: %s (cwd=$FWROOT/%s)" % (command, rel_cwd))
 
     while attempt <= max_attempts:
       error_message = ""
       try:
+
         # Execute command.
         subprocess.check_call(command, shell=True, cwd=cwd, executable='/bin/bash')
         break  # Exit loop if successful.
@@ -321,10 +383,12 @@ EOF
   ############################################################
   # __init__(benchmarker)
   ############################################################
-  def __init__(self, benchmarker):
+  def __init__(self, benchmarker, install_strategy):
     self.benchmarker = benchmarker
     self.install_dir = "installs"
-    
+    self.fwroot = benchmarker.fwroot
+    self.strategy = install_strategy
+
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 

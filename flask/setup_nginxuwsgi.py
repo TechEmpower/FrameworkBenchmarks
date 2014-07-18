@@ -6,12 +6,16 @@ import setup_util
 bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
 config_dir = os.path.expanduser('~/FrameworkBenchmarks/config')
 NCPU = multiprocessing.cpu_count()
+NGINX_COMMAND = 'sudo /usr/local/nginx/sbin/nginx -c ' + config_dir + '/nginx_uwsgi.conf'
+
 
 def start(args, logfile, errfile):
     setup_util.replace_text("flask/app.py", "DBHOSTNAME", args.database_host)
     try:
-        subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c ' +
-            config_dir + '/nginx_uwsgi.conf', shell=True, stderr=errfile, stdout=logfile)
+        subprocess.call(
+            NGINX_COMMAND,
+            shell=True, stdout=logfile, stderr=errfile)
+
         # Run in the background, but keep stdout/stderr for easy debugging
         subprocess.Popen(bin_dir + '/uwsgi --ini ' + config_dir + '/uwsgi.ini' +
             ' --processes ' + str(NCPU * 3) +
@@ -22,14 +26,11 @@ def start(args, logfile, errfile):
         return 1
 
 def stop(logfile, errfile):
-    subprocess.call('sudo /usr/local/nginx/sbin/nginx -s stop', shell=True, stderr=errfile, stdout=logfile)
+    subprocess.call(
+        NGINX_COMMAND + ' -s stop',
+        shell=True, stdout=logfile, stderr=errfile)
     subprocess.call(bin_dir + '/uwsgi --ini ' + config_dir + '/uwsgi_stop.ini', shell=True, stderr=errfile, stdout=logfile)
 
-    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    for line in out.splitlines():
-      if 'FrameworkBenchmarks/installs/py2/bin/' in line:
-        pid = int(line.split(None,2)[1])
-        os.kill(pid, 15)
-
+    os.system('killall nginx')
+    os.system('killall uwsgi')
     return 0

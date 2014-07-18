@@ -7,8 +7,8 @@
 RETCODE=$(fw_exists /usr/local/bin/php)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Moving PHP config files into place"; 
-  sudo cp ../config/php.ini /usr/local/lib/php.ini
-  sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf
+  sudo cp $FWROOT/config/php.ini /usr/local/lib/php.ini
+  sudo cp $FWROOT/config/php-fpm.conf /usr/local/lib/php-fpm.conf
   return 0; }
 
 fw_get http://museum.php.net/php5/php-5.4.13.tar.gz
@@ -19,8 +19,8 @@ make
 sudo make install
 cd ..
 
-sudo cp ../config/php.ini /usr/local/lib/php.ini
-sudo cp ../config/php-fpm.conf /usr/local/lib/php-fpm.conf
+sudo cp $FWROOT/config/php.ini /usr/local/lib/php.ini
+sudo cp $FWROOT/config/php-fpm.conf /usr/local/lib/php-fpm.conf
 
 RETCODE=$(fw_exists /usr/local/lib/php/extensions/no-debug-non-zts-20100525/apc.so)
 [ ! "$RETCODE" == 0 ] || { return 0; }
