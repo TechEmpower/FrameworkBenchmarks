@@ -222,7 +222,7 @@ class FrameworkTest:
   ############################################################
   def validateQueryFiveHundredOrMore(self, jsonString, out, err):
     try:
-      arr = {k.lower(): v in json.loads(jsonString).items()}
+      arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if len(arr) != 500:
         return False
