@@ -252,6 +252,7 @@ class Installer:
 
     git clone https://github.com/wg/wrk.git
     cd wrk
+    git checkout 205a1960c8b8de5f500bb143863ae293456b7add
     make
     sudo cp wrk /usr/local/bin
     cd ~
