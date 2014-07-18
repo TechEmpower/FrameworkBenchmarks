@@ -6,9 +6,9 @@ if [ "$RET1" == 0 ] && [ "$RET2" == 0 ]; then
   return 0;
 fi
 
-fw_get https://github.com/plt/racket/archive/v5.3.6.tar.gz -O racket-5.3.6.tar.gz
-fw_untar racket-5.3.6.tar.gz
-cd racket-5.3.6/src 
-./configure
+fw_get http://mirror.racket-lang.org/installers/recent/racket-src.tgz -O racket-src.tar.gz
+fw_untar racket-src.tar.gz
+cd racket/src 
+./configure --prefix=/usr/local
 make
 sudo make install
