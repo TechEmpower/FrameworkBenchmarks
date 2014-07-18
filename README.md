@@ -88,7 +88,7 @@ mongo --host database-private-ip < config/create.js
 $ sudo apt-get update && sudo apt-get upgrade
 ```
 * Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
 $ toolset/run-tests.py --install database --list-tests
@@ -105,7 +105,7 @@ $ toolset/run-tests.py --install database --list-tests
 $ sudo apt-get update && sudo apt-get upgrade
 ```
 * Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
 $ toolset/run-tests.py --install client --list-tests
