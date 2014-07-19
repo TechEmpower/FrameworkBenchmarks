@@ -32,7 +32,6 @@ class Installer:
   ############################################################
   def __install_server_software(self):
     print("\nINSTALL: Installing server software (strategy=%s)\n"%self.strategy)
-    
     # Install global prerequisites
     bash_functions_path='$FWROOT/toolset/setup/linux/bash_functions.sh'
     prereq_path='$FWROOT/toolset/setup/linux/prerequisites.sh'
@@ -252,6 +251,7 @@ class Installer:
 
     git clone https://github.com/wg/wrk.git
     cd wrk
+    git checkout 205a1960c8b8de5f500bb143863ae293456b7add
     make
     sudo cp wrk /usr/local/bin
     cd ~

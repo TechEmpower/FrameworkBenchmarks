@@ -1,5 +1,6 @@
 from benchmark.fortune_html_parser import FortuneHTMLParser
 from setup.linux import setup_util
+from test_runner import TestRunner
 
 import importlib
 import os
@@ -12,6 +13,7 @@ import traceback
 import json
 import logging
 log = logging.getLogger('framework_test')
+import inspect
 
 from utils import WrapLogger
 from utils import Header
@@ -139,7 +141,7 @@ class FrameworkTest:
   ############################################################
   def validateJson(self, jsonString, logger=log):
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if  obj["message"].lower() == "hello, world!":
         return True
@@ -156,7 +158,7 @@ class FrameworkTest:
   ############################################################
   def validateDb(self, jsonString, logger=log):
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       # We are allowing the single-object array for the DB 
       # test for now, but will likely remove this later.
@@ -167,7 +169,7 @@ class FrameworkTest:
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
       if (type(float(obj["id"])) == float and 
-          type(float(obj["randomNumber"])) == float):
+          type(float(obj["randomnumber"])) == float):
         return True
     except:
       # logger.debug("Expected: %s", "")
@@ -177,13 +179,13 @@ class FrameworkTest:
 
   def validateDbStrict(self, jsonString, logger=log):
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
       if (type(float(obj["id"])) == float and 
-          type(float(obj["randomNumber"])) == float):
+          type(float(obj["randomnumber"])) == float):
         return True
     except:
       # logger.debug("Expected: %s", "")
@@ -200,12 +202,12 @@ class FrameworkTest:
   ############################################################
   def validateQuery(self, jsonString, logger=log):
     try:
-      arr = json.loads(jsonString)
+      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
 
       if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[0]["randomnumber"])) == float and 
           type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomNumber"])) == float):
+          type(float(arr[1]["randomnumber"])) == float):
         return True
     except:
       # logger.debug("Expected: %s", "")
@@ -221,16 +223,16 @@ class FrameworkTest:
   ############################################################
   def validateQueryOneOrLess(self, jsonString, logger=log):
     try:
-      arr = json.loads(jsonString)
+      arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if len(arr) != 1:
         return False
 
       for obj in arr:
         if (type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float or
+            type(float(obj["randomnumber"])) != float or
             type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float):
+            type(float(obj["randomnumber"])) != float):
           return False
       # By here, it's passed validation
       return True
@@ -248,16 +250,16 @@ class FrameworkTest:
   ############################################################
   def validateQueryFiveHundredOrMore(self, jsonString, logger=log):
     try:
-      arr = json.loads(jsonString)
+      arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if len(arr) != 500:
         return False
 
       for obj in arr:
         if (type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float or
+            type(float(obj["randomnumber"])) != float or
             type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float):
+            type(float(obj["randomnumber"])) != float):
           return False
       # By here, it's passed validation
       return True
@@ -291,12 +293,12 @@ class FrameworkTest:
   ############################################################
   def validateUpdate(self, jsonString, logger=log):
     try:
-      arr = json.loads(jsonString)
+      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
 
       if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomNumber"])) == float and 
+          type(float(arr[0]["randomnumber"])) == float and 
           type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomNumber"])) == float):
+          type(float(arr[1]["randomnumber"])) == float):
         return True
     except:
       # logger.debug("Expected: %s", "")
@@ -331,27 +333,28 @@ class FrameworkTest:
     
     set_iroot="export IROOT=%s" % self.install_root
     setup_util.replace_environ(config=profile, command=set_iroot)
+    
+    # Determine if setup.py contains a subclass of TestRunner
+    self.runner = None
+    for name, obj in inspect.getmembers(self.setup_module, inspect.isclass):
+      try:
+        is_subclass = TestRunner.is_parent_of(obj)
+      except Exception as e: 
+        logger.critical("%s: %s", self.setup_module.__file__, e)
+        return 1
 
+      if is_subclass:
+        logger.debug("Framework %s is using the new setup.py format" % self.name)
+        self.runner = obj(self, self.setup_module, logger)
+        return self.runner.start()
+
+    # If not, call the start function directly
+    logger.warning("Framework %s is using the old setup.py format" % self.name)
     (out, err) = WrapLogger(logger, logging.INFO), WrapLogger(logger, logging.ERROR)
-    return self.setup_module.start(self, out, err)
+    return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
   # End start
   ############################################################
-
-  ############################################################
-  # run(command)
-  # Runs a shell command for my self.setup_module 
-  ############################################################
-  def run(self, command, **kwargs):
-    if 'cwd' in kwargs: 
-      self.stdout.write("RUN: %s (cwd=%s)\n"%(command, kwargs['cwd']))  
-    else:
-      self.stdout.write("RUN: %s\n"%command)
-    self.stdout.flush()
-    subprocess.check_call(command, shell=True, stderr=self.stderr, stdout=self.stdout, **kwargs)
-  ############################################################
-  # End run
-  ############################################################  
 
   ############################################################
   # stop(benchmarker)
@@ -359,6 +362,11 @@ class FrameworkTest:
   ############################################################
   def stop(self, logger=log):
     log.info("stop")
+
+    # Are we using a TestRunner
+    if self.runner: 
+      return self.runner.stop()  
+
     (out, err) = WrapLogger(logger, logging.INFO), WrapLogger(logger, logging.ERROR)
     return self.setup_module.stop(out, err)
   ############################################################
@@ -651,7 +659,7 @@ class FrameworkTest:
             pass
         if self.plaintext_url_passed:
           remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk", intervals=[256,1024,4096,16384], pipeline="16")
-          self.__run_benchmark(remote_script, output_file, err)
+          self.__run_benchmark(remote_script, output_file, logger)
         results = self.__parse_test(self.PLAINTEXT)
         self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
         logger.info( "Complete" )

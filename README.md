@@ -32,7 +32,7 @@ $ sudo useradd -m -G sudo tfb
 $ sudo apt-get update && sudo apt-get upgrade
 ```
 * Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * Run the following **(Don't enter a password, just hit enter when the prompt pops up)**. **NOTE** This is still necessary if the client and database are on the same computer as the server
 ```bash
 $ ssh-keygen
@@ -48,7 +48,7 @@ $ cd FrameworkBenchmarks
 ```
 * Install the server software. This will take a long time
 ```bash
-$ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install-software --install server --list-tests &
+$ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install server --list-tests &
 ```
 * If you want to view the process of installing, do the following. The session can be interrupted easily so no need to worry about keeping a connection.
 ```bash
@@ -76,10 +76,6 @@ sudo apt-get remove --purge openjdk-6-jre openjdk-6-jre-headless
 # Change database-private-ip to the database ip
 mongo --host database-private-ip < config/create.js
 ```
-* Before running the tests, do the following
-```bash
-$ source ~/.bashrc
-```
 
 ---
 
@@ -92,10 +88,10 @@ $ source ~/.bashrc
 $ sudo apt-get update && sudo apt-get upgrade
 ```
 * Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
-$ toolset/run-tests.py --install-software --install database --list-tests
+$ toolset/run-tests.py --install database --list-tests
 ```
 
 ---
@@ -109,10 +105,10 @@ $ toolset/run-tests.py --install-software --install database --list-tests
 $ sudo apt-get update && sudo apt-get upgrade
 ```
 * Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo   ALL=NOPASSWD: ALL`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * On the app server, run the following from the FrameworkBenchmark directory (this should only take a small amount of time, several minutes or so):
 ```bash
-$ toolset/run-tests.py --install-software --install client --list-tests
+$ toolset/run-tests.py --install client --list-tests
 ```
 
 You can validate that the setup worked by running a smoke test like this:
@@ -190,6 +186,8 @@ When adding a new framework or new test to an existing framework, please follow 
 
 * Update/add [benchmark_config](#the-benchmark_config-file)
 * Update/add [setup file](#setup-files)
+* Update/add [install.sh file](#install-file)
+* (Optional) Update/add [bash_profile.sh file](#bash-environment-file)
 * When creating a database test, please use the MySQL table hello_world.World, or the MongoDB collection hello_world.world
 
 ### The Tests
@@ -283,6 +281,95 @@ The steps involved are:
 * Assuming you have implemeneted the Linux test already, add a new test permutation to your `benchmark_config` file for the Windows test (or vice-versa).  When the benchmark script runs on Linux, it skips tests where the Application Operating System (`os` in the file) is specified as Linux.  When running on Windows, it skips tests where the `os` field is Linux.
 * Add the necessary tweaks to your [setup file](#setup-files) to start and stop on the new operating system.  See, for example, [the script for Go](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/go/setup.py).
 * Test on Windows and Linux to make sure everything works as expected.
+
+## Install File
+
+The `install.sh` file for each framework starts the bash process which will 
+install that framework. Typically, the first thing done is to call `fw_depends` 
+to run installations for any necessary software that TFB has already 
+created installation scripts for. TFB provides a reasonably wide range of 
+core software, so your `install.sh` may only need to call `fw_depends` and 
+exit. Note: `fw_depends` does not guarantee dependency installation, so 
+list software in the proper order e.g. if `foo` depends on `bar`
+use `fw_depends bar foo`.
+
+Here are some example `install.sh` files
+
+```bash
+#!/bin/bash
+
+# My server only needs nodejs
+fw_depends nodejs
+```
+
+```bash
+#!/bin/bash
+
+# My server is weird and needs nodejs and mono and go
+fw_depends nodejs mono go
+```
+
+```bash
+#!/bin/bash
+
+# My server needs nodejs...
+fw_depends nodejs mono go
+
+# ...and some other software that there is no installer script for.
+# Note: Use IROOT variable to put software in the right folder. 
+#       You can also use FWROOT to refer to the project root, or 
+#       TROOT to refer to the root of your framework
+# Please see guidelines on writing installation scripts
+wget mystuff.tar.gz -O mystuff.tar.gz
+untar mystuff.tar.gz
+cd mystuff
+make --prefix=$IROOT && sudo make install
+```
+
+To see what TFB provides installations for, look in `toolset/setup/linux`
+in the folders `frameworks`, `languages`, `systools`, and `webservers`. 
+You should pass the filename, without the ".sh" extension, to fw_depends. 
+Here is a listing as of July 2014: 
+
+```bash
+$ ls frameworks                                                                
+grails.sh  nawak.sh  play1.sh  siena.sh     vertx.sh  yesod.sh
+jester.sh  onion.sh  play2.sh  treefrog.sh  wt.sh
+$ ls languages
+composer.sh  erlang.sh   hhvm.sh   mono.sh    perl.sh     pypy.sh     racket.sh   urweb.sh
+dart.sh      go.sh       java.sh   nimrod.sh  phalcon.sh  python2.sh  ringojs.sh  xsp.sh
+elixir.sh    haskell.sh  jruby.sh  nodejs.sh  php.sh      python3.sh  ruby.sh     yaf.sh
+$ ls systools
+leiningen.sh  maven.sh
+$ ls webservers
+lapis.sh  mongrel2.sh  nginx.sh  openresty.sh  resin.sh  weber.sh  zeromq.sh
+```
+
+## Bash Environment File
+
+The `bash_profile.sh` file is sourced before installing software or before
+running the framework test. This is mostly used when running your 
+framework, to perform actions such as updating `PATH` or defining environment 
+variables your framework requires e.g. `GOROOT`. You can use these 
+variables: 
+
+* FWROOT: Root of project
+* IROOT: Root of installation for the current framework
+* TROOT: Root directory for the current framework 
+
+Example of `bash_profile.sh`: 
+
+```bash
+# Set the root of our go installation
+export GOROOT=${IROOT}/go
+
+# Where to find the go executable
+export PATH="$GOROOT/bin:$PATH"
+
+export GOPATH=${FWROOT}/go
+```
+
+Do not cause any output, such as using `echo`, inside of `bash_profile.sh`
 
 ## Setup Files
 
