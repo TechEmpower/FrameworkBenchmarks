@@ -3,7 +3,7 @@
 RETCODE=$(fw_exists leda)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
-rm -rf leda
+rm -rf leda || true
 
 sudo apt-get install -y  g++
 sudo apt-get install -y  luarocks
