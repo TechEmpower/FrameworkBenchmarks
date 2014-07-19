@@ -1,4 +1,3 @@
-import tempfile
 
 import subprocess
 import time
@@ -104,16 +103,28 @@ class NonBlockingStreamReader:
       if not line:
         return lines
       lines.append(line)
+
+import tempfile
 class WrapLogger():
   """
-  Used to convert a Logger into file streams. Adds easy integration 
+  Used to convert a Logger into a file-like object. Adds easy integration 
   of Logger into subprocess, which takes file parameters for stdout
   and stderr. 
 
   Use: 
     (out, err) = WrapLogger(logger, logging.INFO), WrapLogger(logger, logging.ERROR)
     subprocess.Popen(command, stdout=out, stderr=err)
+
+  Note: When used with subprocess, this cannot guarantee that output will appear
+  in real time. This is because subprocess tends to bypass the write() method and 
+  access the underlying file directly. This will eventually collect any output
+  that was sent directly to the file, but it cannot do this in real time. 
+  Practically, this limitation means that WrapLogger is safe to use with 
+  all synchronous subprocess calls, but it will lag heavily with 
+  subprocess.Popen calls
   """
+  # Note - Someone awesome with python could make this fully implement the file 
+  # interface, and remove the real-time limitation
   def __init__(self, logger, level):
     self.logger = logger
     self.level = level
