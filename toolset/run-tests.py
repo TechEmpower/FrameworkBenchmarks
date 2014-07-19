@@ -35,6 +35,8 @@ def main(argv=None):
     # 2) Ensure toolset/setup/linux is in the path so that the tests can "import setup_util".
     sys.path.append('toolset/setup/linux')
 
+    sys.path.append('toolset/benchmark')
+
     # Update environment for shell scripts
     fwroot = setup_util.get_fwroot()
     if not fwroot: 

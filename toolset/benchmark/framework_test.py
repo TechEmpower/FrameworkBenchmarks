@@ -1,5 +1,6 @@
 from benchmark.fortune_html_parser import FortuneHTMLParser
 from setup.linux import setup_util
+from test_runner import TestRunner
 
 import importlib
 import os
@@ -12,6 +13,7 @@ import traceback
 import json
 import logging
 log = logging.getLogger('framework_test')
+import inspect
 
 from utils import WrapLogger
 from utils import Header
@@ -331,7 +333,23 @@ class FrameworkTest:
     
     set_iroot="export IROOT=%s" % self.install_root
     setup_util.replace_environ(config=profile, command=set_iroot)
+    
+    # Determine if setup.py contains a subclass of TestRunner
+    self.runner = None
+    for name, obj in inspect.getmembers(self.setup_module, inspect.isclass):
+      try:
+        is_subclass = TestRunner.is_parent_of(obj)
+      except Exception as e: 
+        logger.critical("%s: %s", self.setup_module.__file__, e)
+        return 1
 
+      if is_subclass:
+        logger.debug("Framework %s is using the new setup.py format" % self.name)
+        self.runner = obj(self, self.setup_module, logger)
+        return self.runner.start()
+
+    # If not, call the start function directly
+    logger.warning("Framework %s is using the old setup.py format" % self.name)
     (out, err) = WrapLogger(logger, logging.INFO), WrapLogger(logger, logging.ERROR)
     return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
@@ -344,6 +362,11 @@ class FrameworkTest:
   ############################################################
   def stop(self, logger=log):
     log.info("stop")
+
+    # Are we using a TestRunner
+    if self.runner: 
+      return self.runner.stop()  
+
     (out, err) = WrapLogger(logger, logging.INFO), WrapLogger(logger, logging.ERROR)
     return self.setup_module.stop(out, err)
   ############################################################
