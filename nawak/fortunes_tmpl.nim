@@ -1,6 +1,6 @@
 #! stdtmpl | standard
 #import lib/escape
-#from nawak_app import TFortune
+#import model
 #proc fortunes_tmpl*(fortunes: openArray[TFortune]): string =
 #  result = ""
 <!DOCTYPE html>

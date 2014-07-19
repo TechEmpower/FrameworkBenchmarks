@@ -8,6 +8,9 @@ fw_depends zeromq
 # Dependencies
 sudo apt-get install -y sqlite3 libsqlite3-dev uuid uuid-runtime uuid-dev
 
+# Update linker cache
+sudo ldconfig -v
+
 fw_get https://github.com/zedshaw/mongrel2/tarball/v1.8.1 -O mongrel2.tar.gz
 fw_untar mongrel2.tar.gz
 
@@ -21,6 +24,3 @@ mv -f zmq_compat.h mongrel2/src/
 cd mongrel2
 make clean all
 sudo make install
-
-# Update linker cache
-sudo ldconfig -v

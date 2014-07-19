@@ -6,4 +6,6 @@ RETCODE=$(fw_exists /usr/local/lib/php/extensions/no-debug-non-zts-20100525/phal
 fw_depends php
 
 test -d cphalcon || git clone git://github.com/phalcon/cphalcon.git
-cd cphalcon/build && sudo ./install
+cd cphalcon
+git checkout bf9da26e6e20ea05dd69881b9cd0c2536ec53bcb
+cd build && sudo ./install
