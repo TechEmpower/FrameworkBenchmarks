@@ -19,5 +19,5 @@ cd leda-0.5.4
 make 
 sudo make install
 cd .. 
-mv leda-0.5.3 leda
+mv leda-0.5.4 leda
 
