@@ -636,7 +636,7 @@ class FrameworkTest:
             pass
         if self.plaintext_url_passed:
           remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk", intervals=[256,1024,4096,16384], pipeline="16")
-          self.__run_benchmark(remote_script, output_file, err)
+          self.__run_benchmark(remote_script, output_file, logger)
         results = self.__parse_test(self.PLAINTEXT)
         self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
         logger.info( "Complete" )

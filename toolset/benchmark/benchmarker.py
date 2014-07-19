@@ -643,16 +643,16 @@ class Benchmarker:
     except (OSError, IOError, subprocess.CalledProcessError) as e:
       self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
       log.error(Header("Subprocess Error %s" % test.name))
-      log.error("%s" % e)
-      log.error("%s" % sys.exc_info()[:2])
+      log.error("%s", e)
+      log.error("%s", sys.exc_info()[:2])
       log.debug("Subprocess Error Details", exc_info=True)
       try:
         test.stop(log)
       except (subprocess.CalledProcessError) as e:
         self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
         log.error(Header("Subprocess Error: Test .stop() raised exception %s" % test.name))
-        log.error("%s" % e)
-        log.error("%s" % sys.exc_info()[:2])
+        log.error("%s", e)
+        log.error("%s", sys.exc_info()[:2])
         log.debug("Subprocess Error Details", exc_info=True)
     except (KeyboardInterrupt, SystemExit) as e:
       test.stop(log)
