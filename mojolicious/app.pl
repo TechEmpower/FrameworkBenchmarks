@@ -18,7 +18,7 @@ app->config->{hypnotoad}{workers} = app->config->{workers};
 
 # Database connections
 
-helper mango   => sub { state $mango = Mango->new('mongodb://'. shift->config->{database_host} . ':27017') };
+helper mango   => sub { state $mango = Mango->new('mongodb://'. shift->config->{database_host}) };
 helper db      => sub { state $db = shift->mango->db('hello_world') };
 helper world   => sub { shift->db->collection('World') };
 helper fortune => sub { shift->db->collection('Fortune') };
@@ -35,7 +35,7 @@ get '/db' => sub { shift->render_query(1) };
 
 get '/queries' => sub {
   my $c = shift;
-  $c->render_query($c->param('queries'));
+  $c->render_query(scalar $c->param('queries'));
 };
 
 get '/fortunes' => sub {
@@ -50,7 +50,7 @@ get '/fortunes' => sub {
 
 get '/updates' => sub {
   my $c = shift;
-  $c->render_query($c->param('queries'), 1);
+  $c->render_query(scalar $c->param('queries'), 1);
 };
 
 get '/plaintext' => sub { shift->render( text => 'Hello, World!' ) };
