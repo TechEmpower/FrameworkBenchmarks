@@ -32,6 +32,7 @@ class Installer:
   ############################################################
   def __install_server_software(self):
     print("\nINSTALL: Installing server software (strategy=%s)\n"%self.strategy)
+
     # Install global prerequisites
     bash_functions_path='$FWROOT/toolset/setup/linux/bash_functions.sh'
     prereq_path='$FWROOT/toolset/setup/linux/prerequisites.sh'
@@ -40,7 +41,7 @@ class Installer:
     # Pull in benchmarker include and exclude list
     exclude = self.benchmarker.exclude
     include = self.benchmarker.test
-    if exclude == None:
+    if exclude is None:
         exclude = []
 
     # Locate all known tests
@@ -61,7 +62,7 @@ class Installer:
         else:
             logging.info("Running installation for %s"%test_name)
 
-            # Find installation directory 
+            # Find installation directory
             # e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
             test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
             if self.strategy is 'pertest':
@@ -84,7 +85,7 @@ class Installer:
             # Give all installers a number of variables
             # FWROOT - Path of the FwBm root
             # IROOT  - Path of this test's install directory
-            # TROOT  - Path to this test's directory 
+            # TROOT  - Path to this test's directory
             self.__run_command('''
               export TROOT=$FWROOT%s && 
               export IROOT=$FWROOT%s && 
@@ -388,7 +389,7 @@ EOF
     self.install_dir = "installs"
     self.fwroot = benchmarker.fwroot
     self.strategy = install_strategy
-    
+
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 

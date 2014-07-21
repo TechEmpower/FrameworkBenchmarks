@@ -4,6 +4,7 @@ from setup.linux import setup_util
 from benchmark import framework_test
 
 import os
+import contextlib
 import json
 import subprocess
 import time
@@ -558,16 +559,26 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __run_test(self, test):
+    logs = os.path.join(self.latest_results_directory, 'logs', test.name)
     try:
-      os.makedirs(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name)))
+      os.makedirs(logs)
     except:
       pass
-    with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
-         open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
-      if hasattr(test, 'skip'):
-        if test.skip.lower() == "true":
-          out.write("Test {name} benchmark_config specifies to skip this test. Skipping.\n".format(name=test.name))
-          return
+
+    @contextlib.contextmanager
+    def dstat():
+      out = open(os.path.join(logs, "dstat.txt"), "w")
+      p = subprocess.Popen(["dstat",  "-cdim", "--nocolor", "3"], stdout=out)
+      yield
+      p.terminate()
+      out.close()
+
+    with open(os.path.join(logs, 'out.txt'), 'w') as out, \
+         open(os.path.join(logs, 'err.txt'), 'w') as err, \
+         dstat():
+      if hasattr(test, 'skip') and test.skip.lower() == "true":
+        out.write("Test {name} benchmark_config specifies to skip this test. Skipping.\n".format(name=test.name))
+        return
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
