@@ -13,8 +13,8 @@ class Test2Endpoint(hostname: String) extends EndpointProvider {
   val fields = DBObject("_id" -> true, "randomNumber" -> true)
 
   //uncomment to populate
-  for ( k <- 1 to 10000 )
-    collection.save(DBObject("_id" -> k, "id" -> k, "randomNumber" -> random.nextInt(10000).toDouble))
+  //for ( k <- 1 to 10000 )
+  //  collection.save(DBObject("_id" -> k, "id" -> k, "randomNumber" -> random.nextInt(10000).toDouble))
 
   get("db").json {
     req =>
