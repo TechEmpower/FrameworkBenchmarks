@@ -6,7 +6,7 @@ import com.sksamuel.scruffy.EndpointProvider
 class Test1Endpoint extends EndpointProvider {
 
   get("json").complete {
-    req => json(Message("Hello World"))
+    req => json(Message("Hello, World!"))
   }
 }
 
