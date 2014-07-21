@@ -8,7 +8,7 @@ done
 
 echo "DEL fortunes" | redis-cli
 echo "RPUSH fortunes 'fortune: No such file or directory' \
-\"A computer scientist is someone who fixes things that aren''t broken.\" \
+\"A computer scientist is someone who fixes things that aren't broken.\" \
 'After enough decimal places, nobody gives a damn.' \
 'A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1' \
 'A computer program does what you tell it to do, not what you want it to do.' \
