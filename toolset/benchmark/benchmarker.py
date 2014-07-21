@@ -241,6 +241,35 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # get_stats_file(test_name, test_type)
+  # returns the stats file name for this test_name and 
+  # test_type timestamp/test_type/test_name/raw 
+  ############################################################
+  def get_stats_file(self, test_name, test_type):
+    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "stats")
+  ############################################################
+  # End get_stats_file
+  ############################################################
+
+
+  ############################################################
+  # stats_file(test_name, test_type)
+  # returns the stats file for this test_name and test_type
+  # timestamp/test_type/test_name/raw 
+  ############################################################
+  def stats_file(self, test_name, test_type):
+      path = self.get_stats_file(test_name, test_type)
+      try:
+        os.makedirs(os.path.dirname(path))
+      except OSError:
+        pass
+      return path
+  ############################################################
+  # End stats_file
+  ############################################################
+  
+
+  ############################################################
   # full_results_directory
   ############################################################
   def full_results_directory(self):
@@ -349,6 +378,16 @@ class Benchmarker:
             tests.append(atest)
 
     tests.sort(key=lambda x: x.name)
+
+    # If the tests have been interrupted somehow, then we want to resume them where we left
+    # off, rather than starting from the beginning
+    if os.path.isfile('current_benchmark.txt'):
+        with open('current_benchmark.txt', 'r') as interrputed_benchmark:
+            interrupt_bench = interrupted_benchmark.read()
+            for index, atest in enumerate(tests):
+                if atest.name == interrupt_bench:
+                    tests = tests[index:]
+                    break
     return tests
   ############################################################
   # End __gather_tests
@@ -478,6 +517,8 @@ class Benchmarker:
     if self.os.lower() == 'windows':
       logging.debug("Executing __run_tests on Windows")
       for test in tests:
+        with open('current_benchmark.txt', 'w') as benchmark_resume_file:
+          benchmark_resume_file.write(test.name)
         self.__run_test(test)
     else:
       logging.debug("Executing __run_tests on Linux")
@@ -489,6 +530,8 @@ class Benchmarker:
               Running Test: {name} ...
             -----------------------------------------------------
             """.format(name=test.name))
+          with open('current_benchmark.txt', 'w') as benchmark_resume_file:
+            benchmark_resume_file.write(test.name)
           test_process = Process(target=self.__run_test, args=(test,))
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
@@ -497,6 +540,7 @@ class Benchmarker:
             logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
             test_process.terminate()
+    os.remove('current_benchmark.txt')
     logging.debug("End __run_tests.")
 
   ############################################################
