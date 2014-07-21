@@ -10,5 +10,8 @@ object Main extends App {
   scruffy.mount(new Test1Endpoint)
   scruffy.mount(new Test2Endpoint(Option(System.getProperty("hostname")).getOrElse("localhost")))
   scruffy.mount(new Test6Endpoint)
-  scruffy.start().await()
+  println("Starting Scruffy...")
+  val lifecycle = scruffy.start()
+  println(s"Started on port [$port]. Interrupt to exit.")
+  lifecycle.await()
 }
