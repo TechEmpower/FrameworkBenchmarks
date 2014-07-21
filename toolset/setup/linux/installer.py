@@ -389,9 +389,6 @@ EOF
     self.fwroot = benchmarker.fwroot
     self.strategy = install_strategy
     
-    # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-
     try:
       os.mkdir(self.install_dir)
     except OSError:
