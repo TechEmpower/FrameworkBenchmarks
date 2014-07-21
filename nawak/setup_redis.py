@@ -8,7 +8,7 @@ home = expanduser("~")
 
 def start(args, logfile, errfile):
   setup_util.replace_text("nawak/model_redis.nim",
-                          'open(host=.*)',
+                          'open\(host=.*\)',
                           'open(host="' + args.database_host + '")')
   # compile the app
   subprocess.check_call(
