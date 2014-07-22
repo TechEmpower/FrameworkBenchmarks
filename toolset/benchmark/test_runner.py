@@ -18,7 +18,7 @@ class TestRunner:
     self.dir = test.directory
     
     (out, err) = WrapLogger(logger, logging.INFO), WrapLogger(logger, logging.ERROR)
-    self.utils = ShellUtils(self.dir, out, err)
+    self.utils = ShellUtils(self.dir, None, None, logger)
 
   def start(self):
     raise NotImplementedError()
@@ -26,11 +26,15 @@ class TestRunner:
   def stop(self):
     raise NotImplementedError()
 
-  def sh(self, command, **kwargs):
-    self.utils.sh(command, **kwargs)
+  def sh(self, *args, **kwargs):
+    self.utils.sh(*args, **kwargs)
 
-  def sh_async(self, command, **kwargs):
-    self.utils.sh_async(command, **kwargs)
+  def sh_async(self, *args, **kwargs):
+    return self.utils.sh_async(*args, **kwargs)
+
+  def sh_pkill(self, *args, **kwargs):
+    self.logger.debug("Got %s and %s" % (args, kwargs))
+    self.utils.sh_pkill(*args, **kwargs)
 
   @staticmethod
   def is_parent_of(target_class):
