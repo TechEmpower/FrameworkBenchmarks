@@ -25,4 +25,4 @@ class Test2Endpoint(hostname: String) extends EndpointProvider {
   }
 }
 
-case class Output(_id: Int, randomNumber: Int)
+case class Output(id: Int, randomNumber: Int)

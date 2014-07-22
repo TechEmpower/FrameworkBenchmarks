@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends scala
+fw_depends java
