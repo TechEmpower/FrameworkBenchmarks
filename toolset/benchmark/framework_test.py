@@ -12,6 +12,8 @@ import traceback
 import json
 import textwrap
 import logging
+import csv
+import shlex
 
 class FrameworkTest:
   ##########################################################################################
@@ -43,6 +45,14 @@ class FrameworkTest:
     echo ""
     {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
+
+    echo ""
+    echo "---------------------------------------------------------"
+    echo " Synchronizing time"
+    echo "---------------------------------------------------------"
+    echo ""
+    ntpdate -s pool.ntp.org
+
     for c in {interval}
     do
       echo ""
@@ -51,7 +61,10 @@ class FrameworkTest:
       echo " {wrk} {headers} -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
+      STARTTIME=$(date +"%s")
       {wrk} {headers} -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      echo "STARTTIME $STARTTIME"
+      echo "ENDTIME $(date +"%s")"
       sleep 2
     done
   """
@@ -75,6 +88,14 @@ class FrameworkTest:
     echo ""
     wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
     sleep 5
+
+    echo ""
+    echo "---------------------------------------------------------"
+    echo " Synchronizing time"
+    echo "---------------------------------------------------------"
+    echo ""
+    ntpdate -s pool.ntp.org
+
     for c in {interval}
     do
       echo ""
@@ -83,7 +104,10 @@ class FrameworkTest:
       echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
+      STARTTIME=$(date +"%s")
       wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      echo "STARTTIME $STARTTIME"
+      echo "ENDTIME $(date +"%s")"
       sleep 2
     done
   """
@@ -540,8 +564,11 @@ class FrameworkTest:
             pass
         if self.json_url_passed:
           remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
+          self.__begin_logging(self.JSON)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.JSON)
+        print results
         self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
@@ -565,7 +592,9 @@ class FrameworkTest:
             pass
         if self.db_url_passed:
           remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
+          self.__begin_logging(self.DB)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.DB)
         self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
         out.write( "Complete\n" )
@@ -589,7 +618,9 @@ class FrameworkTest:
             pass
         if self.query_url_passed:
           remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
+          self.__begin_logging(self.QUERY)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.QUERY)
         self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
         out.write( "Complete\n" )
@@ -610,7 +641,9 @@ class FrameworkTest:
             pass
         if self.fortune_url_passed:
           remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
+          self.__begin_logging(self.FORTUNE)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.FORTUNE)
         self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
         out.write( "Complete\n" )
@@ -631,7 +664,9 @@ class FrameworkTest:
             pass
         if self.update_url_passed:
           remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
+          self.__begin_logging(self.UPDATE)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.UPDATE)
         self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
         out.write( "Complete\n" )
@@ -652,7 +687,9 @@ class FrameworkTest:
             pass
         if self.plaintext_url_passed:
           remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk", intervals=[256,1024,4096,16384], pipeline="16")
+          self.__begin_logging(self.PLAINTEXT)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.PLAINTEXT)
         self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
         out.write( "Complete\n" )
@@ -788,6 +825,15 @@ class FrameworkTest:
                 m = re.search("Non-2xx or 3xx responses: ([0-9]+)", line)
                 if m != None: 
                   rawData['5xx'] = int(m.group(1))
+              if "STARTTIME" in line:
+                m = re.search("[0-9]+", line)
+                rawData["startTime"] = int(m.group(0))
+              if "ENDTIME" in line:
+                m = re.search("[0-9]+", line)
+                rawData["endTime"] = int(m.group(0))
+                stats = self.__parse_stats(test_type, rawData["startTime"], rawData["endTime"], 1)
+                with open(self.benchmarker.stats_file(self.name, test_type) + ".json", "w") as stats_file:
+                  json.dump(stats, stats_file)
               
 
       return results
@@ -902,6 +948,77 @@ class FrameworkTest:
               self.contains_type(self.DB) or 
               self.contains_type(self.QUERY) or
               self.contains_type(self.UPDATE))
+  ############################################################
+  # __begin_logging
+  # Starts a thread to monitor the resource usage, to be synced with the client's time
+  # TODO: MySQL and InnoDB are possible. Figure out how to implement them.
+  ############################################################
+  def __begin_logging(self, test_name):
+    output_file = "{file_name}".format(file_name=self.benchmarker.get_stats_file(self.name, test_name))
+    dstat_string = "dstat -afilmprsT --aio --fs --ipc --lock --raw --socket --tcp \
+                                      --raw --socket --tcp --udp --unix --vm --disk-util \
+                                      --rpc --rpcd --output {output_file}".format(output_file=output_file)
+    cmd = shlex.split(dstat_string)
+    dev_null = open(os.devnull, "w")
+    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null)
+  ##############################################################
+  # End __begin_logging
+  ##############################################################
+
+  ##############################################################
+  # Begin __end_logging
+  # Stops the logger thread and blocks until shutdown is complete. 
+  ##############################################################
+  def __end_logging(self):
+    self.subprocess_handle.terminate()
+    self.subprocess_handle.communicate()
+  ##############################################################
+  # End __end_logging
+  ##############################################################
+
+  ##############################################################
+  # Begin __parse_stats
+  # For each test type, process all the statistics, and return a multi-layered dictionary
+  # that has a structure as follows:
+  # (timestamp)
+  # | (main header) - group that the stat is in
+  # | | (sub header) - title of the stat
+  # | | | (stat) - the stat itself, usually a floating point number
+  ##############################################################
+  def __parse_stats(self, test_type, start_time, end_time, interval):
+    stats_dict = dict()
+    stats_file = self.benchmarker.stats_file(self.name, test_type)
+    with open(stats_file) as stats:
+      while(stats.next() != "\n"):
+        pass
+      stats_reader = csv.reader(stats)
+      h1= stats_reader.next()
+      h2 = stats_reader.next()
+      time_row = h2.index("epoch")
+      int_counter = 0
+      for row in stats_reader:
+        time = float(row[time_row])
+        int_counter+=1
+        if time < start_time:
+          continue
+        elif time > end_time:
+          return stats_dict
+        if int_counter % interval != 0:
+          continue
+        row_dict = dict()
+        for nextheader in h1:
+          if nextheader != "":
+            row_dict[nextheader] = dict()
+        header = ""
+        for item_num in range(len(row)):
+          if(len(h1[item_num]) != 0):
+            header = h1[item_num]
+          row_dict[header][h2[item_num]] = row[item_num]
+        stats_dict[time] = row_dict
+    return stats_dict
+  ##############################################################
+  # End __parse_stats
+  ##############################################################
 
   ##########################################################################################
   # Constructor
