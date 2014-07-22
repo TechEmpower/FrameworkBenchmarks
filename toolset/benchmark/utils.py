@@ -1,13 +1,16 @@
 
 import subprocess
 import time
+import logging
 class ShellUtils():
-  def __init__(self, directory, outfile, errfile):
+  def __init__(self, directory, outfile, errfile, logger=None):
     '''
     outfile: A file-like object to write command output to. 
              Must have write(string) method. Common choices are 
              files, sys.stdout, or WrapLogger objects
     errfile: See outfile 
+    logger : If provided, used instead of outfile/errfile for 
+             finer-grained logging
     '''
     # Advanced notes: outfile and errfile do *not* have to be 
     # thread-safe objects. They are only ever written to from one 
@@ -16,22 +19,34 @@ class ShellUtils():
     self.directory = directory
     self.outfile = outfile
     self.errfile = errfile
+    self.logger = logger
+  
+  def __write_out(self, message, level=logging.INFO, stream=None):
+    if self.logger:
+      self.logger.log(level, message)
+    elif stream == None:
+      self.outfile.write(message)
+    else:
+      stream.write(message)
+  
+  def __write_err(self, message, level=logging.ERROR):
+    self.__write_out(message, level, stream=self.errfile)
   
   def sh(self, command, **kwargs):
     '''Run a shell command, sending output to outfile and errfile.
     Blocks until command exits'''
     kwargs.setdefault('cwd', self.directory)
     kwargs.setdefault('executable', '/bin/bash')
-    self.outfile.write("Running %s (cwd=%s)" % (command, kwargs.get('cwd')))
+    self.__write_out("Running %s (cwd=%s)" % (command, kwargs.get('cwd')))
     try:
       output = subprocess.check_output(command, shell=True, stderr=self.errfile, **kwargs)
       if output and output.strip():
-        self.outfile.write("Output:")
-        self.outfile.write(output.rstrip('\n'))
+        self.__write_out("Output:")
+        self.__write_out(output.rstrip('\n'))
       else:
-        self.outfile.write("No Output")
+        self.__write_out("No Output")
     except subprocess.CalledProcessError:
-      self.errfile.write("Command returned non-zero exit code: %s" % command)
+      self.__write_err("Command returned non-zero exit code: %s" % command)
 
   # TODO modify this to start the subcommand as a new process group, so that 
   # we can automatically kill the entire group!
@@ -40,9 +55,9 @@ class ShellUtils():
     If intial_logs, prints out logs for a few seconds before returning. '''
     # TODO add this - '''Continues to send output until command completes'''
     kwargs.setdefault('cwd', self.directory)
-    self.outfile.write("Running %s (cwd=%s)" % (command, kwargs.get('cwd')))
     
     # Open in line-buffered mode (bufsize=1) because NonBlockingStreamReader uses readline anyway
+    self.__write_out("Running %s (cwd=%s)" % (command, kwargs.get('cwd')))
     process = subprocess.Popen(command, bufsize=1, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, **kwargs)
     nbsr = NonBlockingStreamReader(process.stdout)
     nbsr_err = NonBlockingStreamReader(process.stderr) 
