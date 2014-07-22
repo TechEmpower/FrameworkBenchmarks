@@ -1,7 +1,7 @@
 {
   "framework": "redstone",
   "tests": [{
-    "postgresql-raw": {
+    "postgresql: {
       "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/pg/db",
@@ -15,16 +15,16 @@
       "database": "Postgres",
       "framework": "redstone",
       "language": "Dart",
-      "orm": "Raw",
+      "orm": "Micro",
       "platform": "Dart",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "redstone",
+      "display_name": "redstone-postgresql",
       "notes": "",
       "versus": "dart"
     },
-    "mongodb-raw": {
+    "mongodb": {
       "setup_file": "setup",
       "db_url": "/mongo/db",
       "query_url": "/mongo/queries?queries=",
@@ -36,12 +36,12 @@
       "database": "MongoDB",
       "framework": "redstone",
       "language": "Dart",
-      "orm": "Raw",
+      "orm": "Micro",
       "platform": "Dart",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "redstone",
+      "display_name": "redstone-mongodb",
       "notes": "",
       "versus": "dart"
     }

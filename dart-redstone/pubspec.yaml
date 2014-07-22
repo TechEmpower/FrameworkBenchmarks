@@ -8,7 +8,7 @@ dependencies:
   mongo_dart: 0.1.42
   mustache: 0.1.8
   postgresql: 0.2.13
-  redstone: 0.5.8+1
+  redstone: 0.5.9
   redstone_mapper: 0.1.2
   redstone_mapper_mongo: 0.1.1+1
   redstone_mapper_pg: 0.1.0

@@ -10,7 +10,7 @@ This test adds [Redstone.dart](http://redstonedart.org), a microframework for Da
 * [Dart mustache version 0.1.8](http://pub.dartlang.org/packages/mustache)
 * [Dart mongo_dart version 0.1.42](http://pub.dartlang.org/packages/mongo_dart)
 * [Dart postgresql version 0.2.13](http://pub.dartlang.org/packages/postgresql)
-* [Dart redstone version 0.5.8+1](http://pub.dartlang.org/packages/redstone)
+* [Dart redstone version 0.5.9](http://pub.dartlang.org/packages/redstone)
 * [Dart yaml version 0.9.0](http://pub.dartlang.org/packages/yaml)
 * [Dart connection_pool version 0.1.0+2](http://pub.dartlang.org/packages/connection_pool)
 
