@@ -50,14 +50,23 @@ class ShellUtils():
     except subprocess.CalledProcessError:
       self.__write_err("Command returned non-zero exit code: %s" % command)
 
-  # TODO modify this to start the subcommand as a new process group, so that 
-  # we can automatically kill the entire group!
-  def sh_async(self, command, initial_logs=True, **kwargs):
+  def sh_async(self, command, group=True, **kwargs):
     '''
     Run a shell command, continually sending output to outfile and errfile until 
     shell process completes
+
+    - If group is set, create a process group that can later be used to kill all subprocesses
+    Returns the pid of the newly created process (or process group)
     '''
+    
+    # Setup extra args
     kwargs.setdefault('cwd', self.directory)
+    if group:
+      if self.os != 'nt':
+        kwargs.setdefault('preexec_fn', os.setpgrp)
+      else:
+        # TODO if someone could make this work that would be great
+        self.__write_err("Unable to group flag on Windows")
     
     self.__write_out("Running %s (cwd=%s)" % (command, kwargs.get('cwd')))
     # Open in line-buffered mode (bufsize=1) because NonBlocking* uses readline
