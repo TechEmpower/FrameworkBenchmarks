@@ -3,6 +3,8 @@ import nawak_mongrel, jdump
 import fortunes_tmpl
 when defined(postgre_model):
     import model_postgre
+when defined(redis_model):
+    import model_redis
 
 get "/json":
     var j: THello

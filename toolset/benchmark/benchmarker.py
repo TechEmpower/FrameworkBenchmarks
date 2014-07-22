@@ -618,6 +618,7 @@ class Benchmarker:
           p.communicate("""
             sudo restart mysql
             sudo restart mongodb
+            sudo service redis-server restart
             sudo /etc/init.d/postgresql restart
           """)
           time.sleep(10)
