@@ -7,8 +7,8 @@ from os.path import expanduser
 
 home = expanduser("~")
 
-def start(args):
-  setup_util.replace_text("php-fatfree/index.php", "host=.*;", "host=" + args.database_host + ";")
+def start(args, logfile, errfile):
+  setup_util.replace_text("php-fatfree/index.php", "localhost", ""+ args.database_host +"")
   setup_util.replace_text("php-fatfree/deploy/php", "\".*\/FrameworkBenchmarks", "\"" + home + "/FrameworkBenchmarks")
   setup_util.replace_text("php-fatfree/deploy/php", "Directory .*\/FrameworkBenchmarks", "Directory " + home + "/FrameworkBenchmarks")
   setup_util.replace_text("php-fatfree/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
@@ -30,7 +30,7 @@ def start(args):
     return 0
   except subprocess.CalledProcessError:
     return 1
-def stop():
+def stop(logfile, errfile):
   try:
     if os.name == 'nt':
       subprocess.check_call('appcmd delete site PHP', shell=True, stderr=errfile, stdout=logfile)

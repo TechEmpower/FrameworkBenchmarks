@@ -8,58 +8,69 @@ $f3->set('UI','ui/');
 
 $f3->set('DBS',array('mysql:host=localhost;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass'));
 
-// https://github.com/TechEmpower/FrameworkBenchmarks#json-response
+// http: //www.techempower.com/benchmarks/#section=code
+
+// JSON test
 $f3->route('GET /json',function($f3) {
     /** @var Base $f3 */
     header("Content-type: application/json");
-    echo json_encode(array('message' => 'Hello World!'));
+    echo json_encode(array('message' => 'Hello, World!'));
 });
 
 
-// https://github.com/TechEmpower/FrameworkBenchmarks#database-single-query
-// https://github.com/TechEmpower/FrameworkBenchmarks#database-multiple-queries
+// DB RAW test
 $f3->route(
     array(
-        'GET /db',
-        'GET /db/@queries',
+        'GET /db',                  // database-single-query
+        'GET /db/@queries',         // database-multiple-queries
     ),
     function ($f3,$params) {
-    /** @var Base $f3 */
-        $params += array('queries' => 1); //default value
+        /** @var Base $f3 */
+        $single = !isset($params['queries']);
+        if ($single)
+            $queries = 1;
+        else {
+            $queries = (int) $params['queries'];
+            $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
+        }
         $dbc = $f3->get('DBS');
         $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
         $result = array();
-        for ($i = 0; $i < $params['queries']; ++$i) {
+        for ($i = 0; $i < $queries; $i++) {
             $id = mt_rand(1, 10000);
             $result[] = $db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false);
         }
         header("Content-type: application/json");
-        echo json_encode($result);
+        echo json_encode($single ? $result[0] : $result);
     }
 );
 
-// https://github.com/TechEmpower/FrameworkBenchmarks#database-single-query
-// https://github.com/TechEmpower/FrameworkBenchmarks#database-multiple-queries
+// DB ORM test
 $f3->route(
     array(
-         'GET /db-orm',
-         'GET /db-orm/@queries',
+         'GET /db-orm',             // database-single-query
+         'GET /db-orm/@queries',    // database-multiple-queries
     ),
     function ($f3, $params) {
         /** @var Base $f3 */
-        $params += array('queries' => 1); //default value
+        $single = !isset($params['queries']);
+        if ($single)
+            $queries = 1;
+        else {
+            $queries = (int) $params['queries'];
+            $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
+        }
         $dbc = $f3->get('DBS');
         $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
         $mapper = new \DB\SQL\Mapper($db,'World');
         $result = array();
-        for ($i = 0; $i < $params['queries']; ++$i) {
+        for ($i = 0; $i < $queries; $i++) {
             $id = mt_rand(1, 10000);
-            $mapper->load(array('where id = ?',$id));
+            $mapper->load(array('id = ?',$id));
             $result[] = $mapper->cast();
         }
-
         header("Content-type: application/json");
-        echo json_encode($result);
+        echo json_encode($single ? $result[0] : $result);
     }
 );
 
@@ -81,20 +92,17 @@ $f3->route('GET /fortune', function ($f3) {
 });
 
 
-$f3->route(
-    array(
-         'GET /updateraw',
-         'GET /updateraw/@queries',
-    ),function($f3,$params) {
+$f3->route('GET /update-raw/@queries', function($f3,$params) {
     /** @var Base $f3 */
-    $params += array('queries' => 1); //default value
+    $queries = (int) $params['queries'];
+    $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
+
     $dbc = $f3->get('DBS');
     $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
 
     $result = array();
-    for ($i = 0; $i < $params['queries']; ++$i) {
+    for ($i = 0; $i < $queries; $i++) {
         $id = mt_rand(1, 10000);
-
         $row = array(
             'id'=>$id,
             'randomNumber'=>$db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false)
@@ -105,6 +113,29 @@ $f3->route(
         $result[] = $row;
     }
 
+    header("Content-type: application/json");
+    echo json_encode($result);
+
+});
+
+
+$f3->route('GET /update-orm/@queries', function($f3,$params) {
+    /** @var Base $f3 */
+    $queries = (int) $params['queries'];
+    $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
+
+    $dbc = $f3->get('DBS');
+    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
+    $world = new \DB\SQL\Mapper($db,'World');
+
+    $result = array();
+    for ($i = 0; $i < $queries; $i++) {
+        $id = mt_rand(1, 10000);
+        $world->load(array('id = ?', $id));
+        $world->randomNumber = mt_rand(1, 10000);
+        $world->save();
+        $result[] = $world->cast();
+    }
     header("Content-type: application/json");
     echo json_encode($result);
 
