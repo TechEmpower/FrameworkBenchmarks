@@ -172,7 +172,7 @@ def main(argv=None):
     elif benchmarker.parse != None:
       benchmarker.parse_timestamp()
     else:
-      benchmarker.run()
+      return benchmarker.run()
 
 # Integrate uncaught exceptions into our logging system
 # Note: This doesn't work if the exception happens in a 
