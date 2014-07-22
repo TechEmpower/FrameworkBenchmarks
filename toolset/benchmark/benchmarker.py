@@ -1,4 +1,6 @@
 from setup.linux.installer import Installer
+from setup.linux import setup_util
+
 from benchmark import framework_test
 
 import os
@@ -239,6 +241,35 @@ class Benchmarker:
   ############################################################
 
   ############################################################
+  # get_stats_file(test_name, test_type)
+  # returns the stats file name for this test_name and 
+  # test_type timestamp/test_type/test_name/raw 
+  ############################################################
+  def get_stats_file(self, test_name, test_type):
+    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "stats")
+  ############################################################
+  # End get_stats_file
+  ############################################################
+
+
+  ############################################################
+  # stats_file(test_name, test_type)
+  # returns the stats file for this test_name and test_type
+  # timestamp/test_type/test_name/raw 
+  ############################################################
+  def stats_file(self, test_name, test_type):
+      path = self.get_stats_file(test_name, test_type)
+      try:
+        os.makedirs(os.path.dirname(path))
+      except OSError:
+        pass
+      return path
+  ############################################################
+  # End stats_file
+  ############################################################
+  
+
+  ############################################################
   # full_results_directory
   ############################################################
   def full_results_directory(self):
@@ -347,6 +378,16 @@ class Benchmarker:
             tests.append(atest)
 
     tests.sort(key=lambda x: x.name)
+
+    # If the tests have been interrupted somehow, then we want to resume them where we left
+    # off, rather than starting from the beginning
+    if os.path.isfile('current_benchmark.txt'):
+        with open('current_benchmark.txt', 'r') as interrupted_benchmark:
+            interrupt_bench = interrupted_benchmark.read()
+            for index, atest in enumerate(tests):
+                if atest.name == interrupt_bench:
+                    tests = tests[index:]
+                    break
     return tests
   ############################################################
   # End __gather_tests
@@ -476,6 +517,8 @@ class Benchmarker:
     if self.os.lower() == 'windows':
       logging.debug("Executing __run_tests on Windows")
       for test in tests:
+        with open('current_benchmark.txt', 'w') as benchmark_resume_file:
+          benchmark_resume_file.write(test.name)
         self.__run_test(test)
     else:
       logging.debug("Executing __run_tests on Linux")
@@ -487,13 +530,17 @@ class Benchmarker:
               Running Test: {name} ...
             -----------------------------------------------------
             """.format(name=test.name))
+          with open('current_benchmark.txt', 'w') as benchmark_resume_file:
+            benchmark_resume_file.write(test.name)
           test_process = Process(target=self.__run_test, args=(test,))
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
+          self.__load_results()  # Load intermediate result from child process
           if(test_process.is_alive()):
             logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
             test_process.terminate()
+    os.remove('current_benchmark.txt')
     logging.debug("End __run_tests.")
 
   ############################################################
@@ -571,7 +618,8 @@ class Benchmarker:
           p.communicate("""
             sudo restart mysql
             sudo restart mongodb
-  		      sudo /etc/init.d/postgresql restart
+            sudo service redis-server restart
+            sudo /etc/init.d/postgresql restart
           """)
           time.sleep(10)
 
@@ -828,6 +876,13 @@ class Benchmarker:
   # End __write_intermediate_results
   ############################################################
 
+  def __load_results(self):
+    try:
+      with open(os.path.join(self.latest_results_directory, 'results.json')) as f:
+        self.results = json.load(f)
+    except (ValueError, IOError):
+      pass
+
   ############################################################
   # __finish
   ############################################################
@@ -860,6 +915,9 @@ class Benchmarker:
     if self.database_user == None: self.database_user = self.client_user
     if self.database_host == None: self.database_host = self.client_host
     if self.database_identity_file == None: self.database_identity_file = self.client_identity_file
+
+    # Remember root directory
+    self.fwroot = setup_util.get_fwroot()
 
     # setup results and latest_results directories 
     self.result_directory = os.path.join("results", self.name)
@@ -968,8 +1026,8 @@ class Benchmarker:
     if self.client_identity_file != None:
       self.client_ssh_string = self.client_ssh_string + " -i " + self.client_identity_file
 
-    if self.install_software:
-      install = Installer(self)
+    if self.install is not None:
+      install = Installer(self, self.install_strategy)
       install.install_software()
 
   ############################################################
