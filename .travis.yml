@@ -27,6 +27,7 @@ before_install:
     # Setup the root account to be what TFB expects
   - mysql --user=root --execute="select Host,User,Password FROM mysql.user"
   - echo "Configuring mysql"
+  - echo "Trigger build"
   - echo "USE mysql;\nUPDATE user SET password=PASSWORD('secret') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
   - mysql --user=root --password=secret --execute="select Host,User,Password FROM mysql.user"
   - mysql -uroot -psecret < config/create.sql
