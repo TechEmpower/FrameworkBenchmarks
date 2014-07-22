@@ -16,6 +16,10 @@ class Go(TestRunner):
       self.sh("setup.bat")
       return 0
     
+    self.sh("echo Debugging database connectivity")
+    self.sh("mysql --host=%s --password=benchmarkdbpass --user=benchmarkdbuser --execute=\"show databases;\"" % self.database_host)
+    self.sh("mysql --host=%s --password=benchmarkdbpass --user=benchmarkdbuser --execute=\"show create database hello_world;\"" % self.database_host)
+    
     self.sh("go get ./...")
     self.pid = self.sh_async("go run -x -v src/hello/hello.go")
     return 0
