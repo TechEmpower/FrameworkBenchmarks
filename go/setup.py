@@ -4,7 +4,7 @@ import os
 import setup_util
 from test_runner import TestRunner
 
-class Bar(TestRunner):
+class Go(TestRunner):
 
   def start(self):
     setup_util.replace_text("go/src/hello/hello.go", "tcp\(.*:3306\)", "tcp(" + self.database_host + ":3306)")
@@ -12,16 +12,12 @@ class Bar(TestRunner):
       #subprocess.call("rmdir /s /q pkg\\windows_amd64", shell=True, cwd="go")
       #subprocess.call("rmdir /s /q src\\github.com", shell=True, cwd="go")
       #subprocess.call("del /s /q /f bin\\hello.exe", shell=True, cwd="go")
-      subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\go&& go get ./...", shell=True, cwd="go", stderr=errfile, stdout=logfile)
-      subprocess.Popen("setup.bat", shell=True, cwd="go", stderr=errfile, stdout=logfile)
+      self.sh("go get ./...")
+      self.sh("setup.bat")
       return 0
     
-    self.sh("which go")
-    self.sh("rm -rf src/github.com")
-    self.sh("ls src/github.com/go-sql-driver/mysql")
     self.sh("go get ./...")
-    self.sh("ls src/github.com/go-sql-driver/mysql")
-    self.sh_async("go run -x -v src/hello/hello.go")
+    self.pid = self.sh_async("go run -x -v src/hello/hello.go")
     return 0
 
   def stop(self):
@@ -29,10 +25,6 @@ class Bar(TestRunner):
       subprocess.call("taskkill /f /im go.exe > NUL", shell=True, stderr=errfile, stdout=logfile)
       subprocess.call("taskkill /f /im hello.exe > NUL", shell=True, stderr=errfile, stdout=logfile)
       return 0
-    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    for line in out.splitlines():
-      if 'hello' in line:
-        pid = int(line.split(None, 2)[1])
-        os.kill(pid, 15)
+    # Kill off the entire go process group
+    self.sh_pkill(self.pid)
     return 0

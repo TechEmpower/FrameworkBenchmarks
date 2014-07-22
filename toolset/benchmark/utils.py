@@ -1,6 +1,7 @@
 
 import subprocess
 import time
+import os
 import logging
 import shlex
 
@@ -22,6 +23,7 @@ class ShellUtils():
     self.outfile = outfile
     self.errfile = errfile
     self.logger = logger
+    self.os = os.name
   
   def __write_out(self, message, level=logging.INFO, stream=None):
     if self.logger:
