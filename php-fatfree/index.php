@@ -2,20 +2,17 @@
 /** @var Base $f3 */
 $f3=require('lib/base.php');
 
-$f3->set('DEBUG',0);
-$f3->set('CACHE',true);
+$f3->set('DEBUG',2);
+$f3->set('CACHE','folder=tmp/cache/');
 $f3->set('UI','ui/');
-// lazy initialized DB object
-$f3->set('DB',function() {
-	return new \DB\SQL('mysql:host=localhost;port=3306;dbname=hello_world',
-	                   'benchmarkdbuser', 'benchmarkdbpass');
-});
+
+$f3->set('DBS',array('mysql:host=localhost;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass'));
 
 // https://github.com/TechEmpower/FrameworkBenchmarks#json-response
 $f3->route('GET /json',function($f3) {
     /** @var Base $f3 */
     header("Content-type: application/json");
-    return json_encode(array('message' => 'Hello World!'));
+    echo json_encode(array('message' => 'Hello World!'));
 });
 
 
@@ -28,17 +25,16 @@ $f3->route(
     ),
     function ($f3,$params) {
     /** @var Base $f3 */
-        $params += array('queries' => 1); //default value        
-        $dbc = $f3->get('DB');
-        $db = $dbc();
+        $params += array('queries' => 1); //default value
+        $dbc = $f3->get('DBS');
+        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
         $result = array();
         for ($i = 0; $i < $params['queries']; ++$i) {
             $id = mt_rand(1, 10000);
             $result[] = $db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false);
         }
-
         header("Content-type: application/json");
-        return json_encode($result);
+        echo json_encode($result);
     }
 );
 
@@ -51,9 +47,9 @@ $f3->route(
     ),
     function ($f3, $params) {
         /** @var Base $f3 */
-        $params += array('queries' => 1); //default value        
-        $dbc = $f3->get('DB');
-        $db = $dbc();
+        $params += array('queries' => 1); //default value
+        $dbc = $f3->get('DBS');
+        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
         $mapper = new \DB\SQL\Mapper($db,'World');
         $result = array();
         for ($i = 0; $i < $params['queries']; ++$i) {
@@ -63,7 +59,7 @@ $f3->route(
         }
 
         header("Content-type: application/json");
-        return json_encode($result);
+        echo json_encode($result);
     }
 );
 
@@ -75,8 +71,8 @@ $f3->route('GET /plaintext', function ($f3) {
 
 $f3->route('GET /fortune', function ($f3) {
     /** @var Base $f3 */
-    $dbc = $f3->get('DB');
-    $db = $dbc();
+    $dbc = $f3->get('DBS');
+    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
     $result = $db->exec('SELECT id, message FROM Fortune');
     $result[] = 'Additional fortune added at request time.';
     asort($result);
@@ -91,18 +87,18 @@ $f3->route(
          'GET /updateraw/@queries',
     ),function($f3,$params) {
     /** @var Base $f3 */
-    $params += array('queries' => 1); //default value    
-    $dbc = $f3->get('DB');
-    $db = $dbc();
-    
+    $params += array('queries' => 1); //default value
+    $dbc = $f3->get('DBS');
+    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
+
     $result = array();
     for ($i = 0; $i < $params['queries']; ++$i) {
         $id = mt_rand(1, 10000);
-        
+
         $row = array(
-        	'id'=>$id,
-        	'randomNumber'=>$db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false)
-        	);
+            'id'=>$id,
+            'randomNumber'=>$db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false)
+        );
         $rnu = mt_rand(1, 10000);
         $row['randomNumber'] = $rnu;
         $db->exec('UPDATE World SET randomNumber = :ranNum WHERE id = :id', array(':ranNum'=>$rnu,':id'=>$id),0,false);
@@ -110,8 +106,8 @@ $f3->route(
     }
 
     header("Content-type: application/json");
-    return json_encode($result);
-        
+    echo json_encode($result);
+
 });
 
 $f3->run();
