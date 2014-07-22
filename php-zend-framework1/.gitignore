@@ -5,3 +5,4 @@
 /tags
 .idea
 composer.lock
+cache.properties
