@@ -125,7 +125,7 @@ class Benchmarker:
         Running Tests ...
       =====================================================
       """)
-    self.__run_tests(all_tests)
+    result = self.__run_tests(all_tests)
 
     ##########################
     # Parse results
@@ -139,6 +139,7 @@ class Benchmarker:
       self.__parse_results(all_tests)
 
     self.__finish()
+    return result
 
   ############################################################
   # End run
@@ -574,17 +575,17 @@ class Benchmarker:
         # application server or the database server don't match
         # our current environment
         out.write("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.\n")
-        return 
+        return 0
       
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
         out.write("Test {name} has been added to the excludes list. Skipping.\n".format(name=test.name))
-        return
+        return 0
       
       # If the test does not contain an implementation of the current test-type, skip it
       if self.type != 'all' and not test.contains_type(self.type):
         out.write("Test type {type} does not contain an implementation of the current test-type. Skipping.\n".format(type=self.type))
-        return
+        return 0
 
       out.write("test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".format(os=test.os.lower(),dbos=test.database_os.lower()))
       out.write("self.results['frameworks'] != None: {val}\n".format(val=str(self.results['frameworks'] != None)))
@@ -735,6 +736,9 @@ class Benchmarker:
           {trace}
           """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
           err.flush()
+        out.close()
+        err.close()
+        return 1
       except (KeyboardInterrupt, SystemExit) as e:
         test.stop(out)
         out.write( """
@@ -748,6 +752,7 @@ class Benchmarker:
 
       out.close()
       err.close()
+      return 0
 
   ############################################################
   # End __run_tests
