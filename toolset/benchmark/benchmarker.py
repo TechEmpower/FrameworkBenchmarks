@@ -488,10 +488,12 @@ class Benchmarker:
     log.info("__run_tests")
     log.debug("__run_tests with __name__ = %s",__name__)
 
+    error_happened = False
     if self.os.lower() == 'windows':
       log.info("Executing __run_tests on Windows")
       for test in tests:
-        self.__run_test(test)
+        if self.__run_test(test) != 0:
+          error_happened = True
     else:
       log.info("Executing __run_tests on Linux")
       for test in tests:
@@ -534,7 +536,12 @@ class Benchmarker:
               pass
             subprocess.call("sudo pkill -SIGKILL -s %s" % test_process.pid, shell=True)
           log.handlers = []  # Clean up handlers left by __run_test
+          if test_process.exitcode != 0:
+            error_happened = True
     log.info("End __run_tests")
+    if error_happened:
+      return 1
+    return 0
 
   ############################################################
   # End __run_tests
@@ -645,7 +652,7 @@ class Benchmarker:
       if self.__is_port_bound(test.port):
         self.__write_intermediate_results(test.name, "port %s is not available before start" % test.port)
         log.error(Header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
-        return
+        return 1
 
       result = test.start(log)
       if result != 0: 
@@ -654,7 +661,7 @@ class Benchmarker:
         log.error("ERROR: Problem starting %s", test.name)
         log.error(Header("Stopped %s" % test.name))
         self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
-        return
+        return 1
       
       log.info("Sleeping for %s", self.sleep)
       time.sleep(self.sleep)
@@ -676,7 +683,7 @@ class Benchmarker:
       if self.__is_port_bound(test.port):
         self.__write_intermediate_results(test.name, "port %s was not released by stop" % test.port)
         log.error(Header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
-        return
+        return 1
 
       log.info(Header("Stopped %s" % test.name))
       time.sleep(5)
@@ -701,6 +708,7 @@ class Benchmarker:
         log.error("%s", e)
         log.error("%s", sys.exc_info()[:2])
         log.debug("Subprocess Error Details", exc_info=True)
+      return 1
   ############################################################
   # End __run_test
   ############################################################
