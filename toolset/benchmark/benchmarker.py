@@ -382,7 +382,7 @@ class Benchmarker:
     # If the tests have been interrupted somehow, then we want to resume them where we left
     # off, rather than starting from the beginning
     if os.path.isfile('current_benchmark.txt'):
-        with open('current_benchmark.txt', 'r') as interrputed_benchmark:
+        with open('current_benchmark.txt', 'r') as interrupted_benchmark:
             interrupt_bench = interrupted_benchmark.read()
             for index, atest in enumerate(tests):
                 if atest.name == interrupt_bench:
