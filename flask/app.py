@@ -22,10 +22,10 @@ except ImportError:
 # setup
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@DBHOSTNAME:3306/hello_world?charset=utf8'
+app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@localhost:3306/hello_world?charset=utf8'
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = SQLAlchemy(app)
-dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], connect_args={'autocommit': True}, pool_reset_on_return=None)
 
 # models
 
@@ -110,7 +110,9 @@ def get_fortunes():
 
 @app.route("/fortunesraw")
 def get_forutens_raw():
-    fortunes = list(dbraw_engine.execute("SELECT * FROM Fortune"))
+    res = dbraw_engine.execute("SELECT * FROM Fortune")
+    fortunes = res.fetchall()
+    res.close()
     fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
     fortunes.sort(key=attrgetter('message'))
     return render_template('fortunes.html', fortunes=fortunes)
@@ -138,19 +140,22 @@ def updates():
 @app.route("/raw-updates")
 def raw_updates():
     """Test 5: Database Updates"""
-    num_queries = request.args.get('queries', 1, type=int)
-    if num_queries > 500:
-        num_queries = 500
+    connection = dbraw_engine.connect()
+    try:
+        num_queries = request.args.get('queries', 1, type=int)
+        if num_queries > 500:
+            num_queries = 500
 
-    worlds = []
-    rp = partial(randint, 1, 10000)
-    for i in xrange(num_queries):
-        world = dbraw_engine.execute("SELECT * FROM World WHERE id=%s", (rp(),)).fetchone()
-        randomNumber = rp()
-        worlds.append({'id': world['id'], 'randomNumber': randomNumber})
-        dbraw_engine.execute("UPDATE World SET randomNumber=%s WHERE id=%s",
-                             (randomNumber, world['id']))
-    return json_response(worlds)
+        worlds = []
+        rp = partial(randint, 1, 10000)
+        for i in xrange(num_queries):
+            world = connection.execute("SELECT * FROM World WHERE id=%s", (rp(),)).fetchone()
+            randomNumber = rp()
+            worlds.append({'id': world['id'], 'randomNumber': randomNumber})
+            connection.execute("UPDATE World SET randomNumber=%s WHERE id=%s", (randomNumber, world['id']))
+        return json_response(worlds)
+    finally:
+        connection.close()
 
 
 @app.route('/plaintext')
@@ -160,6 +165,13 @@ def plaintext():
     response.content_type = 'text/plain'
     return response
 
+
+try:
+    import meinheld
+    meinheld.server.set_access_logger(None)
+    meinheld.set_keepalive(120)
+except ImportError:
+    pass
 
 # entry point for debugging
 if __name__ == "__main__":

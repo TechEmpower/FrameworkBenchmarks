@@ -1,3 +1,4 @@
+lcd ..
 put config/my.cnf
 put config/mongodb.conf
 put config/create.sql
@@ -9,3 +10,9 @@ put config/postgresql.conf
 put config/pg_hba.conf
 put config/usr.sbin.mysqld
 put config/60-postgresql-shm.conf
+put config/mysql
+put config/mysql.conf
+-mkdir cassandra
+put -r config/cassandra
+put config/redis.conf
+put config/create-redis.sh

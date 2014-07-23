@@ -11,7 +11,7 @@ object ApplicationBuild extends Build {
     jdbc,
     anorm,
     "mysql" % "mysql-connector-java" % "5.1.22",
-    "com.typesafe.play" %% "play-slick" % "0.5.0.8" 
+    "com.typesafe.play" %% "play-slick" % "0.6.0.1"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
