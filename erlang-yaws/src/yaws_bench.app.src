@@ -1,0 +1,9 @@
+%% -*- erlang -*-
+{application, yaws_bench,
+ [{description, ""},
+  {vsn, "0.1"},
+  {modules, []},
+  {registered, []},
+  {mod, {yaws_bench_app, []}},
+  {env, []},
+  {applications, [kernel, stdlib, crypto, erl_bench]}]}.
