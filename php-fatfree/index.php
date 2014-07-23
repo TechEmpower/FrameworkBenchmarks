@@ -6,7 +6,7 @@ $f3->set('DEBUG',2);
 $f3->set('CACHE','folder=tmp/cache/');
 $f3->set('UI','ui/');
 
-$f3->set('DBS',array('mysql:host=localhost;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass'));
+$f3->set('DBS',array('mysql:host=127.0.0.1;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass'));
 
 // http: //www.techempower.com/benchmarks/#section=code
 
