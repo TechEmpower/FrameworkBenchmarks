@@ -5,6 +5,7 @@
     <artifactId>ninja-resin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ninja-resin</name>
+    <packaging>war</packaging>
     <description>Ninja test for the TechEmpower/FrameworkBenchmarks project</description>
 
     <properties>
