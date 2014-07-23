@@ -21,9 +21,8 @@
 	</licenses>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<wicket.version>6.15.0</wicket.version>
+		<wicket.version>6.16.0</wicket.version>
 		<jetty.version>8.1.14.v20131031</jetty.version>
-		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<slf4j.version>1.7.7</slf4j.version>
 	</properties>
 	<dependencies>
@@ -34,16 +33,12 @@
 			<version>${wicket.version}</version>
 		</dependency>
 
+		<!-- a faster DataSource -->
 		<dependency>
-			<groupId>com.jolbox</groupId>
-			<artifactId>bonecp</artifactId>
-			<version>${bonecp.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>17.0</version>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>1.4.0</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- LOGGING DEPENDENCIES - LOG4J -->

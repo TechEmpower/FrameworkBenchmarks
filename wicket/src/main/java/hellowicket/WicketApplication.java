@@ -1,14 +1,12 @@
 package hellowicket;
 
-import java.io.IOException;
-import java.util.Properties;
-
+import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.IRequestCycleSettings;
 
-import com.jolbox.bonecp.BoneCPDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import hellowicket.dbupdates.HelloDbUpdatesReference;
 import hellowicket.fortune.FortunePage;
@@ -19,7 +17,7 @@ import hellowicket.plaintext.HelloTextReference;
  */
 public class WicketApplication extends WebApplication
 {
-	private BoneCPDataSource db;
+	private DataSource db;
 
 	@Override
 	public Class<HomePage> getHomePage()
@@ -54,15 +52,16 @@ public class WicketApplication extends WebApplication
 	@Override
 	protected void onDestroy()
 	{
-		db.close();
+		if (db instanceof HikariDataSource) {
+			((HikariDataSource)db).close();
+		}
 		super.onDestroy();
 	}
 
-//	@Override
-//	public RuntimeConfigurationType getConfigurationType()
-//	{
-//		return RuntimeConfigurationType.DEVELOPMENT;
-//	}
+	private boolean useResinDataSource()
+	{
+		return false;
+	}
 
 	public static WicketApplication get()
 	{
@@ -74,43 +73,33 @@ public class WicketApplication extends WebApplication
 		return db;
 	}
 
-	private BoneCPDataSource newDataSource()
+	private DataSource newDataSource()
 	{
+		DataSource dataSource;
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e)
-		{
-			throw new RuntimeException("Cannot load MySQL JDBC driver", e);
-		}
-		BoneCPDataSource ds = new BoneCPDataSource();
-		Properties settings = loadSettings();
-		ds.setJdbcUrl(settings.getProperty("mysql.uri"));
-		ds.setUsername(settings.getProperty("mysql.user"));
-		ds.setPassword(settings.getProperty("mysql.password"));
 
-		return ds;
-	}
-
-	private Properties loadSettings()
-	{
-		ClassLoader classLoader = WicketApplication.class.getClassLoader();
-		Properties settings = new Properties();
-
-		try
-		{
-			if (usesDeploymentConfig())
+			if (useResinDataSource())
 			{
-				settings.load(classLoader.getResourceAsStream("prod.properties"));
+				InitialContext jndiContext = new InitialContext();
+				dataSource = (DataSource) jndiContext.lookup("java:comp/env/jdbc/hello_world");
 			}
 			else
 			{
-				settings.load(classLoader.getResourceAsStream("dev.properties"));
+				// use faster DataSource impl
+				HikariDataSource ds = new HikariDataSource();
+				ds.setJdbcUrl("jdbc:mysql://localhost:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true");
+				ds.setDriverClassName("com.mysql.jdbc.Driver");
+				ds.setUsername("benchmarkdbuser");
+				ds.setPassword("benchmarkdbpass");
+				dataSource = ds;
 			}
-		} catch (IOException e)
+		} catch (Exception x)
 		{
-			throw new RuntimeException("Cannot load the settings!", e);
+			throw new RuntimeException("Cannot create the data source", x);
 		}
-		return settings;
+
+		return dataSource;
 	}
 }
