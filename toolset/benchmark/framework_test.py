@@ -341,8 +341,11 @@ class FrameworkTest:
   # curl the URL and check for it's return status. 
   # For each url, a flag will be set on this object for whether
   # or not it passed
+  # Returns True if all verifications succeeded
   ############################################################
   def verify_urls(self, out, err):
+    result = True
+
     # JSON
     if self.runTests[self.JSON]:
       out.write(textwrap.dedent("""
@@ -361,6 +364,7 @@ class FrameworkTest:
       else:
         self.json_url_passed = False
         out.write("FAIL\n\n")
+        result = False
       out.flush
 
     # DB
@@ -391,6 +395,7 @@ class FrameworkTest:
         out.write("\n\n")
       else:
         out.write("FAIL\n\n")
+        result = False
       out.flush
 
     # Query
@@ -452,6 +457,7 @@ class FrameworkTest:
         out.write("\n\n")
       else:
         out.write("FAIL\n\n")
+        result = False
       out.flush
 
     # Fortune
@@ -472,6 +478,7 @@ class FrameworkTest:
       else:
         self.fortune_url_passed = False
         out.write("FAIL\n\n")
+        result = False
       out.flush
 
     # Update
@@ -492,6 +499,7 @@ class FrameworkTest:
       else:
         self.update_url_passed = False
         out.write("FAIL\n\n")
+        result = False
       out.flush
 
     # plaintext
@@ -512,8 +520,10 @@ class FrameworkTest:
       else:
         self.plaintext_url_passed = False
         out.write("FAIL\n\n")
+        result = False
       out.flush
 
+    return result
   ############################################################
   # End verify_urls
   ############################################################

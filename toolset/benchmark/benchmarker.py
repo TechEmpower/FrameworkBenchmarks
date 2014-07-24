@@ -653,7 +653,7 @@ class Benchmarker:
         ##########################
         # Verify URLs
         ##########################
-        test.verify_urls(out, err)
+        passed_verify = test.verify_urls(out, err)
         out.flush()
         err.flush()
 
