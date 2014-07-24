@@ -569,6 +569,14 @@ class Benchmarker:
   # are needed.
   ############################################################
   def __run_test(self, test):
+    
+    # Used to capture return values 
+    def exit_with_code(code):
+      if self.os.lower() == 'windows':
+        return code
+      else:
+        sys.exit(code)
+
     try:
       os.makedirs(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name)))
     except:
@@ -578,24 +586,24 @@ class Benchmarker:
       if hasattr(test, 'skip'):
         if test.skip.lower() == "true":
           out.write("Test {name} benchmark_config specifies to skip this test. Skipping.\n".format(name=test.name))
-          return
+          return exit_with_code(0)
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         # the operating system requirements of this test for the
         # application server or the database server don't match
         # our current environment
         out.write("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.\n")
-        return 0
+        return exit_with_code(0)
       
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
         out.write("Test {name} has been added to the excludes list. Skipping.\n".format(name=test.name))
-        return 0
+        return exit_with_code(0)
       
       # If the test does not contain an implementation of the current test-type, skip it
       if self.type != 'all' and not test.contains_type(self.type):
         out.write("Test type {type} does not contain an implementation of the current test-type. Skipping.\n".format(type=self.type))
-        return 0
+        return exit_with_code(0)
 
       out.write("test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".format(os=test.os.lower(),dbos=test.database_os.lower()))
       out.write("self.results['frameworks'] != None: {val}\n".format(val=str(self.results['frameworks'] != None)))
@@ -603,7 +611,7 @@ class Benchmarker:
       out.write("self.results['completed']: {completed}\n".format(completed=str(self.results['completed'])))
       if self.results['frameworks'] != None and test.name in self.results['completed']:
         out.write('Framework {name} found in latest saved data. Skipping.\n'.format(name=str(test.name)))
-        return
+        return exit_with_code(1)
 
       out.flush()
 
@@ -642,7 +650,7 @@ class Benchmarker:
             ---------------------------------------------------------
             """.format(name=test.name, port=str(test.port))) )
           err.flush()
-          return 1
+          return exit_with_code(1)
 
         result = test.start(out, err)
         if result != 0: 
@@ -656,7 +664,7 @@ class Benchmarker:
             """.format(name=test.name)) )
           err.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
-          return 1
+          return exit_with_code(1)
         
         time.sleep(self.sleep)
 
@@ -703,7 +711,7 @@ class Benchmarker:
             -----------------------------------------------------
             """.format(name=test.name, port=str(test.port))) )
           err.flush()
-          return
+          return exit_with_code(1)
 
         out.write( textwrap.dedent("""
         -----------------------------------------------------
@@ -724,6 +732,10 @@ class Benchmarker:
         """.format(name=test.name)) )
         out.flush()
         self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
+
+        if self.mode == "verify" and not passed_verify:
+          print "Failed verify!"
+          return exit_with_code(1)
       except (OSError, IOError, subprocess.CalledProcessError) as e:
         self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
         err.write( textwrap.dedent("""
@@ -748,7 +760,7 @@ class Benchmarker:
           err.flush()
         out.close()
         err.close()
-        return 1
+        return exit_with_code(1)
       except (KeyboardInterrupt, SystemExit) as e:
         test.stop(out)
         out.write( """
@@ -762,7 +774,7 @@ class Benchmarker:
 
       out.close()
       err.close()
-      return 0
+      return exit_with_code(0)
 
   ############################################################
   # End __run_tests
