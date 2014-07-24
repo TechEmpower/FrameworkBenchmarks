@@ -12,7 +12,7 @@ $wincache_installer_path  = "wincache-1.3.4/$wincache_installer_file"
 $go_installer_file        = "go1.2.windows-amd64.msi"
 $jre_installer_file       = "jre-7u51-windows-x64.exe"
 $jdk_installer_file       = "jdk-7u51-windows-x64.exe"
-$jdk_master_hash          = "d1367410be659f1b47e554e7bd011ea0" 
+$jdk_master_hash          = "f0270817998c7408b24a2dd9ac420346" 
 # http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
 $resin_version            = "resin-4.0.36"
 $resin_installer_file     = "$resin_version.zip"
