@@ -1,5 +1,6 @@
 # -*- coding: utf-8
 from HTMLParser import HTMLParser
+from difflib import unified_diff
 
 class FortuneHTMLParser(HTMLParser):
   body = []
@@ -107,5 +108,10 @@ class FortuneHTMLParser(HTMLParser):
   # is valid against our known "fortune" spec.
   # The parsed data in 'body' is joined on empty strings
   # and checked for equality against our spec.
-  def isValidFortune(self):
-    return self.valid == ''.join(self.body)
+  def isValidFortune(self, out):
+    body = ''.join(self.body)
+    diff = self.valid == body
+    if not diff:
+      out.write("Fortune invalid. Diff following:\n")
+      out.write(''.join(unified_diff(self.valid, body, fromfile="Valid", tofile="Output")) + '\n')
+    return diff

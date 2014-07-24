@@ -146,14 +146,16 @@ class FrameworkTest:
   # key with the value "hello, world!" (case-insensitive).
   ############################################################
   def validateJson(self, jsonString, out, err):
+    err_str = ""
     try:
       obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
-
+      if "message" not in obj:
+        err_str += "Expected key 'message' to be in JSON string "
       if  obj["message"].lower() == "hello, world!":
-        return True
+        err_str += "Message was '{message}', should have been 'Hello, World!' ".format(message=obj["message"])
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the JSON test: {exception}".format(exception=sys.exc_info()[0:2])
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # Validates the jsonString is a JSON object that has an "id"
@@ -161,6 +163,7 @@ class FrameworkTest:
   # integers.
   ############################################################
   def validateDb(self, jsonString, out, err):
+    err_str = ""
     try:
       obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
@@ -169,29 +172,62 @@ class FrameworkTest:
       if type(obj) == list:
         obj = obj[0]
 
+      if "id" not in obj or "randomnumber" not in obj:
+        err_str += "Expected keys id and randomNumber to be in JSON string. "
+        return (False, err_str)
+
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
-      if (type(float(obj["id"])) == float and 
-          type(float(obj["randomnumber"])) == float):
-        return True
+      id_ret_val = True
+      try:
+        if not isinstance(float(obj["id"]), float):
+          id_ret_val=False
+      except:
+        id_ret_val=False
+      if not id_ret_val:
+        err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
+      random_num_ret_val = True
+      try:
+        if not isinstance(float(obj["randomnumber"]), float):
+          random_num_ret_val=False
+      except:
+        random_num_ret_val=False
+      if not random_num_ret_val:
+        err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
+      return id_ret_val and random_num_ret_val
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the db test: {exception}".format(exception=sys.exc_info()[0:2])
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   def validateDbStrict(self, jsonString, out, err):
+    err_str = ""
     try:
       obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
-      if (type(float(obj["id"])) == float and 
-          type(float(obj["randomnumber"])) == float):
-        return True
+      id_ret_val = True
+      try:
+        if not isinstance(float(obj["id"]), float):
+          id_ret_val=False
+      except:
+        id_ret_val=False
+      if not id_ret_val:
+        err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
+      random_num_ret_val = True
+      try:
+        if not isinstance(float(obj["randomnumber"]), float):
+          random_num_ret_val=False
+      except:
+        random_num_ret_val=False
+      if not random_num_ret_val:
+        err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
+      return id_ret_val and random_num_ret_val
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the db test: {exception}".format(exception=sys.exc_info()[0:2])
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
 
   ############################################################
@@ -201,17 +237,34 @@ class FrameworkTest:
   # both keys map to integers.
   ############################################################
   def validateQuery(self, jsonString, out, err):
+    err_str = ""
     try:
       arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
-
-      if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomnumber"])) == float and 
-          type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomnumber"])) == float):
-        return True
+      if len(arr) != 2:
+        err_str += "Expected array of length 2. Got length {length}. ".format(length=len(arr))
+      for obj in arr:
+        id_ret_val = True
+        random_num_ret_val = True
+        if "id" not in obj or "randomnumber" not in obj:
+          err_str += "Expected keys id and randomNumber to be in JSON string. "
+          break
+        try:
+          if not isinstance(float(obj["id"]), float):
+            id_ret_val=False
+        except:
+          id_ret_val=False
+        if not id_ret_val:
+          err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
+        try:
+          if not isinstance(float(obj["randomnumber"]), float):
+            random_num_ret_val=False
+        except:
+          random_num_ret_val=False
+        if not random_num_ret_val:
+          err_str += "Expected randomNumber to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the query test: {exception}".format(exception=sys.exc_info()[0:2])
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # Validates the jsonString is an array with a length of
@@ -220,23 +273,39 @@ class FrameworkTest:
   # both keys map to integers.
   ############################################################
   def validateQueryOneOrLess(self, jsonString, out, err):
+    err_str = ""
     try:
-      arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
-
-      if len(arr) != 1:
-        return False
+      json_load = json.loads(jsonString)
+      if isinstance(json_load, list):
+        err_str += "Expected JSON object, got JSON array. " 
+        return (False, err_str)
+      arr = {k.lower(): v for k,v in json_string.items()}
 
       for obj in arr:
-        if (type(float(obj["id"])) != float or
-            type(float(obj["randomnumber"])) != float or
-            type(float(obj["id"])) != float or
-            type(float(obj["randomnumber"])) != float):
-          return False
-      # By here, it's passed validation
-      return True
+        id_ret_val = True
+        random_num_ret_val = True
+        if "id" not in obj or "randomnumber" not in obj:
+          err_str += "Expected keys id and randomNumber to be in JSON string. "
+          continue
+        try:
+          if not isinstance(float(obj["id"]), float):
+            id_ret_val=False
+        except:
+          id_ret_val=False
+        if not id_ret_val:
+          err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
+        try:
+          if not isinstance(float(obj["randomnumber"]), float):
+            random_num_ret_val=False
+        except:
+          random_num_ret_val=False
+        if not random_num_ret_val:
+          err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
+          ret_val = False
+      return ret_val
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=sys.exc_info()[0:2])
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # Validates the jsonString is an array with a length of
@@ -245,36 +314,51 @@ class FrameworkTest:
   # both keys map to integers.
   ############################################################
   def validateQueryFiveHundredOrMore(self, jsonString, out, err):
+    err_str = ""
     try:
       arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if len(arr) != 500:
+        err_str += "Expected array of length 500. Got length {length}. ".format(length=len(arr))
         return False
 
       for obj in arr:
-        if (type(float(obj["id"])) != float or
-            type(float(obj["randomnumber"])) != float or
-            type(float(obj["id"])) != float or
-            type(float(obj["randomnumber"])) != float):
-          return False
-      # By here, it's passed validation
-      return True
+        id_ret_val = True
+        random_num_ret_val = True
+        if "id" not in obj or "randomnumber" not in obj:
+          err_str += "Expected keys id and randomNumber to be in JSON string. "
+          break
+        try:
+          if not isinstance(float(obj["id"]), float):
+            id_ret_val=False
+        except:
+          id_ret_val=False
+        if not id_ret_val:
+          err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
+        try:
+          if not isinstance(float(obj["randomnumber"]), float):
+            random_num_ret_val=False
+        except:
+          random_num_ret_val=False
+        if not random_num_ret_val:
+          err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=sys.exc_info()[0:2])
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # Parses the given HTML string and asks a FortuneHTMLParser
   # whether the parsed string is a valid fortune return.
   ############################################################
   def validateFortune(self, htmlString, out, err):
+    err_str = ""
     try:
       parser = FortuneHTMLParser()
       parser.feed(htmlString)
 
       return parser.isValidFortune()
     except:
-      pass
+      print "Got exception when trying to validate the fortune test: {exception} ".format(exception=sys.exc_info()[0:2])
     return False
 
   ############################################################
@@ -284,27 +368,47 @@ class FrameworkTest:
   # both keys map to integers.
   ############################################################
   def validateUpdate(self, jsonString, out, err):
+    err_str = ""
     try:
       arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
-
-      if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomnumber"])) == float and 
-          type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomnumber"])) == float):
-        return True
+      ret_val = True
+      if len(arr) != 2:
+        err_str += "Expected array of length 2. Got length {length}.\n".format(length=len(arr))
+      for obj in arr:
+        id_ret_val = True
+        random_num_ret_val = True
+        if "id" not in obj or "randomnumber" not in obj:
+          err_str += "Expected keys id and randomNumber to be in JSON string.\n"
+          return False
+        try:
+          if not isinstance(float(obj["id"]), float):
+            id_ret_val=False
+        except:
+          id_ret_val=False
+        if not id_ret_val:
+          err_str += "Expected id to be type int or float, got '{rand}'.\n".format(rand=obj["randomnumber"])
+        try:
+          if not isinstance(float(obj["randomnumber"]), float):
+            random_num_ret_val=False
+        except:
+          random_num_ret_val=False
+        if not random_num_ret_val:
+          err_str += "Expected randomNumber to be type int or float, got '{rand}'.\n".format(rand=obj["randomnumber"])
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the update test: {exception}\n".format(exception=sys.exc_info()[0:2])
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   #
   ############################################################
   def validatePlaintext(self, jsonString, out, err):
+    err_str = ""
     try:
-      return jsonString.lower().strip() == "hello, world!"
+      if not jsonString.lower().strip() == "hello, world!":
+        err_str += "Expected 'Hello, World!', got '{message}'.\n".format(message=jsonString.strip())
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the plaintext test: {exception}\n".format(exception=sys.exc_info()[0:2])
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # start(benchmarker)
@@ -363,7 +467,7 @@ class FrameworkTest:
         out.write("PASS\n\n")
       else:
         self.json_url_passed = False
-        out.write("FAIL\n\n")
+        out.write("\nFAIL\n\n" + ret_tuple[1])
         result = False
       out.flush
 
@@ -394,7 +498,7 @@ class FrameworkTest:
           out.write(" (with warnings)")
         out.write("\n\n")
       else:
-        out.write("FAIL\n\n")
+        out.write("\nFAIL\n\n" + ret_tuple[1])
         result = False
       out.flush
 
@@ -409,21 +513,23 @@ class FrameworkTest:
 
       url = self.benchmarker.generate_url(self.query_url + "2", self.port)
       output = self.__curl_url(url, self.QUERY, out, err)
-      if self.validateQuery(output, out, err):
+      ret_tuple = self.validateQuery(output, out, err)
+      if ret_tuple[0]:
         self.query_url_passed = True
         out.write(self.query_url + "2 - PASS\n\n")
       else:
         self.query_url_passed = False
-        out.write(self.query_url + "2 - FAIL\n\n")
+        out.write(self.query_url + "2 - FAIL\n\n" + ret_tuple[1])
       out.write("-----------------------------------------------------\n\n")
       out.flush()
 
       self.query_url_warn = False
       url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
       output2 = self.__curl_url(url2, self.QUERY, out, err)
-      if not self.validateQueryOneOrLess(output2, out, err):
+      ret_tuple = self.validateQueryOneOrLess(output2, out, err)
+      if not ret_tuple[0]:
         self.query_url_warn = True
-        out.write(self.query_url + "0 - WARNING\n\n")
+        out.write(self.query_url + "0 - WARNING\n\n" + ret_tuple[1])
       else:
         out.write(self.query_url + "0 - PASS\n\n")
       out.write("-----------------------------------------------------\n\n")
@@ -431,9 +537,10 @@ class FrameworkTest:
 
       url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
       output3 = self.__curl_url(url3, self.QUERY, out, err)
-      if not self.validateQueryOneOrLess(output3, out, err):
+      ret_tuple = self.validateQueryOneOrLess(output3, out, err)
+      if not ret_tuple[0]:
         self.query_url_warn = True
-        out.write(self.query_url + "foo - WARNING\n\n")
+        out.write(self.query_url + "foo - WARNING\n\n" + ret_tuple[1])
       else:
         out.write(self.query_url + "foo - PASS\n\n")
       out.write("-----------------------------------------------------\n\n")
@@ -441,9 +548,10 @@ class FrameworkTest:
 
       url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
       output4 = self.__curl_url(url4, self.QUERY, out, err)
-      if not self.validateQueryFiveHundredOrMore(output4, out, err):
+      ret_tuple = self.validateQueryFiveHundredOrMore(output4, out, err)
+      if not ret_tuple[0]:
         self.query_url_warn = True
-        out.write(self.query_url + "501 - WARNING\n\n")
+        out.write(self.query_url + "501 - WARNING\n\n" + ret_tuple[1])
       else:
         out.write(self.query_url + "501 - PASS\n\n")
       out.write("-----------------------------------------------------\n\n\n")
@@ -456,7 +564,7 @@ class FrameworkTest:
           out.write(" (with warnings)")
         out.write("\n\n")
       else:
-        out.write("FAIL\n\n")
+        out.write("\nFAIL\n\n" + ret_tuple[1])
         result = False
       out.flush
 
@@ -477,7 +585,7 @@ class FrameworkTest:
         out.write("PASS\n\n")
       else:
         self.fortune_url_passed = False
-        out.write("FAIL\n\n")
+        out.write("\nFAIL\n\n")
         result = False
       out.flush
 
@@ -498,7 +606,7 @@ class FrameworkTest:
         out.write("PASS\n\n")
       else:
         self.update_url_passed = False
-        out.write("FAIL\n\n")
+        out.write("\nFAIL\n\n" + ret_tuple[1])
         result = False
       out.flush
 
@@ -514,12 +622,14 @@ class FrameworkTest:
       url = self.benchmarker.generate_url(self.plaintext_url, self.port)
       output = self.__curl_url(url, self.PLAINTEXT, out, err)
       out.write("VALIDATING PLAINTEXT ... ")
-      if self.validatePlaintext(output, out, err):
+      ret_tuple = self.validatePlaintext(output, out, err)
+      print ret_tuple
+      if ret_tuple[0]:
         self.plaintext_url_passed = True
         out.write("PASS\n\n")
       else:
         self.plaintext_url_passed = False
-        out.write("FAIL\n\n")
+        out.write(ret_tuple[1] + "\nFAIL\n\n")
         result = False
       out.flush
 
