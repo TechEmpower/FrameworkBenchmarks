@@ -737,7 +737,7 @@ class Benchmarker:
           """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
           err.flush()
       except (KeyboardInterrupt, SystemExit) as e:
-        test.stop(out)
+        test.stop(out, err)
         out.write( """
         -----------------------------------------------------
           Cleaning up....
