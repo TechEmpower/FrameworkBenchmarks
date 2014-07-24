@@ -172,7 +172,7 @@ class FrameworkTest:
       if type(obj) == list:
         obj = obj[0]
 
-     if "id" not in obj or "randomnumber" not in obj:
+      if "id" not in obj or "randomnumber" not in obj:
         err_str += "Expected keys id and randomNumber to be in JSON string. "
         return (False, err_str)
 
@@ -240,7 +240,7 @@ class FrameworkTest:
     err_str = ""
     try:
       arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
-     if len(arr) != 2:
+      if len(arr) != 2:
         err_str += "Expected array of length 2. Got length {length}. ".format(length=len(arr))
       for obj in arr:
         id_ret_val = True
@@ -319,7 +319,7 @@ class FrameworkTest:
       arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
       if len(arr) != 500:
-       err_str += "Expected array of length 500. Got length {length}. ".format(length=len(arr))
+        err_str += "Expected array of length 500. Got length {length}. ".format(length=len(arr))
         return False
 
       for obj in arr:
