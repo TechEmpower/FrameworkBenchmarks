@@ -546,7 +546,10 @@ class Benchmarker:
           if test_process.exitcode != 0:
             error_happened = True
 
-    os.remove('current_benchmark.txt')
+    try:
+      os.remove('current_benchmark.txt')
+    catch OSError:
+      pass
     logging.debug("End __run_tests.")
     if error_happened:
       return 1
