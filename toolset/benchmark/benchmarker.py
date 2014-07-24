@@ -760,7 +760,7 @@ class Benchmarker:
         err.close()
         return exit_with_code(1)
       except (KeyboardInterrupt, SystemExit) as e:
-        test.stop(out)
+        test.stop(out, err)
         out.write( """
         -----------------------------------------------------
           Cleaning up....
