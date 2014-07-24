@@ -93,7 +93,7 @@ class CIRunnner:
     # Use coverage so we can send code coverate to coveralls.io
     command = "coverage run --source toolset,%s --parallel-mode " % self.test.directory
     
-    command = command + 'toolset/run-tests.py --log DEBUG '
+    command = command + 'toolset/run-tests.py '
     if mode == 'prereq':
       command = command + "--install server --test ''"
     elif mode == 'install':
