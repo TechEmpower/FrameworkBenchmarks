@@ -548,7 +548,7 @@ class Benchmarker:
 
     try:
       os.remove('current_benchmark.txt')
-    catch OSError:
+    except OSError:
       pass
     logging.debug("End __run_tests.")
     if error_happened:
