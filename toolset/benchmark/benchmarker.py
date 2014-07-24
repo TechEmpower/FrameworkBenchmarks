@@ -515,12 +515,14 @@ class Benchmarker:
     logging.debug("Start __run_tests.")
     logging.debug("__name__ = %s",__name__)
 
+    error_happened = False
     if self.os.lower() == 'windows':
       logging.debug("Executing __run_tests on Windows")
       for test in tests:
         with open('current_benchmark.txt', 'w') as benchmark_resume_file:
           benchmark_resume_file.write(test.name)
-        self.__run_test(test)
+        if self.__run_test(test) != 0:
+          error_happened = True
     else:
       logging.debug("Executing __run_tests on Linux")
       # These features do not work on Windows
@@ -541,9 +543,14 @@ class Benchmarker:
             logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
             test_process.terminate()
+          if test_process.exitcode != 0:
+            error_happened = True
+
     os.remove('current_benchmark.txt')
     logging.debug("End __run_tests.")
-
+    if error_happened:
+      return 1
+    return 0
   ############################################################
   # End __run_tests
   ############################################################
@@ -632,7 +639,7 @@ class Benchmarker:
             ---------------------------------------------------------
             """.format(name=test.name, port=str(test.port))) )
           err.flush()
-          return
+          return 1
 
         result = test.start(out, err)
         if result != 0: 
@@ -646,7 +653,7 @@ class Benchmarker:
             """.format(name=test.name)) )
           err.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
-          return
+          return 1
         
         time.sleep(self.sleep)
 
