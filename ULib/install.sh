@@ -1,27 +1,26 @@
 #!/bin/bash
 
-# ---------------------------------------------------------------------------------------------------------------------------------
-# toolset/run-tests.py --install server --install-strategy pertest --install-error-action continue --test ULib --type all --verbose
-# ---------------------------------------------------------------------------------------------------------------------------------
+# install.sh
+# --------------------------------------------------------------------------------------------------------
+# toolset/run-tests.py --install server --test ULib --type all --verbose
+# --------------------------------------------------------------------------------------------------------
+# TROOT - Path of this test's directory
+# IROOT - Path of this test's install directory ($FWROOT/installs or $FWROOT/installs/pertest/<test-name>)
+# --------------------------------------------------------------------------------------------------------
 # INFO:root:Running installation for ULib
 # INSTALL: 
 #    export TROOT=$FWROOT/ULib && 
 #    export IROOT=$FWROOT/installs && 
 #    . $FWROOT/toolset/setup/linux/bash_functions.sh && 
 #    . $FWROOT/ULib/install.sh (cwd=$FWROOT//installs)
-# ---------------------------------------------------------------------------------------------------------------------------------
-
-if [ -z "$TROOT" ]; then
-   return 1
-fi
-
+# --------------------------------------------------------------------------------------------------------
 . ${TROOT}/bash_profile.sh
 
 if [ ! -d "$ULIB_ROOT" ]; then
   mkdir -p $ULIB_ROOT
 fi
 
-cd ${ULIB_ROOT}
+cd $ULIB_ROOT
 
 if [ ! -f "benchmark.cfg" ]; then
   cat <<EOF >benchmark.cfg
@@ -30,14 +29,14 @@ userver {
  PREFORK_CHILD 8
  LISTEN_BACKLOG 8192
  MAX_KEEP_ALIVE 8192
- DOCUMENT_ROOT ${ULIB_DOCUMENT_ROOT}
+ DOCUMENT_ROOT $ULIB_DOCUMENT_ROOT
  PID_FILE ${ULIB_ROOT}/userver_tcp.pid
 }
 EOF
 fi
 
 if [ -x "bin/userver_tcp" ] && [ -x "${ULIB_DOCUMENT_ROOT}/db.so" ]; then
-  return 0
+  exit 0
 fi
 
 # 1. Download ULib
@@ -45,7 +44,7 @@ if [ ! -f "v${ULIB_VERSION}.tar.gz" ]; then
 	wget -nc --no-check-certificate --trust-server-names -O v${ULIB_VERSION}.tar.gz \
         https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 2>/dev/null
 
-	tar xvf v${ULIB_VERSION}.tar.gz 2>/dev/null
+	tar xf v${ULIB_VERSION}.tar.gz 2>/dev/null
 fi
 
 cd ULib-$ULIB_VERSION
@@ -73,7 +72,7 @@ cd src/ulib/net/server/plugin/usp
 make -j1 db.la fortunes.la json.la plaintext.la queries.la updates.la >>$ULIB_BUILD_OUTPUT 2>&1
 
 if [ ! -e .libs/db.so ]; then
-   return 1
+   exit 1
 fi
 
 mkdir -p $ULIB_DOCUMENT_ROOT
