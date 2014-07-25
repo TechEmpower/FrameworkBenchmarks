@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends resin java
+fw_depends resin java leiningen
