@@ -157,7 +157,7 @@ class FrameworkTest:
       if  obj["message"].lower() == "hello, world!":
         err_str += "Message was '{message}', should have been 'Hello, World!' ".format(message=obj["message"])
     except:
-      err_str += "Got exception when trying to validate the JSON test: {exception}".format(exception=sys.exc_info()[0:2])
+      err_str += "Got exception when trying to validate the JSON test: {exception}".format(exception=traceback.print_exc())
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
@@ -202,7 +202,7 @@ class FrameworkTest:
       if not random_num_ret_val:
         err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
     except:
-      err_str += "Got exception when trying to validate the db test: {exception}".format(exception=sys.exc_info()[0:2])
+      err_str += "Got exception when trying to validate the db test: {exception}".format(exception=traceback.print_exc())
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
   def validateDbStrict(self, jsonString, out, err):
@@ -234,7 +234,7 @@ class FrameworkTest:
         err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
       return id_ret_val and random_num_ret_val
     except:
-      err_str += "Got exception when trying to validate the db test: {exception}".format(exception=sys.exc_info()[0:2])
+      err_str += "Got exception when trying to validate the db test: {exception}".format(exception=traceback.print_exc())
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
 
@@ -274,7 +274,7 @@ class FrameworkTest:
         if not random_num_ret_val:
           err_str += "Expected randomNumber to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
     except:
-      err_str += "Got exception when trying to validate the query test: {exception}".format(exception=sys.exc_info()[0:2])
+      err_str += "Got exception when trying to validate the query test: {exception}".format(exception=traceback.print_exc())
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
@@ -318,7 +318,7 @@ class FrameworkTest:
           ret_val = False
       return ret_val
     except:
-      err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=sys.exc_info()[0:2])
+      err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=traceback.print_exc())
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
@@ -360,7 +360,7 @@ class FrameworkTest:
         if not random_num_ret_val:
           err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
     except:
-      err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=sys.exc_info()[0:2])
+      err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=traceback.print_exc())
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
@@ -378,7 +378,7 @@ class FrameworkTest:
 
       return parser.isValidFortune(out)
     except:
-      print "Got exception when trying to validate the fortune test: {exception} ".format(exception=sys.exc_info()[0:2])
+      print "Got exception when trying to validate the fortune test: {exception} ".format(exception=traceback.print_exc())
     return False
 
   ############################################################
@@ -418,7 +418,7 @@ class FrameworkTest:
         if not random_num_ret_val:
           err_str += "Expected randomNumber to be type int or float, got '{rand}'.\n".format(rand=obj["randomnumber"])
     except:
-      err_str += "Got exception when trying to validate the update test: {exception}\n".format(exception=sys.exc_info()[0:2])
+      err_str += "Got exception when trying to validate the update test: {exception}\n".format(exception=traceback.print_exc())
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
@@ -433,7 +433,7 @@ class FrameworkTest:
       if not jsonString.lower().strip() == "hello, world!":
         err_str += "Expected 'Hello, World!', got '{message}'.\n".format(message=jsonString.strip())
     except:
-      err_str += "Got exception when trying to validate the plaintext test: {exception}\n".format(exception=sys.exc_info()[0:2])
+      err_str += "Got exception when trying to validate the plaintext test: {exception}\n".format(exception=traceback.print_exc())
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
