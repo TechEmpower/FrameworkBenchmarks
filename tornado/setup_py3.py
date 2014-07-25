@@ -5,14 +5,9 @@ import sys
 import time
 
 
-python = expanduser('~/FrameworkBenchmarks/installs/py3/bin/python3')
-cwd = expanduser('~/FrameworkBenchmarks/tornado')
-
-
 def start(args, logfile, errfile):
-    subprocess.Popen(
-        python + " server.py --port=8080 --mongo=%s --logging=error" % (args.database_host,),
-        shell=True, cwd=cwd, stderr=errfile, stdout=logfile)
+    subprocess.Popen("$PY3 server.py --port=8080 --mongo=%s --logging=error" % (args.database_host,),
+        shell=True, cwd='tornado', stderr=errfile, stdout=logfile)
     return 0
 
 def stop(logfile, errfile):
