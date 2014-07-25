@@ -41,27 +41,41 @@ class World {
 
 }
 
-class MongoFortune implements Comparable<Fortune> {
+class MongoFortune implements Comparable<MongoFortune> {
+  
+  int _id;
   
   @Field(model: "_id")
-  int id;
+  int get id => _id;
+  
+  @Field(model: "_id")
+  set id(num value) => _id = value.toInt();
   
   @Field()
   String message;
   
-  MongoFortune([this.id, this.message]);
+  MongoFortune([this._id, this.message]);
 
-  compareTo(Fortune other) => message.compareTo(other.message);
+  compareTo(MongoFortune other) => message.compareTo(other.message);
   
 }
 
 class MongoWorld {
   
+  int _id;
+  int _randomNumber;
+    
   @Field(model: "_id")
-  int id;
+  int get id => _id;
+  
+  @Field(model: "_id")
+  set id(num value) => _id = value.toInt();
 
   @Field()
-  int randomNumber;
+  int get randomNumber => _randomNumber;
+  
+  @Field()
+  set randomNumber(num value) => _randomNumber = value.toInt();
 
 }
 
