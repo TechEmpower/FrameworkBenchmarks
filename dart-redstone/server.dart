@@ -261,5 +261,6 @@ main(List<String> args) {
 }
 
 _parseQueriesParam(param) {
-  return param.isEmpty ? 1 : int.parse(param, radix: 10, onError: (_) => 1).clamp(1, 500);
+  return param == null || param.isEmpty ? 1 : 
+    int.parse(param, radix: 10, onError: (_) => 1).clamp(1, 500);
 }
