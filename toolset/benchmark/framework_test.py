@@ -195,7 +195,6 @@ class FrameworkTest:
         random_num_ret_val=False
       if not random_num_ret_val:
         err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
-      return id_ret_val and random_num_ret_val
     except:
       err_str += "Got exception when trying to validate the db test: {exception}".format(exception=sys.exc_info()[0:2])
     return (True, ) if len(err_str) == 0 else (False, err_str)
@@ -316,7 +315,7 @@ class FrameworkTest:
   def validateQueryFiveHundredOrMore(self, jsonString, out, err):
     err_str = ""
     try:
-      arr = {k.lower(): v for k,v in json.loads(jsonString).items()}
+      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
 
       if len(arr) != 500:
         err_str += "Expected array of length 500. Got length {length}. ".format(length=len(arr))
@@ -356,7 +355,7 @@ class FrameworkTest:
       parser = FortuneHTMLParser()
       parser.feed(htmlString)
 
-      return parser.isValidFortune()
+      return parser.isValidFortune(out)
     except:
       print "Got exception when trying to validate the fortune test: {exception} ".format(exception=sys.exc_info()[0:2])
     return False
@@ -371,7 +370,7 @@ class FrameworkTest:
     err_str = ""
     try:
       arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
-      ret_val = True
+      print arr
       if len(arr) != 2:
         err_str += "Expected array of length 2. Got length {length}.\n".format(length=len(arr))
       for obj in arr:
@@ -464,7 +463,7 @@ class FrameworkTest:
         out.write("PASS\n\n")
       else:
         self.json_url_passed = False
-        out.write("\nFAIL\n\n" + ret_tuple[1])
+        out.write("\nFAIL" + ret_tuple[1] + "\n\n")
       out.flush
 
     # DB
@@ -478,11 +477,13 @@ class FrameworkTest:
 
       url = self.benchmarker.generate_url(self.db_url, self.port)
       output = self.__curl_url(url, self.DB, out, err)
-      if self.validateDb(output, out, err):
+      validate_ret_tuple = self.validateDb(output, out, err)
+      validate_strict_ret_tuple = self.validateDbStrict(output, out, err)
+      if validate_ret_tuple[0]:
         self.db_url_passed = True
       else:
         self.db_url_passed = False
-      if self.validateDbStrict(output, out, err):
+      if validate_strict_ret_tuple:
         self.db_url_warn = False
       else:
         self.db_url_warn = True
@@ -491,11 +492,11 @@ class FrameworkTest:
       if self.db_url_passed:
         out.write("PASS")
         if self.db_url_warn:
-          out.write(" (with warnings)")
+          out.write(" (with warnings) " + validate_strict_ret_tuple[1])
         out.write("\n\n")
       else:
-        out.write("\nFAIL\n\n" + ret_tuple[1])
-      out.flush
+        out.write("\nFAIL" + validate_ret_tuple[1])
+      out.flush()
 
     # Query
     if self.runTests[self.QUERY]:
@@ -514,7 +515,7 @@ class FrameworkTest:
         out.write(self.query_url + "2 - PASS\n\n")
       else:
         self.query_url_passed = False
-        out.write(self.query_url + "2 - FAIL\n\n" + ret_tuple[1])
+        out.write(self.query_url + "2 - FAIL " + ret_tuple[1] + "\n\n")
       out.write("-----------------------------------------------------\n\n")
       out.flush()
 
@@ -524,7 +525,7 @@ class FrameworkTest:
       ret_tuple = self.validateQueryOneOrLess(output2, out, err)
       if not ret_tuple[0]:
         self.query_url_warn = True
-        out.write(self.query_url + "0 - WARNING\n\n" + ret_tuple[1])
+        out.write(self.query_url + "0 - WARNING " + ret_tuple[1] + "\n\n")
       else:
         out.write(self.query_url + "0 - PASS\n\n")
       out.write("-----------------------------------------------------\n\n")
@@ -535,7 +536,7 @@ class FrameworkTest:
       ret_tuple = self.validateQueryOneOrLess(output3, out, err)
       if not ret_tuple[0]:
         self.query_url_warn = True
-        out.write(self.query_url + "foo - WARNING\n\n" + ret_tuple[1])
+        out.write(self.query_url + "foo - WARNING " + ret_tuple[1] + "\n\n")
       else:
         out.write(self.query_url + "foo - PASS\n\n")
       out.write("-----------------------------------------------------\n\n")
@@ -546,7 +547,7 @@ class FrameworkTest:
       ret_tuple = self.validateQueryFiveHundredOrMore(output4, out, err)
       if not ret_tuple[0]:
         self.query_url_warn = True
-        out.write(self.query_url + "501 - WARNING\n\n" + ret_tuple[1])
+        out.write(self.query_url + "501 - WARNING " + ret_tuple[1] + "\n\n")
       else:
         out.write(self.query_url + "501 - PASS\n\n")
       out.write("-----------------------------------------------------\n\n\n")
@@ -559,8 +560,8 @@ class FrameworkTest:
           out.write(" (with warnings)")
         out.write("\n\n")
       else:
-        out.write("\nFAIL\n\n" + ret_tuple[1])
-      out.flush
+        out.write("\nFAIL " + ret_tuple[1] + "\n\n")
+      out.flush()
 
     # Fortune
     if self.runTests[self.FORTUNE]:
@@ -580,7 +581,7 @@ class FrameworkTest:
       else:
         self.fortune_url_passed = False
         out.write("\nFAIL\n\n")
-      out.flush
+      out.flush()
 
     # Update
     if self.runTests[self.UPDATE]:
@@ -594,12 +595,13 @@ class FrameworkTest:
       url = self.benchmarker.generate_url(self.update_url + "2", self.port)
       output = self.__curl_url(url, self.UPDATE, out, err)
       out.write("VALIDATING UPDATE ... ")
-      if self.validateUpdate(output, out, err):
+      ret_tuple = self.validateUpdate(output, out, err)
+      if ret_tuple[0]:
         self.update_url_passed = True
         out.write("PASS\n\n")
       else:
         self.update_url_passed = False
-        out.write("\nFAIL\n\n" + ret_tuple[1])
+        out.write("\nFAIL " + ret_tuple[1] + "\n\n")
       out.flush
 
     # plaintext
@@ -615,13 +617,12 @@ class FrameworkTest:
       output = self.__curl_url(url, self.PLAINTEXT, out, err)
       out.write("VALIDATING PLAINTEXT ... ")
       ret_tuple = self.validatePlaintext(output, out, err)
-      print ret_tuple
       if ret_tuple[0]:
         self.plaintext_url_passed = True
         out.write("PASS\n\n")
       else:
         self.plaintext_url_passed = False
-        out.write(ret_tuple[1] + "\nFAIL\n\n")
+        out.write("\nFAIL\n\n" + ret_tuple[1] + "\n\n")
       out.flush
 
   ############################################################

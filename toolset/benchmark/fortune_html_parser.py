@@ -1,4 +1,5 @@
 # -*- coding: utf-8
+import re
 from HTMLParser import HTMLParser
 from difflib import unified_diff
 
@@ -113,5 +114,5 @@ class FortuneHTMLParser(HTMLParser):
     diff = self.valid == body
     if not diff:
       out.write("Fortune invalid. Diff following:\n")
-      out.write(''.join(unified_diff(self.valid, body, fromfile="Valid", tofile="Output")) + '\n')
+      out.write(re.sub(r'([^\s])\s{1,2}([^\s])', r'\1\2', ''.join(unified_diff(self.valid, body, fromfile='Valid', tofile='Response', n=20))))
     return diff
