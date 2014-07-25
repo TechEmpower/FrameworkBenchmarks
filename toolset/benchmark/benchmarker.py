@@ -543,6 +543,7 @@ class Benchmarker:
             logging.debug("Child process for {name} is still alive. Terminating.".format(name=test.name))
             self.__write_intermediate_results(test.name,"__run_test timeout (="+ str(self.run_test_timeout_seconds) + " seconds)")
             test_process.terminate()
+            test_process.join()
           if test_process.exitcode != 0:
             error_happened = True
     if os.path.isfile('current_benchmark.txt'):
