@@ -12,7 +12,8 @@ This test adds [Redstone.dart](http://redstonedart.org), a microframework for Da
 * [Dart postgresql version 0.2.13](http://pub.dartlang.org/packages/postgresql)
 * [Dart redstone version 0.5.9](http://pub.dartlang.org/packages/redstone)
 * [Dart yaml version 0.9.0](http://pub.dartlang.org/packages/yaml)
-* [Dart connection_pool version 0.1.0+2](http://pub.dartlang.org/packages/connection_pool)
+* [Dart redstone_mapper version 0.1.3](http://pub.dartlang.org/packages/redstone_mapper)
+* [Dart redstone_mapper_mongo version 0.1.1+1](http://pub.dartlang.org/packages/redstone_mapper_mongo)
 
 ## Test URLs
 
