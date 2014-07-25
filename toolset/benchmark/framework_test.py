@@ -147,6 +147,9 @@ class FrameworkTest:
   ############################################################
   def validateJson(self, jsonString, out, err):
     err_str = ""
+    if jsonString is not None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
       if "message" not in obj:
@@ -164,6 +167,9 @@ class FrameworkTest:
   ############################################################
   def validateDb(self, jsonString, out, err):
     err_str = ""
+    if jsonString is not None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
@@ -201,6 +207,9 @@ class FrameworkTest:
 
   def validateDbStrict(self, jsonString, out, err):
     err_str = ""
+    if jsonString is not None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
 
@@ -237,6 +246,9 @@ class FrameworkTest:
   ############################################################
   def validateQuery(self, jsonString, out, err):
     err_str = ""
+    if jsonString is not None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
       if len(arr) != 2:
@@ -273,6 +285,9 @@ class FrameworkTest:
   ############################################################
   def validateQueryOneOrLess(self, jsonString, out, err):
     err_str = ""
+    if jsonString is not None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       json_load = json.loads(jsonString)
       if isinstance(json_load, list):
@@ -314,6 +329,9 @@ class FrameworkTest:
   ############################################################
   def validateQueryFiveHundredOrMore(self, jsonString, out, err):
     err_str = ""
+    if jsonString is not None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
 
@@ -351,6 +369,9 @@ class FrameworkTest:
   ############################################################
   def validateFortune(self, htmlString, out, err):
     err_str = ""
+    if htmlString is not None or len(htmlString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       parser = FortuneHTMLParser()
       parser.feed(htmlString)
@@ -368,6 +389,9 @@ class FrameworkTest:
   ############################################################
   def validateUpdate(self, jsonString, out, err):
     err_str = ""
+    if jsonString is not None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
       print arr
@@ -402,6 +426,9 @@ class FrameworkTest:
   ############################################################
   def validatePlaintext(self, jsonString, out, err):
     err_str = ""
+    if jsonString is not None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       if not jsonString.lower().strip() == "hello, world!":
         err_str += "Expected 'Hello, World!', got '{message}'.\n".format(message=jsonString.strip())
