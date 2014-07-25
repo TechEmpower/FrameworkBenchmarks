@@ -147,7 +147,7 @@ class FrameworkTest:
   ############################################################
   def validateJson(self, jsonString, out, err):
     err_str = ""
-    if jsonString is not None or len(jsonString) == 0:
+    if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
       return (False, err_str)
     try:
@@ -167,7 +167,7 @@ class FrameworkTest:
   ############################################################
   def validateDb(self, jsonString, out, err):
     err_str = ""
-    if jsonString is not None or len(jsonString) == 0:
+    if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
       return (False, err_str)
     try:
@@ -207,7 +207,7 @@ class FrameworkTest:
 
   def validateDbStrict(self, jsonString, out, err):
     err_str = ""
-    if jsonString is not None or len(jsonString) == 0:
+    if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
       return (False, err_str)
     try:
@@ -246,7 +246,7 @@ class FrameworkTest:
   ############################################################
   def validateQuery(self, jsonString, out, err):
     err_str = ""
-    if jsonString is not None or len(jsonString) == 0:
+    if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
       return (False, err_str)
     try:
@@ -285,7 +285,7 @@ class FrameworkTest:
   ############################################################
   def validateQueryOneOrLess(self, jsonString, out, err):
     err_str = ""
-    if jsonString is not None or len(jsonString) == 0:
+    if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
       return (False, err_str)
     try:
@@ -329,7 +329,7 @@ class FrameworkTest:
   ############################################################
   def validateQueryFiveHundredOrMore(self, jsonString, out, err):
     err_str = ""
-    if jsonString is not None or len(jsonString) == 0:
+    if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
       return (False, err_str)
     try:
@@ -369,7 +369,7 @@ class FrameworkTest:
   ############################################################
   def validateFortune(self, htmlString, out, err):
     err_str = ""
-    if htmlString is not None or len(htmlString) == 0:
+    if htmlString is None or len(htmlString) == 0:
       err_str += "Empty Response"
       return (False, err_str)
     try:
@@ -389,7 +389,7 @@ class FrameworkTest:
   ############################################################
   def validateUpdate(self, jsonString, out, err):
     err_str = ""
-    if jsonString is not None or len(jsonString) == 0:
+    if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
       return (False, err_str)
     try:
@@ -426,7 +426,7 @@ class FrameworkTest:
   ############################################################
   def validatePlaintext(self, jsonString, out, err):
     err_str = ""
-    if jsonString is not None or len(jsonString) == 0:
+    if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
       return (False, err_str)
     try:
