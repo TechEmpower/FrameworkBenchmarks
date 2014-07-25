@@ -1,5 +1,5 @@
 {
-  "framework": "zend framework 1",
+  "framework": "ZendFramework1",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -10,14 +10,14 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "zend framework 1",
+      "framework": "ZendFramework1",
       "language": "PHP",
       "orm": "Full",
       "platform": "PHP-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "zend framework 1",
+      "display_name": "ZendFramework1",
       "notes": "",
       "versus": "php"
     }
