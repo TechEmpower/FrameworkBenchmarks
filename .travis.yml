@@ -135,6 +135,7 @@ env:
     - TESTDIR=tapestry
     - TESTDIR=tornado
     - TESTDIR=treefrog
+    - TESTDIR=ULib
     - TESTDIR=undertow
     - TESTDIR=undertow-edge
     - TESTDIR=unfiltered

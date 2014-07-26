@@ -14,30 +14,12 @@
 #    . $FWROOT/toolset/setup/linux/bash_functions.sh && 
 #    . $FWROOT/ULib/install.sh (cwd=$FWROOT//installs)
 # --------------------------------------------------------------------------------------------------------
-. ${TROOT}/bash_profile.sh
 
 if [ ! -d "$ULIB_ROOT" ]; then
   mkdir -p $ULIB_ROOT
 fi
 
 cd $ULIB_ROOT
-
-if [ ! -f "benchmark.cfg" ]; then
-  cat <<EOF >benchmark.cfg
-userver {
- PORT 8080
- PREFORK_CHILD 8
- LISTEN_BACKLOG 8192
- MAX_KEEP_ALIVE 8192
- DOCUMENT_ROOT $ULIB_DOCUMENT_ROOT
- PID_FILE ${ULIB_ROOT}/userver_tcp.pid
-}
-EOF
-fi
-
-if [ -x "bin/userver_tcp" ] && [ -x "${ULIB_DOCUMENT_ROOT}/db.so" ]; then
-  exit 0
-fi
 
 # 1. Download ULib
 if [ ! -f "v${ULIB_VERSION}.tar.gz" ]; then
