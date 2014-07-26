@@ -200,22 +200,22 @@ class Travis():
     self._login()
 
   def _login(self):
-    subprocess.check_call("travis login --no-interactive --github-token %s" % self.token, shell=True)
+    subprocess.check_call("travis login --skip-version-check --no-interactive --github-token %s" % self.token, shell=True)
     log.info("Logged into travis") # NEVER PRINT OUTPUT, GH_TOKEN MIGHT BE REVEALED
 
   def cancel(self, job):
     # Ignore errors in case job is already cancelled
     try:
-      subprocess.check_call("travis cancel %s --no-interactive" % job, shell=True)
+      subprocess.check_call("travis cancel %s --skip-version-check --no-interactive" % job, shell=True)
       log.info("Thread %s: Canceled job %s", threading.current_thread().name, job)
     except subprocess.CalledProcessError:
       log.exception("Error halting job %s. Report:", job)
-      subprocess.call("travis report --no-interactive --org", shell=True)
+      subprocess.call("travis report --skip-version-check --no-interactive --org", shell=True)
       log.error("Trying to halt %s one more time", job)
-      subprocess.call("travis cancel %s --no-interactive" % job, shell=True)
+      subprocess.call("travis cancel %s --skip-version-check --no-interactive" % job, shell=True)
 
   def build_details(self):
-    build = subprocess.check_output("travis show %s" % self.buildid, shell=True)
+    build = subprocess.check_output("travis show %s --skip-version-check" % self.buildid, shell=True)
     return build
 
 if __name__ == "__main__":
