@@ -45,6 +45,7 @@ env:
     - TESTDIR=dart
     - TESTDIR=dart-start
     - TESTDIR=dart-stream
+    - TESTDIR=dart-redstone
     - TESTDIR=django
     - TESTDIR=dropwizard
     - TESTDIR=dropwizard-mongodb
