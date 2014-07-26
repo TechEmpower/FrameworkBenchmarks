@@ -253,6 +253,16 @@ if __name__ == "__main__":
     log.critical("Unknown error")
     print traceback.format_exc()
   finally:
+    log.error("Running inside travis, so I will print err and out to console")
+    log.error("Here is ERR:")
+    with open("results/ec2/latest/logs/%s/err.txt" % runner.test.name, 'r') as err:
+      for line in err:
+        log.info(line)
+    log.error("Here is OUT:")
+    with open("results/ec2/latest/logs/%s/out.txt" % runner.test.name, 'r') as out:
+      for line in out:
+        log.info(line)
+
     sys.exit(retcode)
 
 
