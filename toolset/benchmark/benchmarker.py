@@ -760,7 +760,9 @@ class Benchmarker:
         out.close()
         err.close()
         return exit_with_code(1)
-      except (KeyboardInterrupt, SystemExit) as e:
+      # TODO - subprocess should not catch this exception!
+      # Parent process should catch it and cleanup/exit
+      except (KeyboardInterrupt) as e:
         test.stop(out, err)
         out.write( """
         -----------------------------------------------------
@@ -769,7 +771,7 @@ class Benchmarker:
         """)
         out.flush()
         self.__finish()
-        sys.exit()
+        sys.exit(1)
 
       out.close()
       err.close()
