@@ -154,7 +154,7 @@ class FrameworkTest:
       obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
       if "message" not in obj:
         err_str += "Expected key 'message' to be in JSON string "
-      if  obj["message"].lower() == "hello, world!":
+      if  not obj["message"].lower() == "hello, world!":
         err_str += "Message was '{message}', should have been 'Hello, World!' ".format(message=obj["message"])
     except:
       err_str += "Got exception when trying to validate the JSON test: {exception}".format(exception=traceback.print_exc())
