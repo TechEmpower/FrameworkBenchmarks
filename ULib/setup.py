@@ -1,14 +1,9 @@
 import os
 import sys
 import time
-#import logging
 import setup_util
 import subprocess
 import multiprocessing
-
-#log = logging.getLogger('framework_test')
-
-
 
 def start(args, logfile, errfile):
 
@@ -45,9 +40,6 @@ def start(args, logfile, errfile):
   except subprocess.CalledProcessError:
     return 1
 
-##############
-# stop()
-##############
 def stop(logfile, errfile):
   try:
     logfile.write( "ULib: setup.py STOP\n")
