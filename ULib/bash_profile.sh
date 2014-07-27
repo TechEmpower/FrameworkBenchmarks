@@ -12,7 +12,5 @@
 #    . $FWROOT/ULib/install.sh (cwd=$FWROOT//installs)
 #---------------------------------------------------------------------------------------------------------
 export ULIB_VERSION=1.4.1
-export ULIB_ROOT=${IROOT}/ULib
+export ULIB_ROOT=$IROOT/ULib
 export ULIB_DOCUMENT_ROOT=${ULIB_ROOT}/ULIB_DOCUMENT_ROOT
-export ULIB_BUILD_OUTPUT=${ULIB_ROOT}/ULIB_BUILD_OUTPUT.txt
-export ULIB_SERVER_OUTPUT=${ULIB_ROOT}/ULIB_SERVER_OUTPUT.txt
