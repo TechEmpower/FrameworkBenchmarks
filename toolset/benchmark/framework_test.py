@@ -14,6 +14,7 @@ import textwrap
 import logging
 import csv
 import shlex
+import math
 
 class FrameworkTest:
   ##########################################################################################
@@ -151,10 +152,10 @@ class FrameworkTest:
       err_str += "Empty Response"
       return (False, err_str)
     try:
-      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
+      obj = {k.lower(): v for k,v in json.loads(jsonString).iteritems()}
       if "message" not in obj:
         err_str += "Expected key 'message' to be in JSON string "
-      if  obj["message"].lower() == "hello, world!":
+      if  obj["message"].lower() != "hello, world!":
         err_str += "Message was '{message}', should have been 'Hello, World!' ".format(message=obj["message"])
     except:
       err_str += "Got exception when trying to validate the JSON test: {exception}".format(exception=traceback.print_exc())
@@ -171,7 +172,7 @@ class FrameworkTest:
       err_str += "Empty Response"
       return (False, err_str)
     try:
-      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
+      obj = {k.lower(): v for k,v in json.loads(jsonString).iteritems()}
 
       # We are allowing the single-object array for the DB 
       # test for now, but will likely remove this later.
@@ -211,7 +212,7 @@ class FrameworkTest:
       err_str += "Empty Response"
       return (False, err_str)
     try:
-      obj = {k.lower(): v for k,v in json.loads(jsonString).items()}
+      obj = {k.lower(): v for k,v in json.loads(jsonString).iteritems()}
 
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
@@ -250,7 +251,7 @@ class FrameworkTest:
       err_str += "Empty Response"
       return (False, err_str)
     try:
-      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
+      arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
       if len(arr) != 2:
         err_str += "Expected array of length 2. Got length {length}. ".format(length=len(arr))
       for obj in arr:
@@ -293,7 +294,7 @@ class FrameworkTest:
       if isinstance(json_load, list):
         err_str += "Expected JSON object, got JSON array. " 
         return (False, err_str)
-      arr = {k.lower(): v for k,v in json_string.items()}
+      arr = {k.lower(): v for k,v in json_string.iteritems()}
 
       for obj in arr:
         id_ret_val = True
@@ -333,7 +334,7 @@ class FrameworkTest:
       err_str += "Empty Response"
       return (False, err_str)
     try:
-      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
+      arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
 
       if len(arr) != 500:
         err_str += "Expected array of length 500. Got length {length}. ".format(length=len(arr))
@@ -393,7 +394,7 @@ class FrameworkTest:
       err_str += "Empty Response"
       return (False, err_str)
     try:
-      arr = [{k.lower(): v for k,v in d.items()} for d in json.loads(jsonString)]
+      arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
       print arr
       if len(arr) != 2:
         err_str += "Expected array of length 2. Got length {length}.\n".format(length=len(arr))
@@ -485,13 +486,14 @@ class FrameworkTest:
       url = self.benchmarker.generate_url(self.json_url, self.port)
       output = self.__curl_url(url, self.JSON, out, err)
       out.write("VALIDATING JSON ... ")
-      if self.validateJson(output, out, err):
+      ret_tuple = self.validateJson(output, out, err)
+      if ret_tuple[0]:
         self.json_url_passed = True
         out.write("PASS\n\n")
       else:
         self.json_url_passed = False
         out.write("\nFAIL" + ret_tuple[1] + "\n\n")
-      out.flush
+      out.flush()
 
     # DB
     if self.runTests[self.DB]:
@@ -629,7 +631,7 @@ class FrameworkTest:
       else:
         self.update_url_passed = False
         out.write("\nFAIL " + ret_tuple[1] + "\n\n")
-      out.flush
+      out.flush()
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
@@ -650,7 +652,7 @@ class FrameworkTest:
       else:
         self.plaintext_url_passed = False
         out.write("\nFAIL\n\n" + ret_tuple[1] + "\n\n")
-      out.flush
+      out.flush()
 
   ############################################################
   # End verify_urls
@@ -885,6 +887,7 @@ class FrameworkTest:
     try:
       results = dict()
       results['results'] = []
+      stats = []
       
       if os.path.exists(self.benchmarker.get_output_file(self.name, test_type)):
         with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
@@ -969,10 +972,12 @@ class FrameworkTest:
               if "ENDTIME" in line:
                 m = re.search("[0-9]+", line)
                 rawData["endTime"] = int(m.group(0))
-                stats = self.__parse_stats(test_type, rawData["startTime"], rawData["endTime"], 1)
-                with open(self.benchmarker.stats_file(self.name, test_type) + ".json", "w") as stats_file:
-                  json.dump(stats, stats_file)
-              
+                test_stats = self.__parse_stats(test_type, rawData["startTime"], rawData["endTime"], 1)
+                # rawData["averageStats"] = self.__calculate_average_stats(test_stats)
+                stats.append(test_stats)
+      with open(self.benchmarker.stats_file(self.name, test_type) + ".json", "w") as stats_file:
+        json.dump(stats, stats_file)
+
 
       return results
     except IOError:
@@ -1127,12 +1132,12 @@ class FrameworkTest:
     stats_dict = dict()
     stats_file = self.benchmarker.stats_file(self.name, test_type)
     with open(stats_file) as stats:
-      while(stats.next() != "\n"):
+      while(stats.next() != "\n"): # dstat doesn't output a completely compliant CSV file - we need to strip the header
         pass
       stats_reader = csv.reader(stats)
-      h1= stats_reader.next()
-      h2 = stats_reader.next()
-      time_row = h2.index("epoch")
+      main_header = stats_reader.next()
+      sub_header = stats_reader.next()
+      time_row = sub_header.index("epoch")
       int_counter = 0
       for row in stats_reader:
         time = float(row[time_row])
@@ -1144,20 +1149,94 @@ class FrameworkTest:
         if int_counter % interval != 0:
           continue
         row_dict = dict()
-        for nextheader in h1:
+        for nextheader in main_header:
           if nextheader != "":
             row_dict[nextheader] = dict()
         header = ""
-        for item_num in range(len(row)):
-          if(len(h1[item_num]) != 0):
-            header = h1[item_num]
-          row_dict[header][h2[item_num]] = row[item_num]
+        for item_num, column in enumerate(row):
+          if(len(main_header[item_num]) != 0):
+            header = main_header[item_num]
+          row_dict[header][sub_header[item_num]] = float(column) # all the stats are numbers, so we want to make sure that they stay that way in json
         stats_dict[time] = row_dict
     return stats_dict
   ##############################################################
   # End __parse_stats
   ##############################################################
 
+  ##############################################################
+  # Begin __calculate_average_stats
+  # We have a large amount of raw data for the statistics that
+  # may be useful for the stats nerds, but most people care about
+  # a couple of numbers. For now, we're only going to supply:
+  # * Average CPU
+  # * Average Memory
+  # * Total network use
+  # * Total disk use
+  # More may be added in the future. If they are, please update
+  # the above list.
+  # Note: raw_stats is directly from the __parse_stats method.
+  # Recall that this consists of a dictionary of timestamps, 
+  # each of which contain a dictionary of stat categories which
+  # contain a dictionary of stats
+  ##############################################################
+  def __calculate_average_stats(self, raw_stats):
+    raw_stat_collection = dict()
+    
+    for timestamp, time_dict in raw_stats.items():
+      for main_header, sub_headers in time_dict.items():
+        item_to_append = None
+        if 'cpu' in main_header:
+          # We want to take the idl stat and subtract it from 100
+          # to get the time that the CPU is NOT idle.
+          item_to_append = sub_headers['idl'] - 100.0
+        elif main_header == 'memory usage':
+          item_to_append = sub_headers['used']
+        elif 'net' in main_header:
+          # Network stats have two parts - recieve and send. We'll use a tuple of
+          # style (recieve, send)
+          item_to_append = (sub_headers['recv'], sub_headers['send'])
+        elif 'dsk' or 'io' in main_header:
+          # Similar for network, except our tuple looks like (read, write)
+          item_to_append = (sub_headers['read'], sub_headers['writ'])
+        if item_to_append is not None:
+          if main_header not in raw_stat_collection:
+            raw_stat_collection[main_header] = list()
+          raw_stat_collection[main_header].append(item_to_append)
+
+    # Simple function to determine human readable size
+    # http://stackoverflow.com/questions/1094841/reusable-library-to-get-human-readable-version-of-file-size
+    def sizeof_fmt(num):
+      # We'll assume that any number we get is convertable to a float, just in case
+      num = float(num)
+      for x in ['bytes','KB','MB','GB']:
+        if num < 1024.0 and num > -1024.0:
+          return "%3.1f%s" % (num, x)
+        num /= 1024.0
+      return "%3.1f%s" % (num, 'TB')
+
+    # Now we have our raw stats in a readable format - we need to format it for display
+    # We need a floating point sum, so the built in sum doesn't cut it
+    display_stat_collection = dict()
+    for header, values in raw_stat_collection.items():
+      display_stat = None
+      if 'cpu' in header:
+        display_stat = sizeof_fmt(math.fsum(values) / len(values))
+      elif main_header == 'memory usage':
+        display_stat = sizeof_fmt(math.fsum(values) / len(values))
+      elif 'net' in main_header:
+        receive, send = zip(*values) # unzip
+        display_stat = {'receive': sizeof_fmt(math.fsum(receive)), 'send': sizeof_fmt(math.fsum(send))}
+      else: # if 'dsk' or 'io' in header:
+        read, write = zip(*values) # unzip
+        display_stat = {'read': sizeof_fmt(math.fsum(read)), 'write': sizeof_fmt(math.fsum(write))}
+      display_stat_collection[header] = display_stat
+    return display_stat
+  ###########################################################################################
+  # End __calculate_average_stats
+  #########################################################################################
+
+
+          
   ##########################################################################################
   # Constructor
   ##########################################################################################  
