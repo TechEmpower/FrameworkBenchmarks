@@ -288,7 +288,7 @@ class FrameworkTest:
     err_str = ""
     if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
-    else
+    else:
       try:
         json_load = json.loads(jsonString)
         if not isinstance(json_load, list):
