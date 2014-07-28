@@ -297,7 +297,7 @@ class FrameworkTest:
       if len(json_load) != 1:
         err_str += "Expected array of length 1. Got length {length}. ".format(length=len(json_load))
 
-      arr = {k.lower(): v for k,v in json_string[0].iteritems()}
+      arr = {k.lower(): v for k,v in json_load[0].iteritems()}
 
       for obj in arr:
         id_ret_val = True
