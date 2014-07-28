@@ -288,39 +288,36 @@ class FrameworkTest:
     err_str = ""
     if jsonString is None or len(jsonString) == 0:
       err_str += "Empty Response"
-      return (False, err_str)
-    try:
-      json_load = json.loads(jsonString)
-      if not isinstance(json_load, list):
-        err_str += "Expected JSON array, got {typeObj}. ".format(typeObj=type(json_load))
-        return (False, err_str)
-      if len(json_load) != 1:
-        err_str += "Expected array of length 1. Got length {length}. ".format(length=len(json_load))
+    else
+      try:
+        json_load = json.loads(jsonString)
+        if not isinstance(json_load, list):
+          err_str += "Expected JSON array, got {typeObj}. ".format(typeObj=type(json_load))
+        if len(json_load) != 1:
+          err_str += "Expected array of length 1. Got length {length}. ".format(length=len(json_load))
 
-      obj = {k.lower(): v for k,v in json_load[0].iteritems()}
-      id_ret_val = True
-      random_num_ret_val = True
-      if "id" not in obj or "randomnumber" not in obj:
-        err_str += "Expected keys id and randomNumber to be in JSON string. "
-        return (False, err_str)
-      try:
-        if not isinstance(float(obj["id"]), float):
+        obj = {k.lower(): v for k,v in json_load[0].iteritems()}
+        id_ret_val = True
+        random_num_ret_val = True
+        if "id" not in obj or "randomnumber" not in obj:
+          err_str += "Expected keys id and randomNumber to be in JSON string. "
+        try:
+          if not isinstance(float(obj["id"]), float):
+            id_ret_val=False
+        except:
           id_ret_val=False
-      except:
-        id_ret_val=False
-      if not id_ret_val:
-        err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
-      try:
-        if not isinstance(float(obj["randomnumber"]), float):
+        if not id_ret_val:
+          err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
+        try:
+          if not isinstance(float(obj["randomnumber"]), float):
+            random_num_ret_val=False
+        except:
           random_num_ret_val=False
+        if not random_num_ret_val:
+          err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
       except:
-        random_num_ret_val=False
-      if not random_num_ret_val:
-        err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
-        ret_val = False
-      return ret_val
-    except:
-      err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=traceback.print_exc())
+        err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=traceback.print_exc())
+
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
