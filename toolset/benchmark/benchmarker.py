@@ -565,7 +565,6 @@ class Benchmarker:
       os.makedirs(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name)))
     except:
       pass
-<<<<<<< HEAD
     with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
          open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
       if hasattr(test, 'skip'):
@@ -677,7 +676,6 @@ class Benchmarker:
         # Save results thus far into toolset/benchmark/latest.json
         ##########################################################
 
-<<<<<<< HEAD
         out.write(Header("Saving results through %s" % test.name))
         out.flush()
         self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
