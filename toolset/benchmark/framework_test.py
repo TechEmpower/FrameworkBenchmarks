@@ -209,7 +209,7 @@ class FrameworkTest:
   def validateDbStrict(self, jsonString, out, err):
     err_str = ""
     if jsonString is None or len(jsonString) == 0:
-      err_str += "Empty Response"
+      err_str += "Empty Response "
       return (False, err_str)
     try:
       obj = {k.lower(): v for k,v in json.loads(jsonString).iteritems()}
