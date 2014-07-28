@@ -14,7 +14,7 @@ make
 make install
 
 mv conf/resin.properties conf/resin.properties.orig
-cat ../../config/resin.properties > conf/resin.properties
+cat $FWROOT/config/resin.properties > conf/resin.properties
 
 mv conf/resin.xml conf/resin.xml.orig
-cat ../../config/resin.xml > conf/resin.xml
+cat $FWROOT/config/resin.xml > conf/resin.xml

@@ -4,16 +4,9 @@ import sys
 import time
 
 
-bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
-python = os.path.expanduser(os.path.join(bin_dir, 'python'))
-pip = os.path.expanduser(os.path.join(bin_dir, 'pip'))
-cwd = os.path.expanduser('~/FrameworkBenchmarks/tornado')
-
-
 def start(args, logfile, errfile):
-    subprocess.Popen(
-        python + ' server.py --port=8080 --postgres=%s --logging=error' % (args.database_host,),
-        shell=True, cwd=cwd, stderr=errfile, stdout=logfile)
+    subprocess.Popen('$PY2 server.py --port=8080 --postgres=%s --logging=error' % (args.database_host,),
+        shell=True, cwd='tornado', stderr=errfile, stdout=logfile)
     return 0
 
 

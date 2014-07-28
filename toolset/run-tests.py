@@ -158,7 +158,7 @@ def main(argv=None):
     elif benchmarker.parse != None:
       benchmarker.parse_timestamp()
     else:
-      benchmarker.run()
+      return benchmarker.run()
 
 if __name__ == "__main__":
     sys.exit(main())
