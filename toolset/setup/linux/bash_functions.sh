@@ -59,6 +59,8 @@ fw_depends() {
     trap 'fw_traperror $depend $? $LINENO "$BASH_COMMAND" $(printf ":%s" ${FUNCNAME[@]}) $(printf ":%s" ${BASH_SOURCE[@]}) $(printf ":%s" ${BASH_LINENO[@]})'  ERR
     retcode=0
 
+    # Ensure we are inside the installer root for this framework
+    cd $IROOT
     wd=$(pwd)
     relative_wd=\$FWROOT${wd#$FWROOT}
 
@@ -95,6 +97,9 @@ fw_depends() {
   # Politely clean up our trap and trace
   set +E
   trap - ERR
+
+  # Politely return to IROOT for later install.sh code
+  cd $IROOT  
 
   return $FW_any_errors
 }

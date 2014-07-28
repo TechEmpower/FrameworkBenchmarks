@@ -1,0 +1,191 @@
+language: python
+python: 
+  - "2.7"
+
+env:
+  global:
+    - TFB_SERVER_HOST=127.0.0.1
+    - TFB_CLIENT_HOST=127.0.0.1
+    - TFB_DATABASE_HOST=127.0.0.1
+    - TFB_CLIENT_USER=travis
+    - TFB_DATABASE_USER=travis
+    - TFB_CLIENT_IDENTITY_FILE=/home/travis/.ssh/id_rsa
+    - TFB_DATABASE_IDENTITY_FILE=/home/travis/.ssh/id_rsa
+
+    # Login token for github to allow run-ci.py to cancel unneeded jobs
+    # To generate, use travis encrypt GH_TOKEN=<token>
+    - secure: A/gsnHDbTA/uf/zWZPQIM2H69N7+Yn8ZgTjlNJvld6VSxcn+PqAEG9KLi5xGfneziNB2R5vTD1NadUvdggR+S/qz6IMu+HHhJHB8kcS0XTCMebNGxzme5qiopUV1m65V5AyB05ZGG5DIS5Lgz9PDEXoJUMrPdmLjOYgMx7Bw54I=
+
+  matrix:
+    # Run one special job that will examine the files changed 
+    # in this push and cancel any unnecessary jobs in the matrix
+    # Put this first as Travis-CI builds top to bottom
+    - TESTDIR=jobcleaner
+
+
+    # Group tests by directory to logically break up travis-CI build. Otherwise
+    # we end up starting ~200+ different workers. Seems that ~100 is the limit
+    # before their website starts to lag heavily
+    #
+    # Here's a bash one-liner if you need to update this: 
+    # toolset/run-tests.py --list-tests | while read line ; do
+    #    echo "    - TEST=$line"
+    # done    
+    - TESTDIR=activeweb
+    - TESTDIR=aspnet
+    - TESTDIR=aspnet-stripped
+    - TESTDIR=beego
+    - TESTDIR=bottle
+    - TESTDIR=cake
+    - TESTDIR=compojure
+    - TESTDIR=cowboy
+    - TESTDIR=cpoll_cppsp
+    - TESTDIR=curacao
+    - TESTDIR=dancer
+    - TESTDIR=dart
+    - TESTDIR=dart-start
+    - TESTDIR=dart-stream
+    - TESTDIR=dart-redstone
+    - TESTDIR=django
+    - TESTDIR=dropwizard
+    - TESTDIR=dropwizard-mongodb
+    - TESTDIR=elli
+    - TESTDIR=evhttp-sharp
+    - TESTDIR=express
+    - TESTDIR=falcon
+    - TESTDIR=falcore
+    - TESTDIR=finagle
+    - TESTDIR=flask
+    - TESTDIR=gemini
+    - TESTDIR=go
+    - TESTDIR=grails
+    - TESTDIR=grizzly-bm
+    - TESTDIR=grizzly-jersey
+    - TESTDIR=hapi
+    - TESTDIR=hhvm
+    - TESTDIR=http-kit
+    - TESTDIR=HttpListener
+    - TESTDIR=jester
+    - TESTDIR=jetty-servlet
+    - TESTDIR=kelp
+    - TESTDIR=lapis
+    - TESTDIR=lift-stateless
+    - TESTDIR=luminus
+    - TESTDIR=mojolicious
+    - TESTDIR=nancy
+    - TESTDIR=nawak
+    - TESTDIR=netty
+    - TESTDIR=ninja-resin
+    - TESTDIR=ninja-standalone
+    - TESTDIR=nodejs
+    - TESTDIR=onion
+    - TESTDIR=openresty
+    - TESTDIR=php
+    - TESTDIR=php-codeigniter
+    - TESTDIR=php-fuel
+    - TESTDIR=php-kohana
+    - TESTDIR=php-laravel
+    - TESTDIR=php-lithium
+    - TESTDIR=php-micromvc
+    - TESTDIR=php-phalcon
+    - TESTDIR=php-phalcon-micro
+    - TESTDIR=php-phpixie
+    - TESTDIR=php-pimf
+    - TESTDIR=php-senthot
+    - TESTDIR=php-silex
+    - TESTDIR=php-silex-orm
+    - TESTDIR=php-silica
+    - TESTDIR=php-slim
+    - TESTDIR=php-symfony2
+    - TESTDIR=php-symfony2-stripped
+    - TESTDIR=php-yaf
+    - TESTDIR=php-yii2
+    - TESTDIR=php-zend-framework
+    - TESTDIR=phreeze
+    - TESTDIR=plack
+    - TESTDIR=plain
+    - TESTDIR=play1
+    - TESTDIR=play1siena
+    - TESTDIR=play-activate-mysql
+    - TESTDIR=play-java
+    - TESTDIR=play-java-jpa
+    - TESTDIR=play-scala
+    - TESTDIR=play-scala-mongodb
+    - TESTDIR=play-slick
+    - TESTDIR=pyramid
+    - TESTDIR=rack
+    - TESTDIR=racket-ws
+    - TESTDIR=rails
+    - TESTDIR=rails-stripped
+    - TESTDIR=restexpress
+    - TESTDIR=revel
+    - TESTDIR=revel-jet
+    - TESTDIR=revel-qbs
+    - TESTDIR=ringojs
+    - TESTDIR=ringojs-convenient
+    - TESTDIR=scalatra
+    - TESTDIR=servicestack
+    - TESTDIR=servlet
+    - TESTDIR=servlet3-cass
+    - TESTDIR=sinatra
+    - TESTDIR=snap
+    - TESTDIR=spark
+    - TESTDIR=spray
+    - TESTDIR=spring
+    - TESTDIR=tapestry
+    - TESTDIR=tornado
+    - TESTDIR=treefrog
+    - TESTDIR=ULib
+    - TESTDIR=undertow
+    - TESTDIR=undertow-edge
+    - TESTDIR=unfiltered
+    - TESTDIR=urweb
+    - TESTDIR=uwsgi
+    - TESTDIR=vertx
+    - TESTDIR=wai
+    - TESTDIR=WeberFramework
+    - TESTDIR=webgo
+    - TESTDIR=web-simple
+    - TESTDIR=wicket
+    - TESTDIR=wildfly-ee7
+    - TESTDIR=wsgi
+    - TESTDIR=wt
+    - TESTDIR=yesod
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install openssh-server
+  
+  # Needed to cancel build jobs from run-ci.py
+  - time gem install travis -v 1.6.16 --no-rdoc --no-ri 
+ 
+  # Run as travis use (who has passwordless sudo)
+  - ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa  
+  - cat /home/travis/.ssh/id_rsa.pub > /home/travis/.ssh/authorized_keys
+  - chmod 600 /home/travis/.ssh/authorized_keys
+  
+  # Setup database manually
+  # NOTE: Do not run database installation! It restarts mysql with a different 
+  # configuration and will break travis's mysql setup
+  - mysql -uroot < config/create.sql
+  
+  # Doesn't work yet
+  # - alias run_tfb="coverage run --parallel-mode --omit installs,results"
+install:
+  - time pip install coveralls
+  
+  # Install server prerequisites
+  - time ./toolset/run-ci.py prereq $TESTDIR
+
+  # Add commit diff to the logs
+  - echo $TRAVIS_COMMIT_RANGE
+  - git diff --name-only $TRAVIS_COMMIT_RANGE
+script: 
+  
+  # Run test verification 
+  - time ./toolset/run-ci.py test $TESTDIR
+
+after_success:
+  - coverage combine
+  - coverage report
+  - coveralls

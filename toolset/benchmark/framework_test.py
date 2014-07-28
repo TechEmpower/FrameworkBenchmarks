@@ -291,10 +291,13 @@ class FrameworkTest:
       return (False, err_str)
     try:
       json_load = json.loads(jsonString)
-      if isinstance(json_load, list):
-        err_str += "Expected JSON object, got JSON array. " 
+      if not isinstance(json_load, list):
+        err_str += "Expected JSON array, got {typeObj}. ".format(typeObj=type(json_load))
         return (False, err_str)
-      arr = {k.lower(): v for k,v in json_string.iteritems()}
+      if len(json_load) != 1:
+        err_str += "Expected array of length 1. Got length {length}. ".format(length=len(json_load))
+
+      arr = {k.lower(): v for k,v in json_string[0].iteritems()}
 
       for obj in arr:
         id_ret_val = True
@@ -448,8 +451,10 @@ class FrameworkTest:
       logging.warning("Framework %s does not have a bash_profile" % self.name)
       profile="$FWROOT/config/benchmark_profile"
     
-    set_iroot="export IROOT=%s" % self.install_root
-    setup_util.replace_environ(config=profile, command=set_iroot)
+    test_rel_dir = setup_util.path_relative_to_root(self.directory)
+    setup_util.replace_environ(config=profile, 
+              command='export TROOT=$FWROOT%s && export IROOT=%s' %
+              (test_rel_dir, self.install_root))
 
     return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
@@ -461,6 +466,17 @@ class FrameworkTest:
   # Stops the test using it's setup file
   ############################################################
   def stop(self, out, err):
+    # Load profile for this installation
+    profile="%s/bash_profile.sh" % self.directory
+    if not os.path.exists(profile):
+      logging.warning("Framework %s does not have a bash_profile" % self.name)
+      profile="$FWROOT/config/benchmark_profile"
+    
+    test_rel_dir = setup_util.path_relative_to_root(self.directory)
+    setup_util.replace_environ(config=profile, 
+              command='export TROOT=$FWROOT%s && export IROOT=%s' %
+              (test_rel_dir, self.install_root))
+
     return self.setup_module.stop(out, err)
   ############################################################
   # End stop
@@ -472,8 +488,11 @@ class FrameworkTest:
   # curl the URL and check for it's return status. 
   # For each url, a flag will be set on this object for whether
   # or not it passed
+  # Returns True if all verifications succeeded
   ############################################################
   def verify_urls(self, out, err):
+    result = True
+
     # JSON
     if self.runTests[self.JSON]:
       out.write(textwrap.dedent("""
@@ -493,6 +512,7 @@ class FrameworkTest:
       else:
         self.json_url_passed = False
         out.write("\nFAIL" + ret_tuple[1] + "\n\n")
+        result = False
       out.flush()
 
     # DB
@@ -525,6 +545,7 @@ class FrameworkTest:
         out.write("\n\n")
       else:
         out.write("\nFAIL" + validate_ret_tuple[1])
+        result = False
       out.flush()
 
     # Query
@@ -590,6 +611,7 @@ class FrameworkTest:
         out.write("\n\n")
       else:
         out.write("\nFAIL " + ret_tuple[1] + "\n\n")
+        result = False
       out.flush()
 
     # Fortune
@@ -610,6 +632,7 @@ class FrameworkTest:
       else:
         self.fortune_url_passed = False
         out.write("\nFAIL\n\n")
+        result = False
       out.flush()
 
     # Update
@@ -631,6 +654,7 @@ class FrameworkTest:
       else:
         self.update_url_passed = False
         out.write("\nFAIL " + ret_tuple[1] + "\n\n")
+        result = False
       out.flush()
 
     # plaintext
@@ -652,8 +676,10 @@ class FrameworkTest:
       else:
         self.plaintext_url_passed = False
         out.write("\nFAIL\n\n" + ret_tuple[1] + "\n\n")
+        result = False
       out.flush()
 
+    return result
   ############################################################
   # End verify_urls
   ############################################################

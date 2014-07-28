@@ -12,4 +12,4 @@ make -j4
 make install
 
 cd ..
-py3/bin/pip3 install -r ../config/requirements-py3.txt
+py3/bin/pip3 install -r $FWROOT/config/requirements-py3.txt
