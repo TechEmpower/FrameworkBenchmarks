@@ -297,29 +297,27 @@ class FrameworkTest:
       if len(json_load) != 1:
         err_str += "Expected array of length 1. Got length {length}. ".format(length=len(json_load))
 
-      arr = {k.lower(): v for k,v in json_load[0].iteritems()}
-
-      for obj in arr:
-        id_ret_val = True
-        random_num_ret_val = True
-        if "id" not in obj or "randomnumber" not in obj:
-          err_str += "Expected keys id and randomNumber to be in JSON string. "
-          continue
-        try:
-          if not isinstance(float(obj["id"]), float):
-            id_ret_val=False
-        except:
+      obj = {k.lower(): v for k,v in json_load[0].iteritems()}
+      id_ret_val = True
+      random_num_ret_val = True
+      if "id" not in obj or "randomnumber" not in obj:
+        err_str += "Expected keys id and randomNumber to be in JSON string. "
+        return (False, err_str)
+      try:
+        if not isinstance(float(obj["id"]), float):
           id_ret_val=False
-        if not id_ret_val:
-          err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
-        try:
-          if not isinstance(float(obj["randomnumber"]), float):
-            random_num_ret_val=False
-        except:
+      except:
+        id_ret_val=False
+      if not id_ret_val:
+        err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
+      try:
+        if not isinstance(float(obj["randomnumber"]), float):
           random_num_ret_val=False
-        if not random_num_ret_val:
-          err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
-          ret_val = False
+      except:
+        random_num_ret_val=False
+      if not random_num_ret_val:
+        err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
+        ret_val = False
       return ret_val
     except:
       err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=traceback.print_exc())
@@ -341,7 +339,7 @@ class FrameworkTest:
 
       if len(arr) != 500:
         err_str += "Expected array of length 500. Got length {length}. ".format(length=len(arr))
-        return False
+        return (False, err_str)
 
       for obj in arr:
         id_ret_val = True
@@ -383,7 +381,7 @@ class FrameworkTest:
       return parser.isValidFortune(out)
     except:
       print "Got exception when trying to validate the fortune test: {exception} ".format(exception=traceback.print_exc())
-    return False
+    return (False, err_str)
 
   ############################################################
   # Validates the jsonString is an array with a length of
@@ -398,7 +396,6 @@ class FrameworkTest:
       return (False, err_str)
     try:
       arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
-      print arr
       if len(arr) != 2:
         err_str += "Expected array of length 2. Got length {length}.\n".format(length=len(arr))
       for obj in arr:
@@ -406,7 +403,7 @@ class FrameworkTest:
         random_num_ret_val = True
         if "id" not in obj or "randomnumber" not in obj:
           err_str += "Expected keys id and randomNumber to be in JSON string.\n"
-          return False
+          return (False, err_str)
         try:
           if not isinstance(float(obj["id"]), float):
             id_ret_val=False
