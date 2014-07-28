@@ -27,13 +27,13 @@ $ sudo apt-get install openssh-server
 ```bash
 $ sudo useradd -m -G sudo tfb
 ```
+* Run the command: `sudo visudo`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * Log in as `tfb`
 * Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
 ```bash
 $ sudo apt-get update && sudo apt-get upgrade
 ```
-* Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * Run the following **(Don't enter a password, just hit enter when the prompt pops up)**. **NOTE** This is still necessary if the client and database are on the same computer as the server
 ```bash
 $ ssh-keygen
@@ -49,7 +49,7 @@ $ cd FrameworkBenchmarks
 ```
 * Install the server software. This will take a long time
 ```bash
-$ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install server --list-tests &
+$ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install-strategy unified --install server --list-tests &
 ```
 * If you want to view the process of installing, do the following. The session can be interrupted easily so no need to worry about keeping a connection.
 ```bash
