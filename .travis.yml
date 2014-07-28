@@ -14,7 +14,7 @@ env:
 
     # Login token for github to allow run-ci.py to cancel unneeded jobs
     # To generate, use travis encrypt GH_TOKEN=<token>
-    - secure: A/gsnHDbTA/uf/zWZPQIM2H69N7+Yn8ZgTjlNJvld6VSxcn+PqAEG9KLi5xGfneziNB2R5vTD1NadUvdggR+S/qz6IMu+HHhJHB8kcS0XTCMebNGxzme5qiopUV1m65V5AyB05ZGG5DIS5Lgz9PDEXoJUMrPdmLjOYgMx7Bw54I=
+    - secure: bI6gGVzrY49Hcl82yU4w1yDWTkxuTIAy8xiP7GFMpYCR47cuztZniKZ7GTr3+/X0kPLh8o9gndvLlCDA9njj96w7enTYjib/KpHPySHzQnnwdJVgyKz6fLyw7xXnIBF0zYdgm6J1yT5lSVfPjjSdDWaJQmErQ7II3YZ+O7F+Q+I=
 
   matrix:
     # Run one special job that will examine the files changed 
