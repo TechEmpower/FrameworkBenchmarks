@@ -23,7 +23,7 @@ def replace_environ(config=None, root=None, print_result=False, command='true'):
 
     if platform.system().lower() == 'windows':
 
-        pass;
+        pass
 
     else:
     
@@ -69,8 +69,8 @@ def get_fwroot():
 
     if platform.system().lower() == 'windows':
 
-        fwroot = "C:\FrameworkBenchmarks";
-        return fwroot;
+        fwroot = "C:\FrameworkBenchmarks"
+        return fwroot
 
     else:
     
