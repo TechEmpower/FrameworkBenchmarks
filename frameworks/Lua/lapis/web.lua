@@ -20,9 +20,10 @@ do
   local _obj_0 = table
   sort = _obj_0.sort
 end
-local random
+local min, random
 do
   local _obj_0 = math
+  min = _obj_0.min
   random = _obj_0.random
 end
 local Fortune
@@ -177,7 +178,7 @@ do
         num_queries = 1
       end
       local worlds = { }
-      for i = 1, num_queries do
+      for i = 1, min(500, num_queries) do
         local wid = random(1, 10000)
         local world = World:find(wid)
         world.randomnumber = random(1, 10000)

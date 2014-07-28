@@ -4,7 +4,7 @@ import Model from require "lapis.db.model"
 import config from require "lapis.config"
 import insert from table
 import sort from table
-import random from math
+import min, random from math
 
 class Fortune extends Model
 
@@ -55,7 +55,7 @@ class Benchmark extends lapis.Application
     if num_queries == 0
       num_queries = 1
     worlds = {}
-    for i = 1, num_queries
+    for i = 1, min(500, num_queries)
       wid = random(1, 10000)
       world = World\find wid
       world.randomnumber = random(1, 10000)
