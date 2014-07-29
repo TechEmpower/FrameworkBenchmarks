@@ -5,7 +5,7 @@
              version="2.0">
     
     <!-- Resin datasource -->
-    <persistence-unit name="resin" transaction-type="JTA">
+    <persistence-unit name="resin" transaction-type="RESOURCE_LOCAL">
         <!--provider>org.hibernate.jpa.HibernatePersistenceProvider</provider-->
         <jta-data-source>java:comp/env/jdbc/hello_world</jta-data-source>
         <shared-cache-mode>NONE</shared-cache-mode>
