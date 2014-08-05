@@ -193,16 +193,28 @@ class CIRunnner:
 class Travis():
   '''Integrates the travis-ci build environment and the travis command line'''
   def __init__(self):     
-    self.token = os.environ['GH_TOKEN']
     self.jobid = os.environ['TRAVIS_JOB_NUMBER']
     self.buildid = os.environ['TRAVIS_BUILD_NUMBER']
-    self._login()
+    self.is_pull_req = "false" != os.environ['TRAVIS_PULL_REQUEST']
+
+    # If this is a PR, we cannot access the secure variable 
+    # GH_TOKEN, and instead must return success for all jobs
+    if not self.is_pull_req:
+      self.token = os.environ['GH_TOKEN']
+      self._login()
+    else:
+      log.info("Pull Request Detected. Non-necessary jobs will return pass instead of being canceled")
 
   def _login(self):
     subprocess.check_call("travis login --skip-version-check --no-interactive --github-token %s" % self.token, shell=True)
     log.info("Logged into travis") # NEVER PRINT OUTPUT, GH_TOKEN MIGHT BE REVEALED
 
   def cancel(self, job):
+    # If this is a pull request, we cannot interact with the CLI
+    if self.is_pull_req:
+      log.info("Thread %s: Return pass for job %s", threading.current_thread().name, job)
+      return
+
     # Ignore errors in case job is already cancelled
     try:
       subprocess.check_call("travis cancel %s --skip-version-check --no-interactive" % job, shell=True)
@@ -214,6 +226,10 @@ class Travis():
       subprocess.call("travis cancel %s --skip-version-check --no-interactive" % job, shell=True)
 
   def build_details(self):
+    # If this is a pull request, we cannot interact with the CLI
+    if self.is_pull_req:
+      return "No details available"
+
     build = subprocess.check_output("travis show %s --skip-version-check" % self.buildid, shell=True)
     return build
 
