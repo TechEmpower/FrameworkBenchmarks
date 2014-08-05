@@ -15,7 +15,7 @@ import csv
 import shlex
 import math
 
-from utils import Header
+from utils import header
 
 class FrameworkTest:
   ##########################################################################################
@@ -490,7 +490,7 @@ class FrameworkTest:
 
     # JSON
     if self.runTests[self.JSON]:
-      out.write(Header("VERIFYING JSON (%s)" % self.json_url))
+      out.write(header("VERIFYING JSON (%s)" % self.json_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.json_url, self.port)
@@ -508,7 +508,7 @@ class FrameworkTest:
 
     # DB
     if self.runTests[self.DB]:
-      out.write(Header("VERIFYING DB (%s)" % self.db_url))
+      out.write(header("VERIFYING DB (%s)" % self.db_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.db_url, self.port)
@@ -537,7 +537,7 @@ class FrameworkTest:
 
     # Query
     if self.runTests[self.QUERY]:
-      out.write(Header("VERIFYING QUERY (%s)" % self.query_url+"2"))
+      out.write(header("VERIFYING QUERY (%s)" % self.query_url+"2"))
       out.flush()
 
       url = self.benchmarker.generate_url(self.query_url + "2", self.port)
@@ -599,7 +599,7 @@ class FrameworkTest:
 
     # Fortune
     if self.runTests[self.FORTUNE]:
-      out.write(Header("VERIFYING FORTUNE (%s)" % self.fortune_url))
+      out.write(header("VERIFYING FORTUNE (%s)" % self.fortune_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.fortune_url, self.port)
@@ -616,7 +616,7 @@ class FrameworkTest:
 
     # Update
     if self.runTests[self.UPDATE]:
-      out.write(Header("VERIFYING UPDATE (%s)" % self.update_url))
+      out.write(header("VERIFYING UPDATE (%s)" % self.update_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.update_url + "2", self.port)
@@ -634,7 +634,7 @@ class FrameworkTest:
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
-      out.write(Header("VERIFYING PLAINTEXT (%s)" % self.plaintext_url))
+      out.write(header("VERIFYING PLAINTEXT (%s)" % self.plaintext_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.plaintext_url, self.port)
