@@ -34,7 +34,7 @@ env:
     - TESTDIR=aspnet
     - TESTDIR=beego
     - TESTDIR=bottle
-    - TESTDIR=cake
+    - TESTDIR=cakephp
     - TESTDIR=compojure
     - TESTDIR=cowboy
     - TESTDIR=cpoll_cppsp

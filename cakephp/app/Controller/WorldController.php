@@ -13,8 +13,16 @@ class WorldController extends AppController {
     // Read number of queries to run from URL parameter
     // http://book.cakephp.org/2.0/en/controllers/request-response.html#accessing-request-parameters
     $query_count = $this->request->query('queries');
+    $should_return_array = True;
     if ($query_count == null) {
       $query_count = 1;
+      $should_return_array = False;
+    }
+    $query_count = intval($query_count);
+    if ($query_count == 0) {
+      $query_count = 1;
+    } elseif ($query_count > 500) {
+      $query_count = 500;
     }
 
     // Create an array with the response string.
@@ -33,11 +41,18 @@ class WorldController extends AppController {
       $arr[] = array("id" => $world['World']['id'], "randomNumber" => $world['World']['randomNumber']);
     }
 
+    # Return either one object or a json list
+    if ($should_return_array == False) {
+      $this->set('worlds', $arr[0]);
+    } else {
+      $this->set('worlds', $arr);  
+    }
+
     // Use the CakePHP JSON View
     // http://book.cakephp.org/2.0/en/views/json-and-xml-views.html
-    $this->set('worlds', $arr);
-    $this->set('_serialize', array('worlds'));
+    $this->set('_serialize', 'worlds');
   }
+
 }
 ?>
 
