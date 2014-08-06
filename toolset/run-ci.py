@@ -34,23 +34,42 @@ class CIRunnner:
     '''
 
     logging.basicConfig(level=logging.INFO)
-
-    try:
-      self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
-    except KeyError:
-      log.warning("Run-ci.py should only be used for automated integration tests")
-      last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
-      self.commit_range = "master...%s" % last_commit
     
     if not test_directory == 'jobcleaner':
       tests = self.gather_tests()
       
-      # Only run the first test in this directory
-      self.test = [t for t in tests if t.directory == test_directory][0]
+      # Run the first linux-only test in this directory
+      dirtests = [t for t in tests if t.directory == test_directory]
+      validtests = [t for t in dirtests if t.os.lower() == "linux"
+                    and t.database_os.lower() == "linux"]
+      log.info("Found %s tests (%s valid) in directory %s", 
+        len(dirtests), len(validtests), test_directory)
+      if len(validtests) == 0:
+        log.critical("Found No Valid Tests, Aborting!")
+        sys.exit(1)
+      self.test = validtests[0]
       self.name = self.test.name
+      log.info("Choosing to run test %s in %s", self.name, test_directory)
 
     self.mode = mode
     self.travis = Travis()
+
+    try:
+      # See http://git.io/hs_qRQ
+      #   TRAVIS_COMMIT_RANGE is empty for pull requests
+      if self.travis.is_pull_req:
+        self.commit_range = "%s..FETCH_HEAD" % os.environ['TRAVIS_BRANCH'].rstrip('\n')
+      else:  
+        self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
+    except KeyError:
+      log.warning("Run-ci.py should only be used for automated integration tests")
+      last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
+      self.commit_range = "master...%s" % last_commit
+
+    log.info("Using commit range %s", self.commit_range)
+    log.info("Running `git diff --name-only %s`" % self.commit_range)
+    changes = subprocess.check_output("git diff --name-only %s" % self.commit_range, shell=True)
+    log.info(changes)
 
   def _should_run(self):
     ''' 
@@ -89,11 +108,8 @@ class CIRunnner:
       return 0
 
     log.info("Running %s for %s", self.mode, self.name)
-
-    # Use coverage so we can send code coverate to coveralls.io
-    command = "coverage run --source toolset,%s --parallel-mode " % self.test.directory
     
-    command = command + 'toolset/run-tests.py '
+    command = 'toolset/run-tests.py '
     if mode == 'prereq':
       command = command + "--install server --test ''"
     elif mode == 'install':
@@ -193,16 +209,28 @@ class CIRunnner:
 class Travis():
   '''Integrates the travis-ci build environment and the travis command line'''
   def __init__(self):     
-    self.token = os.environ['GH_TOKEN']
     self.jobid = os.environ['TRAVIS_JOB_NUMBER']
     self.buildid = os.environ['TRAVIS_BUILD_NUMBER']
-    self._login()
+    self.is_pull_req = "false" != os.environ['TRAVIS_PULL_REQUEST']
+
+    # If this is a PR, we cannot access the secure variable 
+    # GH_TOKEN, and instead must return success for all jobs
+    if not self.is_pull_req:
+      self.token = os.environ['GH_TOKEN']
+      self._login()
+    else:
+      log.info("Pull Request Detected. Non-necessary jobs will return pass instead of being canceled")
 
   def _login(self):
     subprocess.check_call("travis login --skip-version-check --no-interactive --github-token %s" % self.token, shell=True)
     log.info("Logged into travis") # NEVER PRINT OUTPUT, GH_TOKEN MIGHT BE REVEALED
 
   def cancel(self, job):
+    # If this is a pull request, we cannot interact with the CLI
+    if self.is_pull_req:
+      log.info("Thread %s: Return pass for job %s", threading.current_thread().name, job)
+      return
+
     # Ignore errors in case job is already cancelled
     try:
       subprocess.check_call("travis cancel %s --skip-version-check --no-interactive" % job, shell=True)
@@ -214,6 +242,10 @@ class Travis():
       subprocess.call("travis cancel %s --skip-version-check --no-interactive" % job, shell=True)
 
   def build_details(self):
+    # If this is a pull request, we cannot interact with the CLI
+    if self.is_pull_req:
+      return "No details available"
+
     build = subprocess.check_output("travis show %s --skip-version-check" % self.buildid, shell=True)
     return build
 
