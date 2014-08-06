@@ -57,6 +57,11 @@ class CIRunnner:
       last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
       self.commit_range = "master...%s" % last_commit
 
+    log.info("Using commit range %s", self.commit_range)
+    log.info("Running `git diff --name-only %s`" % self.commit_range)
+    changes = subprocess.check_output("git diff --name-only %s" % self.commit_range, shell=True)
+    log.info(changes)
+
   def _should_run(self):
     ''' 
     Decides if the current framework test should be tested or if we can cancel it.

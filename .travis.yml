@@ -176,9 +176,6 @@ install:
   # Install server prerequisites
   - time ./toolset/run-ci.py prereq $TESTDIR
 
-  # Add commit diff to the logs
-  - echo $TRAVIS_COMMIT_RANGE
-  - git diff --name-only $TRAVIS_COMMIT_RANGE
 script: 
   # Run test verification 
   - time ./toolset/run-ci.py test $TESTDIR
