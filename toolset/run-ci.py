@@ -38,9 +38,18 @@ class CIRunnner:
     if not test_directory == 'jobcleaner':
       tests = self.gather_tests()
       
-      # Only run the first test in this directory
-      self.test = [t for t in tests if t.directory == test_directory][0]
+      # Run the first linux-only test in this directory
+      dirtests = [t for t in tests if t.directory == test_directory]
+      validtests = [t for t in dirtests if t.os.lower() == "linux"
+                    and t.database_os.lower() == "linux"]
+      log.info("Found %s tests (%s valid) in directory %s", 
+        len(dirtests), len(validtests), test_directory)
+      if len(validtests) == 0:
+        log.critical("Found No Valid Tests, Aborting!")
+        sys.exit(1)
+      self.test = validtests[0]
       self.name = self.test.name
+      log.info("Choosing to run test %s in %s", self.name, test_directory)
 
     self.mode = mode
     self.travis = Travis()
