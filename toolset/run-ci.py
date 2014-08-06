@@ -82,14 +82,14 @@ class CIRunnner:
     '''
 
     # Look for changes to core TFB framework code
-    find_tool_changes = "git diff --name-only %s | grep '^toolset' | wc -l" % self.commit_range
+    find_tool_changes = "git diff --name-only %s | grep '^toolset/' | wc -l" % self.commit_range
     changes = subprocess.check_output(find_tool_changes, shell=True)  
     if int(changes) != 0:
       log.info("Found changes to core framework code")
       return True
   
     # Look for changes relevant to this test
-    find_test_changes = "git diff --name-only %s | grep '^%s' | wc -l" % (self.commit_range, self.test.directory)
+    find_test_changes = "git diff --name-only %s | grep '^%s/' | wc -l" % (self.commit_range, self.test.directory)
     changes = subprocess.check_output(find_test_changes, shell=True)
     if int(changes) == 0:
       log.info("No changes found for %s", self.name)
