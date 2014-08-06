@@ -156,7 +156,9 @@ before_install:
   - sudo apt-get install openssh-server
   
   # Needed to cancel build jobs from run-ci.py
-  - time gem install travis -v 1.6.16 --no-rdoc --no-ri 
+  # Only install travis command line if this is not a pull request
+  # as it takes a long time and is not used for pull requests
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && time gem install travis -v 1.6.16 --no-rdoc --no-ri || true'
  
   # Run as travis use (who has passwordless sudo)
   - ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa  
