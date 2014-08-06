@@ -179,3 +179,10 @@ install:
 script: 
   # Run test verification 
   - time ./toolset/run-ci.py test $TESTDIR
+
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#techempower-fwbm"
+    on_success: always
+    on_failure: always
