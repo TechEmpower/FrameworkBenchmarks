@@ -22,7 +22,6 @@ env:
     # Put this first as Travis-CI builds top to bottom
     - TESTDIR=jobcleaner
 
-
     # Group tests by directory to logically break up travis-CI build. Otherwise
     # we end up starting ~200+ different workers. Seems that ~100 is the limit
     # before their website starts to lag heavily
@@ -172,8 +171,6 @@ before_install:
   # Doesn't work yet
   # - alias run_tfb="coverage run --parallel-mode --omit installs,results"
 install:
-  - time pip install coveralls
-  
   # Install server prerequisites
   - time ./toolset/run-ci.py prereq $TESTDIR
 
@@ -181,11 +178,5 @@ install:
   - echo $TRAVIS_COMMIT_RANGE
   - git diff --name-only $TRAVIS_COMMIT_RANGE
 script: 
-  
   # Run test verification 
   - time ./toolset/run-ci.py test $TESTDIR
-
-after_success:
-  - coverage combine
-  - coverage report
-  - coveralls
