@@ -38,6 +38,16 @@ class WorldController extends AppController {
     $this->set('worlds', $arr);
     $this->set('_serialize', array('worlds'));
   }
+  
+  public function single() {
+    $id = mt_rand(1, 10000);
+    $world = $this->World->find('first', array('conditions' => array('id' => $id)));
+    $this->set(array(
+      'id' => $world['World']['id'],
+      'randomNumber' => $world['World']['randomNumber'],
+      '_serialize' => array('id', 'randomNumber'
+    ));
+  }
 }
 ?>
 
