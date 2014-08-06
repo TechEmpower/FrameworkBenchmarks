@@ -184,5 +184,10 @@ notifications:
   irc:
     channels:
       - "chat.freenode.net#techempower-fwbm"
+    template:
+      - "%{repository_slug} branch '%{branch}' %{result} (%{author})"
+      - "Build %{build_number} took %{duration}. See %{build_url}"
     on_success: always
     on_failure: always
+    skip_join: true
+
