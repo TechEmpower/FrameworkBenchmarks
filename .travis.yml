@@ -32,7 +32,6 @@ env:
     # done    
     - TESTDIR=activeweb
     - TESTDIR=aspnet
-    - TESTDIR=aspnet-stripped
     - TESTDIR=beego
     - TESTDIR=bottle
     - TESTDIR=cake
