@@ -34,13 +34,6 @@ class CIRunnner:
     '''
 
     logging.basicConfig(level=logging.INFO)
-
-    try:
-      self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
-    except KeyError:
-      log.warning("Run-ci.py should only be used for automated integration tests")
-      last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
-      self.commit_range = "master...%s" % last_commit
     
     if not test_directory == 'jobcleaner':
       tests = self.gather_tests()
@@ -51,6 +44,18 @@ class CIRunnner:
 
     self.mode = mode
     self.travis = Travis()
+
+    try:
+      # See http://git.io/hs_qRQ
+      #   TRAVIS_COMMIT_RANGE is empty for pull requests
+      if self.travis.is_pull_req:
+        self.commit_range = "%s..FETCH_HEAD" % os.environ['TRAVIS_BRANCH'].rstrip('\n')
+      else:  
+        self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
+    except KeyError:
+      log.warning("Run-ci.py should only be used for automated integration tests")
+      last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
+      self.commit_range = "master...%s" % last_commit
 
   def _should_run(self):
     ''' 
