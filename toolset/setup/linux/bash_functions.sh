@@ -12,7 +12,8 @@ fw_get () {
 }
 
 fw_untar() {
-  tar xvf "$@"
+  echo "Running 'tar xf $@'...please wait"
+  tar xf "$@"
 }
 
 fw_unzip() {
