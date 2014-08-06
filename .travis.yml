@@ -62,7 +62,6 @@ env:
     - TESTDIR=hapi
     - TESTDIR=hhvm
     - TESTDIR=http-kit
-    - TESTDIR=HttpListener
     - TESTDIR=jester
     - TESTDIR=jetty-servlet
     - TESTDIR=kelp
