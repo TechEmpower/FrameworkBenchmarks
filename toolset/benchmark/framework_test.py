@@ -444,11 +444,10 @@ class FrameworkTest:
     if not os.path.exists(profile):
       logging.warning("Framework %s does not have a bash_profile" % self.name)
       profile="$FWROOT/config/benchmark_profile"
-    
-    test_rel_dir = setup_util.path_relative_to_root(self.directory)
+
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=$FWROOT%s && export IROOT=%s' %
-              (test_rel_dir, self.install_root))
+              command='export TROOT=$FWROOT/%s && export IROOT=%s' %
+              (self.directory, self.install_root))
 
     return self.setup_module.start(self.benchmarker, out, err)
   ############################################################
@@ -466,10 +465,9 @@ class FrameworkTest:
       logging.warning("Framework %s does not have a bash_profile" % self.name)
       profile="$FWROOT/config/benchmark_profile"
     
-    test_rel_dir = setup_util.path_relative_to_root(self.directory)
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=$FWROOT%s && export IROOT=%s' %
-              (test_rel_dir, self.install_root))
+              command='export TROOT=$FWROOT/%s && export IROOT=%s' %
+              (self.directory, self.install_root))
 
     return self.setup_module.stop(out, err)
   ############################################################
