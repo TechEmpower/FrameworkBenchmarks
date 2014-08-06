@@ -1,5 +1,5 @@
 {
-  "framework": "cake",
+  "framework": "cakephp",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -12,14 +12,14 @@
       "approach": "Realistic",
       "classification": "Fullstack",
       "database": "MySQL",
-      "framework": "cake",
+      "framework": "cakephp",
       "language": "PHP",
       "orm": "Full",
       "platform": "PHP-FPM",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "cake",
+      "display_name": "CakePHP",
       "notes": "",
       "versus": "php"
     }
