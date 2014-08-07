@@ -3,6 +3,7 @@ from setup.linux import setup_util
 
 from benchmark import framework_test
 from utils import header
+from utils import gather_tests
 
 import os
 import json
@@ -320,54 +321,9 @@ class Benchmarker:
   ############################################################
   @property
   def __gather_tests(self):
-    tests = []
-
-    # Assume we are running from FrameworkBenchmarks
-    config_files = glob.glob('*/benchmark_config')
-
-    for config_file_name in config_files:
-      # Look for the benchmark_config file, this will set up our tests.
-      # Its format looks like this:
-      #
-      # {
-      #   "framework": "nodejs",
-      #   "tests": [{
-      #     "default": {
-      #       "setup_file": "setup",
-      #       "json_url": "/json"
-      #     },
-      #     "mysql": {
-      #       "setup_file": "setup",
-      #       "db_url": "/mysql",
-      #       "query_url": "/mysql?queries="
-      #     },
-      #     ...
-      #   }]
-      # }
-      config = None
-
-      with open(config_file_name, 'r') as config_file:
-        # Load json file into config object
-        try:
-          config = json.load(config_file)
-        except:
-          print("Error loading '%s'." % config_file_name)
-          raise
-
-      if config is None:
-        continue
-
-      test = framework_test.parse_config(config, os.path.dirname(config_file_name), self)
-      # If the user specified which tests to run, then 
-      # we can skip over tests that are not in that list
-      if self.test == None:
-        tests = tests + test
-      else:
-        for atest in test:
-          if atest.name in self.test:
-            tests.append(atest)
-
-    tests.sort(key=lambda x: x.name)
+    tests = gather_tests(include=self.test, 
+      exclude=self.exclude,
+      benchmarker=self)
 
     # If the tests have been interrupted somehow, then we want to resume them where we left
     # off, rather than starting from the beginning
