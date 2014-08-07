@@ -2,12 +2,13 @@ from setup.linux.installer import Installer
 from setup.linux import setup_util
 
 from benchmark import framework_test
+from utils import header
 
 import os
 import json
 import subprocess
+import traceback
 import time
-import textwrap
 import pprint
 import csv
 import sys
@@ -104,11 +105,7 @@ class Benchmarker:
     ##########################
     # Setup client/server
     ##########################
-    print textwrap.dedent("""
-      =====================================================
-        Preparing Server, Database, and Client ...
-      =====================================================
-      """)
+    print header("Preparing Server, Database, and Client ...", top='=', bottom='=')
     self.__setup_server()
     self.__setup_database()
     self.__setup_client()
@@ -120,22 +117,14 @@ class Benchmarker:
     ##########################
     # Run tests
     ##########################
-    print textwrap.dedent("""
-      =====================================================
-        Running Tests ...
-      =====================================================
-      """)
+    print header("Running Tests...", top='=', bottom='=')
     result = self.__run_tests(all_tests)
 
     ##########################
     # Parse results
     ##########################  
     if self.mode == "benchmark":
-      print textwrap.dedent("""
-      =====================================================
-        Parsing Results ...
-      =====================================================
-      """)
+      print header("Parsing Results ...", top='=', bottom='=')
       self.__parse_results(all_tests)
 
     self.__finish()
@@ -528,14 +517,10 @@ class Benchmarker:
       # These features do not work on Windows
       for test in tests:
         if __name__ == 'benchmark.benchmarker':
-          print textwrap.dedent("""
-            -----------------------------------------------------
-              Running Test: {name} ...
-            -----------------------------------------------------
-            """.format(name=test.name))
+          print header("Running Test: %s" % test.name)
           with open('current_benchmark.txt', 'w') as benchmark_resume_file:
             benchmark_resume_file.write(test.name)
-          test_process = Process(target=self.__run_test, args=(test,))
+          test_process = Process(target=self.__run_test, name="Test Runner (%s)" % test.name, args=(test,))
           test_process.start()
           test_process.join(self.run_test_timeout_seconds)
           self.__load_results()  # Load intermediate result from child process
@@ -611,24 +596,15 @@ class Benchmarker:
       if self.results['frameworks'] != None and test.name in self.results['completed']:
         out.write('Framework {name} found in latest saved data. Skipping.\n'.format(name=str(test.name)))
         return exit_with_code(1)
-
       out.flush()
 
-      out.write( textwrap.dedent("""
-      =====================================================
-        Beginning {name}
-      -----------------------------------------------------
-      """.format(name=test.name)) )
+      out.write(header("Beginning %s" % test.name, top='='))
       out.flush()
 
       ##########################
       # Start this test
       ##########################  
-      out.write( textwrap.dedent("""
-      -----------------------------------------------------
-        Starting {name}
-      -----------------------------------------------------
-      """.format(name=test.name)) )
+      out.write(header("Starting %s" % test.name))
       out.flush()
       try:
         if test.requires_database():
@@ -643,11 +619,7 @@ class Benchmarker:
 
         if self.__is_port_bound(test.port):
           self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-          err.write( textwrap.dedent("""
-            ---------------------------------------------------------
-              Error: Port {port} is not available before start {name}
-            ---------------------------------------------------------
-            """.format(name=test.name, port=str(test.port))) )
+          err.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
           err.flush()
           return exit_with_code(1)
 
@@ -656,11 +628,7 @@ class Benchmarker:
           test.stop(out, err)
           time.sleep(5)
           err.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
-          err.write( textwrap.dedent("""
-            -----------------------------------------------------
-              Stopped {name}
-            -----------------------------------------------------
-            """.format(name=test.name)) )
+          err.write(header("Stopped %s" % test.name))
           err.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
           return exit_with_code(1)
@@ -678,11 +646,7 @@ class Benchmarker:
         # Benchmark this test
         ##########################
         if self.mode == "benchmark":
-          out.write( textwrap.dedent("""
-            -----------------------------------------------------
-              Benchmarking {name} ...
-            -----------------------------------------------------
-            """.format(name=test.name)) )
+          out.write(header("Benchmarking %s" % test.name))
           out.flush()
           test.benchmark(out, err)
           out.flush()
@@ -691,11 +655,7 @@ class Benchmarker:
         ##########################
         # Stop this test
         ##########################
-        out.write( textwrap.dedent("""
-        -----------------------------------------------------
-          Stopping {name}
-        -----------------------------------------------------
-        """.format(name=test.name)) )
+        out.write(header("Stopping %s" % test.name))
         out.flush()
         test.stop(out, err)
         out.flush()
@@ -704,19 +664,11 @@ class Benchmarker:
 
         if self.__is_port_bound(test.port):
           self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-          err.write( textwrap.dedent("""
-            -----------------------------------------------------
-              Error: Port {port} was not released by stop {name}
-            -----------------------------------------------------
-            """.format(name=test.name, port=str(test.port))) )
+          err.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
           err.flush()
           return exit_with_code(1)
 
-        out.write( textwrap.dedent("""
-        -----------------------------------------------------
-          Stopped {name}
-        -----------------------------------------------------
-        """.format(name=test.name)) )
+        out.write(header("Stopped %s" % test.name))
         out.flush()
         time.sleep(5)
 
@@ -724,11 +676,7 @@ class Benchmarker:
         # Save results thus far into toolset/benchmark/latest.json
         ##########################################################
 
-        out.write( textwrap.dedent("""
-        ----------------------------------------------------
-        Saving results through {name}
-        ----------------------------------------------------
-        """.format(name=test.name)) )
+        out.write(header("Saving results through %s" % test.name))
         out.flush()
         self.__write_intermediate_results(test.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
 
@@ -737,25 +685,15 @@ class Benchmarker:
           return exit_with_code(1)
       except (OSError, IOError, subprocess.CalledProcessError) as e:
         self.__write_intermediate_results(test.name,"<setup.py> raised an exception")
-        err.write( textwrap.dedent("""
-        -----------------------------------------------------
-          Subprocess Error {name}
-        -----------------------------------------------------
-        {err}
-        {trace}
-        """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
+        err.write(header("Subprocess Error %s" % test.name))
+        traceback.print_exc(file=err)
         err.flush()
         try:
           test.stop(out, err)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
-          err.write( textwrap.dedent("""
-          -----------------------------------------------------
-            Subprocess Error: Test .stop() raised exception {name}
-          -----------------------------------------------------
-          {err}
-          {trace}
-          """.format(name=test.name, err=e, trace=sys.exc_info()[:2])) )
+          err.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
+          traceback.print_exc(file=err)
           err.flush()
         out.close()
         err.close()
@@ -764,11 +702,7 @@ class Benchmarker:
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
         test.stop(out, err)
-        out.write( """
-        -----------------------------------------------------
-          Cleaning up....
-        -----------------------------------------------------
-        """)
+        out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
         sys.exit(1)
