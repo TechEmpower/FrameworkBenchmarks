@@ -3,13 +3,11 @@ import sys
 import setup_util
 import os
 
-root = os.getcwd() + "/aspnet"
-app = root + "/src"
-
 def start(args, logfile, errfile):
   if os.name == 'nt':
     return 1
   
+  app = args.fwroot + "/aspnet/src"
   setup_util.replace_text(app + "/Web.config", "localhost", args.database_host)
 
   try:
@@ -20,8 +18,8 @@ def start(args, logfile, errfile):
     
     # nginx
     workers = 'worker_processes ' + str(args.max_threads) + ';'
-    subprocess.check_call('echo "upstream mono {\n' + ';\n'.join('\tserver 127.0.0.1:' + str(port) for port in range(9001, 9001 + args.max_threads)) + ';\n}" > ' + root + '/nginx.upstream.conf', shell=True, stderr=errfile, stdout=logfile);
-    subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c ' + root + '/nginx.conf -g "' + workers + '"', shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call('echo "upstream mono {\n' + ';\n'.join('\tserver 127.0.0.1:' + str(port) for port in range(9001, 9001 + args.max_threads)) + ';\n}" > $TROOT/nginx.upstream.conf', shell=True, stderr=errfile, stdout=logfile);
+    subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c $TROOT/nginx.conf -g "' + workers + '"', shell=True, stderr=errfile, stdout=logfile)
     
     # fastcgi
     for port in range(9001, 9001 + args.max_threads):
@@ -34,8 +32,8 @@ def stop(logfile, errfile):
   if os.name == 'nt':
     return 0
   
-  subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + root + "/nginx.conf -s stop", shell=True, stderr=errfile, stdout=logfile)
-  subprocess.check_call("rm -f " + root + "/nginx.upstream.conf", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c $TROOT/nginx.conf -s stop", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("rm -f $TROOT/nginx.upstream.conf", shell=True, stderr=errfile, stdout=logfile)
   #
   # stop mono
   #
