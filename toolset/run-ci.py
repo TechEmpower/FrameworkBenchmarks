@@ -39,13 +39,17 @@ class CIRunnner:
       tests = self.gather_tests()
       
       # Run the first linux-only test in this directory
+      # At the moment, travis only supports mysql!
       dirtests = [t for t in tests if t.directory == test_directory]
-      validtests = [t for t in dirtests if t.os.lower() == "linux"
+      osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
                     and t.database_os.lower() == "linux"]
-      log.info("Found %s tests (%s valid) in directory %s", 
-        len(dirtests), len(validtests), test_directory)
+      validtests = [t for t in osvalidtests if t.database.lower() == "mysql"]
+      log.info("Found %s tests (%s for linux, %s for linux and mysql) in directory '%s'", 
+        len(dirtests), len(osvalidtests), len(validtests), test_directory)
       if len(validtests) == 0:
-        log.critical("Found No Valid Tests, Aborting!")
+        log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
+        if len(osvalidtests) != 0:
+          log.critical("Note: Found tests that could run in Travis-CI if more databases were supported")
         sys.exit(1)
       self.test = validtests[0]
       self.name = self.test.name
