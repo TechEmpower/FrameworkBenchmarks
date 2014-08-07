@@ -8,6 +8,8 @@ import glob
 import logging
 import setup_util
 
+from benchmark.utils import gather_tests
+
 class Installer:
 
   ############################################################
@@ -37,66 +39,61 @@ class Installer:
     prereq_path='$FWROOT/toolset/setup/linux/prerequisites.sh'
     self.__run_command(". %s && . %s" % (bash_functions_path, prereq_path))
 
-    # Pull in benchmarker include and exclude list
-    exclude = self.benchmarker.exclude
-    include = self.benchmarker.test
-    if exclude == None:
-        exclude = []
+    tests = gather_tests(include=self.benchmarker.test, 
+      exclude=self.benchmarker.exclude,
+      benchmarker=self.benchmarker)
+    
+    dirs = [t.directory for t in tests]
 
-    # Locate all known tests
+    # Locate all installation files
     install_files = glob.glob("%s/*/install.sh" % self.fwroot)
 
     # Run install for selected tests
     for test_install_file in install_files:
-        test_dir = os.path.dirname(test_install_file)
-        test_name = os.path.basename(test_dir)
-        test_rel_dir = setup_util.path_relative_to_root(test_dir)
+      test_dir = os.path.basename(os.path.dirname(test_install_file))
+      test_rel_dir = setup_util.path_relative_to_root(test_dir)
 
-        if test_name in exclude:
-            logging.debug("%s has been excluded", test_name)
-            continue
-        elif include is not None and test_name not in include:
-            logging.debug("%s not in include list", test_name)
-            continue
-        else:
-            logging.info("Running installation for %s"%test_name)
+      if test_dir not in dirs:
+        continue
+              
+      logging.info("Running installation for directory %s", test_dir)
 
-            # Find installation directory 
-            # e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
-            test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
-            if self.strategy is 'pertest':
-              test_install_dir="%s/pertest/%s" % (test_install_dir, test_name)
-            test_rel_install_dir=setup_util.path_relative_to_root(test_install_dir)
-            if not os.path.exists(test_install_dir):
-              os.makedirs(test_install_dir)
+      # Find installation directory 
+      # e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
+      test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
+      if self.strategy is 'pertest':
+        test_install_dir="%s/pertest/%s" % (test_install_dir, test_dir)
+      test_rel_install_dir=setup_util.path_relative_to_root(test_install_dir)
+      if not os.path.exists(test_install_dir):
+        os.makedirs(test_install_dir)
 
-            # Load profile for this installation
-            profile="%s/bash_profile.sh" % test_dir
-            if not os.path.exists(profile):
-              logging.warning("Framework %s does not have a bash_profile"%test_name)
-              profile="$FWROOT/config/benchmark_profile"
-            else:
-              logging.info("Loading environment from %s", profile)
-            setup_util.replace_environ(config=profile, 
-              command='export TROOT=$FWROOT%s && export IROOT=$FWROOT%s' %
-              (test_rel_dir, test_rel_install_dir))
+      # Load profile for this installation
+      profile="%s/bash_profile.sh" % test_dir
+      if not os.path.exists(profile):
+        logging.warning("Directory %s does not have a bash_profile"%test_dir)
+        profile="$FWROOT/config/benchmark_profile"
+      else:
+        logging.info("Loading environment from %s", profile)
+      setup_util.replace_environ(config=profile, 
+        command='export TROOT=$FWROOT%s && export IROOT=$FWROOT%s' %
+        (test_rel_dir, test_rel_install_dir))
 
-            # Find relative installation file
-            test_rel_install_file = "$FWROOT%s" % setup_util.path_relative_to_root(test_install_file)
+      # Find relative installation file
+      test_rel_install_file = "$FWROOT%s" % setup_util.path_relative_to_root(test_install_file)
 
-            # Then run test installer file
-            # Give all installers a number of variables
-            # FWROOT - Path of the FwBm root
-            # IROOT  - Path of this test's install directory
-            # TROOT  - Path to this test's directory 
-            self.__run_command('''
-              export TROOT=$FWROOT%s && 
-              export IROOT=$FWROOT%s && 
-              . %s && 
-              . %s''' % 
-              (test_rel_dir, test_rel_install_dir, 
-                bash_functions_path, test_rel_install_file),
-                cwd=test_install_dir)
+      # Then run test installer file
+      # Give all installers a number of variables
+      # FWROOT - Path of the FwBm root
+      # IROOT  - Path of this test's install directory
+      # TROOT  - Path to this test's directory 
+      self.__run_command('''
+        export TROOT=$FWROOT%s && 
+        export IROOT=$FWROOT%s && 
+        . %s && 
+        . %s''' % 
+        (test_rel_dir, test_rel_install_dir, 
+          bash_functions_path, test_rel_install_file),
+          cwd=test_install_dir)
 
     self.__run_command("sudo apt-get -y autoremove");    
 
@@ -104,7 +101,6 @@ class Installer:
   ############################################################
   # End __install_server_software
   ############################################################
-
 
   ############################################################
   # __install_error
