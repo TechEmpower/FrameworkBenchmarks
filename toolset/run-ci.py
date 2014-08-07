@@ -42,8 +42,9 @@ class CIRunnner:
       # At the moment, travis only supports mysql!
       dirtests = [t for t in tests if t.directory == test_directory]
       osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
-                    and t.database_os.lower() == "linux"]
-      validtests = [t for t in osvalidtests if t.database.lower() == "mysql"]
+                    and (t.database_os.lower() == "linux" or t.database_os.lower() == "none")]
+      validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
+                    or t.database.lower() == "none"]
       log.info("Found %s tests (%s for linux, %s for linux and mysql) in directory '%s'", 
         len(dirtests), len(osvalidtests), len(validtests), test_directory)
       if len(validtests) == 0:
