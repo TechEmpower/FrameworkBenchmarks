@@ -181,7 +181,7 @@ class Installer:
     sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
     sudo apt-get -y update
     sudo apt-get -y remove mongodb-clients
-    sudo apt-get -y install mongodb-10gen
+    sudo apt-get -y install mongodb-org
 
     sudo stop mongodb
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
