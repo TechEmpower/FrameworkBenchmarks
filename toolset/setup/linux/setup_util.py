@@ -80,7 +80,8 @@ def get_fwroot():
             fwroot = subprocess.check_output('printf $FWROOT 2> /dev/null', shell=True, executable='/bin/bash')
             return fwroot
         except subprocess.CalledProcessError:
-            return "";
+            # Make a last-guess effort ;-)
+            return os.getcwd();
 
 # Turns absolute path into path relative to FWROOT
 # Assumes path is underneath FWROOT, not above

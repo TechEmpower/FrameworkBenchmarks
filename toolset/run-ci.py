@@ -4,6 +4,7 @@ import subprocess
 import os
 import sys
 from benchmark import framework_test
+from benchmark.utils import gather_tests
 import glob
 import json
 import traceback
@@ -36,7 +37,7 @@ class CIRunnner:
     logging.basicConfig(level=logging.INFO)
     
     if not test_directory == 'jobcleaner':
-      tests = self.gather_tests()
+      tests = gather_tests()
       
       # Run the first linux-only test in this directory
       # At the moment, travis only supports mysql or none!
@@ -148,26 +149,6 @@ class CIRunnner:
       log.critical("Subprocess Error")
       log.error(err.child_traceback)
       return 1
-
-  def gather_tests(self):
-    ''' Returns all available tests as FrameworkTest list '''
-
-    # Fake benchmarker fields that are used
-    class bench_shim():
-      def __init__(self):
-        self.type = 'all'
-        self.fwroot = os.getcwd()
-        self.install_strategy='pertest'
-
-    # Gather all tests
-    tests = []
-    for config_file_name in glob.glob('*/benchmark_config'):
-      with open(config_file_name, 'r') as config_file:
-        config = json.load(config_file)
-        test = framework_test.parse_config(config, os.path.dirname(config_file_name), bench_shim())
-        tests = tests + test
-    tests.sort(key=lambda x: x.name)
-    return tests
 
   def cancel_unneeded_jobs(self):
     log.info("I am jobcleaner")
