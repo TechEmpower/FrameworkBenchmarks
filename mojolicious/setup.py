@@ -1,11 +1,8 @@
 import subprocess
 import sys
 import json
-from os.path import expanduser
 import os
 import getpass
-
-home = expanduser("~")
 
 def start(args, logfile, errfile):
   conf = { 
