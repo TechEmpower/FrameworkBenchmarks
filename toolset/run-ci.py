@@ -52,11 +52,6 @@ class CIRunnner:
       last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
       self.commit_range = "%s...HEAD" % last_commit
 
-    log.info("Using commit range %s", self.commit_range)
-    log.info("Running `git diff --name-only %s`" % self.commit_range)
-    changes = subprocess.check_output("git diff --name-only %s" % self.commit_range, shell=True)
-    log.info(changes)
-
     #
     # Find the one test from benchmark_config that we are going to run
     #
@@ -111,18 +106,20 @@ class CIRunnner:
     def touch(fname):
       open(fname, 'a').close()
 
+    log.info("Using commit range %s", self.commit_range)
+    log.info("Running `git diff --name-only %s`" % self.commit_range)
+    changes = subprocess.check_output("git diff --name-only %s" % self.commit_range, shell=True)
+    changes = "mojolicious/app.pl\nmojolicious/bash_profile.sh"
+    log.info(changes)
+
     # Look for changes to core TFB framework code
-    find_tool_changes = "git diff --name-only %s | grep '^toolset/' | wc -l" % self.commit_range
-    changes = subprocess.check_output(find_tool_changes, shell=True)  
-    if int(changes) != 0:
+    if re.search(r'^toolset/', changes, re.M) is not None: 
       log.info("Found changes to core framework code")
       touch('.run-ci.should_run')
       return True
   
     # Look for changes relevant to this test
-    find_test_changes = "git diff --name-only %s | grep '^%s/' | wc -l" % (self.commit_range, self.directory)
-    changes = subprocess.check_output(find_test_changes, shell=True)
-    if int(changes) == 0:
+    if re.search("^%s/" % self.directory, changes, re.M) is None:
       log.info("No changes found for %s", self.name)
       touch('.run-ci.should_not_run')
       return False
