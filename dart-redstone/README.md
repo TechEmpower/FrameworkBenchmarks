@@ -9,10 +9,10 @@ This test adds [Redstone.dart](http://redstonedart.org), a microframework for Da
 * [Dart crypto version 0.9.0](http://pub.dartlang.org/packages/crypto)
 * [Dart mustache version 0.1.8](http://pub.dartlang.org/packages/mustache)
 * [Dart mongo_dart version 0.1.42](http://pub.dartlang.org/packages/mongo_dart)
-* [Dart postgresql version 0.2.13](http://pub.dartlang.org/packages/postgresql)
-* [Dart redstone version 0.5.9](http://pub.dartlang.org/packages/redstone)
+* [Dart postgresql version 0.2.14](http://pub.dartlang.org/packages/postgresql)
+* [Dart redstone version 0.5.11](http://pub.dartlang.org/packages/redstone)
 * [Dart yaml version 0.9.0](http://pub.dartlang.org/packages/yaml)
-* [Dart redstone_mapper version 0.1.3](http://pub.dartlang.org/packages/redstone_mapper)
+* [Dart redstone_mapper version 0.1.4](http://pub.dartlang.org/packages/redstone_mapper)
 * [Dart redstone_mapper_mongo version 0.1.1+1](http://pub.dartlang.org/packages/redstone_mapper_mongo)
 * [Dart redstone_mapper_pg version 0.1.1](http://pub.dartlang.org/packages/redstone_mapper_pg)
 
