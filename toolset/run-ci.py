@@ -45,6 +45,7 @@ class CIRunnner:
       osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
                     and (t.database_os.lower() == "linux" or t.database_os.lower() == "none")]
       validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
+                    or t.database.lower() == "postgres"
                     or t.database.lower() == "none"]
       log.info("Found %s tests (%s for linux, %s for linux and mysql) in directory '%s'", 
         len(dirtests), len(osvalidtests), len(validtests), test_directory)
@@ -54,8 +55,8 @@ class CIRunnner:
           log.critical("Note: Found tests that could run in Travis-CI if more databases were supported")
         sys.exit(1)
       
-      # Prefer mysql tests over 'none' if we have both
-      preferred = [t for t in validtests if t.database.lower() == "mysql"]
+      # Prefer database tests over 'none' if we have both
+      preferred = [t for t in validtests if t.database.lower() != "none"]
       if len(preferred) > 0:
         self.test = preferred[0]
       else:
