@@ -52,7 +52,7 @@ class CIRunnner:
       log.warning("I should only be used for automated integration tests e.g. Travis-CI")
       log.warning("Were you looking for run-tests.py?")
       last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
-      self.commit_range = "%s...master" % last_commit
+      self.commit_range = "%s...HEAD" % last_commit
 
     log.info("Using commit range %s", self.commit_range)
     log.info("Running `git diff --name-only %s`" % self.commit_range)
@@ -179,7 +179,43 @@ class CIRunnner:
       return 1
 
   def run_travis_setup(self):
-    print "running travis setup"
+    log.info("Setting up Travis-CI")
+    
+    script = '''
+    sudo apt-get update
+    sudo apt-get install openssh-server
+
+    # Run as travis user (who already has passwordless sudo)
+    ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
+    cat /home/travis/.ssh/id_rsa.pub > /home/travis/.ssh/authorized_keys
+    chmod 600 /home/travis/.ssh/authorized_keys
+
+    # Setup database manually
+    # NOTE: Do not run database installation! It restarts mysql with a different
+    # configuration and will break travis's mysql setup
+    mysql -uroot < config/create.sql
+
+    # Setup Postgres
+    psql --version
+    sudo useradd benchmarkdbuser -p benchmarkdbpass
+    sudo -u postgres psql template1 < config/create-postgres-database.sql
+    sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
+    '''
+
+    def sh(command):
+      log.info("Running `%s`", command)
+      subprocess.check_call(command, shell=True)  
+
+    for command in script.split('\n'):
+      command = command.lstrip()
+      if command != "" and command[0] != '#':
+        sh(command.lstrip())
+
+    # Needed to cancel build jobs from run-ci.py
+    if not self.travis.is_pull_req:
+      sh('time gem install travis -v 1.6.16 --no-rdoc --no-ri')
+
+
 
   def cancel_unneeded_jobs(self):
     log.info("I am jobcleaner")

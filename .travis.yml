@@ -150,31 +150,8 @@ env:
     - TESTDIR=yesod
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install openssh-server
-  
-  # Needed to cancel build jobs from run-ci.py
-  # Only install travis command line if this is not a pull request
-  # as it takes a long time and is not used for pull requests
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && time gem install travis -v 1.6.16 --no-rdoc --no-ri || true'
- 
-  # Run as travis use (who has passwordless sudo)
-  - ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa  
-  - cat /home/travis/.ssh/id_rsa.pub > /home/travis/.ssh/authorized_keys
-  - chmod 600 /home/travis/.ssh/authorized_keys
-  
-  # Setup database manually
-  # NOTE: Do not run database installation! It restarts mysql with a different 
-  # configuration and will break travis's mysql setup
-  - mysql -uroot < config/create.sql
-  
-  # Setup Postgres
-  - psql --version
-  - sudo useradd benchmarkdbuser -p benchmarkdbpass
-  - sudo -u postgres psql template1 < config/create-postgres-database.sql
-  - sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
-  
   - time ./toolset/run-ci.py cisetup
+
 addons:
   postgresql: "9.3" 
 
@@ -183,7 +160,6 @@ install:
   - time ./toolset/run-ci.py install $TESTDIR
    
 script: 
-  # Run test verification 
   - time ./toolset/run-ci.py verify $TESTDIR
 
 notifications:
