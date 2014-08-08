@@ -104,12 +104,20 @@ class CIRunnner:
     # Don't use git diff multiple times, it's mega slow sometimes\
     # Put flag on filesystem so that future calls to run-ci see it too
     if os.path.isfile('.run-ci.should_run'):
+      log.info("SHOULD RUN RETURNING TRUE")
       return True
     if os.path.isfile('.run-ci.should_not_run'):
+      log.info("SHOULD RUN RETURNING FALSE")
       return False
 
     def touch(fname):
       open(fname, 'a').close()
+
+      log.info("SHOULD RUN touched %s", fname)
+      subprocess.call("ls -a | grep run", shell=True)
+
+      res = os.path.isfile(fname)
+      log.info("checking if detected by os.path...%s", res)
 
     # Look for changes to core TFB framework code
     find_tool_changes = "git diff --name-only %s | grep '^toolset/' | wc -l" % self.commit_range
