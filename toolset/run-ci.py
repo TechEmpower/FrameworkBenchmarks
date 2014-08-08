@@ -38,7 +38,6 @@ class CIRunnner:
     self.directory = testdir
     self.name = testdir  # Temporary value, reset below
     self.mode = mode
-    self.should_run_cache = None
     self.travis = Travis()
 
     try:
@@ -109,16 +108,11 @@ class CIRunnner:
     we probably want to examine the entire branch of commits. Also, this cannot handle 
     history re-writing very well, so avoid rebasing onto any published history
     '''
-    # Don't use git diff twice, it's mega slow sometimes
-    if self.should_run_cache is not None: 
-      return self.should_run_cache
-
-    # Check if a previous run has left indicator files
+    # Don't use git diff multiple times, it's mega slow sometimes\
+    # Put flag on filesystem so that future calls to run-ci see it too
     if os.path.isfile('.run-ci.should_run'):
-      self.should_run_cache = True
       return True
     elif os.path.isfile('.run-ci.should_not_run'):
-      self.should_run_cache = False
       return False
 
     def touch(fname):
@@ -129,7 +123,6 @@ class CIRunnner:
     changes = subprocess.check_output(find_tool_changes, shell=True)  
     if int(changes) != 0:
       log.info("Found changes to core framework code")
-      self.should_run_cache = True
       touch('.run-ci.should_run')
       return True
   
@@ -138,12 +131,10 @@ class CIRunnner:
     changes = subprocess.check_output(find_test_changes, shell=True)
     if int(changes) == 0:
       log.info("No changes found for %s", self.name)
-      self.should_run_cache = False
       touch('.run-ci.should_not_run')
       return False
 
     log.info("Changes found for %s", self.name)
-    self.should_run_cache = True
     touch('.run-ci.should_run')
     return True
 
@@ -381,7 +372,11 @@ if __name__ == "__main__":
     
     # Only print logs if we are not jobcleaner and we ran a verify
     if mode == 'jobcleaner' or mode != 'verify':
-      sys.exit(retcode)          
+      sys.exit(retcode)   
+
+    # Only print logs if we actually did something
+    if os.path.isfile('.run-ci.should_not_run'):
+      sys.exit(retcode)         
 
     log.error("Running inside travis, so I will print err and out to console")
     
