@@ -30,7 +30,7 @@ class CIRunnner:
   
   def __init__(self, mode, test_directory):
     '''
-    mode = [prereq|install|test] for what we want TFB to do
+    mode = [prereq|install|verify] for what we want TFB to do
     dir  = directory we are running
     '''
 
@@ -77,7 +77,7 @@ class CIRunnner:
     except KeyError:
       log.warning("Run-ci.py should only be used for automated integration tests")
       last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
-      self.commit_range = "master...%s" % last_commit
+      self.commit_range = "%s...master" % last_commit
 
     log.info("Using commit range %s", self.commit_range)
     log.info("Running `git diff --name-only %s`" % self.commit_range)
@@ -124,14 +124,11 @@ class CIRunnner:
     
     command = 'toolset/run-tests.py '
     if mode == 'prereq':
-      command = command + "--install server --test ''"
+      command = command + "--install server --install-only --test ''"
     elif mode == 'install':
-      # Just a note that having an install-only mode would integrate nicely with 
-      # Travis-CI's line-folding
-      log.warning('Currently there is no install-only mode available')
-      return 1
-    elif mode == 'test':
-      command = command + "--install server --mode verify --test %s" % self.name
+      command = command + "--install server --install-only --test %s" % self.name
+    elif mode == 'verify':
+      command = command + "--mode verify --test %s" % self.name
     else:
       log.critical('Unknown mode passed')
       return 1
@@ -245,8 +242,21 @@ class Travis():
 if __name__ == "__main__":
   args = sys.argv[1:]
 
-  if len(args) != 2 or not (args[0] == "prereq" or args[0] == "install" or args[0] == "test"):
-    print "Usage: toolset/run-ci.py [prereq|install|test] test-name"
+  if len(args) != 2 or not (args[0] == "prereq" or args[0] == "install" or args[0] == "verify"):
+    print '''Usage: toolset/run-ci.py [prereq|install|verify] framework-directory
+    run-ci.py selects one test from <framework-directory>/benchark_config, and 
+    automates a number of calls into run-tests.py specific to the selected test. 
+
+    It is guaranteed to always select the same test from the benchark_config, so 
+    multiple runs with the same <framework-directory> reference the same test. 
+    The name of the selected test will be printed to standard output. 
+
+    prereq  - trigger standard prerequisite installation
+    install - trigger server installation for the selected test_directory
+    verify  - run a verification on the selected test using `--mode verify`
+
+    run-ci.py expects to be run inside the Travis-CI build environment, and 
+    will expect environment variables such as $TRAVIS_BUILD'''
     sys.exit(1)
 
   mode = args[0]
@@ -278,6 +288,10 @@ if __name__ == "__main__":
     log.critical("Unknown error")
     print traceback.format_exc()
   finally:
+    # Only print logs if we ran a verify
+    if mode != "verify":
+      sys.exit(retcode)          
+
     log.error("Running inside travis, so I will print err and out to console")
     log.error("Here is ERR:")
     
