@@ -178,8 +178,8 @@ install:
 before_script:
   - psql --version
   - sudo useradd benchmarkdbuser -p benchmarkdbpass
-  - sudo -u postgres psql template1 < create-postgres-database.sql
-  - sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
+  - sudo -u postgres psql template1 < config/create-postgres-database.sql
+  - sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
   # TODO May have to change ssl to false in the config file...
    
 script: 
