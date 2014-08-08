@@ -173,11 +173,13 @@ before_install:
   - sudo useradd benchmarkdbuser -p benchmarkdbpass
   - sudo -u postgres psql template1 < config/create-postgres-database.sql
   - sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
+  
+  - time ./toolset/run-ci.py cisetup
 addons:
   postgresql: "9.3" 
 
 install:
-  - time ./toolset/run-ci.py prereq $TESTDIR
+  - time ./toolset/run-ci.py prereq 
   - time ./toolset/run-ci.py install $TESTDIR
    
 script: 
