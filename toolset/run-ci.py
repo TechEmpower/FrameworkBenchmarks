@@ -178,8 +178,7 @@ class CIRunnner:
 
     sudo apt-get update
     
-    # MongoDB takes a while to start accepting connections
-    # so we install it first
+    # MongoDB takes a good 30-45 seconds to turn on, so install it first
     sudo apt-get install mongodb-org
 
     sudo apt-get install openssh-server
@@ -204,9 +203,8 @@ class CIRunnner:
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
 
     # Setup MongoDB (see install above)
-    sleep 15
     mongod --version
-    mongo < config/create.js
+    until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
     mongo < config/create.js
     '''
 
