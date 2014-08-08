@@ -159,7 +159,8 @@ Now, when running `run-tests.py`, just add `-d <ip of SQL Server instance>`. Thi
 
 ## Running the test suite
 
-We ran our tests using three dedicated i7 2600k machines, three EC2 m1.large instances, and three servers from Peak Hosting
+We ran our tests using three dedicated i7 2600k machines, three EC2 m1.large instances, and three servers from Peak Hosting. You can find the raw output data 
+[here](https://github.com/TechEmpower/TFB-Round-9)
 
 ## Updating Tests
 
