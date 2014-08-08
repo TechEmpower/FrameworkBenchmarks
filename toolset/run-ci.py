@@ -109,10 +109,20 @@ class CIRunnner:
     we probably want to examine the entire branch of commits. Also, this cannot handle 
     history re-writing very well, so avoid rebasing onto any published history
     '''
-    
     # Don't use git diff twice, it's mega slow sometimes
     if self.should_run_cache is not None: 
       return self.should_run_cache
+
+    # Check if a previous run has left indicator files
+    if os.path.isfile('.run-ci.should_run'):
+      self.should_run_cache = True
+      return True
+    elif os.path.isfile('.run-ci.should_not_run'):
+      self.should_run_cache = False
+      return False
+
+    def touch(fname):
+      open(fname, 'a').close()
 
     # Look for changes to core TFB framework code
     find_tool_changes = "git diff --name-only %s | grep '^toolset/' | wc -l" % self.commit_range
@@ -120,6 +130,7 @@ class CIRunnner:
     if int(changes) != 0:
       log.info("Found changes to core framework code")
       self.should_run_cache = True
+      touch('.run-ci.should_run')
       return True
   
     # Look for changes relevant to this test
@@ -128,10 +139,12 @@ class CIRunnner:
     if int(changes) == 0:
       log.info("No changes found for %s", self.name)
       self.should_run_cache = False
+      touch('.run-ci.should_not_run')
       return False
 
     log.info("Changes found for %s", self.name)
     self.should_run_cache = True
+    touch('.run-ci.should_run')
     return True
 
   def run(self):
@@ -213,9 +226,7 @@ class CIRunnner:
 
     # Needed to cancel build jobs from run-ci.py
     if not self.travis.is_pull_req:
-      sh('time gem install travis -v 1.6.16 --no-rdoc --no-ri')
-
-
+      sh('gem install travis -v 1.6.16 --no-rdoc --no-ri')
 
   def cancel_unneeded_jobs(self):
     log.info("I am jobcleaner")
