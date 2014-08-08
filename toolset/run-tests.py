@@ -103,6 +103,7 @@ def main(argv=None):
     parser.add_argument('--install-strategy', choices=['unified', 'pertest'], default='unified', 
         help='''Affects `--install server`: With unified, all server software is installed into a single directory. 
         With pertest each test gets its own installs directory, but installation takes longer''')
+    parser.add_argument('--install-only', action='store_true', default=False, help='Do not run benchmark or verification, just install and exit')
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
@@ -157,7 +158,7 @@ def main(argv=None):
       benchmarker.run_list_test_metadata()
     elif benchmarker.parse != None:
       benchmarker.parse_timestamp()
-    else:
+    elif not benchmarker.install_only:
       return benchmarker.run()
 
 if __name__ == "__main__":
