@@ -168,12 +168,20 @@ before_install:
   # configuration and will break travis's mysql setup
   - mysql -uroot < config/create.sql
   
-  # Doesn't work yet
-  # - alias run_tfb="coverage run --parallel-mode --omit installs,results"
+addons:
+  postgresql: "9.3" 
+
 install:
   # Install server prerequisites
   - time ./toolset/run-ci.py prereq $TESTDIR
 
+before_script:
+  - psql --version
+  - sudo useradd benchmarkdbuser -p benchmarkdbpass
+  - sudo -u postgres psql template1 < create-postgres-database.sql
+  - sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
+  # TODO May have to change ssl to false in the config file...
+   
 script: 
   # Run test verification 
   - time ./toolset/run-ci.py test $TESTDIR
