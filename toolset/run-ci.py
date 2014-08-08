@@ -36,7 +36,6 @@ class CIRunnner:
 
     logging.basicConfig(level=logging.INFO)
     self.directory = testdir
-    self.name = testdir  # Temporary value, reset below
     self.mode = mode
 
     try:
@@ -57,14 +56,6 @@ class CIRunnner:
     log.info("Running `git diff --name-only %s`" % self.commit_range)
     changes = subprocess.check_output("git diff --name-only %s" % self.commit_range, shell=True)
     log.info(changes)
-
-    # Nothing else to setup
-    if mode == 'cisetup' or mode == 'prereq':
-      return
-
-    # Should we bother to continue
-    if not self._should_run():
-      return
 
     #
     # Find the one test from benchmark_config that we are going to run
@@ -97,7 +88,7 @@ class CIRunnner:
     else:
       self.test = validtests[0]
     self.name = self.test.name
-    log.info("Choosing to run test %s in %s", self.name, testdir)
+    log.info("Choosing to use test %s to verify directory %s", self.name, testdir)
 
   def _should_run(self):
     ''' 
@@ -113,7 +104,7 @@ class CIRunnner:
     # Put flag on filesystem so that future calls to run-ci see it too
     if os.path.isfile('.run-ci.should_run'):
       return True
-    elif os.path.isfile('.run-ci.should_not_run'):
+    if os.path.isfile('.run-ci.should_not_run'):
       return False
 
     def touch(fname):
@@ -212,9 +203,8 @@ class CIRunnner:
 if __name__ == "__main__":
   args = sys.argv[1:]
 
-  usage = '''Usage: toolset/run-ci.py [cisetup|prereq]
-    OR toolset/run-ci.py [install|verify] <framework-directory>
-
+  usage = '''Usage: toolset/run-ci.py [cisetup|prereq|install|verify] <framework-directory>
+    
     run-ci.py selects one test from <framework-directory>/benchark_config, and 
     automates a number of calls into run-tests.py specific to the selected test. 
 
@@ -230,12 +220,17 @@ if __name__ == "__main__":
     run-ci.py expects to be run inside the Travis-CI build environment, and 
     will expect environment variables such as $TRAVIS_BUILD'''
 
+  if len(args) != 2:
+    print usage
+    sys.exit(1)
+
   mode = args[0]
-  if mode == 'cisetup' or mode == 'prereq':
-    runner = CIRunnner(mode)
-  elif len(args) == 2 and (mode == "install" 
-    or mode == "verify"):
-    runner = CIRunnner(mode, args[1])
+  testdir = args[1]
+  if len(args) == 2 and (mode == "install" 
+    or mode == "verify"
+    or mode == 'prereq'
+    or mode == 'cisetup'):
+    runner = CIRunnner(mode, testdir)
   else:
     print usage
     sys.exit(1)
@@ -253,13 +248,13 @@ if __name__ == "__main__":
     
     # Only print logs if we ran a verify
     if mode != 'verify':
-      sys.exit(retcode)   
+      sys.exit(retcode)
 
     # Only print logs if we actually did something
     if os.path.isfile('.run-ci.should_not_run'):
-      sys.exit(retcode)         
+      sys.exit(retcode)
 
-    log.error("Running inside travis, so I will print err and out to console")
+    log.error("Running inside Travis-CI, so I will print err and out to console...")
     
     try:
       log.error("Here is ERR:")
