@@ -28,43 +28,17 @@ class CIRunnner:
   Only verifies the first test in each directory 
   '''
   
-  def __init__(self, mode, test_directory):
+  def __init__(self, mode, testdir=None):
     '''
-    mode = [prereq|install|verify] for what we want TFB to do
-    dir  = directory we are running
+    mode = [cisetup|jobcleaner|prereq|install|verify] for what we want to do
+    testdir  = framework directory we are running
     '''
 
     logging.basicConfig(level=logging.INFO)
-    
-    if not test_directory == 'jobcleaner':
-      tests = gather_tests()
-      
-      # Run the first linux-only test in this directory
-      # At the moment, travis only supports mysql or none!
-      dirtests = [t for t in tests if t.directory == test_directory]
-      osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
-                    and (t.database_os.lower() == "linux" or t.database_os.lower() == "none")]
-      validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
-                    or t.database.lower() == "postgres"
-                    or t.database.lower() == "none"]
-      log.info("Found %s tests (%s for linux, %s for linux and mysql) in directory '%s'", 
-        len(dirtests), len(osvalidtests), len(validtests), test_directory)
-      if len(validtests) == 0:
-        log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
-        if len(osvalidtests) != 0:
-          log.critical("Note: Found tests that could run in Travis-CI if more databases were supported")
-        sys.exit(1)
-      
-      # Prefer database tests over 'none' if we have both
-      preferred = [t for t in validtests if t.database.lower() != "none"]
-      if len(preferred) > 0:
-        self.test = preferred[0]
-      else:
-        self.test = validtests[0]
-      self.name = self.test.name
-      log.info("Choosing to run test %s in %s", self.name, test_directory)
-
+    self.directory = testdir
+    self.name = testdir  # Temporary value, reset below
     self.mode = mode
+    self.should_run_cache = None
     self.travis = Travis()
 
     try:
@@ -75,14 +49,56 @@ class CIRunnner:
       else:  
         self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
     except KeyError:
-      log.warning("Run-ci.py should only be used for automated integration tests")
+      log.warning("I should only be used for automated integration tests e.g. Travis-CI")
+      log.warning("Were you looking for run-tests.py?")
       last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
-      self.commit_range = "%s...master" % last_commit
+      self.commit_range = "%s...HEAD" % last_commit
 
     log.info("Using commit range %s", self.commit_range)
     log.info("Running `git diff --name-only %s`" % self.commit_range)
     changes = subprocess.check_output("git diff --name-only %s" % self.commit_range, shell=True)
     log.info(changes)
+
+    # Nothing else to setup
+    if mode == 'cisetup' or mode == 'jobcleaner' or mode == 'prereq':
+      return
+
+    # Should we bother to continue
+    if not self._should_run():
+      return
+
+    #
+    # Find the one test from benchmark_config that we are going to run
+    #
+
+    tests = gather_tests()
+    dirtests = [t for t in tests if t.directory == testdir]
+    
+    # Travis-CI is linux only
+    osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
+                  and (t.database_os.lower() == "linux" or t.database_os.lower() == "none")]
+    
+    # Travis-CI only has some supported databases
+    validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
+                  or t.database.lower() == "postgres"
+                  or t.database.lower() == "none"]
+    log.info("Found %s tests (%s for linux, %s for linux and mysql) in directory '%s'", 
+      len(dirtests), len(osvalidtests), len(validtests), testdir)
+    if len(validtests) == 0:
+      log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
+      if len(osvalidtests) != 0:
+        log.critical("Note: Found these tests that could run in Travis-CI if more databases were supported")
+        log.criticat("Note: %s", osvalidtests)
+      sys.exit(1)
+    
+    # Prefer database tests over 'none' if we have both
+    preferred = [t for t in validtests if t.database.lower() != "none"]
+    if len(preferred) > 0:
+      self.test = preferred[0]
+    else:
+      self.test = validtests[0]
+    self.name = self.test.name
+    log.info("Choosing to run test %s in %s", self.name, testdir)
 
   def _should_run(self):
     ''' 
@@ -93,26 +109,42 @@ class CIRunnner:
     we probably want to examine the entire branch of commits. Also, this cannot handle 
     history re-writing very well, so avoid rebasing onto any published history
     '''
+    
+    # Don't use git diff twice, it's mega slow sometimes
+    if self.should_run_cache is not None: 
+      return self.should_run_cache
 
     # Look for changes to core TFB framework code
     find_tool_changes = "git diff --name-only %s | grep '^toolset/' | wc -l" % self.commit_range
     changes = subprocess.check_output(find_tool_changes, shell=True)  
     if int(changes) != 0:
       log.info("Found changes to core framework code")
+      self.should_run_cache = True
       return True
   
     # Look for changes relevant to this test
-    find_test_changes = "git diff --name-only %s | grep '^%s/' | wc -l" % (self.commit_range, self.test.directory)
+    find_test_changes = "git diff --name-only %s | grep '^%s/' | wc -l" % (self.commit_range, self.directory)
     changes = subprocess.check_output(find_test_changes, shell=True)
     if int(changes) == 0:
       log.info("No changes found for %s", self.name)
+      self.should_run_cache = False
       return False
 
     log.info("Changes found for %s", self.name)
+    self.should_run_cache = True
     return True
 
   def run(self):
     ''' Do the requested command using TFB  '''
+
+    if self.mode == 'jobcleaner':
+      self.cancel_unneeded_jobs()
+      return 0
+
+    if self.mode == 'cisetup' and self._should_run():
+      self.run_travis_setup()
+      return 0
+
     if not self._should_run():
       log.info("Not running %s", self.name)
       
@@ -120,21 +152,19 @@ class CIRunnner:
       self.travis.cancel(self.travis.jobid)
       return 0
 
-    log.info("Running %s for %s", self.mode, self.name)
-    
     command = 'toolset/run-tests.py '
-    if mode == 'prereq':
+    if self.mode == 'prereq':
       command = command + "--install server --install-only --test ''"
-    elif mode == 'install':
+    elif self.mode == 'install':
       command = command + "--install server --install-only --test %s" % self.name
-    elif mode == 'verify':
+    elif self.mode == 'verify':
       command = command + "--mode verify --test %s" % self.name
     else:
       log.critical('Unknown mode passed')
       return 1
     
     # Run the command
-    log.info("Running %s", command)
+    log.info("Running mode %s with commmand %s", self.mode, command)
     try:
       p = subprocess.Popen(command, shell=True)
       p.wait()
@@ -148,8 +178,49 @@ class CIRunnner:
       log.error(err.child_traceback)
       return 1
 
+  def run_travis_setup(self):
+    log.info("Setting up Travis-CI")
+    
+    script = '''
+    sudo apt-get update
+    sudo apt-get install openssh-server
+
+    # Run as travis user (who already has passwordless sudo)
+    ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
+    cat /home/travis/.ssh/id_rsa.pub > /home/travis/.ssh/authorized_keys
+    chmod 600 /home/travis/.ssh/authorized_keys
+
+    # Setup database manually
+    # NOTE: Do not run database installation! It restarts mysql with a different
+    # configuration and will break travis's mysql setup
+    mysql -uroot < config/create.sql
+
+    # Setup Postgres
+    psql --version
+    sudo useradd benchmarkdbuser -p benchmarkdbpass
+    sudo -u postgres psql template1 < config/create-postgres-database.sql
+    sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
+    '''
+
+    def sh(command):
+      log.info("Running `%s`", command)
+      subprocess.check_call(command, shell=True)  
+
+    for command in script.split('\n'):
+      command = command.lstrip()
+      if command != "" and command[0] != '#':
+        sh(command.lstrip())
+
+    # Needed to cancel build jobs from run-ci.py
+    if not self.travis.is_pull_req:
+      sh('time gem install travis -v 1.6.16 --no-rdoc --no-ri')
+
+
+
   def cancel_unneeded_jobs(self):
     log.info("I am jobcleaner")
+    log.info("Sleeping to ensure Travis-CI has queued all jobs")
+    time.sleep(20)
 
     # Look for changes to core TFB framework code
     find_tool_changes = "git diff --name-only %s | grep toolset | wc -l" % self.commit_range
@@ -201,21 +272,27 @@ class Travis():
   def __init__(self):     
     self.jobid = os.environ['TRAVIS_JOB_NUMBER']
     self.buildid = os.environ['TRAVIS_BUILD_NUMBER']
-    self.is_pull_req = "false" != os.environ['TRAVIS_PULL_REQUEST']
+    self.is_pull_req = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
+    self.logged_in = False
+
+  def _login(self):
+    if self.logged_in:
+      return
 
     # If this is a PR, we cannot access the secure variable 
     # GH_TOKEN, and instead must return success for all jobs
     if not self.is_pull_req:
       self.token = os.environ['GH_TOKEN']
-      self._login()
+      subprocess.check_call("travis login --skip-version-check --no-interactive --github-token %s" % self.token, shell=True)
+      log.info("Logged into travis") # NEVER PRINT OUTPUT, GH_TOKEN MIGHT BE REVEALED      
     else:
       log.info("Pull Request Detected. Non-necessary jobs will return pass instead of being canceled")
 
-  def _login(self):
-    subprocess.check_call("travis login --skip-version-check --no-interactive --github-token %s" % self.token, shell=True)
-    log.info("Logged into travis") # NEVER PRINT OUTPUT, GH_TOKEN MIGHT BE REVEALED
+    self.logged_in = True
 
   def cancel(self, job):
+    self._login()
+
     # If this is a pull request, we cannot interact with the CLI
     if self.is_pull_req:
       log.info("Thread %s: Return pass for job %s", threading.current_thread().name, job)
@@ -232,6 +309,8 @@ class Travis():
       subprocess.call("travis cancel %s --skip-version-check --no-interactive" % job, shell=True)
 
   def build_details(self):
+    self._login()
+
     # If this is a pull request, we cannot interact with the CLI
     if self.is_pull_req:
       return "No details available"
@@ -242,8 +321,9 @@ class Travis():
 if __name__ == "__main__":
   args = sys.argv[1:]
 
-  if len(args) != 2 or not (args[0] == "prereq" or args[0] == "install" or args[0] == "verify"):
-    print '''Usage: toolset/run-ci.py [prereq|install|verify] framework-directory
+  usage = '''Usage: toolset/run-ci.py [cisetup|prereq]
+    OR toolset/run-ci.py [install|verify] <framework-directory>
+
     run-ci.py selects one test from <framework-directory>/benchark_config, and 
     automates a number of calls into run-tests.py specific to the selected test. 
 
@@ -251,66 +331,64 @@ if __name__ == "__main__":
     multiple runs with the same <framework-directory> reference the same test. 
     The name of the selected test will be printed to standard output. 
 
+    cisetup - configure the Travis-CI environment for our test suite
     prereq  - trigger standard prerequisite installation
     install - trigger server installation for the selected test_directory
     verify  - run a verification on the selected test using `--mode verify`
 
     run-ci.py expects to be run inside the Travis-CI build environment, and 
     will expect environment variables such as $TRAVIS_BUILD'''
-    sys.exit(1)
 
   mode = args[0]
-  testdir = args[1]
-
-  runner = CIRunnner(mode, testdir)
-  
-  # Watch for the special test name indicating we are 
-  # the test in charge of cancelling unnecessary jobs
-  if testdir == "jobcleaner":
-    try:
-      log.info("Sleeping to ensure Travis-CI has queued all jobs")
-      time.sleep(20)
-      runner.cancel_unneeded_jobs()
-    except KeyError as ke: 
-      log.warning("Environment key missing, are you running inside Travis-CI?")
-    except:
-      log.critical("Unknown error")
-      print traceback.format_exc()
-    finally: 
+  if mode == 'cisetup' or mode == 'prereq':
+    runner = CIRunnner(mode)
+  elif len(args) == 2 and args[1] == 'jobcleaner':
+    # Only run jobcleaner once
+    if mode != 'verify':
       sys.exit(0)
-  
+
+    # Translate jobcleaner from a directory name to a mode
+    mode = 'jobcleaner'
+    runner = CIRunnner(args[1])
+  elif len(args) == 2 and (mode == "install" 
+    or mode == "verify"):
+    runner = CIRunnner(mode, args[1])
+  else:
+    print usage
+    sys.exit(1)
+    
   retcode = 0
   try:
     retcode = runner.run()
   except KeyError as ke: 
     log.warning("Environment key missing, are you running inside Travis-CI?")
+    print traceback.format_exc()
   except:
     log.critical("Unknown error")
     print traceback.format_exc()
-  finally:
-    # Only print logs if we ran a verify
-    if mode != "verify":
+  finally:  # Ensure that logs are printed
+    
+    # Only print logs if we are not jobcleaner and we ran a verify
+    if mode == 'jobcleaner' or mode != 'verify':
       sys.exit(retcode)          
 
     log.error("Running inside travis, so I will print err and out to console")
-    log.error("Here is ERR:")
     
     try:
+      log.error("Here is ERR:")
       with open("results/ec2/latest/logs/%s/err.txt" % runner.test.name, 'r') as err:
         for line in err:
           log.info(line)
     except IOError:
-      if mode == "test":
-        log.error("No ERR file found")
+      log.error("No ERR file found")
 
-    log.error("Here is OUT:")
     try:
+      log.error("Here is OUT:")
       with open("results/ec2/latest/logs/%s/out.txt" % runner.test.name, 'r') as out:
         for line in out:
           log.info(line)
     except IOError:
-      if mode == "test":
-        log.error("No OUT file found")
+      log.error("No OUT file found")
 
     sys.exit(retcode)
 
