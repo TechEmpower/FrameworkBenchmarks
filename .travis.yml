@@ -177,12 +177,12 @@ addons:
   postgresql: "9.3" 
 
 install:
-  # Install server prerequisites
   - time ./toolset/run-ci.py prereq $TESTDIR
+  - time ./toolset/run-ci.py install $TESTDIR
    
 script: 
   # Run test verification 
-  - time ./toolset/run-ci.py test $TESTDIR
+  - time ./toolset/run-ci.py verify $TESTDIR
 
 notifications:
   irc:
