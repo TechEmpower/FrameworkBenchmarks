@@ -177,6 +177,11 @@ class CIRunnner:
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
     sudo apt-get update
+    
+    # MongoDB takes a while to start accepting connections
+    # so we install it first
+    sudo apt-get install mongodb-org
+
     sudo apt-get install openssh-server
 
     # Run as travis user (who already has passwordless sudo)
@@ -198,8 +203,8 @@ class CIRunnner:
     sudo -u postgres psql template1 < config/create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
 
-    # Setup MongoDB
-    sudo apt-get install mongodb-org
+    # Setup MongoDB (see install above)
+    sleep 15
     mongod --version
     mongo < config/create.js
     mongo < config/create.js
