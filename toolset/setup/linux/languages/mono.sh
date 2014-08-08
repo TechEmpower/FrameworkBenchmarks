@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-RETCODE=$(fw_exists mono-3.2.8)
+RETCODE=$(fw_exists mono-3.2.8.installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Installing RootCAs from Mozilla..."; 
   mozroots --import --sync;
@@ -18,3 +18,5 @@ sudo make install
 sudo apt-get -y install mono-devel
 echo "Installing RootCAs from Mozilla..."; 
 mozroots --import --sync;
+
+touch mono-3.2.8.installed
