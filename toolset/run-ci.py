@@ -71,6 +71,7 @@ class CIRunnner:
     # Travis-CI only has some supported databases
     validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
                   or t.database.lower() == "postgres"
+                  or t.database.lower() == "mongodb"
                   or t.database.lower() == "none"]
     log.info("Found %s tests (%s for linux, %s for linux and mysql) in directory '%s'", 
       len(dirtests), len(osvalidtests), len(validtests), testdir)
@@ -171,7 +172,15 @@ class CIRunnner:
     log.info("Setting up Travis-CI")
     
     script = '''
+    # Needed to download latest MongoDB
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+    echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+
     sudo apt-get update
+    
+    # MongoDB takes a good 30-45 seconds to turn on, so install it first
+    sudo apt-get install mongodb-org
+
     sudo apt-get install openssh-server
 
     # Run as travis user (who already has passwordless sudo)
@@ -179,9 +188,12 @@ class CIRunnner:
     cat /home/travis/.ssh/id_rsa.pub > /home/travis/.ssh/authorized_keys
     chmod 600 /home/travis/.ssh/authorized_keys
 
-    # Setup database manually
-    # NOTE: Do not run database installation! It restarts mysql with a different
-    # configuration and will break travis's mysql setup
+    # =============Setup Databases===========================
+    # NOTE: Do not run `--install database` in travis-ci! 
+    #       It changes DB configuration files and will break everything
+    # =======================================================
+
+    # Add data to mysql
     mysql -uroot < config/create.sql
 
     # Setup Postgres
@@ -189,6 +201,11 @@ class CIRunnner:
     sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < config/create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
+
+    # Setup MongoDB (see install above)
+    mongod --version
+    until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
+    mongo < config/create.js
     '''
 
     def sh(command):
