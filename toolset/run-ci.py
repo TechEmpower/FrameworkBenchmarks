@@ -30,7 +30,7 @@ class CIRunnner:
   
   def __init__(self, mode, testdir=None):
     '''
-    mode = [cisetup|jobcleaner|prereq|install|verify] for what we want to do
+    mode = [cisetup|prereq|install|verify] for what we want to do
     testdir  = framework directory we are running
     '''
 
@@ -38,13 +38,13 @@ class CIRunnner:
     self.directory = testdir
     self.name = testdir  # Temporary value, reset below
     self.mode = mode
-    self.travis = Travis()
 
     try:
       # See http://git.io/hs_qRQ
       #   TRAVIS_COMMIT_RANGE is empty for pull requests
-      if self.travis.is_pull_req:
-        self.commit_range = "%s..FETCH_HEAD" % os.environ['TRAVIS_BRANCH'].rstrip('\n')
+      is_pull_req = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
+      if is_pull_req:
+        self.commit_range = "%s..FETCH_HEAD" % os.environ['TRAVIS_BRANCH']
       else:  
         self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
     except KeyError:
@@ -59,7 +59,7 @@ class CIRunnner:
     log.info(changes)
 
     # Nothing else to setup
-    if mode == 'cisetup' or mode == 'jobcleaner' or mode == 'prereq':
+    if mode == 'cisetup' or mode == 'prereq':
       return
 
     # Should we bother to continue
@@ -101,12 +101,13 @@ class CIRunnner:
 
   def _should_run(self):
     ''' 
-    Decides if the current framework test should be tested or if we can cancel it.
+    Decides if the current framework test should be tested. 
     Examines git commits included in the latest push to see if any files relevant to 
     this framework were changed. 
-    This is a rather primitive strategy for things like pull requests, where
-    we probably want to examine the entire branch of commits. Also, this cannot handle 
-    history re-writing very well, so avoid rebasing onto any published history
+    If you do rewrite history (e.g. rebase) then it's up to you to ensure that both 
+    old and new (e.g. old...new) are available in the public repository. For simple
+    rebase onto the public master this is not a problem, only more complex rebases 
+    may have issues
     '''
     # Don't use git diff multiple times, it's mega slow sometimes\
     # Put flag on filesystem so that future calls to run-ci see it too
@@ -141,19 +142,12 @@ class CIRunnner:
   def run(self):
     ''' Do the requested command using TFB  '''
 
-    if self.mode == 'jobcleaner':
-      self.cancel_unneeded_jobs()
-      return 0
-
-    if self.mode == 'cisetup' and self._should_run():
-      self.run_travis_setup()
-      return 0
-
     if not self._should_run():
       log.info("Not running %s", self.name)
-      
-      # Cancel ourselves
-      self.travis.cancel(self.travis.jobid)
+      return 0
+
+    if self.mode == 'cisetup':
+      self.run_travis_setup()
       return 0
 
     command = 'toolset/run-tests.py '
@@ -178,7 +172,7 @@ class CIRunnner:
       print traceback.format_exc()
       return 1
     except Exception as err:
-      log.critical("Subprocess Error")
+      log.critical("Exception from running+wait on subprocess")
       log.error(err.child_traceback)
       return 1
 
@@ -215,111 +209,6 @@ class CIRunnner:
       if command != "" and command[0] != '#':
         sh(command.lstrip())
 
-    # Needed to cancel build jobs from run-ci.py
-    if not self.travis.is_pull_req:
-      sh('gem install travis -v 1.6.16 --no-rdoc --no-ri')
-
-  def cancel_unneeded_jobs(self):
-    log.info("I am jobcleaner")
-    log.info("Sleeping to ensure Travis-CI has queued all jobs")
-    time.sleep(20)
-
-    # Look for changes to core TFB framework code
-    find_tool_changes = "git diff --name-only %s | grep toolset | wc -l" % self.commit_range
-    changes = subprocess.check_output(find_tool_changes, shell=True)  
-    if int(changes) != 0:
-      log.info("Found changes to core framework code. Running all tests")
-      self.travis.cancel(self.travis.jobid) # Cancel ourselves
-      return 0
-    
-    build = self.travis.build_details()
-    log.info("Build details:\n%s", build)
-    def parse_job_id(directory):
-      for line in build.split('\n'):
-        if "TESTDIR=%s" % directory in line: 
-          job = re.findall("\d+.\d+", line)[0]
-          return job
-    
-    # Build a list of modified directories
-    changes = subprocess.check_output("git diff --name-only %s" % self.commit_range, shell=True)
-    dirchanges = []
-    for line in changes.split('\n'):
-      dirchanges.append(line[0:line.find('/')])
-
-    # For each test, launch a Thread to cancel it's job if 
-    # it's directory has not been modified
-    cancelled_testdirs = []
-    threads = []
-    for test in self.gather_tests():
-      if test.directory not in dirchanges:
-        job = parse_job_id(test.directory)
-        log.info("No changes found for %s (job=%s) (dir=%s)", test.name, job, test.directory)
-        if job and test.directory not in cancelled_testdirs:
-          cancelled_testdirs.append(test.directory)
-          t = threading.Thread(target=self.travis.cancel, args=(job,),
-            name="%s (%s)" % (job, test.name))
-          t.start()
-          threads.append(t)
-
-    # Wait for all threads
-    for t in threads:
-      t.join()
-
-    # Cancel ourselves
-    self.travis.cancel(self.travis.jobid)
-
-
-class Travis():
-  '''Integrates the travis-ci build environment and the travis command line'''
-  def __init__(self):     
-    self.jobid = os.environ['TRAVIS_JOB_NUMBER']
-    self.buildid = os.environ['TRAVIS_BUILD_NUMBER']
-    self.is_pull_req = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
-    self.logged_in = False
-
-  def _login(self):
-    if self.logged_in:
-      return
-
-    # If this is a PR, we cannot access the secure variable 
-    # GH_TOKEN, and instead must return success for all jobs
-    if not self.is_pull_req:
-      self.token = os.environ['GH_TOKEN']
-      subprocess.check_call("travis login --skip-version-check --no-interactive --github-token %s" % self.token, shell=True)
-      log.info("Logged into travis") # NEVER PRINT OUTPUT, GH_TOKEN MIGHT BE REVEALED      
-    else:
-      log.info("Pull Request Detected. Non-necessary jobs will return pass instead of being canceled")
-
-    self.logged_in = True
-
-  def cancel(self, job):
-    self._login()
-
-    # If this is a pull request, we cannot interact with the CLI
-    if self.is_pull_req:
-      log.info("Thread %s: Return pass for job %s", threading.current_thread().name, job)
-      return
-
-    # Ignore errors in case job is already cancelled
-    try:
-      subprocess.check_call("travis cancel %s --skip-version-check --no-interactive" % job, shell=True)
-      log.info("Thread %s: Canceled job %s", threading.current_thread().name, job)
-    except subprocess.CalledProcessError:
-      log.exception("Error halting job %s. Report:", job)
-      subprocess.call("travis report --skip-version-check --no-interactive --org", shell=True)
-      log.error("Trying to halt %s one more time", job)
-      subprocess.call("travis cancel %s --skip-version-check --no-interactive" % job, shell=True)
-
-  def build_details(self):
-    self._login()
-
-    # If this is a pull request, we cannot interact with the CLI
-    if self.is_pull_req:
-      return "No details available"
-
-    build = subprocess.check_output("travis show %s --skip-version-check" % self.buildid, shell=True)
-    return build
-
 if __name__ == "__main__":
   args = sys.argv[1:]
 
@@ -344,14 +233,6 @@ if __name__ == "__main__":
   mode = args[0]
   if mode == 'cisetup' or mode == 'prereq':
     runner = CIRunnner(mode)
-  elif len(args) == 2 and args[1] == 'jobcleaner':
-    # Only run jobcleaner once
-    if mode != 'verify':
-      sys.exit(0)
-
-    # Translate jobcleaner from a directory name to a mode
-    mode = 'jobcleaner'
-    runner = CIRunnner(args[1])
   elif len(args) == 2 and (mode == "install" 
     or mode == "verify"):
     runner = CIRunnner(mode, args[1])
@@ -370,8 +251,8 @@ if __name__ == "__main__":
     print traceback.format_exc()
   finally:  # Ensure that logs are printed
     
-    # Only print logs if we are not jobcleaner and we ran a verify
-    if mode == 'jobcleaner' or mode != 'verify':
+    # Only print logs if we ran a verify
+    if mode != 'verify':
       sys.exit(retcode)   
 
     # Only print logs if we actually did something
