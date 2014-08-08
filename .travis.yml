@@ -12,15 +12,7 @@ env:
     - TFB_CLIENT_IDENTITY_FILE=/home/travis/.ssh/id_rsa
     - TFB_DATABASE_IDENTITY_FILE=/home/travis/.ssh/id_rsa
 
-    # Login token for github to allow run-ci.py to cancel unneeded jobs
-    # To generate, use travis encrypt GH_TOKEN=<token>
-    - secure: bI6gGVzrY49Hcl82yU4w1yDWTkxuTIAy8xiP7GFMpYCR47cuztZniKZ7GTr3+/X0kPLh8o9gndvLlCDA9njj96w7enTYjib/KpHPySHzQnnwdJVgyKz6fLyw7xXnIBF0zYdgm6J1yT5lSVfPjjSdDWaJQmErQ7II3YZ+O7F+Q+I=
-
   matrix:
-    # Run one special job that will examine the files changed 
-    # in this push and cancel any unnecessary jobs in the matrix
-    # Put this first as Travis-CI builds top to bottom
-    - TESTDIR=jobcleaner
 
     # Group tests by directory to logically break up travis-CI build. Otherwise
     # we end up starting ~200+ different workers. Seems that ~100 is the limit
