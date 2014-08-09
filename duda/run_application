@@ -1,4 +1,0 @@
-cd dudac/
-./dudac -r
-./dudac -s
-./dudac -w ../webservice -p 2001

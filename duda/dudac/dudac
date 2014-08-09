@@ -1,9 +1,0 @@
-#!/usr/bin/env python2
-import sys
-import os
-
-dot = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, dot)
-
-from dudaclient.main import main
-main()
