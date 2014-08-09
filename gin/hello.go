@@ -55,7 +55,7 @@ var (
 )
 
 func parseQueries(c *gin.Context) int {
-	n, err := strconv.Atoi(c.Params.ByName("queries"))
+	n, err := strconv.Atoi(c.Request.URL.Query().Get("queries"))
 	if err != nil {
 		n = 1
 	} else if n < 1 {
