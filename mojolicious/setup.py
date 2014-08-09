@@ -22,12 +22,14 @@ def start(args, logfile, errfile):
 def stop(logfile, errfile):
   try:
     subprocess.call("hypnotoad -s ./app.pl", shell=True, cwd="mojolicious", stderr=errfile, stdout=logfile)
-    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    for line in out.splitlines():
-      if 'hypnotoad' in line:
-        pid = int(line.split(None, 2)[1])
-        os.kill(pid, 15)
+    #p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    #out, err = p.communicate()
+    #for line in out.splitlines():
+    #  if 'hypnotoad' in line:
+    #    pid = int(line.split(None, 2)[1])
+    #    os.kill(pid, 15)
     return 0
-  except subprocess.CalledProcessError:
+  except subprocess.CalledProcessError as e:
+    print e
     return 1
+
