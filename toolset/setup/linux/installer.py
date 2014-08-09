@@ -329,7 +329,7 @@ EOF
       command = "yes yes | " + command
         
     rel_cwd = setup_util.path_relative_to_root(cwd)
-    print("INSTALL: %s (cwd=$FWROOT/%s)" % (command, rel_cwd))
+    print("INSTALL: %s (cwd=$FWROOT%s)" % (command, rel_cwd))
 
     while attempt <= max_attempts:
       error_message = ""
