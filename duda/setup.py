@@ -4,7 +4,7 @@ import os
 import setup_util 
 
 def start(args, logfile, errfile):
-  subprocess.Popen("./run_application", shell=True, stderr=errfile, stdout=logfile);
+  subprocess.Popen("dudac -w $TROOT/webservice -p 2001", shell=True, stderr=errfile, stdout=logfile);
   return 0
 
 def stop(logfile, errfile):
