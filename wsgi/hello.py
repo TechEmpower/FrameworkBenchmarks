@@ -33,11 +33,3 @@ def app(environ, start_response):
         return json(environ, start_response)
     else:
         return plaintext(environ, start_response)
-
-
-try:
-    import meinheld
-    meinheld.server.set_access_logger(None)
-    meinheld.set_keepalive(120)
-except ImportError:
-    pass

@@ -6,7 +6,9 @@ proc = None
 
 def start(args, logfile, errfile):
     global proc
-    proc = subprocess.Popen( "$PYPY_GUNICORN -c gunicorn_conf.py -e DBHOSTNAME=%s app:app" % args.database_host, cwd="bottle", shell=True, stderr=errfile, stdout=logfile)
+    proc = subprocess.Popen(
+        "exec $PYPY_GUNICORN -c gunicorn_conf.py --error-logfile - app:app",
+        cwd="bottle", shell=True, stderr=errfile, stdout=logfile)
     return 0
 
 
@@ -19,5 +21,4 @@ def stop(logfile, errfile):
     proc = None
 
     subprocess.call("sudo pkill gunicorn", shell=True, stderr=errfile, stdout=logfile)
-
     return 0

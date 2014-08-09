@@ -17,9 +17,11 @@ except ImportError:
 if sys.version_info[0] == 3:
     xrange = range
 
+_is_pypy = hasattr(sys, 'pypy_version_info')
 
-DBHOSTNAME = os.environ.get('DBHOSTNAME', 'localhost')
-DATABASE_URI = 'mysql://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % DBHOSTNAME
+DBDRIVER = 'mysql+pymysql' if _is_pypy else 'mysql'
+DBHOSTNAME = os.environ.get('TFB_DATABASE_HOST', 'localhost')
+DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % (DBDRIVER, DBHOSTNAME)
 
 app = Bottle()
 Base = declarative_base()
@@ -85,6 +87,8 @@ def get_random_world_single_raw():
 def get_random_world(db):
     """Test Type 3: Multiple database queries"""
     num_queries = request.query.get('queries', 1, type=int)
+    if num_queries < 1:
+        num_queries = 1
     if num_queries > 500:
         num_queries = 500
     rp = partial(randint, 1, 10000)
@@ -97,6 +101,8 @@ def get_random_world(db):
 @app.route("/raw-queries")
 def get_random_world_raw():
     num_queries = request.query.get('queries', 1, type=int)
+    if num_queries < 1:
+        num_queries = 1
     if num_queries > 500:
         num_queries = 500
     worlds = []
@@ -136,6 +142,8 @@ def fortune_raw():
 def updates(db):
     """Test 5: Database Updates"""
     num_queries = request.query.get('queries', 1, type=int)
+    if num_queries < 1:
+        num_queries = 1
     if num_queries > 500:
         num_queries = 500
 
@@ -156,6 +164,8 @@ def updates(db):
 def raw_updates():
     """Test 5: Database Updates"""
     num_queries = request.query.get('queries', 1, type=int)
+    if num_queries < 1:
+        num_queries = 1
     if num_queries > 500:
         num_queries = 500
 

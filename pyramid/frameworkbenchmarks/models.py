@@ -3,6 +3,7 @@ Benchmark models.
 """
 
 import json
+import os
 import psycopg2
 from collections import Iterable
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
@@ -10,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 
-DBHOSTNAME = 'localhost'
+DBHOSTNAME = os.environ.get('TFB_DATABASE_HOST', 'localhost')
 
 def get_conn():
     return psycopg2.connect(

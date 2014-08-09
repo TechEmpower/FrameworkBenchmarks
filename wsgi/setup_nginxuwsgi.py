@@ -2,10 +2,12 @@ import subprocess
 import multiprocessing
 import os
 
-bin_dir = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin')
-config_dir = os.path.expanduser('~/FrameworkBenchmarks/config')
+
+CWD = os.path.abspath(os.path.dirname(__file__))
+bin_dir = os.path.expandvars('$PY2_ROOT/bin')
 NCPU = multiprocessing.cpu_count()
-NGINX_COMMAND = 'sudo /usr/local/nginx/sbin/nginx -c ' + config_dir + '/nginx_uwsgi.conf'
+NGINX_COMMAND = 'sudo /usr/local/nginx/sbin/nginx -c ' + CWD + '/nginx.conf'
+
 
 def start(args, logfile, errfile):
     try:
@@ -14,10 +16,11 @@ def start(args, logfile, errfile):
             shell=True, stdout=logfile, stderr=errfile)
 
         # Run in the background, but keep stdout/stderr for easy debugging
-        subprocess.Popen(bin_dir + '/uwsgi --ini ' + config_dir + '/uwsgi.ini' +
+        subprocess.Popen(
+            bin_dir + '/uwsgi --ini uwsgi.ini' +
             ' --processes ' + str(NCPU) +
             ' --wsgi hello:app',
-            shell=True, cwd='wsgi', stdout=logfile, stderr=errfile)
+            shell=True, cwd=CWD, stdout=logfile, stderr=errfile)
         return 0
     except subprocess.CalledProcessError:
         return 1
@@ -27,8 +30,7 @@ def stop(logfile, errfile):
         NGINX_COMMAND + ' -s stop',
         shell=True, stdout=logfile, stderr=errfile)
 
-    subprocess.call(bin_dir + '/uwsgi --ini ' + config_dir + '/uwsgi_stop.ini', shell=True, stdout=logfile, stderr=errfile)
-
-    os.system('killall nginx')
-    os.system('killall uwsgi')
+    subprocess.call(
+        bin_dir + '/uwsgi --stop /tmp/uwsgi.pid',
+        shell=True, cwd=CWD, stderr=errfile, stdout=logfile)
     return 0

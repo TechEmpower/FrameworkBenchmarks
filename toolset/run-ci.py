@@ -288,12 +288,12 @@ class CIRunnner:
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 || gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7F0CEB10
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
-    sudo apt-get update
+    sudo apt-get -q update
     
     # MongoDB takes a good 30-45 seconds to turn on, so install it first
-    sudo apt-get install mongodb-org
+    sudo apt-get -q install mongodb-org
 
-    sudo apt-get install openssh-server
+    sudo apt-get -q install openssh-server
 
     # Run as travis user (who already has passwordless sudo)
     ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
