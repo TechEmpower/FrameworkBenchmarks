@@ -3,6 +3,7 @@ import sys
 import json
 import os
 import getpass
+import time
 
 def start(args, logfile, errfile):
   conf = { 
@@ -28,6 +29,9 @@ def stop(logfile, errfile):
       if 'hypnotoad' in line:
         pid = int(line.split(None, 2)[1])
         os.kill(pid, 15)
+
+    # Wait for signaled processes to end
+    time.sleep(15)
     return 0
   except subprocess.CalledProcessError:
     return 1
