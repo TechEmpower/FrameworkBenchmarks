@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends perl
+fw_depends perl nginx
