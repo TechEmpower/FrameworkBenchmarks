@@ -51,7 +51,7 @@ class Installer:
     # Run install for selected tests
     for test_install_file in install_files:
       test_dir = os.path.basename(os.path.dirname(test_install_file))
-      test_rel_dir = setup_util.path_relative_to_root(test_dir)
+      test_rel_dir = os.path.relpath(os.path.dirname(test_install_file), self.fwroot)
 
       if test_dir not in dirs:
         continue
@@ -63,7 +63,7 @@ class Installer:
       test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
       if self.strategy is 'pertest':
         test_install_dir="%s/pertest/%s" % (test_install_dir, test_dir)
-      test_rel_install_dir=setup_util.path_relative_to_root(test_install_dir)
+      test_rel_install_dir=os.path.relpath(test_install_dir, self.fwroot)
       if not os.path.exists(test_install_dir):
         os.makedirs(test_install_dir)
 
@@ -87,8 +87,8 @@ class Installer:
       # IROOT  - Path of this test's install directory
       # TROOT  - Path to this test's directory 
       self.__run_command('''
-        export TROOT=$FWROOT%s && 
-        export IROOT=$FWROOT%s && 
+        export TROOT=$FWROOT/%s && 
+        export IROOT=$FWROOT/%s && 
         . %s && 
         . %s''' % 
         (test_rel_dir, test_rel_install_dir, 
