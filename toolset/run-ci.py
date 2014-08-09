@@ -74,7 +74,11 @@ class CIRunnner:
       log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
       if len(osvalidtests) != 0:
         log.critical("Note: Found these tests that could run in Travis-CI if more databases were supported")
-        log.criticat("Note: %s", osvalidtests)
+        log.critical("Note: %s", osvalidtests)
+        databases_needed = [t.database for t in osvalidtests]
+        databases_needed = list(set(databases_needed))
+        log.critical("Note: Here are the needed databases:")
+        log.critical("Note: %s", databases_needed)
       sys.exit(1)
     
     # Prefer database tests over 'none' if we have both
