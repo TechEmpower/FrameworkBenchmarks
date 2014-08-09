@@ -48,6 +48,7 @@ env:
     - TESTDIR=finagle
     - TESTDIR=flask
     - TESTDIR=gemini
+    - TESTDIR=gin
     - TESTDIR=go
     - TESTDIR=grails
     - TESTDIR=grizzly-bm
