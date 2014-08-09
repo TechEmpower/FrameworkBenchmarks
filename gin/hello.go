@@ -24,10 +24,6 @@ const (
 	maxConnectionCount = 256
 )
 
-type Message struct {
-	Message string `json:"message"`
-}
-
 type World struct {
 	Id           uint16 `json:"id"`
 	RandomNumber uint16 `json:"randomNumber"`
