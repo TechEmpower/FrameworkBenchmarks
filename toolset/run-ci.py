@@ -109,7 +109,6 @@ class CIRunnner:
     log.info("Using commit range %s", self.commit_range)
     log.info("Running `git diff --name-only %s`" % self.commit_range)
     changes = subprocess.check_output("git diff --name-only %s" % self.commit_range, shell=True)
-    changes = "mojolicious/app.pl\nmojolicious/bash_profile.sh"
     log.info(changes)
 
     # Look for changes to core TFB framework code
