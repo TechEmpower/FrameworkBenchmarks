@@ -39,6 +39,7 @@ env:
     - TESTDIR=django
     - TESTDIR=dropwizard
     - TESTDIR=dropwizard-mongodb
+    - TESTDIR=duda
     - TESTDIR=elli
     - TESTDIR=evhttp-sharp
     - TESTDIR=express
