@@ -31,11 +31,19 @@ fi
 #   - remove newline
 PR_FIRST=$(curl -s https://github.com/${TRAVIS_REPO_SLUG}/pull/${TRAVIS_PULL_REQUEST}.patch | head -1 | grep -o -E '\b[0-9a-f]{40}\b' | tr -d '\n')
 
+# Use the parent of the first commit so we can 
+# easily diff the changes introduced by this PR
+PR_PARENT=$(git rev-parse ${PR_FIRST}^)
+
 # Create new branch for first commit in pull request
-git branch -f prbase ${PR_FIRST}
+git branch -f prbase ${PR_PARENT}
 
 # Create new branch for last commit in pull request
+# Note: This is the automerge commit that github creates
+#       If you really want the last commit use the 
+#       parent of this commit. It's a merge, so you have to 
+#       decipher which parent commit you want
 git branch -f prhead ${TRAVIS_COMMIT}
 
-echo "Set prbase branch to commit ${PR_FIRST}"
+echo "Set prbase branch to commit ${PR_PARENT}"
 echo "Set prhead branch to commit ${TRAVIS_COMMIT}"
