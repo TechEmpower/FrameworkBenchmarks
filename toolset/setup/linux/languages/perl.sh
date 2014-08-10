@@ -3,7 +3,8 @@
 RETCODE=$(fw_exists perl-5.18)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
-fw_get https://raw.githubusercontent.com/tokuhirom/Perl-Build/72587c8a13c3cd7f26fd25d6243a89d7a0327b1d/perl-build -O perl-build.pl
+fw_get https://raw.github.com/tokuhirom/Perl-Build/master/perl-build -O perl-build.pl
+# compile with optimizations, n.b. this does not turn on debugging
 perl perl-build.pl -DDEBUGGING=-g 5.18.2 perl-5.18
 
 fw_get http://cpanmin.us -O cpanminus.pl
