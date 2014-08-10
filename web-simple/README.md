@@ -7,7 +7,7 @@
 # Requirements
 
 * Web::Simple
-* DBD::pg
+* DBD::mysql
 * Starman (if using Starman as web server)
 * Plack (for plackup)
 * nginx (if you want to front Dancer with nginx, nginx.conf provided)
