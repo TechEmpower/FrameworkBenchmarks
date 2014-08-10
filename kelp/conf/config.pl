@@ -1,3 +1,3 @@
 {
-    modules => ['JSON::XS']
+    modules    => ['JSON::XS', 'Template'],
 }
