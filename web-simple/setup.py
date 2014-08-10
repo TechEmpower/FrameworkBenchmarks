@@ -5,16 +5,14 @@ from os.path import expanduser
 import os
 import getpass
 
-home = expanduser("~")
-
 def start(args, logfile, errfile):
-  setup_util.replace_text("web-simple/app.pl", "localhost", ""+ args.database_host +"")
+  setup_util.replace_text("web-simple/app.pl", "localhost", args.database_host)
   setup_util.replace_text("web-simple/nginx.conf", "USR", getpass.getuser())
-  setup_util.replace_text("web-simple/nginx.conf", "server unix:.*\/FrameworkBenchmarks", "server unix:" + home + "/FrameworkBenchmarks")
+  setup_util.replace_text("web-simple/nginx.conf", "server unix:.*\/FrameworkBenchmarks", "server unix:" + args.fwroot)
 
   try:
-    subprocess.Popen("plackup -E production -s Starman --workers=" + str(args.max_threads) + " -l " + home + "/FrameworkBenchmarks/web-simple/frameworks-benchmark.sock -a ./app.pl", shell=True, cwd="web-simple", stderr=errfile, stdout=logfile)
-    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/web-simple/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.Popen("plackup -E production -s Starman --workers=" + str(args.max_threads) + " -l $TROOT/frameworks-benchmark.sock -a $TROOT/app.pl", shell=True, cwd="web-simple", stderr=errfile, stdout=logfile)
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c $TROOT/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
