@@ -2,5 +2,5 @@
 
 fw_depends perl
 
-perl-5.18/bin/cpanm --notest --no-man-page --installdeps ../mojolicious
+cpanm --notest --no-man-page --installdeps $TROOT
 echo installed Mojolicious app dependencies
