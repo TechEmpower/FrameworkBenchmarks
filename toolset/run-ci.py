@@ -39,11 +39,10 @@ class CIRunnner:
     self.mode = mode
 
     try:
-      # See http://git.io/hs_qRQ
-      #   TRAVIS_COMMIT_RANGE is empty for pull requests
       is_pull_req = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
       if is_pull_req:
-        self.commit_range = "%s..FETCH_HEAD" % os.environ['TRAVIS_BRANCH']
+        # See add_commit_range in setup/travis-ci
+        self.commit_range = "prbase..prhead"
       else:  
         self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
     except KeyError:
