@@ -2,5 +2,5 @@
 
 fw_depends perl
 
-cpanm --notest --no-man-page --installdeps $TROOT
+carton install --cpanfile $TROOT/cpanfile
 echo installed Mojolicious app dependencies
