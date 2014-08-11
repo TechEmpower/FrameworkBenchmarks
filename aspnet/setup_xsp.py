@@ -13,7 +13,7 @@ def start(args, logfile, errfile):
     subprocess.check_call("rm -rf bin obj", shell=True, cwd="aspnet/src", stderr=errfile, stdout=logfile)
     subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="aspnet/src", stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo chown -R ubuntu:ubuntu /usr/local/etc/mono", shell=True, stderr=errfile, stdout=logfile)
-    subprocess.Popen("MONO_OPTIONS=--gc=sgen xsp4 --nonstop", shell=True, cwd="aspnet/src", stderr=errfile, stdout=logfile)
+    subprocess.Popen("MONO_OPTIONS=--server --gc=sgen xsp4 --nonstop", shell=True, cwd="aspnet/src", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
