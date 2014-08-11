@@ -1,27 +1,20 @@
 {-# LANGUAGE OverloadedStrings #-}
-import Data.Aeson
-import Data.Text (Text)
 
-import Control.Monad (replicateM_)
+import Control.Concurrent (runInUnboundThread)
+import Data.Aeson ((.=), object, encode)
+import Data.Streaming.Network (bindPortTCP)
+import Data.Text (Text)
 import Network.HTTP.Types (status200)
-import qualified Network.Wai.Handler.Warp as Warp
-import System.Posix.Process (forkProcess)
-import Data.Conduit.Network (bindPort)
-import Network.Wai
-import System.Environment (getArgs)
+import Network.Wai (responseLBS)
+import qualified Network.Wai.Handler.Warp as W
 
 main :: IO ()
-main = do
-    socket <- bindPort 8000 "*"
-    [cores, _] <- getArgs
-    let run = Warp.runSettingsSocket Warp.defaultSettings
-                { Warp.settingsPort = 8000
-                , Warp.settingsHost = "*"
-                , Warp.settingsOnException = const $ return ()
-                } socket app
-    replicateM_ (read cores - 1) $ forkProcess run
-    run
+main = runInUnboundThread $ do
+    s <- bindPortTCP 8000 "*"
+    W.runSettingsSocket settings s app
   where
-    app _ = return $ responseLBS
-      status200 [("Content-Type", "application/json")] $
-      encode $ object ["message" .= ("Hello, World!" :: Text)]
+    settings = W.setOnException (\_ _ -> return ()) W.defaultSettings
+    app _ = return response
+    response = responseLBS status200 ct json
+    ct = [("Content-Type", "application/json")]
+    json = encode $ object ["message" .= ("Hello, World!" :: Text)]
