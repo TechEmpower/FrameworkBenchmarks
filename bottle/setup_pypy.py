@@ -1,19 +1,12 @@
 import subprocess
 import os
 
-BIN = os.path.expanduser('~/FrameworkBenchmarks/installs/pypy/bin')
 
 proc = None
 
-
 def start(args, logfile, errfile):
     global proc
-    proc = subprocess.Popen(
-        [BIN + "/gunicorn",
-         "-c", "gunicorn_conf.py",
-         "-e", "DBHOSTNAME=" + args.database_host,
-         "app:app"],
-        cwd="bottle", stderr=errfile, stdout=logfile)
+    proc = subprocess.Popen( "$PYPY_GUNICORN -c gunicorn_conf.py -e DBHOSTNAME=%s app:app" % args.database_host, cwd="bottle", shell=True, stderr=errfile, stdout=logfile)
     return 0
 
 
@@ -24,4 +17,7 @@ def stop(logfile, errfile):
     proc.terminate()
     proc.wait()
     proc = None
+
+    subprocess.call("sudo pkill gunicorn", shell=True, stderr=errfile, stdout=logfile)
+
     return 0

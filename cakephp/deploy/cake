@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /cake/ "/home/hyoung/FrameworkBenchmarks/cakephp/app/webroot/"
+  <Directory /home/hyoung/FrameworkBenchmarks/cakephp/app/webroot/>
+          Options Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>

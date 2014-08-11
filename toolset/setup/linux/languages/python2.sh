@@ -14,4 +14,4 @@ make install
 cd ..
 fw_get https://bootstrap.pypa.io/get-pip.py -O get-pip2.py
 py2/bin/python get-pip2.py
-py2/bin/pip install -r ../config/requirements.txt
+py2/bin/pip install -r $FWROOT/config/requirements.txt
