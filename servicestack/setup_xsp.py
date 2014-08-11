@@ -12,7 +12,7 @@ def start(args, logfile, errfile):
   try:
     subprocess.check_call("rm -rf bin obj", shell=True, cwd="servicestack/src", stderr=errfile, stdout=logfile)
     subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="servicestack/src", stderr=errfile, stdout=logfile)
-    subprocess.Popen("MONO_OPTIONS=--gc=sgen xsp4 --nonstop", shell=True, cwd="servicestack/src", stderr=errfile, stdout=logfile)
+    subprocess.Popen("MONO_OPTIONS=--server --gc=sgen xsp4 --nonstop", shell=True, cwd="servicestack/src", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
