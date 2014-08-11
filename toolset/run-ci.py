@@ -267,25 +267,24 @@ if __name__ == "__main__":
 
     log.error("Running inside Travis-CI, so I will print err and out to console...")
     
-    try:
-      log.error("Here is ERR:")
-      with open("results/ec2/latest/logs/%s/err.txt" % runner.test.name, 'r') as err:
-        for line in err:
-          log.info(line.rstrip('\n'))
-    except IOError:
-      log.error("No ERR file found")
+    for name in runner.names:
+      log.error("Test %s", name)
+      try:
+        log.error("Here is ERR:")
+        with open("results/ec2/latest/logs/%s/err.txt" % name, 'r') as err:
+          for line in err:
+            log.info(line.rstrip('\n'))
+      except IOError:
+        log.error("No ERR file found")
 
-    try:
-      log.error("Here is OUT:")
-      with open("results/ec2/latest/logs/%s/out.txt" % runner.test.name, 'r') as out:
-        for line in out:
-          log.info(line.rstrip('\n'))
-    except IOError:
-      log.error("No OUT file found")
+      try:
+        log.error("Here is OUT:")
+        with open("results/ec2/latest/logs/%s/out.txt" % name, 'r') as out:
+          for line in out:
+            log.info(line.rstrip('\n'))
+      except IOError:
+        log.error("No OUT file found")
 
     sys.exit(retcode)
 
-
-
-
-
+# vim: set sw=2 ts=2 expandtab
