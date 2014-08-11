@@ -1,5 +1,5 @@
 language: python
-python: 
+python:
   - "2.7"
 
 env:
@@ -18,10 +18,10 @@ env:
     # we end up starting ~200+ different workers. Seems that ~100 is the limit
     # before their website starts to lag heavily
     #
-    # Here's a bash one-liner if you need to update this: 
+    # Here's a bash one-liner if you need to update this:
     # toolset/run-tests.py --list-tests | while read line ; do
     #    echo "    - TEST=$line"
-    # done    
+    # done
     - TESTDIR=activeweb
     - TESTDIR=aspnet
     - TESTDIR=beego
@@ -41,6 +41,9 @@ env:
     - TESTDIR=dropwizard-mongodb
     - TESTDIR=duda
     - TESTDIR=elli
+    - TESTDIR=erlang-misultin
+    - TESTDIR=erlang-mochiweb
+    - TESTDIR=erlang-yaws
     - TESTDIR=evhttp-sharp
     - TESTDIR=express
     - TESTDIR=falcon
@@ -146,22 +149,22 @@ env:
 before_install:
   # Enables $TRAVIS_COMMIT_RANGE for pull requests
   - time ./toolset/setup/travis-ci/add_commit_range.sh
-  
+
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
   - time ./toolset/run-ci.py cisetup $TESTDIR
 
 addons:
-  postgresql: "9.3" 
+  postgresql: "9.3"
 
 install:
   # Install prerequisites
   - time ./toolset/run-ci.py prereq $TESTDIR
-  
-  # Install software for this framework  
+
+  # Install software for this framework
   - time ./toolset/run-ci.py install $TESTDIR
-   
-script: 
+
+script:
   # Pick one test in this directory and verify
   - time ./toolset/run-ci.py verify $TESTDIR
 
