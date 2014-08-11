@@ -79,15 +79,9 @@ class CIRunnner:
         log.critical("Note: Here are the needed databases:")
         log.critical("Note: %s", databases_needed)
       sys.exit(1)
-    
-    # Prefer database tests over 'none' if we have both
-    preferred = [t for t in validtests if t.database.lower() != "none"]
-    if len(preferred) > 0:
-      self.test = preferred[0]
-    else:
-      self.test = validtests[0]
-    self.name = self.test.name
-    log.info("Choosing to use test %s to verify directory %s", self.name, testdir)
+
+    self.names = [t.name for t in validtests]
+    log.info("Choosing to use test %s to verify directory %s", self.names, testdir)
 
   def _should_run(self):
     ''' 
@@ -122,11 +116,11 @@ class CIRunnner:
   
     # Look for changes relevant to this test
     if re.search("^%s/" % self.directory, changes, re.M) is None:
-      log.info("No changes found for %s", self.name)
+      log.info("No changes found for directory %s", self.directory)
       touch('.run-ci.should_not_run')
       return False
 
-    log.info("Changes found for %s", self.name)
+    log.info("Changes found for directory %s", self.directory)
     touch('.run-ci.should_run')
     return True
 
@@ -134,20 +128,21 @@ class CIRunnner:
     ''' Do the requested command using TFB  '''
 
     if not self._should_run():
-      log.info("Not running %s", self.name)
+      log.info("Not running directory %s", self.directory)
       return 0
 
     if self.mode == 'cisetup':
       self.run_travis_setup()
       return 0
 
+    names = ' '.join(self.names)
     command = 'toolset/run-tests.py '
     if self.mode == 'prereq':
       command = command + "--install server --install-only --test ''"
     elif self.mode == 'install':
-      command = command + "--install server --install-only --test %s" % self.name
+      command = command + "--install server --install-only --test %s" % names
     elif self.mode == 'verify':
-      command = command + "--mode verify --test %s" % self.name
+      command = command + "--mode verify --test %s" % names
     else:
       log.critical('Unknown mode passed')
       return 1
@@ -272,25 +267,24 @@ if __name__ == "__main__":
 
     log.error("Running inside Travis-CI, so I will print err and out to console...")
     
-    try:
-      log.error("Here is ERR:")
-      with open("results/ec2/latest/logs/%s/err.txt" % runner.test.name, 'r') as err:
-        for line in err:
-          log.info(line)
-    except IOError:
-      log.error("No ERR file found")
+    for name in runner.names:
+      log.error("Test %s", name)
+      try:
+        log.error("Here is ERR:")
+        with open("results/ec2/latest/logs/%s/err.txt" % name, 'r') as err:
+          for line in err:
+            log.info(line.rstrip('\n'))
+      except IOError:
+        log.error("No ERR file found")
 
-    try:
-      log.error("Here is OUT:")
-      with open("results/ec2/latest/logs/%s/out.txt" % runner.test.name, 'r') as out:
-        for line in out:
-          log.info(line)
-    except IOError:
-      log.error("No OUT file found")
+      try:
+        log.error("Here is OUT:")
+        with open("results/ec2/latest/logs/%s/out.txt" % name, 'r') as out:
+          for line in out:
+            log.info(line.rstrip('\n'))
+      except IOError:
+        log.error("No OUT file found")
 
     sys.exit(retcode)
 
-
-
-
-
+# vim: set sw=2 ts=2 expandtab
