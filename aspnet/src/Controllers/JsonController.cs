@@ -6,9 +6,10 @@ namespace Benchmarks.AspNet.Controllers
 {
     public class JsonController : Controller
     {
-        public ActionResult Default()
+        public JsonResult Default()
         {
-            return new JsonResult { Data = new { message = "Hello World" } };
+            //return new JsonResult { Data = new { message = "Hello World" } };
+            return Json(new { message = "Hello World" });
         }
 
         public ActionResult JsonNet()
