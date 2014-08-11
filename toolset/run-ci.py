@@ -41,10 +41,13 @@ class CIRunnner:
     try:
       is_pull_req = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
       if is_pull_req:
-        # See add_commit_range in setup/travis-ci
-        self.commit_range = "prbase..prhead"
+        # For pull requests, this is the Github auto-merge commit
+        # which is exactly what we want to see
+        self.commit_range = os.environ['TRAVIS_COMMIT']
       else:  
         self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
+        if self.commit_range == "":
+          self.commit_range = os.environ['TRAVIS_COMMIT']
     except KeyError:
       log.warning("I should only be used for automated integration tests e.g. Travis-CI")
       log.warning("Were you looking for run-tests.py?")
@@ -286,5 +289,6 @@ if __name__ == "__main__":
         log.error("No OUT file found")
 
     sys.exit(retcode)
+
 
 # vim: set sw=2 ts=2 expandtab
