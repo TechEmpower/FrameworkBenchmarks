@@ -39,12 +39,9 @@ class CIRunnner:
     self.mode = mode
 
     try:
-      is_pull_req = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
-      if is_pull_req:
-        # See add_commit_range in setup/travis-ci
-        self.commit_range = "prbase..prhead"
-      else:  
-        self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
+      self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
+      if self.commit_range == "":
+          self.commit_range = "-1 %s" % os.environ['TRAVIS_COMMIT']
     except KeyError:
       log.warning("I should only be used for automated integration tests e.g. Travis-CI")
       log.warning("Were you looking for run-tests.py?")
@@ -104,8 +101,8 @@ class CIRunnner:
       open(fname, 'a').close()
 
     log.info("Using commit range %s", self.commit_range)
-    log.info("Running `git diff --name-only %s`" % self.commit_range)
-    changes = subprocess.check_output("git diff --name-only %s" % self.commit_range, shell=True)
+    log.info("Running `git log --name-only -m --pretty=\"format:\" %s`" % self.commit_range)
+    changes = subprocess.check_output("git log --name-only -m --pretty=\"format:\" %s" % self.commit_range, shell=True)
     log.info(changes)
 
     # Look for changes to core TFB framework code
@@ -286,5 +283,6 @@ if __name__ == "__main__":
         log.error("No OUT file found")
 
     sys.exit(retcode)
+
 
 # vim: set sw=2 ts=2 expandtab
