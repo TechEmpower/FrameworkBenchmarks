@@ -116,11 +116,11 @@ class CIRunnner:
   
     # Look for changes relevant to this test
     if re.search("^%s/" % self.directory, changes, re.M) is None:
-      log.info("No changes found for %s", self.directory)
+      log.info("No changes found for directory %s", self.directory)
       touch('.run-ci.should_not_run')
       return False
 
-    log.info("Changes found for %s", self.directory)
+    log.info("Changes found for directory %s", self.directory)
     touch('.run-ci.should_run')
     return True
 
@@ -128,7 +128,7 @@ class CIRunnner:
     ''' Do the requested command using TFB  '''
 
     if not self._should_run():
-      log.info("Not running %s", self.directory)
+      log.info("Not running directory %s", self.directory)
       return 0
 
     if self.mode == 'cisetup':
