@@ -51,7 +51,7 @@ def start(args, logfile, errfile):
     #
     # start nginx
     #
-    subprocess.Popen('sudo /usr/local/nginx/sbin/nginx -c `pwd`/nginx.conf', shell=True, cwd='dart', stderr=errfile, stdout=logfile);
+    subprocess.Popen('sudo /usr/local/nginx/sbin/nginx -c $TROOT/nginx.conf', shell=True, cwd='dart', stderr=errfile, stdout=logfile);
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -60,7 +60,7 @@ def stop(logfile, errfile):
   #
   # stop nginx
   #
-  subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c `pwd`/nginx.conf -s stop', shell=True, cwd='dart', stderr=errfile, stdout=logfile)
+  subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c $TROOT/nginx.conf -s stop', shell=True, cwd='dart', stderr=errfile, stdout=logfile)
   os.remove('dart/nginx.conf')
   #
   # stop dart servers
@@ -68,7 +68,7 @@ def stop(logfile, errfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if 'dart' in line and 'run-tests' not in line:
+    if 'dart' in line and 'run-tests' not in line and 'run-ci' not in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 15)
   return 0

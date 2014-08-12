@@ -11,6 +11,9 @@ plugin JSONConfig => {
   default => {
     database_host => 'localhost',
     workers => 8,
+    hypnotoad => {
+      graceful_timeout => 1,
+    },
   },
 };
 
@@ -18,10 +21,10 @@ app->config->{hypnotoad}{workers} = app->config->{workers};
 
 # Database connections
 
-helper mango   => sub { state $mango = Mango->new('mongodb://'. shift->config->{database_host} . ':27017') };
+helper mango   => sub { state $mango = Mango->new('mongodb://'. shift->config->{database_host}) };
 helper db      => sub { state $db = shift->mango->db('hello_world') };
-helper world   => sub { shift->db->collection('World') };
-helper fortune => sub { shift->db->collection('Fortune') };
+helper world   => sub { shift->db->collection('world') };
+helper fortune => sub { shift->db->collection('fortune') };
 
 # JSON::XS renderer
 
@@ -31,11 +34,11 @@ helper render_json => sub { shift->render( data => encode_json(shift), format =>
 
 get '/json' => sub { shift->render_json({message => 'Hello, World!'}) };
 
-get '/db' => sub { shift->render_query(1) };
+get '/db' => sub { shift->render_query(1, {single => 1}) };
 
 get '/queries' => sub {
   my $c = shift;
-  $c->render_query($c->param('queries'));
+  $c->render_query(scalar $c->param('queries'));
 };
 
 get '/fortunes' => sub {
@@ -50,7 +53,7 @@ get '/fortunes' => sub {
 
 get '/updates' => sub {
   my $c = shift;
-  $c->render_query($c->param('queries'), 1);
+  $c->render_query(scalar $c->param('queries'), {update => 1});
 };
 
 get '/plaintext' => sub { shift->render( text => 'Hello, World!' ) };
@@ -58,10 +61,14 @@ get '/plaintext' => sub { shift->render( text => 'Hello, World!' ) };
 # Additional helpers (shared code)
 
 helper 'render_query' => sub {
-  my ($self, $q, $update) = @_;
+  my ($self, $q, $args) = @_;
+  $args ||= {};
+  my $update = $args->{update};
+
   $self->render_later;
 
   $q = 1 unless looks_like_number($q);
+  $q = 1   if $q < 1;
   $q = 500 if $q > 500;
 
   my $r  = [];
@@ -69,6 +76,7 @@ helper 'render_query' => sub {
 
   my $delay = Mojo::IOLoop->delay;
   $delay->on(finish => sub{
+    $r = $r->[0] if $args->{single};
     $self->render_json($r) unless $tx->is_finished;
   });
 

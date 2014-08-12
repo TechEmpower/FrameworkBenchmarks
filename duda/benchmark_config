@@ -1,0 +1,24 @@
+{
+  "framework": "duda",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 2001,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "none",
+      "framework": "Duda",
+      "language": "C",
+      "orm": "Raw",
+      "platform": "Duda I/O",
+      "webserver": "Monkey",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Duda I/O",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

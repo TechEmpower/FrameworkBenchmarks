@@ -10,4 +10,4 @@ ln -sf pypy-2.3.1-linux64 pypy
 fw_get https://bootstrap.pypa.io/get-pip.py
 pypy/bin/pypy get-pip.py
 
-pypy/bin/pip install -r ../config/requirements-pypy.txt
+pypy/bin/pip install -r $FWROOT/config/requirements-pypy.txt

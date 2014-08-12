@@ -6,18 +6,34 @@
 
 # Requirements
 
-* Kelp
-* DBD::mysql
-* Starman (if using Starman as web server)
-* Plack (for plackup)
-* nginx (if you want to front Dancer with nginx, nginx.conf provided)
+* Kelp (install from CPAN)
+* Kelp::Module::JSON::XS (install from CPAN)
+* DBD::mysql (install from CPAN)
+* Starman (install from CPAN)
+* nginx (if you want to front with nginx, nginx.conf provided)
 
 # Deployment
 
-Something along the lines of
+## uWSGI (Recommended)
 
-    plackup -E production -s Starman --workers=2 -l /tmp/frameworks-benchmark.sock -a ./app.pl
+1. Create a configuration file. Bare bones example of app.ini:
 
-if you want to front it with nginx, otherwise
+    [uwsgi]
+    http-socket = :8080
+    psgi = app.pl
 
-    plackup -E production -s Starman --port=8080 --workers=2 -a ./app.pl
+2. Make sure you have installed the psgi plugin.
+
+3. Deploy with uwsgi
+
+    uwsgi --http-modifier1 5 --plugin psgi --ini app.ini
+
+## Plack + Starman
+
+1. Deploy via plackup
+
+    plackup -E production -s Starman --workers=5 -l /tmp/frameworks-benchmark.sock -a ./app.pl
+
+2. If you want to front it with nginx, otherwise
+
+    plackup -E production -s Starman --port=8080 --workers=5 -a ./app.pl

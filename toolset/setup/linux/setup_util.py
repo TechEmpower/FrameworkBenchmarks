@@ -1,6 +1,7 @@
 import re
 import os
 import subprocess
+import platform
 
 # Replaces all text found using the regular expression to_replace with the supplied replacement.
 def replace_text(file, to_replace, replacement):
@@ -19,53 +20,68 @@ def replace_text(file, to_replace, replacement):
 # Note: This will not replace the sudo environment (e.g. subprocess.check_call("sudo <command>")). 
 # If you must use sudo, consider sudo sh -c ". <config> && your_command"
 def replace_environ(config=None, root=None, print_result=False, command='true'):
-    
-    # Clean up our current environment, preserving some important items
-    mini_environ = {}
-    for envname in ['HOME', 'PATH', 'USER', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'FWROOT']:
-      if envname in os.environ:
-        mini_environ[envname] = os.environ[envname]
-    for key in os.environ:
-      if key.startswith('TFB_'):    # Any TFB_ variables are preserved
-        mini_environ[key] = os.environ[key]
-    os.environ.clear()
 
-    # Use FWROOT if explicitely provided
-    if root is not None: 
-      mini_environ['FWROOT']=root
-    
+    if platform.system().lower() == 'windows':
 
-    # Run command, source config file, and store resulting environment
-    setup_env = "%s && . %s && env" % (command, config)
-    env = subprocess.check_output(setup_env, shell=True, env=mini_environ,
-      executable='/bin/bash')
-    for line in env.split('\n'):
-        try:
-            key, value = line.split('=', 1)
-            # If we already have this TFB_ variable, do not overwrite
-            if key.startswith('TFB_') and key in mini_environ:
-                os.environ[key]=mini_environ[key]
-            else:
-                os.environ[key]=value    
-        except:
-            if not line: # Don't warn for empty line
-                continue 
-            print "WARN: Line '%s' from '%s' is not an environment variable" % (line, config)
-            continue
-    if print_result:
-        out = subprocess.check_output('env', shell=True, executable='/bin/bash')
-        print "Environment after loading %s" %config
-        print out
+        pass
+
+    else:
+    
+        # Clean up our current environment, preserving some important items
+        mini_environ = {}
+        for envname in ['HOME', 'PATH', 'USER', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'FWROOT']:
+          if envname in os.environ:
+            mini_environ[envname] = os.environ[envname]
+        for key in os.environ:
+          if key.startswith('TFB_'):    # Any TFB_ variables are preserved
+            mini_environ[key] = os.environ[key]
+        os.environ.clear()
+
+        # Use FWROOT if explicitely provided
+        if root is not None: 
+          mini_environ['FWROOT']=root
+        
+
+        # Run command, source config file, and store resulting environment
+        setup_env = "%s && . %s && env" % (command, config)
+        env = subprocess.check_output(setup_env, shell=True, env=mini_environ,
+          executable='/bin/bash')
+        for line in env.split('\n'):
+            try:
+                key, value = line.split('=', 1)
+                # If we already have this TFB_ variable, do not overwrite
+                if key.startswith('TFB_') and key in mini_environ:
+                    os.environ[key]=mini_environ[key]
+                else:
+                    os.environ[key]=value    
+            except:
+                if not line: # Don't warn for empty line
+                    continue 
+                print "WARN: Line '%s' from '%s' is not an environment variable" % (line, config)
+                continue
+        if print_result:
+            out = subprocess.check_output('env', shell=True, executable='/bin/bash')
+            print "Environment after loading %s" %config
+            print out
 
 # Queries the shell for the value of FWROOT
 def get_fwroot():
-    try:
-        # Use printf to avoid getting a newline
-        # Redirect to avoid stderr printing
-        fwroot = subprocess.check_output('printf $FWROOT 2> /dev/null', shell=True, executable='/bin/bash')
+
+    if platform.system().lower() == 'windows':
+
+        fwroot = "C:\FrameworkBenchmarks"
         return fwroot
-    except subprocess.CalledProcessError:
-        return "";
+
+    else:
+    
+        try:
+            # Use printf to avoid getting a newline
+            # Redirect to avoid stderr printing
+            fwroot = subprocess.check_output('printf $FWROOT 2> /dev/null', shell=True, executable='/bin/bash')
+            return fwroot
+        except subprocess.CalledProcessError:
+            # Make a last-guess effort ;-)
+            return os.getcwd();
 
 # Turns absolute path into path relative to FWROOT
 # Assumes path is underneath FWROOT, not above

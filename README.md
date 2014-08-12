@@ -1,4 +1,5 @@
 # Web Framework Performance Comparison
+[![Build Status](https://travis-ci.org/TechEmpower/FrameworkBenchmarks.svg?branch=master)](https://travis-ci.org/TechEmpower/FrameworkBenchmarks)
 
 This project provides representative performance measures across a wide field of web application frameworks. With much help from the community, coverage is quite broad and we are happy to broaden it further with contributions. The project presently includes frameworks on many languages including Go, Python, Java, Ruby, PHP, Clojure, Groovy, JavaScript, Erlang, Haskell, Scala, Lua, and C.  The current tests exercise plaintext responses, JSON seralization, database reads and writes via the object-relational mapper (ORM), collections, sorting, server-side templates, and XSS counter-measures.  Future tests will exercise other components and greater computation.
 
@@ -26,13 +27,13 @@ $ sudo apt-get install openssh-server
 ```bash
 $ sudo useradd -m -G sudo tfb
 ```
+* Run the command: `sudo visudo`
+* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * Log in as `tfb`
 * Fully update **NOTE**: If you update the kernel (linux-firmware), it is generally a good idea to reboot aftewards.
 ```bash
 $ sudo apt-get update && sudo apt-get upgrade
 ```
-* Run the command: `sudo visudo`
-* Change line 20 in from `%sudo   ALL=(ALL:ALL) ALL` to `%sudo ALL=(ALL) NOPASSWD: ALL`
 * Run the following **(Don't enter a password, just hit enter when the prompt pops up)**. **NOTE** This is still necessary if the client and database are on the same computer as the server
 ```bash
 $ ssh-keygen
@@ -48,7 +49,7 @@ $ cd FrameworkBenchmarks
 ```
 * Install the server software. This will take a long time
 ```bash
-$ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install server --list-tests &
+$ nohup python toolset/run-tests.py -s <server hostname/ip> -c <client hostname/ip> -u tfb --install-strategy unified --install server --list-tests &
 ```
 * If you want to view the process of installing, do the following. The session can be interrupted easily so no need to worry about keeping a connection.
 ```bash
@@ -158,7 +159,8 @@ Now, when running `run-tests.py`, just add `-d <ip of SQL Server instance>`. Thi
 
 ## Running the test suite
 
-We ran our tests using three dedicated i7 2600k machines, three EC2 m1.large instances, and three servers from Peak Hosting
+We ran our tests using three dedicated i7 2600k machines, three EC2 m1.large instances, and three servers from Peak Hosting. You can find the raw output data 
+[here](https://github.com/TechEmpower/TFB-Round-9)
 
 ## Updating Tests
 
