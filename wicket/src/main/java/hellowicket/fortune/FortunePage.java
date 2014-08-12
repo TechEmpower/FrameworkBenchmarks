@@ -1,39 +1,52 @@
 package hellowicket.fortune;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import hellowicket.WicketApplication;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.hibernate.Query;
-import org.hibernate.Session;
-
-import hellowicket.HibernateUtil;
 
 /**
  * A page that loads all fortune cookies
  */
 public class FortunePage extends WebPage
 {
-  public FortunePage()
+  public FortunePage() throws Exception
   {
-    Session session = HibernateUtil.getSessionFactory().openSession();
+    List<Fortune> fortunes = new ArrayList<>(10000);
 
-    Query query = session.createQuery("from Fortune");
-    query.setReadOnly(true);
-    List list = query.list();
-    List<Fortune> fortunes = new ArrayList<Fortune>(list);
-    session.close();
-
-    Fortune newFortune = new Fortune();
-    newFortune.message = "Additional fortune added at request time.";
+    Fortune newFortune = new Fortune(0, "Additional fortune added at request time.");
     fortunes.add(newFortune);
 
-    sort(fortunes);
+    DataSource dataSource = WicketApplication.get().getDataSource();
+    try (Connection connection = dataSource.getConnection())
+    {
+      try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Fortune",
+              ResultSet.TYPE_FORWARD_ONLY,
+              ResultSet.CONCUR_READ_ONLY))
+      {
+          try (ResultSet resultSet = statement.executeQuery())
+          {
+              while (resultSet.next())
+              {
+                  fortunes.add(new Fortune(
+                          resultSet.getInt("id"),
+                          resultSet.getString("message")));
+              }
+          }
+      }
+    }
+
+    Collections.sort(fortunes);
 
     ListView<Fortune> listView = new ListView<Fortune>("fortunes", fortunes)
     {
@@ -46,17 +59,5 @@ public class FortunePage extends WebPage
       }
     };
     add(listView);
-  }
-
-  private void sort(List<Fortune> fortunes)
-  {
-    Collections.sort(fortunes, new Comparator<Fortune>()
-    {
-      @Override
-      public int compare(Fortune f1, Fortune f2)
-      {
-        return f1.message.compareTo(f2.message);
-      }
-    });
   }
 }

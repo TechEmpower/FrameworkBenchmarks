@@ -1,22 +1,18 @@
 package hellowicket.dbupdates;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.concurrent.ThreadLocalRandom;
+
+import javax.sql.DataSource;
 
 import org.apache.wicket.request.resource.AbstractResource;
-import org.hibernate.CacheMode;
-import org.hibernate.Query;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
-import org.hibernate.Session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hellowicket.HibernateUtil;
+import hellowicket.WicketApplication;
 import hellowicket.World;
-import org.hibernate.Transaction;
 
 /**
  * A resource that implements the requirements for
@@ -49,49 +45,51 @@ public class HelloDbUpdatesResource extends AbstractResource
     response.setWriteCallback(new WriteCallback() {
       public void writeData(Attributes attributes)
       {
-        Random random = new Random();
-
-        List<World> worldsForJson = new ArrayList<>();
-
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-
-        // update in batches. See http://docs.jboss.org/hibernate/core/3.3/reference/en/html/batch.html#batch-update
-        ScrollableResults worlds = session.createQuery("from World")
-           .setMaxResults(queries)
-           .setCacheMode(CacheMode.IGNORE)
-           .scroll(ScrollMode.FORWARD_ONLY);
-        int count=0;
-        while (worlds.next())
-        {
-          World world = (World) worlds.get(0);
-          world.randomNumber = random.nextInt(DB_ROWS) + 1;
-          worldsForJson.add(world);
-          if ( ++count % 500 == 0 )
-          {
-            //flush a batch of updates and release memory
-            session.flush();
-            session.clear();
-          }
-        }
-
-        tx.commit();
-        session.close();
-
         try
         {
+          final ThreadLocalRandom random = ThreadLocalRandom.current();
+          DataSource dataSource = WicketApplication.get().getDataSource();
+
+          World[] worlds = new World[queries];
+          try (Connection connection = dataSource.getConnection();
+               PreparedStatement query = connection.prepareStatement(
+                       "SELECT * FROM World WHERE id = ?",
+                       ResultSet.TYPE_FORWARD_ONLY,
+                       ResultSet.CONCUR_READ_ONLY);
+               PreparedStatement update = connection.prepareStatement(
+                       "UPDATE World SET randomNumber = ? WHERE id= ?"))
+          {
+            for (int i = 0; i < queries; i++)
+            {
+              query.setInt(1, random.nextInt(DB_ROWS) + 1);
+              World world;
+              try (ResultSet resultSet = query.executeQuery())
+              {
+                resultSet.next();
+                world = new World(
+                    resultSet.getInt("id"),
+                    resultSet.getInt("randomNumber"));
+              }
+              world.randomNumber = random.nextInt(DB_ROWS) + 1;
+              update.setInt(1, world.randomNumber);
+              update.setInt(2, world.id);
+              update.executeUpdate();
+              worlds[i] = world;
+            }
+          }
+
           String data;
           if (queries == 1)
           {
-              data = HelloDbUpdatesResource.mapper.writeValueAsString(worldsForJson.get(0));
+              data = HelloDbUpdatesResource.mapper.writeValueAsString(worlds[0]);
           }
           else
           {
-              data = HelloDbUpdatesResource.mapper.writeValueAsString(worldsForJson);
+              data = HelloDbUpdatesResource.mapper.writeValueAsString(worlds);
           }
           attributes.getResponse().write(data);
         }
-        catch (IOException ex)
+        catch (Exception ex)
         {
           // do nothing
         }

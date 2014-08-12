@@ -20,7 +20,7 @@ env:
     #
     # Here's a bash one-liner if you need to update this: 
     # toolset/run-tests.py --list-tests | while read line ; do
-    #    echo "    - TEST=$line"
+    #    echo "    - TESTDIR=$line"
     # done    
     - TESTDIR=activeweb
     - TESTDIR=aspnet

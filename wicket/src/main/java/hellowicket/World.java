@@ -1,15 +1,16 @@
 package hellowicket;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
 public class World
 {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   public int id;
   public int randomNumber;
+
+  public World()
+  {
+  }
+
+  public World(int id, int randomNumber) {
+    this.id = id;
+    this.randomNumber = randomNumber;
+  }
 }
