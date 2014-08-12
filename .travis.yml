@@ -51,6 +51,7 @@ env:
     - TESTDIR=gin
     - TESTDIR=go
     - TESTDIR=grails
+    - TESTDIR=grape
     - TESTDIR=grizzly-bm
     - TESTDIR=grizzly-jersey
     - TESTDIR=hapi
