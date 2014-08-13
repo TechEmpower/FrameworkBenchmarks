@@ -453,9 +453,12 @@ class FrameworkTest:
               command='export TROOT=$FWROOT/%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
-    # Run the start module (inside TROOT)
+    # Run the module start (inside parent of TROOT)
+    #     - we use the parent as a historical accident - a lot of tests
+    #       use subprocess's cwd argument already
     previousDir = os.getcwd()
-    os.chdir(self.troot)
+    os.chdir(os.path.dirname(self.troot))
+    logging.warning("Running setup module (cwd=%s)", os.path.dirname(self.troot))
     retcode = self.setup_module.start(self, out, err)    
     os.chdir(previousDir)
 
@@ -479,8 +482,12 @@ class FrameworkTest:
               command='export TROOT=$FWROOT/%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
-   # Run the module stop (inside TROOT)
+    # Run the module stop (inside parent of TROOT)
+    #     - we use the parent as a historical accident - a lot of tests
+    #       use subprocess's cwd argument already
     previousDir = os.getcwd()
+    os.chdir(os.path.dirname(self.troot))
+    logging.warning("Running setup module (cwd=%s)", os.path.dirname(self.troot))
     os.chdir(self.troot)
     retcode = self.setup_module.stop(out, err)
     os.chdir(previousDir)
