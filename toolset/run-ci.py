@@ -39,6 +39,36 @@ class CIRunnner:
     self.mode = mode
 
     try:
+      # NOTE: THIS IS TRICKY TO GET RIGHT!!! 
+      # If modifying, please consider: 
+      #  - the commit range for a pull request will be (once travis
+      #    finishes merging their lastest) the base commit to 
+      #    the github auto-merge commit
+      #  - the commits in the commit range may include merge commits
+      #    other than the auto-merge commit. An improper git command
+      #    will know that *all* the files in the merge were changed, 
+      #    but that is not the changeset that we care about
+      #  - git diff shows differences, but we care about git log, which
+      #    shows information on what was changed during commits
+      #  - master can (and will!) move during a build. This is one 
+      #    of the biggest problems with using git diff - master will 
+      #    be updated, and those updates will include changes to toolset, 
+      #    and suddenly every job in the build will start to run instead 
+      #    of fast-failing
+      #  - commit_range is not set if there was only one commit pushed, 
+      #    so be sure to test for that
+      #  - commit_range and commit are set very differently for pushes
+      #    to an owned branch versus pushes to a pull request, test
+      #  - Occasionally the commit range appears to provide commits
+      #    that do not exist in the checked out repository. This may
+      #    be related to rebasing on a branch you own (works fine for 
+      #    pull requests), but I cannot isolate the issue. If you
+      #    figure it out please put in an issue
+      #  - Test all these options!!!!!!!!!!!
+      #      - single commit to a branch you own
+      #      - multiple commits pushed at once to a branch you own
+      #      - single commit tested from a pull request
+      #      - multiple commits pushed at once to the pull request
       self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
       if self.commit_range == "":
           self.commit_range = "-m -1 %s" % os.environ['TRAVIS_COMMIT']
