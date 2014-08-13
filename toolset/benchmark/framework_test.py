@@ -446,11 +446,20 @@ class FrameworkTest:
       logging.warning("Directory %s does not have a bash_profile.sh" % self.directory)
       profile="$FWROOT/config/benchmark_profile"
 
+    # Setup variables for TROOT and IROOT
+    self.troot = "%s/%s" % (self.fwroot, self.directory)
+    self.iroot = self.install_root
     setup_util.replace_environ(config=profile, 
               command='export TROOT=$FWROOT/%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
-    return self.setup_module.start(self.benchmarker, out, err)
+    # Run the start module (inside TROOT)
+    previousDir = os.getcwd()
+    os.chdir(self.troot)
+    retcode = self.setup_module.start(self, out, err)    
+    os.chdir(previousDir)
+
+    return retcode
   ############################################################
   # End start
   ############################################################
@@ -470,7 +479,13 @@ class FrameworkTest:
               command='export TROOT=$FWROOT/%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
-    return self.setup_module.stop(out, err)
+   # Run the module stop (inside TROOT)
+    previousDir = os.getcwd()
+    os.chdir(self.troot)
+    retcode = self.setup_module.stop(out, err)
+    os.chdir(previousDir)
+
+    return retcode
   ############################################################
   # End stop
   ############################################################
@@ -1157,6 +1172,11 @@ class FrameworkTest:
   ##############################################################
   # End __parse_stats
   ##############################################################
+
+  def __getattr__(self, name):
+    """For backwards compatibility, we used to pass benchmarker 
+    as the argument to the setup.py files"""
+    return getattr(self.benchmarker, name)
 
   ##############################################################
   # Begin __calculate_average_stats
