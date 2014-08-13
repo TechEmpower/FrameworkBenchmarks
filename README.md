@@ -220,6 +220,10 @@ build queue. This means 1) only your commits/branches are being verified, so the
 no delay waiting for an unrelated pull request, and 2) you can cancel unneeded items. 
 This does not affect our own Travis-CI setup at all - any commits added to a pull 
 request will be verifed as normal. 
+* **Read the README**: We know that's cliche. However, our toolset drags in a lot of 
+different concepts and frameworks, and it can really help to read the README's, such 
+as this one, the one inside the `toolset/` directory, and the ones inside specific 
+framework directories
 
 ---
 
