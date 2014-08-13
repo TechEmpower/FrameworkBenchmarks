@@ -39,13 +39,13 @@ class CIRunnner:
     self.mode = mode
 
     try:
-      # NOTE: THIS IS TRICKY TO GET RIGHT!!! 
+      # NOTE: THIS IS VERY TRICKY TO GET RIGHT!
+      # 
       # If modifying, please consider: 
-      #  - the commit range for a pull request will be (once travis
-      #    finishes merging their lastest) the base commit to 
+      #  - the commit range for a pull request is the first PR commit to 
       #    the github auto-merge commit
       #  - the commits in the commit range may include merge commits
-      #    other than the auto-merge commit. An improper git command
+      #    other than the auto-merge commit. An git log with -m 
       #    will know that *all* the files in the merge were changed, 
       #    but that is not the changeset that we care about
       #  - git diff shows differences, but we care about git log, which
@@ -56,27 +56,93 @@ class CIRunnner:
       #    and suddenly every job in the build will start to run instead 
       #    of fast-failing
       #  - commit_range is not set if there was only one commit pushed, 
-      #    so be sure to test for that
+      #    so be sure to test for that on both master and PR
       #  - commit_range and commit are set very differently for pushes
       #    to an owned branch versus pushes to a pull request, test
-      #  - Occasionally the commit range appears to provide commits
-      #    that do not exist in the checked out repository. This may
-      #    be related to rebasing on a branch you own (works fine for 
-      #    pull requests), but I cannot isolate the issue. If you
-      #    figure it out please put in an issue
-      #  - Test all these options!!!!!!!!!!!
-      #      - single commit to a branch you own
-      #      - multiple commits pushed at once to a branch you own
-      #      - single commit tested from a pull request
-      #      - multiple commits pushed at once to the pull request
-      self.commit_range = os.environ['TRAVIS_COMMIT_RANGE']
-      if self.commit_range == "":
+      #  - For merge commits, the TRAVIS_COMMIT and TRAVIS_COMMIT_RANGE 
+      #    will become invalid if additional commits are pushed while a job is 
+      #    building. See https://github.com/travis-ci/travis-ci/issues/2666
+      #  - If you're really insane, consider that the last commit in a 
+      #    pull request could have been a merge commit. This means that 
+      #    the github auto-merge commit could have more than two parents
+      #  
+      #  - TEST ALL THESE OPTIONS: 
+      #      - On a branch you own (e.g. your fork's master)
+      #          - single commit
+      #          - multiple commits pushed at once
+      #          - commit+push, then commit+push again before the first
+      #            build has finished. Verify all jobs in the first build 
+      #            used the correct commit range
+      #          - multiple commits, including a merge commit. Verify that
+      #            the unrelated merge commit changes are not counted as 
+      #            changes the user made
+      #      - On a pull request
+      #          - repeat all above variations
+      #
+      #
+      # ==== CURRENT SOLUTION FOR PRs ====
+      #
+      # For pull requests, we will examine Github's automerge commit to see
+      # what files would be touched if we merged this into the current master. 
+      # You can't trust the travis variables here, as the automerge commit can
+      # be different for jobs on the same build. See https://github.com/travis-ci/travis-ci/issues/2666
+      # We instead use the FETCH_HEAD, which will always point to the SHA of 
+      # the lastest merge commit. However, if we only used FETCH_HEAD than any
+      # new commits to a pull request would instantly start affecting currently
+      # running jobs and the the list of changed files may become incorrect for
+      # those affected jobs. The solution is to walk backward from the FETCH_HEAD
+      # to the last commit in the pull request. Based on how github currently 
+      # does the automerge, this is the second parent of FETCH_HEAD, and 
+      # therefore we use FETCH_HEAD^2 below
+      #
+      # This may not work perfectly in situations where the user had advanced 
+      # merging happening in their PR. We correctly handle them merging in 
+      # from upstream, but if they do wild stuff then this will likely break
+      # on that. However, it will also likely break by seeing a change in 
+      # toolset and triggering a full run when a partial run would be 
+      # acceptable
+      #
+      # ==== CURRENT SOLUTION FOR OWNED BRANCHES (e.g. master) ====
+      #
+      # This one is fairly simple. Find the commit or commit range, and 
+      # examine the log of files changes. If you encounter any merges, 
+      # then fully explode the two parent commits that made the merge
+      # and look for the files changed there. This is an aggressive 
+      # strategy to ensure that commits to master are always tested 
+      # well
+      is_PR = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
+      if is_PR:
+        log.info('I am testing a pull request')
+        first_commit = os.environ['TRAVIS_COMMIT_RANGE'].split('...')[0]
+        last_commit = subprocess.check_output("git rev-list -n 1 FETCH_HEAD^2", shell=True).rstrip('\n')
+        if first_commit == last_commit:
+          # There is only one commit in the pull request so far
+          # so we examine just it using -1
+          #
+          # On the oddball change that it's a merge commit, we pray that 
+          # it's a merge from upstream and also pass --first-parent 
+          self.commit_range = "--first-parent -1 %s" % last_commit
+        else: 
+          # In case they merged in upstream, we only care about the first 
+          # parent. For crazier merges, we hope
+          self.commit_range = "--first-parent %s...%s" % (first_commit, last_commit)
+      
+      if not is_PR:
+        log.info('I am not testing a pull request')
+        # If more than one commit was pushed, examine everything including 
+        # all details on all merges
+        self.commit_range = "-m %s" % os.environ['TRAVIS_COMMIT_RANGE']
+        
+        # If only one commit was pushed, examine that one. If it was a 
+        # merge be sure to show all details
+        if self.commit_range == "":
           self.commit_range = "-m -1 %s" % os.environ['TRAVIS_COMMIT']
+
+      log.info("I found a range of %s...%s", first_commit, last_commit)
     except KeyError:
       log.warning("I should only be used for automated integration tests e.g. Travis-CI")
       log.warning("Were you looking for run-tests.py?")
-      last_commit = subprocess.check_output("git rev-parse HEAD^", shell=True).rstrip('\n')
-      self.commit_range = "%s...HEAD" % last_commit
+      self.commit_range = "-m HEAD^...HEAD"
 
     #
     # Find the one test from benchmark_config that we are going to run
@@ -130,10 +196,11 @@ class CIRunnner:
     def touch(fname):
       open(fname, 'a').close()
 
-    log.info("Using commit range %s", self.commit_range)
+    log.info("Using commit range `%s`", self.commit_range)
     log.info("Running `git log --name-only --pretty=\"format:\" %s`" % self.commit_range)
     changes = subprocess.check_output("git log --name-only --pretty=\"format:\" %s" % self.commit_range, shell=True)
-    log.info(changes)
+    changes = os.linesep.join([s for s in changes.splitlines() if s]) # drop empty lines
+    log.info("Result:\n%s", changes)
 
     # Look for changes to core TFB framework code
     if re.search(r'^toolset/', changes, re.M) is not None: 
