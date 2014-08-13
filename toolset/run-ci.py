@@ -43,6 +43,13 @@ class CIRunnner:
 
     try:
       # NOTE: THIS IS VERY TRICKY TO GET RIGHT!
+      #
+      # Our goal: Look at the files changed and determine if we need to 
+      # run a verification for this folder. For a pull request, we want to 
+      # see the list of files changed by any commit in that PR. For a 
+      # push to master, we want to see a list of files changed by the pushed
+      # commits. If this list of files contains the current directory, or 
+      # contains the toolset/ directory, then we need to run a verification
       # 
       # If modifying, please consider: 
       #  - the commit range for a pull request is the first PR commit to 
