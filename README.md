@@ -10,7 +10,7 @@ current tests exercise plaintext responses, JSON seralization, database reads
 and writes via the object-relational mapper (ORM), collections, sorting, server-side templates,
 and XSS counter-measures. Future tests will exercise other components and greater computation.
 
-[Read more and see the results of our tests on Amazon EC2 and physical hardware](http://www.techempower.com/benchmarks/)
+[Read more and see the results of our tests on Amazon EC2 and physical hardware](http://www.techempower.com/benchmarks/). 
 For descriptions of the test types that we run, see the [test requirements section](http://www.techempower.com/benchmarks/#section=code).
 
 Join in the conversation at our 
@@ -201,32 +201,49 @@ Note: If you're looking for logs from our official benchmark rounds, see
 
 # Contribution Guidelines
 
-The community has consistently helped in making these tests better, and we welcome any and all changes. These guidelines prevent us from having to give repeated feedback on the same topics: 
+The community has consistently helped in making these tests better, and we welcome any 
+and all changes. These guidelines prevent us from having to give repeated feedback on 
+the same topics: 
 
-* **Use specific versions** If you're updating any software or dependency, please be specific with the version number. Also, update the appropriate `README` to reflect that change
-* **Rope in experts** If you're making a performance tweak, our team may not be able to verify your code--we are not experts in every language. It's always helpful to ping expert users and provide a basic introduction to their credentials. If you are an expert that is willing to be consulted, please add yourself to the appropriate test README files. 
-
+* **Use specific versions**: If you're updating any software or dependency, please be 
+specific with the version number. Also, update the appropriate `README` to reflect that change
+* **Rope in experts**: If you're making a performance tweak, our team may not be 
+able to verify your code--we are not experts in every language. It's always helpful 
+to ping expert users and provide a basic introduction on their credentials. If you 
+are an expert that is willing to be pinged occasionally, please add yourself to 
+the appropriate test README files. 
+* **Use a personal Travis-CI account**: This one is mainly for your own sanity. Our 
+[main Travis-CI](https://travis-ci.org/TechEmpower/FrameworkBenchmarks) can occasionally
+become clogged with so many pull requests that it takes a day to finish all the 
+builds. If you create a fork and enable Travis-CI.org, you will get your own 
+build queue. This means 1) only your commits/branches are being verified, so there is 
+no delay waiting for an unrelated pull request, and 2) you can cancel unneeded items. 
+This does not affect our own Travis-CI setup at all - any commits added to a pull 
+request will be verifed as normal. 
 
 ---
 
-# Adding Frameworks
+# Adding Frameworks or Tests
 
-When adding a new framework or new test to an existing framework, please follow these steps:
+When adding a new framework or new test to an existing 
+framework, please follow these steps:
 
-* Update/add [benchmark_config](#the-benchmark_config-file)
-* Update/add [setup file](#setup-files)
-* Update/add [install.sh file](#install-file)
-* (Optional) Update/add [bash_profile.sh file](#bash-environment-file)
-* When creating a database test, please use the MySQL table hello_world.World, or the MongoDB collection hello_world.world
+* Update/add a [benchmark_config](#the-benchmark_config-file)
+* Update/add a [setup file](#setup-files)
+* Update/add an [install.sh file](#install-file)
+* (Optional) Update/add a [bash_profile.sh file](#bash-environment-file)
+* When creating a database test, use the table/collection `hello_world`. 
+  Our database setup scripts are stored inside the `config/` folder if 
+  you need to see the database schema
 
 ### The benchmark_config File
 
-The benchmark_config file is used by our scripts to identify available tests - it 
-should exist at the root of the test directory.
+The `benchmark_config` file is used by our scripts to identify 
+available tests - it should exist at the root of the framework directory.
+We
 
-Here is the basic structure of benchmark_config, using the Compojure framework as 
-an example.  Compojure has two test permutations, which are identified as the 
-"tests" list in the JSON structure below.
+Here is an example `benchmark_config` from the `Compojure` framework. 
+There are two different tests listed for the `Compojure` framework, 
 
     {
       "framework": "compojure",
@@ -275,36 +292,66 @@ an example.  Compojure has two test permutations, which are identified as the
       }]
     }
 
-* framework: Specifies the framework name.
-* tests: An list of tests that can be run for this framework. In many cases, this contains a single element for the "default" test, but additional tests can be specified.  Each test name must be unique when concatenated with the framework name.
-  * setup_file: The location of the [setup file](#setup-files) that can start and stop the test. By convention this is just setup.py.
-  * json_url (optional): The URI to the JSON test, typically `/json`
-  * db_url (optional): The URI to the database test, typically `/db`
-  * query_url (optional): The URI to the variable query test. The URI must be set up so that an integer can be applied to the end of the URI to specify the number of queries to run.  For example, "/query?queries=" (to yield /query?queries=20" or "/query/" to yield "/query/20".
-  * fortune_url (optional): the URI to the fortunes test, typically `/fortune`
-  * update_url (optional): the URI to the updates test, setup in a manner similar to the query_url described above.
-  * plaintext_url (optional): the URI of the plaintext test, typically `/plaintext`
-  * port: The port the server is listening on
-  * approach (metadata): `Realistic` or `Stripped` (see results web site for description of all metadata attributes)
-  * classification (metadata): `Full`, `Micro`, or `Platform`
-  * database (metadata): `MySQL`, `Postgres`, `MongoDB`, `SQLServer`, or `None`
-  * framework (metadata): name of the framework
-  * language (metadata): name of the language
-  * orm (metadata): `Full`, `Micro`, or `Raw`
-  * platform (metadata): name of the platform
-  * webserver (metadata): name of the web-server (also referred to as the "front-end server")
-  * os (metadata): The application server's operating system, `Linux` or `Windows`
-  * database_os (metadata): The database server's operating system, `Linux` or `Windows`
-  * display_name (metadata): How to render this test permutation's name in the results web site.  Some permutation names can be really long, so the display_name is provided in order to provide something more succinct.
-  * versus (optional): The name of another test (elsewhere in this project) that is a subset of this framework.  This allows for the generation of the framework efficiency chart in the results web site.  For example, Compojure is compared to "servlet" since Compojure is built on the Servlets platform.
+* `framework:` Specifies the framework name.
+* `tests:` A list of tests that can be run for this framework. In many cases, 
+this contains a single element for the "default" test, but additional tests 
+can be specified.  Each test name must be unique when concatenated with the
+framework name. Each test will be run separately in our Rounds, so it is to your
+benefit to provide multiple variations in case one works better in some cases
+  * `setup_file:` The location of the [python setup file](#setup-files) that 
+  can start and stop the test, excluding the `.py` ending. If your different 
+  tests require different setup approachs, use another setup file. 
+  * `json_url (optional):` The URI to the JSON test, typically `/json`
+  * `db_url (optional):` The URI to the database test, typically `/db`
+  * `query_url (optional):` The URI to the variable query test. The URI 
+  must be set up so that an integer can be applied to the end of the URI to
+  specify the number of queries to run.  For example, `/query?queries=` 
+  (to yield `/query?queries=20`) or `/query/` (to yield `/query/20`)
+  * `fortune_url (optional):` the URI to the fortunes test, typically `/fortune`
+  * `update_url (optional):` the URI to the updates test, setup in a 
+  manner similar to `query_url` described above.
+  * `plaintext_url (optional):` the URI of the plaintext test, 
+  typically `/plaintext`
+  * `port:` The port the server is listening on
+  * `approach (metadata):` `Realistic` or `Stripped` (see 
+  [here](http://www.techempower.com/benchmarks/#section=code&hw=peak&test=json) for a description of all metadata attributes)
+  * `classification (metadata):` `Full`, `Micro`, or `Platform`
+  * `database (metadata):` `MySQL`, `Postgres`, `MongoDB`, `SQLServer`, or `None`
+  * `framework (metadata):` name of the framework
+  * `language (metadata):` name of the language
+  * `orm (metadata):` `Full`, `Micro`, or `Raw`
+  * `platform (metadata):` name of the platform
+  * `webserver (metadata):` name of the web-server (also referred 
+  to as the "front-end server")
+  * `os (metadata):` The application server's operating system, 
+  `Linux` or `Windows`
+  * `database_os (metadata):` The database server's operating 
+  system, `Linux` or `Windows`
+  * `display_name (metadata):` How to render this test permutation's name on
+  the results web site.  Some permutation names can be really long, 
+  so the display_name is provided in order to provide something more succinct.
+  * `versus (optional):` The name of another test (elsewhere in this project) that is a subset of this framework.  This allows for the generation of the framework efficiency chart in the results web site.  For example, Compojure is compared to "servlet" since Compojure is built on the Servlets platform.
+
+The requirements section 
+[here](http://www.techempower.com/benchmarks/#section=code&hw=peak&test=json) 
+explains the expected response for each URL as well all metadata 
+options available. 
 
 ### Testing on both Windows and Linux
 
-If your framework and platform can execute on both Windows and Linux, we encourage you to specify tests for both operating systems.  This increases the amount of testing you should do before submitting your pull-request, however, so we understand if you start with just one of the two.
+If your framework and platform can execute on both Windows and Linux, we 
+encourage you to specify tests for both operating systems.  This increases the 
+amount of testing you should do before submitting your pull-request, however, 
+so we understand if you start with just one of the two. Travis-CI cannot 
+automatically verify Windows-based tests, and therefore you should verify 
+your code manually. 
 
 The steps involved are:
 
-* Assuming you have implemeneted the Linux test already, add a new test permutation to your `benchmark_config` file for the Windows test (or vice-versa).  When the benchmark script runs on Linux, it skips tests where the Application Operating System (`os` in the file) is specified as Linux.  When running on Windows, it skips tests where the `os` field is Linux.
+* Assuming you have implemented the Linux test already, add a new test 
+permutation to your `benchmark_config` file for the Windows test.  When 
+the benchmark script runs on Linux, it skips tests where `os` in `Windows`
+and vice versa. 
 * Add the necessary tweaks to your [setup file](#setup-files) to start and stop on the new operating system.  See, for example, [the script for Go](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/go/setup.py).
 * Test on Windows and Linux to make sure everything works as expected.
 
@@ -324,22 +371,22 @@ Here are some example `install.sh` files
 ```bash
 #!/bin/bash
 
-# My server only needs nodejs
+# My framework only needs nodejs
 fw_depends nodejs
 ```
 
 ```bash
 #!/bin/bash
 
-# My server is weird and needs nodejs and mono and go
+# My framework needs nodejs and mono and go
 fw_depends nodejs mono go
 ```
 
 ```bash
 #!/bin/bash
 
-# My server needs nodejs...
-fw_depends nodejs mono go
+# My framework needs nodejs
+fw_depends nodejs
 
 # ...and some other software that there is no installer script for.
 # Note: Use IROOT variable to put software in the right folder. 
@@ -379,9 +426,9 @@ framework, to perform actions such as updating `PATH` or defining environment
 variables your framework requires e.g. `GOROOT`. You can use these 
 variables: 
 
-* FWROOT: Root of project
-* IROOT: Root of installation for the current framework
-* TROOT: Root directory for the current framework 
+* **FWROOT:** Root of project
+* **IROOT:** Root of installation for the current framework
+* **TROOT:** Root directory for the current framework 
 
 Example of `bash_profile.sh`: 
 
