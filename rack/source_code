@@ -1,3 +1,0 @@
-./rack/config/unicorn.rb
-./rack/setup_jruby.py
-./rack/setup_ruby.py
