@@ -113,20 +113,23 @@ class CIRunnner:
       is_PR = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
       if is_PR:
         log.info('I am testing a pull request')
+        log.info("TRAVIS_COMMIT_RANGE: %s", os.environ['TRAVIS_COMMIT_RANGE'])
+        log.info("TRAVIS_COMMIT      : %s", os.environ['TRAVIS_COMMIT'])
         first_commit = os.environ['TRAVIS_COMMIT_RANGE'].split('...')[0]
+
         last_commit = subprocess.check_output("git rev-list -n 1 FETCH_HEAD^2", shell=True).rstrip('\n')
-        if first_commit == last_commit:
-          # There is only one commit in the pull request so far
-          # so we examine just it using -1
+        if first_commit == "" or first_commit == last_commit:
+          # There is only one commit in the pull request so far, 
+          # or Travis-CI is not yet passing the commit range properly 
+          # for pull requests. We examine just the one commit using -1
           #
-          # On the oddball change that it's a merge commit, we pray that 
+          # On the oddball chance that it's a merge commit, we pray  
           # it's a merge from upstream and also pass --first-parent 
           self.commit_range = "--first-parent -1 %s" % last_commit
         else: 
           # In case they merged in upstream, we only care about the first 
           # parent. For crazier merges, we hope
           self.commit_range = "--first-parent %s...%s" % (first_commit, last_commit)
-      
       if not is_PR:
         log.info('I am not testing a pull request')
         # If more than one commit was pushed, examine everything including 
