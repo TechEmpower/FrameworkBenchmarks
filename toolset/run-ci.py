@@ -121,15 +121,22 @@ class CIRunnner:
         log.info("Guessing that first commit in PR is : %s", first_commit)
         log.info("Guessing that final commit in PR is : %s", last_commit)
 
-        if first_commit == "" or first_commit == last_commit:
+        if first_commit == "":
+          # Travis-CI is not yet passing a commit range for pull requests
+          # so we must use the automerge's changed file list. This has the 
+          # negative effect that new pushes to the PR will immediately 
+          # start affecting any new jobs, regardless of the build they are on
+          log.info("No first commit, using Github's automerge commit")
+          self.commit_range = "--first-parent -1 -m FETCH_HEAD"
+        elif first_commit == last_commit:
           # There is only one commit in the pull request so far, 
           # or Travis-CI is not yet passing the commit range properly 
           # for pull requests. We examine just the one commit using -1
           #
           # On the oddball chance that it's a merge commit, we pray  
           # it's a merge from upstream and also pass --first-parent 
-          log.info("Not enough info for a commit range, examining %s only", last_commit)
-          self.commit_range = "--first-parent -1 %s" % last_commit
+          log.info("Only one commit in range, examining %s", last_commit)
+          self.commit_range = "-m --first-parent -1 %s" % last_commit
         else: 
           # In case they merged in upstream, we only care about the first 
           # parent. For crazier merges, we hope
