@@ -363,9 +363,11 @@ if __name__ == "__main__":
   except KeyError as ke: 
     log.warning("Environment key missing, are you running inside Travis-CI?")
     print traceback.format_exc()
+    retcode = 1
   except:
     log.critical("Unknown error")
     print traceback.format_exc()
+    retcode = 1
   finally:  # Ensure that logs are printed
     
     # Only print logs if we ran a verify
