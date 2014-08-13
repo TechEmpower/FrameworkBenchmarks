@@ -4,8 +4,8 @@
 This project provides representative performance measures across a wide field of web 
 application frameworks. With much help from the community, coverage is quite broad and 
 we are happy to broaden it further with contributions. The project presently includes 
-frameworks on many languages including `Go`, `Python`, `Java`, `Ruby`, `PHP`, `Clojure`, 
-`Groovy`, `JavaScript`, `Erlang`, `Haskell`, `Scala`, `Lua`, `C`, and others.  The 
+frameworks on many languages including `Go`, `Python`, `Java`, `Ruby`, `PHP`, `C#`, `Clojure`, 
+`Groovy`, `Dart`, `JavaScript`, `Erlang`, `Haskell`, `Scala`, `Perl`, `Lua`, `C`, and others.  The 
 current tests exercise plaintext responses, JSON seralization, database reads 
 and writes via the object-relational mapper (ORM), collections, sorting, server-side templates,
 and XSS counter-measures. Future tests will exercise other components and greater computation.
@@ -29,14 +29,13 @@ can run the verification for you. This is as simple as going to travis-ci.org, u
 `Log in with Github` button, and enabling Travis-CI for your fork. All commit pushes 
 will be automatically verified by Travis-CI, and you will get full log output. 
 You can submit a pull request when your code passes the Travis-CI verification and have 
-confidence it will be merged quickly. 
-While this development route it slightly slower than standard local development, it does not 
-require any local setup process.
+confidence it will be merged quickly. While this development route is slightly slower than 
+standard local development, it does not require any local setup process.
 
 You can also run *verify* mode on a single computer, although you should be comfortable with us 
 installing multiple large software suites. 
-You will need to enable passwordless SSH access to localhost ([google](http://hortonworks.com/kb/generating-ssh-keys-for-passwordless-login/) [for](http://superuser.com/questions/336226/how-to-ssh-to-localhost-without-password) [help](https://help.ubuntu.com/community/SSH/OpenSSH/Keys)), and you will also 
-need to enable passwordless sudo (google for help)
+You will need to enable passwordless SSH access to localhost ([search Google for help](https://www.google.com/#hl=en&q=passwordless%20SSH%20access), yielding references such as these: [article 1](http://hortonworks.com/kb/generating-ssh-keys-for-passwordless-login/) [article 2](http://superuser.com/questions/336226/how-to-ssh-to-localhost-without-password) [article 3](https://help.ubuntu.com/community/SSH/OpenSSH/Keys)), and you will also 
+need to enable passwordless sudo access ([Google for help](https://www.google.com/#hl=en&q=passwordless%20sudo)).
 Once you have cloned our repository, run `toolset/run-tests.py --help` for detailed 
 help on running in *verify* mode and see the sections below for more guidance. 
 
@@ -46,12 +45,10 @@ If you plan to run the benchmark and compare results, you need to run in *benchm
 mode. We recommend having a minimum of three distinct computers with a fast network 
 connection in between, all of which you should be comfortable installing a large amount
 of additional software on. One of these computers (the `app server`) must have passwordless
-SSH access to the other two ([google](http://hortonworks.com/kb/generating-ssh-keys-for-passwordless-login/)
-[for](http://superuser.com/questions/336226/how-to-ssh-to-localhost-without-password) 
-[help](https://help.ubuntu.com/community/SSH/OpenSSH/Keys)), and on every computer 
-you will need to have passwordless sudo access (google for help).
-Once you have cloned our repository, run `toolset/run-tests.py --help` for detailed 
-help on running in *benchmark* mode and see the sections below for more guidance. 
+SSH access to the other two ([search Google for help](https://www.google.com/#hl=en&q=passwordless%20SSH%20access), yielding references such as these: [article 1](http://hortonworks.com/kb/generating-ssh-keys-for-passwordless-login/) [article 2](http://superuser.com/questions/336226/how-to-ssh-to-localhost-without-password) [article 3](https://help.ubuntu.com/community/SSH/OpenSSH/Keys)), and on every computer 
+you will need to have passwordless sudo access ([Google for help](https://www.google.com/#hl=en&q=passwordless%20sudo)).
+Once you have cloned our repository, run `toolset/run-tests.py --help` for detailedhelp
+on running in *benchmark* mode and see the sections below for more guidance. 
 
 If you are not an expert, please ensure your setup can run in *verify* mode before 
 attempting to run in *benchmark* mode. 
@@ -60,20 +57,20 @@ attempting to run in *benchmark* mode.
 
 Running the full benchmark requires at least three computers:
 
-* `app server` : The computer that your framework will be launched on
-* `load server`: The computer that will generate client load. Aka `client machine`
-* `DB server`  : The computer that runs all the databases
+* `app server`: The computer that your framework will be launched on.
+* `load server`: The computer that will generate client load. Also known as the `client machine`.
+* `database server`: The computer that runs all the databases. Also knonw as the `DB server`.
 
-This codebase (aka `TechEmpower/FrameworkBenchmarks` aka `TFB`) must be run on 
+This codebase (`TechEmpower/FrameworkBenchmarks` aka `TFB`) must be run on 
 the `app server`. The codebase contains a number of `framework directories`, each 
-of which contains one or more `framework tests`. While our current setup has 
+of which contains one or more `framework test implementations`. While our current setup has 
 many directories, we are working to consolidate related code into fewer directories  
 with more tests per directory. 
 
 When run, `TFB` will: 
-* select which framework tests are to be run based on passed arguments
+* select which framework tests are to be run based on command-line arguments you provide
 * install the necessary software (both on the `app server` and other servers)
-* launch the framework 
+* launch the framework
 * access the urls listed in [the requirements](http://www.techempower.com/benchmarks/#section=code) and verify the responses
 * launch the load generation software on the `load server`
 * gather the results
@@ -88,20 +85,21 @@ on all three servers. If you are only planning to use *verify* mode, then
 all three servers can be the same computer, and you will need to ensure
 you have passwordless sudo access to `localhost`. 
 
-We run all tests on [Ubuntu 14.04](http://www.ubuntu.com/download/server), so 
-it is recommended you use this for development or use. 
+For all Linux framework tests, we use [Ubuntu 14.04](http://www.ubuntu.com/download/server), so 
+it is recommended you use this for development or use.  Furthermore, the load server is Linux-only,
+even when testing Windows frameworks.
 
 ## Configuration File Usage
 
-TFB takes a large number of command line flags, and it can become tedious to 
+TFB takes a large number of command-line arguments, and it can become tedious to 
 specify them repeatedly. We recommend you create a `benchmark.cfg` file by 
 copying the example `benchmark.cfg.example` file and modifying as needed. 
 See `toolset/run-tests.py --help` for a description of each flag. 
 
 For running in *verify* mode, you can set the various hosts to `localhost`. 
-For running in *benchmark* mode, you will need the public IP addresses.
+For running in *benchmark* mode, you will need all of the servers' IP addresses.
 
-Note: environment variables can also be used for a number of the arguments
+Note: environment variables can also be used for a number of the arguments.
 
 ## Installation Basics
 
@@ -130,10 +128,10 @@ You can choose to selectively install components by using the
 `--test` and `--exclude` flags. 
 
 ```
-# Install just the software for beego
+# Install just the software for beego (as an example)
 toolset/run-tests.py --install server --test beego --verbose --install-only
 
-# Install all php software but php-fuel
+# Install all php software but php-fuel (as another example)
 toolset/run-tests.py --install server --test php* --exclude php-fuel --verbose --install-only
 
 # Install *all* framework software. Expect this to take hours!
@@ -170,12 +168,12 @@ toolset/run-tests.py --test beego --mode verify
 # Run the default benchmark for the beego test
 toolset/run-tests.py --test beego
 
-# Modify which test types are run during benchmark
+# Specify which test types are run during benchmark
 toolset/run-tests.py --test beego --type json
 toolset/run-tests.py --test beego --type db
 toolset/run-tests.py --test beego --type fortune
 
-# Modify a number of options for how the load is generated
+# Specify a number of options for how the load is generated
 toolset/run-tests.py --test beego --max-concurrency 24 --max-threads 24 --duration 20 --max-queries 200
 
 # Run a tiny benchmark
@@ -189,7 +187,7 @@ The general structure is `results/<run name>/<timestamp>/logs/<test name>/<file>
 You can use the `--name` flag to change the `<run name>`
 If you re-run the same test multiple times, you will get a different folder
 for each `<timestamp>`, although the `latest` folder will be kept up to date. 
-The `<test name>` is simply the test you ran, and `<file>` is either `out.txt`
+The `<test name>` is simply the name of the test type you ran, and `<file>` is either `out.txt`
 or `err.txt` (these are the `logout` and `logerr` arguments passed into each 
 `setup.py` file. 
 
