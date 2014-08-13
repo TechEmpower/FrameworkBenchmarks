@@ -34,9 +34,12 @@ class CIRunnner:
     testdir  = framework directory we are running
     '''
 
-    logging.basicConfig(level=logging.INFO)
     self.directory = testdir
     self.mode = mode
+    if mode == "cisetup":
+      logging.basicConfig(level=logging.DEBUG)
+    else:
+      logging.basicConfig(level=logging.INFO)
 
     try:
       # NOTE: THIS IS VERY TRICKY TO GET RIGHT!
@@ -110,23 +113,23 @@ class CIRunnner:
       # and look for the files changed there. This is an aggressive 
       # strategy to ensure that commits to master are always tested 
       # well
-      log.info("TRAVIS_COMMIT_RANGE: %s", os.environ['TRAVIS_COMMIT_RANGE'])
-      log.info("TRAVIS_COMMIT      : %s", os.environ['TRAVIS_COMMIT'])
+      log.debug("TRAVIS_COMMIT_RANGE: %s", os.environ['TRAVIS_COMMIT_RANGE'])
+      log.debug("TRAVIS_COMMIT      : %s", os.environ['TRAVIS_COMMIT'])
 
       is_PR = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
       if is_PR:
-        log.info('I am testing a pull request')
+        log.debug('I am testing a pull request')
         first_commit = os.environ['TRAVIS_COMMIT_RANGE'].split('...')[0]
         last_commit = subprocess.check_output("git rev-list -n 1 FETCH_HEAD^2", shell=True).rstrip('\n')
-        log.info("Guessing that first commit in PR is : %s", first_commit)
-        log.info("Guessing that final commit in PR is : %s", last_commit)
+        log.debug("Guessing that first commit in PR is : %s", first_commit)
+        log.debug("Guessing that final commit in PR is : %s", last_commit)
 
         if first_commit == "":
           # Travis-CI is not yet passing a commit range for pull requests
           # so we must use the automerge's changed file list. This has the 
           # negative effect that new pushes to the PR will immediately 
           # start affecting any new jobs, regardless of the build they are on
-          log.info("No first commit, using Github's automerge commit")
+          log.debug("No first commit, using Github's automerge commit")
           self.commit_range = "--first-parent -1 -m FETCH_HEAD"
         elif first_commit == last_commit:
           # There is only one commit in the pull request so far, 
@@ -135,7 +138,7 @@ class CIRunnner:
           #
           # On the oddball chance that it's a merge commit, we pray  
           # it's a merge from upstream and also pass --first-parent 
-          log.info("Only one commit in range, examining %s", last_commit)
+          log.debug("Only one commit in range, examining %s", last_commit)
           self.commit_range = "-m --first-parent -1 %s" % last_commit
         else: 
           # In case they merged in upstream, we only care about the first 
@@ -143,7 +146,7 @@ class CIRunnner:
           self.commit_range = "--first-parent %s...%s" % (first_commit, last_commit)
 
       if not is_PR:
-        log.info('I am not testing a pull request')
+        log.debug('I am not testing a pull request')
         # If more than one commit was pushed, examine everything including 
         # all details on all merges
         self.commit_range = "-m %s" % os.environ['TRAVIS_COMMIT_RANGE']
@@ -210,11 +213,11 @@ class CIRunnner:
     def touch(fname):
       open(fname, 'a').close()
 
-    log.info("Using commit range `%s`", self.commit_range)
-    log.info("Running `git log --name-only --pretty=\"format:\" %s`" % self.commit_range)
+    log.debug("Using commit range `%s`", self.commit_range)
+    log.debug("Running `git log --name-only --pretty=\"format:\" %s`" % self.commit_range)
     changes = subprocess.check_output("git log --name-only --pretty=\"format:\" %s" % self.commit_range, shell=True)
     changes = os.linesep.join([s for s in changes.splitlines() if s]) # drop empty lines
-    log.info("Result:\n%s", changes)
+    log.debug("Result:\n%s", changes)
 
     # Look for changes to core TFB framework code
     if re.search(r'^toolset/', changes, re.M) is not None: 
@@ -236,7 +239,7 @@ class CIRunnner:
     ''' Do the requested command using TFB  '''
 
     if not self._should_run():
-      log.info("Not running directory %s", self.directory)
+      log.info("I found no changes to `%s` or `toolset/`, aborting verification", self.directory)
       return 0
 
     if self.mode == 'cisetup':
