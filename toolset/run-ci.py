@@ -110,14 +110,17 @@ class CIRunnner:
       # and look for the files changed there. This is an aggressive 
       # strategy to ensure that commits to master are always tested 
       # well
+      log.info("TRAVIS_COMMIT_RANGE: %s", os.environ['TRAVIS_COMMIT_RANGE'])
+      log.info("TRAVIS_COMMIT      : %s", os.environ['TRAVIS_COMMIT'])
+
       is_PR = (os.environ['TRAVIS_PULL_REQUEST'] != "false")
       if is_PR:
         log.info('I am testing a pull request')
-        log.info("TRAVIS_COMMIT_RANGE: %s", os.environ['TRAVIS_COMMIT_RANGE'])
-        log.info("TRAVIS_COMMIT      : %s", os.environ['TRAVIS_COMMIT'])
         first_commit = os.environ['TRAVIS_COMMIT_RANGE'].split('...')[0]
-
         last_commit = subprocess.check_output("git rev-list -n 1 FETCH_HEAD^2", shell=True).rstrip('\n')
+        log.info("Guessing that first commit in PR is : %s", first_commit)
+        log.info("Guessing that final commit in PR is : %s", last_commit)
+
         if first_commit == "" or first_commit == last_commit:
           # There is only one commit in the pull request so far, 
           # or Travis-CI is not yet passing the commit range properly 
@@ -125,11 +128,13 @@ class CIRunnner:
           #
           # On the oddball chance that it's a merge commit, we pray  
           # it's a merge from upstream and also pass --first-parent 
+          log.info("Not enough info for a commit range, examining %s only", last_commit)
           self.commit_range = "--first-parent -1 %s" % last_commit
         else: 
           # In case they merged in upstream, we only care about the first 
           # parent. For crazier merges, we hope
           self.commit_range = "--first-parent %s...%s" % (first_commit, last_commit)
+
       if not is_PR:
         log.info('I am not testing a pull request')
         # If more than one commit was pushed, examine everything including 
@@ -141,7 +146,6 @@ class CIRunnner:
         if self.commit_range == "":
           self.commit_range = "-m -1 %s" % os.environ['TRAVIS_COMMIT']
 
-      log.info("I found a range of %s...%s", first_commit, last_commit)
     except KeyError:
       log.warning("I should only be used for automated integration tests e.g. Travis-CI")
       log.warning("Were you looking for run-tests.py?")
