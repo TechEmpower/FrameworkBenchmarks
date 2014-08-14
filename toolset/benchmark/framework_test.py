@@ -1282,7 +1282,16 @@ class FrameworkTest:
     if not os.path.exists(os.path.join(directory, "__init__.py")):
       open(os.path.join(directory, "__init__.py"), 'w').close()
 
-    self.setup_module = setup_module = importlib.import_module(directory + '.' + self.setup_file)
+    # Import the module (TODO - consider using sys.meta_path)
+    dir_rel_to_fwroot = os.path.relpath(os.path.dirname(directory), self.fwroot)
+    if dir_rel_to_fwroot != ".":
+      sys.path.append("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
+      logging.debug("Adding %s to import %s.%s", dir_rel_to_fwroot, os.path.basename(directory), self.setup_file)
+      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
+      sys.path.remove("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
+    else:
+      logging.debug("Importing %s.%s", directory, self.setup_file)
+      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
   ############################################################
   # End __init__
   ############################################################
