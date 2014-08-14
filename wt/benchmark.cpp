@@ -40,12 +40,7 @@ public:
 
   template<class Action>
   void persist(Action& a) {
-    // Workaround for issue #783
-    if (a.getsValue()) {
-      Wt::Dbo::field(a, randomNumber, "randomNumber");
-    } else {
-      Wt::Dbo::field(a, randomNumber, "randomnumber");
-    }
+    Wt::Dbo::field(a, randomNumber, "randomnumber");
   }
 };
 
@@ -64,19 +59,19 @@ namespace Wt {
     template<>
     struct dbo_traits<World> : public dbo_default_traits {
       static const char *versionField() {
-	return 0;
+        return 0;
       }
       static IdType invalidId() {
-	return 0;
+        return 0;
       }
     };
     template<>
     struct dbo_traits<Fortune> : public dbo_default_traits {
       static const char *versionField() {
-	return 0;
+        return 0;
       }
       static IdType invalidId() {
-	return 0;
+        return 0;
       }
     };
   }
@@ -88,11 +83,11 @@ public:
         response.setMimeType("application/json");
         response.addHeader("Server", "Wt");
 
-	MyMessage message;
-	message.message = "Hello, World!";
+        MyMessage message;
+        message.message = "Hello, World!";
 
-	Wt::Dbo::JsonSerializer writer(response.out());
-	writer.serialize(message);
+        Wt::Dbo::JsonSerializer writer(response.out());
+        writer.serialize(message);
     }
 };
 
@@ -116,7 +111,7 @@ struct DbStruct {
   DbStruct() : connection("host=INSERT_DB_HOST_HERE port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world"),
 #endif
       rng(clock()),
-      distribution(1, 10000) {	       
+      distribution(1, 10000) {
     session.setConnection(connection);
     session.mapClass<World>("world");
     session.mapClass<Fortune>("fortune");
@@ -172,8 +167,8 @@ public:
     if (!db) {
       std::lock_guard<std::mutex> lock(mtx);
       if (!db) {
-	db = new DbStruct();
-	dbStruct_.reset(db);
+        db = new DbStruct();
+        dbStruct_.reset(db);
       }
     }
 
@@ -193,9 +188,9 @@ public:
     if (const std::string *queries = request.getParameter("queries")) {
       n = atoi(queries->c_str());
       if (n < 1)
-	n = 1;
+        n = 1;
       else if (n > 500)
-	n = 500;
+        n = 500;
     } else {
       n = 1;
     }
@@ -207,8 +202,8 @@ public:
     if (!db) {
       std::lock_guard<std::mutex> lock(mtx);
       if (!db) {
-	db = new DbStruct();
-	dbStruct_.reset(db);
+        db = new DbStruct();
+        dbStruct_.reset(db);
       }
     }
 
@@ -241,12 +236,12 @@ public:
   virtual bool conditionValue(const std::string& name) const {
     if (name == "next-fortune") {
       if (it_ == fortunes_->end())
-	it_ = fortunes_->begin();
+        it_ = fortunes_->begin();
       else
-	++it_;
+        ++it_;
 
       if (it_ == fortunes_->end())
-	return false;
+        return false;
 
       return true;
     } else
@@ -275,8 +270,8 @@ public:
     if (!db) {
       std::lock_guard<std::mutex> lock(mtx);
       if (!db) {
-	db = new DbStruct();
-	dbStruct_.reset(db);
+        db = new DbStruct();
+        dbStruct_.reset(db);
       }
     }
 
@@ -306,9 +301,9 @@ public:
     if (const std::string *queries = request.getParameter("queries")) {
       n = atoi(queries->c_str());
       if (n < 1)
-	n = 1;
+        n = 1;
       else if (n > 500)
-	n = 500;
+        n = 500;
     } else {
       n = 1;
     }
@@ -320,8 +315,8 @@ public:
     if (!db) {
       std::lock_guard<std::mutex> lock(mtx);
       if (!db) {
-	db = new DbStructNoTransaction();
-	dbStruct_.reset(db);
+        db = new DbStructNoTransaction();
+        dbStruct_.reset(db);
       }
     }
 
@@ -330,16 +325,16 @@ public:
     for (int i = 0; i < n; ++i) {
       bool success = false;
       while (!success) {
-	try {
-	  Wt::Dbo::Transaction transaction(db->session);
-	  Wt::Dbo::ptr<World> world = db->session.load<World>(db->rand());
-	  world.modify()->randomNumber = db->rand();
-	  transaction.commit();
-	  results.push_back(world);
-	  success = true;
-	} catch (Wt::Dbo::Exception& e) {
-	  // Retry
-	}
+        try {
+          Wt::Dbo::Transaction transaction(db->session);
+          Wt::Dbo::ptr<World> world = db->session.load<World>(db->rand());
+          world.modify()->randomNumber = db->rand();
+          transaction.commit();
+          results.push_back(world);
+          success = true;
+        } catch (Wt::Dbo::Exception& e) {
+          // Retry
+        }
       }
     }
 
