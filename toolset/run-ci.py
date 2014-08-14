@@ -3,8 +3,6 @@
 import subprocess
 import os
 import sys
-from benchmark import framework_test
-from benchmark.utils import gather_tests
 import glob
 import json
 import traceback
@@ -13,11 +11,14 @@ import logging
 log = logging.getLogger('run-ci')
 import time
 import threading
+from benchmark import framework_test
+from benchmark.utils import gather_tests
 
 # Needed for various imports
 sys.path.append('.')
 sys.path.append('toolset/setup/linux')
 sys.path.append('toolset/benchmark')
+
 
 class CIRunnner:
   '''
@@ -173,7 +174,7 @@ class CIRunnner:
     #
 
     tests = gather_tests()
-    dirtests = [t for t in tests if t.directory == testdir]
+    dirtests = [t for t in tests if os.path.basename(t.directory) == testdir]
     
     # Travis-CI is linux only
     osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
@@ -185,7 +186,7 @@ class CIRunnner:
                   or t.database.lower() == "mongodb"
                   or t.database.lower() == "none"]
     log.info("Found %s tests (%s for linux, %s for linux and mysql) in directory '%s'", 
-      len(dirtests), len(osvalidtests), len(validtests), testdir)
+      len(dirtests), len(osvalidtests), len(validtests), os.path.basename(testdir))
     if len(validtests) == 0:
       log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
       if len(osvalidtests) != 0:
@@ -198,7 +199,7 @@ class CIRunnner:
       sys.exit(1)
 
     self.names = [t.name for t in validtests]
-    log.info("Choosing to use test %s to verify directory %s", self.names, testdir)
+    log.info("Using tests %s to verify directory %s", self.names, os.path.basename(testdir))
 
   def _should_run(self):
     ''' 
@@ -233,7 +234,10 @@ class CIRunnner:
       return True
   
     # Look for changes relevant to this test
-    if re.search("^%s/" % self.directory, changes, re.M) is None:
+    if (
+         re.search("^%s/" % self.directory, changes, re.M) is None and 
+         re.search("^frameworks/.+?/%s/" % self.directory, changes, re.M) is None
+       ):
       log.info("No changes found for directory %s", self.directory)
       touch('.run-ci.should_not_run')
       return False
