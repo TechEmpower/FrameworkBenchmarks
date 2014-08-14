@@ -36,6 +36,9 @@ get '/db' => sub {
 get '/queries' => sub {
     my $self = shift;
     my $count = $self->param('queries') || 1;
+    if ($count !~ /^\d+$/) {
+        $count = 1;
+    }
     query( $count > 500 ? 500 : $count );
 };
 
