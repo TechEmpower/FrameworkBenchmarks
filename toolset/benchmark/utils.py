@@ -52,7 +52,7 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
 
   
   # Search in both old and new directories
-  fwroot = os.environ['FWROOT']
+  fwroot = setup_util.get_fwroot() 
   config_files = glob.glob("%s/*/benchmark_config" % fwroot) 
   config_files.extend(glob.glob("%s/frameworks/*/*/benchmark_config" % fwroot))
   

@@ -447,8 +447,6 @@ class FrameworkTest:
       profile="$FWROOT/config/benchmark_profile"
 
     # Setup variables for TROOT and IROOT
-    self.troot = self.directory
-    self.iroot = self.install_root
     setup_util.replace_environ(config=profile, 
               command='export TROOT=%s && export IROOT=%s' %
               (self.directory, self.install_root))
@@ -1274,6 +1272,11 @@ class FrameworkTest:
     self.install_root="%s/%s" % (self.fwroot, "installs")
     if benchmarker.install_strategy is 'pertest':
       self.install_root="%s/pertest/%s" % (self.install_root, name)
+
+    # Used in setup.py scripts for consistency with 
+    # the bash environment variables
+    self.troot = self.directory
+    self.iroot = self.install_root
 
     self.__dict__.update(args)
 
