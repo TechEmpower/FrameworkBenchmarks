@@ -66,6 +66,10 @@ class Installer:
       test_rel_install_dir=os.path.relpath(test_install_dir, self.fwroot)
       if not os.path.exists(test_install_dir):
         os.makedirs(test_install_dir)
+      
+      # Move into the proper working directory
+      previousDir = os.getcwd()
+      os.chdir(test_dir)
 
       # Load profile for this installation
       profile="%s/bash_profile.sh" % test_dir
@@ -94,6 +98,9 @@ class Installer:
         (test_rel_dir, test_rel_install_dir, 
           bash_functions_path, test_rel_install_file),
           cwd=test_install_dir)
+
+      # Move back to previous directory
+      os.chdir(previousDir)
 
     self.__run_command("sudo apt-get -y autoremove");    
 
