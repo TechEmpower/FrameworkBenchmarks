@@ -447,10 +447,10 @@ class FrameworkTest:
       profile="$FWROOT/config/benchmark_profile"
 
     # Setup variables for TROOT and IROOT
-    self.troot = "%s/%s" % (self.fwroot, self.directory)
+    self.troot = self.directory
     self.iroot = self.install_root
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=$FWROOT/%s && export IROOT=%s' %
+              command='export TROOT=%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
     # Run the module start (inside parent of TROOT)
@@ -479,7 +479,7 @@ class FrameworkTest:
       profile="$FWROOT/config/benchmark_profile"
     
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=$FWROOT/%s && export IROOT=%s' %
+              command='export TROOT=%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
     # Run the module stop (inside parent of TROOT)
