@@ -19,7 +19,6 @@ sys.path.append('.')
 sys.path.append('toolset/setup/linux')
 sys.path.append('toolset/benchmark')
 
-
 class CIRunnner:
   '''
   Manages running TFB on the Travis Continuous Integration system. 
