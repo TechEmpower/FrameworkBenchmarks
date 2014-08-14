@@ -1,5 +1,5 @@
 greenlet
 cython
--e git://github.com/surfly/gevent.git#egg=gevent
+gevent==1.0.1
 uwsgi
-ujson
+ujson==1.33

@@ -2,6 +2,7 @@
 from functools import partial
 import json
 from operator import attrgetter
+import os
 from random import randint
 import sys
 
@@ -13,6 +14,8 @@ from sqlalchemy import create_engine
 if sys.version_info[0] == 3:
     xrange = range
 
+DBHOST = os.environ.get('TFB_DATABASE_HOST', 'localhost')
+
 try:
     import MySQLdb
     mysql_schema = "mysql:"
@@ -22,7 +25,7 @@ except ImportError:
 # setup
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@localhost:3306/hello_world?charset=utf8'
+app.config['SQLALCHEMY_DATABASE_URI'] = mysql_schema + '//benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % DBHOST
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = SQLAlchemy(app)
 dbraw_engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], connect_args={'autocommit': True}, pool_reset_on_return=None)
@@ -67,6 +70,10 @@ def hello():
 @app.route("/db")
 def get_random_world():
     num_queries = request.args.get("queries", 1, type=int)
+    if num_queries < 1:
+        num_queries = 1
+    if num_queries > 500:
+        num_queries = 500
     worlds = [World.query.get(randint(1, 10000)).serialize
               for _ in xrange(num_queries)]
     return json_response(worlds)
@@ -83,6 +90,10 @@ def get_random_world_single():
 def get_random_world_raw():
     connection = dbraw_engine.connect()
     num_queries = request.args.get("queries", 1, type=int)
+    if num_queries < 1:
+        num_queries = 1
+    if num_queries > 500:
+        num_queries = 500
     worlds = []
     for i in xrange(num_queries):
         wid = randint(1, 10000)
@@ -122,6 +133,8 @@ def get_forutens_raw():
 def updates():
     """Test 5: Database Updates"""
     num_queries = request.args.get('queries', 1, type=int)
+    if num_queries < 1:
+        num_queries = 1
     if num_queries > 500:
         num_queries = 500
 
@@ -143,6 +156,8 @@ def raw_updates():
     connection = dbraw_engine.connect()
     try:
         num_queries = request.args.get('queries', 1, type=int)
+        if num_queries < 1:
+            num_queries = 1
         if num_queries > 500:
             num_queries = 500
 

@@ -3,7 +3,7 @@ import sys
 
 _is_pypy = hasattr(sys, 'pypy_version_info')
 
-# falcon only implements json and plain. Not wait DB.
+# only implements json and plain. Not wait DB.
 workers = multiprocessing.cpu_count()
 bind = "0.0.0.0:8080"
 keepalive = 120

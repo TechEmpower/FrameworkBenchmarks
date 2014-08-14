@@ -5,5 +5,4 @@ SQLAlchemy==0.9.7
 Flask-SQLAlchemy==1.0
 mysqlclient==1.3.1
 gunicorn==19.1
-meinheld==0.5.6
-uwsgi
+tornado==3.2.2
