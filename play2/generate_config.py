@@ -19,7 +19,7 @@ configurations = [
 test_urls = {
   'json': '/json',
   'db': '/db',
-  'query': '/db?queries=',
+  'query': '/queries?queries=',
   'fortune': '/fortunes',
   'update': '/update?queries=',
 }

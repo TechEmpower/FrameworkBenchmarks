@@ -1,6 +1,7 @@
 package controllers
 
 import play.api.Play.current
+import play.api.db.DB
 import play.api.mvc._
 import play.api.libs.json.Json
 import java.util.concurrent._
@@ -14,7 +15,6 @@ import play.core.NamedThreadFactory
 
 object Application extends Controller {
 
-  private val MaxQueriesPerRequest = 20
   private val TestDatabaseRows = 10000
 
   private val partitionCount = current.configuration.getInt("db.default.partitionCount").getOrElse(2)
@@ -29,60 +29,78 @@ object Application extends Controller {
     new NamedThreadFactory("dbEc"))
   private val dbEc = ExecutionContext.fromExecutorService(tpe)
 
-  // A predicate for checking our ability to service database requests is determined by ensuring that the request
-  // queue doesn't fill up beyond a certain threshold. For convenience we use the max number of connections * the max
-  // # of db requests per web request to determine this threshold. It is a rough check as we don't know how many
-  // queries we're going to make or what other threads are running in parallel etc. Nevertheless, the check is
-  // adequate in order to throttle the acceptance of requests to the size of the pool.
-  def isDbAvailable: Boolean = tpe.getQueue.size() < maxConnections * MaxQueriesPerRequest
+  // If the thread-pool used by the database grows too large then our server
+  // is probably struggling, and we should start dropping requests. Set
+  // the max size of our queue something above the number of concurrent
+  // connections that we need to handle.
+  def isDbQueueTooBig: Boolean = tpe.getQueue.size() <= 1024
 
-  def db(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
+  def db = PredicatedAction(isDbQueueTooBig, ServiceUnavailable) {
     Action.async {
-      val random = ThreadLocalRandom.current()
-
-      val worlds = Future.sequence((for {
-        _ <- 1 to queries
-      } yield Future(World.findById(random.nextInt(TestDatabaseRows) + 1))(dbEc)
-        ).toList)
-
-      worlds map {
-        w => Ok(Json.toJson(w))
+      getRandomWorlds(1).map { worlds =>
+        Ok(Json.toJson(worlds.head))
       }
     }
   }
 
-  def fortunes() = PredicatedAction(isDbAvailable, ServiceUnavailable) {
+  def queries(countString: String) = PredicatedAction(isDbQueueTooBig, ServiceUnavailable) {
     Action.async {
-      Future(Fortune.getAll())(dbEc).map { fs =>
-        val fortunes =  Fortune(0.toLong, "Additional fortune added at request time.") +: fs
-        Ok(views.html.fortune(fortunes))
+      val n = parseCount(countString)
+      getRandomWorlds(n).map { worlds =>
+        Ok(Json.toJson(worlds))
       }
     }
   }
 
-  def update(queries: Int) = PredicatedAction(isDbAvailable, ServiceUnavailable) {
+  private def parseCount(s: String): Int = {
+    try {
+      val parsed = java.lang.Integer.parseInt(s, 10)
+      parsed match {
+        case i if i < 1 => 1
+        case i if i > 500 => 500
+        case i => i
+      }
+    } catch {
+      case _: NumberFormatException => 1
+    }
+  }
+
+  private def getRandomWorlds(n: Int): Future[Seq[World]] = Future {
+    val random = ThreadLocalRandom.current()
+    DB.withConnection { implicit connection =>
+      for (_ <- 1 to n) yield {
+        val randomId: Long = random.nextInt(TestDatabaseRows) + 1
+        World.findById(randomId)
+      }
+    }
+  }(dbEc)
+
+  def fortunes() = PredicatedAction(isDbQueueTooBig, ServiceUnavailable) {
     Action.async {
-      val random = ThreadLocalRandom.current()
-
-      val boundsCheckedQueries = queries match {
-        case q if q > 500 => 500
-        case q if q <   1 => 1
-        case _ => queries
+      Future {
+        val fortunes = Fortune.getAll()
+        val extendedFortunes = Fortune(0.toLong, "Additional fortune added at request time.") +: fortunes
+        Ok(views.html.fortune(extendedFortunes))
       }
+    }
+  }
 
-      val worlds = Future.sequence((for {
-        _ <- 1 to boundsCheckedQueries
-      } yield Future {
-          val world = World.findById(random.nextInt(TestDatabaseRows) + 1)
-          val updatedWorld = world.copy(randomNumber = random.nextInt(TestDatabaseRows) + 1)
-          World.updateRandom(updatedWorld)
-          updatedWorld
-        }(dbEc)
-      ).toList)
-
-      worlds.map {
-        w => Ok(Json.toJson(w)).withHeaders("Server" -> "Netty")
-      }
+  def update(countString: String) = PredicatedAction(isDbQueueTooBig, ServiceUnavailable) {
+    Action.async {
+      val n = parseCount(countString)
+      Future {
+        val random = ThreadLocalRandom.current()
+        val worlds = DB.withConnection { implicit connection =>
+          for(_ <- 1 to n) yield {
+            val randomId: Long = random.nextInt(TestDatabaseRows) + 1
+            val world = World.findById(random.nextInt(TestDatabaseRows) + 1)
+            val updatedWorld = world.copy(randomNumber = random.nextInt(10000) + 1)
+            World.updateRandom(updatedWorld)
+            updatedWorld
+          }
+        }
+        Ok(Json.toJson(worlds)).withHeaders("Server" -> "Netty")
+      }(dbEc)
     }
   }
 }

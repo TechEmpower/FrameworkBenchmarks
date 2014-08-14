@@ -35,37 +35,63 @@ public class Application extends Controller {
             new NamedThreadFactory("dbEc"));
     private static final ExecutionContext dbEc = ExecutionContexts.fromExecutorService(tpe);
 
-    // A predicate for checking our ability to service database requests is determined by ensuring that the request
-    // queue doesn't fill up beyond a certain threshold. For convenience we use the max number of connections * the max
-    // # of db requests per web request to determine this threshold. It is a rough check as we don't know how many
-    // queries we're going to make or what other threads are running in parallel etc. Nevertheless, the check is
-    // adequate in order to throttle the acceptance of requests to the size of the pool.
+    // If the thread-pool used by the database grows too large then our server
+    // is probably struggling, and we should start dropping requests. Set
+    // the max size of our queue something above the number of concurrent
+    // connections that we need to handle.
     public static class IsDbAvailable implements Predicate {
         @Override
         public boolean condition() {
-            return tpe.getQueue().size() < maxConnections * MAX_QUERIES_PER_REQUEST;
+            return tpe.getQueue().size() <= 1024;
         }
     }
 
     @Predicated(predicate = IsDbAvailable.class, failed = SERVICE_UNAVAILABLE)
-    public static F.Promise<Result> db(final Integer queries) {
-        final Random random = ThreadLocalRandom.current();
-        final List<F.Promise<? extends World>> promises = new ArrayList<F.Promise<? extends World>>(queries);
-        for (int i = 0; i < queries; ++i) {
-            final F.Promise<World> p = F.Promise.promise(new F.Function0<World>() {
-                @Override
-                public World apply() throws Throwable {
-                    return World.find.byId(Long.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1));
-                }
-            }, dbEc);
-            promises.add(p);
+    public static F.Promise<Result> db() {
+        return getRandomWorlds(1).map(new F.Function<List<World>, Result>() {
+            @Override
+            public Result apply(List<World> worlds) {
+                return ok(Json.toJson(worlds.get(0)));
+            }
+        });
+    }
+
+    @Predicated(predicate = IsDbAvailable.class, failed = SERVICE_UNAVAILABLE)
+    public static F.Promise<Result> queries(final String queryCountString) {
+        int queryCount;
+        try {
+            queryCount = Integer.parseInt(queryCountString, 10);
+        } catch (NumberFormatException e) {
+            queryCount = 1;
         }
-        return F.Promise.sequence(promises).map(new F.Function<List<World>, Result>() {
+        if (queryCount < 1) {
+            queryCount = 1;
+        } else if (queryCount > 500) {
+            queryCount = 500;
+        }
+
+        return getRandomWorlds(queryCount).map(new F.Function<List<World>, Result>() {
             @Override
             public Result apply(List<World> worlds) {
                 return ok(Json.toJson(worlds));
             }
         });
+    }
+
+    private static F.Promise<List<World>> getRandomWorlds(final int n) {
+        return F.Promise.promise(new F.Function0<List<World>>() {
+            @Override
+            public List<World> apply() {
+                Random random = ThreadLocalRandom.current();
+                List<World> worlds = new ArrayList<World>(n);
+                for (int i = 0; i < n; ++i) {
+                    long randomId = random.nextInt(TEST_DATABASE_ROWS) + 1;
+                    World world = World.find.byId(randomId);
+                    worlds.add(world);
+                }
+                return worlds;
+            }
+        }, dbEc);
     }
 
 }

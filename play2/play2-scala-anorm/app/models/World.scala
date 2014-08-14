@@ -1,11 +1,12 @@
 package models
 
-import play.api.db._
-import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
-import play.api.libs.json._
+import java.sql.Connection
+import play.api.db._
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
+import play.api.Play.current
 
 case class World(id: Pk[Long], randomNumber: Long)
 
@@ -35,7 +36,7 @@ object World {
   /**
    * Retrieve a World by id.
    */
-  def findById(id: Long): World = {
+  def findById(id: Long)(implicit connection: Connection): World = {
     DB.withConnection { implicit connection =>
       SQL("SELECT * FROM World WHERE id = {id}").on(
           "id" -> id
@@ -43,7 +44,7 @@ object World {
     }
   }
 
-  def updateRandom(world: World) {
+  def updateRandom(world: World)(implicit connection: Connection) {
     DB.withConnection { implicit connection =>
       SQL("UPDATE World SET randomNumber = {randomNumber} WHERE id = {id}").on(
         "id" -> world.id.get,
