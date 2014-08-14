@@ -458,7 +458,7 @@ class FrameworkTest:
     #       use subprocess's cwd argument already
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
-    logging.warning("Running setup module (cwd=%s)", os.path.dirname(self.troot))
+    logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
     retcode = self.setup_module.start(self, out, err)    
     os.chdir(previousDir)
 
@@ -487,8 +487,7 @@ class FrameworkTest:
     #       use subprocess's cwd argument already
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
-    logging.warning("Running setup module (cwd=%s)", os.path.dirname(self.troot))
-    os.chdir(self.troot)
+    logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
     retcode = self.setup_module.stop(out, err)
     os.chdir(previousDir)
 
@@ -1270,7 +1269,7 @@ class FrameworkTest:
     self.fwroot = benchmarker.fwroot
     
     # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
     
     self.install_root="%s/%s" % (self.fwroot, "installs")
     if benchmarker.install_strategy is 'pertest':
@@ -1280,6 +1279,7 @@ class FrameworkTest:
 
     # ensure directory has __init__.py file so that we can use it as a Python package
     if not os.path.exists(os.path.join(directory, "__init__.py")):
+      logging.warning("Please add an empty __init__.py file to directory %s", directory)
       open(os.path.join(directory, "__init__.py"), 'w').close()
 
     # Import the module (TODO - consider using sys.meta_path)

@@ -53,11 +53,15 @@ class Installer:
     for test_install_file in install_files:
       test_dir = os.path.dirname(test_install_file)
       test_rel_dir = os.path.relpath(test_dir, self.fwroot)
+      logging.debug("Considering install of %s (%s, %s)", test_install_file, test_rel_dir, test_dir)
 
       if test_dir not in dirs:
         continue
-              
-      logging.info("Running installation for directory %s", test_dir)
+
+      logging.info("Running installation for directory %s (cwd=%s)", test_dir, test_dir)
+
+      # Collect the tests in this directory
+      # local_tests = [t for t in tests if t.directory == test_dir]
 
       # Find installation directory 
       #   e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
@@ -77,7 +81,7 @@ class Installer:
         logging.warning("Directory %s does not have a bash_profile"%test_dir)
         profile="$FWROOT/config/benchmark_profile"
       else:
-        logging.info("Loading environment from %s", profile)
+        logging.info("Loading environment from %s (cwd=%s)", profile, test_dir)
       setup_util.replace_environ(config=profile, 
         command='export TROOT=%s && export IROOT=%s' %
         (test_dir, test_install_dir))
@@ -401,7 +405,7 @@ EOF
     self.strategy = install_strategy
     
     # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
     try:
       os.mkdir(self.install_dir)
