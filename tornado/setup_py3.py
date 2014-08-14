@@ -1,21 +1,27 @@
-from os.path import expanduser
-from os import kill
+import os
 import subprocess
 import sys
 import time
 
+CWD = os.path.dirname(__file__)
+
 
 def start(args, logfile, errfile):
-    subprocess.Popen("$PY3 server.py --port=8080 --mongo=%s --logging=error" % (args.database_host,),
-        shell=True, cwd='tornado', stderr=errfile, stdout=logfile)
+    subprocess.Popen(
+        "$PY3 server.py --port=8080 --mongo=%s --logging=error" % (args.database_host,),
+        shell=True, cwd=CWD, stderr=errfile, stdout=logfile)
     return 0
 
+
 def stop(logfile, errfile):
-    for line in subprocess.check_output(["ps", "aux"]).splitlines():
-        if 'server.py --port=8080' in line:
-            pid = int(line.split(None,2)[1])
-            kill(pid, 9)
-    return 0
+    subprocess.call(
+        'pgrep -f server.py',
+        shell=True, stderr=errfile, stdout=logfile)
+    subprocess.call(
+        'pkill -f server.py',
+        shell=True, stderr=errfile, stdout=logfile)
+    time.sleep(1)
+
 
 if __name__ == '__main__':
     class DummyArg:

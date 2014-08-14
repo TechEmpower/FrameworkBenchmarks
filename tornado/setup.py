@@ -6,7 +6,8 @@ import time
 
 
 def start(args, logfile, errfile):
-    subprocess.Popen("$PY2 server.py --port=8080 --mongo=%s --logging=error" % (args.database_host,),
+    subprocess.Popen(
+        "$PY2 server.py --port=8080 --mongo=%s --logging=error" % (args.database_host,),
         shell=True, cwd='tornado', stderr=errfile, stdout=logfile)
     return 0
 

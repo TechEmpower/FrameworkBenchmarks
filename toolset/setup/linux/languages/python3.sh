@@ -10,6 +10,9 @@ cd Python-3.4.1
 ./configure --prefix=${pre}/py3 --disable-shared
 make -j4
 make install
-
 cd ..
-py3/bin/pip3 install -r $FWROOT/config/requirements-py3.txt
+
+if [ ! -f "get-pip.py" ]; then
+fw_get https://bootstrap.pypa.io/get-pip.py -O get-pip.py
+fi
+./py3/bin/python get-pip.py

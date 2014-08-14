@@ -1,12 +1,11 @@
 import multiprocessing
 import subprocess
-import sys
-import setup_util
 import os
 import time
 
-uwsgi = os.path.expanduser('~/FrameworkBenchmarks/installs/py2/bin/uwsgi')
+uwsgi = os.path.expandvars('$PY2_ROOT/bin/uwsgi')
 PROCS = multiprocessing.cpu_count()
+
 
 def start(args, logfile, errfile):
     # --http and --http-processes create http router processes that process the
@@ -23,9 +22,6 @@ def start(args, logfile, errfile):
 
 
 def stop(logfile, errfile):
-    try:
-        subprocess.Popen(uwsgi + ' --stop /tmp/uwsgi.pid', shell=True, cwd="uwsgi", stderr=errfile, stdout=logfile)
-    except OSError:
-        pass
-    time.sleep(1)
+    subprocess.call(uwsgi + ' --stop /tmp/uwsgi.pid', shell=True, cwd="uwsgi", stderr=errfile, stdout=logfile)
+    os.system('killall uwsgi')
     return 0
