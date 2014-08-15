@@ -3,12 +3,12 @@ import sys
 import setup_util
 import os
 
-root = os.getcwd() + "/evhttp-sharp"
-app = root + "/src"
 
 def start(args, logfile, errfile):
   if os.name == 'nt':
     return 1
+  
+  app = args.troot + "/src"
 
   try:
     # build
