@@ -35,7 +35,7 @@ sudo apt-get -y install \
   liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev \
   libjson0-dev libmcrypt-dev libicu-dev gettext \
   libpq-dev mlton cloc dstat \
-  postgresql-server-dev-*
+  postgresql-server-dev-9.3
 
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt-get -y update
