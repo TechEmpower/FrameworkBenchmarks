@@ -75,6 +75,9 @@ class CIRunnner:
       #  - If you're really insane, consider that the last commit in a 
       #    pull request could have been a merge commit. This means that 
       #    the github auto-merge commit could have more than two parents
+      #  - Travis cannot really support rebasing onto an owned branch, the
+      #    commit_range they provide will include commits that are non-existant
+      #    in the repo cloned on the workers. See https://github.com/travis-ci/travis-ci/issues/2668
       #  
       #  - TEST ALL THESE OPTIONS: 
       #      - On a branch you own (e.g. your fork's master)
@@ -222,7 +225,14 @@ class CIRunnner:
 
     log.debug("Using commit range `%s`", self.commit_range)
     log.debug("Running `git log --name-only --pretty=\"format:\" %s`" % self.commit_range)
-    changes = subprocess.check_output("git log --name-only --pretty=\"format:\" %s" % self.commit_range, shell=True)
+    changes = ""
+    try:
+      changes = subprocess.check_output("git log --name-only --pretty=\"format:\" %s" % self.commit_range, shell=True)
+    except subprocess.CalledProcessError, e:
+      log.error("Got errors when using git to detect your changes, assuming that we must run this verification!")
+      log.error("Error was: %s", e.output)
+      log.error("Did you rebase a branch? If so, you can safely disregard this error, it's a Travis limitation")
+      return True
     changes = os.linesep.join([s for s in changes.splitlines() if s]) # drop empty lines
     if len(changes.splitlines()) > 1000:
       log.debug("Change list is >1000 lines, uploading to sprunge.us instead of printing to console")
