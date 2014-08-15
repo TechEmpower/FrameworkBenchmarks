@@ -1286,14 +1286,15 @@ class FrameworkTest:
       open(os.path.join(directory, "__init__.py"), 'w').close()
 
     # Import the module (TODO - consider using sys.meta_path)
+    # Note: You can see the log output if you really want to, but it's a *ton*
     dir_rel_to_fwroot = os.path.relpath(os.path.dirname(directory), self.fwroot)
     if dir_rel_to_fwroot != ".":
       sys.path.append("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
-      logging.debug("Adding %s to import %s.%s", dir_rel_to_fwroot, os.path.basename(directory), self.setup_file)
+      logging.log(0, "Adding %s to import %s.%s", dir_rel_to_fwroot, os.path.basename(directory), self.setup_file)
       self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
       sys.path.remove("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
     else:
-      logging.debug("Importing %s.%s", directory, self.setup_file)
+      logging.log(0, "Importing %s.%s", directory, self.setup_file)
       self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
   ############################################################
   # End __init__
