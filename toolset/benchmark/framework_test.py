@@ -14,6 +14,8 @@ import logging
 import csv
 import shlex
 import math
+from threading import Thread
+from threading import Event
 
 from utils import header
 
@@ -451,6 +453,20 @@ class FrameworkTest:
               command='export TROOT=%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
+    # Because start can take so long, we print a dot to let the user know 
+    # we are working
+    class ProgressPrinterThread(Thread):
+      def __init__(self, event):
+          Thread.__init__(self)
+          self.stopped = event
+
+      def run(self):
+        while not self.stopped.wait(20):
+          sys.stderr.write("Waiting for start to return...\n")
+    stopFlag = Event()
+    thread = ProgressPrinterThread(stopFlag)
+    thread.start()
+
     # Run the module start (inside parent of TROOT)
     #     - we use the parent as a historical accident - a lot of tests
     #       use subprocess's cwd argument already
@@ -459,6 +475,11 @@ class FrameworkTest:
     logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
     retcode = self.setup_module.start(self, out, err)    
     os.chdir(previousDir)
+
+    # Stop the progress printer
+    stopFlag.set()
+
+    logging.info("Start completed, running %s", self.benchmarker.mode)
 
     return retcode
   ############################################################
