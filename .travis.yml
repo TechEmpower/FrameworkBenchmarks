@@ -97,7 +97,8 @@ env:
     - TESTDIR=plain
     - TESTDIR=play1
     - TESTDIR=play1siena
-    - TESTDIR=play2
+    - TESTDIR=play2-java
+    - TESTDIR=play2-scala
     - TESTDIR=play-activate-mysql
     - TESTDIR=play-java-jpa
     - TESTDIR=play-scala-mongodb
