@@ -22,7 +22,7 @@ def start(args, logfile, errfile):
     #subprocess.check_call("sudo a2ensite cake", shell=True)
     subprocess.check_call("sudo chown -R www-data:www-data cakephp", shell=True, stderr=errfile, stdout=logfile)
     #subprocess.check_call("sudo /etc/init.d/apache2 start", shell=True)
-    subprocess.check_call("sudo php-fpm --fpm-config config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("sudo php-fpm --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid", shell=True, stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c $TROOT/deploy/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
