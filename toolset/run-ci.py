@@ -236,7 +236,7 @@ class CIRunnner:
     changes = os.linesep.join([s for s in changes.splitlines() if s]) # drop empty lines
     if len(changes.splitlines()) > 1000:
       log.debug("Change list is >1000 lines, uploading to sprunge.us instead of printing to console")
-      url = subprocess.check_output("echo '%s' | curl -F 'sprunge=<-' http://sprunge.us" % changes , shell=True)
+      url = subprocess.check_output("git log --name-only %s | curl -F 'sprunge=<-' http://sprunge.us" % self.commit_range, shell=True)
       log.debug("Uploaded to %s", url)
     else:
       log.debug("Result:\n%s", changes)
