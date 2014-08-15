@@ -8,10 +8,9 @@ def start(args, logfile, errfile):
   if os.name == 'nt':
     subprocess.check_call('"..\\sbt\\sbt.bat" assembly', shell=True, cwd="spray", stderr=errfile, stdout=logfile)
   else:
-    subprocess.check_call("../sbt/sbt assembly", shell=True, cwd="spray", stderr=errfile, stdout=logfile)
+    subprocess.check_call("$FWROOT/sbt/sbt assembly", shell=True, cwd="spray", stderr=errfile, stdout=logfile)
     
   subprocess.Popen("java -jar target/scala-2.10/spray-benchmark-assembly-1.0.jar", cwd="spray", shell=True, stderr=errfile, stdout=logfile)  
-  time.sleep(5)
   return 0
 
 def stop(logfile, errfile):
