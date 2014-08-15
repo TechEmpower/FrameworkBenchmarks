@@ -12,10 +12,8 @@ def start(args, logfile, errfile):
     subprocess.check_call('"..\\sbt\\sbt.bat" update assembly', shell=True, cwd="lift-stateless", stderr=errfile, stdout=logfile)
     subprocess.Popen(".\\run.bat", shell=True, cwd="lift-stateless", stderr=errfile, stdout=logfile)  
   else:
-    subprocess.check_call("../sbt/sbt update assembly", shell=True, cwd="lift-stateless", stderr=errfile, stdout=logfile)
+    subprocess.check_call("$FWROOT/sbt/sbt update assembly", shell=True, cwd="lift-stateless", stderr=errfile, stdout=logfile)
     subprocess.Popen("./run", shell=True, cwd="lift-stateless", stderr=errfile, stdout=logfile)
-
-  time.sleep(5)
   return 0
 def stop(logfile, errfile):
   if os.name == 'nt':
