@@ -8,7 +8,7 @@ import getpass
 def start(args, logfile, errfile):
   setup_util.replace_text("web-simple/app.pl", "localhost", args.database_host)
   setup_util.replace_text("web-simple/nginx.conf", "USR", getpass.getuser())
-  setup_util.replace_text("web-simple/nginx.conf", "server unix:.*\/FrameworkBenchmarks", "server unix:" + args.fwroot)
+  setup_util.replace_text("web-simple/nginx.conf", "server unix:.*\/FrameworkBenchmarks/web-simple", "server unix:" + args.troot)
 
   try:
     subprocess.Popen("plackup -E production -s Starman --workers=" + str(args.max_threads) + " -l $TROOT/frameworks-benchmark.sock -a $TROOT/app.pl", shell=True, cwd="web-simple", stderr=errfile, stdout=logfile)
