@@ -224,7 +224,12 @@ class CIRunnner:
     log.debug("Running `git log --name-only --pretty=\"format:\" %s`" % self.commit_range)
     changes = subprocess.check_output("git log --name-only --pretty=\"format:\" %s" % self.commit_range, shell=True)
     changes = os.linesep.join([s for s in changes.splitlines() if s]) # drop empty lines
-    log.debug("Result:\n%s", changes)
+    if len(changes.splitlines()) > 1000:
+      log.debug("Change list is >1000 lines, uploading to sprunge.us instead of printing to console")
+      url = subprocess.check_output("git log --name-only %s | curl -F 'sprunge=<-' http://sprunge.us" % self.commit_range, shell=True)
+      log.debug("Uploaded to %s", url)
+    else:
+      log.debug("Result:\n%s", changes)
 
     # Look for changes to core TFB framework code
     if re.search(r'^toolset/', changes, re.M) is not None: 
