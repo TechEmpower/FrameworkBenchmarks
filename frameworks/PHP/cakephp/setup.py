@@ -8,9 +8,9 @@ from os.path import expanduser
 def start(args, logfile, errfile):
   fwroot = args.fwroot
   setup_util.replace_text("cakephp/app/Config/database.php", "'host' => '.*',", "'host' => '" + args.database_host + "',")
-  setup_util.replace_text("cakephp/deploy/cake", "\".*\/FrameworkBenchmarks", "\"%s" % fwroot)
-  setup_util.replace_text("cakephp/deploy/cake", "Directory .*\/FrameworkBenchmarks", "Directory %s" % fwroot)
-  setup_util.replace_text("cakephp/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root %s" % fwroot)
+  setup_util.replace_text("cakephp/deploy/cake", "\".*\/FrameworkBenchmarks/cakephp", "\"%s" % args.troot)
+  setup_util.replace_text("cakephp/deploy/cake", "Directory .*\/FrameworkBenchmarks/cakephp", "Directory %s" % args.troot)
+  setup_util.replace_text("cakephp/deploy/nginx.conf", "root .*\/FrameworkBenchmarks/cakephp", "root %s" % args.troot)
 
   try:
     if os.name == 'nt':
@@ -21,8 +21,12 @@ def start(args, logfile, errfile):
     #subprocess.check_call("sudo cp cake/deploy/cake /etc/apache2/sites-available/", shell=True)
     #subprocess.check_call("sudo a2ensite cake", shell=True)
     subprocess.check_call("sudo chown -R www-data:www-data cakephp", shell=True, stderr=errfile, stdout=logfile)
-    #subprocess.check_call("sudo /etc/init.d/apache2 start", shell=True)
-    subprocess.check_call("sudo php-fpm --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid", shell=True, stderr=errfile, stdout=logfile)
+    
+    # Sudo needed to switch to correct user
+    #   This is a bit tricky as sudo normally resets the PATH for security
+    #   To work around that in this one case, we use the full 
+    #   path to the php-fpm binary we setup in bash_profile.sh
+    subprocess.check_call("sudo $PHP_FPM --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid", shell=True, stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c $TROOT/deploy/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
