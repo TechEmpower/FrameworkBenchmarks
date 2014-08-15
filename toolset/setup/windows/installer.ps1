@@ -24,6 +24,7 @@ $maven_installer_path     = "maven-3/3.0.5/binaries/$maven_installer_file"
 $scala_version            = "2.10.2"
 $play_version             = "2.2.0"
 $play_installer_file      = "play-$play_version.zip"
+$sbt_version              = "0.13.5"
 $mercurial_installer_file = "mercurial-2.6.1-x64.msi"
 $cygwin_installer_file    = "setup-x86_64.exe"
 
@@ -305,6 +306,17 @@ $play_dir = "C:\Java\play"
 [System.IO.Compression.ZipFile]::ExtractToDirectory($play_local, $workdir) | Out-Null
 Move-Item "$workdir\play-$play_version" $play_dir
 $env:Path += ";$play_dir"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+
+# sbt
+$sbt_installer_file = "sbt-$sbt_version.zip"
+$sbt_url = "http://dl.bintray.com/sbt/native-packages/sbt/$sbt_version/$sbt_installer_file"
+$sbt_local = "$workdir\$sbt_installer_file"
+$sbt_dir = "C:\Java\sbt"
+(New-Object System.Net.WebClient).DownloadFile($sbt_url, $sbt_local)
+[System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
+[System.IO.Compression.ZipFile]::ExtractToDirectory($sbt_local, $workdir) | Out-Null
+Move-Item "$workdir\sbt" $sbt_dir
+$env:Path += ";$sbt_dir\bin"; [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
 
 #
 # Firewall
