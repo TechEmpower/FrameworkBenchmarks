@@ -8,7 +8,7 @@ def start(args, logfile, errfile):
   if os.name == 'nt':
     subprocess.check_call('"..\\sbt\\sbt.bat" assembly', shell=True, cwd="curacao", stderr=errfile, stdout=logfile)
   else:
-    subprocess.check_call("../sbt/sbt assembly", shell=True, cwd="curacao", stderr=errfile, stdout=logfile)
+    subprocess.check_call("$FWROOT/sbt/sbt assembly", shell=True, cwd="curacao", stderr=errfile, stdout=logfile)
 
   subprocess.Popen("java -jar dist/curacao-standalone.jar", shell=True, cwd="curacao", stderr=errfile, stdout=logfile)
    
