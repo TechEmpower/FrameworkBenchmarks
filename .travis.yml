@@ -18,16 +18,18 @@ env:
     # we end up starting ~200+ different workers. Seems that ~100 is the limit
     # before their website starts to lag heavily
     #
-    # Here's the bash if you need to update this: 
+    # Here's the bash if you need to update this. Be sure to maintain the 
+    # lines that are currently commented out (these cannot run in Travis)
     #   cd frameworks 
     #   find . -type d -depth 2 | sed 's|./|    - "TESTDIR=|' | sed 's/$/"/g'
-    # Be sure to manually go through and add back in the commented values rows
+    #
+    #  
     - "TESTDIR=C/duda"
     - "TESTDIR=C/onion"
     - "TESTDIR=C#/aspnet"
-    - "TESTDIR=C#/aspnet-stripped"
+    # - "TESTDIR=C#/aspnet-stripped"
     - "TESTDIR=C#/evhttp-sharp"
-    - "TESTDIR=C#/HttpListener"
+    # - "TESTDIR=C#/HttpListener"
     - "TESTDIR=C#/nancy"
     - "TESTDIR=C#/servicestack"
     - "TESTDIR=C++/cpoll_cppsp"
