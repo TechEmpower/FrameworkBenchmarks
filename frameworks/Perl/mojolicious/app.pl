@@ -23,8 +23,8 @@ app->config->{hypnotoad}{workers} = app->config->{workers};
 
 helper mango   => sub { state $mango = Mango->new('mongodb://'. shift->config->{database_host}) };
 helper db      => sub { state $db = shift->mango->db('hello_world') };
-helper world   => sub { shift->db->collection('world') };
-helper fortune => sub { shift->db->collection('fortune') };
+helper world   => sub { state $world = shift->db->collection('world') };
+helper fortune => sub { state $fortune = shift->db->collection('fortune') };
 
 # JSON::XS renderer
 
