@@ -33,6 +33,8 @@ fw_untar wt-3.3.3.tar.gz
 cd wt-3.3.3
 mkdir -p build
 cd build
-cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$IROOT/wt
+cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=${IROOT}/wt -DCONFIGDIR=${IROOT}/wt/etc \
+  -DCMAKE_CXX_COMPILER=$(which g++-4.8)
 make
 make install
