@@ -97,10 +97,10 @@ env:
     - TESTDIR=plain
     - TESTDIR=play1
     - TESTDIR=play1siena
+    - TESTDIR=play2-java
+    - TESTDIR=play2-scala
     - TESTDIR=play-activate-mysql
-    - TESTDIR=play-java
     - TESTDIR=play-java-jpa
-    - TESTDIR=play-scala
     - TESTDIR=play-scala-mongodb
     - TESTDIR=play-slick
     - TESTDIR=pyramid
@@ -144,9 +144,6 @@ env:
     - TESTDIR=yesod
 
 before_install:
-  # Enables $TRAVIS_COMMIT_RANGE for pull requests
-  - time ./toolset/setup/travis-ci/add_commit_range.sh
-  
   # Configure Travis-CI build environment for TFB
   #   e.g. setup databases, users, etc
   - time ./toolset/run-ci.py cisetup $TESTDIR
@@ -164,17 +161,6 @@ install:
 script: 
   # Pick one test in this directory and verify
   - time ./toolset/run-ci.py verify $TESTDIR
-
-notifications:
-  irc:
-    channels:
-      - "chat.freenode.net#techempower-fwbm"
-    template:
-      - "%{repository_slug} branch '%{branch}' %{result} (%{author})"
-      - "Build %{build_number} took %{duration}. See %{build_url}"
-    on_success: always
-    on_failure: always
-    skip_join: true
 
 cache:
   directories:

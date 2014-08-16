@@ -47,25 +47,33 @@ class Installer:
 
     # Locate all installation files
     install_files = glob.glob("%s/*/install.sh" % self.fwroot)
+    install_files.extend(glob.glob("%s/frameworks/*/*/install.sh" % self.fwroot))
 
     # Run install for selected tests
     for test_install_file in install_files:
-      test_dir = os.path.basename(os.path.dirname(test_install_file))
-      test_rel_dir = os.path.relpath(os.path.dirname(test_install_file), self.fwroot)
+      test_dir = os.path.dirname(test_install_file)
+      test_rel_dir = os.path.relpath(test_dir, self.fwroot)
+      logging.debug("Considering install of %s (%s, %s)", test_install_file, test_rel_dir, test_dir)
 
       if test_dir not in dirs:
         continue
-              
-      logging.info("Running installation for directory %s", test_dir)
+
+      logging.info("Running installation for directory %s (cwd=%s)", test_dir, test_dir)
+
+      # Collect the tests in this directory
+      # local_tests = [t for t in tests if t.directory == test_dir]
 
       # Find installation directory 
-      # e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
+      #   e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
       test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
       if self.strategy is 'pertest':
         test_install_dir="%s/pertest/%s" % (test_install_dir, test_dir)
-      test_rel_install_dir=os.path.relpath(test_install_dir, self.fwroot)
       if not os.path.exists(test_install_dir):
         os.makedirs(test_install_dir)
+      
+      # Move into the proper working directory
+      previousDir = os.getcwd()
+      os.chdir(test_dir)
 
       # Load profile for this installation
       profile="%s/bash_profile.sh" % test_dir
@@ -73,27 +81,26 @@ class Installer:
         logging.warning("Directory %s does not have a bash_profile"%test_dir)
         profile="$FWROOT/config/benchmark_profile"
       else:
-        logging.info("Loading environment from %s", profile)
+        logging.info("Loading environment from %s (cwd=%s)", profile, test_dir)
       setup_util.replace_environ(config=profile, 
-        command='export TROOT=$FWROOT%s && export IROOT=$FWROOT%s' %
-        (test_rel_dir, test_rel_install_dir))
+        command='export TROOT=%s && export IROOT=%s' %
+        (test_dir, test_install_dir))
 
-      # Find relative installation file
-      test_rel_install_file = "$FWROOT%s" % setup_util.path_relative_to_root(test_install_file)
-
-      # Then run test installer file
-      # Give all installers a number of variables
-      # FWROOT - Path of the FwBm root
-      # IROOT  - Path of this test's install directory
-      # TROOT  - Path to this test's directory 
+      # Run test installation script
+      #   FWROOT - Path of the FwBm root
+      #   IROOT  - Path of this test's install directory
+      #   TROOT  - Path to this test's directory 
       self.__run_command('''
-        export TROOT=$FWROOT/%s && 
-        export IROOT=$FWROOT/%s && 
-        . %s && 
-        . %s''' % 
-        (test_rel_dir, test_rel_install_dir, 
-          bash_functions_path, test_rel_install_file),
+        export TROOT=%s && 
+        export IROOT=%s && 
+        source %s && 
+        source %s''' % 
+        (test_dir, test_install_dir, 
+          bash_functions_path, test_install_file),
           cwd=test_install_dir)
+
+      # Move back to previous directory
+      os.chdir(previousDir)
 
     self.__run_command("sudo apt-get -y autoremove");    
 
@@ -398,7 +405,7 @@ EOF
     self.strategy = install_strategy
     
     # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
     try:
       os.mkdir(self.install_dir)

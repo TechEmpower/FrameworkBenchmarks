@@ -14,10 +14,18 @@ fw_get () {
 fw_untar() {
   echo "Running 'tar xf $@'...please wait"
   tar xf "$@"
+  echo "Removing compressed tar file"
+  
+  # use -f to avoid printing errors if they gave additional arguments
+  rm -f "$@"
 }
 
 fw_unzip() {
-  unzip "$@"
+  echo "Running 'unzip $@'...please wait"
+  unzip -o -q "$@"
+  echo "Removing compressed zip file"
+  # use -f to avoid printing errors if they gave additional arguments
+  rm -f "$@"
 }
 
 # Was there an error for the current dependency?

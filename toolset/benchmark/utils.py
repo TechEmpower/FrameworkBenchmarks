@@ -50,9 +50,12 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
     
     benchmarker = Benchmarker(defaults)
 
-  # Assume we are running from FrameworkBenchmarks
-  config_files = glob.glob('*/benchmark_config')
-
+  
+  # Search in both old and new directories
+  fwroot = setup_util.get_fwroot() 
+  config_files = glob.glob("%s/*/benchmark_config" % fwroot) 
+  config_files.extend(glob.glob("%s/frameworks/*/*/benchmark_config" % fwroot))
+  
   tests = []
   for config_file_name in config_files:
     config = None
