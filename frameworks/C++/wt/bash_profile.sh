@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export BOOST_ROOT=${IROOT}/boost
+export BOOST_ROOT=/usr/local
 export BOOST_INC=${BOOST_ROOT}/include
 export BOOST_LIB=${BOOST_ROOT}/lib
 
