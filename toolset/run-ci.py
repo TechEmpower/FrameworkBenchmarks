@@ -19,6 +19,8 @@ sys.path.append('.')
 sys.path.append('toolset/setup/linux')
 sys.path.append('toolset/benchmark')
 
+from setup.linux import setup_util
+
 class CIRunnner:
   '''
   Manages running TFB on the Travis Continuous Integration system. 
@@ -176,19 +178,22 @@ class CIRunnner:
     #
 
     tests = gather_tests()
-    dirtests = [t for t in tests if os.path.basename(t.directory) == testdir]
+    self.fwroot = setup_util.get_fwroot()
+    target_dir = self.fwroot + '/frameworks/' + testdir
+    log.debug("Target directory is %s", target_dir)
+    dirtests = [t for t in tests if t.directory == target_dir]
     
     # Travis-CI is linux only
     osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
                   and (t.database_os.lower() == "linux" or t.database_os.lower() == "none")]
     
-    # Travis-CI only has some supported databases
+    # Our Travis-CI only has some databases supported
     validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
                   or t.database.lower() == "postgres"
                   or t.database.lower() == "mongodb"
                   or t.database.lower() == "none"]
-    log.info("Found %s tests (%s for linux, %s for linux and mysql) in directory '%s'", 
-      len(dirtests), len(osvalidtests), len(validtests), os.path.basename(testdir))
+    log.info("Found %s usable tests (%s valid for linux, %s valid for linux and {mysql,postgres,mongodb,none}) in directory '%s'", 
+      len(dirtests), len(osvalidtests), len(validtests), '$FWROOT/frameworks/' + testdir)
     if len(validtests) == 0:
       log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
       if len(osvalidtests) != 0:
@@ -201,7 +206,7 @@ class CIRunnner:
       sys.exit(1)
 
     self.names = [t.name for t in validtests]
-    log.info("Using tests %s to verify directory %s", self.names, os.path.basename(testdir))
+    log.info("Using tests %s to verify directory %s", self.names, '$FWROOT/frameworks/' + testdir)
 
   def _should_run(self):
     ''' 
@@ -248,10 +253,7 @@ class CIRunnner:
       return True
   
     # Look for changes relevant to this test
-    if (
-         re.search("^%s/" % self.directory, changes, re.M) is None and 
-         re.search("^frameworks/.+?/%s/" % self.directory, changes, re.M) is None
-       ):
+    if re.search("^frameworks/%s/" % self.directory, changes, re.M) is None:
       log.info("No changes found for directory %s", self.directory)
       touch('.run-ci.should_not_run')
       return False
