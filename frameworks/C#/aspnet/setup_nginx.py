@@ -7,13 +7,12 @@ def start(args, logfile, errfile):
   if os.name == 'nt':
     return 1
   
-  app = args.fwroot + "/aspnet/src"
-  setup_util.replace_text(app + "/Web.config", "localhost", args.database_host)
+  setup_util.replace_text("aspnet/src/Web.config", "localhost", args.database_host)
 
   try:
     # build
-    subprocess.check_call("rm -rf bin obj", shell=True, cwd=app, stderr=errfile, stdout=logfile)
-    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd=app, stderr=errfile, stdout=logfile)
+    subprocess.check_call("rm -rf bin obj", shell=True, cwd="aspnet", stderr=errfile, stdout=logfile)
+    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="aspnet", stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo chown -R $USER:$USER /usr/local/etc/mono", shell=True, stderr=errfile, stdout=logfile)
     
     # nginx
@@ -23,7 +22,7 @@ def start(args, logfile, errfile):
     
     # fastcgi
     for port in range(9001, 9001 + args.max_threads):
-      subprocess.Popen("MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 /applications=/:. /socket=tcp:127.0.0.1:" + str(port) + " &", shell=True, cwd=app, stderr=errfile, stdout=logfile)
+      subprocess.Popen("MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 /applications=/:. /socket=tcp:127.0.0.1:" + str(port) + " &", shell=True, cwd="aspnet", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -40,7 +39,7 @@ def stop(logfile, errfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if 'mono-server' in line:
+    if 'mono-server' in line and not 'run-ci' in line and not 'run-tests' in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 15)
   return 0
