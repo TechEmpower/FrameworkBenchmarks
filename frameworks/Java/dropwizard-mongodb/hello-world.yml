@@ -1,0 +1,20 @@
+http:
+  port: 9000
+
+  requestLog:
+
+    # Settings for logging to stdout.
+    console:
+      # If true, log requests to stdout.
+      enabled: false
+
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: OFF
+
+  console:
+
+    # If true, write log statements to stdout.
+    enabled: false
+

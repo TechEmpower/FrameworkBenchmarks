@@ -1,0 +1,25 @@
+{
+  "framework": "beego",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "beego",
+      "language": "Go",
+      "orm": "beego ORM",
+      "platform": "Go",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "beego",
+      "notes": "",
+      "versus": "go"
+    }
+  }]
+}

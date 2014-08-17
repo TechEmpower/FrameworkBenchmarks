@@ -1,5 +1,7 @@
 # -*- coding: utf-8
+import re
 from HTMLParser import HTMLParser
+from difflib import unified_diff
 
 class FortuneHTMLParser(HTMLParser):
   body = []
@@ -107,5 +109,13 @@ class FortuneHTMLParser(HTMLParser):
   # is valid against our known "fortune" spec.
   # The parsed data in 'body' is joined on empty strings
   # and checked for equality against our spec.
-  def isValidFortune(self):
-    return self.valid == ''.join(self.body)
+  def isValidFortune(self, out):
+    body = ''.join(self.body)
+    diff = self.valid == body
+    if not diff:
+      out.write("Fortune invalid. Diff following:\n")
+      diff_str = ''.join(unified_diff(self.valid.split(' '), body.split(' '), fromfile='Valid', tofile='Response', n=5))
+      #diff_str = re.sub(r'(?<![ +]) (?![ +])', '', diff_str)
+      diff_str = re.sub(r'  ', ' ', diff_str)
+      out.write(diff_str)
+    return diff

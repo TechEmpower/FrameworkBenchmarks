@@ -1,0 +1,51 @@
+<!--#
+Test 6: Plaintext
+
+This test is an exercise of the request-routing fundamentals only, designed to demonstrate the capacity of
+high-performance platforms in particular. The response payload is still small, meaning good performance is
+still necessary in order to saturate the gigabit Ethernet of the test environment.
+
+Requirements
+
+1.  The recommended URI is /plaintext.
+
+2.  The response content type must be set to text/plain.
+
+3.  The response body must be Hello, World!.
+
+4.  The response headers must include either Content-Length or Transfer-Encoding.
+
+5.  The response headers must include Server and Date.
+
+6.  gzip compression is not permitted.
+
+7.  Server support for HTTP Keep-Alive is strongly encouraged but not required.
+
+8.  Server support for HTTP pipelining is strongly encouraged but not required.
+
+9.  If HTTP Keep-Alive is enabled, no maximum Keep-Alive timeout is specified by this test.
+
+10. The request handler will be exercised at 256, 1024, 4096, and 16,384 concurrency.
+
+11. The request handler will be exercised using GET requests.
+
+Example request:
+
+GET /plaintext HTTP/1.1
+Host: server
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00
+Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Connection: keep-alive
+
+Example response:
+
+HTTP/1.1 200 OK
+Content-Length: 15
+Content-Type: text/plain; charset=UTF-8
+Server: Example
+Date: Wed, 17 Apr 2013 12:00:00 GMT
+Hello, World!
+-->
+Hello, World!

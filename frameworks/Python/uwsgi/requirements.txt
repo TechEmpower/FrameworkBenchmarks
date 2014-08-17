@@ -1,0 +1,5 @@
+greenlet
+cython
+gevent==1.0.1
+uwsgi
+ujson==1.33

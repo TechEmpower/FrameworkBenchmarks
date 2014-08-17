@@ -1,0 +1,28 @@
+{
+  "framework": "phreeze",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/index.php?json",
+      "db_url": "/index.php?db",
+      "query_url": "/index.php?query&queries=",
+      "fortune_url": "/index.php?fortunes",
+      "update_url": "/index.php?updates&queries=",
+      "plaintext_url": "/index.php?plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "phreeze",
+      "language": "PHP",
+      "orm": "Micro",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "phreeze",
+      "notes": "",
+      "versus": "php"
+    }
+  }]
+}

@@ -1,0 +1,8 @@
+requires 'Mojolicious', '>= 5.0';
+requires 'Mango', '>= 1.0';
+requires 'JSON::XS';
+requires 'EV';
+
+recommends 'IO::Socket::IP';
+recommends 'IO::Socket::SSL';
+

@@ -1,1 +1,0 @@
-map requires($_), qw(JSON::XS EV HTTP::Parser::XS Plack DBI DBD::mysql DBI Monoceros Starman);

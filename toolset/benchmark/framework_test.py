@@ -1,4 +1,5 @@
 from benchmark.fortune_html_parser import FortuneHTMLParser
+from setup.linux import setup_util
 
 import importlib
 import os
@@ -9,7 +10,14 @@ import pprint
 import sys
 import traceback
 import json
-import textwrap
+import logging
+import csv
+import shlex
+import math
+from threading import Thread
+from threading import Event
+
+from utils import header
 
 class FrameworkTest:
   ##########################################################################################
@@ -27,29 +35,40 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " {wrk} {headers} -d 5 -c 8 -t 8 \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d 5 -c 8 -t 8 "http://{server_host}:{port}{url}"
+    {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " {wrk} {headers} -d {duration} -c {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo " {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
     echo "---------------------------------------------------------"
     echo ""
-    {wrk} {headers} -d {duration} -c {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
     sleep 5
+
+    echo ""
+    echo "---------------------------------------------------------"
+    echo " Synchronizing time"
+    echo "---------------------------------------------------------"
+    echo ""
+    ntpdate -s pool.ntp.org
+
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Concurrency: $c for {name}"
-      echo " {wrk} {headers} {pipeline} -d {duration} -c $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
+      echo " {wrk} {headers} -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\" -s ~/pipeline.lua -- {pipeline}"
       echo "---------------------------------------------------------"
       echo ""
-      {wrk} {headers} {pipeline} -d {duration} -c "$c" -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      STARTTIME=$(date +"%s")
+      {wrk} {headers} -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url} -s ~/pipeline.lua -- {pipeline}
+      echo "STARTTIME $STARTTIME"
+      echo "ENDTIME $(date +"%s")"
       sleep 2
     done
   """
@@ -59,29 +78,40 @@ class FrameworkTest:
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Primer {name}"
-    echo " wrk {headers} -d 5 -c 8 -t 8 \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d 5 -c 8 -t 8 "http://{server_host}:{port}{url}2"
+    wrk {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}2"
     sleep 5
     
     echo ""
     echo "---------------------------------------------------------"
     echo " Running Warmup {name}"
-    echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
+    echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}2\""
     echo "---------------------------------------------------------"
     echo ""
-    wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
+    wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}2"
     sleep 5
+
+    echo ""
+    echo "---------------------------------------------------------"
+    echo " Synchronizing time"
+    echo "---------------------------------------------------------"
+    echo ""
+    ntpdate -s pool.ntp.org
+
     for c in {interval}
     do
       echo ""
       echo "---------------------------------------------------------"
       echo " Queries: $c for {name}"
-      echo " wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
+      echo " wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}$c\""
       echo "---------------------------------------------------------"
       echo ""
-      wrk {headers} -d {duration} -c {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      STARTTIME=$(date +"%s")
+      wrk {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}$c"
+      echo "STARTTIME $STARTTIME"
+      echo "ENDTIME $(date +"%s")"
       sleep 2
     done
   """
@@ -120,14 +150,19 @@ class FrameworkTest:
   # key with the value "hello, world!" (case-insensitive).
   ############################################################
   def validateJson(self, jsonString, out, err):
+    err_str = ""
+    if jsonString is None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
-      obj = json.loads(jsonString)
-
-      if  obj["message"].lower() == "hello, world!":
-        return True
+      obj = {k.lower(): v for k,v in json.loads(jsonString).iteritems()}
+      if "message" not in obj:
+        err_str += "Expected key 'message' to be in JSON string "
+      if  obj["message"].lower() != "hello, world!":
+        err_str += "Message was '{message}', should have been 'Hello, World!' ".format(message=obj["message"])
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the JSON test: {exception}".format(exception=traceback.format_exc())
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # Validates the jsonString is a JSON object that has an "id"
@@ -135,37 +170,76 @@ class FrameworkTest:
   # integers.
   ############################################################
   def validateDb(self, jsonString, out, err):
+    err_str = ""
+    if jsonString is None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).iteritems()}
 
       # We are allowing the single-object array for the DB 
       # test for now, but will likely remove this later.
       if type(obj) == list:
         obj = obj[0]
 
+      if "id" not in obj or "randomnumber" not in obj:
+        err_str += "Expected keys id and randomNumber to be in JSON string. "
+        return (False, err_str)
+
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
-      if (type(float(obj["id"])) == float and 
-          type(float(obj["randomNumber"])) == float):
-        return True
+      id_ret_val = True
+      try:
+        if not isinstance(float(obj["id"]), float):
+          id_ret_val=False
+      except:
+        id_ret_val=False
+      if not id_ret_val:
+        err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
+      random_num_ret_val = True
+      try:
+        if not isinstance(float(obj["randomnumber"]), float):
+          random_num_ret_val=False
+      except:
+        random_num_ret_val=False
+      if not random_num_ret_val:
+        err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the db test: {exception}".format(exception=traceback.format_exc())
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   def validateDbStrict(self, jsonString, out, err):
+    err_str = ""
+    if jsonString is None or len(jsonString) == 0:
+      err_str += "Empty Response "
+      return (False, err_str)
     try:
-      obj = json.loads(jsonString)
+      obj = {k.lower(): v for k,v in json.loads(jsonString).iteritems()}
 
       # This will error out of the value could not parsed to a
       # float (this will work with ints, but it will turn them
       # into their float equivalent; i.e. "123" => 123.0)
-      if (type(float(obj["id"])) == float and 
-          type(float(obj["randomNumber"])) == float):
-        return True
+      id_ret_val = True
+      try:
+        if not isinstance(float(obj["id"]), float):
+          id_ret_val=False
+      except:
+        id_ret_val=False
+      if not id_ret_val:
+        err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
+      random_num_ret_val = True
+      try:
+        if not isinstance(float(obj["randomnumber"]), float):
+          random_num_ret_val=False
+      except:
+        random_num_ret_val=False
+      if not random_num_ret_val:
+        err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
+      return id_ret_val and random_num_ret_val
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the db test: {exception}".format(exception=traceback.format_exc())
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
 
   ############################################################
@@ -175,17 +249,37 @@ class FrameworkTest:
   # both keys map to integers.
   ############################################################
   def validateQuery(self, jsonString, out, err):
+    err_str = ""
+    if jsonString is None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
-      arr = json.loads(jsonString)
-
-      if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomNumber"])) == float and 
-          type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomNumber"])) == float):
-        return True
+      arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
+      if len(arr) != 2:
+        err_str += "Expected array of length 2. Got length {length}. ".format(length=len(arr))
+      for obj in arr:
+        id_ret_val = True
+        random_num_ret_val = True
+        if "id" not in obj or "randomnumber" not in obj:
+          err_str += "Expected keys id and randomNumber to be in JSON string. "
+          break
+        try:
+          if not isinstance(float(obj["id"]), float):
+            id_ret_val=False
+        except:
+          id_ret_val=False
+        if not id_ret_val:
+          err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
+        try:
+          if not isinstance(float(obj["randomnumber"]), float):
+            random_num_ret_val=False
+        except:
+          random_num_ret_val=False
+        if not random_num_ret_val:
+          err_str += "Expected randomNumber to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the query test: {exception}".format(exception=traceback.format_exc())
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # Validates the jsonString is an array with a length of
@@ -194,23 +288,40 @@ class FrameworkTest:
   # both keys map to integers.
   ############################################################
   def validateQueryOneOrLess(self, jsonString, out, err):
-    try:
-      arr = json.loads(jsonString)
+    err_str = ""
+    if jsonString is None or len(jsonString) == 0:
+      err_str += "Empty Response"
+    else:
+      try:
+        json_load = json.loads(jsonString)
+        if not isinstance(json_load, list):
+          err_str += "Expected JSON array, got {typeObj}. ".format(typeObj=type(json_load))
+        if len(json_load) != 1:
+          err_str += "Expected array of length 1. Got length {length}. ".format(length=len(json_load))
 
-      if len(arr) != 1:
-        return False
+        obj = {k.lower(): v for k,v in json_load[0].iteritems()}
+        id_ret_val = True
+        random_num_ret_val = True
+        if "id" not in obj or "randomnumber" not in obj:
+          err_str += "Expected keys id and randomNumber to be in JSON string. "
+        try:
+          if not isinstance(float(obj["id"]), float):
+            id_ret_val=False
+        except:
+          id_ret_val=False
+        if not id_ret_val:
+          err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
+        try:
+          if not isinstance(float(obj["randomnumber"]), float):
+            random_num_ret_val=False
+        except:
+          random_num_ret_val=False
+        if not random_num_ret_val:
+          err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
+      except:
+        err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=traceback.format_exc())
 
-      for obj in arr:
-        if (type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float or
-            type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float):
-          return False
-      # By here, it's passed validation
-      return True
-    except:
-      pass
-    return False
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # Validates the jsonString is an array with a length of
@@ -219,37 +330,58 @@ class FrameworkTest:
   # both keys map to integers.
   ############################################################
   def validateQueryFiveHundredOrMore(self, jsonString, out, err):
+    err_str = ""
+    if jsonString is None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
-      arr = json.loads(jsonString)
+      arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
 
       if len(arr) != 500:
-        return False
+        err_str += "Expected array of length 500. Got length {length}. ".format(length=len(arr))
+        return (False, err_str)
 
       for obj in arr:
-        if (type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float or
-            type(float(obj["id"])) != float or
-            type(float(obj["randomNumber"])) != float):
-          return False
-      # By here, it's passed validation
-      return True
+        id_ret_val = True
+        random_num_ret_val = True
+        if "id" not in obj or "randomnumber" not in obj:
+          err_str += "Expected keys id and randomNumber to be in JSON string. "
+          break
+        try:
+          if not isinstance(float(obj["id"]), float):
+            id_ret_val=False
+        except:
+          id_ret_val=False
+        if not id_ret_val:
+          err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
+        try:
+          if not isinstance(float(obj["randomnumber"]), float):
+            random_num_ret_val=False
+        except:
+          random_num_ret_val=False
+        if not random_num_ret_val:
+          err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=traceback.format_exc())
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # Parses the given HTML string and asks a FortuneHTMLParser
   # whether the parsed string is a valid fortune return.
   ############################################################
   def validateFortune(self, htmlString, out, err):
+    err_str = ""
+    if htmlString is None or len(htmlString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
       parser = FortuneHTMLParser()
       parser.feed(htmlString)
 
-      return parser.isValidFortune()
+      return parser.isValidFortune(out)
     except:
-      pass
-    return False
+      print "Got exception when trying to validate the fortune test: {exception} ".format(exception=traceback.format_exc())
+    return (False, err_str)
 
   ############################################################
   # Validates the jsonString is an array with a length of
@@ -258,34 +390,98 @@ class FrameworkTest:
   # both keys map to integers.
   ############################################################
   def validateUpdate(self, jsonString, out, err):
+    err_str = ""
+    if jsonString is None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
-      arr = json.loads(jsonString)
-
-      if (type(float(arr[0]["id"])) == float and 
-          type(float(arr[0]["randomNumber"])) == float and 
-          type(float(arr[1]["id"])) == float and 
-          type(float(arr[1]["randomNumber"])) == float):
-        return True
+      arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
+      if len(arr) != 2:
+        err_str += "Expected array of length 2. Got length {length}.\n".format(length=len(arr))
+      for obj in arr:
+        id_ret_val = True
+        random_num_ret_val = True
+        if "id" not in obj or "randomnumber" not in obj:
+          err_str += "Expected keys id and randomNumber to be in JSON string.\n"
+          return (False, err_str)
+        try:
+          if not isinstance(float(obj["id"]), float):
+            id_ret_val=False
+        except:
+          id_ret_val=False
+        if not id_ret_val:
+          err_str += "Expected id to be type int or float, got '{rand}'.\n".format(rand=obj["randomnumber"])
+        try:
+          if not isinstance(float(obj["randomnumber"]), float):
+            random_num_ret_val=False
+        except:
+          random_num_ret_val=False
+        if not random_num_ret_val:
+          err_str += "Expected randomNumber to be type int or float, got '{rand}'.\n".format(rand=obj["randomnumber"])
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the update test: {exception}\n".format(exception=traceback.format_exc())
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   #
   ############################################################
   def validatePlaintext(self, jsonString, out, err):
+    err_str = ""
+    if jsonString is None or len(jsonString) == 0:
+      err_str += "Empty Response"
+      return (False, err_str)
     try:
-      return jsonString.lower().strip() == "hello, world!"
+      if not jsonString.lower().strip() == "hello, world!":
+        err_str += "Expected 'Hello, World!', got '{message}'.\n".format(message=jsonString.strip())
     except:
-      pass
-    return False
+      err_str += "Got exception when trying to validate the plaintext test: {exception}\n".format(exception=traceback.format_exc())
+    return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
   # start(benchmarker)
   # Start the test using it's setup file
   ############################################################
   def start(self, out, err):
-    return self.setup_module.start(self.benchmarker, out, err)
+    # Load profile for this installation
+    profile="%s/bash_profile.sh" % self.directory
+    if not os.path.exists(profile):
+      logging.warning("Directory %s does not have a bash_profile.sh" % self.directory)
+      profile="$FWROOT/config/benchmark_profile"
+
+    # Setup variables for TROOT and IROOT
+    setup_util.replace_environ(config=profile, 
+              command='export TROOT=%s && export IROOT=%s' %
+              (self.directory, self.install_root))
+
+    # Because start can take so long, we print a dot to let the user know 
+    # we are working
+    class ProgressPrinterThread(Thread):
+      def __init__(self, event):
+          Thread.__init__(self)
+          self.stopped = event
+
+      def run(self):
+        while not self.stopped.wait(20):
+          sys.stderr.write("Waiting for start to return...\n")
+    stopFlag = Event()
+    thread = ProgressPrinterThread(stopFlag)
+    thread.start()
+
+    # Run the module start (inside parent of TROOT)
+    #     - we use the parent as a historical accident - a lot of tests
+    #       use subprocess's cwd argument already
+    previousDir = os.getcwd()
+    os.chdir(os.path.dirname(self.troot))
+    logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
+    retcode = self.setup_module.start(self, out, err)    
+    os.chdir(previousDir)
+
+    # Stop the progress printer
+    stopFlag.set()
+
+    logging.info("Start completed, running %s", self.benchmarker.mode)
+
+    return retcode
   ############################################################
   # End start
   ############################################################
@@ -295,7 +491,26 @@ class FrameworkTest:
   # Stops the test using it's setup file
   ############################################################
   def stop(self, out, err):
-    return self.setup_module.stop(out, err)
+    # Load profile for this installation
+    profile="%s/bash_profile.sh" % self.directory
+    if not os.path.exists(profile):
+      logging.warning("Directory %s does not have a bash_profile.sh" % self.directory)
+      profile="$FWROOT/config/benchmark_profile"
+    
+    setup_util.replace_environ(config=profile, 
+              command='export TROOT=%s && export IROOT=%s' %
+              (self.directory, self.install_root))
+
+    # Run the module stop (inside parent of TROOT)
+    #     - we use the parent as a historical accident - a lot of tests
+    #       use subprocess's cwd argument already
+    previousDir = os.getcwd()
+    os.chdir(os.path.dirname(self.troot))
+    logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
+    retcode = self.setup_module.stop(out, err)
+    os.chdir(previousDir)
+
+    return retcode
   ############################################################
   # End stop
   ############################################################
@@ -306,44 +521,43 @@ class FrameworkTest:
   # curl the URL and check for it's return status. 
   # For each url, a flag will be set on this object for whether
   # or not it passed
+  # Returns True if all verifications succeeded
   ############################################################
   def verify_urls(self, out, err):
+    result = True
+
     # JSON
     if self.runTests[self.JSON]:
-      out.write(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING JSON ({url})
-        -----------------------------------------------------
-        """.format(url = self.json_url)))
+      out.write(header("VERIFYING JSON (%s)" % self.json_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.json_url, self.port)
       output = self.__curl_url(url, self.JSON, out, err)
       out.write("VALIDATING JSON ... ")
-      if self.validateJson(output, out, err):
+      ret_tuple = self.validateJson(output, out, err)
+      if ret_tuple[0]:
         self.json_url_passed = True
         out.write("PASS\n\n")
       else:
         self.json_url_passed = False
-        out.write("FAIL\n\n")
-      out.flush
+        out.write("\nFAIL" + ret_tuple[1] + "\n\n")
+        result = False
+      out.flush()
 
     # DB
     if self.runTests[self.DB]:
-      out.write(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING DB ({url})
-        -----------------------------------------------------
-        """.format(url = self.db_url)))
+      out.write(header("VERIFYING DB (%s)" % self.db_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.db_url, self.port)
       output = self.__curl_url(url, self.DB, out, err)
-      if self.validateDb(output, out, err):
+      validate_ret_tuple = self.validateDb(output, out, err)
+      validate_strict_ret_tuple = self.validateDbStrict(output, out, err)
+      if validate_ret_tuple[0]:
         self.db_url_passed = True
       else:
         self.db_url_passed = False
-      if self.validateDbStrict(output, out, err):
+      if validate_strict_ret_tuple:
         self.db_url_warn = False
       else:
         self.db_url_warn = True
@@ -352,38 +566,37 @@ class FrameworkTest:
       if self.db_url_passed:
         out.write("PASS")
         if self.db_url_warn:
-          out.write(" (with warnings)")
+          out.write(" (with warnings) " + validate_strict_ret_tuple[1])
         out.write("\n\n")
       else:
-        out.write("FAIL\n\n")
-      out.flush
+        out.write("\nFAIL" + validate_ret_tuple[1])
+        result = False
+      out.flush()
 
     # Query
     if self.runTests[self.QUERY]:
-      out.write(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING QUERY ({url})
-        -----------------------------------------------------
-        """.format(url=self.query_url+"2")))
+      out.write(header("VERIFYING QUERY (%s)" % self.query_url+"2"))
       out.flush()
 
       url = self.benchmarker.generate_url(self.query_url + "2", self.port)
       output = self.__curl_url(url, self.QUERY, out, err)
-      if self.validateQuery(output, out, err):
+      ret_tuple = self.validateQuery(output, out, err)
+      if ret_tuple[0]:
         self.query_url_passed = True
         out.write(self.query_url + "2 - PASS\n\n")
       else:
         self.query_url_passed = False
-        out.write(self.query_url + "2 - FAIL\n\n")
+        out.write(self.query_url + "2 - FAIL " + ret_tuple[1] + "\n\n")
       out.write("-----------------------------------------------------\n\n")
       out.flush()
 
       self.query_url_warn = False
       url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
       output2 = self.__curl_url(url2, self.QUERY, out, err)
-      if not self.validateQueryOneOrLess(output2, out, err):
+      ret_tuple = self.validateQueryOneOrLess(output2, out, err)
+      if not ret_tuple[0]:
         self.query_url_warn = True
-        out.write(self.query_url + "0 - WARNING\n\n")
+        out.write(self.query_url + "0 - WARNING " + ret_tuple[1] + "\n\n")
       else:
         out.write(self.query_url + "0 - PASS\n\n")
       out.write("-----------------------------------------------------\n\n")
@@ -391,9 +604,10 @@ class FrameworkTest:
 
       url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
       output3 = self.__curl_url(url3, self.QUERY, out, err)
-      if not self.validateQueryOneOrLess(output3, out, err):
+      ret_tuple = self.validateQueryOneOrLess(output3, out, err)
+      if not ret_tuple[0]:
         self.query_url_warn = True
-        out.write(self.query_url + "foo - WARNING\n\n")
+        out.write(self.query_url + "foo - WARNING " + ret_tuple[1] + "\n\n")
       else:
         out.write(self.query_url + "foo - PASS\n\n")
       out.write("-----------------------------------------------------\n\n")
@@ -401,9 +615,10 @@ class FrameworkTest:
 
       url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
       output4 = self.__curl_url(url4, self.QUERY, out, err)
-      if not self.validateQueryFiveHundredOrMore(output4, out, err):
+      ret_tuple = self.validateQueryFiveHundredOrMore(output4, out, err)
+      if not ret_tuple[0]:
         self.query_url_warn = True
-        out.write(self.query_url + "501 - WARNING\n\n")
+        out.write(self.query_url + "501 - WARNING " + ret_tuple[1] + "\n\n")
       else:
         out.write(self.query_url + "501 - PASS\n\n")
       out.write("-----------------------------------------------------\n\n\n")
@@ -416,16 +631,13 @@ class FrameworkTest:
           out.write(" (with warnings)")
         out.write("\n\n")
       else:
-        out.write("FAIL\n\n")
-      out.flush
+        out.write("\nFAIL " + ret_tuple[1] + "\n\n")
+        result = False
+      out.flush()
 
     # Fortune
     if self.runTests[self.FORTUNE]:
-      out.write(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING FORTUNE ({url})
-        -----------------------------------------------------
-        """.format(url = self.fortune_url)))
+      out.write(header("VERIFYING FORTUNE (%s)" % self.fortune_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.fortune_url, self.port)
@@ -436,49 +648,47 @@ class FrameworkTest:
         out.write("PASS\n\n")
       else:
         self.fortune_url_passed = False
-        out.write("FAIL\n\n")
-      out.flush
+        out.write("\nFAIL\n\n")
+        result = False
+      out.flush()
 
     # Update
     if self.runTests[self.UPDATE]:
-      out.write(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING UPDATE ({url})
-        -----------------------------------------------------
-        """.format(url = self.update_url)))
+      out.write(header("VERIFYING UPDATE (%s)" % self.update_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.update_url + "2", self.port)
       output = self.__curl_url(url, self.UPDATE, out, err)
       out.write("VALIDATING UPDATE ... ")
-      if self.validateUpdate(output, out, err):
+      ret_tuple = self.validateUpdate(output, out, err)
+      if ret_tuple[0]:
         self.update_url_passed = True
         out.write("PASS\n\n")
       else:
         self.update_url_passed = False
-        out.write("FAIL\n\n")
-      out.flush
+        out.write("\nFAIL " + ret_tuple[1] + "\n\n")
+        result = False
+      out.flush()
 
     # plaintext
     if self.runTests[self.PLAINTEXT]:
-      out.write(textwrap.dedent("""
-        -----------------------------------------------------
-          VERIFYING PLAINTEXT ({url})
-        -----------------------------------------------------
-        """.format(url = self.plaintext_url)))
+      out.write(header("VERIFYING PLAINTEXT (%s)" % self.plaintext_url))
       out.flush()
 
       url = self.benchmarker.generate_url(self.plaintext_url, self.port)
       output = self.__curl_url(url, self.PLAINTEXT, out, err)
       out.write("VALIDATING PLAINTEXT ... ")
-      if self.validatePlaintext(output, out, err):
+      ret_tuple = self.validatePlaintext(output, out, err)
+      if ret_tuple[0]:
         self.plaintext_url_passed = True
         out.write("PASS\n\n")
       else:
         self.plaintext_url_passed = False
-        out.write("FAIL\n\n")
-      out.flush
+        out.write("\nFAIL\n\n" + ret_tuple[1] + "\n\n")
+        result = False
+      out.flush()
 
+    return result
   ############################################################
   # End verify_urls
   ############################################################
@@ -529,8 +739,11 @@ class FrameworkTest:
             pass
         if self.json_url_passed:
           remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
+          self.__begin_logging(self.JSON)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.JSON)
+        print results
         self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
@@ -554,7 +767,9 @@ class FrameworkTest:
             pass
         if self.db_url_passed:
           remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
+          self.__begin_logging(self.DB)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.DB)
         self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
         out.write( "Complete\n" )
@@ -578,7 +793,9 @@ class FrameworkTest:
             pass
         if self.query_url_passed:
           remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
+          self.__begin_logging(self.QUERY)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.QUERY)
         self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
         out.write( "Complete\n" )
@@ -599,7 +816,9 @@ class FrameworkTest:
             pass
         if self.fortune_url_passed:
           remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
+          self.__begin_logging(self.FORTUNE)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.FORTUNE)
         self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
         out.write( "Complete\n" )
@@ -620,7 +839,9 @@ class FrameworkTest:
             pass
         if self.update_url_passed:
           remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
+          self.__begin_logging(self.UPDATE)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.UPDATE)
         self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
         out.write( "Complete\n" )
@@ -640,8 +861,10 @@ class FrameworkTest:
             # Simply opening the file in write mode should create the empty file.
             pass
         if self.plaintext_url_passed:
-          remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk-pipeline", intervals=[256,1024,4096,16384], pipeline="--pipeline 16")
+          remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk", intervals=[256,1024,4096,16384], pipeline="16")
+          self.__begin_logging(self.PLAINTEXT)
           self.__run_benchmark(remote_script, output_file, err)
+          self.__end_logging()
         results = self.__parse_test(self.PLAINTEXT)
         self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
         out.write( "Complete\n" )
@@ -699,6 +922,7 @@ class FrameworkTest:
     try:
       results = dict()
       results['results'] = []
+      stats = []
       
       if os.path.exists(self.benchmarker.get_output_file(self.name, test_type)):
         with open(self.benchmarker.output_file(self.name, test_type)) as raw_data:
@@ -777,7 +1001,18 @@ class FrameworkTest:
                 m = re.search("Non-2xx or 3xx responses: ([0-9]+)", line)
                 if m != None: 
                   rawData['5xx'] = int(m.group(1))
-              
+              if "STARTTIME" in line:
+                m = re.search("[0-9]+", line)
+                rawData["startTime"] = int(m.group(0))
+              if "ENDTIME" in line:
+                m = re.search("[0-9]+", line)
+                rawData["endTime"] = int(m.group(0))
+                test_stats = self.__parse_stats(test_type, rawData["startTime"], rawData["endTime"], 1)
+                # rawData["averageStats"] = self.__calculate_average_stats(test_stats)
+                stats.append(test_stats)
+      with open(self.benchmarker.stats_file(self.name, test_type) + ".json", "w") as stats_file:
+        json.dump(stats, stats_file)
+
 
       return results
     except IOError:
@@ -891,7 +1126,157 @@ class FrameworkTest:
               self.contains_type(self.DB) or 
               self.contains_type(self.QUERY) or
               self.contains_type(self.UPDATE))
+  ############################################################
+  # __begin_logging
+  # Starts a thread to monitor the resource usage, to be synced with the client's time
+  # TODO: MySQL and InnoDB are possible. Figure out how to implement them.
+  ############################################################
+  def __begin_logging(self, test_name):
+    output_file = "{file_name}".format(file_name=self.benchmarker.get_stats_file(self.name, test_name))
+    dstat_string = "dstat -afilmprsT --aio --fs --ipc --lock --raw --socket --tcp \
+                                      --raw --socket --tcp --udp --unix --vm --disk-util \
+                                      --rpc --rpcd --output {output_file}".format(output_file=output_file)
+    cmd = shlex.split(dstat_string)
+    dev_null = open(os.devnull, "w")
+    self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null)
+  ##############################################################
+  # End __begin_logging
+  ##############################################################
 
+  ##############################################################
+  # Begin __end_logging
+  # Stops the logger thread and blocks until shutdown is complete. 
+  ##############################################################
+  def __end_logging(self):
+    self.subprocess_handle.terminate()
+    self.subprocess_handle.communicate()
+  ##############################################################
+  # End __end_logging
+  ##############################################################
+
+  ##############################################################
+  # Begin __parse_stats
+  # For each test type, process all the statistics, and return a multi-layered dictionary
+  # that has a structure as follows:
+  # (timestamp)
+  # | (main header) - group that the stat is in
+  # | | (sub header) - title of the stat
+  # | | | (stat) - the stat itself, usually a floating point number
+  ##############################################################
+  def __parse_stats(self, test_type, start_time, end_time, interval):
+    stats_dict = dict()
+    stats_file = self.benchmarker.stats_file(self.name, test_type)
+    with open(stats_file) as stats:
+      while(stats.next() != "\n"): # dstat doesn't output a completely compliant CSV file - we need to strip the header
+        pass
+      stats_reader = csv.reader(stats)
+      main_header = stats_reader.next()
+      sub_header = stats_reader.next()
+      time_row = sub_header.index("epoch")
+      int_counter = 0
+      for row in stats_reader:
+        time = float(row[time_row])
+        int_counter+=1
+        if time < start_time:
+          continue
+        elif time > end_time:
+          return stats_dict
+        if int_counter % interval != 0:
+          continue
+        row_dict = dict()
+        for nextheader in main_header:
+          if nextheader != "":
+            row_dict[nextheader] = dict()
+        header = ""
+        for item_num, column in enumerate(row):
+          if(len(main_header[item_num]) != 0):
+            header = main_header[item_num]
+          row_dict[header][sub_header[item_num]] = float(column) # all the stats are numbers, so we want to make sure that they stay that way in json
+        stats_dict[time] = row_dict
+    return stats_dict
+  ##############################################################
+  # End __parse_stats
+  ##############################################################
+
+  def __getattr__(self, name):
+    """For backwards compatibility, we used to pass benchmarker 
+    as the argument to the setup.py files"""
+    return getattr(self.benchmarker, name)
+
+  ##############################################################
+  # Begin __calculate_average_stats
+  # We have a large amount of raw data for the statistics that
+  # may be useful for the stats nerds, but most people care about
+  # a couple of numbers. For now, we're only going to supply:
+  # * Average CPU
+  # * Average Memory
+  # * Total network use
+  # * Total disk use
+  # More may be added in the future. If they are, please update
+  # the above list.
+  # Note: raw_stats is directly from the __parse_stats method.
+  # Recall that this consists of a dictionary of timestamps, 
+  # each of which contain a dictionary of stat categories which
+  # contain a dictionary of stats
+  ##############################################################
+  def __calculate_average_stats(self, raw_stats):
+    raw_stat_collection = dict()
+    
+    for timestamp, time_dict in raw_stats.items():
+      for main_header, sub_headers in time_dict.items():
+        item_to_append = None
+        if 'cpu' in main_header:
+          # We want to take the idl stat and subtract it from 100
+          # to get the time that the CPU is NOT idle.
+          item_to_append = sub_headers['idl'] - 100.0
+        elif main_header == 'memory usage':
+          item_to_append = sub_headers['used']
+        elif 'net' in main_header:
+          # Network stats have two parts - recieve and send. We'll use a tuple of
+          # style (recieve, send)
+          item_to_append = (sub_headers['recv'], sub_headers['send'])
+        elif 'dsk' or 'io' in main_header:
+          # Similar for network, except our tuple looks like (read, write)
+          item_to_append = (sub_headers['read'], sub_headers['writ'])
+        if item_to_append is not None:
+          if main_header not in raw_stat_collection:
+            raw_stat_collection[main_header] = list()
+          raw_stat_collection[main_header].append(item_to_append)
+
+    # Simple function to determine human readable size
+    # http://stackoverflow.com/questions/1094841/reusable-library-to-get-human-readable-version-of-file-size
+    def sizeof_fmt(num):
+      # We'll assume that any number we get is convertable to a float, just in case
+      num = float(num)
+      for x in ['bytes','KB','MB','GB']:
+        if num < 1024.0 and num > -1024.0:
+          return "%3.1f%s" % (num, x)
+        num /= 1024.0
+      return "%3.1f%s" % (num, 'TB')
+
+    # Now we have our raw stats in a readable format - we need to format it for display
+    # We need a floating point sum, so the built in sum doesn't cut it
+    display_stat_collection = dict()
+    for header, values in raw_stat_collection.items():
+      display_stat = None
+      if 'cpu' in header:
+        display_stat = sizeof_fmt(math.fsum(values) / len(values))
+      elif main_header == 'memory usage':
+        display_stat = sizeof_fmt(math.fsum(values) / len(values))
+      elif 'net' in main_header:
+        receive, send = zip(*values) # unzip
+        display_stat = {'receive': sizeof_fmt(math.fsum(receive)), 'send': sizeof_fmt(math.fsum(send))}
+      else: # if 'dsk' or 'io' in header:
+        read, write = zip(*values) # unzip
+        display_stat = {'read': sizeof_fmt(math.fsum(read)), 'write': sizeof_fmt(math.fsum(write))}
+      display_stat_collection[header] = display_stat
+    return display_stat
+  ###########################################################################################
+  # End __calculate_average_stats
+  #########################################################################################
+
+
+          
   ##########################################################################################
   # Constructor
   ##########################################################################################  
@@ -900,13 +1285,38 @@ class FrameworkTest:
     self.directory = directory
     self.benchmarker = benchmarker
     self.runTests = runTests
+    self.fwroot = benchmarker.fwroot
+    
+    # setup logging
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+    
+    self.install_root="%s/%s" % (self.fwroot, "installs")
+    if benchmarker.install_strategy is 'pertest':
+      self.install_root="%s/pertest/%s" % (self.install_root, name)
+
+    # Used in setup.py scripts for consistency with 
+    # the bash environment variables
+    self.troot = self.directory
+    self.iroot = self.install_root
+
     self.__dict__.update(args)
 
     # ensure directory has __init__.py file so that we can use it as a Python package
     if not os.path.exists(os.path.join(directory, "__init__.py")):
+      logging.warning("Please add an empty __init__.py file to directory %s", directory)
       open(os.path.join(directory, "__init__.py"), 'w').close()
 
-    self.setup_module = setup_module = importlib.import_module(directory + '.' + self.setup_file)
+    # Import the module (TODO - consider using sys.meta_path)
+    # Note: You can see the log output if you really want to, but it's a *ton*
+    dir_rel_to_fwroot = os.path.relpath(os.path.dirname(directory), self.fwroot)
+    if dir_rel_to_fwroot != ".":
+      sys.path.append("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
+      logging.log(0, "Adding %s to import %s.%s", dir_rel_to_fwroot, os.path.basename(directory), self.setup_file)
+      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
+      sys.path.remove("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
+    else:
+      logging.log(0, "Importing %s.%s", directory, self.setup_file)
+      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
   ############################################################
   # End __init__
   ############################################################

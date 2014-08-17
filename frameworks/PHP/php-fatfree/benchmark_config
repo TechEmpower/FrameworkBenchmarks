@@ -1,0 +1,48 @@
+{
+  "framework": "fat-free",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db-orm",
+      "query_url": "/db-orm/",
+      "update_url": "/update-orm/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "Fat Free Framework",
+      "language": "PHP",
+      "orm": "Full",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "fat-free",
+      "notes": "",
+      "versus": "php"
+    },
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/db/",
+      "fortune_url": "/fortune",
+      "update_url": "/update-raw/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "Fat Free Framework",
+      "language": "PHP",
+      "orm": "Raw",
+      "platform": "PHP-FPM",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "fat-free",
+      "notes": "",
+      "versus": "php"
+    }
+  }]
+}

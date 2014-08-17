@@ -1,0 +1,18 @@
+
+development:
+  adapter: mysql2
+  database: hello_world
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+  host: localhost
+  pool: 5
+  timeout: 5000
+
+production:
+  adapter: mysql2
+  database: hello_world
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+  host: localhost
+  pool: 256
+  timeout: 5000

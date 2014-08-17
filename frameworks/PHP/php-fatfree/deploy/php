@@ -1,0 +1,9 @@
+<VirtualHost *:8080>
+  Alias /php-fatfree/ "/home/tfb/FrameworkBenchmarks/php-fatfree/"
+  <Directory /home/tfb/FrameworkBenchmarks/php-fatfree/>
+          Options -Indexes FollowSymLinks MultiViews
+          #AllowOverride None
+          Order allow,deny
+          allow from all
+  </Directory>
+</VirtualHost>
