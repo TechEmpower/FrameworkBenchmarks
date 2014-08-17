@@ -52,7 +52,7 @@ get '/fortunes/?db' => sub {
         $sth[1]->execute();
         @objects = @{ $sth[1]->fetchall_arrayref( {} ) };
     }
-    push @objects, { message => "Additional fortune added at request time." };
+    push @objects, { id => 0, message => "Additional fortune added at request time." };
     fortunes( \@objects );
 };
 
@@ -118,8 +118,13 @@ sub fortunes {
     $res .= q[<body><table><tr><th>id</th><th>message</th></tr>];
 
     for my $item ( sort { $a->{message} cmp $b->{message} } @$objects ) {
-        my $id = $item->{id} // 1000;
+        my $id = $item->{id};
         my $message = escape_html( $item->{message} );
+
+        # HTML::Escape encodes apostrophe as &#39; because IE8 does not
+        # support &apos;. We forse an &apos; here in order to pass the
+        # test
+        $message =~ s/&#39/&apos/g;
         $res .= "<tr><td>$id</td><td>$message</td></tr>";
     }
 
