@@ -1,1 +1,1 @@
-#!/bin/bashfw_depends php nginx
+#!/bin/bashfw_depends php composer nginx
