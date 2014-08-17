@@ -6,7 +6,7 @@ import os
 def start(args, logfile, errfile):
   setup_util.replace_text("hhvm/once.php.inc", "host=localhost;", "host=" + args.database_host + ";")
   setup_util.replace_text("hhvm/deploy/config.hdf", "SourceRoot = .*\/FrameworkBenchmarks/hhvm", "SourceRoot = " + args.troot)
-  setup_util.replace_text("hhvm/deploy/config.hdf", "Path = .*\/.hhvm.hhbc", "Path = " + args.troot "/.hhvm.bbhc")
+  setup_util.replace_text("hhvm/deploy/config.hdf", "Path = .*\/.hhvm.hhbc", "Path = " + args.troot + "/.hhvm.bbhc")
   setup_util.replace_text("hhvm/deploy/config.hdf", "PidFile = .*\/hhvm.pid", "PidFile = " + args.troot + "/hhvm.pid")
   setup_util.replace_text("hhvm/deploy/config.hdf", "File = .*\/error.log", "File = " + args.troot + "/error.log")
 
