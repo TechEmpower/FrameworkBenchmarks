@@ -86,7 +86,8 @@ run;
 sub query {
     my ( $db, $count ) = @_;
     $count //= 1;
-    $count = 1 unless $count =~ /^\d+$/;
+    $count = 1 if ( $count !~ /^\d+$/ || $count < 1 );
+    $count = 500 if $count > 500;
     my @response;
     for ( 1 .. $count ) {
         my $id = int rand 10000 + 1;
@@ -96,9 +97,9 @@ sub query {
         }
         else {
             $sth[0]->execute($id);
-            $row = $sth[0]->fetchrow_hashref
+            $row = $sth[0]->fetchrow_hashref;
         }
-        if ( $row ) {
+        if ($row) {
             if ( $count == 1 ) {
                 return { id => $id, randomNumber => $row->{randomNumber} };
             }

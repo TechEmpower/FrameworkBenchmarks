@@ -31,6 +31,7 @@ subtest queries => sub {
         $t->request( GET $uri )->json_cmp($world);
         $t->request( GET "$uri?queries=3" )
           ->json_cmp( [ $world, $world, $world ] );
+        $t->request( GET "$uri?queries=0" )->json_cmp($world);
     }
 };
 
