@@ -22,6 +22,7 @@ def start(args, logfile, errfile):
     
     # fastcgi
     for port in range(9001, 9001 + args.max_threads):
+      # /usr/local/bin/fastcgi-mono-server4
       subprocess.Popen("MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 /applications=/:. /socket=tcp:127.0.0.1:" + str(port) + " &", shell=True, cwd="aspnet", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
