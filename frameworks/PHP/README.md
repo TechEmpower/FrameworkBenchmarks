@@ -9,3 +9,7 @@ always use `sudo <full-path-to-my-binary>`. For example, `cakephp`'s
 to the `php-fpm` binary that `cakephp` wants, and then uses `sudo $PHP_FPM`
 to ensure that the `php-fpm` binary used by sudo is the exact binary 
 desired. 
+
+# Dependency Management
+
+Many PHP apps use https://getcomposer.org/ for dependency management.
