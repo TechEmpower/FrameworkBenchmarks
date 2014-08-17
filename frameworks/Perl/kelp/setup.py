@@ -11,7 +11,7 @@ def start(args, logfile, errfile):
   setup_util.replace_text("kelp/nginx.conf", "server unix:.*\/FrameworkBenchmarks", "server unix:" + args.fwroot)
 
   try:
-    subprocess.Popen("plackup -E production -s Starman --workers=" + str(args.max_threads) + " -l $TROOT/frameworks-benchmark.sock -a $TROOT/app.pl", shell=True, cwd="kelp", stderr=errfile, stdout=logfile)
+    subprocess.Popen("plackup -E deployment -s Starman --workers=" + str(args.max_threads) + " -l $TROOT/frameworks-benchmark.sock -a $TROOT/app.pl", shell=True, cwd="kelp", stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c $TROOT/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
