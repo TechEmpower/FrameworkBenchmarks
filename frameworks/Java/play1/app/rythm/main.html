@@ -1,0 +1,31 @@
+@args String title 
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <meta charset="@_response_encoding">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<link href="/public/bootstrap/3.0/css/bootstrap.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" media="screen" href="/public/css/main.css">
+        @render("moreStyles")
+        
+		<link rel="shortcut icon" type="image/png" href="/public/images/favicon.png">
+		        
+		@render("moreScripts")
+    </head>
+    <body>
+        <div class="container">
+		<h1>@title</h1>
+		<p>
+			@doLayout()
+		</div>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+		<script src="/public/js/jquery-1.10.2.js"></script>
+		<script src="/public/bootstrap/3.0/js/bootstrap.js"></script>
+    </body>
+</html>

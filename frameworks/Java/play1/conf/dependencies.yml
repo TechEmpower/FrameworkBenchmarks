@@ -2,3 +2,22 @@
 
 require:
     - play
+    - com.gelinsoft -> play-rythm 1.0.1-b3
+    - customModules -> transaction-retry 0.9.1
+    
+repositories:
+    - gelinsoft:
+        type: http
+        artifact: "http://gelinsoft.com/play/repo/[module]-[revision].zip"
+        contains:
+            - com.gelinsoft -> *
+#    - playCustomModules:
+#        type: local
+#        artifact: "C:/Users/cran/Dropbox/docs/projects/github/play-transaction-retry"
+#        contains:
+#            - customModules -> *
+    - githubModules:
+        type: http
+        artifact: "https://github.com/PerfectCarl/play-transaction-retry/raw/master/dist/[module]-[revision].zip"
+        contains:
+            - customModules -> *

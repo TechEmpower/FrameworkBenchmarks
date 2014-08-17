@@ -1,0 +1,17 @@
+@extends(main, title:"Index")
+
+Round 8
+<ul>
+	<li><a href="@url(Application.json)">json</a></li>
+	<li><a href="@url(Application.db)">DB</a></li>
+	<li><a href="@url(Application.queries)">queries</a></li>
+	<li><a href="@url(Application.updates)">updates</a></li>
+	<li><a href="@url(Application.fortunes)">fortunes</a></li>
+	<li><a href="@url(Application.plaintext)">plaintext</a></li>
+</ul>
+Extra
+<ul>
+	<li><a href="@url(Extra.setup)">populate db</a></li>
+	<li><a href="@url(Extra.setupTx)">populate db with transaction</a></li>
+	<li><a href="/staticplaintext">static plaintext (served from html file)</a></li>
+</ul>
