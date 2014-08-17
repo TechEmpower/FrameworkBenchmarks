@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends mono
+fw_depends nginx mono
