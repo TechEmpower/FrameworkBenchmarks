@@ -1,6 +1,7 @@
 import subprocess
 import multiprocessing
 import os
+import time
 
 
 CWD = os.path.abspath(os.path.dirname(__file__))
@@ -23,6 +24,7 @@ def start(args, logfile, errfile):
             ' --gevent 1000 --wsgi hello',
             shell=True, cwd='uwsgi',
             stdout=logfile, stderr=errfile)
+        time.sleep(3)
         return 0
     except subprocess.CalledProcessError:
         return 1
@@ -36,6 +38,5 @@ def stop(logfile, errfile):
         uwsgi + ' --stop /tmp/uwsgi.pid',
         shell=True, cwd="uwsgi", stderr=errfile, stdout=logfile)
 
-    os.system('killall nginx')
-    os.system('killall uwsgi')
+    time.sleep(3)
     return 0

@@ -16,3 +16,4 @@ if [ ! -f "get-pip.py" ]; then
 fw_get https://bootstrap.pypa.io/get-pip.py -O get-pip.py
 fi
 ./py2/bin/python get-pip.py
+./py2/bin/pip install virtualenv

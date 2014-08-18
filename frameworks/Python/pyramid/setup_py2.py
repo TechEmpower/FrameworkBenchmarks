@@ -1,18 +1,21 @@
-import subprocess
 import os
+import subprocess
+import time
 
-CWD = os.path.abspath(os.path.dirname(__file__))
+CWD = os.path.dirname(__file__)
 
 
 def start(args, logfile, errfile):
     subprocess.Popen(
         "$PY2_GUNICORN wsgi:app -c gunicorn_conf.py",
-        cwd=CWD, shell=True, stderr=errfile, stdout=logfile)
+        cwd=CWD, stderr=errfile, stdout=logfile, shell=True)
+    time.sleep(3)
     return 0
 
 
 def stop(logfile, errfile):
     subprocess.call(
         "kill `cat gunicorn.pid`",
-        cwd=CWD, shell=True, stderr=errfile, stdout=logfile)
+        cwd=CWD, stderr=errfile, stdout=logfile, shell=True)
+    time.sleep(3)
     return 0

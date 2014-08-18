@@ -6,12 +6,6 @@ Single file test, [app.py](app.py)
 
 Falcon API framework (http://falconframework.org)
 
-### Interpreter
-
-* CPython 2.7
-* CPython 3.3
-* PyPy 2.2
-
 ### Database
 
 (none at the moment)

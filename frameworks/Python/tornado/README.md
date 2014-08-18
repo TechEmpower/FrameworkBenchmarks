@@ -1,6 +1,6 @@
 # Tornado Benchmarking Test
 
-This is the Tornado portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the Tornado portion of a benchmarking test suite comparing a variety of web development platforms.
 
 ### JSON Encoding Test
 
@@ -11,25 +11,14 @@ This is the Tornado portion of a [benchmarking test suite](../) comparing a vari
 
 * [Database teste source Raw](server.py)
 
-## Infrastructure Software Versions
-The tests were run with:
-* [Python 2.7.3](http://www.python.org/)
-* [Tornado 3](https://www.tornadoweb.com/)
-* [Mongodb 2.0.4](https://www.mongodb.org/)
+
+## Infrastructure Software
+
+* CPython 2, 3 and PyPy
+* [Tornado](https://www.tornadoweb.com/)
+* [Mongodb](https://www.mongodb.org/) with [motor](http://motor.readthedocs.org/en/stable/)
+* [PostgreSQL](http://www.postgresql.org/) with [momoko](http://momoko.61924.nl/en/latest/)
 
 
 ## Resources
 * http://www.tornadoweb.org/en/stable/documentation.html
-
-## Test URLs
-### JSON Encoding Test
-
-http://localhost:8080/json
-
-### Data-Store/Database Mapping Test
-
-http://localhost:8080/db
-
-### Variable Query Test
-
-http://localhost:8080/db?queries=2
