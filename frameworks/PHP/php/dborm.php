@@ -38,7 +38,7 @@ for ($i = 0; $i < $query_count; $i++) {
   $world = World::find_by_id($id);
   
   // Store result in array.
-  $arr[] = $world->to_json();
+  $arr[] = $world->to_array();
 }
 
 // Use the PHP standard JSON encoder.
