@@ -7,6 +7,8 @@ fw_depends mono
 git clone git://github.com/mono/xsp
 cd xsp
 git checkout 8a31bc625727594d42f94173768bee5cf8afd0a4
+
+export PKG_CONFIG_PATH=$IROOT/mono-3.2.8-install/lib/pkgconfig
 ./autogen.sh --prefix=$IROOT/mono-3.2.8-install
 make
 make install
