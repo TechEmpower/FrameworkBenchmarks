@@ -7,13 +7,21 @@ RETCODE=$(fw_exists mono.installed)
   mozroots --import --sync;
   return 0; }
 
-fw_get http://download.mono-project.com/sources/mono/mono-3.2.8.tar.bz2 -O mono-3.2.8.tar.bz2
-fw_untar mono-3.2.8.tar.bz2
+sudo apt-get install -y build-essential \
+             autoconf \
+             automake \
+             libtool \
+             zlib1g-dev \
+             pkg-config \
+             gettext
 
-cd mono-3.2.8 
-./configure --disable-nls --prefix=$IROOT/mono-3.2.8-install
-make get-monolite-latest
-make -j4 EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe
+fw_get http://download.mono-project.com/sources/mono/mono-3.6.0.tar.bz2 -O mono-3.6.0.tar.bz2
+fw_untar mono-3.6.0.tar.bz2
+
+cd mono-3.6.0
+./autogen.sh --prefix=$IROOT/mono-3.6.0-install
+# make -j4 EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe
+make -j4
 make install
 
 echo "Installing RootCAs from Mozilla..."; 
