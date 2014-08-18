@@ -15,7 +15,6 @@ import csv
 import sys
 import logging
 import socket
-import glob
 from multiprocessing import Process
 from datetime import datetime
 
@@ -827,7 +826,7 @@ class Benchmarker:
     self.run_test_timeout_seconds = 3600
 
     # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
     
     # setup some additional variables
     if self.database_user == None: self.database_user = self.client_user

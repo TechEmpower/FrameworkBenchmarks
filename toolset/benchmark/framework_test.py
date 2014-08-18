@@ -14,6 +14,8 @@ import logging
 import csv
 import shlex
 import math
+from threading import Thread
+from threading import Event
 
 from utils import header
 
@@ -446,11 +448,40 @@ class FrameworkTest:
       logging.warning("Directory %s does not have a bash_profile.sh" % self.directory)
       profile="$FWROOT/config/benchmark_profile"
 
+    # Setup variables for TROOT and IROOT
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=$FWROOT/%s && export IROOT=%s' %
+              command='export TROOT=%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
-    return self.setup_module.start(self.benchmarker, out, err)
+    # Because start can take so long, we print a dot to let the user know 
+    # we are working
+    class ProgressPrinterThread(Thread):
+      def __init__(self, event):
+          Thread.__init__(self)
+          self.stopped = event
+
+      def run(self):
+        while not self.stopped.wait(20):
+          sys.stderr.write("Waiting for start to return...\n")
+    stopFlag = Event()
+    thread = ProgressPrinterThread(stopFlag)
+    thread.start()
+
+    # Run the module start (inside parent of TROOT)
+    #     - we use the parent as a historical accident - a lot of tests
+    #       use subprocess's cwd argument already
+    previousDir = os.getcwd()
+    os.chdir(os.path.dirname(self.troot))
+    logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
+    retcode = self.setup_module.start(self, out, err)    
+    os.chdir(previousDir)
+
+    # Stop the progress printer
+    stopFlag.set()
+
+    logging.info("Start completed, running %s", self.benchmarker.mode)
+
+    return retcode
   ############################################################
   # End start
   ############################################################
@@ -467,10 +498,19 @@ class FrameworkTest:
       profile="$FWROOT/config/benchmark_profile"
     
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=$FWROOT/%s && export IROOT=%s' %
+              command='export TROOT=%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
-    return self.setup_module.stop(out, err)
+    # Run the module stop (inside parent of TROOT)
+    #     - we use the parent as a historical accident - a lot of tests
+    #       use subprocess's cwd argument already
+    previousDir = os.getcwd()
+    os.chdir(os.path.dirname(self.troot))
+    logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
+    retcode = self.setup_module.stop(out, err)
+    os.chdir(previousDir)
+
+    return retcode
   ############################################################
   # End stop
   ############################################################
@@ -1158,6 +1198,11 @@ class FrameworkTest:
   # End __parse_stats
   ##############################################################
 
+  def __getattr__(self, name):
+    """For backwards compatibility, we used to pass benchmarker 
+    as the argument to the setup.py files"""
+    return getattr(self.benchmarker, name)
+
   ##############################################################
   # Begin __calculate_average_stats
   # We have a large amount of raw data for the statistics that
@@ -1243,19 +1288,35 @@ class FrameworkTest:
     self.fwroot = benchmarker.fwroot
     
     # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
     
     self.install_root="%s/%s" % (self.fwroot, "installs")
     if benchmarker.install_strategy is 'pertest':
       self.install_root="%s/pertest/%s" % (self.install_root, name)
 
+    # Used in setup.py scripts for consistency with 
+    # the bash environment variables
+    self.troot = self.directory
+    self.iroot = self.install_root
+
     self.__dict__.update(args)
 
     # ensure directory has __init__.py file so that we can use it as a Python package
     if not os.path.exists(os.path.join(directory, "__init__.py")):
+      logging.warning("Please add an empty __init__.py file to directory %s", directory)
       open(os.path.join(directory, "__init__.py"), 'w').close()
 
-    self.setup_module = setup_module = importlib.import_module(directory + '.' + self.setup_file)
+    # Import the module (TODO - consider using sys.meta_path)
+    # Note: You can see the log output if you really want to, but it's a *ton*
+    dir_rel_to_fwroot = os.path.relpath(os.path.dirname(directory), self.fwroot)
+    if dir_rel_to_fwroot != ".":
+      sys.path.append("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
+      logging.log(0, "Adding %s to import %s.%s", dir_rel_to_fwroot, os.path.basename(directory), self.setup_file)
+      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
+      sys.path.remove("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
+    else:
+      logging.log(0, "Importing %s.%s", directory, self.setup_file)
+      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
   ############################################################
   # End __init__
   ############################################################

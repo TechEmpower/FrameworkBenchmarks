@@ -1,0 +1,4 @@
+ujson==1.33
+uwsgi
+gunicorn==19.1
+meinheld==0.5.6
