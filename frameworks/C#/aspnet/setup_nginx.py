@@ -12,8 +12,8 @@ def start(args, logfile, errfile):
   try:
     # build
     subprocess.check_call("rm -rf bin obj", shell=True, cwd="aspnet", stderr=errfile, stdout=logfile)
-    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="aspnet", stderr=errfile, stdout=logfile)
-    subprocess.check_call("sudo chown -R $USER:$USER /usr/local/etc/mono", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("xbuild /p:Configuration=Release", shell=True, cwd="aspnet/src", stderr=errfile, stdout=logfile)
+    subprocess.check_call("sudo chown -R $USER:$USER $MONO_ROOT", shell=True, stderr=errfile, stdout=logfile)
     
     # nginx
     workers = 'worker_processes ' + str(args.max_threads) + ';'
