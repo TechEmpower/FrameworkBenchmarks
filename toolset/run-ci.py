@@ -253,7 +253,7 @@ class CIRunnner:
       return True
   
     # Look for changes relevant to this test
-    if re.search("^frameworks/%s/" % self.directory, changes, re.M) is None:
+    if re.search("^frameworks/%s/" % re.escape(self.directory), changes, re.M) is None:
       log.info("No changes found for directory %s", self.directory)
       touch('.run-ci.should_not_run')
       return False
