@@ -29,11 +29,11 @@ def replace_environ(config=None, root=None, print_result=False, command='true'):
     
         # Clean up our current environment, preserving some important items
         mini_environ = {}
-        for envname in ['HOME', 'PATH', 'USER', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'FWROOT']:
+        for envname in ['HOME', 'PATH', 'USER', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'FWROOT', 'TRAVIS']:
           if envname in os.environ:
             mini_environ[envname] = os.environ[envname]
         for key in os.environ:
-          if key.startswith('TFB_'):    # Any TFB_ variables are preserved
+          if key.startswith(('TFB_', 'TRAVIS_')):    # Any TFB_* and TRAVIS_* variables are preserved
             mini_environ[key] = os.environ[key]
         os.environ.clear()
 
