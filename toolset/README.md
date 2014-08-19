@@ -39,6 +39,11 @@ the set of *jobs* that should be run for each *build*. Our
 *build matrix* lists each framework directory, which causes 
 each *build* to have one *job* for each listed directory. 
 
+If any *job* is *canceled*, then the *build* is marked *canceled*.
+If any *job* returns *error*, then the *build* is marked *errored*.
+If any *job* returns *fail*, then the *build* is marked *failed*.
+The *build* is marked *pass* only if every *job* returns *pass*. 
+
 ### Travis Limits
 
 [Travis-ci.org](https://travis-ci.org/) is a free 
@@ -68,18 +73,55 @@ this limit, but most do not
 
 ### Dealing with Travis' Limits
 
-**Max Concurrent Jobs**: Basically, we cancel any unneeded jobs. Practically,
-canceling is entirely handled by `run-ci.py`. If needed, the TechEmpower team
-can manually cancel *jobs* (or *builds*) directly from the Travis website. 
-Every *build* queues every *job*, there is no way to not queue *jobs*
-we don't need, so the only solution is to cancel the unneeded jobs. 
+**Max Concurrent Jobs**: Basically, we rapidly return `pass` for any unneeded 
+jobs. Practically this is entirely handled by `run-ci.py`. If needed, the 
+TechEmpower team can manually `cancel` *jobs* (or *builds*) directly from the 
+Travis website. Every *build* queues every *job*, there is no way to not queue *jobs*
+we don't need, so the only solution is to rapidly quit unneeded jobs. We previously
+used a solution that would automatically cancel *jobs*, but if any job is canceled the
+entire *build* is canceled. 
 
-**Min Console Output**: Some frameworks run part of their installation 
-inside of their `setup.py`'s start method, meaning that all output goes into 
-the `out.txt` file for that test. The TFB toolset needs to be updated to 
-occasionally trigger some output, although this is a non-trivial change for a 
-few reasons. If your framework is erroring in this way, consider attempting to 
-run your installation from the `install.sh` file, which avoids this issue. 
+**Max Console Output**: Some jobs do lots of compiling, and Travis-CI will
+abort the job if there is too much output. At the moment this is very 
+rare (e.g. only wt, which downloads+compiles both mono and wt, has experienced
+this issue). The only solution is to reduce the amount of output you generate. 
+
+### Tricks and Tips for Travis-CI
+
+**Use your own Travis Queue**: We cannot stress this enough. Your own queue will 
+help you work 10x faster, and it's easy to setup. Just go to travis-ci.org, click 
+log in with Github, and enable Travis-CI on your fork of TFB. 
+
+**Branch, and remove Lines from `.travis.yml`**: Do your work on a git branch, and the 
+first commit can modify `.travis.yml` to remove any lines that you are not interested
+in. Be sure to name this commit something like `DO NOT MERGE` to remind you that you
+should do a `git rebase --interactive` and delete that commit before you do a pull 
+request. 
+
+**Use the Travis-CI Command Line to Quickly Cancel Jobs**: Travis has a ruby command line. 
+After you install it and log into your Github account, you can do something like this: 
+
+    $ for i in {21..124}
+    do
+      travis cancel -r hamiltont/FrameworkBenchmarks 322.$i &
+    done
+
+Note the fork `&` at the end - the Travis command line client seems to have very high
+latency, so doing this loop can take 30 minutes to complete. If you fork each job then
+the loop will complete in seconds and the jobs will still be canceled properly. 
+
+**How to see log files on Travis-CI**: You may occasionally need to see a log file. 
+You can use your setup.py's stop function to cat the file to stdout. 
+    
+    subprocess.call('cat <my-log-file>', shell=True, stdout=logfile)
+
+This may cause issues with the Travis-CI **Max Console Output** limitation. An alternative
+is to upload the file to an online service like sprunge: 
+
+    subprocess.call("cat <my-log-file> | curl -F 'sprunge=<-' http://sprunge.us", shell=True, stdout=logfile)
+
+If you need to use these solutions, please be sure to remove them (or comment them out)
+before you send in a pull request.
 
 ### Advanced Travis Details
 
@@ -98,37 +140,15 @@ framework has been modified then the entire build will complete within
 *However, if anything in the `toolset/` directory has been modified, then
 every framework is affected and no jobs will be cancelled!* We call this 
 a **full verification**, and the entire build will complete within 4-5 hours. 
+Once the build completes, Travis stops listing the wall time of 5 hours and 
+instead uses the CPU time of ~20 hours total. 
 
-In order to cancel Travis *jobs*, `run-ci.py` uses the [Travis Command Line
-Interface](https://github.com/travis-ci/travis.rb). Only TechEmpower admins
-have permission to cancel *jobs* on 
-[TechEmpower's Travis Account](https://travis-ci.org/TechEmpower/FrameworkBenchmarks/builds/31771076), 
-so `run-ci.py` uses an authentication token to log into Github (and therefore
-Travis) as a TechEmpower employee, and then cancels *jobs* as needed. 
+#### Partial vs Full Verification
 
-#### The 'jobcleaner' 
-
-Because we have so many *jobs*, launching *workers* just to have them be 
-cancelled can take quite a while. `jobcleaner` is a special job listed first
-in the *build matrix*. `run-ci.py` notices the `jobcleaner` keyword and 
-attempts to cancel any unnecessary *jobs* before the *workers* are even 
-launched. In practice this is quite effective - without `jobcleaner` a 
-partial verification takes >1 hour, but with `jobcleaner` a partial 
-verification can take as little as 10 minutes.  
-
-This takes advantage of the fact that Travis currently runs the 
-*build matrix* roughly top to bottom, so `jobcleaner` is triggered early 
-in the build. 
-
-#### Pull Requests vs Commits To Master
-
-When verifying code from a pull request, `run-ci.py` cannot cancel any 
-builds due to a Travis [security restriction](http://docs.travis-ci.com/user/pull-requests/#Security-Restrictions-when-testing-Pull-Requests) 
-([more details](https://github.com/TechEmpower/FrameworkBenchmarks/issues/951)). 
-
-Therefore, `run-ci.py` returns `pass` for any *job* that it would normally 
-cancel. *Jobs* that would not be canceled are run as normal. The final 
-status for the verification of the pull request will therefore depend on the 
+`run-ci.py` returns `pass` for any *job* that we do not need to test. If any 
+job is passed for this reason, that is a partial verification. Each job is 
+examined separately, and *jobs* that should be tested are run as normal. 
+The final status for the verification of the pull request will therefore depend on the 
 exit status of the *jobs* that are run as normal - if they return `pass` then
 the entire build will `pass`, and similarly for fail. 
 
@@ -142,9 +162,3 @@ A Travis account specific to your fork of TFB is highly valuable, as you have
 personal limits on *workers* and can therefore see results from Travis much 
 more quickly than you could when the Travis account for TechEmpower has a 
 full queue awaiting verification. 
-
-You will need to modify the `.travis.yml` file to contain your own (encrypted)
-`GH_TOKEN` environment variable. Unfortunately there is no way to externalize 
-encrypted variables, and therefore you will have to manually ensure that you 
-don't include your changes to `.travis.yml` in any pull request or commit to 
-master!
