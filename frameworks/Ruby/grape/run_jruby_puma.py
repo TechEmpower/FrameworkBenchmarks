@@ -8,7 +8,7 @@ def start(args, logfile, errfile):
     Command("rvm jruby-1.7.8 do bundle exec puma -b tcp://0.0.0.0:8080 -e production", False)
   ]
 
-  return helper.run(commands, logfile, errfile)
+  return helper.run(commands, logfile, errfile, args.troot)
 
 def stop(logfile, errfile):
   return helper.stop('puma', logfile, errfile)

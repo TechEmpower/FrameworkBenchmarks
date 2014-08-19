@@ -8,11 +8,10 @@ Command = namedtuple('Command', ['command', 'wait_for_exit'])
 
 def set_database_host(args):
   database_host = args.database_host or 'localhost'
-  database_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/database.yml')
+  database_file = os.path.join(args.troot, 'config', 'database.yml')
   setup_util.replace_text(database_file, "  host:.*", "  host: " + database_host)
 
-def run(commands, logfile, errfile):
-  cwd = os.path.expanduser(os.path.basename(os.path.normpath(os.path.dirname(os.path.realpath(__file__)))))
+def run(commands, logfile, errfile, cwd):
   try:
     for command in commands:      
       if command.wait_for_exit:
