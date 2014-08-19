@@ -17,6 +17,7 @@
                 <property name="hibernate.hbm2ddl.auto" value="create" />
                 <property name="hibernate.show_sql" value="false" />
                 <property name="hibernate.format_sql" value="false" />
+                <property name="hibernate.jdbc.batch_size" value="100" />
 
                 <!-- Connection Pooling settings -->
                 <property name="hibernate.connection.provider_class"
@@ -41,7 +42,7 @@
 
 			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.format_sql" value="false" />
-
+                        <property name="hibernate.jdbc.batch_size" value="100" />
 			<!-- Connection Pooling settings -->
 			<property name="hibernate.connection.provider_class"
 				value="org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider" />
