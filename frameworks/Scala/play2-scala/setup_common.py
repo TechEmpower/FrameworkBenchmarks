@@ -1,3 +1,6 @@
+# This file and frameworks/Java/play2-java/setup_common.py are
+# duplicates and should be kept in sync.
+
 import os, setup_util, signal, subprocess
 
 # Create start and stop functions for the Play project with the given dir

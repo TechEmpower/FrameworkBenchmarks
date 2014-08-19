@@ -1,77 +1,105 @@
 #!/usr/bin/env perl
+
 use Kelp::Less;
+use HTML::Escape 'escape_html';
+use MongoDB;
 use DBI;
+use utf8;
 
-my $dsn  = "dbi:mysql:database=hello_world;host=localhost;port=3306";
-my $dbh  = DBI->connect( $dsn, 'benchmarkdbuser', 'benchmarkdbpass', {} );
-my $sth  = $dbh->prepare("SELECT * FROM World WHERE id = ?");
-my $sth1 = $dbh->prepare("SELECT * FROM Fortune");
-my $sth2 = $dbh->prepare("UPDATE World SET randomNumber = ? WHERE id = ?");
+module 'JSON::XS';
 
-get '/populate' => sub {
-    $dbh->do("DELETE FROM World");
-    $dbh->do("DELETE FROM Fortune");
-    srand;
+my $mongo   = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
+my $mdb     = $mongo->get_database('hello_world');
+my $world   = $mdb->get_collection('World');
+my $fortune = $mdb->get_collection('Fortune');
 
-    # Add some random numbers
-    my @rand = map {'(' . $_ . ',' . int(rand(10_000)) . ')'} (1 .. 10_000);
-    $dbh->do(q[INSERT INTO World (id, randomNumber) VALUES ] . join(',', @rand));
+my $dbh = DBI->connect(
+    "dbi:mysql:database=hello_world;host=localhost;port=3306",
+    'benchmarkdbuser',
+    'benchmarkdbpass',
+    { RaiseError => 0, PrintError => 0, mysql_enable_utf8 => 1 }
+);
 
-    # Add some fortunes
-    my @fortunes = map { '("' . 'x' x (int(rand(20)) + 1) . '")' } (1 .. 30);
-    $dbh->do(q[INSERT INTO Fortune (message) VALUES ] . join(',', @fortunes));
-
-    "OK";
-};
+my @sth = map { $dbh->prepare($_) } (
+    "SELECT * FROM World WHERE id = ?",
+    "SELECT * FROM Fortune",
+    "UPDATE World SET randomNumber = ? WHERE id = ?",
+);
 
 get '/json' => sub {
-    my $self = shift;
     { message => 'Hello, World!' };
 };
 
-get '/db' => sub {
-    query(1);
+get '/db/?db' => sub {
+    my ( $self, $db ) = @_;
+    query( $db // 'mongo', 1 );
 };
 
-get '/queries' => sub {
-    my $self = shift;
-    my $count = $self->param('queries') || 1;
-    query( $count > 500 ? 500 : $count );
+get '/queries/?db' => sub {
+    my ( $self, $db ) = @_;
+    query( $db // 'mongo', $self->param('queries') );
 };
 
-get '/fortunes' => sub {
-    my $self = shift;
-    $sth1->execute();
-    my $fortunes = $sth1->fetchall_arrayref({});
-    $self->template( 'fortunes', { fortunes => $fortunes } );
+get '/fortunes/?db' => sub {
+    my ( $self, $db ) = @_;
+    $db //= 'mongo';
+    my @objects;
+    if ( $db eq 'mongo' ) {
+        my $cursor = $fortune->query( {} );
+        @objects = $cursor->all;
+    }
+    else {
+        $sth[1]->execute();
+        @objects = @{ $sth[1]->fetchall_arrayref( {} ) };
+    }
+    push @objects, { id => 0, message => "Additional fortune added at request time." };
+    fortunes( \@objects );
 };
 
-get '/updates' => sub {
-    my $self  = shift;
-    my $count = $self->param('queries');
-    my $arr   = query( $count > 500 ? 500 : $count );
+get '/update/?db' => sub {
+    my ( $self, $db ) = @_;
+    $db //= 'mongo';
+
+    my $arr = query( $db, $self->param('queries') );
+    $arr = [$arr] unless ref($arr) eq 'ARRAY';
     for my $row (@$arr) {
         $row->{randomNumber} = int( rand(10_000) ) + 1;
-        $sth2->execute( $row->{randomNumber}, $row->{id} );
+        if ( $db eq 'mongo' ) {
+            $world->update( { _id => $row->{id} },
+                { randomNumber => $row->{randomNumber} } );
+        }
+        else {
+            $row->{randomNumber} = int( rand(10_000) ) + 1;
+            $sth[2]->execute( $row->{randomNumber}, $row->{id} );
+        }
     }
 
-    $arr;
+    return $arr;
 };
 
 get '/plaintext' => sub {
-    my $self = shift;
-    $self->res->text->render('Hello, World!');
+    shift->res->text->render('Hello, World!');
 };
 
 run;
 
 sub query {
-    my $count = shift;
+    my ( $db, $count ) = @_;
+    $count //= 1;
+    $count = 1 if ( $count !~ /^\d+$/ || $count < 1 );
+    $count = 500 if $count > 500;
     my @response;
     for ( 1 .. $count ) {
         my $id = int rand 10000 + 1;
-        $sth->execute($id);
-        if ( my $row = $sth->fetchrow_hashref ) {
+        my $row;
+        if ( $db eq 'mongo' ) {
+            $row = $world->find_one( { _id => $id } );
+        }
+        else {
+            $sth[0]->execute($id);
+            $row = $sth[0]->fetchrow_hashref;
+        }
+        if ($row) {
             if ( $count == 1 ) {
                 return { id => $id, randomNumber => $row->{randomNumber} };
             }
@@ -82,4 +110,24 @@ sub query {
         }
     }
     return \@response;
+}
+
+sub fortunes {
+    my ($objects) = @_;
+    my $res = q[<!DOCTYPE html><html><head><title>Fortunes</title></head>];
+    $res .= q[<body><table><tr><th>id</th><th>message</th></tr>];
+
+    for my $item ( sort { $a->{message} cmp $b->{message} } @$objects ) {
+        my $id = $item->{id};
+        my $message = escape_html( $item->{message} );
+
+        # HTML::Escape encodes apostrophe as &#39; because IE8 does not
+        # support &apos;. We forse an &apos; here in order to pass the
+        # test
+        $message =~ s/&#39/&apos/g;
+        $res .= "<tr><td>$id</td><td>$message</td></tr>";
+    }
+
+    $res .= q[</table></body></html>];
+    return $res;
 }
