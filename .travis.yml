@@ -68,7 +68,6 @@ env:
     - "TESTDIR=Java/grizzly-jersey"
     - "TESTDIR=Java/jetty-servlet"
     - "TESTDIR=Java/netty"
-    - "TESTDIR=Java/ninja-resin"
     - "TESTDIR=Java/ninja-standalone"
     - "TESTDIR=Java/play-java-jpa"
     - "TESTDIR=Java/play1"
