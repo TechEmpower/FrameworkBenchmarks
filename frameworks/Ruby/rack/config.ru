@@ -1,19 +1,14 @@
-require 'json'
+Bundler.require :default
+require 'erb'
 
-app = lambda do |env| 
-  if env['PATH_INFO'] == "/plaintext"
-    [
-      200,
-      { 'Content-Type' => 'text/plain' },
-      ["Hello, World!"]
-    ]
-  else
-    [
-      200,
-      { 'Content-Type' => 'application/json' },
-      [{:message => "Hello, World!"}.to_json]
-    ]
-  end
-end 
-run app 
+$: << "."
 
+DB_CONFIG = YAML.load(ERB.new(File.read("config/database.yml")).result)
+
+if RUBY_PLATFORM == 'java'
+ require 'app/jruby_impl'
+ run App::JRuby
+else
+ require 'app/ruby_impl'
+ run App::Ruby
+end
