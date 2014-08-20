@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends openresty nginx
+fw_depends lua nginx openresty 
