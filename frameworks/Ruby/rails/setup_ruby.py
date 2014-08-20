@@ -14,7 +14,7 @@ def start(args, logfile, errfile):
     subprocess.check_call("cp Gemfile-ruby Gemfile", shell=True, cwd="rails", stderr=errfile, stdout=logfile)
     subprocess.check_call("cp Gemfile-ruby.lock Gemfile.lock", shell=True, cwd="rails", stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c $TROOT/config/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
-    subprocess.Popen("rvm ruby-2.0.0-p0 do bundle exec unicorn_rails -E production -c $TROOT/config/unicorn.rb", shell=True, cwd="rails", stderr=errfile, stdout=logfile)
+    subprocess.Popen("rvm 2.1.2 do bundle exec unicorn_rails -E production -c $TROOT/config/unicorn.rb", shell=True, cwd="rails", stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1

@@ -12,12 +12,12 @@ This is the Ruby on Rails portion of a [benchmarking test suite](../) comparing 
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Ruby 2.0.0-p0](http://www.ruby-lang.org/)
-* [JRuby 1.7.8](http://jruby.org/)
-* [Rails 3.2.18](http://rubyonrails.org/)
+* [Ruby 2.1.2](http://www.ruby-lang.org/)
+* [JRuby 1.7.13](http://jruby.org/)
+* [Rails 4.1.x](http://rubyonrails.org/)
 * [Unicorn 4.8.3](http://unicorn.bogomips.org/)
 * [TorqBox 0.1.7](http://torquebox.org/torqbox/)
-* [MySQL 5.5.29](https://dev.mysql.com/)
+* [MySQL 5.5](https://dev.mysql.com/)
 
 ## References
 * https://github.com/FooBarWidget/passenger/pull/71
