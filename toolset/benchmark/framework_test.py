@@ -510,6 +510,9 @@ class FrameworkTest:
     retcode = self.setup_module.stop(out, err)
     os.chdir(previousDir)
 
+    # Give processes sent a SIGTERM a moment to shut down gracefully
+    time.sleep(5)
+
     return retcode
   ############################################################
   # End stop
