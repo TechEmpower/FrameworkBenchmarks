@@ -8,8 +8,8 @@ This is the netty portion of a [benchmarking test suite](../) comparing a variet
 ## Versions
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Netty 4.0.21](http://netty.io/)
-* [Jackson 2.4.1](http://wiki.fasterxml.com/JacksonHome)
+* [Netty 4.0.23](http://netty.io/)
+* [Jackson 2.4.2](http://wiki.fasterxml.com/JacksonHome)
 
 ## References
 * https://github.com/netty/netty/tree/master/example/src/main/java/io/netty/example/http/snoop
