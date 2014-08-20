@@ -304,8 +304,10 @@ class CIRunnner:
     log.info("Setting up Travis-CI")
     
     script = '''
-    # Needed to download latest MongoDB (use two different approaches)
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 || gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7F0CEB10
+    # Needed to download latest MongoDB
+    #   Due to TechEmpower/FrameworkBenchmarks#989 and travis-ci/travis-ci#2655, 
+    #   we put this into a loop
+    until timeout 15s sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10; do echo 'Waiting for apt-key' ; done
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
     sudo apt-get -q update
