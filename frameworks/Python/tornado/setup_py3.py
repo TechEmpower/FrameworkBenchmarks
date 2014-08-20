@@ -20,7 +20,6 @@ def stop(logfile, errfile):
     subprocess.call(
         'pkill -f server.py',
         shell=True, stderr=errfile, stdout=logfile)
-    time.sleep(1)
 
 
 if __name__ == '__main__':
