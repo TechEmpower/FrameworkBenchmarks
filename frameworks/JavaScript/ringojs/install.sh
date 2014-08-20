@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends ringojs
+fw_depends java ringojs
