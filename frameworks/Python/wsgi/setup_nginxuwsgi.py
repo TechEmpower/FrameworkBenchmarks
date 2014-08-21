@@ -1,6 +1,7 @@
 import subprocess
 import multiprocessing
 import os
+import time
 
 
 CWD = os.path.abspath(os.path.dirname(__file__))
@@ -21,6 +22,7 @@ def start(args, logfile, errfile):
             ' --processes ' + str(NCPU) +
             ' --wsgi hello:app',
             shell=True, cwd=CWD, stdout=logfile, stderr=errfile)
+        time.sleep(3)
         return 0
     except subprocess.CalledProcessError:
         return 1
@@ -33,4 +35,5 @@ def stop(logfile, errfile):
     subprocess.call(
         bin_dir + '/uwsgi --stop /tmp/uwsgi.pid',
         shell=True, cwd=CWD, stderr=errfile, stdout=logfile)
+    time.sleep(3)
     return 0

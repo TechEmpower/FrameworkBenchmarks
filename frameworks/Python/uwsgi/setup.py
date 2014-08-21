@@ -1,7 +1,6 @@
 import multiprocessing
 import subprocess
 import os
-import time
 
 uwsgi = os.path.expandvars('$PY2_ROOT/bin/uwsgi')
 PROCS = multiprocessing.cpu_count()

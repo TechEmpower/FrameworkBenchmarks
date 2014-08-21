@@ -2,7 +2,7 @@
   "framework": "flask",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "setup_py2",
       "json_url": "/json",
       "db_url": "/dbs",
       "query_url": "/db?queries=",
@@ -25,7 +25,7 @@
       "versus": "wsgi"
     },
     "mysql-raw": {
-      "setup_file": "setup",
+      "setup_file": "setup_py2",
       "db_url": "/dbsraw",
       "query_url": "/dbraw?queries=",
       "fortune_url": "/fortunesraw",

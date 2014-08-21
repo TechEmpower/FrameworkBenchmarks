@@ -1,5 +1,5 @@
-import subprocess
 import os
+import subprocess
 
 CWD = os.path.dirname(__file__)
 

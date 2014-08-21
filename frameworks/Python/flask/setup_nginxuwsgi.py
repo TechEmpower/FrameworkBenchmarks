@@ -1,6 +1,6 @@
-import subprocess
 import multiprocessing
 import os
+import subprocess
 
 
 CWD = os.path.abspath(os.path.dirname(__file__))
@@ -19,6 +19,7 @@ def start(args, logfile, errfile):
         subprocess.Popen(
             "{0}/uwsgi --ini uwsgi.ini --processes {1} --wsgi app:app".format(bin_dir, NCPU*3),
             shell=True, cwd=CWD, stderr=errfile, stdout=logfile)
+
         return 0
     except subprocess.CalledProcessError:
         return 1

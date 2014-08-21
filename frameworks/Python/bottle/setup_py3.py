@@ -1,25 +1,18 @@
-import subprocess
 import os
+import subprocess
 
-
-proc = None
+CWD = os.path.dirname(__file__)
 
 
 def start(args, logfile, errfile):
-    global proc
-    proc = subprocess.Popen(
-            "exec $PY3_GUNICORN -c gunicorn_conf.py app:app",
-            cwd="bottle", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.Popen(
+        "$PY3_GUNICORN app:app -c gunicorn_conf.py",
+        cwd=CWD, stderr=errfile, stdout=logfile, shell=True)
     return 0
 
 
 def stop(logfile, errfile):
-    global proc
-    if proc is None:
-        return 0
-    proc.terminate()
-    proc.wait()
-    proc = None
-
-    subprocess.call("sudo pkill gunicorn", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.call(
+        "kill `cat gunicorn.pid`",
+        cwd=CWD, stderr=errfile, stdout=logfile, shell=True)
     return 0
