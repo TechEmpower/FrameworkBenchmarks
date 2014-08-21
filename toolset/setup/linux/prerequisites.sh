@@ -36,9 +36,6 @@ sudo apt-get -y install \
   libjson0-dev libmcrypt-dev libicu-dev gettext \
   libpq-dev mlton cloc dstat
 
-# For cross-platform colored stdout/stderr messages
-sudo pip install colorama
-
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt-get -y update
 sudo apt-get install -y gcc-4.8 g++-4.8
