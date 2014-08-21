@@ -792,7 +792,16 @@ class Benchmarker:
   ############################################################
   def __finish(self):
     if self.mode == "verify":
-      print json.dumps(self.results, indent=2, sort_keys=True)
+      tests = self.__gather_tests
+      print header("Verification Summary", top='=', bottom='')
+      for test in tests:
+        print "| Test: %s" % test.name
+        if test.name in self.results['verify'].keys():
+          for test_type, result in self.results['verify'][test.name].iteritems():
+            print "|       %s : %s" % (test_type, result)
+        else:
+          print "|      NO RESULTS (Did framework launch?)"
+      print header('', top='', bottom='=')
 
     print "Time to complete: " + str(int(time.time() - self.start_time)) + " seconds"
     print "Results are saved in " + os.path.join(self.result_directory, self.timestamp)
