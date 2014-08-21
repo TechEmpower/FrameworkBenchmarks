@@ -18,6 +18,9 @@ import socket
 from multiprocessing import Process
 from datetime import datetime
 
+# Cross-platform colored text
+from colorama import Fore, Back, Style
+
 class Benchmarker:
 
   ##########################################################################################
@@ -793,15 +796,23 @@ class Benchmarker:
   def __finish(self):
     if self.mode == "verify":
       tests = self.__gather_tests
+      print Fore.BLUE
       print header("Verification Summary", top='=', bottom='')
       for test in tests:
         print "| Test: %s" % test.name
         if test.name in self.results['verify'].keys():
           for test_type, result in self.results['verify'][test.name].iteritems():
-            print "|       %s : %s" % (test_type, result)
+            if result.upper() == "PASS":
+              color = Fore.GREEN
+            elif result.upper() == "WARN":
+              color = Fore.YELLOW
+            else:
+              color = Fore.RED
+            print "|       " + test_type.ljust(11) + ' : ' + color + result.upper() + Fore.BLUE
         else:
-          print "|      NO RESULTS (Did framework launch?)"
+          print "|      " + Fore.RED + "NO RESULTS (Did framework launch?)" + Fore.BLUE
       print header('', top='', bottom='=')
+      print Style.RESET_ALL
 
     print "Time to complete: " + str(int(time.time() - self.start_time)) + " seconds"
     print "Results are saved in " + os.path.join(self.result_directory, self.timestamp)
