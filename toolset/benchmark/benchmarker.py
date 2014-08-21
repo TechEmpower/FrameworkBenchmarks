@@ -815,7 +815,6 @@ class Benchmarker:
             print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
         else:
           print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
-          print prefix + "TESTING BLUE IN TRAVIS"
       print prefix + header('', top='', bottom='=') + Style.RESET_ALL
 
     print "Time to complete: " + str(int(time.time() - self.start_time)) + " seconds"
