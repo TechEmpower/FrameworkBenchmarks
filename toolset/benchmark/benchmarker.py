@@ -18,6 +18,9 @@ import socket
 from multiprocessing import Process
 from datetime import datetime
 
+# Cross-platform colored text
+from colorama import Fore, Back, Style
+
 class Benchmarker:
 
   ##########################################################################################
@@ -203,32 +206,6 @@ class Benchmarker:
   # End output_file
   ############################################################
 
-  ############################################################
-  # get_warning_file(test_name, test_type)
-  # returns the output file name for this test_name and 
-  # test_type timestamp/test_type/test_name/raw 
-  ############################################################
-  def get_warning_file(self, test_name, test_type):
-    return os.path.join(self.result_directory, self.timestamp, test_type, test_name, "warn")
-  ############################################################
-  # End get_warning_file
-  ############################################################
-
-  ############################################################
-  # warning_file(test_name, test_type)
-  # returns the warning file for this test_name and test_type
-  # timestamp/test_type/test_name/raw 
-  ############################################################
-  def warning_file(self, test_name, test_type):
-    path = self.get_warning_file(test_name, test_type)
-    try:
-      os.makedirs(os.path.dirname(path))
-    except OSError:
-      pass
-    return path
-  ############################################################
-  # End warning_file
-  ############################################################
 
   ############################################################
   # get_stats_file(test_name, test_type)
@@ -286,22 +263,35 @@ class Benchmarker:
     return path
 
   ############################################################
-  # report_results
+  # report_verify_results
+  # Used by FrameworkTest to add verification details to our results
+  #
+  # TODO: Technically this is an IPC violation - we are accessing
+  # the parent process' memory from the child process
   ############################################################
-  def report_results(self, framework, test, results):
+  def report_verify_results(self, framework, test, result):
+    if framework.name not in self.results['verify'].keys():
+      self.results['verify'][framework.name] = dict()
+    self.results['verify'][framework.name][test] = result
+
+  ############################################################
+  # report_benchmark_results
+  # Used by FrameworkTest to add benchmark data to this
+  #
+  # TODO: Technically this is an IPC violation - we are accessing
+  # the parent process' memory from the child process
+  ############################################################
+  def report_benchmark_results(self, framework, test, results):
     if test not in self.results['rawData'].keys():
       self.results['rawData'][test] = dict()
 
     # If results has a size from the parse, then it succeeded.
     if results:
       self.results['rawData'][test][framework.name] = results
+
       # This may already be set for single-tests
       if framework.name not in self.results['succeeded'][test]:
         self.results['succeeded'][test].append(framework.name)
-      # Add this type
-      if (os.path.exists(self.get_warning_file(framework.name, test)) and
-          framework.name not in self.results['warning'][test]):
-        self.results['warning'][test].append(framework.name)
     else:
       # This may already be set for single-tests
       if framework.name not in self.results['failed'][test]:
@@ -804,6 +794,29 @@ class Benchmarker:
   # __finish
   ############################################################
   def __finish(self):
+    if self.mode == "verify":
+      tests = self.__gather_tests
+      # Normally you don't have to use Fore.BLUE before each line, but 
+      # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
+      # or stream flush, so we have to ensure that the color code is printed repeatedly
+      prefix = Fore.CYAN
+      for line in header("Verification Summary", top='=', bottom='').split('\n'):
+        print prefix + line
+      for test in tests:
+        print prefix + "| Test: %s" % test.name
+        if test.name in self.results['verify'].keys():
+          for test_type, result in self.results['verify'][test.name].iteritems():
+            if result.upper() == "PASS":
+              color = Fore.GREEN
+            elif result.upper() == "WARN":
+              color = Fore.YELLOW
+            else:
+              color = Fore.RED
+            print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
+        else:
+          print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
+      print prefix + header('', top='', bottom='=') + Style.RESET_ALL
+
     print "Time to complete: " + str(int(time.time() - self.start_time)) + " seconds"
     print "Results are saved in " + os.path.join(self.result_directory, self.timestamp)
 
@@ -921,13 +934,7 @@ class Benchmarker:
       self.results['failed']['fortune'] = []
       self.results['failed']['update'] = []
       self.results['failed']['plaintext'] = []
-      self.results['warning'] = dict()
-      self.results['warning']['json'] = []
-      self.results['warning']['db'] = []
-      self.results['warning']['query'] = []
-      self.results['warning']['fortune'] = []
-      self.results['warning']['update'] = []
-      self.results['warning']['plaintext'] = []
+      self.results['verify'] = dict()
     else:
       #for x in self.__gather_tests():
       #  if x.name not in self.results['frameworks']:

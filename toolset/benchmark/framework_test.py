@@ -541,9 +541,11 @@ class FrameworkTest:
       if ret_tuple[0]:
         self.json_url_passed = True
         out.write("PASS\n\n")
+        self.benchmarker.report_verify_results(self, self.JSON, 'pass')
       else:
         self.json_url_passed = False
         out.write("\nFAIL" + ret_tuple[1] + "\n\n")
+        self.benchmarker.report_verify_results(self, self.JSON, 'fail')
         result = False
       out.flush()
 
@@ -564,14 +566,16 @@ class FrameworkTest:
         self.db_url_warn = False
       else:
         self.db_url_warn = True
-
       out.write("VALIDATING DB ... ")
       if self.db_url_passed:
         out.write("PASS")
+        self.benchmarker.report_verify_results(self, self.DB, 'pass')
         if self.db_url_warn:
           out.write(" (with warnings) " + validate_strict_ret_tuple[1])
+          self.benchmarker.report_verify_results(self, self.DB, 'warn')
         out.write("\n\n")
       else:
+        self.benchmarker.report_verify_results(self, self.DB, 'fail')
         out.write("\nFAIL" + validate_ret_tuple[1])
         result = False
       out.flush()
@@ -630,11 +634,14 @@ class FrameworkTest:
       out.write("VALIDATING QUERY ... ")
       if self.query_url_passed:
         out.write("PASS")
+        self.benchmarker.report_verify_results(self, self.QUERY, 'pass')
         if self.query_url_warn:
           out.write(" (with warnings)")
+          self.benchmarker.report_verify_results(self, self.QUERY, 'warn')
         out.write("\n\n")
       else:
         out.write("\nFAIL " + ret_tuple[1] + "\n\n")
+        self.benchmarker.report_verify_results(self, self.QUERY, 'fail')
         result = False
       out.flush()
 
@@ -649,9 +656,11 @@ class FrameworkTest:
       if self.validateFortune(output, out, err):
         self.fortune_url_passed = True
         out.write("PASS\n\n")
+        self.benchmarker.report_verify_results(self, self.FORTUNE, 'pass')
       else:
         self.fortune_url_passed = False
         out.write("\nFAIL\n\n")
+        self.benchmarker.report_verify_results(self, self.FORTUNE, 'fail')
         result = False
       out.flush()
 
@@ -667,9 +676,11 @@ class FrameworkTest:
       if ret_tuple[0]:
         self.update_url_passed = True
         out.write("PASS\n\n")
+        self.benchmarker.report_verify_results(self, self.UPDATE, 'pass')
       else:
         self.update_url_passed = False
         out.write("\nFAIL " + ret_tuple[1] + "\n\n")
+        self.benchmarker.report_verify_results(self, self.UPDATE, 'fail')
         result = False
       out.flush()
 
@@ -685,9 +696,11 @@ class FrameworkTest:
       if ret_tuple[0]:
         self.plaintext_url_passed = True
         out.write("PASS\n\n")
+        self.benchmarker.report_verify_results(self, self.PLAINTEXT, 'pass')
       else:
         self.plaintext_url_passed = False
         out.write("\nFAIL\n\n" + ret_tuple[1] + "\n\n")
+        self.benchmarker.report_verify_results(self, self.PLAINTEXT, 'fail')
         result = False
       out.flush()
 
@@ -747,7 +760,7 @@ class FrameworkTest:
           self.__end_logging()
         results = self.__parse_test(self.JSON)
         print results
-        self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.JSON, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -760,21 +773,18 @@ class FrameworkTest:
         out.flush()
         results = None
         output_file = self.benchmarker.output_file(self.name, self.DB)
-        warning_file = self.benchmarker.warning_file(self.name, self.DB)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
             pass
-        if self.db_url_warn:
-          with open(warning_file, 'w'):
-            pass
         if self.db_url_passed:
+          self.benchmarker.report_verify_results(self, self.DB, 'pass')
           remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
           self.__begin_logging(self.DB)
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.DB)
-        self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.DB, results=results['results'])
         out.write( "Complete\n" )
       except AttributeError:
         pass
@@ -786,21 +796,19 @@ class FrameworkTest:
         out.flush()
         results = None
         output_file = self.benchmarker.output_file(self.name, self.QUERY)
-        warning_file = self.benchmarker.warning_file(self.name, self.QUERY)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
             pass
         if self.query_url_warn:
-          with open(warning_file, 'w'):
-            pass
+          self.benchmarker.report_verify_results(framework=self, test=self.QUERY, results=None)
         if self.query_url_passed:
           remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
           self.__begin_logging(self.QUERY)
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.QUERY)
-        self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.QUERY, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -823,7 +831,7 @@ class FrameworkTest:
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.FORTUNE)
-        self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.FORTUNE, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -846,7 +854,7 @@ class FrameworkTest:
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.UPDATE)
-        self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.UPDATE, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -869,7 +877,7 @@ class FrameworkTest:
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.PLAINTEXT)
-        self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.PLAINTEXT, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -888,32 +896,32 @@ class FrameworkTest:
     # JSON
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.JSON)):
       results = self.__parse_test(self.JSON)
-      self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.JSON, results=results['results'])
     
     # DB
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.DB)):
       results = self.__parse_test(self.DB)
-      self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.DB, results=results['results'])
     
     # Query
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.QUERY)):
       results = self.__parse_test(self.QUERY)
-      self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.QUERY, results=results['results'])
 
     # Fortune
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.FORTUNE)):
       results = self.__parse_test(self.FORTUNE)
-      self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.FORTUNE, results=results['results'])
 
     # Update
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.UPDATE)):
       results = self.__parse_test(self.UPDATE)
-      self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.UPDATE, results=results['results'])
 
     # Plaintext
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.PLAINTEXT)):
       results = self.__parse_test(self.PLAINTEXT)
-      self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.PLAINTEXT, results=results['results'])
   ############################################################
   # End parse_all
   ############################################################

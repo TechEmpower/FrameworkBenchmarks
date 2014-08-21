@@ -87,4 +87,17 @@ def header(message, top='-', bottom='-'):
     '''
     topheader = (top * 80)[:80]
     bottomheader = (bottom * 80)[:80]
-    return "%s\n  %s\n%s" % (topheader, message, bottomheader)
+    result = ""
+    if topheader != "":
+      result += "%s" % topheader
+    if message != "":
+      if result == "":
+        result = "  %s" % message
+      else:
+        result += "\n  %s" % message
+    if bottomheader != "":
+      if result == "":
+        result = "%s" % bottomheader
+      else:
+        result += "\n%s" % bottomheader
+    return result
