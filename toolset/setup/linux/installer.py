@@ -137,8 +137,13 @@ class Installer:
     sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev postgresql redis-server
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
+    # Create a user-owned directory for our databases
     sudo mkdir -p /ssd
     sudo mkdir -p /ssd/log
+    sudo chown -R $USER:$USER /ssd
+
+    # Additional user account (only use if required)
+    sudo useradd benchmarkdbuser -p benchmarkdbpass
 
     ##############################
     # MySQL
@@ -150,9 +155,9 @@ class Installer:
 
     sudo stop mysql
     # disable checking of disk size
-    sudo cp mysql /etc/init.d/mysql
+    sudo mv mysql /etc/init.d/mysql
     sudo chmod +x /etc/init.d/mysql
-    sudo cp mysql.conf /etc/init/mysql.conf
+    sudo mv mysql.conf /etc/init/mysql.conf
     # use the my.cnf file to overwrite /etc/mysql/my.cnf
     sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
     sudo mv my.cnf /etc/mysql/my.cnf
@@ -165,15 +170,18 @@ class Installer:
 
     # Insert data
     mysql -uroot -psecret < create.sql
+    rm create.sql
 
     ##############################
     # Postgres
     ##############################
-    sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
+    rm create-postgres-database.sql create-postgres.sql
 
     sudo -u postgres -H /etc/init.d/postgresql stop
+    # NOTE: This will cause errors on Ubuntu 12.04, as apt installs 
+    # an older version (9.1 instead of 9.3)
     sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
     sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
@@ -185,51 +193,56 @@ class Installer:
     # MongoDB
     ##############################
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-    sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
+    echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
     sudo apt-get -y update
     sudo apt-get -y remove mongodb-clients
     sudo apt-get -y install mongodb-org
 
-    sudo stop mongodb
+    sudo service mongod stop
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf
     sudo cp -R -p /var/lib/mongodb /ssd/
     sudo cp -R -p /var/log/mongodb /ssd/log/
-    sudo start mongodb
+    sudo service mongod start
+
+    until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
+    mongo < create.js
+    rm create.js
 
     ##############################
     # Apache Cassandra
     ##############################
     sudo apt-get install -qqy openjdk-7-jdk
     export CASS_V=2.0.7
-    wget http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
+    wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
     tar xzf apache-cassandra-$CASS_V-bin.tar.gz
-    rm apache-cassandra-*-bin.tar.gz
-    fuser -k -TERM /ssd/log/cassandra/system.log
-    sleep 5
-    sudo rm -rf /ssd/cassandra /ssd/log/cassandra
-    sudo mkdir -p /ssd/cassandra /ssd/log/cassandra
-    sudo chown tfb:tfb /ssd/cassandra /ssd/log/cassandra
+    
+    rm -rf /ssd/cassandra /ssd/log/cassandra
+    mkdir -p /ssd/cassandra /ssd/log/cassandra
+    
     sed -i "s/^.*seeds:.*/          - seeds: \"%s\"/" cassandra/cassandra.yaml
     sed -i "s/^listen_address:.*/listen_address: %s/" cassandra/cassandra.yaml
     sed -i "s/^rpc_address:.*/rpc_address: %s/" cassandra/cassandra.yaml
-    cp cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
-    cp cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
-    pushd apache-cassandra-$CASS_V
-    nohup ./bin/cassandra
+    
+    mv cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
+    mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
+    nohup apache-cassandra-$CASS_V/bin/cassandra > cassandra.log
+
     sleep 10
-    cat ../cassandra/create-keyspace.cql | ./bin/cqlsh $TFB_DATABASE_HOST
-    python ../cassandra/db-data-gen.py | ./bin/cqlsh $TFB_DATABASE_HOST
-    popd
+    cat cassandra/create-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
+    python cassandra/db-data-gen.py | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
+    rm -rf apache-cassandra-*-bin.tar.gz cassandra
 
     ##############################
     # Redis
     ##############################
     sudo service redis-server stop
-    sudo cp redis.conf /etc/redis/redis.conf
+    # NOTE: This will cause errors on Ubuntu 12.04, as apt installs 
+    # an older version of redis
+    sudo mv redis.conf /etc/redis/redis.conf
     sudo service redis-server start
     bash create-redis.sh
-
+    rm create-redis.sh
     """ % (self.benchmarker.database_host, self.benchmarker.database_host, self.benchmarker.database_host)
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
