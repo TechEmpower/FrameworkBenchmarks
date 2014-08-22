@@ -20,5 +20,9 @@ Vagrant.configure("2") do |config|
   config.vm.network "private_network", ip: "172.16.16.16"
 
   # We run the bootstrap as the normal vagrant user, not as root
-  config.vm.provision :shell, :path => "bootstrap.sh", privileged: false
+  # You can pass arguments to the bootstrap.sh by setting the variable
+  # SHELL_ARGS. At the moment, the only arg it understands is 'dev' for 
+  # developer mode. For example:
+  #   $ SHELL_ARGS="dev" vagrant up
+  config.vm.provision :shell, :path => "bootstrap.sh", privileged: false, args: ENV['SHELL_ARGS']
 end
