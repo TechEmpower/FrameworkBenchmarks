@@ -800,8 +800,6 @@ class FrameworkTest:
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
             pass
-        if self.query_url_warn:
-          self.benchmarker.report_verify_results(framework=self, test=self.QUERY, results=None)
         if self.query_url_passed:
           remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
           self.__begin_logging(self.QUERY)
