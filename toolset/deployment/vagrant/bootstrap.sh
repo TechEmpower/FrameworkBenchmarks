@@ -45,8 +45,11 @@ if [ ! -e "/home/vagrant/.firstboot" ]; then
   toolset/run-tests.py --verbose --install all --test ''
 
   # Setup a nice welcome message for our guest
-  rm /etc/motd
-cat | sudo tee /etc/motd <<EOF
+  sudo rm /etc/update-motd.d/51-cloudguest
+  sudo rm /etc/update-motd.d/98-cloudguest
+  sudo cp /vagrant/custom_motd.sh /etc/update-motd.d/55-tfbwelcome
+
+cat | sudo tee /etc/update-motd.d/05-tfbwelcome <<EOF
   Welcome to the FrameworkBenchmarks project!
 
   To get started, perhaps try this: 
