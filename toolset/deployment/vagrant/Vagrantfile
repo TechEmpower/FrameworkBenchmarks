@@ -4,15 +4,21 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "FrameworkBenchmarks"
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-  config.vm.network :forwarded_port, guest: 8080, host: 28080
+  
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "2048"]
   end
+
+  # Add a settings for advanced users who are actively doing 
+  # development
   config.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+  config.vm.network :forwarded_port, guest: 8080, host: 28080
   
   # Use a non-standard value here as most home networks are 
   # 192.168.X.X or 10.X.X.X and we cannot have a collision 
   # with the host network
   config.vm.network "private_network", ip: "172.16.16.16"
+
+  # We run the bootstrap as the normal vagrant user, not as root
   config.vm.provision :shell, :path => "bootstrap.sh", privileged: false
 end
