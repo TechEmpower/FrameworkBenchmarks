@@ -1,11 +1,15 @@
 import subprocess
 import json
 import os
+import multiprocessing
 
 def start(args, logfile, errfile):
   conf = { 
     'database_host' : args.database_host,
-    'workers'       : args.max_threads,
+    'hypnotoad_merge' : {
+      'workers' : 2*multiprocessing.cpu_count(), 
+      # can use args.max_threads and args.max_concurrency to set
+    },
   }
   with open(args.troot + '/app.conf', 'w') as f:
     f.write(json.dumps(conf))

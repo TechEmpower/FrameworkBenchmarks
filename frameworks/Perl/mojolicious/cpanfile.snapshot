@@ -16,10 +16,10 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 0
       Types::Serialiser 0
       common::sense 0
-  Mango-1.05
-    pathname: S/SR/SRI/Mango-1.05.tar.gz
+  Mango-1.06
+    pathname: S/SR/SRI/Mango-1.06.tar.gz
     provides:
-      Mango 1.05
+      Mango 1.06
       Mango::BSON undef
       Mango::BSON::Binary undef
       Mango::BSON::Code undef
@@ -39,9 +39,9 @@ DISTRIBUTIONS
       Mango::Protocol undef
     requirements:
       ExtUtils::MakeMaker 0
-      Mojolicious 5.0
-  Mojolicious-5.28
-    pathname: S/SR/SRI/Mojolicious-5.28.tar.gz
+      Mojolicious 5.32
+  Mojolicious-5.32
+    pathname: S/SR/SRI/Mojolicious-5.32.tar.gz
     provides:
       Mojo undef
       Mojo::Asset undef
@@ -104,7 +104,7 @@ DISTRIBUTIONS
       Mojo::UserAgent::Server undef
       Mojo::UserAgent::Transactor undef
       Mojo::Util undef
-      Mojolicious 5.28
+      Mojolicious 5.32
       Mojolicious::Command undef
       Mojolicious::Command::cgi undef
       Mojolicious::Command::cpanify undef

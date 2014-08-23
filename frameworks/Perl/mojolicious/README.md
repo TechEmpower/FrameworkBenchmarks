@@ -1,8 +1,7 @@
 # Setup
 
 * Perl 5.16.3
-* MongoDB 2.4.9
-* Wrk 2.0
+* MongoDB 2.6
 
 # Requirements
 
