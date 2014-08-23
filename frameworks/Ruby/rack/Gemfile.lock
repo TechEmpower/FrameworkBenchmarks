@@ -1,0 +1,46 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    daemons (1.1.9)
+    eventmachine (1.0.3)
+    jdbc-mysql (5.1.31)
+    jruby-rack (1.1.16)
+    json (1.8.1)
+    json (1.8.1-java)
+    kgio (2.9.2)
+    mysql2 (0.3.16)
+    puma (2.9.0)
+      rack (>= 1.1, < 2.0)
+    puma (2.9.0-java)
+      rack (>= 1.1, < 2.0)
+    rack (1.5.2)
+    raindrops (0.13.0)
+    thin (1.6.2)
+      daemons (>= 1.0.9)
+      eventmachine (>= 1.0.0)
+      rack (>= 1.0.0)
+    torqbox (0.1.7-java)
+      rack (>= 1.4.0, < 2.0)
+    trinidad (1.4.6)
+      jruby-rack (~> 1.1.13)
+      trinidad_jars (>= 1.3.0, < 1.5.0)
+    trinidad_jars (1.4.0)
+    unicorn (4.8.3)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
+
+PLATFORMS
+  java
+  ruby
+
+DEPENDENCIES
+  jdbc-mysql (= 5.1.31)
+  json (= 1.8.1)
+  mysql2 (= 0.3.16)
+  puma (~> 2.9.0)
+  rack (= 1.5.2)
+  thin (~> 1.6.2)
+  torqbox (= 0.1.7)
+  trinidad (= 1.4.6)
+  unicorn (= 4.8.3)
