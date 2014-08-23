@@ -84,7 +84,7 @@ helper 'render_query' => sub {
     $self->helpers->render_json($r) unless $tx->is_finished;
   });
 
-  my $world = $self->world;
+  my $world = $self->helpers->world;
 
   foreach (1 .. $q) {
     my $id = int rand 10_000;
