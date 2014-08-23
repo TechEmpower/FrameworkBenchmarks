@@ -14,10 +14,14 @@ plugin JSONConfig => {
     hypnotoad => {
       graceful_timeout => 1,
     },
+    hypnotoad_merge => {},
   },
 };
 
-app->config->{hypnotoad}{workers} = app->config->{workers};
+{
+  my $merge = app->config->{hypnotoad_merge};
+  @{app->config->{hypnotoad}}{keys %$merge} = values %$merge;
+}
 
 # Database connections
 
@@ -32,19 +36,19 @@ helper render_json => sub { shift->render( data => encode_json(shift), format =>
 
 # Routes
 
-get '/json' => sub { shift->render_json({message => 'Hello, World!'}) };
+get '/json' => sub { shift->helpers->render_json({message => 'Hello, World!'}) };
 
-get '/db' => sub { shift->render_query(1, {single => 1}) };
+get '/db' => sub { shift->helpers->render_query(1, {single => 1}) };
 
 get '/queries' => sub {
   my $c = shift;
-  $c->render_query(scalar $c->param('queries'));
+  $c->helpers->render_query(scalar $c->param('queries'));
 };
 
 get '/fortunes' => sub {
   my $c = shift->render_later;
   my $tx = $c->tx;
-  $c->fortune->find->all(sub{
+  $c->helpers->fortune->find->all(sub{
     my ($cursor, $err, $docs) = @_;
     push @$docs, { _id => 0, message => 'Additional fortune added at request time.' };
     $c->render( fortunes => docs => $docs ) unless $tx->is_finished;
@@ -53,7 +57,7 @@ get '/fortunes' => sub {
 
 get '/updates' => sub {
   my $c = shift;
-  $c->render_query(scalar $c->param('queries'), {update => 1});
+  $c->helpers->render_query(scalar $c->param('queries'), {update => 1});
 };
 
 get '/plaintext' => sub { shift->render( text => 'Hello, World!' ) };
@@ -77,7 +81,7 @@ helper 'render_query' => sub {
   my $delay = Mojo::IOLoop->delay;
   $delay->on(finish => sub{
     $r = $r->[0] if $args->{single};
-    $self->render_json($r) unless $tx->is_finished;
+    $self->helpers->render_json($r) unless $tx->is_finished;
   });
 
   my $world = $self->world;
