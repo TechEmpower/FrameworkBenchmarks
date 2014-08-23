@@ -1,0 +1,18 @@
+# Bash Configuration
+
+Perl is installed in the `$IROOT` directory. Currently, the Perl interpreter
+used by the test is in version 5.18 family. It is highly recommended that
+you have a `bash_profile.sh` in your app's directory that contains at least
+
+    #!/bin/bash
+
+    export PERL_HOME=${IROOT}/perl-5.18
+    export PATH="$PERL_HOME/bin:$PATH"
+
+This will provide the `$PERL_HOME` path - should you need it - and 
+allow all apps installed by Perl to be used directly.
+
+# Dependency Management
+
+While installing Perl, the [`cpanm`](https://metacpan.org/pod/distribution/App-cpanminus/bin/cpanm)
+client is installed as well as the more advanced [`Carton`](https://metacpan.org/pod/Carton).
