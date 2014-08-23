@@ -1,22 +1,71 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+
+# Workaround for mitchellh/vagrant#1867
+if (ARGV[1] and ARGV[1].split('=')[0] == "--provider" and ARGV[1].split('=')[1])
+  provider = ARGV[1].split('=')[1].to_sym
+else
+  provider = (ARGV[2] || ENV['VAGRANT_DEFAULT_PROVIDER'] || :virtualbox).to_sym
+end
+
+if provider == :"aws" \
+  and !(ENV['TFB_AWS_ACCESS_KEY'] and ENV['TFB_AWS_SECRET_KEY'] \
+        and ENV['TFB_AWS_KEY_NAME'] and ENV['TFB_AWS_KEY_PATH'])
+  abort 'If you want to use the AWS provider, you must provide these four variables: 
+  TFB_AWS_ACCESS_KEY : Your Amazon Web Services Access Key
+  TFB_AWS_SECRET_KEY : Your Amazon Web Services Secret Access Key
+  TFB_AWS_KEY_NAME   : The name of the keypair you are using
+  TFB_AWS_KEY_PATH   : Path to the *.pem file for the keypair you are using'
+end
 Vagrant.configure("2") do |config|
   config.vm.hostname = "TFB"
   config.vm.box = "ubuntu/trusty64"
-  
-  config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "2048"]
-  end
 
-  # Add a settings for advanced users who are actively doing 
-  # development
-  config.vm.synced_folder "../../..", "/FrameworkBenchmarks"
-  config.vm.network :forwarded_port, guest: 8080, host: 28080
-  
   # Use a non-standard value here as most home networks are 
   # 192.168.X.X or 10.X.X.X and we cannot have a collision 
   # with the host network
-  config.vm.network "private_network", ip: "172.16.16.16"
+  config.vm.network "private_network", ip: "172.16.16.16"  
+
+  # Add settings for advanced users doing development
+  config.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+  config.vm.network :forwarded_port, guest: 8080, host: 28080
+
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    if ENV['TFB_SHOW_VM'] and ENV['TFB_SHOW_VM'] == "true"
+      vb.gui = true
+    end
+  end
+
+  # Requires the vagrant-aws plugin from github.com/mitchellh/vagrant-aws
+  config.vm.provider :aws do |aws, override|
+    aws.access_key_id = ENV['TFB_AWS_ACCESS_KEY'] 
+    aws.secret_access_key = ENV['TFB_AWS_SECRET_KEY']
+    aws.keypair_name = ENV['TFB_AWS_KEY_NAME']
+    override.ssh.private_key_path = ENV['TFB_AWS_KEY_PATH']
+
+    # Use a boilerplate box - this will be replaced by the AMI
+    override.vm.box = "dummy"
+    override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+
+    # From http://cloud-images.ubuntu.com/trusty/current/
+    # This is 64-bit Ubuntu 14.04 US east EBS
+    # See http://cloud-images.ubuntu.com/vagrant/trusty/current/ 
+    # for comparison to the Ubuntu Vagrant VirtualBox boxes 
+    aws.ami = "ami-62c8160a"
+    override.ssh.username = "ubuntu"
+    
+    # If you would like to override
+    # aws.region = "us-east-1"
+    # aws.security_groups = ["default"]
+    
+    # Currently this uses 'previous generation' instance names
+    # See: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
+    aws.instance_type = "m1.small"
+
+    # Disable support for synced folders
+    override.vm.synced_folder "../../..", "/FrameworkBenchmarks", disabled: true
+  end
 
   # We run the bootstrap as the normal vagrant user, not as root
   # You can pass arguments to the bootstrap.sh by setting the variable
