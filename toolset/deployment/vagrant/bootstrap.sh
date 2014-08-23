@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
-if [ ! -e "/home/vagrant/.firstboot" ]; then
+#
+# Prepares a virtual machine for running TFB
+#
+# Intentionally uses ~, $HOME, and $USER so that the 
+# same script can work for VirtualBox (username vagrant)
+# and Amazon (username ubuntu)
+
+if [ ! -e "~/.firstboot" ]; then
 
   # Setup some nice TFB defaults
   echo "export TFB_SERVER_HOST=127.0.0.1" >> ~/.bash_profile
   echo "export TFB_CLIENT_HOST=127.0.0.1" >> ~/.bash_profile
   echo "export TFB_DATABASE_HOST=127.0.0.1" >> ~/.bash_profile
-  echo "export TFB_CLIENT_USER=vagrant" >> ~/.bash_profile
-  echo "export TFB_DATABASE_USER=vagrant" >> ~/.bash_profile
-  echo "export TFB_CLIENT_IDENTITY_FILE=/home/vagrant/.ssh/id_rsa" >> ~/.bash_profile
-  echo "export TFB_DATABASE_IDENTITY_FILE=/home/vagrant/.ssh/id_rsa" >> ~/.bash_profile
+  echo "export TFB_CLIENT_USER=$USER" >> ~/.bash_profile
+  echo "export TFB_DATABASE_USER=$USER" >> ~/.bash_profile
+  echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
+  echo "export TFB_DATABASE_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
   if [ "$1" == "dev" ]; then
     echo "FrameworkBenchmarks: Running in developer mode"
     echo "export FWROOT=/FrameworkBenchmarks" >> ~/.bash_profile 
@@ -18,7 +25,7 @@ if [ ! -e "/home/vagrant/.firstboot" ]; then
       mv /FrameworkBenchmarks/benchmark.cfg /FrameworkBenchmarks/benchmark.cfg.backup
     fi
   else
-    echo "export FWROOT=/home/vagrant/FrameworkBenchmarks" >> ~/.bash_profile 
+    echo "export FWROOT=$HOME/FrameworkBenchmarks" >> ~/.bash_profile 
   fi
   source ~/.bash_profile
 
@@ -45,27 +52,10 @@ if [ ! -e "/home/vagrant/.firstboot" ]; then
   toolset/run-tests.py --verbose --install all --test ''
 
   # Setup a nice welcome message for our guest
-  sudo rm /etc/update-motd.d/51-cloudguest
-  sudo rm /etc/update-motd.d/98-cloudguest
+  sudo rm -f /etc/update-motd.d/51-cloudguest
+  sudo rm -f /etc/update-motd.d/98-cloudguest
   sudo cp /vagrant/custom_motd.sh /etc/update-motd.d/55-tfbwelcome
 
-cat | sudo tee /etc/update-motd.d/05-tfbwelcome <<EOF
-  Welcome to the FrameworkBenchmarks project!
-
-  To get started, perhaps try this: 
-    $ cd FrameworkBenchmarks
-    $ toolset/run-tests.py --install server --test go
-    $ cat results/ec2/latest/logs/go/out.txt
-
-  You can get tons of help with this: 
-    $ toolset/run-tests.py --install server --test go
-
-  This environment is already setup and ready to go, so you 
-  can safely ignore any flags about users, hosts, or identity files. 
-EOF
-
-
   touch ~/.firstboot
-
 fi
 
