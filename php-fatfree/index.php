@@ -38,7 +38,8 @@ $f3->route(
         $result = array();
         for ($i = 0; $i < $queries; $i++) {
             $id = mt_rand(1, 10000);
-            $result[] = $db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false);
+            $res = $db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false);
+            $result[] = $res[0];
         }
         header("Content-type: application/json");
         echo json_encode($single ? $result[0] : $result);
