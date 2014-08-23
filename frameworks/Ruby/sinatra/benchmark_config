@@ -20,7 +20,7 @@
       "database_os": "Linux",
       "display_name": "sinatra",
       "notes": "",
-      "versus": "rack-ruby"
+      "versus": "rack-unicorn"
     },
     "jruby": {
       "setup_file": "setup_jruby",
@@ -41,7 +41,7 @@
       "database_os": "Linux",
       "display_name": "sinatra-jruby",
       "notes": "",
-      "versus": "rack-jruby"
+      "versus": "rack-torqbox"
     }
   }]
 }

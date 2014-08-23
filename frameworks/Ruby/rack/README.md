@@ -14,6 +14,8 @@ The tests were run with:
 * [Rack 1.5.2](http://rack.github.com/)
 * [Unicorn 4.8.3](http://unicorn.bogomips.org/)
 * [TorqBox 0.1.7](http://torquebox.org/torqbox/)
+* [Puma 2.9.0](http://puma.io/)
+* [Thin 1.6.2](http://code.macournoyer.com/thin/)
 
 ## References
 * https://github.com/FooBarWidget/passenger/pull/71
