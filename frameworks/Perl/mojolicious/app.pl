@@ -10,9 +10,9 @@ plugin JSONConfig => {
   file => 'app.conf',
   default => {
     database_host => 'localhost',
-    workers => 8,
     hypnotoad => {
       graceful_timeout => 1,
+      workers => 8,
     },
     hypnotoad_merge => {},
   },
