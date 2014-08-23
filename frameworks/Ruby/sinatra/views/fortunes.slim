@@ -1,9 +1,10 @@
-== slim :layout
-  table
+table
+  thead
     tr
       th id
       th message
-    - for fortune in @fortunes
-      tr
-        td =fortune.id
-        td =fortune.message
+  tbody
+  - for fortune in @fortunes
+    tr
+      td =fortune.id
+      td =fortune.message
