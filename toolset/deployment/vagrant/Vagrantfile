@@ -8,14 +8,27 @@ else
   provider = (ARGV[2] || ENV['VAGRANT_DEFAULT_PROVIDER'] || :virtualbox).to_sym
 end
 
-if provider == :"aws" \
-  and !(ENV['TFB_AWS_ACCESS_KEY'] and ENV['TFB_AWS_SECRET_KEY'] \
+if provider == :"aws"
+  # Check required variables
+  if !(ENV['TFB_AWS_ACCESS_KEY'] and ENV['TFB_AWS_SECRET_KEY'] \
         and ENV['TFB_AWS_KEY_NAME'] and ENV['TFB_AWS_KEY_PATH'])
-  abort 'If you want to use the AWS provider, you must provide these four variables: 
-  TFB_AWS_ACCESS_KEY : Your Amazon Web Services Access Key
-  TFB_AWS_SECRET_KEY : Your Amazon Web Services Secret Access Key
-  TFB_AWS_KEY_NAME   : The name of the keypair you are using
-  TFB_AWS_KEY_PATH   : Path to the *.pem file for the keypair you are using'
+    abort 'If you want to use the AWS provider, you must provide these four variables: 
+    TFB_AWS_ACCESS_KEY : Your Amazon Web Services Access Key
+    TFB_AWS_SECRET_KEY : Your Amazon Web Services Secret Access Key
+    TFB_AWS_KEY_NAME   : The name of the keypair you are using
+    TFB_AWS_KEY_PATH   : Path to the *.pem file for the keypair you are using'
+  end
+
+  # Print warning
+    warning = "\033[33m\
+WARNING: FrameworkBenchmarks is disabling folder sync between your
+local working copy and Amazon Web Services - the ~/FrameworkBenchmarks
+directory in your VM will be a git clone of TechEmpower/FrameworkBenchmarks. 
+You can re-enable folder sync using 
+    $ TFB_FORCE_SYNC=true vagrant up --provider=aws
+but be aware that you will need to upload ~2GB to Amazon before you can use
+the VM as normal.\033[0m"
+  puts warning
 end
 
 # Helps with finding current OS
@@ -85,11 +98,6 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "TFB"
   config.vm.box = "ubuntu/trusty64"
 
-  # Use a non-standard value here as most home networks are 
-  # 192.168.X.X or 10.X.X.X and we cannot have a collision 
-  # with the host network
-  config.vm.network "private_network", ip: "172.16.16.16"  
-
   # Add settings for advanced users doing development
   config.vm.synced_folder "../../..", "/FrameworkBenchmarks"
   config.vm.network :forwarded_port, guest: 8080, host: 28080
@@ -103,6 +111,11 @@ Vagrant.configure("2") do |config|
     if ENV['TFB_VM_ARCH'] and ENV['TFB_SHOW_VM'] == "32"
       override.vm.box = "ubuntu/trusty32"
     end
+
+    # Use a non-standard value here as most home networks are 
+    # 192.168.X.X or 10.X.X.X and we cannot have a collision 
+    # with the host network
+    override.vm.network "private_network", ip: "172.16.16.16"
   end
 
   # Requires the vagrant-aws plugin from github.com/mitchellh/vagrant-aws
@@ -126,19 +139,30 @@ Vagrant.configure("2") do |config|
     # If you would like to override
     # aws.region = "us-east-1"
     # aws.security_groups = ["default"]
+
+    aws.tags = {
+      'Project' => 'FrameworkBenchmarks',
+      'TFB_role' => 'integrated'
+     }
     
     # Currently this uses 'previous generation' instance names
     # See: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
     aws.instance_type = "m1.small"
 
     # Disable support for synced folders
-    override.vm.synced_folder "../../..", "/FrameworkBenchmarks", disabled: true
+    if !(ENV['TFB_FORCE_SYNC'] and ENV['TFB_FORCE_SYNC'] == "true")
+      override.vm.synced_folder "../../..", "/FrameworkBenchmarks", disabled: true
+    end
   end
-
-  # We run the bootstrap as the normal vagrant user, not as root
-  # You can pass arguments to the bootstrap.sh by setting the variable
-  # SHELL_ARGS. At the moment, the only arg it understands is 'dev' for 
-  # developer mode. For example:
-  #   $ SHELL_ARGS="dev" vagrant up
-  config.vm.provision :shell, :path => "bootstrap.sh", privileged: false, args: ENV['SHELL_ARGS']
+  
+  config.vm.provision :shell do |sh|
+    sh.path = "bootstrap.sh"
+    
+    # We run the bootstrap as the normal vagrant user, not as root
+    sh.privileged = false
+    
+    # If you need arguments, you must pass them in, becuase Vagrant 
+    # cleans the environment before running the provision script
+    # sh.args = ""
+  end
 end

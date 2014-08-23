@@ -5,6 +5,7 @@
 # Intentionally uses ~, $HOME, and $USER so that the 
 # same script can work for VirtualBox (username vagrant)
 # and Amazon (username ubuntu)
+#
 
 if [ ! -e "~/.firstboot" ]; then
 
@@ -16,16 +17,10 @@ if [ ! -e "~/.firstboot" ]; then
   echo "export TFB_DATABASE_USER=$USER" >> ~/.bash_profile
   echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
   echo "export TFB_DATABASE_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
-  if [ "$1" == "dev" ]; then
-    echo "FrameworkBenchmarks: Running in developer mode"
-    echo "export FWROOT=/FrameworkBenchmarks" >> ~/.bash_profile 
-    ln -s /FrameworkBenchmarks ~/FrameworkBenchmarks
-    if [ -e "/FrameworkBenchmarks/benchmark.cfg" ]; then
-      echo "You have a benchmark.cfg file that will interfere with Vagrant, moving"
-      mv /FrameworkBenchmarks/benchmark.cfg /FrameworkBenchmarks/benchmark.cfg.backup
-    fi
-  else
-    echo "export FWROOT=$HOME/FrameworkBenchmarks" >> ~/.bash_profile 
+  echo "export FWROOT=$HOME/FrameworkBenchmarks" >> ~/.bash_profile 
+  if [ -e "~/FrameworkBenchmarks/benchmark.cfg" ]; then
+    echo "You have a benchmark.cfg file that will interfere with Vagrant, moving to benchmark.cfg.bak"
+    mv ~/FrameworkBenchmarks/benchmark.cfg ~/FrameworkBenchmarks/benchmark.cfg.bak
   fi
   source ~/.bash_profile
 
@@ -42,7 +37,10 @@ if [ ! -e "~/.firstboot" ]; then
   sudo apt-get install -y python-pip
 
   # Initial project setup
-  if [ "$1" != "dev" ]; then
+  if [ -d "/FrameworkBenchmarks" ]; then
+    ln -s /FrameworkBenchmarks $FWROOT
+  else
+    # If there is no synced folder, clone the project
     git clone https://github.com/TechEmpower/FrameworkBenchmarks.git $FWROOT
   fi
   sudo pip install -r $FWROOT/config/python_requirements.txt
