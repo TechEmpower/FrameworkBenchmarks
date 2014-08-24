@@ -1,0 +1,72 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  
+  # Put the keys inside each box
+  Dir['keys/*'].each do |fname|
+    config.vm.provision :file do |file|
+      file.source = fname
+      file.destination = "~/.ssh/" + File.basename(fname)
+    end
+  end
+
+  # Build the DB and client servers before the 
+  # app server
+  config.vm.define "db" do |db|
+    db.vm.hostname = "TFB-dbserver"
+    db.vm.box = "ubuntu/trusty64"
+    db.vm.network "private_network", ip: "172.16.16.18"
+    db.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+
+    # Database-specific setup
+    db.vm.provision "shell" do |sh|
+      sh.inline = "cat ~/.ssh/database.pub >> ~/.ssh/authorized_keys"
+      sh.privileged = false
+    end
+
+    db.vm.provision "shell" do |sh|
+      sh.path = "bootstrap.sh"
+      sh.privileged = false
+      sh.args = "database"
+    end
+  end
+
+  # Build the DB and client servers before the 
+  # app server
+  config.vm.define "load" do |load|
+    load.vm.hostname = "TFB-loadserver"
+    load.vm.box = "ubuntu/trusty64"
+    load.vm.network "private_network", ip: "172.16.16.17"
+    load.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+
+    load.vm.provision "shell" do |sh|
+      sh.inline = "cat ~/.ssh/client.pub >> ~/.ssh/authorized_keys"
+      sh.privileged = false
+    end
+
+    load.vm.provision "shell" do |sh|
+      sh.path = "bootstrap.sh"
+      sh.privileged = false
+      sh.args = "client"
+    end
+  end
+
+  # Define the app server as the primary VM
+  config.vm.define "app", primary: true do |app|
+    app.vm.hostname = "TFB-appserver"
+    app.vm.box = "ubuntu/trusty64"
+    app.vm.network "private_network", ip: "172.16.16.16"
+    app.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+    app.vm.network :forwarded_port, guest: 8080, host: 28080
+
+    app.vm.provision "shell" do |sh|
+      sh.path = "bootstrap.sh"
+      sh.privileged = false
+      sh.args = "server"
+    end
+  end
+
+
+  
+end
