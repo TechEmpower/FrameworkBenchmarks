@@ -24,6 +24,10 @@ the FAQs section below for more on this
 * **VirtualBox**, if you plan to run the Virtual Machine locally. If 
 you plan to solely use Amazon-based Virtual Machines you can skip this. 
 
+* **Vagrant AWS Plugin** from [here](https://github.com/mitchellh/vagrant-aws),
+if you plan to run the Virtual Machine on Amazon's Web Services (e.g. use 
+EC2). If you plan to solely use VirtualBox you can skip this. 
+
 ## Using Vagrant to Run VirtualBox-powered Virtual Machine
 
 In short, you need to clone the project and then run `vagrant up` 
@@ -141,3 +145,9 @@ minutes per test in `<foo>`, and running the full benchmark would likely take
 between 1 and 5 days of continuous execution. Note that this single VM runs the 
 framework, the load generation, and the database, and is therefore not a stable 
 benchmarking setup. 
+
+**Are spot instances supported?**: 
+
+There is an open issue at [mitchellh/vagrant-aws#32](https://github.com/mitchellh/vagrant-aws/issues/32) that appears to have 
+working code for spot instances. This could reduce the amazon cost up to 100x!
+Once this is supported in vagrant-aws it will be supported here. 
