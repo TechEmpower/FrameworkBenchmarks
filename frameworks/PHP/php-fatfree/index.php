@@ -38,7 +38,8 @@ $f3->route(
         $result = array();
         for ($i = 0; $i < $queries; $i++) {
             $id = mt_rand(1, 10000);
-            $result[] = $db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false);
+            $res = $db->exec('SELECT randomNumber FROM World WHERE id = ?',$id,0,false);
+            $result[] = $res[0];
         }
         header("Content-type: application/json");
         echo json_encode($single ? $result[0] : $result);
@@ -85,8 +86,12 @@ $f3->route('GET /fortune', function ($f3) {
     $dbc = $f3->get('DBS');
     $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
     $result = $db->exec('SELECT id, message FROM Fortune');
-    $result[] = 'Additional fortune added at request time.';
-    asort($result);
+    $result[] = array(
+        'id'=>0,
+        'message'=>'Additional fortune added at request time.'
+    );
+    $mtx = \Matrix::instance();
+    $mtx->sort($result,'message');
     $f3->set('result',$result);
     echo \Template::instance()->render('fortune.html');
 });
