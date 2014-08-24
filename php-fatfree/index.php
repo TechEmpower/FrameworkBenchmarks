@@ -86,7 +86,10 @@ $f3->route('GET /fortune', function ($f3) {
     $dbc = $f3->get('DBS');
     $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
     $result = $db->exec('SELECT id, message FROM Fortune');
-    $result[] = 'Additional fortune added at request time.';
+    $result[] = array(
+        'id'=>0,
+        'message'=>'Additional fortune added at request time.'
+    );
     $mtx = \Matrix::instance();
     $mtx->sort($result,'message');
     $f3->set('result',$result);
