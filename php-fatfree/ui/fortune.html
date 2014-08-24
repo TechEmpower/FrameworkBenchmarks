@@ -9,10 +9,10 @@
             <th>id</th>
             <th>message</th>
         </tr>
-        <repeat group="{{@result}}" key="{{@id}}" value="{{@fortune}}">
+        <repeat group="{{@result}}" value="{{@fortune}}">
             <tr>
-                <td>{{@id}}</td>
-                <td>{{@fortune}}</td>
+                <td>{{@fortune.id}}</td>
+                <td>{{@fortune.message}}</td>
             </tr>
         </repeat>
     </table>
