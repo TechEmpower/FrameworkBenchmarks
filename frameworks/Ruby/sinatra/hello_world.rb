@@ -6,6 +6,7 @@ ActiveRecord::Base.logger = nil
 set :activerecord_logger, nil
 set :static, false
 set :template_engine, :slim
+Slim::Engine.set_default_options format: :html5, sort_attrs: false
 
 # Specify the encoder - otherwise, sinatra/json inefficiently
 # attempts to load one of several on each request
