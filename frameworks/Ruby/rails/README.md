@@ -14,7 +14,7 @@ This is the Ruby on Rails portion of a [benchmarking test suite](../) comparing 
 The tests were run with:
 * [Ruby 2.1.2](http://www.ruby-lang.org/)
 * [JRuby 1.7.13](http://jruby.org/)
-* [Rails 4.1.x](http://rubyonrails.org/)
+* [Rails 4.1.4](http://rubyonrails.org/)
 * [Unicorn 4.8.3](http://unicorn.bogomips.org/)
 * [TorqBox 0.1.7](http://torquebox.org/torqbox/)
 * [MySQL 5.5](https://dev.mysql.com/)
