@@ -56,6 +56,7 @@ Rails.application.routes.draw do
 
   get "hello_world/json"
   get "hello_world/db"
+  get "hello_world/query"
   get "fortune" => "hello_world#fortune"
   get "update" => "hello_world#update"
   get "plaintext" => "hello_world#plaintext"
