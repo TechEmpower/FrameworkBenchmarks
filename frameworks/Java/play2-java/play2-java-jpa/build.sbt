@@ -1,4 +1,4 @@
-name := "play-java-jpa"
+name := "play2-java-jpa"
 
 version := "1.0-SNAPSHOT"
 
