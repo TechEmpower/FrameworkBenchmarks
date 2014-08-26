@@ -8,6 +8,7 @@ import java.util.concurrent._
 import scala.concurrent._
 import models.{World, Fortune}
 import utils._
+import utils.DbOperation._
 import scala.concurrent.Future
 
 import play.api.libs.concurrent.Execution.Implicits._
@@ -15,40 +16,60 @@ import play.core.NamedThreadFactory
 
 object Application extends Controller {
 
-  private val TestDatabaseRows = 10000
+  // Anorm code
 
-  private val partitionCount = current.configuration.getInt("db.default.partitionCount").getOrElse(2)
-  private val maxConnections =
-    partitionCount * current.configuration.getInt("db.default.maxConnectionsPerPartition").getOrElse(5)
-  private val minConnections =
-    partitionCount * current.configuration.getInt("db.default.minConnectionsPerPartition").getOrElse(5)
-
-  private val tpe = new ThreadPoolExecutor(minConnections, maxConnections,
-    0L, TimeUnit.MILLISECONDS,
-    new LinkedBlockingQueue[Runnable](),
-    new NamedThreadFactory("dbEc"))
-  private val dbEc = ExecutionContext.fromExecutorService(tpe)
-
-  // If the thread-pool used by the database grows too large then our server
-  // is probably struggling, and we should start dropping requests. Set
-  // the max size of our queue something above the number of concurrent
-  // connections that we need to handle.
-  def isDbQueueTooBig: Boolean = tpe.getQueue.size() <= 1024
-
-  def db = PredicatedAction(isDbQueueTooBig, ServiceUnavailable) {
-    Action.async {
-      getRandomWorlds(1).map { worlds =>
-        Ok(Json.toJson(worlds.head))
-      }
+  def getRandomWorlds(n: Int): Future[Seq[World]] = asyncDbOp { implicit connection =>
+    val random = ThreadLocalRandom.current()
+    for (_ <- 1 to n) yield {
+      val randomId: Long = random.nextInt(TestDatabaseRows) + 1
+      World.findById(randomId)
     }
   }
 
-  def queries(countString: String) = PredicatedAction(isDbQueueTooBig, ServiceUnavailable) {
-    Action.async {
-      val n = parseCount(countString)
-      getRandomWorlds(n).map { worlds =>
-        Ok(Json.toJson(worlds))
-      }
+  def getFortunes(): Future[Seq[Fortune]] = asyncDbOp { implicit connection =>
+    Fortune.getAll()
+  }
+
+  def updateWorlds(n: Int): Future[Seq[World]] = asyncDbOp { implicit connection =>
+    val random = ThreadLocalRandom.current()
+    for(_ <- 1 to n) yield {
+      val randomId: Long = random.nextInt(TestDatabaseRows) + 1
+      val world = World.findById(random.nextInt(TestDatabaseRows) + 1)
+      val randomNumber: Long = random.nextInt(10000) + 1
+      val updatedWorld = world.copy(randomNumber = randomNumber)
+      World.updateRandom(updatedWorld)
+      updatedWorld
+    }
+  }
+
+  // Common code between Anorm and Slick
+
+  protected val TestDatabaseRows = 10000
+
+  def db = Action.async {
+    getRandomWorlds(1).map { worlds =>
+      Ok(Json.toJson(worlds.head))
+    }
+  }
+
+  def queries(countString: String) = Action.async {
+    val n = parseCount(countString)
+    getRandomWorlds(n).map { worlds =>
+      Ok(Json.toJson(worlds))
+    }
+  }
+
+  def fortunes() = Action.async {
+    getFortunes().map { dbFortunes =>
+      val appendedFortunes =  Fortune(0, "Additional fortune added at request time.") :: (dbFortunes.to[List])
+      Ok(views.html.fortune(appendedFortunes))
+    }
+  }
+
+  def update(queries: String) = Action.async {
+    val n = parseCount(queries)
+    updateWorlds(n).map { worlds =>
+      Ok(Json.toJson(worlds))
     }
   }
 
@@ -65,42 +86,4 @@ object Application extends Controller {
     }
   }
 
-  private def getRandomWorlds(n: Int): Future[Seq[World]] = Future {
-    val random = ThreadLocalRandom.current()
-    DB.withConnection { implicit connection =>
-      for (_ <- 1 to n) yield {
-        val randomId: Long = random.nextInt(TestDatabaseRows) + 1
-        World.findById(randomId)
-      }
-    }
-  }(dbEc)
-
-  def fortunes() = PredicatedAction(isDbQueueTooBig, ServiceUnavailable) {
-    Action.async {
-      Future {
-        val fortunes = Fortune.getAll()
-        val extendedFortunes = Fortune(0.toLong, "Additional fortune added at request time.") +: fortunes
-        Ok(views.html.fortune(extendedFortunes))
-      }
-    }
-  }
-
-  def update(countString: String) = PredicatedAction(isDbQueueTooBig, ServiceUnavailable) {
-    Action.async {
-      val n = parseCount(countString)
-      Future {
-        val random = ThreadLocalRandom.current()
-        val worlds = DB.withConnection { implicit connection =>
-          for(_ <- 1 to n) yield {
-            val randomId: Long = random.nextInt(TestDatabaseRows) + 1
-            val world = World.findById(random.nextInt(TestDatabaseRows) + 1)
-            val updatedWorld = world.copy(randomNumber = random.nextInt(10000) + 1)
-            World.updateRandom(updatedWorld)
-            updatedWorld
-          }
-        }
-        Ok(Json.toJson(worlds)).withHeaders("Server" -> "Netty")
-      }(dbEc)
-    }
-  }
 }

@@ -2,8 +2,11 @@ name := "play2-scala-anorm"
 
 version := "1.0-SNAPSHOT"
 
-libraryDependencies ++= Seq(jdbc, anorm, "mysql" % "mysql-connector-java" % "5.1.22")
+scalaVersion := "2.11.2"
 
-dependencyOverrides += "com.jolbox" % "bonecp" % "0.7.1.RELEASE"
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-playScalaSettings
+libraryDependencies ++= Seq(
+  jdbc,
+  anorm,
+  "mysql" % "mysql-connector-java" % "5.1.32")
