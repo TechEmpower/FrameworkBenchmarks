@@ -11,42 +11,15 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # Add some default host entries
-  config.vm.provision :shell do |sh|
-    sh.inline = "
-      echo 127.0.0.1 `hostname` >> /etc/hosts
-      echo 172.16.0.18 TFB-dbserver >> /etc/hosts
-      echo 172.16.0.17 TFB-loadserver >> /etc/hosts
-      echo 172.16.0.16 TFB-appserver >> /etc/hosts
-      echo Updated /etc/hosts file:
-      cat /etc/hosts"
-  end
+  config.vm.define "client" do |client|
 
-  # Build the DB and client servers before the 
-  # app server
-  config.vm.define "load" do |load|
-    load.vm.hostname = "TFB-loadserver"
-    load.vm.box = "ubuntu/trusty64"
-    # virtualbox
-    #load.vm.network "private_network", ip: "172.16.16.17"
-    #load.vm.synced_folder "../../..", "/FrameworkBenchmarks"
-
-    # Configure our SSH key 
-    # (and hostname for AWS)
-    load.vm.provision "shell" do |sh|
-      sh.inline = "cat ~/.ssh/client.pub >> ~/.ssh/authorized_keys
-                   echo 'TFB-loadserver' | sudo tee /etc/hostname
-                   sudo hostname 'TFB-loadserver'"
-      sh.privileged = false
-    end
-
-    load.vm.provision "shell" do |sh|
+    client.vm.provision "shell" do |sh|
       sh.path = "bootstrap.sh"
       sh.privileged = false
       sh.args = "client"
     end
 
-    load.vm.provider :aws do |aws, override|
+    client.vm.provider :aws do |aws, override|
       aws.access_key_id = ENV['TFB_AWS_ACCESS_KEY'] 
       aws.secret_access_key = ENV['TFB_AWS_SECRET_KEY']
       aws.keypair_name = ENV['TFB_AWS_KEY_NAME']
@@ -69,26 +42,19 @@ Vagrant.configure("2") do |config|
 
       aws.instance_type = "m1.small"
     end
+
+    client.vm.provider :virtualbox do |vb, override|
+      override.vm.hostname = "TFB-client"
+      override.vm.box = "ubuntu/trusty64"
+      override.vm.network "private_network", ip: "172.16.0.17"
+      
+      override.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+    end
   end
 
   # Build the DB and client servers before the 
   # app server
   config.vm.define "db" do |db|
-    db.vm.hostname = "TFB-dbserver"
-    db.vm.box = "ubuntu/trusty64"
-    
-    # Only work in virtualbox
-    #db.vm.network "private_network", ip: "172.16.0.18"
-    #db.vm.synced_folder "../../..", "/FrameworkBenchmarks"
-
-    # Configure our SSH key 
-    # (and hostname for AWS)
-    db.vm.provision "shell" do |sh|
-      sh.inline = "cat ~/.ssh/database.pub >> ~/.ssh/authorized_keys
-                   echo 'TFB-dbserver' | sudo tee /etc/hostname
-                   sudo hostname 'TFB-dbserver'"
-      sh.privileged = false
-    end
 
     db.vm.provision "shell" do |sh|
       sh.path = "bootstrap.sh"
@@ -119,24 +85,19 @@ Vagrant.configure("2") do |config|
 
       aws.instance_type = "m1.small"
     end
+
+    db.vm.provider :virtualbox do |vb, override|
+      override.vm.hostname = "TFB-database"
+      override.vm.box = "ubuntu/trusty64"
+      override.vm.network "private_network", ip: "172.16.0.18"
+      
+      override.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+    end
   end
 
   # Define the app server as the primary VM
   config.vm.define "app", primary: true do |app|
-    app.vm.hostname = "TFB-appserver"
-    app.vm.box = "ubuntu/trusty64"
-    app.vm.network "private_network", ip: "172.16.16.16"
     
-    # app.vm.synced_folder "../../..", "/FrameworkBenchmarks"
-    
-    app.vm.network :forwarded_port, guest: 8080, host: 28080
-
-    # Configure our Hostname for AWS
-    app.vm.provision "shell" do |sh|
-      sh.inline = "echo 'TFB-appserver' | tee /etc/hostname
-                   hostname 'TFB-appserver'"
-    end
-
     app.vm.provision "shell" do |sh|
       sh.path = "bootstrap.sh"
       sh.privileged = false
@@ -165,6 +126,15 @@ Vagrant.configure("2") do |config|
        }
 
       aws.instance_type = "m1.small"
+    end
+
+    app.vm.provider :virtualbox do |vb, override|
+      override.vm.hostname = "TFB-server"
+      override.vm.box = "ubuntu/trusty64"
+      override.vm.network "private_network", ip: "172.16.0.16"
+      
+      override.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+      override.vm.network :forwarded_port, guest: 8080, host: 28080
     end
   end
 
