@@ -64,7 +64,7 @@ for lang, orm, opsyses, tests in configurations:
       ('setup_file', setup_name),
       ('framework', 'play2'),
       ('language', lang),
-      ('orm', orm if orm else 'Raw'),
+      ('orm', 'Full' if orm else 'Raw'),
       ('os', opsys),
       ('database', 'MySQL' if orm else 'None'),
       ('approach', 'Realistic'),
