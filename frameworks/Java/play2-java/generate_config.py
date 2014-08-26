@@ -11,6 +11,7 @@ import collections, json, os, textwrap
 configurations = [
   ('Java',  None,    ['Linux'],            ['json']),
   ('Java',  'Ebean', ['Linux'],            ['db', 'query']),
+  ('Java',  'JPA',   ['Linux'],            ['db', 'query']),
   ('Scala', None,    ['Linux'],            ['json']),
   ('Scala', 'Anorm', ['Linux', 'Windows'], ['db', 'query', 'fortune', 'update']),
 ]

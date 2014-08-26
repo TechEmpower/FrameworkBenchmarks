@@ -38,6 +38,25 @@
         "port": "9000", 
         "db_url": "/db", 
         "query_url": "/queries?queries="
+      }, 
+      "java-jpa": {
+        "display_name": "play2-java-jpa", 
+        "setup_file": "setup_java_jpa", 
+        "framework": "play2", 
+        "language": "Java", 
+        "orm": "JPA", 
+        "os": "Linux", 
+        "database": "MySQL", 
+        "approach": "Realistic", 
+        "classification": "Fullstack", 
+        "platform": "Netty", 
+        "webserver": "None", 
+        "database_os": "Linux", 
+        "notes": "", 
+        "versus": "netty", 
+        "port": "9000", 
+        "db_url": "/db", 
+        "query_url": "/queries?queries="
       }
     }
   ]
