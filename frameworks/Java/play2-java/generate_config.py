@@ -13,6 +13,7 @@ configurations = [
   ('Java',  'Ebean', ['Linux'],            ['db', 'query']),
   ('Scala', None,    ['Linux'],            ['json']),
   ('Scala', 'Anorm', ['Linux', 'Windows'], ['db', 'query', 'fortune', 'update']),
+  ('Scala', 'Slick', ['Linux'],            ['db', 'query', 'fortune', 'update']),
 ]
 
 # All play2 test applications must use the same URLs.
