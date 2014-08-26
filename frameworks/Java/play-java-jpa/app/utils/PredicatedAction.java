@@ -8,16 +8,16 @@ package utils;
 import play.libs.F;
 import play.mvc.Action;
 import play.mvc.Http;
-import play.mvc.SimpleResult;
+import play.mvc.Result;
 
 public class PredicatedAction extends Action<Predicated> {
     @Override
-    public F.Promise<SimpleResult> call(final Http.Context ctx) throws Throwable {
+    public F.Promise<Result> call(final Http.Context ctx) throws Throwable {
         final Predicate p = configuration.predicate().newInstance();
         if (p.condition()) {
             return delegate.call(ctx);
         } else {
-            return F.Promise.<SimpleResult>pure(status(configuration.failed()));
+            return F.Promise.<Result>pure(status(configuration.failed()));
         }
     }
 }
