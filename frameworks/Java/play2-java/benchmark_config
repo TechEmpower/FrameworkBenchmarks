@@ -2,7 +2,7 @@
   "framework": "play2", 
   "tests": [
     {
-      "java": {
+      "play2-java": {
         "display_name": "play2-java", 
         "setup_file": "setup_java", 
         "framework": "play2", 
@@ -20,7 +20,7 @@
         "port": "9000", 
         "json_url": "/json"
       }, 
-      "java-ebean": {
+      "play2-java-ebean": {
         "display_name": "play2-java-ebean", 
         "setup_file": "setup_java_ebean", 
         "framework": "play2", 
@@ -39,7 +39,7 @@
         "db_url": "/db", 
         "query_url": "/queries?queries="
       }, 
-      "java-jpa": {
+      "play2-java-jpa": {
         "display_name": "play2-java-jpa", 
         "setup_file": "setup_java_jpa", 
         "framework": "play2", 
@@ -61,7 +61,7 @@
         "update_url": "/update?queries=", 
         "plaintext_url": "/plaintext"
       }, 
-      "java-jpa-hikaricp": {
+      "play2-java-jpa-hikaricp": {
         "display_name": "play2-java-jpa-hikaricp", 
         "setup_file": "setup_java_jpa_hikaricp", 
         "framework": "play2", 

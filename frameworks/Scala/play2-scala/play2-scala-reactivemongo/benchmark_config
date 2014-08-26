@@ -1,5 +1,5 @@
 {
-  "framework": "play-scala-mongodb",
+  "framework": "play2-scala-reactivemongo",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -16,7 +16,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "play-scala-rmongo",
+      "display_name": "play2-scala-reactivemongo",
       "notes": "Uses Reactive Mongo",
       "versus": "netty"
     }
