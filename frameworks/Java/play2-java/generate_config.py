@@ -8,15 +8,74 @@ import collections, json, os, textwrap
 # Each line corresponds to a test application.
 # Format is: (language, orm, (opsys, ...), (test, ...))
 # See the dir_name logic below to see the directory name for each test application.
+Config = collections.namedtuple('Config', ['lang', 'orm', 'db', 'operatingSystems', 'tests', 'shouldIncludeResults'])
 configurations = [
-  ('Java',  None,    			['Linux'],            ['json', 'plaintext']),
-  ('Java',  'Ebean BoneCP', 	['Linux'],            ['db', 'query', 'fortune', 'update']),
-  ('Java',  'Ebean HikariCP', 	['Linux'],            ['db', 'query', 'fortune', 'update']),
-  ('Java',  'JPA BoneCP',		['Linux'],            ['db', 'query', 'fortune', 'update']),
-  ('Java',  'JPA HikariCP',		['Linux'],            ['db', 'query', 'fortune', 'update']),
-  ('Scala', None,    			['Linux'],            ['json']),
-  ('Scala', 'Anorm', 			['Linux', 'Windows'], ['db', 'query', 'fortune', 'update']),
-  ('Scala', 'Slick', 			['Linux'],            ['db', 'query', 'fortune', 'update']),
+
+  # Plain Java test
+
+  Config(
+    'Java', None, None,
+    operatingSystems = ['Linux'],
+    tests = ['json'],
+    shouldIncludeResults = True
+  ),
+
+  # Java database tests
+
+  Config(
+    'Java', 'Ebean', 'MySQL',
+    operatingSystems = ['Linux'],
+    tests = ['db', 'query'],
+    shouldIncludeResults = True
+  ),
+  Config(
+    'Java', 'JPA', 'MySQL',
+    operatingSystems = ['Linux'],
+    tests = ['db', 'query', 'fortune', 'update', 'plaintext'],
+    shouldIncludeResults = True
+  ),
+  Config(
+    'Java', 'JPA HikariCP', 'MySQL',
+    operatingSystems = ['Linux'],
+    tests = ['db', 'query', 'fortune', 'update', 'plaintext'],
+    shouldIncludeResults = True
+  ),
+
+  # Plain Scala test
+
+  Config(
+    'Scala', None, None,
+    operatingSystems = ['Linux'],
+    tests = ['json'],
+    shouldIncludeResults = True
+  ),
+
+  # Scala database tests
+
+  Config(
+    'Scala', 'Activate', 'MySQL',
+    operatingSystems = ['Linux'],
+    tests = ['db', 'query', 'fortune', 'update'],
+    shouldIncludeResults = False # Uses old versions of Play and Activate
+  ),
+  Config(
+    'Scala', 'Anorm', 'MySQL',
+    operatingSystems = ['Linux', 'Windows'],
+    tests = ['db', 'query', 'fortune', 'update'],
+    shouldIncludeResults = True
+  ),
+  Config(
+    'Scala', 'ReactiveMongo', 'MongoDB',
+    operatingSystems = ['Linux'],
+    tests = ['db', 'query'],
+    shouldIncludeResults = True # Updated to Play 2.3 and ReactiveMongo 0.10, but no maintainer
+  ),
+  Config(
+    'Scala', 'Slick', 'MySQL',
+    operatingSystems = ['Linux'],
+    tests = ['db', 'query', 'fortune', 'update'],
+    shouldIncludeResults = True
+  )
 ]
 
 # All play2 test applications must use the same URLs.
@@ -39,15 +98,28 @@ def frameworksPath():
   'Get the absolute path of ROOT/frameworks'
   return os.path.abspath(os.path.join(__file__, '..', '..', '..'))
 
+def maybe(item):
+  'Maps None => [] and item => [item]'
+  if item is None:
+    return []
+  else:
+    return [item]
+
+def namify(bits, sep):
+  'Joins a list of bits together then replaces spaces with sep.'
+  return ' '.join(bits).replace(' ', sep).lower()
+
 lang_test_configs = {}
 for lang, _ in langs.iteritems():
   lang_test_configs[lang] = collections.OrderedDict()
 
-for lang, orm, opsyses, tests in configurations:
-  dir_name = 'play2-' + lang.lower() + (('-'+orm.replace(' ', '-').lower()) if orm else '')
-  setup_name = 'setup_' + lang.lower() + (('_'+orm.replace(' ', '_').lower()) if orm else '')
+for config in configurations:
 
-  setup_path = os.path.join(pathForLang(lang), setup_name+'.py')
+  core_name_bits = [config.lang] + maybe(config.orm)
+  dir_name = namify(['play2'] + core_name_bits, '-')
+  setup_name = namify(['setup'] + core_name_bits, '_')
+
+  setup_path = os.path.join(pathForLang(config.lang), setup_name+'.py')
   print 'Generating', setup_path
   with open(setup_path, 'w') as f:
     f.write(textwrap.dedent("""
@@ -58,19 +130,31 @@ for lang, orm, opsyses, tests in configurations:
       make_setup_for_dir(globals(), '"""+dir_name+"""')
     """))
 
-  for opsys in opsyses:
-    if len(opsyses) == 1:
-      test_name = lang.lower() + (('-'+orm.replace(' ', '-').lower()) if orm else '')
-    else:
-      test_name = lang.lower() + (('-'+orm.replace(' ', '-').lower()) if orm else '') + '-'+opsys.lower()
+  # We make a separate test config entry for each operating system
+  # that the test runs on.
+  for opsys in config.operatingSystems:
+
+    # Note the test name may differ from the directory name because
+    # it may have the OS name or a word to show that results shouldn't
+    # be included.
+
+    # If there is more than one OS then add the current OS to the test name
+    # so we can distinguish between the tests.
+    opsys_name_bit = [] if len(config.operatingSystems) == 1 else [opsys]
+
+    # If the test is out of date then add 'do not include' to the end of the
+    # test name to make it harder to accidentally include in final results.
+    tags_bit = [] if config.shouldIncludeResults else ['do not include']
+    test_name_bits = core_name_bits + opsys_name_bit + tags_bit
+
     test_config_json = collections.OrderedDict([
-      ('display_name', 'play2-'+test_name),
+      ('display_name', namify(['play2'] + test_name_bits, '-')),
       ('setup_file', setup_name),
       ('framework', 'play2'),
-      ('language', lang),
-      ('orm', 'Full' if orm else 'Raw'),
+      ('language', config.lang),
+      ('orm', 'Full' if config.orm else 'Raw'),
       ('os', opsys),
-      ('database', 'MySQL' if orm else 'None'),
+      ('database', config.db if config.db else 'None'),
       ('approach', 'Realistic'),
       ('classification', 'Fullstack'),
       ('platform', 'Netty'),
@@ -80,9 +164,9 @@ for lang, orm, opsyses, tests in configurations:
       ('versus', 'netty'),
       ('port', '9000'),
     ])
-    for test in tests:
+    for test in config.tests:
       test_config_json[test+'_url'] = test_urls[test]
-      lang_test_configs[lang][test_name] = test_config_json
+      lang_test_configs[config.lang][namify(test_name_bits, '-')] = test_config_json
 
 for lang, _ in langs.iteritems():
   benchmark_config_path = os.path.join(pathForLang(lang), 'benchmark_config')
