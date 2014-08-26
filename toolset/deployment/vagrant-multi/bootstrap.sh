@@ -7,9 +7,9 @@
 # and Amazon (username ubuntu)
 
 # Setup some nice TFB defaults
-echo "export TFB_SERVER_HOST=172.16.16.16" >> ~/.bash_profile
-echo "export TFB_CLIENT_HOST=172.16.16.17" >> ~/.bash_profile
-echo "export TFB_DATABASE_HOST=172.16.16.18" >> ~/.bash_profile
+echo "export TFB_SERVER_HOST=172.16.0.16" >> ~/.bash_profile
+echo "export TFB_CLIENT_HOST=172.16.0.17" >> ~/.bash_profile
+echo "export TFB_DATABASE_HOST=172.16.0.18" >> ~/.bash_profile
 echo "export TFB_CLIENT_USER=$USER" >> ~/.bash_profile
 echo "export TFB_DATABASE_USER=$USER" >> ~/.bash_profile
 echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/client" >> ~/.bash_profile

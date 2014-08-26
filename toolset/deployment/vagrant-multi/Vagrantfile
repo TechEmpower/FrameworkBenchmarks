@@ -11,25 +11,15 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # Build the DB and client servers before the 
-  # app server
-  config.vm.define "db" do |db|
-    db.vm.hostname = "TFB-dbserver"
-    db.vm.box = "ubuntu/trusty64"
-    db.vm.network "private_network", ip: "172.16.16.18"
-    db.vm.synced_folder "../../..", "/FrameworkBenchmarks"
-
-    # Database-specific setup
-    db.vm.provision "shell" do |sh|
-      sh.inline = "cat ~/.ssh/database.pub >> ~/.ssh/authorized_keys"
-      sh.privileged = false
-    end
-
-    db.vm.provision "shell" do |sh|
-      sh.path = "bootstrap.sh"
-      sh.privileged = false
-      sh.args = "database"
-    end
+  # Add some default host entries
+  config.vm.provision :shell do |sh|
+    sh.inline = "
+      echo 127.0.0.1 `hostname` >> /etc/hosts
+      echo 172.16.0.18 TFB-dbserver >> /etc/hosts
+      echo 172.16.0.17 TFB-loadserver >> /etc/hosts
+      echo 172.16.0.16 TFB-appserver >> /etc/hosts
+      echo Updated /etc/hosts file:
+      cat /etc/hosts"
   end
 
   # Build the DB and client servers before the 
@@ -37,11 +27,16 @@ Vagrant.configure("2") do |config|
   config.vm.define "load" do |load|
     load.vm.hostname = "TFB-loadserver"
     load.vm.box = "ubuntu/trusty64"
-    load.vm.network "private_network", ip: "172.16.16.17"
-    load.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+    # virtualbox
+    #load.vm.network "private_network", ip: "172.16.16.17"
+    #load.vm.synced_folder "../../..", "/FrameworkBenchmarks"
 
+    # Configure our SSH key 
+    # (and hostname for AWS)
     load.vm.provision "shell" do |sh|
-      sh.inline = "cat ~/.ssh/client.pub >> ~/.ssh/authorized_keys"
+      sh.inline = "cat ~/.ssh/client.pub >> ~/.ssh/authorized_keys
+                   echo 'TFB-loadserver' | sudo tee /etc/hostname
+                   sudo hostname 'TFB-loadserver'"
       sh.privileged = false
     end
 
@@ -50,6 +45,80 @@ Vagrant.configure("2") do |config|
       sh.privileged = false
       sh.args = "client"
     end
+
+    load.vm.provider :aws do |aws, override|
+      aws.access_key_id = ENV['TFB_AWS_ACCESS_KEY'] 
+      aws.secret_access_key = ENV['TFB_AWS_SECRET_KEY']
+      aws.keypair_name = ENV['TFB_AWS_KEY_NAME']
+      override.ssh.private_key_path = ENV['TFB_AWS_KEY_PATH']
+
+      override.vm.box = "dummy"
+      override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+      aws.ami = "ami-62c8160a"
+      override.ssh.username = "ubuntu"
+      
+      aws.private_ip_address = "172.16.0.17"
+      aws.associate_public_ip = true
+      aws.subnet_id = "subnet-2737230f"
+      aws.security_groups = ["sg-871240e2"]
+
+      aws.tags = {
+        'Project' => 'FrameworkBenchmarks',
+        'TFB_role' => 'loadgen'
+       }
+
+      aws.instance_type = "m1.small"
+    end
+  end
+
+  # Build the DB and client servers before the 
+  # app server
+  config.vm.define "db" do |db|
+    db.vm.hostname = "TFB-dbserver"
+    db.vm.box = "ubuntu/trusty64"
+    
+    # Only work in virtualbox
+    #db.vm.network "private_network", ip: "172.16.0.18"
+    #db.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+
+    # Configure our SSH key 
+    # (and hostname for AWS)
+    db.vm.provision "shell" do |sh|
+      sh.inline = "cat ~/.ssh/database.pub >> ~/.ssh/authorized_keys
+                   echo 'TFB-dbserver' | sudo tee /etc/hostname
+                   sudo hostname 'TFB-dbserver'"
+      sh.privileged = false
+    end
+
+    db.vm.provision "shell" do |sh|
+      sh.path = "bootstrap.sh"
+      sh.privileged = false
+      sh.args = "database"
+    end
+
+    db.vm.provider :aws do |aws, override|
+      aws.access_key_id = ENV['TFB_AWS_ACCESS_KEY'] 
+      aws.secret_access_key = ENV['TFB_AWS_SECRET_KEY']
+      aws.keypair_name = ENV['TFB_AWS_KEY_NAME']
+      override.ssh.private_key_path = ENV['TFB_AWS_KEY_PATH']
+
+      override.vm.box = "dummy"
+      override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+      aws.ami = "ami-62c8160a"
+      override.ssh.username = "ubuntu"
+      
+      aws.private_ip_address = "172.16.0.18"
+      aws.associate_public_ip = true
+      aws.subnet_id = "subnet-2737230f"
+      aws.security_groups = ["sg-871240e2"]
+
+      aws.tags = {
+        'Project' => 'FrameworkBenchmarks',
+        'TFB_role' => 'database'
+       }
+
+      aws.instance_type = "m1.small"
+    end
   end
 
   # Define the app server as the primary VM
@@ -57,16 +126,47 @@ Vagrant.configure("2") do |config|
     app.vm.hostname = "TFB-appserver"
     app.vm.box = "ubuntu/trusty64"
     app.vm.network "private_network", ip: "172.16.16.16"
-    app.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+    
+    # app.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+    
     app.vm.network :forwarded_port, guest: 8080, host: 28080
+
+    # Configure our Hostname for AWS
+    app.vm.provision "shell" do |sh|
+      sh.inline = "echo 'TFB-appserver' | tee /etc/hostname
+                   hostname 'TFB-appserver'"
+    end
 
     app.vm.provision "shell" do |sh|
       sh.path = "bootstrap.sh"
       sh.privileged = false
       sh.args = "server"
     end
+
+    app.vm.provider :aws do |aws, override|
+      aws.access_key_id = ENV['TFB_AWS_ACCESS_KEY'] 
+      aws.secret_access_key = ENV['TFB_AWS_SECRET_KEY']
+      aws.keypair_name = ENV['TFB_AWS_KEY_NAME']
+      override.ssh.private_key_path = ENV['TFB_AWS_KEY_PATH']
+
+      override.vm.box = "dummy"
+      override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+      aws.ami = "ami-62c8160a"
+      override.ssh.username = "ubuntu"
+      
+      aws.private_ip_address = "172.16.0.16"
+      aws.associate_public_ip = true
+      aws.subnet_id = "subnet-2737230f"
+      aws.security_groups = ["sg-871240e2"]
+
+      aws.tags = {
+        'Project' => 'FrameworkBenchmarks',
+        'TFB_role' => 'appserver'
+       }
+
+      aws.instance_type = "m1.small"
+    end
   end
 
 
-  
 end
