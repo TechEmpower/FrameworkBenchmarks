@@ -14,6 +14,15 @@ while read -r line; do
   export $line; 
 done <<< "$1"
 
+# Are we installing the server machine, the client machine, 
+# the database machine, or all machines? 
+# Valid values: 
+#    - all      (we are setting up a development environment)
+#    - database (we are setting up the database machine)
+#    - client   (we are setting up the client machine for load generation)
+#    - server   (we are setting up the machine that will host frameworks)
+ROLE=${2:-all}
+
 # Set a number of variables by either pulling them from 
 # the existing environment or using the default values
 # I'm renaming them to indicate that (in this script only)
@@ -21,51 +30,45 @@ done <<< "$1"
 SERVER_IP=${TFB_AWS_APP_IP:-172.16.0.16}
 CLIENT_IP=${TFB_AWS_LOAD_IP:-172.16.0.17}
 DATABA_IP=${TFB_AWS_DB_IP:-172.16.0.18}
+if [ "$ROLE" == "all" ]; then
+  SERVER_IP=127.0.0.1
+  CLIENT_IP=127.0.0.1
+  DATABA_IP=127.0.0.1
+fi
 
 GH_REPO=${TFB_AWS_REPO_SLUG:-TechEmpower/FrameworkBenchmarks}
 GH_BRANCH=${TFB_AWS_REPO_BRANCH:-master}
-
-# Are we installing the server machine, the client machine, 
-# the database machine, or all machines? 
-ROLE=${2:-all}
-
-# Are we installing in production mode, or development mode?
-# It's odd to have ROLE=all and MODE=prod, but I suppose it 
-# could happen so I'm using two variables instead of one
-MODE=${3:-dev}
 
 # A shell provisioner is called multiple times
 if [ ! -e "~/.firstboot" ]; then
 
   # Setup some nice TFB defaults
+  if [ "$ROLE" == "all" ]; then
+    echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
+    echo "export TFB_DATABASE_IDENTITY_FILE=$HOME/.ssh/id_rsa" >> ~/.bash_profile
+  else
+    echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/client" >> ~/.bash_profile
+    echo "export TFB_DATABASE_IDENTITY_FILE=$HOME/.ssh/database" >> ~/.bash_profile
+  fi
   echo "export TFB_SERVER_HOST=$SERVER_IP" >> ~/.bash_profile
   echo "export TFB_CLIENT_HOST=$CLIENT_IP" >> ~/.bash_profile
   echo "export TFB_DATABASE_HOST=$DATABA_IP" >> ~/.bash_profile
   echo "export TFB_CLIENT_USER=$USER" >> ~/.bash_profile
   echo "export TFB_DATABASE_USER=$USER" >> ~/.bash_profile
-  echo "export TFB_CLIENT_IDENTITY_FILE=$HOME/.ssh/client" >> ~/.bash_profile
-  echo "export TFB_DATABASE_IDENTITY_FILE=$HOME/.ssh/database" >> ~/.bash_profile
   echo "export FWROOT=$HOME/FrameworkBenchmarks" >> ~/.bash_profile 
+  source ~/.bash_profile
+
+  # Ensure their host-local benchmark.cfg is not picked up on the remote host
   if [ -e "~/FrameworkBenchmarks/benchmark.cfg" ]; then
     echo "You have a benchmark.cfg file that will interfere with Vagrant, moving to benchmark.cfg.bak"
     mv ~/FrameworkBenchmarks/benchmark.cfg ~/FrameworkBenchmarks/benchmark.cfg.bak
   fi
-  source ~/.bash_profile
 
   # Setup hosts 
   echo "Setting up convenience hosts entries"
   echo $DATABA_IP TFB-database | sudo tee --append /etc/hosts
   echo $CLIENT_IP TFB-client   | sudo tee --append /etc/hosts
   echo $SERVER_IP TFB-server   | sudo tee --append /etc/hosts
-
-  # If we are using development mode, route all remote
-  # queries to the localhost interface
-  if [ "$MODE" == "dev" ]; then
-    echo "Routing database and client to localhost"
-    sudo route add -host $DATABA_IP lo
-    sudo route add -host $CLIENT_IP lo
-    sudo route add -host $SERVER_IP lo
-  fi
 
   # Update hostname to reflect our current role
   if [ "$ROLE" != "all" ]; then
@@ -106,21 +109,25 @@ if [ ! -e "~/.firstboot" ]; then
   cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
   chmod 600 ~/.ssh/authorized_keys
 
-  # Ensure keys have proper permissions
-  chmod 600 ~/.ssh/client ~/.ssh/database
-
-  # Database and client need to add their specific keys
+  # Enable remote SSH access if we are running production environment
   # Note : this are always copied from the local working copy using a
   #        file provisioner. While they exist in the git clone we just 
   #        created (so we could use those), we want to let the user
   #        have the option of replacing the keys in their working copy
   #        and ensuring that only they can ssh into the machines
-  mykey=~/.ssh/$ROLE.pub
-  if [ -e $mykey ]; then
+  if [ "$ROLE" == "server" ]; then
+    # Ensure keys have proper permissions
+    chmod 600 ~/.ssh/client ~/.ssh/database
+  elif [ "$ROLE" != "all" ]; then
+    # Ensure keys can be used to ssh in
     echo "Setting up SSH access for the TFB-server"
+    mykey=~/.ssh/$ROLE.pub
     echo "Using key: "
     ssh-keygen -lv -f $mykey
     cat $mykey >> ~/.ssh/authorized_keys
+
+    # Ensure keys have proper permissions
+    chmod 600 ~/.ssh/client ~/.ssh/database
   fi
 
   # Setup 
@@ -132,5 +139,5 @@ if [ ! -e "~/.firstboot" ]; then
   echo "Setting up welcome message"
   sudo rm -f /etc/update-motd.d/51-cloudguest
   sudo rm -f /etc/update-motd.d/98-cloudguest
-  sudo mv /custom_motd.sh /etc/update-motd.d/55-tfbwelcome
+  sudo mv ~/.custom_motd.sh /etc/update-motd.d/55-tfbwelcome
 fi
