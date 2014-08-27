@@ -96,13 +96,8 @@ fun queries s =
 (** A new table, specific to this test *)
 table fortune : {Id : int, Message : string} PRIMARY KEY Id
 
-(** Teach the JSON library about good string names for the columns. *)
-type fortune_t = {Id : int, Message : string}
-val fortune_conversion : json fortune_t =
-    json_record {Id = "id", Message = "message"}
-
 (** Here's the additional fortune mandated by the spec. *)
-val new_fortune : fortune_t =
+val new_fortune =
     {Id = 0, Message = "Additional fortune added at request time."}
 
 (** Actual page handler *)

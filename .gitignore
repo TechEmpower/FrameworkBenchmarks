@@ -71,4 +71,4 @@ go/pkg/*
 beego/pkg/*
 
 # urweb
-urweb/*.exe
+frameworks/Ur/urweb/*.exe
