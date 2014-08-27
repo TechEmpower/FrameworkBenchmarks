@@ -794,28 +794,27 @@ class Benchmarker:
   # __finish
   ############################################################
   def __finish(self):
-    if self.mode == "verify":
-      tests = self.__gather_tests
-      # Normally you don't have to use Fore.BLUE before each line, but 
-      # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
-      # or stream flush, so we have to ensure that the color code is printed repeatedly
-      prefix = Fore.CYAN
-      for line in header("Verification Summary", top='=', bottom='').split('\n'):
-        print prefix + line
-      for test in tests:
-        print prefix + "| Test: %s" % test.name
-        if test.name in self.results['verify'].keys():
-          for test_type, result in self.results['verify'][test.name].iteritems():
-            if result.upper() == "PASS":
-              color = Fore.GREEN
-            elif result.upper() == "WARN":
-              color = Fore.YELLOW
-            else:
-              color = Fore.RED
-            print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
-        else:
-          print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
-      print prefix + header('', top='', bottom='=') + Style.RESET_ALL
+    tests = self.__gather_tests
+    # Normally you don't have to use Fore.BLUE before each line, but 
+    # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
+    # or stream flush, so we have to ensure that the color code is printed repeatedly
+    prefix = Fore.CYAN
+    for line in header("Verification Summary", top='=', bottom='').split('\n'):
+      print prefix + line
+    for test in tests:
+      print prefix + "| Test: %s" % test.name
+      if test.name in self.results['verify'].keys():
+        for test_type, result in self.results['verify'][test.name].iteritems():
+          if result.upper() == "PASS":
+            color = Fore.GREEN
+          elif result.upper() == "WARN":
+            color = Fore.YELLOW
+          else:
+            color = Fore.RED
+          print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
+      else:
+        print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
+    print prefix + header('', top='', bottom='=') + Style.RESET_ALL
 
     print "Time to complete: " + str(int(time.time() - self.start_time)) + " seconds"
     print "Results are saved in " + os.path.join(self.result_directory, self.timestamp)
