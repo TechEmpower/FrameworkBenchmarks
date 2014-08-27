@@ -69,7 +69,7 @@ def provider_aws(config, role, ip_address='172.16.0.16')
     end
 
     if ENV.fetch('TFB_FORCE_SYNC', "false") == "true"
-      override.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+      override.vm.synced_folder "../..", "/FrameworkBenchmarks"
     end
 
   end
@@ -92,7 +92,7 @@ def provider_virtualbox(config, role)
       vb.customize ["modifyvm", :id, "--memory", "2048"]
     end
 
-    override.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+    override.vm.synced_folder "../..", "/FrameworkBenchmarks"
 
     if role.eql? "all" or role.eql? "app"
       override.vm.network :forwarded_port, guest: 8080, host: 28080
