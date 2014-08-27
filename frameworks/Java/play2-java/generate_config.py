@@ -13,6 +13,7 @@ configurations = [
   ('Java',  'Ebean', ['Linux'],            ['db', 'query']),
   ('Scala', None,    ['Linux'],            ['json']),
   ('Scala', 'Anorm', ['Linux', 'Windows'], ['db', 'query', 'fortune', 'update']),
+  ('Scala', 'Slick', ['Linux'],            ['db', 'query', 'fortune', 'update']),
 ]
 
 # All play2 test applications must use the same URLs.
@@ -63,7 +64,7 @@ for lang, orm, opsyses, tests in configurations:
       ('setup_file', setup_name),
       ('framework', 'play2'),
       ('language', lang),
-      ('orm', orm if orm else 'Raw'),
+      ('orm', 'Full' if orm else 'Raw'),
       ('os', opsys),
       ('database', 'MySQL' if orm else 'None'),
       ('approach', 'Realistic'),

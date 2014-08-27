@@ -12,7 +12,7 @@ class Fortunes(tag: Tag) extends Table[Fortune](tag, "Fortune") {
 }
 class FortunesTableQuery extends TableQuery(new Fortunes(_)){
   val byId = this.findBy(_.id)
-  val all = Compiled{this:Query[Fortunes,Fortune]}
+  val all = Compiled{this:Query[Fortunes,Fortune,Seq]}
   def getAll(): List[Fortune] = DB.withSession { implicit session =>
     all.list
   }
