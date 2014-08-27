@@ -44,7 +44,7 @@
         "setup_file": "setup_java_jpa", 
         "framework": "play2", 
         "language": "Java", 
-        "orm": "JPA", 
+        "orm": "Full", 
         "os": "Linux", 
         "database": "MySQL", 
         "approach": "Realistic", 
