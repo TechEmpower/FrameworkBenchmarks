@@ -8,6 +8,10 @@ check_provider_needs(provider)
 require_relative 'production-env'
 
 Vagrant.configure("2") do |config|
+
+  server_ip = ENV.fetch('TFB_LOAD_IP', '172.16.0.16')
+  client_ip = ENV.fetch('TFB_DB_IP', '172.16.0.17')
+  databa_ip = ENV.fetch('TFB_APP_IP', '172.16.0.18')
   
   # Put the keys inside each box
   Dir['keys/*'].each do |fname|
@@ -19,21 +23,22 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "client" do |client|
     provision_bootstrap(client, "client")
-    provider_aws(client, "loadgen", "172.16.0.17")
-    provider_virtualbox(client, "client", "172.16.0.17")
+    provider_aws(client, "loadgen", client_ip)
+    provider_virtualbox(client, "client", client_ip)
   end
 
   config.vm.define "db" do |db|
     provision_bootstrap(db, "database")
-    provider_aws(db, "database", "172.16.0.18")
-    provider_virtualbox(db, "database", "172.16.0.18")
+    provider_aws(db, "database", databa_ip)
+    provider_virtualbox(db, "database", databa_ip)
   end
 
   # Define the app server as the primary VM
   config.vm.define "app", primary: true do |app|
     provision_bootstrap(app, "server")
-    provider_aws(app, "appserver", "172.16.0.16")
-    provider_virtualbox(app, "server", "172.16.0.16")
+    ENV.fetch
+    provider_aws(app, "appserver", server_ip)
+    provider_virtualbox(app, "server", server_ip)
   end
 
 end

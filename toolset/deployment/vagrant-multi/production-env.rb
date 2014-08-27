@@ -1,5 +1,4 @@
 
-
 def provision_bootstrap(config, role)
   config.vm.provision "shell" do |sh|
     sh.path = "bootstrap.sh"

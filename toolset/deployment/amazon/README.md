@@ -81,6 +81,9 @@ destroy`, any later synchronization shouldn't take more than a few seconds.
 
 ## Environmental Variables 
 
+These only have effect if the vagrant aws provider is used. See [here](fii) for variables
+that always take effect, and [here] for variables that take effect if the vagrant virtualbox 
+provider is used. 
 
 | Name                             | Values              | Purpose                  |
 | :------------------------------- | :------------------ | :----------------------- | 
@@ -97,13 +100,18 @@ destroy`, any later synchronization shouldn't take more than a few seconds.
 | `TFB_AWS_EBS_TYPE`               | `gp2,standard,io1`  | The EBS [type](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/block-device-mapping-concepts.html#block-device-mapping-def). `gp2` is a general-purpose SSD, `standard` is a magnetic drive, `io1` is a guaranteed I/O SSD drive. Our benchmark mode defaults to `gp2`
 | `TFB_AWS_EBS_IO`                 | `<number>`          | Only used if `TFB_AWS_EBS_TYPE=io1`. The number of IO operations per second
 | `TFB_AWS_EBS_DELETE`             | `true,false`        | Should the EBS volume be deleted when `vagrant destroy` happens? 
+| `TFB_AWS_APP_IP`                 | `<ip address>`      | IP address used inside Amazon for the application server. Default is `172.16.0.16`
+| `TFB_AWS_LOAD_IP`                | `<ip address>`      | IP address used inside Amazon for the application server. Default is `172.16.0.17`
+| `TFB_AWS_DB_IP`                  | `<ip address>`      | IP address used inside Amazon for the database server. Default is `172.16.0.18`
+| `TFB_AWS_REGION`                 | `<aws region>`      | Region to launch the instances in. Default is `us-east-1`
 
 <sup>1</sup> Variable is required
 
 <sup>2</sup> Variable can be auto-generated using `setup_aws.py`
 
 **Note:** We do not currently support setting instance-specific variables, like instance type 
-and EBS type, on a per-instance basis. 
+or EBS variables, on a per-instance basis. The only exception is the ip address used for the 
+instances. 
 
 ### Amazon Tips and Tricks
 
@@ -154,11 +162,11 @@ There is an open issue at [mitchellh/vagrant-aws#32](https://github.com/mitchell
 working code for spot instances. This could reduce the amazon cost up to 100x!
 Once this is supported in vagrant-aws it will be supported here. 
 
-**I disagree with the Amazon Setup**:
+**I disagree with the Amazon Setup!**:
 
 You're free to submit a PR to improve the automated deployment scripts. Please
 justify why you feel that your changes provide an improvement, and explain the
-total cost of running a benchmark with your update setup. Also, be aware that 
+total cost of running a benchmark with your update setup. Be aware that 
 you can use `vagrant provision` to selectively re-run your provision scripts,
 instead of having to constantly terminate and launch instances. 
 
@@ -169,8 +177,16 @@ providers simultaneously for the same Vagrantfile. The quick fix is to
 just copy the folder, and run one provider in one folder and one provider
 in another. 
 
+**Can I run multiple benchmarks simultaneously?**:
 
-
+Sure, but you will need to duplicate the directory containing the
+`Vagrantfile` and you will also need to use `TFB_AWS_APP_IP` (and similar 
+variables) to avoid IP address conflicts. You could re-run the `setup_aws.py`
+script and avoid changing the IP addresses, but this creates a new 
+Virtual Private Cloud (VPC), and you are limited to 5 VPC's per region. If 
+you are reading this FAQ, you may be interested in running more than 5 
+simultaneous benchmarks, so the better approach is to just increase all
+the IP addresses by 3 and run the additional benchmarks in the same VPC. 
 
 
 

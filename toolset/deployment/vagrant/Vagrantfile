@@ -7,14 +7,22 @@ provider = get_provider
 check_provider_needs(provider)
 
 Vagrant.configure("2") do |config|
-  config.vm.hostname = "TFB"
-  config.vm.box = "ubuntu/trusty64"
-
-  # Add settings for advanced users doing development
-  config.vm.synced_folder "../../..", "/FrameworkBenchmarks"
-  config.vm.network :forwarded_port, guest: 8080, host: 28080
+  
+  config.vm.provision :shell do |sh|
+    sh.path = "bootstrap.sh"
+    
+    # We run the bootstrap as the normal vagrant user, not as root
+    sh.privileged = false
+    
+    # If you need arguments, you must pass them in, becuase Vagrant 
+    # cleans the environment before running the provision script
+    # sh.args = ""
+  end
 
   config.vm.provider :virtualbox do |vb, override|
+    override.vm.hostname = "TFB"
+    override.vm.box = "ubuntu/trusty64"
+
     vb.customize ["modifyvm", :id, "--memory", "2048"]
     if ENV['TFB_SHOW_VM'] and ENV['TFB_SHOW_VM'] == "true"
       vb.gui = true
@@ -28,9 +36,12 @@ Vagrant.configure("2") do |config|
     # 192.168.X.X or 10.X.X.X and we cannot have a collision 
     # with the host network
     override.vm.network "private_network", ip: "172.16.16.16"
+
+    # Add settings for development
+    override.vm.synced_folder "../../..", "/FrameworkBenchmarks"
+    override.vm.network :forwarded_port, guest: 8080, host: 28080
   end
 
-  # Requires the vagrant-aws plugin from github.com/mitchellh/vagrant-aws
   config.vm.provider :aws do |aws, override|
     aws.access_key_id = ENV['TFB_AWS_ACCESS_KEY'] 
     aws.secret_access_key = ENV['TFB_AWS_SECRET_KEY']
@@ -79,14 +90,4 @@ Vagrant.configure("2") do |config|
     end
   end
   
-  #config.vm.provision :shell do |sh|
-  #  sh.path = "bootstrap.sh"
-  #  
-  #  # We run the bootstrap as the normal vagrant user, not as root
-  #  sh.privileged = false
-  ##  
-  #  # If you need arguments, you must pass them in, becuase Vagrant 
-  #  # cleans the environment before running the provision script
-  #  # sh.args = ""
-  #end
 end
