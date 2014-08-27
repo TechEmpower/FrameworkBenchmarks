@@ -6,25 +6,33 @@
 # same script can work for VirtualBox (username vagrant)
 # and Amazon (username ubuntu)
 
+# Add everything passed in the first argument to our 
+# local environment. This is a hack to let us use 
+# environment variables defined on the host inside the 
+# guest machine
+while read -r line; do  
+  export $line; 
+done <<< "$1"
+
 # Set a number of variables by either pulling them from 
 # the existing environment or using the default values
 # I'm renaming them to indicate that (in this script only)
 # the values are provisioner agnostic
-SERVER_IP=${TFB_AWS_APP_IP:=172.16.0.16}
-CLIENT_IP=${TFB_AWS_LOAD_IP:=172.16.0.17}
-DATABA_IP=${TFB_AWS_DB_IP:=172.16.0.18}
+SERVER_IP=${TFB_AWS_APP_IP:-172.16.0.16}
+CLIENT_IP=${TFB_AWS_LOAD_IP:-172.16.0.17}
+DATABA_IP=${TFB_AWS_DB_IP:-172.16.0.18}
 
-GH_REPO=${TFB_AWS_REPO_SLUG:=TechEmpower/FrameworkBenchmarks}
-GH_BRANCH=${TFB_AWS_REPO_BRANCH:=master}
+GH_REPO=${TFB_AWS_REPO_SLUG:-TechEmpower/FrameworkBenchmarks}
+GH_BRANCH=${TFB_AWS_REPO_BRANCH:-master}
 
 # Are we installing the server machine, the client machine, 
 # the database machine, or all machines? 
-ROLE=${1:=all}
+ROLE=${2:-all}
 
 # Are we installing in production mode, or development mode?
 # It's odd to have ROLE=all and MODE=prod, but I suppose it 
 # could happen so I'm using two variables instead of one
-MODE=${2:=dev}
+MODE=${3:-dev}
 
 # A shell provisioner is called multiple times
 if [ ! -e "~/.firstboot" ]; then
@@ -63,7 +71,7 @@ if [ ! -e "~/.firstboot" ]; then
   if [ "$ROLE" != "all" ]; then
     echo "Updating hostname"
     echo 127.0.0.1 `hostname` | sudo tee --append /etc/hosts
-    myhost=TFB-${1}
+    myhost=TFB-${ROLE}
     echo $myhost | sudo tee --append /etc/hostname
     sudo hostname $myhost
     echo Updated /etc/hosts file to be: 
@@ -124,5 +132,5 @@ if [ ! -e "~/.firstboot" ]; then
   echo "Setting up welcome message"
   sudo rm -f /etc/update-motd.d/51-cloudguest
   sudo rm -f /etc/update-motd.d/98-cloudguest
-  sudo cp /vagrant/custom_motd.sh /etc/update-motd.d/55-tfbwelcome
+  sudo mv /custom_motd.sh /etc/update-motd.d/55-tfbwelcome
 fi
