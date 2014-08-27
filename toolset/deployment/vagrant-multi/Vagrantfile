@@ -1,6 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require_relative '../vagrant/common'
+provider = get_provider
+check_provider_needs(provider)
+
+require_relative 'production-env'
+
 Vagrant.configure("2") do |config|
   
   # Put the keys inside each box
@@ -12,131 +18,22 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "client" do |client|
-
-    client.vm.provision "shell" do |sh|
-      sh.path = "bootstrap.sh"
-      sh.privileged = false
-      sh.args = "client"
-    end
-
-    client.vm.provider :aws do |aws, override|
-      aws.access_key_id = ENV['TFB_AWS_ACCESS_KEY'] 
-      aws.secret_access_key = ENV['TFB_AWS_SECRET_KEY']
-      aws.keypair_name = ENV['TFB_AWS_KEY_NAME']
-      override.ssh.private_key_path = ENV['TFB_AWS_KEY_PATH']
-
-      override.vm.box = "dummy"
-      override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-      aws.ami = "ami-62c8160a"
-      override.ssh.username = "ubuntu"
-      
-      aws.private_ip_address = "172.16.0.17"
-      aws.associate_public_ip = true
-      aws.subnet_id = "subnet-2737230f"
-      aws.security_groups = ["sg-871240e2"]
-
-      aws.tags = {
-        'Project' => 'FrameworkBenchmarks',
-        'TFB_role' => 'loadgen'
-       }
-
-      aws.instance_type = "m1.small"
-    end
-
-    client.vm.provider :virtualbox do |vb, override|
-      override.vm.hostname = "TFB-client"
-      override.vm.box = "ubuntu/trusty64"
-      override.vm.network "private_network", ip: "172.16.0.17"
-      
-      override.vm.synced_folder "../../..", "/FrameworkBenchmarks"
-    end
+    provision_bootstrap(client, "client")
+    provider_aws(client, "loadgen", "172.16.0.17")
+    provider_virtualbox(client, "client", "172.16.0.17")
   end
 
-  # Build the DB and client servers before the 
-  # app server
   config.vm.define "db" do |db|
-
-    db.vm.provision "shell" do |sh|
-      sh.path = "bootstrap.sh"
-      sh.privileged = false
-      sh.args = "database"
-    end
-
-    db.vm.provider :aws do |aws, override|
-      aws.access_key_id = ENV['TFB_AWS_ACCESS_KEY'] 
-      aws.secret_access_key = ENV['TFB_AWS_SECRET_KEY']
-      aws.keypair_name = ENV['TFB_AWS_KEY_NAME']
-      override.ssh.private_key_path = ENV['TFB_AWS_KEY_PATH']
-
-      override.vm.box = "dummy"
-      override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-      aws.ami = "ami-62c8160a"
-      override.ssh.username = "ubuntu"
-      
-      aws.private_ip_address = "172.16.0.18"
-      aws.associate_public_ip = true
-      aws.subnet_id = "subnet-2737230f"
-      aws.security_groups = ["sg-871240e2"]
-
-      aws.tags = {
-        'Project' => 'FrameworkBenchmarks',
-        'TFB_role' => 'database'
-       }
-
-      aws.instance_type = "m1.small"
-    end
-
-    db.vm.provider :virtualbox do |vb, override|
-      override.vm.hostname = "TFB-database"
-      override.vm.box = "ubuntu/trusty64"
-      override.vm.network "private_network", ip: "172.16.0.18"
-      
-      override.vm.synced_folder "../../..", "/FrameworkBenchmarks"
-    end
+    provision_bootstrap(db, "database")
+    provider_aws(db, "database", "172.16.0.18")
+    provider_virtualbox(db, "database", "172.16.0.18")
   end
 
   # Define the app server as the primary VM
   config.vm.define "app", primary: true do |app|
-    
-    app.vm.provision "shell" do |sh|
-      sh.path = "bootstrap.sh"
-      sh.privileged = false
-      sh.args = "server"
-    end
-
-    app.vm.provider :aws do |aws, override|
-      aws.access_key_id = ENV['TFB_AWS_ACCESS_KEY'] 
-      aws.secret_access_key = ENV['TFB_AWS_SECRET_KEY']
-      aws.keypair_name = ENV['TFB_AWS_KEY_NAME']
-      override.ssh.private_key_path = ENV['TFB_AWS_KEY_PATH']
-
-      override.vm.box = "dummy"
-      override.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
-      aws.ami = "ami-62c8160a"
-      override.ssh.username = "ubuntu"
-      
-      aws.private_ip_address = "172.16.0.16"
-      aws.associate_public_ip = true
-      aws.subnet_id = "subnet-2737230f"
-      aws.security_groups = ["sg-871240e2"]
-
-      aws.tags = {
-        'Project' => 'FrameworkBenchmarks',
-        'TFB_role' => 'appserver'
-       }
-
-      aws.instance_type = "m1.small"
-    end
-
-    app.vm.provider :virtualbox do |vb, override|
-      override.vm.hostname = "TFB-server"
-      override.vm.box = "ubuntu/trusty64"
-      override.vm.network "private_network", ip: "172.16.0.16"
-      
-      override.vm.synced_folder "../../..", "/FrameworkBenchmarks"
-      override.vm.network :forwarded_port, guest: 8080, host: 28080
-    end
+    provision_bootstrap(app, "server")
+    provider_aws(app, "appserver", "172.16.0.16")
+    provider_virtualbox(app, "server", "172.16.0.16")
   end
-
 
 end

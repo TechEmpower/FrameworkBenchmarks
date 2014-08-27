@@ -1,98 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Workaround for mitchellh/vagrant#1867
-if (ARGV[1] and ARGV[1].split('=')[0] == "--provider" and ARGV[1].split('=')[1])
-  provider = ARGV[1].split('=')[1].to_sym
-else
-  provider = (ARGV[2] || ENV['VAGRANT_DEFAULT_PROVIDER'] || :virtualbox).to_sym
-end
+require_relative 'common'
 
-if provider == :"aws"
-  # Check required variables
-  if !(ENV['TFB_AWS_ACCESS_KEY'] and ENV['TFB_AWS_SECRET_KEY'] \
-        and ENV['TFB_AWS_KEY_NAME'] and ENV['TFB_AWS_KEY_PATH'])
-    abort 'If you want to use the AWS provider, you must provide these four variables: 
-    TFB_AWS_ACCESS_KEY : Your Amazon Web Services Access Key
-    TFB_AWS_SECRET_KEY : Your Amazon Web Services Secret Access Key
-    TFB_AWS_KEY_NAME   : The name of the keypair you are using
-    TFB_AWS_KEY_PATH   : Path to the *.pem file for the keypair you are using'
-  end
-
-  # Print warning
-    warning = "\033[33m\
-WARNING: FrameworkBenchmarks is disabling folder sync between your
-local working copy and Amazon Web Services - the ~/FrameworkBenchmarks
-directory in your VM will be a git clone of TechEmpower/FrameworkBenchmarks. 
-You can re-enable folder sync using 
-    $ TFB_FORCE_SYNC=true vagrant up --provider=aws
-but be aware that you will need to upload ~2GB to Amazon before you can use
-the VM as normal.\033[0m"
-  puts warning
-end
-
-# Helps with finding current OS
-module OS
-  def OS.windows?
-    (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
-  end
-
-  def OS.mac?
-   (/darwin/ =~ RUBY_PLATFORM) != nil
-  end
-
-  def OS.unix?
-    !OS.windows?
-  end
-
-  def OS.linux?
-    OS.unix? and not OS.mac?
-  end
-end
-
-# Helps with finding current OS
-module ARCH
-  def ARCH.is64?
-    (/x86_64/ =~ RUBY_PLATFORM) != nil
-  end
-
-  def ARCH.is32?
-    !ARCH.is64?
-  end
-end
-
-# Check if this computer can run a 64-bit OS
-if provider == :"virtualbox"
-  warning = "\033[31m\
-WARNING: FrameworkBenchmarks only officially supports a 64-bit 
-virtual machine, which your current system may not be able to 
-support. Use `TFB_SHOW_VM=true vagrant up` to watch the VM launch -
-if you just see a black window you likely cannot run a 64-bit VM. 
-
-To workaround, consider using the Amazon (e.g. AWS) provider
-   $ vagrant up --provider=aws
-
-Or forcing FrameworkBenchmarks to attempt a 32-bit VM
-   $ TFB_VM_ARCH=32 vagrant up
-  
-  See http://askubuntu.com/questions/41550 for more info\033[0m"
-
-  # AMD-based needs svm feature, Intel-based needs vmx feature
-  if OS.linux? and %x(egrep '(vmx|svm)' /proc/cpuinfo).empty?
-    puts warning
-  end
-
-  # Ignore PowerPC, check for intel features
-  if OS.mac? and %x(sysctl -n machdep.cpu.features | grep -i vmx).empty?
-    puts warning
-  end
-
-  # Don't really know how to check CPU features, so I'll just check 
-  # the arch
-  if OS.windows? and ARCH.is32?
-    puts warning
-  end
-end
+provider = get_provider
+check_provider_needs(provider)
 
 Vagrant.configure("2") do |config|
   config.vm.hostname = "TFB"
@@ -140,10 +52,22 @@ Vagrant.configure("2") do |config|
     # aws.region = "us-east-1"
     # aws.security_groups = ["default"]
 
+    aws.private_ip_address = "10.0.0.12"
+    aws.associate_public_ip = true
+    aws.subnet_id = "subnet-53a9bc7b"
+
     aws.tags = {
       'Project' => 'FrameworkBenchmarks',
       'TFB_role' => 'integrated'
      }
+
+    # Manually set the hostname (not supported by vagrant-aws)
+    override.vm.provision :shell do |sh|
+      sh.inline = "
+        echo '127.0.0.1 TFB-server' >> /etc/hosts
+        echo 'TFB-server' > /etc/hostname
+        hostname `cat /etc/hostname`"
+    end
     
     # Currently this uses 'previous generation' instance names
     # See: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html
@@ -155,14 +79,14 @@ Vagrant.configure("2") do |config|
     end
   end
   
-  config.vm.provision :shell do |sh|
-    sh.path = "bootstrap.sh"
-    
-    # We run the bootstrap as the normal vagrant user, not as root
-    sh.privileged = false
-    
-    # If you need arguments, you must pass them in, becuase Vagrant 
-    # cleans the environment before running the provision script
-    # sh.args = ""
-  end
+  #config.vm.provision :shell do |sh|
+  #  sh.path = "bootstrap.sh"
+  #  
+  #  # We run the bootstrap as the normal vagrant user, not as root
+  #  sh.privileged = false
+  ##  
+  #  # If you need arguments, you must pass them in, becuase Vagrant 
+  #  # cleans the environment before running the provision script
+  #  # sh.args = ""
+  #end
 end
