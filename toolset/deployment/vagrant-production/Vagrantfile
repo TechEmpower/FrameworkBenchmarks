@@ -1,11 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-require_relative '../vagrant/common'
+require_relative '../vagrant-common/checks'
+require_relative '../vagrant-common/core'
 provider = get_provider
 check_provider_needs(provider)
-
-require_relative 'production-env'
 
 Vagrant.configure("2") do |config|
 
@@ -21,24 +20,28 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.provision :file do |file|
+      file.source = "../vagrant-common/custom_motd.sh"
+      file.destination = "~/.custom_motd.sh"
+  end
+
   config.vm.define "client" do |client|
     provision_bootstrap(client, "client")
     provider_aws(client, "loadgen", client_ip)
-    provider_virtualbox(client, "client", client_ip)
+    provider_virtualbox(client, "client")
   end
 
   config.vm.define "db" do |db|
     provision_bootstrap(db, "database")
     provider_aws(db, "database", databa_ip)
-    provider_virtualbox(db, "database", databa_ip)
+    provider_virtualbox(db, "database")
   end
 
   # Define the app server as the primary VM
   config.vm.define "app", primary: true do |app|
     provision_bootstrap(app, "server")
-    ENV.fetch
     provider_aws(app, "appserver", server_ip)
-    provider_virtualbox(app, "server", server_ip)
+    provider_virtualbox(app, "server")
   end
 
 end

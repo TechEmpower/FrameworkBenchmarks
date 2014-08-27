@@ -99,7 +99,7 @@ provider is used.
 | <sup>2</sup>`TFB_AWS_SEC_GROUP`  | `<security_group_id>` (e.g. `sg-871240e2`) | The default security group instances use
 | `TFB_AWS_EBS_TYPE`               | `gp2,standard,io1`  | The EBS [type](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/block-device-mapping-concepts.html#block-device-mapping-def). `gp2` is a general-purpose SSD, `standard` is a magnetic drive, `io1` is a guaranteed I/O SSD drive. Our benchmark mode defaults to `gp2`
 | `TFB_AWS_EBS_IO`                 | `<number>`          | Only used if `TFB_AWS_EBS_TYPE=io1`. The number of IO operations per second
-| `TFB_AWS_EBS_DELETE`             | `true,false`        | Should the EBS volume be deleted when `vagrant destroy` happens? 
+| `TFB_AWS_EBS_DELETE`             | `true,false`        | Should the EBS volume be deleted when `vagrant destroy` happens? Note: We cannot currently tag EBS with `Project=FrameworkBenchmarks`, so you'll need to remember which volumes were from this project, and which of those was the application server volume
 | `TFB_AWS_APP_IP`                 | `<ip address>`      | IP address used inside Amazon for the application server. Default is `172.16.0.16`
 | `TFB_AWS_LOAD_IP`                | `<ip address>`      | IP address used inside Amazon for the application server. Default is `172.16.0.17`
 | `TFB_AWS_DB_IP`                  | `<ip address>`      | IP address used inside Amazon for the database server. Default is `172.16.0.18`
@@ -189,6 +189,7 @@ simultaneous benchmarks, so the better approach is to just increase all
 the IP addresses by 3 and run the additional benchmarks in the same VPC. 
 
 
+**I'm getting an AuthFailure but my Credientials are Correct!**:
 
-
-Use SSD on benchmark server
+This normally means the AMI has been moved from public to private. Ubuntu's 
+Cloud image team occasionally does this. Navigate [here](http://cloud-images.ubuntu.com/trusty/current/) and find a more current AMI. 
