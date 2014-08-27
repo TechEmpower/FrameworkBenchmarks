@@ -8,7 +8,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.Play.current
 
-case class World(id: Pk[Long], randomNumber: Long)
+case class World(id: Id[Long], randomNumber: Long)
 
 object World {
     /**
@@ -27,9 +27,9 @@ object World {
    * Parse a World from a ResultSet
    */
   val simpleRowParser = {
-    get[Pk[Long]]("world.id") ~
+    get[Long]("world.id") ~
     get[Long]("world.randomNumber") map {
-      case id~randomNumber => World(id, randomNumber)
+      case id~randomNumber => World(Id(id), randomNumber)
     }
   }
 
@@ -37,19 +37,10 @@ object World {
    * Retrieve a World by id.
    */
   def findById(id: Long)(implicit connection: Connection): World = {
-    DB.withConnection { implicit connection =>
-      SQL("SELECT * FROM World WHERE id = {id}").on(
-          "id" -> id
-      ).as(World.simpleRowParser.single)
-    }
+    SQL"SELECT * FROM World WHERE id = ${id}".as(World.simpleRowParser.single)
   }
 
   def updateRandom(world: World)(implicit connection: Connection) {
-    DB.withConnection { implicit connection =>
-      SQL("UPDATE World SET randomNumber = {randomNumber} WHERE id = {id}").on(
-        "id" -> world.id.get,
-        "randomNumber" -> world.randomNumber
-      ).executeUpdate()
-    }
+    SQL"UPDATE World SET randomNumber = ${world.randomNumber} WHERE id = ${world.id.get}".executeUpdate()
   }
 }

@@ -14,15 +14,14 @@ class Worlds(tag: Tag) extends Table[World](tag, "World") {
 class WorldsTableQuery extends TableQuery(new Worlds(_)){
   val byId = this.findBy(_.id)
 
-  def findById(id: Int): Option[World] = DB.withSession { implicit session =>
-      byId(id).firstOption
+  def findById(id: Int)(implicit session: Session): World = {
+    byId(id).first
   }
 
-  val updateQuery = Compiled{ (id: Column[Int]) => this.where(_.id === id) }
-  def updateRandom(world: World) {
-    DB.withSession { implicit session: Session =>
-      updateQuery(world.id).update(world)
-    }
+  val updateQuery = Compiled{ (id: Column[Int]) => this.filter(_.id === id) }
+
+  def updateRandom(world: World)(implicit session: Session) {
+    updateQuery(world.id).update(world)
   }  
 }
 

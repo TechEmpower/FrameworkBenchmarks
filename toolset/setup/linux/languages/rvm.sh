@@ -9,7 +9,7 @@ RETCODE=$(fw_exists rvm.installed)
 
 # Never run installation inside of TRAVIS, 
 # just rely on their default RVM installaton
-if [ "$TRAVIS" = "true" ] || { \
+[ "$TRAVIS" != "true" ] || { \
   source $HOME/.rvm/scripts/rvm
   touch rvm.installed
   return 0;
@@ -19,4 +19,4 @@ if [ "$TRAVIS" = "true" ] || { \
 \curl -sSL https://get.rvm.io | bash -s stable
 source $HOME/.rvm/scripts/rvm
 
-touch rvm.installed
+touch $IROOT/rvm.installed

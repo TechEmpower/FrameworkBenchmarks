@@ -25,7 +25,7 @@
         "setup_file": "setup_java_ebean", 
         "framework": "play2", 
         "language": "Java", 
-        "orm": "Ebean", 
+        "orm": "Full", 
         "os": "Linux", 
         "database": "MySQL", 
         "approach": "Realistic", 

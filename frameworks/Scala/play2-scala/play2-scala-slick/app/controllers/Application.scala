@@ -1,43 +1,45 @@
 package controllers
 
+import java.util.concurrent._
 import play.api.Play.current
-import play.api.db.DB
 import play.api.mvc._
 import play.api.libs.json.Json
-import java.util.concurrent._
 import scala.concurrent._
-import models.{World, Fortune}
+import models.{Worlds, World, Fortunes, Fortune, WorldsTableQuery, FortunesTableQuery}
 import utils._
 import utils.DbOperation._
 import scala.concurrent.Future
+import scala.slick.jdbc.JdbcBackend.Session
 
 import play.api.libs.concurrent.Execution.Implicits._
-import play.core.NamedThreadFactory
 
 object Application extends Controller {
 
-  // Anorm code
+  // Slick code
 
-  def getRandomWorlds(n: Int): Future[Seq[World]] = asyncDbOp { implicit connection =>
+  private val worldsTable = new WorldsTableQuery
+  private val fortunesTable = new FortunesTableQuery
+
+  def getRandomWorlds(n: Int): Future[Seq[World]] = asyncDbOp { implicit session =>
     val random = ThreadLocalRandom.current()
     for (_ <- 1 to n) yield {
-      val randomId: Long = random.nextInt(TestDatabaseRows) + 1
-      World.findById(randomId)
+      val randomId = random.nextInt(TestDatabaseRows) + 1
+      worldsTable.findById(randomId)
     }
   }
 
-  def getFortunes(): Future[Seq[Fortune]] = asyncDbOp { implicit connection =>
-    Fortune.getAll()
+  def getFortunes(): Future[Seq[Fortune]] = asyncDbOp { implicit session =>
+    fortunesTable.getAll()
   }
 
-  def updateWorlds(n: Int): Future[Seq[World]] = asyncDbOp { implicit connection =>
+  def updateWorlds(n: Int): Future[Seq[World]] = asyncDbOp { implicit session =>
     val random = ThreadLocalRandom.current()
-    for(_ <- 1 to n) yield {
-      val randomId: Long = random.nextInt(TestDatabaseRows) + 1
-      val world = World.findById(random.nextInt(TestDatabaseRows) + 1)
-      val randomNumber: Long = random.nextInt(10000) + 1
+    for (_ <- 1 to n) yield {
+      val randomId = random.nextInt(TestDatabaseRows) + 1
+      val world = worldsTable.findById(randomId)
+      val randomNumber = random.nextInt(10000) + 1
       val updatedWorld = world.copy(randomNumber = randomNumber)
-      World.updateRandom(updatedWorld)
+      worldsTable.updateRandom(updatedWorld)
       updatedWorld
     }
   }
