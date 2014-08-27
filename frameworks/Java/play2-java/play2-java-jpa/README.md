@@ -14,8 +14,8 @@ This is the Play portion of a [benchmarking test suite](../) comparing a variety
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Play 2.1.0](http://http://www.playframework.com/)
+* [Java OpenJDK 1.7](http://openjdk.java.net/)
+* [Play 2.3.3](http://http://www.playframework.com/)
 
 ## Test URLs
 ### JSON Encoding Test
@@ -24,4 +24,5 @@ http://localhost/json
 
 ### Data-Store/Database Mapping Test
 
-http://localhost/db?queries=5
+http://localhost/db
+http://localhost/queries?queries=10
