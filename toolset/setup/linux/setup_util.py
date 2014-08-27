@@ -44,8 +44,16 @@ def replace_environ(config=None, root=None, print_result=False, command='true'):
 
         # Run command, source config file, and store resulting environment
         setup_env = "%s && . %s && env" % (command, config)
-        env = subprocess.check_output(setup_env, shell=True, env=mini_environ,
-          executable='/bin/bash')
+        env = ""
+        try:
+            env = subprocess.check_output(setup_env, shell=True, env=mini_environ,
+           executable='/bin/bash')
+        except subprocess.CalledProcessError:
+            # Ensure that an error here does not crash the toolset
+            print "CRITICAL: Loading %s returned non-zero exit" % config
+            for key,value in mini_environ.iteritems():
+                os.environ[key]=value
+            return
         for line in env.split('\n'):
             try:
                 key, value = line.split('=', 1)
