@@ -1,80 +1,50 @@
 # Benchmark Suite Deployment
 
-This directory contains tools and documentation to deploy the benchmark suite on cloud or self-hosted environments.
+This directory contains information for deploying the benchmark 
+on a range of cloud or self-hosted environments. While you can always use 
+*manual deployment*, automated scripts exist for many scenarios. 
 
-## Deploment overview
+Before forging ahead, you should determine if your primary interest is
+**development** or **benchmarking**. Once you know this, look at the 
+'Summary of Script Directories' section to figure out which directory
+has scripts relevant to your use case. 
 
-The deployment consists of two phases:
+If your primary interest is **development**, e.g. adding or updating frameworks,
+you can use an environment with a single computer running the database, 
+the load generation system, and the web framework. We provide scripts for 
+configuring a Linux development environment using either Virtualbox or Amazon EC2,
+and are actively searching for help adding Windows.
 
-1. Provisioning phase
-2. Setup phase
+If your primary interest is **benchmarking**, then you will need three computers
+(or virtual machines) networked together to fill the three benchmark roles of 
+database server, load generation server, and web framework server. We provide 
+a Vagrant script to setup a full benchmark-ready Linux environment in Amazon EC2.
 
-The provisioning phase varies according to the hosting environment: EC2, Windows Azure, dedicated hardware or other hosting. 
+If you wish to benchmark a framework on a non-Amazon cloud, e.g. Azure or 
+Rackspace, or a framework that requires Windows OS or SQL server, there are 
+some limited helper scripts available at the moment. We welcome any pull requests 
+along these lines. 
 
-The setup phase is, for the most part, the same for all environments, because the benchmark suite specifies particular versions of operating systems and tools that will be used.
+**Please note**: Running this software will make many modifications to software
+and settings, so it's recommended you either use a VM or hardware dedicated to this project. 
 
-For any hosting option, these are the operating systems and tools that should be provisioned for each role:
 
-**Linux client**
+## Summary of Script Directories
 
-* Runs the benchmark client and the Linux databases (e.g. MySQL, PostgreSQL, MongoDB).
-* Operating system: Ubuntu Server 12.04 LTS 64-bit.
 
-**Linux server**
+| Directory Name | Summary |
+| -------------- | :-------- |
+| [azure](azure)  | Scripts to help deploy onto Microsoft Azure
+| [common](common) | Common-use scripts that could be used in many environments
+| [vagrant-common](vagrant-common) | The core directory for vagrant-based setups. Currently only supports deplconfiguring Linux-based environments
+| [vagrant-aws](vagrant-aws) | Setup scripts for configuring Amazon such that you can use `vagrant-development` and `vagrant-production`. Also outlines Amazon-specific options, such as instance type, you can use with `vagrant-development` and `vagrant-production`
+| [vagrant-virtualbox](vagrant-virtualbox) | A readme defining all the Virtualbox-specific options you can use with `vagrant-development` and `vagrant-production`, such as amount of RAM per virtual machine
+| [vagrant-development](vagrant-development) | Sets up a development environment using a single Virtual Machine. Can use either Virtualbox (for a free, locally run virtual machine) or Amazon EC2 (for a `$1/day` remote virtual machine)
+| [vagrant-production](vagrant-production) | Sets up a 3-virtual machine environment in either Amazon or Virtualbox. If Amazon is used, this is intended to be an environment you could run an official `TechEmpower` round with. A 3-VM VirtualBox setup is mainly used to test-run in a free environment before launching into a paid environment
 
-* Hosts the web frameworks under test on a Linux environment.
-* Operating system: Ubuntu Server 12.04 LTS 64-bit.
 
-**Windows server**
+## Manual Deployment
 
-* Hosts the web frameworks under test on a Windows environment.
-* Operating system: Windows Server 2012 Datacenter 64-bit.
-
-**SQL Server**
-
-* Hosts the Microsoft SQL Server database server used by some tests.
-* Operating system: Windows Server 2012 Datacenter 64-bit.
-* Software: SQL Server 2012 SP1 Standard Edition 64-bit.
-
-## EC2 Deployment
-
-To deploy the benchmark suite on Amazon Web Services (AWS) Elastic Compute Cloud (EC2):
-
-**Create the EC2 instances**
-
-Create one instance for each role described in the deploment overview above.
-* For the Windows server, use the "Microsoft Windows Server 2012 Base" image on Amazon EC2.
-* For the SQL Server database server, use the [Windows Server 2012 RTM English 64-bit SQL 2012 Standard](https://aws.amazon.com/amis/amazon-ebs-backed-windows-server-2012-rtm-english-64-bit-sql-2012-standard) image on Amazon EC2.
-
-We tested on m1.large instances, but feel free to experiment with different configurations.
-
-Give the instance that will act as the application server more then the default 8GB of disk capacity (we used 20GB).
-
-**Security Group**
-
-When prompted to create a security group for the instances, here are the ports that you'll need to open:
-
-* 22 (SSH)
-* 80 (php-senthot)
-* 3000 (yesod)
-* 3306 (MySQL)
-* 5432 (PostgreSQL)
-* 8000 (snap, racket-ws, wai, yesod)
-* 8080 (Most of the tests run on 8080)
-* 9000 (Play Framework, Dropwizard, Unfiltered)
-* 9080 (Plain)
-* 16969 (cpoll)
-* 27017 (MongoDB)
-
-## Windows Azure
-
-For Windows Azure deployment instructions see the [Windows Azure Deployment README file](azure/README.md).
-
-## Dedicated hardware
-
-If you have two servers or workstations lying around, then you can install and run the tests on physical hardware.
-
-Please be aware that these setup instructions **can overwrite software and settings**, so it's best to follow these instructions on clean hardware.
 
 **Evaluation downloads**
 
