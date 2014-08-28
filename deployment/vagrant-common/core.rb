@@ -90,9 +90,8 @@ def provider_virtualbox(config, role)
       vb.gui = true
     end
 
-    if ENV.fetch('TFB_VB_MEM', 2048)
-      vb.customize ["modifyvm", :id, "--memory", "2048"]
-    end
+    vb.memory = ENV.fetch('TFB_VB_MEM', 2048)
+    vb.cpus = ENV.fetch('TFB_VB_CPU', 2)
 
     override.vm.synced_folder "../..", "/FrameworkBenchmarks"
 

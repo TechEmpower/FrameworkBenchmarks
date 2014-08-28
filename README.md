@@ -21,6 +21,19 @@ or chat with us on [Freenode](https://freenode.net/faq.shtml#whatwhy) at `#teche
 
 [Setup a development environment](deployment), typically by using a 
 remote server dedicated to this project or by using a virtual machine. 
+Here's a short example: 
+    
+```
+# Clone the project, then move into the right directory
+$ cd ~/FrameworkBenchmarks/deployment/vagrant-development
+# Turn on the VM. Takes at least 20 minutes
+$ vagrant up
+# Enter the VM, then run a test
+$ vagrant ssh
+vagrant@TFB-all:~$ cd ~/FrameworkBenchmarks
+vagrant@TFB-all:~/FrameworkBenchmarks$ toolset/run-tests.py --install server --mode verify --test beego
+```
+
 Then enable Travis-CI on your project fork, so that any commits you send
 to Github are automatically verified for correctness (e.g. meeting all 
 [benchmark requirements](http://www.techempower.com/benchmarks/#section=code)). 
@@ -127,7 +140,7 @@ toolset/run-tests.py --install server --verbose --install-only
 You can easily list all available tests
 
 ```
-╰─$ toolset/run-tests.py --list-tests
+$ toolset/run-tests.py --list-tests
 activeweb
 activeweb-raw
 aspnet
