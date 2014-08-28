@@ -14,6 +14,10 @@ Vagrant.configure("2") do |config|
       file.destination = "~/.custom_motd.sh"
   end
   
+  # Set AWS variables to be more appropriate for a development machine
+  ENV['TFB_AWS_EBS_TYPE'] = ENV.fetch('TFB_AWS_EBS_TYPE', 'standard')
+  ENV['TFB_AWS_EC2_TYPE'] = ENV.fetch('TFB_AWS_EC2_TYPE', 'm1.small')
+
   provision_bootstrap(config, 'all')
 
   provider_virtualbox(config, 'all')
