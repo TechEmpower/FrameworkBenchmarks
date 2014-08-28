@@ -4,9 +4,11 @@ def provision_bootstrap(config, role)
   # TFB_* and pass them as an argument. This is a hack to 
   # let our bootstrap script use environment variables that 
   # were originally defined on the host 
+  # Skip any potentially sensitive variables
   env_arg = ""
+  skip= ['TFB_AWS_ACCESS_KEY', 'TFB_AWS_SECRET_KEY', 'TFB_AWS_KEY_NAME', 'TFB_AWS_KEY_PATH']
   ENV.each do |key, array|
-    if key.start_with? "TFB"
+    if (key.start_with?("TFB") && !skip.include?(key))
       env_arg.concat key
       env_arg.concat "="
       env_arg.concat array
@@ -15,7 +17,7 @@ def provision_bootstrap(config, role)
   end
   env_arg = env_arg.strip
 
-  # TODO this will break if the environment contains the ' character, 
+  # TODO this will break if the environment contains the ' delimiter, 
   # so at some point we need to escape the ' character here and unescape
   # it in bootstrap.sh
   config.vm.provision "shell" do |sh|
