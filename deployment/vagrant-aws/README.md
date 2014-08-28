@@ -81,9 +81,9 @@ destroy`, any later synchronization shouldn't take more than a few seconds.
 
 ## Environmental Variables 
 
-These only have effect if the vagrant aws provider is used. See [here](fii) for variables
-that always take effect, and [here] for variables that take effect if the vagrant virtualbox 
-provider is used. 
+These only have effect if the vagrant aws provider is used. See 
+[here](../vagrant-virtualbox) for variables that take effect if the 
+virtualbox provider is used. 
 
 | Name                             | Values              | Purpose                  |
 | :------------------------------- | :------------------ | :----------------------- | 

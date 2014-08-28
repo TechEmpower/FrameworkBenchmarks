@@ -1,11 +1,22 @@
 #!/usr/bin/env python
 #
-# Prepares Amazon to run our test setup script
+# Prepares Amazon network to run either vagrant-development or
+# vagrant-production. Configures subnets, virtual private clouds, 
+# security groups, etc
 #
+# Currently is a one-way operation, you have to delete these 
+# manually. Visit https://console.aws.amazon.com/vpc and remove the 
+# VPC tagged TFB_Network and that should undo all changes made my 
+# this script (for production mode). For development mode, the only 
+# things created are a security group and a subnet, so find those in
+# your standard EC2 console https://console.aws.amazon.com/ec2 and 
+# delete them manually
 
 import subprocess
 import json
 import logging
+import sys
+
 log = logging.getLogger('aws')
 
 nwtags = "Key=Project,Value=FrameworkBenchmarks Key=TFB_Role,Value=network"
@@ -69,9 +80,15 @@ def setup_vpc():
   # run_aws("authorize-security-group-egress --group-id %s --protocol -1 --cidr 0.0.0.0/0 --port all" % groupid)
   run_aws("authorize-security-group-ingress --group-id %s --source-group %s --protocol -1 --port -1" % (groupid, groupid))
 
+  log.info("Complete."
+  log.info(" Here are the environment variables you should use:")
+  print "export TFB_AWS_SUBNET=%s" % pubid
+  print "export TFB_AWS_SEC_GROUP=%s" % groupid
+
   return vpcid
 
 def unset_vpc(vpcid):
+  '''Doesn't work at the moment, we need to delete all the other items first'''
   run_aws("delete-vpc --vpc-id %s" % vpcid)
 
 def run_aws(command, prefix=True, load=True):
@@ -90,9 +107,25 @@ def run_aws(command, prefix=True, load=True):
     return result
 
 if __name__ == "__main__":
+  args = sys.argv[1:]
+
   logging.basicConfig(level=logging.INFO)
-  usage = '''Usage: '''
+  usage = '''Usage: setup_aws.py
 
-  vpcid = setup_vpc()
+Prepares Amazon network to run either vagrant-development 
+or vagrant-production. Configures subnets, virtual private
+clouds, security groups, etc. 
 
-  # unset_vpc(vpcid)
+Outputs TFB_AWS_SEC_GROUP and TFB_AWS_SUBNET
+
+Currently is a one-way operation, you have to delete these 
+manually. This script expects standard AWS environment 
+variables to exist e.g. AWS_ACCESS_KEY_ID, 
+AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION
+'''
+
+  if len(args) != 0:
+    print usage
+    sys.exit(1)
+
+  setup_vpc()
