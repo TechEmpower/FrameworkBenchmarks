@@ -23,7 +23,7 @@ or chat with us on [Freenode](https://freenode.net/faq.shtml#whatwhy) at `#teche
 remote server dedicated to this project or by using a virtual machine. 
 Here's a short example: 
     
-```
+```bash
 # Clone the project, then move into the right directory
 $ cd ~/FrameworkBenchmarks/deployment/vagrant-development
 # Turn on the VM. Takes at least 20 minutes
@@ -104,17 +104,14 @@ See [here](deployment) for additional details.
 
 **Setting up the `load server`**
 
-```
-toolset/run-tests.py --install client --verbose  --install-only
+```bash
+$ toolset/run-tests.py --install client --install-only
 ```
 
 **Setting up the `database server`**
 
-```
-toolset/run-tests.py --install database --verbose --install-only
-# We are still working to automate MongoDO. Until this, please run
-# this as well (replacing database-ip with your own value)
-mongo --host database-ip < config/create.js
+```bash
+$ toolset/run-tests.py --install database --install-only
 ```
 
 **Setting up the `app server`**
@@ -122,24 +119,24 @@ mongo --host database-ip < config/create.js
 You can choose to selectively install components by using the 
 `--test` and `--exclude` flags. 
 
-```
+```bash
 # Install just the software for beego (as an example)
-toolset/run-tests.py --install server --test beego --verbose --install-only
+$ toolset/run-tests.py --install server --test beego --verbose --install-only
 
 # Install all php software but php-fuel (as another example)
-toolset/run-tests.py --install server --test php* --exclude php-fuel --verbose --install-only
+$ toolset/run-tests.py --install server --test php* --exclude php-fuel --verbose --install-only
 
 # Install *all* framework software. Expect this to take hours!
 # If running on a remote server, use `screen` or `tmux` or `nohup` to 
 # prevent the installation from being terminated if you are disconnected
-toolset/run-tests.py --install server --verbose --install-only
+$ toolset/run-tests.py --install server --verbose --install-only
 ```
 
 ## Listing Tests
 
 You can easily list all available tests
 
-```
+```bash
 $ toolset/run-tests.py --list-tests
 activeweb
 activeweb-raw
@@ -156,23 +153,23 @@ aspnet-mono-mongodb-raw
 
 There are a number of options that can be specified: 
 
-```
+```bash
 # Run a verification for test beego
-toolset/run-tests.py --test beego --mode verify
+$ toolset/run-tests.py --test beego --mode verify
 
 # Run the default benchmark for the beego test
-toolset/run-tests.py --test beego
+$ toolset/run-tests.py --test beego
 
 # Specify which test types are run during benchmark
-toolset/run-tests.py --test beego --type json
-toolset/run-tests.py --test beego --type db
-toolset/run-tests.py --test beego --type fortune
+$ toolset/run-tests.py --test beego --type json
+$ toolset/run-tests.py --test beego --type db
+$ toolset/run-tests.py --test beego --type fortune
 
 # Specify a number of options for how the load is generated
-toolset/run-tests.py --test beego --max-concurrency 24 --max-threads 24 --duration 20 --max-queries 200
+$ toolset/run-tests.py --test beego --max-concurrency 24 --max-threads 24 --duration 20 --max-queries 200
 
 # Run a tiny benchmark
-toolset/run-tests.py --test beego --max-threads 2 --max-concurrency 2 
+$ toolset/run-tests.py --test beego --max-threads 2 --max-concurrency 2 
 ```
 
 ## Finding output logs
@@ -199,7 +196,9 @@ and all changes. These guidelines prevent us from having to give repeated feedba
 the same topics: 
 
 * **Use specific versions**: If you're updating any software or dependency, please be 
-specific with the version number. Also, update the appropriate `README` to reflect that change
+specific with the version number. Also, update the appropriate `README` to reflect 
+that change. Don't rely on the package manager to deliver a specific version, apt 
+consistently returns different versions on Ubuntu 12.04 vs 14.04.
 * **Rope in experts**: If you're making a performance tweak, our team may not be 
 able to verify your code--we are not experts in every language. It's always helpful 
 to ping expert users and provide a basic introduction on their credentials. If you 
@@ -217,6 +216,10 @@ request will be verifed as normal.
 different concepts and frameworks, and it can really help to read the README's, such 
 as this one, the one inside the `toolset/` directory, and the ones inside specific 
 framework directories
+* **Use the Development Virtual Machine**: Our Vagrant scripts can setup a VM for you
+that looks nearly identical to our test environment. This is even better than relying
+on the Travis-CI verification, and you are strongly encouraged to use this. See 
+the [deployment directory](deployment) for specifics
 
 ---
 
