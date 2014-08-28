@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fw_depends rvm nginx java
+fw_depends rvm nginx java maven
 
 rvm install ruby-2.0.0-p0
 rvm ruby-2.0.0-p0 do bundle install --gemfile=$TROOT/Gemfile

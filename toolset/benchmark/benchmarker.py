@@ -466,11 +466,10 @@ class Benchmarker:
     else:
       logging.debug("Executing __run_tests on Linux")
 
-      logging.info("Running %s" % tests)
       # Setup a nice progressbar and ETA indicator
       widgets = [self.mode, ': ',  progressbar.Percentage(), 
                  ' ', progressbar.Bar(),
-                 ' Full ', progressbar.ETA()]
+                 ' Rough ', progressbar.ETA()]
       pbar = progressbar.ProgressBar(widgets=widgets, maxval=len(tests)).start()
       pbar_test = 0
 
