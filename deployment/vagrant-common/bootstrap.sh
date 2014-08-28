@@ -14,6 +14,10 @@ while read -r line; do
   export $line; 
 done <<< "$1"
 
+# Store any custom variables used at launch, in case someone forgets
+# what this instance is (e.g. SSD or HDD, etc)
+echo "$1" > ~/.tfb_launch_options
+
 # Are we installing the server machine, the client machine, 
 # the database machine, or all machines? 
 # Valid values: 
@@ -98,7 +102,7 @@ if [ ! -e "~/.firstboot" ]; then
     rm -rf $FWROOT/installs $FWROOT/results
   else
     # If there is no synced folder, clone the project
-    echo "Cloning project from TechEmpower/FrameworkBenchmarks master"
+    echo "Cloning project from $GH_REPO $GH_BRANCH"
     git clone -b ${GH_BRANCH} https://github.com/${GH_REPO}.git $FWROOT
   fi
   sudo pip install -r $FWROOT/config/python_requirements.txt
