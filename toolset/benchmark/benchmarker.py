@@ -21,6 +21,9 @@ from datetime import datetime
 # Cross-platform colored text
 from colorama import Fore, Back, Style
 
+# Text-based progress indicators
+import progressbar
+
 class Benchmarker:
 
   ##########################################################################################
@@ -446,6 +449,9 @@ class Benchmarker:
   ############################################################
 
   def __run_tests(self, tests):
+    if len(tests) == 0:
+      return 0
+
     logging.debug("Start __run_tests.")
     logging.debug("__name__ = %s",__name__)
 
@@ -459,8 +465,19 @@ class Benchmarker:
           error_happened = True
     else:
       logging.debug("Executing __run_tests on Linux")
+
+      logging.info("Running %s" % tests)
+      # Setup a nice progressbar and ETA indicator
+      widgets = [self.mode, ': ',  progressbar.Percentage(), 
+                 ' ', progressbar.Bar(),
+                 ' Full ', progressbar.ETA()]
+      pbar = progressbar.ProgressBar(widgets=widgets, maxval=len(tests)).start()
+      pbar_test = 0
+
       # These features do not work on Windows
       for test in tests:
+        pbar.update(pbar_test)
+        pbar_test = pbar_test + 1
         if __name__ == 'benchmark.benchmarker':
           print header("Running Test: %s" % test.name)
           with open('current_benchmark.txt', 'w') as benchmark_resume_file:
@@ -476,6 +493,7 @@ class Benchmarker:
             test_process.join()
           if test_process.exitcode != 0:
             error_happened = True
+      pbar.finish()
     if os.path.isfile('current_benchmark.txt'):
       os.remove('current_benchmark.txt')
     logging.debug("End __run_tests.")
@@ -794,28 +812,27 @@ class Benchmarker:
   # __finish
   ############################################################
   def __finish(self):
-    if self.mode == "verify":
-      tests = self.__gather_tests
-      # Normally you don't have to use Fore.BLUE before each line, but 
-      # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
-      # or stream flush, so we have to ensure that the color code is printed repeatedly
-      prefix = Fore.CYAN
-      for line in header("Verification Summary", top='=', bottom='').split('\n'):
-        print prefix + line
-      for test in tests:
-        print prefix + "| Test: %s" % test.name
-        if test.name in self.results['verify'].keys():
-          for test_type, result in self.results['verify'][test.name].iteritems():
-            if result.upper() == "PASS":
-              color = Fore.GREEN
-            elif result.upper() == "WARN":
-              color = Fore.YELLOW
-            else:
-              color = Fore.RED
-            print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
-        else:
-          print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
-      print prefix + header('', top='', bottom='=') + Style.RESET_ALL
+    tests = self.__gather_tests
+    # Normally you don't have to use Fore.BLUE before each line, but 
+    # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
+    # or stream flush, so we have to ensure that the color code is printed repeatedly
+    prefix = Fore.CYAN
+    for line in header("Verification Summary", top='=', bottom='').split('\n'):
+      print prefix + line
+    for test in tests:
+      print prefix + "| Test: %s" % test.name
+      if test.name in self.results['verify'].keys():
+        for test_type, result in self.results['verify'][test.name].iteritems():
+          if result.upper() == "PASS":
+            color = Fore.GREEN
+          elif result.upper() == "WARN":
+            color = Fore.YELLOW
+          else:
+            color = Fore.RED
+          print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
+      else:
+        print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
+    print prefix + header('', top='', bottom='=') + Style.RESET_ALL
 
     print "Time to complete: " + str(int(time.time() - self.start_time)) + " seconds"
     print "Results are saved in " + os.path.join(self.result_directory, self.timestamp)

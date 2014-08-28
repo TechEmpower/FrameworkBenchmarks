@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo "$(tput setaf 4)"
+echo "Welcome to the FrameworkBenchmarks project!"
+echo ""
+echo "  To get started, perhaps try this:"
+echo "    \$ cd FrameworkBenchmarks"
+echo "    \$ toolset/run-tests.py --install server --test go"
+echo "    \$ cat results/ec2/latest/logs/go/out.txt"
+echo ""
+echo "  You can get lots of help:"
+echo "    \$ toolset/run-tests.py --help"
+echo ""
+echo "  This Vagrant environment is already setup and ready to go, so you"
+printf "  can safely ignore any flags about users, hosts, or identity files $(tput sgr 0)"
