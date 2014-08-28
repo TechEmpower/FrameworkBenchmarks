@@ -8,9 +8,9 @@ check_provider_needs(provider)
 
 Vagrant.configure("2") do |config|
 
-  server_ip = ENV.fetch('TFB_LOAD_IP', '172.16.0.16')
-  client_ip = ENV.fetch('TFB_DB_IP', '172.16.0.17')
-  databa_ip = ENV.fetch('TFB_APP_IP', '172.16.0.18')
+  server_ip = ENV.fetch('TFB_AWS_LOAD_IP', '172.16.0.16')
+  client_ip = ENV.fetch('TFB_AWS_DB_IP', '172.16.0.17')
+  databa_ip = ENV.fetch('TFB_AWS_APP_IP', '172.16.0.18')
   
   # Put the keys inside each box
   Dir['keys/*'].each do |fname|
