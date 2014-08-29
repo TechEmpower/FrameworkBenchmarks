@@ -42,6 +42,9 @@ void cb_json(duda_request_t *dr)
     body = json->print_unformatted_gc(dr, j_root);
     body_len = strlen(body);
 
+    /* Delete the JSON tree */
+    json->delete(j_root);
+
     /* Compose the response */
     response->http_status(dr, 200);
     response->http_header_n(dr, JSON_CONTENT_TYPE, sizeof(JSON_CONTENT_TYPE) - 1);
