@@ -8,6 +8,12 @@
  * routes.
  */
 return array(
+
+	/*
+	 * Not Found and internal Server Error
+	 */
+	'#404'	=> 'Error@404',
+	'#500'	=> 'Error@500',
 	
 	/**
 	 * JSON response benchmark

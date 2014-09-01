@@ -10,15 +10,15 @@ return array(
 	 */
 	'main' =>  array(
 		// selected database
-		'db'	 => 'localhost',
+		'db'	 => 'hello_world',
 	
 		// driver
 		'driver' => 'mysql',
 	
 		// auth
-		'host'		=> '127.0.0.1',
-		'user' 		=> 'root',
-		'pass'		=> '',
+		'host'		=> 'localhost',
+		'user' 		=> 'benchmarkdbuser',
+		'pass'		=> 'benchmarkdbpass',
 		'charset'	=> 'utf8'
 	),
 );
