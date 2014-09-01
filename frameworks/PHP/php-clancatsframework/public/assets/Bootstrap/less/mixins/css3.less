@@ -1,0 +1,63 @@
+/*
+ * border radius
+ */
+.border-radius(@radius: 5px) {
+	-webkit-border-radius: @radius;
+	border-radius: @radius;
+}
+.border-radius-top-right(@radius: 5px) {
+	-webkit-border-top-right-radius: @radius;
+	border-top-right-radius: @radius;
+}
+.border-radius-top-left(@radius: 5px) {
+	-webkit-border-top-left-radius: @radius;
+	border-top-left-radius: @radius;
+}
+.border-radius-bottom-right(@radius: 5px) {
+	-webkit-border-bottom-right-radius: @radius;
+	border-bottom-right-radius: @radius;
+}
+.border-radius-bottom-left(@radius: 5px) {
+	-webkit-border-bottom-left-radius: @radius;
+	border-bottom-left-radius: @radius;
+}
+
+/*
+ * Box shadows
+ */
+.box-shadow(@shadow: 0 1px 3px rgba(0,0,0,0.3)) {
+	-webkit-box-shadow: @shadow;
+	box-shadow: @shadow;
+}
+.box-shadow (@shadow1, @shadow2){
+	-webkit-box-shadow: @shadow1, @shadow2;
+	box-shadow: @shadow1, @shadow2;
+}
+.box-shadow (@shadow1, @shadow2, @shadow3){
+	-webkit-box-shadow: @shadow1, @shadow2, @shadow3;
+	box-shadow: @shadow1, @shadow2, @shadow3;
+}
+.inset-line(@y: 1px, @color: #FFF) {
+	@val: 0 @y 0 @color inset;
+	-webkit-box-shadow: @val;
+	box-shadow: @val;
+}
+
+
+/*
+ * transitions
+ */
+.transition(@transition: all 0.25s ease-in-out) {
+	-webkit-transition: @transition;
+	-moz-transition: @transition;
+	-ms-transition: @transition;
+	-o-transition: @transition;
+	transition: @transition;
+}
+.transition (@transition1, @transition2) {
+	-webkit-transition: @transition1, @transition2;
+	-moz-transition: @transition1, @transition2;
+	-ms-transition: @transition1, @transition2;
+	-o-transition: @transition1, @transition2;
+	transition: @transition1, @transition2;
+}

@@ -1,0 +1,12 @@
+{
+	"repos": [
+		{
+			"name": "ClanCats Orbit Repository",
+			"url": "http://framework.clancats.com/orbit/repo",
+			"website": "http://framework.clancats.com/orbit"
+		}
+	],
+	"installed": {
+		"Bootstrap": "CCF/app/themes/Bootstrap/"
+	}
+}

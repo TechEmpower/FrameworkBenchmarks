@@ -1,0 +1,17 @@
+{
+	"name": "CleanRedirect",
+	"version": "1.0.0",
+	"description": "This is a little example of an orbit ship.",
+	"homepage": "http:\/\/clancats.com",
+	"keywords": [
+		"clancats"
+	],
+	"license": "MIT",
+	"author": [
+		{
+			"name": "Mario Döring",
+			"email": "mario@clancats.com"
+		}
+	],
+	"namespace": "CleanRedirect"
+}

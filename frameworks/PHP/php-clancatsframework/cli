@@ -1,0 +1,120 @@
+#!/usr/bin/env php
+<?php 
+/*
+ *---------------------------------------------------------------
+ * PHPUnit runner
+ *---------------------------------------------------------------
+ *
+ * This file just loads CCF and all needed resources to run the 
+ * php unit tests. PHPUnit is a really elegant way to make sure 
+ * that everything works how it should.
+ *
+ *
+ * force the environment to phpunit
+ *
+ * By default the the environment detector defines the current 
+ * environment. But you can force another one using the this var.
+ */
+$environment = 'cli';
+
+/*
+ *---------------------------------------------------------------
+ * Require CCF
+ *---------------------------------------------------------------
+ *
+ * load the framework file wich wil initialize CCF. 
+ */
+require_once __DIR__."/framework.php";
+
+
+// get passed arguments
+if ( isset( $argv ) ) 
+{
+	array_shift( $argv );
+	$argv = implode( ' ', $argv );
+}
+
+// direct mode or read loop?
+if ( !empty( $argv ) ) {
+	CCConsoleController::parse( $argv ); die;
+}
+
+// clear the screen
+CCCli::clear();
+
+/*
+ * show logo
+ */
+CCCli::write("==============================
+    _____ _____ ______ 
+   / ____/ ____|  ____|
+  | |   | |    | |__   
+  | |   | |    |  __|  
+  | |___| |____| |     
+   \_____\_____|_| Framework
+==============================
+\n", 'cyan');
+
+/* 
+ * start a manual read loop because we need the gloab scope
+ */
+while ( 1 ) {
+
+	// get input
+	$_reply = CCCli::read( '> ' );
+
+	// continue if no command given
+	if ( empty( $_reply ) ) {
+		continue;
+	}
+
+	// check for exit command
+	if ( $_reply == 'bye' ) {
+		die;
+	}
+
+	// last char
+	$last_char = substr( $_reply, -1 );
+
+  	// get first cmd
+  	$first_cmd = array_shift( array_values( explode( ' ', $_reply ) ) );
+
+  	// check if we should execute an console controller
+  	if ( $first_cmd == 'run' ) {
+  		CCConsoleController::parse( substr( $_reply, 4 ) ); continue;
+  	}
+
+	// add semicolon if missing
+	if ( $last_char != ";" && $last_char != "}" ) {
+		$_reply .= ";";
+	}
+
+	/*
+	 * these commands cannot be used with a var assignment
+	 */
+	$no_return_cmds = array(
+		'throw',
+		'echo',
+	);
+
+	// catch the return
+	if ( !in_array( $first_cmd, $no_return_cmds ) ) {
+		$_reply = '$_return_data = '.$_reply;
+	}
+
+	// output buffer
+	ob_start();
+		// run the command
+		$return = eval( $_reply );
+	echo $out = ob_get_clean();
+
+	// add break if something where outputet
+	if ( strlen( $out ) > 0 ) {
+		echo "\n";
+	}
+
+	// dump the return
+	if ( !in_array( $first_cmd, $no_return_cmds ) ) {
+		var_dump( $_return_data );
+	}
+}

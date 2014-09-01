@@ -1,0 +1,18 @@
+{
+	"name": "Twitter Bootstrap with packtacular",
+	"version": "3.0.3",
+	"description": "Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.",
+	"homepage": "http://getbootstrap.com",
+	"keywords": [
+		"Twitter",
+		"Theme"
+	],
+	"license": "MIT",
+	"authors": [],
+	
+	"namespace": "Bootstrap",
+	
+	"wake": false,
+	"install": false,
+	"uninstall": false
+}
