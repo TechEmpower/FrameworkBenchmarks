@@ -1,0 +1,20 @@
+{
+	"name": "Packtacular",
+	"version": "1.0.0",
+	"description": "",
+	"homepage": "http://clancats.com",
+	"keywords": [
+		"clancats"
+	],
+	"license": "MIT",
+	"author": [
+		{
+			"name": "Mario Döring",
+			"email": "mario@clancats.com"
+		}
+	],
+	"namespace": "Packtacular",
+	
+	"install": false,
+	"uninstall": false
+}
