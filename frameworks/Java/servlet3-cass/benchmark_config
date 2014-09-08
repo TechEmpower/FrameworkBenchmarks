@@ -20,7 +20,7 @@
       "notes": "",
       "versus": "servlet3-cass"
     },
-    "cassandra": {
+    "raw": {
       "setup_file": "setup",
       "db_url": "/servlet3-cass/db",
       "query_url": "/servlet3-cass/queries?queries=",
