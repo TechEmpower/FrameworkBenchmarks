@@ -21,5 +21,3 @@ do
     sudo update-alternatives --set $n "$p"
   fi
 done
-
-return 0
