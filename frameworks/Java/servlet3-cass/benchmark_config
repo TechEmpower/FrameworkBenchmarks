@@ -28,7 +28,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "Apache Cassandra",
+      "database": "Cassandra",
       "framework": "servlet3-cass",
       "language": "Java",
       "orm": "Raw",

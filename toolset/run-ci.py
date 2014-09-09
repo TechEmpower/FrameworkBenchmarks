@@ -195,6 +195,7 @@ class CIRunnner:
     validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
                   or t.database.lower() == "postgres"
                   or t.database.lower() == "mongodb"
+                  or t.database.lower() == "cassandra"
                   or t.database.lower() == "none"]
     log.info("Found %s usable tests (%s valid for linux, %s valid for linux and {mysql,postgres,mongodb,none}) in directory '%s'", 
       len(dirtests), len(osvalidtests), len(validtests), '$FWROOT/frameworks/' + testdir)
@@ -314,10 +315,16 @@ class CIRunnner:
     until timeout 15s sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10; do echo 'Waiting for apt-key' ; done
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
+    # Add Apache Cassandra repository
+    sudo apt-key adv --keyserver pgp.mit.edu --recv 4BD736A82B5C1B00
+    sudo apt-add-repository  'deb http://www.apache.org/dist/cassandra/debian 20x main'
+
     sudo apt-get -q update
     
     # MongoDB takes a good 30-45 seconds to turn on, so install it first
     sudo apt-get -q install mongodb-org
+
+    sudo apt-get install cassandra
 
     sudo apt-get -q install openssh-server
 
@@ -339,6 +346,10 @@ class CIRunnner:
     sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < config/create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
+
+    # Setup Apache Cassandra
+    cat config/cassandra/create-keyspace.cql | cqlsh localhost
+    python config/cassandra/db-data-gen.py | cqlsh
 
     # Setup MongoDB (see install above)
     mongod --version
