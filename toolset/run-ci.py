@@ -349,9 +349,10 @@ class CIRunnner:
 
     # Setup Apache Cassandra
     sudo dpkg -l cassandra
+    sudo dpkg -L cassandra
     sudo apt-cache search cassandra
     which cqlsh
-    cqlsh --version
+    sudo cqlsh --version
     cqlsh -f config/cassandra/create-keyspace.cql
     python config/cassandra/db-data-gen.py | cqlsh
 
