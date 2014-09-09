@@ -197,7 +197,7 @@ class CIRunnner:
                   or t.database.lower() == "mongodb"
                   or t.database.lower() == "cassandra"
                   or t.database.lower() == "none"]
-    log.info("Found %s usable tests (%s valid for linux, %s valid for linux and {mysql,postgres,mongodb,none}) in directory '%s'", 
+    log.info("Found %s usable tests (%s valid for linux, %s valid for linux and {mysql,postgres,mongodb,cassandra,none}) in directory '%s'", 
       len(dirtests), len(osvalidtests), len(validtests), '$FWROOT/frameworks/' + testdir)
     if len(validtests) == 0:
       log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
@@ -324,7 +324,7 @@ class CIRunnner:
     # MongoDB takes a good 30-45 seconds to turn on, so install it first
     sudo apt-get -q install mongodb-org
 
-    sudo apt-get install cassandra
+    sudo apt-get install -o Dpkg::Options::="--force-confnew" cassandra
 
     sudo apt-get -q install openssh-server
 
