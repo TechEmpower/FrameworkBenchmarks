@@ -316,7 +316,7 @@ class CIRunnner:
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
     # Add Apache Cassandra repository
-    sudo apt-key adv --keyserver pgp.mit.edu --recv 4BD736A82B5C1B00
+    until timeout 15s sudo apt-key adv --keyserver pgp.mit.edu --recv 4BD736A82B5C1B00; do echo 'Waiting for apt-key' ; done
     sudo apt-add-repository  'deb http://www.apache.org/dist/cassandra/debian 20x main'
 
     sudo apt-get -q update
@@ -348,12 +348,7 @@ class CIRunnner:
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
 
     # Setup Apache Cassandra
-    sudo dpkg -l cassandra
-    sudo dpkg -L cassandra
-    sudo dpkg -l
-    sudo apt-cache search cassandra
-    sudo cqlsh --version
-    sudo cqlsh -f config/cassandra/create-keyspace.cql
+    for i in 1 2 3; do sudo cqlsh -f config/cassandra/create-keyspace.cql && break || sleep 15; done
     python config/cassandra/db-data-gen.py | sudo cqlsh
 
     # Setup MongoDB (see install above)
