@@ -351,7 +351,7 @@ class CIRunnner:
     pwd
     echo foobar
     find config
-    cat config/cassandra/create-keyspace.cql | cqlsh
+    cqlsh -f config/cassandra/create-keyspace.cql
     python config/cassandra/db-data-gen.py | cqlsh
 
     # Setup MongoDB (see install above)
