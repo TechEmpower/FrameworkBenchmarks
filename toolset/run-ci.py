@@ -350,14 +350,11 @@ class CIRunnner:
     # Setup Apache Cassandra
     sudo dpkg -l cassandra
     sudo dpkg -L cassandra
+    sudo dpkg -l dsc*
     sudo apt-cache search cassandra
-    id
-    umask
-    ls -la /usr/share/pyshared
-    ls -la /usr/share/pyshared/cqlshlib
     sudo cqlsh --version
-    cqlsh -f config/cassandra/create-keyspace.cql
-    python config/cassandra/db-data-gen.py | cqlsh
+    sudo cqlsh -f config/cassandra/create-keyspace.cql
+    python config/cassandra/db-data-gen.py | sudo cqlsh
 
     # Setup MongoDB (see install above)
     mongod --version
