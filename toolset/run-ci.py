@@ -348,9 +348,10 @@ class CIRunnner:
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
 
     # Setup Apache Cassandra
-    pwd
-    echo foobar
-    find config
+    sudo dpkg -l cassandra
+    sudo apt-cache search cassandra
+    which cqlsh
+    cqlsh --version
     cqlsh -f config/cassandra/create-keyspace.cql
     python config/cassandra/db-data-gen.py | cqlsh
 
