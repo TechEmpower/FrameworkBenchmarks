@@ -1,0 +1,6 @@
+./goji/src/
+./goji/src/app
+./goji/src/app/app.go
+./goji/src/app/models.go
+./goji/templates
+./goji/templates/fortune.tmpl
