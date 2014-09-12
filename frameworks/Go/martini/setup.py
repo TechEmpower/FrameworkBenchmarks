@@ -9,14 +9,14 @@ def start(args, logfile, errfile):
     #subprocess.call("rmdir /s /q pkg\\windows_amd64", shell=True, cwd="go")
     #subprocess.call("rmdir /s /q src\\github.com", shell=True, cwd="go")
     #subprocess.call("del /s /q /f bin\\hello.exe", shell=True, cwd="go")
-    subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\go&& go get ./...", shell=True, cwd="go", stderr=errfile, stdout=logfile)
-    subprocess.Popen("setup.bat", shell=True, cwd="go", stderr=errfile, stdout=logfile)
+    subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\martini&& go get ./...", shell=True, cwd="martini", stderr=errfile, stdout=logfile)
+    subprocess.Popen("setup.bat", shell=True, cwd="martini", stderr=errfile, stdout=logfile)
     return 0
   # os.environ["GOPATH"] = os.path.expanduser('~/FrameworkBenchmarks/go')
-  subprocess.call("go get -u github.com/martini/martini", shell=True, cwd="go", stderr=errfile, stdout=logfile)
-  subprocess.call("go get -u github.com/martini-contrib/render", shell=True, cwd="go", stderr=errfile, stdout=logfile)
-  subprocess.call("go get ./...", shell=True, cwd="go", stderr=errfile, stdout=logfile)
-  subprocess.Popen("go run src/app/app.go src/app/models.go".rsplit(" "), cwd="go", stderr=errfile, stdout=logfile)
+  subprocess.call("go get -u github.com/martini/martini", shell=True, cwd="martini", stderr=errfile, stdout=logfile)
+  subprocess.call("go get -u github.com/martini-contrib/render", shell=True, cwd="martini", stderr=errfile, stdout=logfile)
+  subprocess.call("go get ./...", shell=True, cwd="martini", stderr=errfile, stdout=logfile)
+  subprocess.Popen("go run src/app/app.go src/app/models.go".rsplit(" "), cwd="martini", stderr=errfile, stdout=logfile)
   return 0
 def stop(logfile, errfile):
   if os.name == 'nt':
