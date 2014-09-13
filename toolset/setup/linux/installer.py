@@ -228,9 +228,11 @@ class Installer:
     mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
     nohup apache-cassandra-$CASS_V/bin/cassandra > cassandra.log
 
-    sleep 10
-    cat cassandra/create-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
-    python cassandra/db-data-gen.py | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
+    until nc -z localhost 9160 ; do echo Waiting for Cassandra; sleep 1; done
+    cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
+    python cassandra/db-data-gen.py > cassandra/tfb-data.cql
+    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql $TFB_DATABASE_HOST
+    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql $TFB_DATABASE_HOST
     rm -rf apache-cassandra-*-bin.tar.gz cassandra
 
     ##############################
