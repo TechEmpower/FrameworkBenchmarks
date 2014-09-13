@@ -348,7 +348,8 @@ class CIRunnner:
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
 
     # Setup Apache Cassandra
-    for i in 1 2 3; do sudo cqlsh -f config/cassandra/create-keyspace.cql && break || sleep 15; done
+    until nc -z localhost 9160 ; do echo Waiting for Cassandra; sleep 1; done
+    sudo cqlsh -f config/cassandra/create-keyspace.cql
     python config/cassandra/db-data-gen.py | sudo cqlsh
 
     # Setup MongoDB (see install above)
