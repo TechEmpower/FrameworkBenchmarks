@@ -349,8 +349,10 @@ class CIRunnner:
 
     # Setup Apache Cassandra
     until nc -z localhost 9160 ; do echo Waiting for Cassandra; sleep 1; done
+    cat config/cassandra/cleanup-keyspace.cql | sudo cqlsh
+    python config/cassandra/db-data-gen.py > config/cassandra/tfb-data.cql
     sudo cqlsh -f config/cassandra/create-keyspace.cql
-    python config/cassandra/db-data-gen.py | sudo cqlsh
+    sudo cqlsh -f config/cassandra/tfb-data.cql
 
     # Setup MongoDB (see install above)
     mongod --version
