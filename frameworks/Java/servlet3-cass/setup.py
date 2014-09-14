@@ -15,10 +15,12 @@ def start(args, logfile, errfile):
       subprocess.check_call("cp servlet3-cass\\target\\servlet3-cass.war C:\\Java\\resin\\webapps\\servlet3-cass.war", shell=True, stderr=errfile, stdout=logfile)
       subprocess.check_call("C:\\Java\\resin\\bin\\start.bat", shell=True, stderr=errfile, stdout=logfile)
       return 0
-    subprocess.check_call("pwd", shell=True, stderr=errfile, stdout=logfile)
-    subprocess.check_call("cat src/main/resources/application.properties", shell=True, cwd="servlet3-cass", stderr=errfile, stdout=logfile)
     subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
-    subprocess.check_call("cp servlet3-cass/target/servlet3-cass.war $RESIN_HOME/webapps/", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("cp servlet3-cass/target/servlet3-cass.war $RESIN_HOME/webapps/", shell=True, stderr=errfile, stdout=logfile)    
+    # output config + verify database connection
+    subprocess.call("echo servlet3-cass application.properties", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("cat src/main/resources/application.properties", shell=True, cwd="servlet3-cass", stderr=errfile, stdout=logfile)
+    subprocess.call("for i in 1 2 3 4 5; do nc -vz "+args.database_host+" 9160  && echo 'c* ok' && break || echo 'waiting for c*'; sleep 2; done", shell=True, stderr=errfile, stdout=logfile)
     subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:

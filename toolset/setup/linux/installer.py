@@ -226,13 +226,13 @@ class Installer:
     
     mv cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
     mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
-    nohup apache-cassandra-$CASS_V/bin/cassandra > cassandra.log
+    apache-cassandra-$CASS_V/bin/cassandra -p /ssd/cassandra/c.pid > /ssd/cassandra/boot.log
 
     until nc -z localhost 9160 ; do echo Waiting for Cassandra; sleep 1; done
-    cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
+    cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh localhost
     python cassandra/db-data-gen.py > cassandra/tfb-data.cql
-    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql $TFB_DATABASE_HOST
-    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql $TFB_DATABASE_HOST
+    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql localhost
+    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql localhost
     rm -rf apache-cassandra-*-bin.tar.gz cassandra
 
     ##############################
