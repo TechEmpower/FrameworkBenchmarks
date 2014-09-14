@@ -12,7 +12,7 @@ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
 sudo apt-get -y update
-sudo apt-get -y upgrade
+sudo apt-get -y -o Dpkg::Options::="--force-confnew" upgrade
 
 # WARNING: DONT PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
 sudo apt-get -y install \
