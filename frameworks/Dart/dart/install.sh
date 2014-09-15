@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends dart nginx
+fw_depends dart
