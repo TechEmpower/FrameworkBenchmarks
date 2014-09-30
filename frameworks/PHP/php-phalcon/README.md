@@ -24,7 +24,7 @@ Uses Phalcons template engine 'Volt'
 The tests were run with:
 
 * [Phalcon 1.0.0](http://phalconphp.com/)
-* [PHP Version 5.4.13](http://www.php.net/) with FPM, APC and Phalcon extension
+* [PHP Version 5.5.17](http://www.php.net/) with FPM, APC and Phalcon extension
 * [nginx 1.4.0](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 * [MongoDB 2.4.8](https://mongodb.org/)

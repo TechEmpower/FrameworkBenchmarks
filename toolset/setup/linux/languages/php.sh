@@ -11,20 +11,20 @@ RETCODE=$(fw_exists php.installed)
   sudo cp $FWROOT/config/php-fpm.conf /usr/local/lib/php-fpm.conf
   return 0; }
 
-fw_get http://museum.php.net/php5/php-5.4.13.tar.gz -O php-5.4.13.tar.gz
-fw_untar php-5.4.13.tar.gz
+fw_get http://php.net/distributions/php-5.5.17.tar.gz -O php-5.5.17.tar.gz
+fw_untar php-5.5.17.tar.gz
 ls
-mv php-5.4.13 php
+mv php-5.5.17 php
 ls
 cd php
 
-./configure --prefix=$IROOT/php-5.4.13 --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl
+./configure --prefix=$IROOT/php-5.5.17 --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl
 make
 make install
 cd ..
 
-cp $FWROOT/config/php.ini $IROOT/php-5.4.13/lib/php.ini
-cp $FWROOT/config/php-fpm.conf $IROOT/php-5.4.13/lib/php-fpm.conf
+cp $FWROOT/config/php.ini $IROOT/php-5.5.17/lib/php.ini
+cp $FWROOT/config/php-fpm.conf $IROOT/php-5.5.17/lib/php-fpm.conf
 
 # =======================
 #
@@ -35,22 +35,22 @@ cp $FWROOT/config/php-fpm.conf $IROOT/php-5.4.13/lib/php-fpm.conf
 echo PHP compilation finished, building modules
 
 # Apc.so
-$IROOT/php-5.4.13/bin/pecl config-set php_ini $IROOT/php-5.4.13/lib/php.ini
-printf "\n" | $IROOT/php-5.4.13/bin/pecl install -f apc-beta
+$IROOT/php-5.5.17/bin/pecl config-set php_ini $IROOT/php-5.5.17/lib/php.ini
+printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f apc-beta
 
 # yaf.so
-printf "\n" | $IROOT/php-5.4.13/bin/pecl install -f yaf
+printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f yaf
 
 # phalcon.so
 #   The configure seems broken, does not respect prefix. If you 
 #   update the value of PATH then it finds the prefix from `which php`
-export PATH=$IROOT/php-5.4.13/bin:$IROOT/php-5.4.13/sbin:$PATH
+export PATH=$IROOT/php-5.5.17/bin:$IROOT/php-5.5.17/sbin:$PATH
 git clone git://github.com/phalcon/cphalcon.git
 cd cphalcon
 git checkout phalcon-v1.3.2
 cd build/64bits 
-$IROOT/php-5.4.13/bin/phpize
-./configure --prefix=$IROOT/php-5.4.13 --enable-phalcon
+$IROOT/php-5.5.17/bin/phpize
+./configure --prefix=$IROOT/php-5.5.17 --enable-phalcon
 make
 make install
 

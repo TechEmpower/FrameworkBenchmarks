@@ -18,7 +18,7 @@ Uses the db abstraction class from Kohana
 The tests were run with:
 
 * [Kohana Version 3.3.0](http://kohanaframework.org/)
-* [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
+* [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
 * [nginx 1.4.0](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 

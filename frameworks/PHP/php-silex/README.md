@@ -18,7 +18,7 @@ Uses the Doctrine DBAL functionality.
 The tests were run with:
 
 * [Silex Version 1.0](http://silex.sensiolabs.org/)
-* [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
+* [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
 * [nginx 1.4.0](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
