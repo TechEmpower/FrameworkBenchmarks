@@ -4,6 +4,9 @@ RETCODE=$(fw_exists /opt/ghc/7.8.3/bin/ghc)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 lsb_release -a
+env
+
+export LANG=en_US.UTF-8
 
 sudo add-apt-repository -y ppa:hvr/ghc
 sudo apt-get update
