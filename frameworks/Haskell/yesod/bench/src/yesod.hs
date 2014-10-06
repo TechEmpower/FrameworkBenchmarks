@@ -64,11 +64,17 @@ mkYesod "App" [parseRoutes|
 
 instance Yesod App where
     makeSessionBackend _ = return Nothing
+    {-# INLINE makeSessionBackend #-}
     shouldLog _ _ _ = False
+    {-# INLINE shouldLog #-}
     yesodMiddleware = id
+    {-# INLINE yesodMiddleware #-}
+    cleanPath _ = Right
+    {-# INLINE cleanPath #-}
 
-getJsonR :: Handler Value
-getJsonR = return $ object ["message" .= ("Hello, World!" :: Text)]
+getJsonR :: Handler TypedContent
+getJsonR = return $ TypedContent typeJson
+         $ toContent $ object ["message" .= ("Hello, World!" :: Text)]
 
 
 getDbR :: Handler Value
