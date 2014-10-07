@@ -29,7 +29,12 @@ import           Data.Pool                    (withResource)
 import           Data.Text                    (Text)
 import           Database.MongoDB             (Field ((:=)), (=:))
 import qualified Database.MongoDB             as Mongo
+import           Database.Persist             (Key, PersistEntity,
+                                               PersistEntityBackend,
+                                               PersistStore, get)
 import qualified Database.Persist.MySQL       as My
+import           Database.Persist.TH          (mkPersist, mpsGeneric,
+                                               persistLowerCase, sqlSettings)
 import           Network                      (PortID (PortNumber))
 import           Network.HTTP.Types
 import           Network.Wai
@@ -37,7 +42,7 @@ import qualified Network.Wai.Handler.Warp     as Warp
 import           System.Environment           (getArgs)
 import           System.IO.Unsafe             (unsafePerformIO)
 import qualified System.Random.MWC            as R
-import           Yesod                        hiding (Field)
+import           Yesod.Core
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
 World sql=World
