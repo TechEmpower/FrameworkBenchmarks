@@ -1,0 +1,51 @@
+{
+  "framework": "kelp",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "SQL",
+      "framework": "kelp",
+      "language": "Perl",
+      "orm": "Raw",
+      "platform": "Plack",
+      "webserver": "Starman",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "kelp",
+      "notes": "",
+      "versus": ""
+    },
+    "mongodb": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries/mongo?queries=",
+      "fortune_url": "/fortunes/mongo",
+      "update_url": "/update/mongo?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MongoDB",
+      "framework": "kelp",
+      "language": "Perl",
+      "orm": "Raw",
+      "platform": "Plack",
+      "webserver": "Starman",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "kelp",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

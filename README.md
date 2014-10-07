@@ -19,25 +19,28 @@ or chat with us on [Freenode](https://freenode.net/faq.shtml#whatwhy) at `#teche
 
 # How do I contribute updates or new frameworks?
 
-If you plan to add a new framework or update an existing framework, you only 
-need to run in *verify* mode. This will launch the framework, query all URLs, and verify that 
-returned data matches the [benchmark requirements](http://www.techempower.com/benchmarks/#section=code). 
+[Setup a development environment](deployment), typically by using a 
+remote server dedicated to this project or by using a virtual machine. 
+Here's a short example: 
+    
+```bash
+# Clone the project, then move into the right directory
+$ cd ~/FrameworkBenchmarks/deployment/vagrant-development
+# Turn on the VM. Takes at least 20 minutes
+$ vagrant up
+# Enter the VM, then run a test
+$ vagrant ssh
+vagrant@TFB-all:~$ cd ~/FrameworkBenchmarks
+vagrant@TFB-all:~/FrameworkBenchmarks$ toolset/run-tests.py --install server --mode verify --test beego
+```
 
-If *verify* mode is all you need, you can potentially develop without ever running our 
-codebase locally - our [Travis-CI.org](https://travis-ci.org/TechEmpower/FrameworkBenchmarks) setup 
-can run the verification for you. This is as simple as going to travis-ci.org, using the 
-`Log in with Github` button, and enabling Travis-CI for your fork. All commit pushes 
-will be automatically verified by Travis-CI, and you will get full log output. 
-You can submit a pull request when your code passes the Travis-CI verification and have 
-confidence it will be merged quickly. While this development route is slightly slower than 
-standard local development, it does not require any local setup process.
-
-You can also run *verify* mode on a single computer, although you should be comfortable with us 
-installing multiple large software suites. 
-You will need to enable passwordless SSH access to localhost ([search Google for help](https://www.google.com/#hl=en&q=passwordless%20SSH%20access), yielding references such as these: [article 1](http://hortonworks.com/kb/generating-ssh-keys-for-passwordless-login/) [article 2](http://superuser.com/questions/336226/how-to-ssh-to-localhost-without-password) [article 3](https://help.ubuntu.com/community/SSH/OpenSSH/Keys)), and you will also 
-need to enable passwordless sudo access ([Google for help](https://www.google.com/#hl=en&q=passwordless%20sudo)).
-Once you have cloned our repository, run `toolset/run-tests.py --help` for detailed 
-help on running in *verify* mode and see the sections below for more guidance. 
+Then enable Travis-CI on your project fork, so that any commits you send
+to Github are automatically verified for correctness (e.g. meeting all 
+[benchmark requirements](http://www.techempower.com/benchmarks/#section=code)). 
+This is as simple as going to travis-ci.org, using the 
+`Log in with Github` button, and enabling Travis-CI for your fork.
+When your development is done and your changes pass the Travis-CI verification,
+submit a pull request with confidence that it can be merged quickly. 
 
 # How do I run the benchmark myself? 
 
@@ -47,15 +50,18 @@ connection in between, all of which you should be comfortable installing a large
 of additional software on. One of these computers (the `app server`) must have passwordless
 SSH access to the other two ([search Google for help](https://www.google.com/#hl=en&q=passwordless%20SSH%20access), yielding references such as these: [article 1](http://hortonworks.com/kb/generating-ssh-keys-for-passwordless-login/) [article 2](http://superuser.com/questions/336226/how-to-ssh-to-localhost-without-password) [article 3](https://help.ubuntu.com/community/SSH/OpenSSH/Keys)), and on every computer 
 you will need to have passwordless sudo access ([Google for help](https://www.google.com/#hl=en&q=passwordless%20sudo)).
-Once you have cloned our repository, run `toolset/run-tests.py --help` for detailedhelp
-on running in *benchmark* mode and see the sections below for more guidance. 
+Once you have cloned our repository, run `toolset/run-tests.py --help` for detailed help
+on running in *benchmark* mode. 
+
+If you wish to benchmark on Amazon EC2, see [our scripts](deployment/vagrant-production) for 
+launching a benchmark-ready Amazon environment. 
 
 If you are not an expert, please ensure your setup can run in *verify* mode before 
 attempting to run in *benchmark* mode. 
 
 # Project Overview 
 
-Running the full benchmark requires at least three computers:
+The full benchmark requires at least three computers:
 
 * `app server`: The computer that your framework will be launched on.
 * `load server`: The computer that will generate client load. Also known as the `client machine`.
@@ -76,19 +82,6 @@ When run, `TFB` will:
 * gather the results
 * halt the framework
 
-# Installation and Usage Details
-
-If you choose to run TFB on your own computer, you will need to install 
-passwordless SSH to your `load server` and your `database server` from 
-your `app server`. You will also need to enable passwordless sudo access
-on all three servers. If you are only planning to use *verify* mode, then
-all three servers can be the same computer, and you will need to ensure
-you have passwordless sudo access to `localhost`. 
-
-For all Linux framework tests, we use [Ubuntu 14.04](http://www.ubuntu.com/download/server), so 
-it is recommended you use this for development or use.  Furthermore, the load server is Linux-only,
-even when testing Windows frameworks.
-
 ## Configuration File Usage
 
 TFB takes a large number of command-line arguments, and it can become tedious to 
@@ -107,19 +100,18 @@ After you have a configuration file, run the following to setup your
 various servers. We use the `--install-only` flag in our examples to 
 prevent launching tests at this stage. 
 
+See [here](deployment) for additional details. 
+
 **Setting up the `load server`**
 
-```
-toolset/run-tests.py --install client --verbose  --install-only
+```bash
+$ toolset/run-tests.py --install client --install-only
 ```
 
 **Setting up the `database server`**
 
-```
-toolset/run-tests.py --install database --verbose --install-only
-# We are still working to automate MongoDO. Until this, please run
-# this as well (replacing database-ip with your own value)
-mongo --host database-ip < config/create.js
+```bash
+$ toolset/run-tests.py --install database --install-only
 ```
 
 **Setting up the `app server`**
@@ -127,25 +119,25 @@ mongo --host database-ip < config/create.js
 You can choose to selectively install components by using the 
 `--test` and `--exclude` flags. 
 
-```
+```bash
 # Install just the software for beego (as an example)
-toolset/run-tests.py --install server --test beego --verbose --install-only
+$ toolset/run-tests.py --install server --test beego --verbose --install-only
 
 # Install all php software but php-fuel (as another example)
-toolset/run-tests.py --install server --test php* --exclude php-fuel --verbose --install-only
+$ toolset/run-tests.py --install server --test php* --exclude php-fuel --verbose --install-only
 
 # Install *all* framework software. Expect this to take hours!
 # If running on a remote server, use `screen` or `tmux` or `nohup` to 
 # prevent the installation from being terminated if you are disconnected
-toolset/run-tests.py --install server --verbose --install-only
+$ toolset/run-tests.py --install server --verbose --install-only
 ```
 
 ## Listing Tests
 
 You can easily list all available tests
 
-```
-╰─$ toolset/run-tests.py --list-tests
+```bash
+$ toolset/run-tests.py --list-tests
 activeweb
 activeweb-raw
 aspnet
@@ -161,23 +153,23 @@ aspnet-mono-mongodb-raw
 
 There are a number of options that can be specified: 
 
-```
+```bash
 # Run a verification for test beego
-toolset/run-tests.py --test beego --mode verify
+$ toolset/run-tests.py --test beego --mode verify
 
 # Run the default benchmark for the beego test
-toolset/run-tests.py --test beego
+$ toolset/run-tests.py --test beego
 
 # Specify which test types are run during benchmark
-toolset/run-tests.py --test beego --type json
-toolset/run-tests.py --test beego --type db
-toolset/run-tests.py --test beego --type fortune
+$ toolset/run-tests.py --test beego --type json
+$ toolset/run-tests.py --test beego --type db
+$ toolset/run-tests.py --test beego --type fortune
 
 # Specify a number of options for how the load is generated
-toolset/run-tests.py --test beego --max-concurrency 24 --max-threads 24 --duration 20 --max-queries 200
+$ toolset/run-tests.py --test beego --max-concurrency 24 --max-threads 24 --duration 20 --max-queries 200
 
 # Run a tiny benchmark
-toolset/run-tests.py --test beego --max-threads 2 --max-concurrency 2 
+$ toolset/run-tests.py --test beego --max-threads 2 --max-concurrency 2 
 ```
 
 ## Finding output logs
@@ -204,7 +196,9 @@ and all changes. These guidelines prevent us from having to give repeated feedba
 the same topics: 
 
 * **Use specific versions**: If you're updating any software or dependency, please be 
-specific with the version number. Also, update the appropriate `README` to reflect that change
+specific with the version number. Also, update the appropriate `README` to reflect 
+that change. Don't rely on the package manager to deliver a specific version, apt 
+consistently returns different versions on Ubuntu 12.04 vs 14.04.
 * **Rope in experts**: If you're making a performance tweak, our team may not be 
 able to verify your code--we are not experts in every language. It's always helpful 
 to ping expert users and provide a basic introduction on their credentials. If you 
@@ -222,6 +216,10 @@ request will be verifed as normal.
 different concepts and frameworks, and it can really help to read the README's, such 
 as this one, the one inside the `toolset/` directory, and the ones inside specific 
 framework directories
+* **Use the Development Virtual Machine**: Our Vagrant scripts can setup a VM for you
+that looks nearly identical to our test environment. This is even better than relying
+on the Travis-CI verification, and you are strongly encouraged to use this. See 
+the [deployment directory](deployment) for specifics
 
 ---
 
@@ -354,7 +352,9 @@ The steps involved are:
 permutation to your `benchmark_config` file for the Windows test.  When 
 the benchmark script runs on Linux, it skips tests where `os` in `Windows`
 and vice versa. 
-* Add the necessary tweaks to your [setup file](#setup-files) to start and stop on the new operating system.  See, for example, [the script for Go](https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/go/setup.py).
+* Add the necessary tweaks to your [setup file](#setup-files) to start and 
+stop on the new operating system.  See, for example, 
+[the script for Go](frameworks/Go/go/setup.py).
 * Test on Windows and Linux to make sure everything works as expected.
 
 ### Install File
@@ -412,8 +412,8 @@ grails.sh  nawak.sh  play1.sh  siena.sh     vertx.sh  yesod.sh
 jester.sh  onion.sh  play2.sh  treefrog.sh  wt.sh
 $ ls languages
 composer.sh  erlang.sh   hhvm.sh   mono.sh    perl.sh     pypy.sh     racket.sh   urweb.sh
-dart.sh      go.sh       java.sh   nimrod.sh  phalcon.sh  python2.sh  ringojs.sh  xsp.sh
-elixir.sh    haskell.sh  jruby.sh  nodejs.sh  php.sh      python3.sh  ruby.sh     yaf.sh
+dart.sh      go.sh       java.sh   nimrod.sh  python2.sh  ringojs.sh  xsp.sh
+elixir.sh    haskell.sh  jruby.sh  nodejs.sh  php.sh      python3.sh  ruby.sh 
 $ ls systools
 leiningen.sh  maven.sh
 $ ls webservers
@@ -451,17 +451,25 @@ Do not cause any output, such as using `echo`, inside of `bash_profile.sh`
 The setup file is responsible for starting and stopping the test. This script is responsible for (among other things):
 
 * Modifying the framework's configuration to point to the correct database host
-* Compiling and/or packaging the code
+* Compiling and/or packaging the code (if impossible to do in `install.sh`)
 * Starting the server
 * Stopping the server
 
-The setup file is a python script that contains a start() and a stop() function.  The start function should build the source, make any necessary changes to the framework's configuration, and then start the server.  The stop function should shutdown the server, including all sub-processes as applicable.
+The setup file is a python script that contains a start() and a stop() function.  
+The start function should build the source, make any necessary changes to the framework's 
+configuration, and then start the server. The stop function should shutdown the server, 
+including all sub-processes as applicable.
 
 #### Configuring database connectivity in start()
 
-By convention, the configuration files used by a framework should specify the database server as `localhost` so that developing tests in a single-machine environment can be done in an ad hoc fashion, without using the benchmark scripts.
+By convention, the configuration files used by a framework should specify the database 
+server as `localhost` so that developing tests in a single-machine environment can be 
+done in an ad hoc fashion, without using the benchmark scripts.
 
-When running a benchmark script, the script needs to modify each framework's configuration so that the framework connects to a database host provided as a command line argument.  In order to do this, use setup_util.replace_text() to make necessary modifications prior to starting the server.
+When running a benchmark script, the script needs to modify each framework's configuration
+so that the framework connects to a database host provided as a command line argument. 
+In order to do this, use `setup_util.replace_text()` to make modifications prior to 
+starting the server.
 
 For example:
 
@@ -469,7 +477,12 @@ For example:
 setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 ```
 
-Using `localhost` in the raw configuration file is not a requirement as long as the `replace_text` call properly injects the database host provided to the benchmarker toolset as a command line argument.
+Note: `args` contains a number of useful items, such as `troot`, `iroot`, `fwroot` (comparable
+to their bash counterparts in `install.sh`, `database_host`, `client_host`, and many others)
+
+Note: Using `localhost` in the raw configuration file is not a requirement as long as the
+`replace_text` call properly injects the database host provided to the benchmark 
+toolset as a command line argument.
 
 #### A full example
 
@@ -489,7 +502,7 @@ import setup_util
 def start(args, logfile, errfile):
 
 # setting the database url
-setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
+setup_util.replace_text(args.troot + "/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\/\/.*:3306", "mysql://" + args.database_host + ":3306")
 
 # 1. Compile and package
 # 2. Clean out possible old tests
@@ -498,7 +511,7 @@ setup_util.replace_text("wicket/src/main/webapp/WEB-INF/resin-web.xml", "mysql:\
 try:
   subprocess.check_call("mvn clean compile war:war", shell=True, cwd="wicket", stderr=errfile, stdout=logfile)
   subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
-  subprocess.check_call("cp wicket/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("cp $TROOT/target/hellowicket-1.0-SNAPSHOT.war $RESIN_HOME/webapps/wicket.war", shell=True, stderr=errfile, stdout=logfile)
   subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
   return 0
 except subprocess.CalledProcessError:
@@ -521,40 +534,3 @@ except subprocess.CalledProcessError:
 #### A tool to generate your setup file
  
 A contributor named [@kpacha](https://github.com/kpacha) has built a pure JavaScript tool for generating the `setup.py` file for a new framework via an in-browser form.  Check out his [FrameworkBenchmarks Setup Builder](http://kpacha.github.io/FrameworkBenchmarks-setup-builder/).
-
----
-
-## Windows server setup
-
-* Connect to the Windows server via Remote Desktop.
-* Copy `installer-bootstrap.ps1` from "toolset/setup/windows" to the server (use CTRL-C and CTRL-V).
-* Copy your Linux client private key too.
-* Right click on the installer script and select `Run with PowerShell`.
-* Press Enter to confirm.
-* It will install git and then launch `installer.ps1` from the repository, which will install everything else.
-* The installation takes about 20 minutes.
-* Then you have a working console: try `python`, `git`, `ssh`, `curl`, `node` etc. and verify that everything works + PowerShell goodies.
-
-The client/database machine is still assumed to be a Linux box. You can install just the client software via
-
-    python toolset\run-tests.py -s server-private-ip -c client-private-ip -i "C:\Users\Administrator\Desktop\client.key" --install-software --install client --list-tests
-
-but this step is not required if you already installed the Linux server and client as described above.
-
-Now you can run tests:
-
-    python toolset\run-tests.py -s server-private-ip -c client-private-ip -i "C:\Users\Administrator\Desktop\client.key" --max-threads 2 --duration 30 --sleep 5 --name win --test aspnet --type all
-
----
-
-## SQL Server setup
-
-* Connect to the SQL Server host via Remote Desktop.
-* Run a `Command Prompt` as Administrator.
-* Enter this command:
-
-        powershell -ExecutionPolicy Bypass -Command "iex (New-Object Net.WebClient).DownloadString('https://raw.github.com/TechEmpower/FrameworkBenchmarks/master/toolset/setup/sqlserver/setup-sqlserver-bootstrap.ps1')"
-
-* This will configure SQL Server, the Windows Firewall, and populate the database.
-
-Now, when running `run-tests.py`, just add `-d <ip of SQL Server instance>`. This works for the (Windows Server-based) `aspnet-sqlserver-raw` and `aspnet-sqlserver-entityframework` tests.

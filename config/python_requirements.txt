@@ -1,0 +1,4 @@
+colorama==0.3.1
+# Version 2.3 has a nice Counter() and other features
+# but it requires —-allow-external and -—allow-unverified
+progressbar==2.2

@@ -14,6 +14,8 @@ import logging
 import csv
 import shlex
 import math
+from threading import Thread
+from threading import Event
 
 from utils import header
 
@@ -446,11 +448,40 @@ class FrameworkTest:
       logging.warning("Directory %s does not have a bash_profile.sh" % self.directory)
       profile="$FWROOT/config/benchmark_profile"
 
+    # Setup variables for TROOT and IROOT
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=$FWROOT/%s && export IROOT=%s' %
+              command='export TROOT=%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
-    return self.setup_module.start(self.benchmarker, out, err)
+    # Because start can take so long, we print a dot to let the user know 
+    # we are working
+    class ProgressPrinterThread(Thread):
+      def __init__(self, event):
+          Thread.__init__(self)
+          self.stopped = event
+
+      def run(self):
+        while not self.stopped.wait(20):
+          sys.stderr.write("Waiting for start to return...\n")
+    stopFlag = Event()
+    thread = ProgressPrinterThread(stopFlag)
+    thread.start()
+
+    # Run the module start (inside parent of TROOT)
+    #     - we use the parent as a historical accident - a lot of tests
+    #       use subprocess's cwd argument already
+    previousDir = os.getcwd()
+    os.chdir(os.path.dirname(self.troot))
+    logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
+    retcode = self.setup_module.start(self, out, err)    
+    os.chdir(previousDir)
+
+    # Stop the progress printer
+    stopFlag.set()
+
+    logging.info("Start completed, running %s", self.benchmarker.mode)
+
+    return retcode
   ############################################################
   # End start
   ############################################################
@@ -467,10 +498,22 @@ class FrameworkTest:
       profile="$FWROOT/config/benchmark_profile"
     
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=$FWROOT/%s && export IROOT=%s' %
+              command='export TROOT=%s && export IROOT=%s' %
               (self.directory, self.install_root))
 
-    return self.setup_module.stop(out, err)
+    # Run the module stop (inside parent of TROOT)
+    #     - we use the parent as a historical accident - a lot of tests
+    #       use subprocess's cwd argument already
+    previousDir = os.getcwd()
+    os.chdir(os.path.dirname(self.troot))
+    logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
+    retcode = self.setup_module.stop(out, err)
+    os.chdir(previousDir)
+
+    # Give processes sent a SIGTERM a moment to shut down gracefully
+    time.sleep(5)
+
+    return retcode
   ############################################################
   # End stop
   ############################################################
@@ -498,9 +541,11 @@ class FrameworkTest:
       if ret_tuple[0]:
         self.json_url_passed = True
         out.write("PASS\n\n")
+        self.benchmarker.report_verify_results(self, self.JSON, 'pass')
       else:
         self.json_url_passed = False
         out.write("\nFAIL" + ret_tuple[1] + "\n\n")
+        self.benchmarker.report_verify_results(self, self.JSON, 'fail')
         result = False
       out.flush()
 
@@ -521,14 +566,16 @@ class FrameworkTest:
         self.db_url_warn = False
       else:
         self.db_url_warn = True
-
       out.write("VALIDATING DB ... ")
       if self.db_url_passed:
         out.write("PASS")
+        self.benchmarker.report_verify_results(self, self.DB, 'pass')
         if self.db_url_warn:
           out.write(" (with warnings) " + validate_strict_ret_tuple[1])
+          self.benchmarker.report_verify_results(self, self.DB, 'warn')
         out.write("\n\n")
       else:
+        self.benchmarker.report_verify_results(self, self.DB, 'fail')
         out.write("\nFAIL" + validate_ret_tuple[1])
         result = False
       out.flush()
@@ -587,11 +634,14 @@ class FrameworkTest:
       out.write("VALIDATING QUERY ... ")
       if self.query_url_passed:
         out.write("PASS")
+        self.benchmarker.report_verify_results(self, self.QUERY, 'pass')
         if self.query_url_warn:
           out.write(" (with warnings)")
+          self.benchmarker.report_verify_results(self, self.QUERY, 'warn')
         out.write("\n\n")
       else:
         out.write("\nFAIL " + ret_tuple[1] + "\n\n")
+        self.benchmarker.report_verify_results(self, self.QUERY, 'fail')
         result = False
       out.flush()
 
@@ -606,9 +656,11 @@ class FrameworkTest:
       if self.validateFortune(output, out, err):
         self.fortune_url_passed = True
         out.write("PASS\n\n")
+        self.benchmarker.report_verify_results(self, self.FORTUNE, 'pass')
       else:
         self.fortune_url_passed = False
         out.write("\nFAIL\n\n")
+        self.benchmarker.report_verify_results(self, self.FORTUNE, 'fail')
         result = False
       out.flush()
 
@@ -624,9 +676,11 @@ class FrameworkTest:
       if ret_tuple[0]:
         self.update_url_passed = True
         out.write("PASS\n\n")
+        self.benchmarker.report_verify_results(self, self.UPDATE, 'pass')
       else:
         self.update_url_passed = False
         out.write("\nFAIL " + ret_tuple[1] + "\n\n")
+        self.benchmarker.report_verify_results(self, self.UPDATE, 'fail')
         result = False
       out.flush()
 
@@ -642,9 +696,11 @@ class FrameworkTest:
       if ret_tuple[0]:
         self.plaintext_url_passed = True
         out.write("PASS\n\n")
+        self.benchmarker.report_verify_results(self, self.PLAINTEXT, 'pass')
       else:
         self.plaintext_url_passed = False
         out.write("\nFAIL\n\n" + ret_tuple[1] + "\n\n")
+        self.benchmarker.report_verify_results(self, self.PLAINTEXT, 'fail')
         result = False
       out.flush()
 
@@ -704,7 +760,7 @@ class FrameworkTest:
           self.__end_logging()
         results = self.__parse_test(self.JSON)
         print results
-        self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.JSON, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -717,21 +773,18 @@ class FrameworkTest:
         out.flush()
         results = None
         output_file = self.benchmarker.output_file(self.name, self.DB)
-        warning_file = self.benchmarker.warning_file(self.name, self.DB)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
             pass
-        if self.db_url_warn:
-          with open(warning_file, 'w'):
-            pass
         if self.db_url_passed:
+          self.benchmarker.report_verify_results(self, self.DB, 'pass')
           remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
           self.__begin_logging(self.DB)
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.DB)
-        self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.DB, results=results['results'])
         out.write( "Complete\n" )
       except AttributeError:
         pass
@@ -743,13 +796,9 @@ class FrameworkTest:
         out.flush()
         results = None
         output_file = self.benchmarker.output_file(self.name, self.QUERY)
-        warning_file = self.benchmarker.warning_file(self.name, self.QUERY)
         if not os.path.exists(output_file):
           with open(output_file, 'w'):
             # Simply opening the file in write mode should create the empty file.
-            pass
-        if self.query_url_warn:
-          with open(warning_file, 'w'):
             pass
         if self.query_url_passed:
           remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
@@ -757,7 +806,7 @@ class FrameworkTest:
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.QUERY)
-        self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.QUERY, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -780,7 +829,7 @@ class FrameworkTest:
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.FORTUNE)
-        self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.FORTUNE, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -803,7 +852,7 @@ class FrameworkTest:
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.UPDATE)
-        self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.UPDATE, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -826,7 +875,7 @@ class FrameworkTest:
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
         results = self.__parse_test(self.PLAINTEXT)
-        self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
+        self.benchmarker.report_benchmark_results(framework=self, test=self.PLAINTEXT, results=results['results'])
         out.write( "Complete\n" )
         out.flush()
       except AttributeError:
@@ -845,32 +894,32 @@ class FrameworkTest:
     # JSON
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.JSON)):
       results = self.__parse_test(self.JSON)
-      self.benchmarker.report_results(framework=self, test=self.JSON, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.JSON, results=results['results'])
     
     # DB
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.DB)):
       results = self.__parse_test(self.DB)
-      self.benchmarker.report_results(framework=self, test=self.DB, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.DB, results=results['results'])
     
     # Query
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.QUERY)):
       results = self.__parse_test(self.QUERY)
-      self.benchmarker.report_results(framework=self, test=self.QUERY, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.QUERY, results=results['results'])
 
     # Fortune
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.FORTUNE)):
       results = self.__parse_test(self.FORTUNE)
-      self.benchmarker.report_results(framework=self, test=self.FORTUNE, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.FORTUNE, results=results['results'])
 
     # Update
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.UPDATE)):
       results = self.__parse_test(self.UPDATE)
-      self.benchmarker.report_results(framework=self, test=self.UPDATE, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.UPDATE, results=results['results'])
 
     # Plaintext
     if os.path.exists(self.benchmarker.get_output_file(self.name, self.PLAINTEXT)):
       results = self.__parse_test(self.PLAINTEXT)
-      self.benchmarker.report_results(framework=self, test=self.PLAINTEXT, results=results['results'])
+      self.benchmarker.report_benchmark_results(framework=self, test=self.PLAINTEXT, results=results['results'])
   ############################################################
   # End parse_all
   ############################################################
@@ -1158,6 +1207,11 @@ class FrameworkTest:
   # End __parse_stats
   ##############################################################
 
+  def __getattr__(self, name):
+    """For backwards compatibility, we used to pass benchmarker 
+    as the argument to the setup.py files"""
+    return getattr(self.benchmarker, name)
+
   ##############################################################
   # Begin __calculate_average_stats
   # We have a large amount of raw data for the statistics that
@@ -1243,19 +1297,35 @@ class FrameworkTest:
     self.fwroot = benchmarker.fwroot
     
     # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
     
     self.install_root="%s/%s" % (self.fwroot, "installs")
     if benchmarker.install_strategy is 'pertest':
       self.install_root="%s/pertest/%s" % (self.install_root, name)
 
+    # Used in setup.py scripts for consistency with 
+    # the bash environment variables
+    self.troot = self.directory
+    self.iroot = self.install_root
+
     self.__dict__.update(args)
 
     # ensure directory has __init__.py file so that we can use it as a Python package
     if not os.path.exists(os.path.join(directory, "__init__.py")):
+      logging.warning("Please add an empty __init__.py file to directory %s", directory)
       open(os.path.join(directory, "__init__.py"), 'w').close()
 
-    self.setup_module = setup_module = importlib.import_module(directory + '.' + self.setup_file)
+    # Import the module (TODO - consider using sys.meta_path)
+    # Note: You can see the log output if you really want to, but it's a *ton*
+    dir_rel_to_fwroot = os.path.relpath(os.path.dirname(directory), self.fwroot)
+    if dir_rel_to_fwroot != ".":
+      sys.path.append("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
+      logging.log(0, "Adding %s to import %s.%s", dir_rel_to_fwroot, os.path.basename(directory), self.setup_file)
+      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
+      sys.path.remove("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
+    else:
+      logging.log(0, "Importing %s.%s", directory, self.setup_file)
+      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
   ############################################################
   # End __init__
   ############################################################

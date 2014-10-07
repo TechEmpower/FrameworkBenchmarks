@@ -50,9 +50,12 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
     
     benchmarker = Benchmarker(defaults)
 
-  # Assume we are running from FrameworkBenchmarks
-  config_files = glob.glob('*/benchmark_config')
-
+  
+  # Search in both old and new directories
+  fwroot = setup_util.get_fwroot() 
+  config_files = glob.glob("%s/*/benchmark_config" % fwroot) 
+  config_files.extend(glob.glob("%s/frameworks/*/*/benchmark_config" % fwroot))
+  
   tests = []
   for config_file_name in config_files:
     config = None
@@ -84,4 +87,17 @@ def header(message, top='-', bottom='-'):
     '''
     topheader = (top * 80)[:80]
     bottomheader = (bottom * 80)[:80]
-    return "%s\n  %s\n%s" % (topheader, message, bottomheader)
+    result = ""
+    if topheader != "":
+      result += "%s" % topheader
+    if message != "":
+      if result == "":
+        result = "  %s" % message
+      else:
+        result += "\n  %s" % message
+    if bottomheader != "":
+      if result == "":
+        result = "%s" % bottomheader
+      else:
+        result += "\n%s" % bottomheader
+    return result

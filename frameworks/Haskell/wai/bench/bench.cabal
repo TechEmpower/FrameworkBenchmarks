@@ -1,0 +1,22 @@
+name:              bench-wai
+version:           0.0.0
+cabal-version:     >= 1.8
+build-type:        Simple
+
+executable         bench
+    main-is:           wai.hs
+    hs-source-dirs:    .
+
+    ghc-options:       -Wall -threaded -O2 -rtsopts
+
+    extensions: OverloadedStrings
+
+    build-depends: base                          >= 4.7        && < 5
+                 , aeson                         >= 0.6.1.0
+                 , http-types
+                 , network                       >= 2.4
+                 , text                          >= 1.0
+                 , wai                           >= 3.0
+                 , warp                          >= 3.0
+                 , blaze-builder
+                 , bytestring                    >= 0.10

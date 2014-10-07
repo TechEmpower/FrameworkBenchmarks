@@ -11,4 +11,4 @@ fw_get http://cpanmin.us -O cpanminus.pl
 perl-5.18/bin/perl cpanminus.pl --notest --no-man-page App::cpanminus
 # Install only a bare-bones of Perl modules
 # Install others in the per-framework install script or cpanfile
-perl-5.18/bin/cpanm -f --notest --no-man-page JSON JSON::XS IO::Socket::IP IO::Socket::SSL
+perl-5.18/bin/cpanm -f --notest --no-man-page Carton JSON JSON::XS IO::Socket::IP IO::Socket::SSL

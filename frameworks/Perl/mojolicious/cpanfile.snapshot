@@ -1,0 +1,171 @@
+# carton snapshot format: version 1.0
+DISTRIBUTIONS
+  EV-4.17
+    pathname: M/ML/MLEHMANN/EV-4.17.tar.gz
+    provides:
+      EV 4.17
+      EV::MakeMaker undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      common::sense 0
+  JSON-XS-3.01
+    pathname: M/ML/MLEHMANN/JSON-XS-3.01.tar.gz
+    provides:
+      JSON::XS 3.01
+    requirements:
+      ExtUtils::MakeMaker 0
+      Types::Serialiser 0
+      common::sense 0
+  Mango-1.06
+    pathname: S/SR/SRI/Mango-1.06.tar.gz
+    provides:
+      Mango 1.06
+      Mango::BSON undef
+      Mango::BSON::Binary undef
+      Mango::BSON::Code undef
+      Mango::BSON::Document undef
+      Mango::BSON::ObjectID undef
+      Mango::BSON::Time undef
+      Mango::BSON::Timestamp undef
+      Mango::BSON::_MaxKey undef
+      Mango::BSON::_MinKey undef
+      Mango::Bulk undef
+      Mango::Collection undef
+      Mango::Cursor undef
+      Mango::Database undef
+      Mango::GridFS undef
+      Mango::GridFS::Reader undef
+      Mango::GridFS::Writer undef
+      Mango::Protocol undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      Mojolicious 5.32
+  Mojolicious-5.32
+    pathname: S/SR/SRI/Mojolicious-5.32.tar.gz
+    provides:
+      Mojo undef
+      Mojo::Asset undef
+      Mojo::Asset::File undef
+      Mojo::Asset::Memory undef
+      Mojo::Base undef
+      Mojo::ByteStream undef
+      Mojo::Cache undef
+      Mojo::Collection undef
+      Mojo::Content undef
+      Mojo::Content::MultiPart undef
+      Mojo::Content::Single undef
+      Mojo::Cookie undef
+      Mojo::Cookie::Request undef
+      Mojo::Cookie::Response undef
+      Mojo::DOM undef
+      Mojo::DOM::CSS undef
+      Mojo::DOM::HTML undef
+      Mojo::Date undef
+      Mojo::EventEmitter undef
+      Mojo::Exception undef
+      Mojo::Headers undef
+      Mojo::HelloWorld undef
+      Mojo::Home undef
+      Mojo::IOLoop undef
+      Mojo::IOLoop::Client undef
+      Mojo::IOLoop::Delay undef
+      Mojo::IOLoop::Server undef
+      Mojo::IOLoop::Stream undef
+      Mojo::JSON undef
+      Mojo::JSON::Pointer undef
+      Mojo::JSON::_Bool undef
+      Mojo::Loader undef
+      Mojo::Log undef
+      Mojo::Message undef
+      Mojo::Message::Request undef
+      Mojo::Message::Response undef
+      Mojo::Parameters undef
+      Mojo::Path undef
+      Mojo::Reactor undef
+      Mojo::Reactor::EV undef
+      Mojo::Reactor::Poll undef
+      Mojo::Server undef
+      Mojo::Server::CGI undef
+      Mojo::Server::Daemon undef
+      Mojo::Server::Hypnotoad undef
+      Mojo::Server::Morbo undef
+      Mojo::Server::PSGI undef
+      Mojo::Server::PSGI::_IO undef
+      Mojo::Server::Prefork undef
+      Mojo::Template undef
+      Mojo::Transaction undef
+      Mojo::Transaction::HTTP undef
+      Mojo::Transaction::WebSocket undef
+      Mojo::URL undef
+      Mojo::Upload undef
+      Mojo::UserAgent undef
+      Mojo::UserAgent::CookieJar undef
+      Mojo::UserAgent::Proxy undef
+      Mojo::UserAgent::Server undef
+      Mojo::UserAgent::Transactor undef
+      Mojo::Util undef
+      Mojolicious 5.32
+      Mojolicious::Command undef
+      Mojolicious::Command::cgi undef
+      Mojolicious::Command::cpanify undef
+      Mojolicious::Command::daemon undef
+      Mojolicious::Command::eval undef
+      Mojolicious::Command::generate undef
+      Mojolicious::Command::generate::app undef
+      Mojolicious::Command::generate::lite_app undef
+      Mojolicious::Command::generate::makefile undef
+      Mojolicious::Command::generate::plugin 0.01
+      Mojolicious::Command::get undef
+      Mojolicious::Command::inflate undef
+      Mojolicious::Command::prefork undef
+      Mojolicious::Command::psgi undef
+      Mojolicious::Command::routes undef
+      Mojolicious::Command::test undef
+      Mojolicious::Command::version undef
+      Mojolicious::Commands undef
+      Mojolicious::Controller undef
+      Mojolicious::Lite undef
+      Mojolicious::Plugin undef
+      Mojolicious::Plugin::Charset undef
+      Mojolicious::Plugin::Config undef
+      Mojolicious::Plugin::Config::Sandbox undef
+      Mojolicious::Plugin::DefaultHelpers undef
+      Mojolicious::Plugin::EPLRenderer undef
+      Mojolicious::Plugin::EPRenderer undef
+      Mojolicious::Plugin::HeaderCondition undef
+      Mojolicious::Plugin::JSONConfig undef
+      Mojolicious::Plugin::Mount undef
+      Mojolicious::Plugin::PODRenderer undef
+      Mojolicious::Plugin::TagHelpers undef
+      Mojolicious::Plugins undef
+      Mojolicious::Renderer undef
+      Mojolicious::Routes undef
+      Mojolicious::Routes::Match undef
+      Mojolicious::Routes::Pattern undef
+      Mojolicious::Routes::Route undef
+      Mojolicious::Sessions undef
+      Mojolicious::Static undef
+      Mojolicious::Types undef
+      Mojolicious::Validator undef
+      Mojolicious::Validator::Validation undef
+      Test::Mojo undef
+      ojo undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      Pod::Simple 3.09
+  Types-Serialiser-1.0
+    pathname: M/ML/MLEHMANN/Types-Serialiser-1.0.tar.gz
+    provides:
+      JSON::PP::Boolean 1.0
+      Types::Serialiser 1.0
+      Types::Serialiser::BooleanBase 1.0
+      Types::Serialiser::Error 1.0
+    requirements:
+      ExtUtils::MakeMaker 0
+      common::sense 0
+  common-sense-3.73
+    pathname: M/ML/MLEHMANN/common-sense-3.73.tar.gz
+    provides:
+      common::sense 3.73
+    requirements:
+      ExtUtils::MakeMaker 0

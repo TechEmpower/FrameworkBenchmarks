@@ -10,6 +10,10 @@ from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
 
+# Enable cross-platform colored output
+from colorama import init
+init()
+
 ###################################################################################################
 # Main
 ###################################################################################################

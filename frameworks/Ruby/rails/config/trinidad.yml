@@ -1,0 +1,8 @@
+---
+  port: 8080
+  threadsafe: true
+  environment: production
+  http:
+    address: '*'
+  logging:
+    level: SEVERE

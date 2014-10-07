@@ -3,8 +3,6 @@
 import subprocess
 import os
 import sys
-from benchmark import framework_test
-from benchmark.utils import gather_tests
 import glob
 import json
 import traceback
@@ -13,11 +11,19 @@ import logging
 log = logging.getLogger('run-ci')
 import time
 import threading
+from benchmark import framework_test
+from benchmark.utils import gather_tests
+from benchmark.utils import header
+
+# Cross-platform colored text
+from colorama import Fore, Back, Style
 
 # Needed for various imports
 sys.path.append('.')
 sys.path.append('toolset/setup/linux')
 sys.path.append('toolset/benchmark')
+
+from setup.linux import setup_util
 
 class CIRunnner:
   '''
@@ -75,6 +81,9 @@ class CIRunnner:
       #  - If you're really insane, consider that the last commit in a 
       #    pull request could have been a merge commit. This means that 
       #    the github auto-merge commit could have more than two parents
+      #  - Travis cannot really support rebasing onto an owned branch, the
+      #    commit_range they provide will include commits that are non-existant
+      #    in the repo cloned on the workers. See https://github.com/travis-ci/travis-ci/issues/2668
       #  
       #  - TEST ALL THESE OPTIONS: 
       #      - On a branch you own (e.g. your fork's master)
@@ -173,19 +182,22 @@ class CIRunnner:
     #
 
     tests = gather_tests()
-    dirtests = [t for t in tests if t.directory == testdir]
+    self.fwroot = setup_util.get_fwroot()
+    target_dir = self.fwroot + '/frameworks/' + testdir
+    log.debug("Target directory is %s", target_dir)
+    dirtests = [t for t in tests if t.directory == target_dir]
     
     # Travis-CI is linux only
     osvalidtests = [t for t in dirtests if t.os.lower() == "linux"
                   and (t.database_os.lower() == "linux" or t.database_os.lower() == "none")]
     
-    # Travis-CI only has some supported databases
+    # Our Travis-CI only has some databases supported
     validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
                   or t.database.lower() == "postgres"
                   or t.database.lower() == "mongodb"
                   or t.database.lower() == "none"]
-    log.info("Found %s tests (%s for linux, %s for linux and mysql) in directory '%s'", 
-      len(dirtests), len(osvalidtests), len(validtests), testdir)
+    log.info("Found %s usable tests (%s valid for linux, %s valid for linux and {mysql,postgres,mongodb,none}) in directory '%s'", 
+      len(dirtests), len(osvalidtests), len(validtests), '$FWROOT/frameworks/' + testdir)
     if len(validtests) == 0:
       log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
       if len(osvalidtests) != 0:
@@ -198,7 +210,7 @@ class CIRunnner:
       sys.exit(1)
 
     self.names = [t.name for t in validtests]
-    log.info("Choosing to use test %s to verify directory %s", self.names, testdir)
+    log.info("Using tests %s to verify directory %s", self.names, '$FWROOT/frameworks/' + testdir)
 
   def _should_run(self):
     ''' 
@@ -222,9 +234,21 @@ class CIRunnner:
 
     log.debug("Using commit range `%s`", self.commit_range)
     log.debug("Running `git log --name-only --pretty=\"format:\" %s`" % self.commit_range)
-    changes = subprocess.check_output("git log --name-only --pretty=\"format:\" %s" % self.commit_range, shell=True)
+    changes = ""
+    try:
+      changes = subprocess.check_output("git log --name-only --pretty=\"format:\" %s" % self.commit_range, shell=True)
+    except subprocess.CalledProcessError, e:
+      log.error("Got errors when using git to detect your changes, assuming that we must run this verification!")
+      log.error("Error was: %s", e.output)
+      log.error("Did you rebase a branch? If so, you can safely disregard this error, it's a Travis limitation")
+      return True
     changes = os.linesep.join([s for s in changes.splitlines() if s]) # drop empty lines
-    log.debug("Result:\n%s", changes)
+    if len(changes.splitlines()) > 1000:
+      log.debug("Change list is >1000 lines, uploading to sprunge.us instead of printing to console")
+      url = subprocess.check_output("git log --name-only %s | curl -F 'sprunge=<-' http://sprunge.us" % self.commit_range, shell=True)
+      log.debug("Uploaded to %s", url)
+    else:
+      log.debug("Result:\n%s", changes)
 
     # Look for changes to core TFB framework code
     if re.search(r'^toolset/', changes, re.M) is not None: 
@@ -233,7 +257,7 @@ class CIRunnner:
       return True
   
     # Look for changes relevant to this test
-    if re.search("^%s/" % self.directory, changes, re.M) is None:
+    if re.search("^frameworks/%s/" % re.escape(self.directory), changes, re.M) is None:
       log.info("No changes found for directory %s", self.directory)
       touch('.run-ci.should_not_run')
       return False
@@ -284,16 +308,18 @@ class CIRunnner:
     log.info("Setting up Travis-CI")
     
     script = '''
-    # Needed to download latest MongoDB (use two different approaches)
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 || gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 7F0CEB10
+    # Needed to download latest MongoDB
+    #   Due to TechEmpower/FrameworkBenchmarks#989 and travis-ci/travis-ci#2655, 
+    #   we put this into a loop
+    until timeout 15s sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10; do echo 'Waiting for apt-key' ; done
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
-    sudo apt-get update
+    sudo apt-get -q update
     
     # MongoDB takes a good 30-45 seconds to turn on, so install it first
-    sudo apt-get install mongodb-org
+    sudo apt-get -q install mongodb-org
 
-    sudo apt-get install openssh-server
+    sudo apt-get -q install openssh-server
 
     # Run as travis user (who already has passwordless sudo)
     ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
@@ -404,6 +430,44 @@ if __name__ == "__main__":
             log.info(line.rstrip('\n'))
       except IOError:
         log.error("No OUT file found")
+
+    log.error("Running inside Travis-CI, so I will print a copy of the verification summary")
+
+    results = None
+    try:
+      with open('results/ec2/latest/results.json', 'r') as f:
+        results = json.load(f)
+    except IOError:
+      log.critical("No results.json found, unable to print verification summary") 
+      sys.exit(retcode)
+
+    target_dir = setup_util.get_fwroot() + '/frameworks/' + testdir
+    dirtests = [t for t in gather_tests() if t.directory == target_dir]
+
+    # Normally you don't have to use Fore.* before each line, but 
+    # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
+    # or stream flush, so we have to ensure that the color code is printed repeatedly
+    prefix = Fore.CYAN
+    for line in header("Verification Summary", top='=', bottom='').split('\n'):
+      print prefix + line
+
+    for test in dirtests:
+      print prefix + "| Test: %s" % test.name
+      if test.name not in runner.names:
+        print prefix + "|      " + Fore.YELLOW + "Unable to verify in Travis-CI"
+      elif test.name in results['verify'].keys():
+        for test_type, result in results['verify'][test.name].iteritems():
+          if result.upper() == "PASS":
+            color = Fore.GREEN
+          elif result.upper() == "WARN":
+            color = Fore.YELLOW
+          else:
+            color = Fore.RED
+          print prefix + "|       " + test_type.ljust(11) + ' : ' + color + result.upper()
+      else:
+        print prefix + "|      " + Fore.RED + "NO RESULTS (Did framework launch?)"
+    print prefix + header('', top='', bottom='=') + Style.RESET_ALL
+
 
     sys.exit(retcode)
 

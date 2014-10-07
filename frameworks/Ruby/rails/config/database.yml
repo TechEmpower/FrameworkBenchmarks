@@ -1,0 +1,18 @@
+
+development:
+  adapter: <%= RUBY_PLATFORM == 'java' ? 'jdbcmysql' : 'mysql2' %>
+  database: hello_world
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+  host: <%= ENV['DB_HOST'] %>
+  pool: 5
+  timeout: 5000
+
+production:
+  adapter: <%= RUBY_PLATFORM == 'java' ? 'jdbcmysql' : 'mysql2' %>
+  database: hello_world
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+  host: <%= ENV['DB_HOST'] %>
+  pool: 256
+  timeout: 5000

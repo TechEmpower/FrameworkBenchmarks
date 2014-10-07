@@ -47,25 +47,33 @@ class Installer:
 
     # Locate all installation files
     install_files = glob.glob("%s/*/install.sh" % self.fwroot)
+    install_files.extend(glob.glob("%s/frameworks/*/*/install.sh" % self.fwroot))
 
     # Run install for selected tests
     for test_install_file in install_files:
-      test_dir = os.path.basename(os.path.dirname(test_install_file))
-      test_rel_dir = os.path.relpath(os.path.dirname(test_install_file), self.fwroot)
+      test_dir = os.path.dirname(test_install_file)
+      test_rel_dir = os.path.relpath(test_dir, self.fwroot)
+      logging.debug("Considering install of %s (%s, %s)", test_install_file, test_rel_dir, test_dir)
 
       if test_dir not in dirs:
         continue
-              
-      logging.info("Running installation for directory %s", test_dir)
+
+      logging.info("Running installation for directory %s (cwd=%s)", test_dir, test_dir)
+
+      # Collect the tests in this directory
+      # local_tests = [t for t in tests if t.directory == test_dir]
 
       # Find installation directory 
-      # e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
+      #   e.g. FWROOT/installs or FWROOT/installs/pertest/<test-name>
       test_install_dir="%s/%s" % (self.fwroot, self.install_dir)
       if self.strategy is 'pertest':
         test_install_dir="%s/pertest/%s" % (test_install_dir, test_dir)
-      test_rel_install_dir=os.path.relpath(test_install_dir, self.fwroot)
       if not os.path.exists(test_install_dir):
         os.makedirs(test_install_dir)
+      
+      # Move into the proper working directory
+      previousDir = os.getcwd()
+      os.chdir(test_dir)
 
       # Load profile for this installation
       profile="%s/bash_profile.sh" % test_dir
@@ -73,27 +81,26 @@ class Installer:
         logging.warning("Directory %s does not have a bash_profile"%test_dir)
         profile="$FWROOT/config/benchmark_profile"
       else:
-        logging.info("Loading environment from %s", profile)
+        logging.info("Loading environment from %s (cwd=%s)", profile, test_dir)
       setup_util.replace_environ(config=profile, 
-        command='export TROOT=$FWROOT%s && export IROOT=$FWROOT%s' %
-        (test_rel_dir, test_rel_install_dir))
+        command='export TROOT=%s && export IROOT=%s' %
+        (test_dir, test_install_dir))
 
-      # Find relative installation file
-      test_rel_install_file = "$FWROOT%s" % setup_util.path_relative_to_root(test_install_file)
-
-      # Then run test installer file
-      # Give all installers a number of variables
-      # FWROOT - Path of the FwBm root
-      # IROOT  - Path of this test's install directory
-      # TROOT  - Path to this test's directory 
+      # Run test installation script
+      #   FWROOT - Path of the FwBm root
+      #   IROOT  - Path of this test's install directory
+      #   TROOT  - Path to this test's directory 
       self.__run_command('''
-        export TROOT=$FWROOT/%s && 
-        export IROOT=$FWROOT/%s && 
-        . %s && 
-        . %s''' % 
-        (test_rel_dir, test_rel_install_dir, 
-          bash_functions_path, test_rel_install_file),
+        export TROOT=%s && 
+        export IROOT=%s && 
+        source %s && 
+        source %s''' % 
+        (test_dir, test_install_dir, 
+          bash_functions_path, test_install_file),
           cwd=test_install_dir)
+
+      # Move back to previous directory
+      os.chdir(previousDir)
 
     self.__run_command("sudo apt-get -y autoremove");    
 
@@ -130,8 +137,13 @@ class Installer:
     sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev postgresql redis-server
     sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
+    # Create a user-owned directory for our databases
     sudo mkdir -p /ssd
     sudo mkdir -p /ssd/log
+    sudo chown -R $USER:$USER /ssd
+
+    # Additional user account (only use if required)
+    sudo useradd benchmarkdbuser -p benchmarkdbpass
 
     ##############################
     # MySQL
@@ -143,9 +155,9 @@ class Installer:
 
     sudo stop mysql
     # disable checking of disk size
-    sudo cp mysql /etc/init.d/mysql
+    sudo mv mysql /etc/init.d/mysql
     sudo chmod +x /etc/init.d/mysql
-    sudo cp mysql.conf /etc/init/mysql.conf
+    sudo mv mysql.conf /etc/init/mysql.conf
     # use the my.cnf file to overwrite /etc/mysql/my.cnf
     sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
     sudo mv my.cnf /etc/mysql/my.cnf
@@ -158,15 +170,18 @@ class Installer:
 
     # Insert data
     mysql -uroot -psecret < create.sql
+    rm create.sql
 
     ##############################
     # Postgres
     ##############################
-    sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
+    rm create-postgres-database.sql create-postgres.sql
 
     sudo -u postgres -H /etc/init.d/postgresql stop
+    # NOTE: This will cause errors on Ubuntu 12.04, as apt installs 
+    # an older version (9.1 instead of 9.3)
     sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
     sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
@@ -178,52 +193,58 @@ class Installer:
     # MongoDB
     ##############################
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-    sudo cp 10gen.list /etc/apt/sources.list.d/10gen.list
+    echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
     sudo apt-get -y update
     sudo apt-get -y remove mongodb-clients
     sudo apt-get -y install mongodb-org
 
-    sudo stop mongodb
+    sudo service mongod stop
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf
+    sudo mv mongodb.conf /etc/mongod.conf
     sudo cp -R -p /var/lib/mongodb /ssd/
     sudo cp -R -p /var/log/mongodb /ssd/log/
-    sudo start mongodb
+    sudo service mongod start
+
+    until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
+    mongo < create.js
+    rm create.js
 
     ##############################
     # Apache Cassandra
     ##############################
     sudo apt-get install -qqy openjdk-7-jdk
     export CASS_V=2.0.7
-    wget http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
+    wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
     tar xzf apache-cassandra-$CASS_V-bin.tar.gz
-    rm apache-cassandra-*-bin.tar.gz
-    fuser -k -TERM /ssd/log/cassandra/system.log
-    sleep 5
-    sudo rm -rf /ssd/cassandra /ssd/log/cassandra
-    sudo mkdir -p /ssd/cassandra /ssd/log/cassandra
-    sudo chown tfb:tfb /ssd/cassandra /ssd/log/cassandra
-    sed -i "s/^.*seeds:.*/          - seeds: \"%s\"/" cassandra/cassandra.yaml
-    sed -i "s/^listen_address:.*/listen_address: %s/" cassandra/cassandra.yaml
-    sed -i "s/^rpc_address:.*/rpc_address: %s/" cassandra/cassandra.yaml
-    cp cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
-    cp cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
-    pushd apache-cassandra-$CASS_V
-    nohup ./bin/cassandra
-    sleep 10
-    cat ../cassandra/create-keyspace.cql | ./bin/cqlsh $TFB_DATABASE_HOST
-    python ../cassandra/db-data-gen.py | ./bin/cqlsh $TFB_DATABASE_HOST
-    popd
+    
+    rm -rf /ssd/cassandra /ssd/log/cassandra
+    mkdir -p /ssd/cassandra /ssd/log/cassandra
+    
+    sed -i "s/^.*seeds:.*/          - seeds: \"{database_host}\"/" cassandra/cassandra.yaml
+    sed -i "s/^listen_address:.*/listen_address: {database_host}/" cassandra/cassandra.yaml
+    sed -i "s/^rpc_address:.*/rpc_address: {database_host}/" cassandra/cassandra.yaml
+    
+    mv cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
+    mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
+    nohup apache-cassandra-$CASS_V/bin/cassandra > cassandra.log
+
+    sleep 20
+    cat cassandra/create-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh {database_host}
+    python cassandra/db-data-gen.py | apache-cassandra-$CASS_V/bin/cqlsh {database_host}
+    rm -rf apache-cassandra-*-bin.tar.gz cassandra
 
     ##############################
     # Redis
     ##############################
     sudo service redis-server stop
-    sudo cp redis.conf /etc/redis/redis.conf
+    # NOTE: This will cause errors on Ubuntu 12.04, as apt installs 
+    # an older version of redis
+    sudo mv redis.conf /etc/redis/redis.conf
     sudo service redis-server start
     bash create-redis.sh
-
-    """ % (self.benchmarker.database_host, self.benchmarker.database_host, self.benchmarker.database_host)
+    rm create-redis.sh
+    """.format(database_host=self.benchmarker.database_host)
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
     p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
@@ -398,7 +419,7 @@ EOF
     self.strategy = install_strategy
     
     # setup logging
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
     try:
       os.mkdir(self.install_dir)
