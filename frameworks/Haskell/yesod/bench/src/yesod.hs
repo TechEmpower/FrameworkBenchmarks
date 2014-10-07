@@ -1,48 +1,58 @@
-{-# LANGUAGE EmptyDataDecls        #-}
-{-# LANGUAGE GADTs                 #-}
+{-# LANGUAGE EmptyDataDecls             #-}
+{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE GADTs                      #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE QuasiQuotes           #-}
-{-# LANGUAGE RankNTypes            #-}
-{-# LANGUAGE RecordWildCards       #-}
-{-# LANGUAGE TemplateHaskell       #-}
-{-# LANGUAGE TypeFamilies          #-}
-{-# LANGUAGE ViewPatterns          #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE MultiParamTypeClasses      #-}
+{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE QuasiQuotes                #-}
+{-# LANGUAGE RankNTypes                 #-}
+{-# LANGUAGE RecordWildCards            #-}
+{-# LANGUAGE TemplateHaskell            #-}
+{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE ViewPatterns               #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Main (main, resourcesApp, Widget, WorldId) where
-import           Control.Monad            (replicateM)
-import           Control.Monad.Logger     (runNoLoggingT)
-import           Control.Monad.Primitive  (PrimState)
-import           Control.Monad.Reader     (ReaderT)
-import           Data.Conduit.Pool        (Pool)
-import           Data.Int                 (Int64)
-import           Data.Text                (Text)
-import           Database.MongoDB         (Field ((:=)), (=:))
-import qualified Database.MongoDB         as Mongo
-import qualified Database.Persist.MongoDB as Mongo
-import qualified Database.Persist.MySQL   as My
-import           Network                  (PortID (PortNumber))
-import qualified Network.Wai.Handler.Warp as Warp
-import           System.Environment       (getArgs)
-import qualified System.Random.MWC        as R
-import           Yesod                    hiding (Field)
+import           Blaze.ByteString.Builder
+import           Control.Concurrent           (runInUnboundThread)
+import           Control.Monad                (replicateM)
+import           Control.Monad.Logger         (runNoLoggingT)
+import           Control.Monad.Primitive      (PrimState)
+import           Control.Monad.Reader         (ReaderT)
+import           Control.Monad.Trans.Resource (InternalState)
+import           Data.Aeson                   (encode)
+import qualified Data.ByteString.Lazy         as L
+import           Data.Conduit.Pool            (Pool, createPool)
+import           Data.Int                     (Int64)
+import           Data.IORef                   (newIORef)
+import           Data.Pool                    (withResource)
+import           Data.Text                    (Text)
+import           Database.MongoDB             (Field ((:=)), (=:))
+import qualified Database.MongoDB             as Mongo
+import           Database.Persist             (Key, PersistEntity,
+                                               PersistEntityBackend,
+                                               PersistStore, get)
+import qualified Database.Persist.MySQL       as My
+import           Database.Persist.TH          (mkPersist, mpsGeneric,
+                                               persistLowerCase, sqlSettings)
+import           Network                      (PortID (PortNumber))
+import           Network.HTTP.Types
+import           Network.Wai
+import qualified Network.Wai.Handler.Warp     as Warp
+import           System.Environment           (getArgs)
+import           System.IO.Unsafe             (unsafePerformIO)
+import qualified System.Random.MWC            as R
+import           Yesod.Core
 
 mkPersist sqlSettings { mpsGeneric = True } [persistLowerCase|
 World sql=World
     randomNumber Int sql=randomNumber
-#ifdef MONGODB
-    id           Int64
-    UniqueId
-#endif
 |]
 
 data App = App
     { appGen      :: !(R.Gen (PrimState IO))
     , mySqlPool   :: !(Pool My.SqlBackend)
-    , mongoDBPool :: !(Pool Mongo.Connection)
+    , mongoDBPool :: !(Pool Mongo.Pipe)
     }
 
 -- | Not actually using the non-raw mongoDB.
@@ -53,14 +63,13 @@ mkYesod "App" [parseRoutes|
 /db                 DbR       GET
 /dbs/#Int           DbsR      GET
 
-#ifdef MONGODB
-/mongo/db           MongoDbR  GET
-/mongo/dbs/#Int     MongoDbsR GET
-#endif
-
 /mongo/raw/db       MongoRawDbR  GET
 /mongo/raw/dbs/#Int MongoRawDbsR GET
 |]
+
+fakeInternalState :: InternalState
+fakeInternalState = unsafePerformIO $ newIORef $ error "fakeInternalState forced"
+{-# NOINLINE fakeInternalState #-}
 
 instance Yesod App where
     makeSessionBackend _ = return Nothing
@@ -71,19 +80,24 @@ instance Yesod App where
     {-# INLINE yesodMiddleware #-}
     cleanPath _ = Right
     {-# INLINE cleanPath #-}
+    yesodWithInternalState _ _ = ($ fakeInternalState)
+    {-# INLINE yesodWithInternalState #-}
+    maximumContentLength _ _ = Nothing
+    {-# INLINE maximumContentLength #-}
 
-getJsonR :: Handler TypedContent
-getJsonR = return $ TypedContent typeJson
-         $ toContent $ object ["message" .= ("Hello, World!" :: Text)]
+getJsonR :: Handler ()
+getJsonR = sendWaiResponse
+         $ responseBuilder
+            status200
+            [("Content-Type", typeJson)]
+         $ copyByteString
+         $ L.toStrict
+         $ encode
+         $ object ["message" .= ("Hello, World!" :: Text)]
 
 
 getDbR :: Handler Value
 getDbR = getDb (intQuery runMySQL My.toSqlKey)
-
-#ifdef MONGODB
-getMongoDbR :: Handler Value
-getMongoDbR = getDb (intQuery runMongoDB (getBy . UniqueId))
-#endif
 
 getMongoRawDbR :: Handler Value
 getMongoRawDbR = getDb rawMongoIntQuery
@@ -92,11 +106,6 @@ getDbsR :: Int -> Handler Value
 getDbsR cnt = do
     App {..} <- getYesod
     multiRandomHandler (intQuery runMySQL My.toSqlKey) cnt
-
-#ifdef MONGODB
-getMongoDbsR :: Int -> Handler Value
-getMongoDbsR cnt = multiRandomHandler (intQuery runMongoDB (getBy . UniqueId)) cnt
-#endif
 
 getMongoRawDbsR :: Int -> Handler Value
 getMongoRawDbsR cnt = multiRandomHandler rawMongoIntQuery cnt
@@ -109,13 +118,21 @@ getDb :: (Int64 -> Handler Value) -> Handler Value
 getDb query = do
     app <- getYesod
     i <- liftIO (randomNumber (appGen app))
-    query i
+    value <- query i
+    sendWaiResponse
+        $ responseBuilder
+            status200
+            [("Content-Type", typeJson)]
+        $ copyByteString
+        $ L.toStrict
+        $ encode value
 
 
 runMongoDB :: Mongo.Action Handler b -> Handler b
 runMongoDB f = do
   App {..} <- getYesod
-  Mongo.runMongoDBPoolDef f mongoDBPool
+  withResource mongoDBPool $ \pipe ->
+    Mongo.access pipe Mongo.ReadStaleOk "hello_world" f
 
 runMySQL :: My.SqlPersistT Handler b -> Handler b
 runMySQL f = do
@@ -167,7 +184,7 @@ instance ToJSON Mongo.Value where
 
 main :: IO ()
 main = R.withSystemRandom $ \gen -> do
-    [_cores, host] <- getArgs
+    [cores, host] <- getArgs
     myPool <- runNoLoggingT $ My.createMySQLPool My.defaultConnectInfo
         { My.connectUser = "benchmarkdbuser"
         , My.connectPassword = "benchmarkdbpass"
@@ -175,18 +192,19 @@ main = R.withSystemRandom $ \gen -> do
         , My.connectHost = host
         } 1000
 
-    mongoPool <- Mongo.createMongoDBPool "hello_world" host (PortNumber 27017)
-        (Just (Mongo.MongoAuth "benchmarkdbuser" "benchmarkdbpass"))
-           1  -- what is the optimal stripe count? 1 is said to be a good default
-           1000
-           3  -- 3 second timeout
+    mongoPool <- createPool
+        (Mongo.connect $ Mongo.Host host $ PortNumber 27017)
+        Mongo.close
+        (read cores) -- what is the optimal stripe count? 1 is said to be a good default
+        3  -- 3 second timeout
+        1000
 
     app <- toWaiAppPlain App
         { appGen = gen
         , mySqlPool = myPool
         , mongoDBPool = mongoPool
         }
-    Warp.runSettings
+    runInUnboundThread $ Warp.runSettings
         ( Warp.setPort 8000
         $ Warp.setHost "*"
         $ Warp.setOnException (\_ _ -> return ())

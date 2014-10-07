@@ -6,13 +6,11 @@ import os
 
 def start(args, logfile, errfile):
   subprocess.check_call("cabal update", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
-  subprocess.check_call("cabal install --only-dependencies", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
-  subprocess.check_call("cabal configure", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
-  subprocess.check_call("cabal build", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
+  subprocess.check_call("cabal install", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
 
   db_host = args.database_host
   threads = str(args.max_threads)
-  subprocess.Popen("dist/build/bench/bench " + threads + " " + db_host + " +RTS -A32m -N", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
+  subprocess.Popen("dist/build/bench/bench " + threads + " " + db_host + " +RTS -A32m -N" + threads, shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
   return 0
 
 def stop(logfile, errfile):
