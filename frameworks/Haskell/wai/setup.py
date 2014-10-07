@@ -10,7 +10,7 @@ def start(args, logfile, errfile):
 
   db_host = args.database_host
   threads = str(args.max_threads)
-  subprocess.Popen("dist/build/bench/bench " + threads + " " + db_host + " +RTS -A32m -N", shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
+  subprocess.Popen("dist/build/bench/bench " + threads + " " + db_host + " +RTS -A32m -N" + threads, shell=True, cwd="wai/bench", stderr=errfile, stdout=logfile)
   return 0
 
 def stop(logfile, errfile):
