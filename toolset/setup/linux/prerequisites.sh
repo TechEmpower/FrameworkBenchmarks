@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -x
+export DEBIAN_FRONTEND=noninteractive
+
 RETCODE=$(fw_exists fwbm_prereqs_installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Prerequisites installed!"; 
@@ -12,10 +15,10 @@ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
 sudo apt-get -y update
-sudo apt-get -y upgrade
+sudo apt-get -y upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
 
 # WARNING: DONT PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
-sudo apt-get -y install \
+sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   cmake build-essential automake    `# Needed for building code` \
   curl wget unzip                   `# Common tools` \
   software-properties-common        `# Needed for add-apt-repository` \

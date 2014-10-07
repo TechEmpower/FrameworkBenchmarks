@@ -201,6 +201,7 @@ class Installer:
     sudo service mongod stop
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf
+    sudo mv mongodb.conf /etc/mongod.conf
     sudo cp -R -p /var/lib/mongodb /ssd/
     sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo service mongod start
@@ -220,17 +221,17 @@ class Installer:
     rm -rf /ssd/cassandra /ssd/log/cassandra
     mkdir -p /ssd/cassandra /ssd/log/cassandra
     
-    sed -i "s/^.*seeds:.*/          - seeds: \"%s\"/" cassandra/cassandra.yaml
-    sed -i "s/^listen_address:.*/listen_address: %s/" cassandra/cassandra.yaml
-    sed -i "s/^rpc_address:.*/rpc_address: %s/" cassandra/cassandra.yaml
+    sed -i "s/^.*seeds:.*/          - seeds: \"{database_host}\"/" cassandra/cassandra.yaml
+    sed -i "s/^listen_address:.*/listen_address: {database_host}/" cassandra/cassandra.yaml
+    sed -i "s/^rpc_address:.*/rpc_address: {database_host}/" cassandra/cassandra.yaml
     
     mv cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
     mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
     nohup apache-cassandra-$CASS_V/bin/cassandra > cassandra.log
 
-    sleep 10
-    cat cassandra/create-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
-    python cassandra/db-data-gen.py | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
+    sleep 20
+    cat cassandra/create-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh {database_host}
+    python cassandra/db-data-gen.py | apache-cassandra-$CASS_V/bin/cqlsh {database_host}
     rm -rf apache-cassandra-*-bin.tar.gz cassandra
 
     ##############################
@@ -243,7 +244,7 @@ class Installer:
     sudo service redis-server start
     bash create-redis.sh
     rm create-redis.sh
-    """ % (self.benchmarker.database_host, self.benchmarker.database_host, self.benchmarker.database_host)
+    """.format(database_host=self.benchmarker.database_host)
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
     p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
