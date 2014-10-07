@@ -20,11 +20,10 @@ executable         bench
 
     build-depends: base                          >= 4.7        && < 5
                  , yesod                         >= 1.4        && < 1.5
-                 , yesod-core                    >= 1.4        && < 1.5
+                 , yesod-core                    >= 1.4.2      && < 1.5
                  , text                          >= 0.11       && < 1.3
                  , persistent                    >= 2.1        && < 2.2
                  , persistent-mysql              >= 2.1        && < 2.2
-                 , persistent-mongoDB            >= 2.1        && < 2.2
                  , warp                          >= 3.0.2.2    && < 3.1
                  , auto-update                   >= 0.1.1.4    && < 0.2
                  , primitive                     >= 0.5
@@ -34,3 +33,10 @@ executable         bench
                  , mongoDB
                  , monad-logger
                  , mtl
+                 , wai
+                 , http-types
+                 , aeson
+                 , blaze-builder
+                 , bytestring                    >= 0.10
+                 , resource-pool
+                 , resourcet
