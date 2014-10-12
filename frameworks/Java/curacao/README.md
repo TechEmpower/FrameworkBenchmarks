@@ -4,7 +4,7 @@ Curacao is an open-source toolkit for building REST/HTTP-based integration layer
 
 ## Versions
 
-Curacao 2.6.2
+Curacao 2.6.3
 https://github.com/markkolich/curacao
 
 ## Tests
