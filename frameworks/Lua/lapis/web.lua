@@ -23,8 +23,7 @@ end
 local min, random
 do
   local _obj_0 = math
-  min = _obj_0.min
-  random = _obj_0.random
+  min, random = _obj_0.min, _obj_0.random
 end
 local Fortune
 do
@@ -117,6 +116,7 @@ do
         }
       end
       local worlds = { }
+      num_queries = min(500, num_queries)
       for i = 1, num_queries do
         local w = World:find(random(1, 10000))
         insert(worlds, {
@@ -178,7 +178,8 @@ do
         num_queries = 1
       end
       local worlds = { }
-      for i = 1, min(500, num_queries) do
+      num_queries = min(500, num_queries)
+      for i = 1, num_queries do
         local wid = random(1, 10000)
         local world = World:find(wid)
         world.randomnumber = random(1, 10000)
