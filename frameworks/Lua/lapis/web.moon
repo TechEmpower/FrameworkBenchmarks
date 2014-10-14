@@ -21,6 +21,7 @@ class Benchmark extends lapis.Application
       return json: {id:w.id,randomNumber:w.randomnumber}
 
     worlds = {}
+    num_queries = min(500, num_queries)
     for i = 1, num_queries
       w = World\find random(1, 10000)
       insert worlds, {id:w.id,randomNumber:w.randomnumber} 
@@ -55,7 +56,8 @@ class Benchmark extends lapis.Application
     if num_queries == 0
       num_queries = 1
     worlds = {}
-    for i = 1, min(500, num_queries)
+    num_queries = min(500, num_queries)
+    for i = 1, num_queries
       wid = random(1, 10000)
       world = World\find wid
       world.randomnumber = random(1, 10000)
