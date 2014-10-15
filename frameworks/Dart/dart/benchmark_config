@@ -17,7 +17,7 @@
       "language": "Dart",
       "orm": "Raw",
       "platform": "Dart",
-      "webserver": "nginx",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "dart",
