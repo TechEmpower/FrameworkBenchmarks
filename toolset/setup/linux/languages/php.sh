@@ -37,6 +37,7 @@ echo PHP compilation finished, building modules
 # Apc.so
 $IROOT/php-5.5.17/bin/pecl config-set php_ini $IROOT/php-5.5.17/lib/php.ini
 #printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f apc-beta
+printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f redis
 
 # yaf.so
 printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f yaf
