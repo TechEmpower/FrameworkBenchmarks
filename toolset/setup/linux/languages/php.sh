@@ -18,7 +18,7 @@ mv php-5.5.17 php
 ls
 cd php
 
-./configure --prefix=$IROOT/php-5.5.17 --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl
+./configure --prefix=$IROOT/php-5.5.17 --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl --enable-opcache
 make
 make install
 cd ..
@@ -36,7 +36,7 @@ echo PHP compilation finished, building modules
 
 # Apc.so
 $IROOT/php-5.5.17/bin/pecl config-set php_ini $IROOT/php-5.5.17/lib/php.ini
-printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f apc-beta
+#printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f apc-beta
 
 # yaf.so
 printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f yaf
