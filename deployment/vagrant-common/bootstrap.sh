@@ -90,6 +90,7 @@ if [ ! -e "~/.firstboot" ]; then
 
   # Install prerequisite tools
   echo "Installing prerequisites"
+  sudo apt-get update
   sudo apt-get install -y git
   sudo apt-get install -y python-pip
 

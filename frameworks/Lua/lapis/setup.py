@@ -4,6 +4,7 @@ import setup_util
 import os
 
 def start(args, logfile, errfile):
+  setup_util.replace_text("lapis/config.lua", "DBHOSTNAME", args.database_host)
   setup_util.replace_text("lapis/nginx.conf", "DBHOSTNAME", args.database_host)
   #subprocess.Popen('/usr/local/openresty/nginx/sbin/nginx -c `pwd`/nginx.conf -g "worker_processes ' + str((args.max_threads)) + ';"', shell=True, cwd="lapis", stderr=errfile, stdout=logfile)
   subprocess.Popen('lapis server production', shell=True, cwd="lapis", stderr=errfile, stdout=logfile)

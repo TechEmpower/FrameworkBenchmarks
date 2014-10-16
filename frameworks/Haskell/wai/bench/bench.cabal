@@ -11,12 +11,12 @@ executable         bench
 
     extensions: OverloadedStrings
 
-    build-depends: base                          >= 4          && < 5
+    build-depends: base                          >= 4.7        && < 5
                  , aeson                         >= 0.6.1.0
-                 , conduit-extra                 >= 1.1
                  , http-types
                  , network                       >= 2.4
-                 , streaming-commons
                  , text                          >= 1.0
                  , wai                           >= 3.0
                  , warp                          >= 3.0
+                 , blaze-builder
+                 , bytestring                    >= 0.10
