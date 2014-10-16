@@ -236,6 +236,11 @@ class Installer:
     apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql {database_host}
     rm -rf apache-cassandra-*-bin.tar.gz cassandra
 
+    # next lines are for debugging
+    uname -a
+    ps -ef
+    ifconfig
+
     ##############################
     # Redis
     ##############################
