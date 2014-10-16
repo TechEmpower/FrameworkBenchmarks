@@ -35,7 +35,7 @@ $app->register(new DoctrineOrmServiceProvider, array(
                 'use_simple_annotation_reader' => false,
             ),
         ),
-        'metadata_cache' => 'apc'
+        'metadata_cache' => 'redis'
     ),
 ));
 

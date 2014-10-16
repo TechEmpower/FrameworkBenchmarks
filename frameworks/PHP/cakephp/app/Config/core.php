@@ -248,7 +248,7 @@ Configure::write('App.baseUrl', env('SCRIPT_NAME'));
  *       Please check the comments in boostrap.php for more info on the cache engines available
  *       and their setttings.
  */
-$engine = 'Apc';
+$engine = 'Redis';
 
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
@@ -265,6 +265,7 @@ $prefix = 'myapp_';
  */
 Cache::config('_cake_core_', array(
 	'engine' => $engine,
+	'server' => 'REDISSERVER',
 	'prefix' => $prefix . 'cake_core_',
 	'path' => CACHE . 'persistent' . DS,
 	'serialize' => ($engine === 'File'),
@@ -277,6 +278,7 @@ Cache::config('_cake_core_', array(
  */
 Cache::config('_cake_model_', array(
 	'engine' => $engine,
+	'server' => 'REDISSERVER',
 	'prefix' => $prefix . 'cake_model_',
 	'path' => CACHE . 'models' . DS,
 	'serialize' => ($engine === 'File'),
