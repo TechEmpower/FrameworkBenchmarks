@@ -23,6 +23,28 @@
       "notes": "",
       "versus": "rack-puma-jruby"
     },
+    "puma-rbx": {
+      "setup_file": "run_rbx_puma",
+      "json_url": "/json",
+      "db_url": "/db", 
+      "query_url": "/query?queries=", 
+      "update_url": "/updates?queries=", 
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "grape",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rubinius",
+      "webserver": "Puma",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "puma-rbx-grape",
+      "notes": "",
+      "versus": "rack-puma-rbx"
+    },
     "ruby-puma": {
       "setup_file": "run_mri_puma",
       "json_url": "/json",
