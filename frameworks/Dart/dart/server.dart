@@ -1,6 +1,7 @@
 import 'dart:async' show Future;
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:isolate';
 import 'dart:math' show Random;
 import 'package:args/args.dart' show ArgParser;
 import 'package:mustache/mustache.dart' as mustache;
@@ -17,11 +18,26 @@ main(List<String> args) {
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
   parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
+  parser.addOption('isolates', abbr: 'i', defaultsTo: '1');
   var arguments = parser.parse(args);
-  _startServer(
-      arguments['address'],
-      int.parse(arguments['port']),
-      int.parse(arguments['dbconnections']));
+  var isolates = int.parse(arguments['isolates']);
+  var dbConnections = int.parse(arguments['dbconnections']) ~/ isolates;
+  ServerSocket.bind(arguments['address'], int.parse(arguments['port']))
+      .then((server) {
+        var ref = server.reference;
+        for (int i = 1; i < isolates; i++) {
+          Isolate.spawn(startInIsolate, [ref, dbConnections]);
+        }
+        _startServer(server, dbConnections);
+      });
+}
+
+void startInIsolate(args) {
+  var ref = args[0];
+  var dbConnections = args[1];
+  ref.create().then((server) {
+    _startServer(server, dbConnections);
+  });
 }
 
 /// The entity used in the database query and update tests.
@@ -51,15 +67,6 @@ const _WORLD_TABLE_SIZE = 10000;
 /// A random number generator.
 final _RANDOM = new Random();
 
-/// The 'text/html; charset=utf-8' content type.
-final _TYPE_HTML = new ContentType('text', 'html', charset: 'utf-8');
-
-/// The 'application/json' content type.
-final _TYPE_JSON = new ContentType('application', 'json');
-
-/// The 'text/html; charset=utf-8' content type.
-final _TYPE_TEXT = new ContentType('text', 'plain', charset: 'utf-8');
-
 /// The PostgreSQL connection pool used by all the tests that require database
 /// connectivity.
 var _connectionPool;
@@ -70,7 +77,7 @@ var _fortunesTemplate;
 /// Starts a benchmark server, which listens for connections from
 /// '[address] : [port]' and maintains [dbConnections] connections to the
 /// database.
-_startServer(address, port, dbConnections) {
+_startServer(serverSocket, dbConnections) {
   Future.wait([
     new File('postgresql.yaml').readAsString().then((config) {
       _connectionPool = new pgpool.Pool(
@@ -83,33 +90,33 @@ _startServer(address, port, dbConnections) {
       _fortunesTemplate = mustache.parse(template);
     })
   ]).then((_) {
-    HttpServer.bind(address, port).then((server) {
-      server.serverHeader = 'dart';
-      server.listen((request) {
-        switch (request.uri.path) {
-          case '/json':
-            _jsonTest(request);
-            break;
-          case '/db':
-            _dbTest(request);
-            break;
-          case '/queries':
-            _queriesTest(request);
-            break;
-          case '/fortunes':
-            _fortunesTest(request);
-            break;
-          case '/updates':
-            _updatesTest(request);
-            break;
-          case '/plaintext':
-            _plaintextTest(request);
-            break;
-          default:
-            _sendResponse(request, HttpStatus.NOT_FOUND);
-            break;
-        }
-      });
+    var server = new HttpServer.listenOn(serverSocket);
+    server.defaultResponseHeaders.clear();
+    server.serverHeader = 'dart';
+    server.listen((request) {
+      switch (request.uri.path) {
+        case '/json':
+          _jsonTest(request);
+          break;
+        case '/db':
+          _dbTest(request);
+          break;
+        case '/queries':
+          _queriesTest(request);
+          break;
+        case '/fortunes':
+          _fortunesTest(request);
+          break;
+        case '/updates':
+          _updatesTest(request);
+          break;
+        case '/plaintext':
+          _plaintextTest(request);
+          break;
+        default:
+          _sendResponse(request, HttpStatus.NOT_FOUND);
+          break;
+      }
     });
   });
 }
@@ -140,17 +147,18 @@ _sendResponse(request, statusCode, [ type, response ]) {
 
 /// Completes the given [request] by writing the [response] as HTML.
 _sendHtml(request, response) {
-  _sendResponse(request, HttpStatus.OK, _TYPE_HTML, response);
+  _sendResponse(request, HttpStatus.OK, ContentType.HTML, response);
 }
 
 /// Completes the given [request] by writing the [response] as JSON.
 _sendJson(request, response) {
-  _sendResponse(request, HttpStatus.OK, _TYPE_JSON, JSON.encode(response));
+  _sendResponse(
+      request, HttpStatus.OK, ContentType.JSON, JSON.encode(response));
 }
 
 /// Completes the given [request] by writing the [response] as plain text.
 _sendText(request, response) {
-  _sendResponse(request, HttpStatus.OK, _TYPE_TEXT, response);
+  _sendResponse(request, HttpStatus.OK, ContentType.TEXT, response);
 }
 
 /// Responds with the JSON test to the [request].

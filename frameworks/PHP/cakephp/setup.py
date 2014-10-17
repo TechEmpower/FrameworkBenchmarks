@@ -8,13 +8,14 @@ from os.path import expanduser
 def start(args, logfile, errfile):
   fwroot = args.fwroot
   setup_util.replace_text("cakephp/app/Config/database.php", "'host' => '.*',", "'host' => '" + args.database_host + "',")
+  setup_util.replace_text("cakephp/app/Config/core.php", "'REDISSERVER'", "'" + args.database_host + "'")
   setup_util.replace_text("cakephp/deploy/cake", "\".*\/FrameworkBenchmarks/cakephp", "\"%s" % args.troot)
   setup_util.replace_text("cakephp/deploy/cake", "Directory .*\/FrameworkBenchmarks/cakephp", "Directory %s" % args.troot)
   setup_util.replace_text("cakephp/deploy/nginx.conf", "root .*\/FrameworkBenchmarks/cakephp", "root %s" % args.troot)
 
   try:
     if os.name == 'nt':
-      setup_util.replace_text("cakephp/app/Config/core.php", "'Apc'", "'Wincache'")
+      setup_util.replace_text("cakephp/app/Config/core.php", "'Redis'", "'Wincache'")
       subprocess.check_call('icacls "C:\\FrameworkBenchmarks\\cakephp" /grant "IIS_IUSRS:(OI)(CI)F"', shell=True, stderr=errfile, stdout=logfile)
       subprocess.check_call('appcmd add site /name:PHP /bindings:http/*:8080: /physicalPath:"C:\\FrameworkBenchmarks\\cakephp\\app\\webroot"', shell=True, stderr=errfile, stdout=logfile)
       return 0

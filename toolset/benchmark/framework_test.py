@@ -378,7 +378,7 @@ class FrameworkTest:
       parser = FortuneHTMLParser()
       parser.feed(htmlString)
 
-      return parser.isValidFortune(out)
+      return (parser.isValidFortune(out), )
     except:
       print "Got exception when trying to validate the fortune test: {exception} ".format(exception=traceback.format_exc())
     return (False, err_str)
@@ -653,13 +653,14 @@ class FrameworkTest:
       url = self.benchmarker.generate_url(self.fortune_url, self.port)
       output = self.__curl_url(url, self.FORTUNE, out, err)
       out.write("VALIDATING FORTUNE ... ")
-      if self.validateFortune(output, out, err):
+      ret_tuple = self.validateFortune(output, out, err)
+      if ret_tuple[0]:
         self.fortune_url_passed = True
         out.write("PASS\n\n")
         self.benchmarker.report_verify_results(self, self.FORTUNE, 'pass')
       else:
         self.fortune_url_passed = False
-        out.write("\nFAIL\n\n")
+        out.write("\nFAIL " + ret_tuple[1] + "\n\n")
         self.benchmarker.report_verify_results(self, self.FORTUNE, 'fail')
         result = False
       out.flush()

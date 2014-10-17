@@ -15,7 +15,7 @@ Use the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-e
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
+* [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
 * [nginx 1.4.0](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 * [PHP ActiveRecord Nightly 20121221](http://www.phpactiverecord.org/)

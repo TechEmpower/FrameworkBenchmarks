@@ -2,6 +2,7 @@ local mysql = mysql
 
 local encode = encode
 local random = math.random
+local min = math.min
 
 local mysqlconn = {
 	host = "DBHOSTNAME",
@@ -23,6 +24,7 @@ return function(ngx)
 		ngx.print(encode(db:query('SELECT * FROM World WHERE id = '..random(1,10000))[1]))
 	else
 		local worlds = {}
+		num_queries = min(500, num_queries)
 		for i=1, num_queries do
 			worlds[#worlds+1] = db:query('SELECT * FROM World WHERE id = '..random(1,10000))[1]
 		end

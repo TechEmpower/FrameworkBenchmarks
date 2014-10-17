@@ -18,7 +18,7 @@ Uses the built-in ORM of micromvc
 The tests were run with:
 
 * [Micromvc 4.0.0](http://www.micromvc.com/)
-* [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
+* [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
 * [nginx 1.4.0](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 

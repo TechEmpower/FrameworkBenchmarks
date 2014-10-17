@@ -24,7 +24,7 @@ Uses Symfony's template engine 'Twig'
 The tests were run with:
 
 * [Symfony Version 2.2.1](http://symfony.com/)
-* [PHP Version 5.4.13](http://www.php.net/) with FPM and APC
+* [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
 * [nginx 1.4.0](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 

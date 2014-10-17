@@ -148,6 +148,7 @@ class Installer:
     ##############################
     # MySQL
     ##############################
+    echo "Setting up MySQL database"
     sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
     sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
 
@@ -175,6 +176,7 @@ class Installer:
     ##############################
     # Postgres
     ##############################
+    echo "Setting up Postgres database"
     sudo -u postgres psql template1 < create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
     rm create-postgres-database.sql create-postgres.sql
@@ -192,6 +194,7 @@ class Installer:
     ##############################
     # MongoDB
     ##############################
+    echo "Setting up MongoDB database"
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
     sudo apt-get -y update
@@ -201,6 +204,7 @@ class Installer:
     sudo service mongod stop
     sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
     sudo mv mongodb.conf /etc/mongodb.conf
+    sudo mv mongodb.conf /etc/mongod.conf
     sudo cp -R -p /var/lib/mongodb /ssd/
     sudo cp -R -p /var/log/mongodb /ssd/log/
     sudo service mongod start
@@ -212,6 +216,7 @@ class Installer:
     ##############################
     # Apache Cassandra
     ##############################
+    echo "Setting up Apache Cassandra database"
     sudo apt-get install -qqy openjdk-7-jdk
     export CASS_V=2.0.7
     wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
@@ -220,22 +225,25 @@ class Installer:
     rm -rf /ssd/cassandra /ssd/log/cassandra
     mkdir -p /ssd/cassandra /ssd/log/cassandra
     
-    sed -i "s/^.*seeds:.*/          - seeds: \"%s\"/" cassandra/cassandra.yaml
-    sed -i "s/^listen_address:.*/listen_address: %s/" cassandra/cassandra.yaml
-    sed -i "s/^rpc_address:.*/rpc_address: %s/" cassandra/cassandra.yaml
+    sed -i "s/^.*seeds:.*/          - seeds: \"{database_host}\"/" cassandra/cassandra.yaml
+    sed -i "s/^listen_address:.*/listen_address: {database_host}/" cassandra/cassandra.yaml
+    sed -i "s/^rpc_address:.*/rpc_address: {database_host}/" cassandra/cassandra.yaml
     
     mv cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
     mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
-    nohup apache-cassandra-$CASS_V/bin/cassandra > cassandra.log
+    nohup apache-cassandra-$CASS_V/bin/cassandra -p c.pid > cassandra.log
 
-    sleep 10
-    cat cassandra/create-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
-    python cassandra/db-data-gen.py | apache-cassandra-$CASS_V/bin/cqlsh $TFB_DATABASE_HOST
+    until nc -z {database_host} 9160 ; do echo Waiting for Cassandra; sleep 1; done
+    cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh {database_host}
+    python cassandra/db-data-gen.py > cassandra/tfb-data.cql
+    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql {database_host}
+    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql {database_host}
     rm -rf apache-cassandra-*-bin.tar.gz cassandra
 
     ##############################
     # Redis
     ##############################
+    echo "Setting up Redis database"
     sudo service redis-server stop
     # NOTE: This will cause errors on Ubuntu 12.04, as apt installs 
     # an older version of redis
@@ -243,7 +251,7 @@ class Installer:
     sudo service redis-server start
     bash create-redis.sh
     rm create-redis.sh
-    """ % (self.benchmarker.database_host, self.benchmarker.database_host, self.benchmarker.database_host)
+    """.format(database_host=self.benchmarker.database_host)
     
     print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
     p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
