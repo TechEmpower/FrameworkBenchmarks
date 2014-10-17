@@ -21,9 +21,6 @@ def start(args, logfile, errfile):
     subprocess.call("echo servlet3-cass application.properties", shell=True, stderr=errfile, stdout=logfile)
     subprocess.check_call("cat src/main/resources/application.properties", shell=True, cwd="servlet3-cass", stderr=errfile, stdout=logfile)
     subprocess.call("echo checking connection to TFB DB host: "+args.database_host, shell=True, stderr=errfile, stdout=logfile)
-    # next two are for debugging
-    subprocess.call("uname -a", shell=True, stderr=errfile, stdout=logfile)
-    subprocess.call("ps -ef", shell=True, stderr=errfile, stdout=logfile)
     subprocess.call("for i in 1 2 3 4 5; do nc -vz "+args.database_host+" 9160  && echo 'C* ok' && break || echo 'waiting for C*'; sleep 2; if [ $i -eq '5' ]; then echo 'ERROR: failed to connect to Cassandra'; fi; done", shell=True, stderr=errfile, stdout=logfile)
     subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
     return 0

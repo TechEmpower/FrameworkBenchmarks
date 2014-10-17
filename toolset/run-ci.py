@@ -339,21 +339,25 @@ class CIRunnner:
     # =======================================================
 
     # Add data to mysql
+    echo "Populating MySQL DB data"
     mysql -uroot < config/create.sql
 
     # Setup Postgres
+    echo "Setting up Postgres database"
     psql --version
     sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < config/create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
 
     # Setup Apache Cassandra
+    echo "Setting up Apache Cassandra database"
     until nc -z localhost 9160 ; do echo Waiting for Cassandra; sleep 1; done
     cat config/cassandra/cleanup-keyspace.cql | sudo cqlsh
     python config/cassandra/db-data-gen.py > config/cassandra/tfb-data.cql
     sudo cqlsh -f config/cassandra/create-keyspace.cql
     sudo cqlsh -f config/cassandra/tfb-data.cql
 
+    echo "Setting up MongDB database"
     # Setup MongoDB (see install above)
     mongod --version
     until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done

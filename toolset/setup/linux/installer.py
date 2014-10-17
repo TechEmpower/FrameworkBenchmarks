@@ -148,6 +148,7 @@ class Installer:
     ##############################
     # MySQL
     ##############################
+    echo "Setting up MySQL database"
     sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
     sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
 
@@ -175,6 +176,7 @@ class Installer:
     ##############################
     # Postgres
     ##############################
+    echo "Setting up Postgres database"
     sudo -u postgres psql template1 < create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
     rm create-postgres-database.sql create-postgres.sql
@@ -192,6 +194,7 @@ class Installer:
     ##############################
     # MongoDB
     ##############################
+    echo "Setting up MongoDB database"
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
     sudo apt-get -y update
@@ -213,6 +216,7 @@ class Installer:
     ##############################
     # Apache Cassandra
     ##############################
+    echo "Setting up Apache Cassandra database"
     sudo apt-get install -qqy openjdk-7-jdk
     export CASS_V=2.0.7
     wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
@@ -236,14 +240,10 @@ class Installer:
     apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql {database_host}
     rm -rf apache-cassandra-*-bin.tar.gz cassandra
 
-    # next lines are for debugging
-    uname -a
-    ps -ef
-    ifconfig
-
     ##############################
     # Redis
     ##############################
+    echo "Setting up Redis database"
     sudo service redis-server stop
     # NOTE: This will cause errors on Ubuntu 12.04, as apt installs 
     # an older version of redis
