@@ -5,4 +5,6 @@ RETCODE=$(fw_exists rust.installed)
 
 curl -s https://static.rust-lang.org/rustup.sh | sudo sh
 
+rustc --version
+
 touch rust.installed
