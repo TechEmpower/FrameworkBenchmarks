@@ -65,7 +65,7 @@ The full benchmark requires at least three computers:
 
 * `app server`: The computer that your framework will be launched on.
 * `load server`: The computer that will generate client load. Also known as the `client machine`.
-* `database server`: The computer that runs all the databases. Also knonw as the `DB server`.
+* `database server`: The computer that runs all the databases. Also known as the `DB server`.
 
 This codebase (`TechEmpower/FrameworkBenchmarks` aka `TFB`) must be run on 
 the `app server`. The codebase contains a number of `framework directories`, each 
