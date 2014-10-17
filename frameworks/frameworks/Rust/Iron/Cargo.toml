@@ -1,0 +1,36 @@
+[package]
+
+name = "iron"
+version = "0.0.1"
+authors = ["Tor Hveem <tor@hveem.no>"]
+
+[[bin]]
+
+name = "iron"
+
+[dependencies.iron]
+
+git = "https://github.com/iron/iron.git"
+
+[dependencies.router]
+
+git = "https://github.com/iron/router.git"
+
+[dependencies.mysql]
+
+git = "https://github.com/blackbeam/rust-mysql-simple"
+
+[dependencies.urlencoded]
+
+git = "https://github.com/iron/urlencoded"
+
+[dependencies.persistent]
+
+git = "https://github.com/iron/persistent.git"
+
+[dependencies.content_type]
+git = "https://github.com/reem/rust-http-content-type.git"
+
+[dependencies.htmlescape]
+
+git = "https://github.com/torhve/rust-htmlescape.git"
