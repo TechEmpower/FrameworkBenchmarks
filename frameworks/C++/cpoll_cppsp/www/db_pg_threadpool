@@ -1,4 +1,4 @@
-<%!-lpq%><%!-I/usr/include/postgresql%><%@ class mypage %><%#
+<%!-lpq%><%!-I/usr/include/postgresql%><%!-I/usr/include/postgresql/9.3/server%><%@ class mypage %><%#
 #include <libpq-fe.h>
 #include <postgres.h>
 #include <catalog/pg_type.h>
