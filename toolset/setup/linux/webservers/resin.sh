@@ -10,6 +10,7 @@ sudo cp -r /usr/lib/jvm/java-1.7.0-openjdk-amd64/include /usr/lib/jvm/java-1.7.0
 
 fw_get http://www.caucho.com/download/resin-$RVER.tar.gz
 fw_untar resin-$RVER.tar.gz
+ln -s resin-$RVER resin-4.0
 cd resin-$RVER
 ./configure --prefix=`pwd`
 make
