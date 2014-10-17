@@ -115,7 +115,5 @@ class FortuneHTMLParser(HTMLParser):
     if not diff:
       out.write("Fortune invalid. Diff following:\n")
       diff_str = ''.join(unified_diff(self.valid.split(' '), body.split(' '), fromfile='Valid', tofile='Response', n=5))
-      #diff_str = re.sub(r'(?<![ +]) (?![ +])', '', diff_str)
-      diff_str = re.sub(r'  ', ' ', diff_str)
       out.write(diff_str)
     return diff
