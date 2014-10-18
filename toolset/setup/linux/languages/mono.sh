@@ -1,10 +1,13 @@
 #!/bin/bash
 
+set -x
 
 RETCODE=$(fw_exists mono.installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Installing RootCAs from Mozilla..."; 
   mozroots --import --sync;
+  echo "ROOT: Installing RootCAs from Mozilla..."; 
+  sudo $IROOT/mono-3.6.0-install/bin/mozroots --import --sync;
   return 0; }
 
 sudo apt-get install -y build-essential \
@@ -26,5 +29,8 @@ make install
 
 echo "Installing RootCAs from Mozilla..."; 
 mozroots --import --sync;
+
+echo "ROOT: Installing RootCAs from Mozilla..."; 
+sudo $IROOT/mono-3.6.0-install/bin/mozroots --import --sync;
 
 touch $IROOT/mono.installed
