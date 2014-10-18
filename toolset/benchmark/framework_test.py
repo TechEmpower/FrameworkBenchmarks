@@ -473,7 +473,16 @@ class FrameworkTest:
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
-    retcode = self.setup_module.start(self, out, err)    
+    try:
+      self.setup_module.start(self, out, err)    
+      retcode = 0
+    except Exception:
+      retcode = 1
+      st = traceback.format_exc()
+      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
+      st = "Start exception:\n%s" % st
+      logging.info(st)
+      err.write(st + '\n')
     os.chdir(previousDir)
 
     # Stop the progress printer
@@ -507,7 +516,16 @@ class FrameworkTest:
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
-    retcode = self.setup_module.stop(out, err)
+    try:
+      self.setup_module.stop(out, err)
+      retcode = 0
+    except Exception:
+      retcode = 1 
+      st = traceback.format_exc()
+      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
+      st = "Stop exception:\n%s\n" % st
+      logging.info(st)
+      err.write(st + '\n')
     os.chdir(previousDir)
 
     # Give processes sent a SIGTERM a moment to shut down gracefully
