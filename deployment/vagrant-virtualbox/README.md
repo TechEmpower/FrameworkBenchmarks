@@ -30,3 +30,9 @@ initial state each time to avoid interference.
 automatically build and inject the correct version of Oracle's Guest 
 Additions for the VM you are running. It's helpful for avoiding annoying 
 errors like "host additions are 4.3.10 but guest is 4.3.18"
+
+**Use SSH Port Forwarding To Access Web Servers Inside Vagrant**
+
+Use `vagrant ssh -- -L 9001:127.0.0.1:9001` to make `localhost:9001` 
+on your host OS connect you to `127.0.0.1:9001` inside the Vagrant 
+VM
