@@ -13,3 +13,25 @@ in your pull request.
 
 While we have not currently run into the need to have multiple 
 simultaneous Mono installations, it is [possible](http://www.mono-project.com/docs/compiling-mono/parallel-mono-environments/)
+
+# Debugging Mono + NuGet
+
+Mono understands an environment variable `MONO_LOG_LEVEL=debug` that is helpful for checking that 
+mono is properly working e.g. loading necessary DLL's. 
+
+Most NuGet commands understand a `-Verbosity` flag, which is great because the error messages can be completely
+mystifying when working with Mono too. Use this would enable all the debugging you can: 
+
+    $ MONO_LOG_LEVEL=debug mono NuGet2.exe update -Verbosity "detailed" -self
+
+For example, aspnet was constantly failing with this message: 
+    
+    Could not connect to the feed specified at 'https://www.nuget.org/api/v2/'. Please verify that the package source (located in the Package Manager Settings) is valid and ensure your network connectivity.`. 
+
+Using `-Verbosity "detailed"` shows that the real error is actually a Mono library problem, as so: 
+
+    System.InvalidOperationException: Could not connect to the feed specified at 'https://www.nuget.org/api/v2/'. Please verify that the package source (located in the Package Manager Settings) is valid and ensure your network connectivity. ---> System.Net.WebException: libMonoPosixHelper.so ---> System.DllNotFoundException: libMonoPosixHelper.so
+      at (wrapper managed-to-native) System.IO.Compression.DeflateStreamNative:CreateZStream (System.IO.Compression.CompressionMode,bool,System.IO.Compression.DeflateStreamNative/UnmanagedReadOrWrite,intptr)
+      <snip>
+
+More helpful info is [here](http://www.mono-project.com/docs/advanced/pinvoke/dllnotfoundexception/), [here](http://docs.nuget.org/docs/reference/command-line-reference)
