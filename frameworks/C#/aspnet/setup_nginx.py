@@ -7,7 +7,6 @@ def start(args, logfile, errfile):
   if os.name == 'nt':
     return 1
   
-
   setup_util.replace_text("aspnet/src/Web.config", "localhost", args.database_host)
 
   # build
@@ -27,10 +26,11 @@ def start(args, logfile, errfile):
   subprocess.check_call(command, shell=True, stderr=errfile, stdout=logfile);
   subprocess.check_call('sudo /usr/local/nginx/sbin/nginx -c $TROOT/nginx.conf -g "' + workers + '"', shell=True, stderr=errfile, stdout=logfile)
   
-  # fastcgi
+  # Start fastcgi for each thread
+  # To debug, use --printlog --verbose --loglevels=All
   for port in range(9001, 9001 + args.max_threads):
-    # /usr/local/bin/fastcgi-mono-server4
-    subprocess.Popen("MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 /applications=/:. /socket=tcp:127.0.0.1:" + str(port) + " &", shell=True, cwd="aspnet", stderr=errfile, stdout=logfile)
+    subprocess.Popen("MONO_OPTIONS=--gc=sgen fastcgi-mono-server4 --applications=/:%s/src --socket=tcp:127.0.0.1:%s " % (args.directory, port), shell=True, cwd="aspnet", stderr=errfile, stdout=logfile)
+  
   return 0
 
 def stop(logfile, errfile):
