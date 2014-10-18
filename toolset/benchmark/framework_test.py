@@ -474,8 +474,9 @@ class FrameworkTest:
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
     try:
-      self.setup_module.start(self, out, err)    
-      retcode = 0
+      retcode = self.setup_module.start(self, out, err)    
+      if retcode == None: 
+        retcode = 0
     except Exception:
       retcode = 1
       st = traceback.format_exc()
@@ -517,8 +518,9 @@ class FrameworkTest:
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
     try:
-      self.setup_module.stop(out, err)
-      retcode = 0
+      retcode = self.setup_module.stop(out, err)
+      if retcode == None: 
+        retcode = 0
     except Exception:
       retcode = 1 
       st = traceback.format_exc()
