@@ -26,6 +26,14 @@ public class WorldResource {
 
     @GET
     @UnitOfWork
+    public World dbSingleTest() {
+        final long worldId = RANDOM.nextInt(10_000) + 1;
+        return worldDAO.findById(worldId).orNull();
+    }
+
+    @GET
+    @Path("?queries")
+    @UnitOfWork
     public World[] dbTest(@QueryParam("queries") Optional<Integer> queries) {
         final int totalQueries = queries.or(1); // TODO: Should be bound [1,500]
         final World[] worlds = new World[totalQueries];
