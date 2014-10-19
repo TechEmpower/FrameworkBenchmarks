@@ -82,7 +82,7 @@ def provider_virtualbox(config, role)
     override.vm.hostname = "TFB-#{role}"
 
     override.vm.box = "ubuntu/trusty64"
-    if ENV.fetch('TFB_VM_ARCH','64') == "32"
+    if ENV.fetch('TFB_VB_ARCH','64') == "32"
       override.vm.box = "ubuntu/trusty32"
     end
     
