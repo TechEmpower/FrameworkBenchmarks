@@ -16,15 +16,36 @@ class Installer:
   # install_software
   ############################################################
   def install_software(self):
-    if self.benchmarker.install == 'all' or self.benchmarker.install == 'server':
-        self.__install_server_software()
+    linux_install_root = self.fwroot + "/toolset/setup/linux"
+    imode = self.benchmarker.install
 
-    if self.benchmarker.install == 'all' or self.benchmarker.install == 'database':
-        self.__install_database_software()
+    if imode == 'all' or imode == 'server':
+      self.__install_server_software()
 
-    if self.benchmarker.install == 'all' or self.benchmarker.install == 'client':
-        self.__install_client_software()
+    if imode == 'all' or imode == 'database':
+      print("\nINSTALL: Installing database software\n")   
+      self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="../config/database_sftp_batch"), True)
+      with open (linux_install_root + "/database.sh", "r") as myfile:
+        remote_script=myfile.read().format(database_host=self.benchmarker.database_host)
+        print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
+        p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
+        p.communicate(remote_script)
+        returncode = p.returncode
+        if returncode != 0:
+          self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.database_ssh_string))
+      print("\nINSTALL: Finished installing database software\n")
 
+    if imode == 'all' or imode == 'client':
+      print("\nINSTALL: Installing client software\n")    
+      with open (linux_install_root + "/client.sh", "r") as myfile:
+        remote_script=myfile.read()
+        print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
+        p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
+        p.communicate(remote_script)
+        returncode = p.returncode
+        if returncode != 0:
+          self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
+      print("\nINSTALL: Finished installing client software\n")
   ############################################################
   # End install_software
   ############################################################
@@ -120,208 +141,6 @@ class Installer:
   # End __install_error
   ############################################################
 
-  ############################################################
-  # __install_database_software
-  ############################################################
-  def __install_database_software(self):
-    print("\nINSTALL: Installing database software\n")
- 
-    self.__run_command("cd .. && " + self.benchmarker.database_sftp_string(batch_file="../config/database_sftp_batch"), True)
-
-    remote_script = """
-
-    ##############################
-    # Prerequisites
-    ##############################
-    sudo apt-get -y update
-    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev postgresql redis-server
-    sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
-
-    # Create a user-owned directory for our databases
-    sudo mkdir -p /ssd
-    sudo mkdir -p /ssd/log
-    sudo chown -R $USER:$USER /ssd
-
-    # Additional user account (only use if required)
-    sudo useradd benchmarkdbuser -p benchmarkdbpass
-
-    ##############################
-    # MySQL
-    ##############################
-    echo "Setting up MySQL database"
-    sudo sh -c "echo mysql-server mysql-server/root_password_again select secret | debconf-set-selections"
-    sudo sh -c "echo mysql-server mysql-server/root_password select secret | debconf-set-selections"
-
-    sudo apt-get -y install mysql-server
-
-    sudo stop mysql
-    # disable checking of disk size
-    sudo mv mysql /etc/init.d/mysql
-    sudo chmod +x /etc/init.d/mysql
-    sudo mv mysql.conf /etc/init/mysql.conf
-    # use the my.cnf file to overwrite /etc/mysql/my.cnf
-    sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
-    sudo mv my.cnf /etc/mysql/my.cnf
-
-    sudo cp -R -p /var/lib/mysql /ssd/
-    sudo cp -R -p /var/log/mysql /ssd/log
-    sudo cp usr.sbin.mysqld /etc/apparmor.d/
-    sudo /etc/init.d/apparmor reload
-    sudo start mysql
-
-    # Insert data
-    mysql -uroot -psecret < create.sql
-    rm create.sql
-
-    ##############################
-    # Postgres
-    ##############################
-    echo "Setting up Postgres database"
-    sudo -u postgres psql template1 < create-postgres-database.sql
-    sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
-    rm create-postgres-database.sql create-postgres.sql
-
-    sudo -u postgres -H /etc/init.d/postgresql stop
-    # NOTE: This will cause errors on Ubuntu 12.04, as apt installs 
-    # an older version (9.1 instead of 9.3)
-    sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
-    sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
-
-    sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
-    sudo -u postgres -H /etc/init.d/postgresql start
-    sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
-
-    ##############################
-    # MongoDB
-    ##############################
-    echo "Setting up MongoDB database"
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-    echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
-    sudo apt-get -y update
-    sudo apt-get -y remove mongodb-clients
-    sudo apt-get -y install mongodb-org
-
-    sudo service mongod stop
-    sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
-    sudo mv mongodb.conf /etc/mongodb.conf
-    sudo mv mongodb.conf /etc/mongod.conf
-    sudo cp -R -p /var/lib/mongodb /ssd/
-    sudo cp -R -p /var/log/mongodb /ssd/log/
-    sudo service mongod start
-
-    until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
-    mongo < create.js
-    rm create.js
-
-    ##############################
-    # Apache Cassandra
-    ##############################
-    echo "Setting up Apache Cassandra database"
-    sudo apt-get install -qqy openjdk-7-jdk
-    export CASS_V=2.0.7
-    wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
-    tar xzf apache-cassandra-$CASS_V-bin.tar.gz
-    
-    rm -rf /ssd/cassandra /ssd/log/cassandra
-    mkdir -p /ssd/cassandra /ssd/log/cassandra
-    
-    sed -i "s/^.*seeds:.*/          - seeds: \"{database_host}\"/" cassandra/cassandra.yaml
-    sed -i "s/^listen_address:.*/listen_address: {database_host}/" cassandra/cassandra.yaml
-    sed -i "s/^rpc_address:.*/rpc_address: {database_host}/" cassandra/cassandra.yaml
-    
-    mv cassandra/cassandra.yaml apache-cassandra-$CASS_V/conf
-    mv cassandra/log4j-server.properties apache-cassandra-$CASS_V/conf
-    nohup apache-cassandra-$CASS_V/bin/cassandra -p c.pid > cassandra.log
-
-    until nc -z {database_host} 9160 ; do echo Waiting for Cassandra; sleep 1; done
-    cat cassandra/cleanup-keyspace.cql | apache-cassandra-$CASS_V/bin/cqlsh {database_host}
-    python cassandra/db-data-gen.py > cassandra/tfb-data.cql
-    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/create-keyspace.cql {database_host}
-    apache-cassandra-$CASS_V/bin/cqlsh -f cassandra/tfb-data.cql {database_host}
-    rm -rf apache-cassandra-*-bin.tar.gz cassandra
-
-    ##############################
-    # Redis
-    ##############################
-    echo "Setting up Redis database"
-    sudo service redis-server stop
-    # NOTE: This will cause errors on Ubuntu 12.04, as apt installs 
-    # an older version of redis
-    sudo mv redis.conf /etc/redis/redis.conf
-    sudo service redis-server start
-    bash create-redis.sh
-    rm create-redis.sh
-    """.format(database_host=self.benchmarker.database_host)
-    
-    print("\nINSTALL: %s" % self.benchmarker.database_ssh_string)
-    p = subprocess.Popen(self.benchmarker.database_ssh_string.split(" ") + ["bash"], stdin=subprocess.PIPE)
-    p.communicate(remote_script)
-    returncode = p.returncode
-    if returncode != 0:
-      self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.database_ssh_string))
-
-    print("\nINSTALL: Finished installing database software\n")
-  ############################################################
-  # End __install_database_software
-  ############################################################
-
-  ############################################################
-  # __install_client_software
-  ############################################################
-  def __install_client_software(self):
-    print("\nINSTALL: Installing client software\n")
-
-    remote_script = """
-
-    ##############################
-    # Prerequisites
-    ##############################
-    sudo apt-get -y update
-    sudo apt-get -y install build-essential git libev-dev libpq-dev libreadline6-dev 
-    sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
-
-
-    ##############################
-    # wrk
-    ##############################
-
-    git clone https://github.com/wg/wrk.git
-    cd wrk
-    git checkout 205a1960c8b8de5f500bb143863ae293456b7add
-    make
-    sudo cp wrk /usr/local/bin
-    cd ~
-    
-    #############################
-    # pipeline.lua
-    #############################
-cat << EOF | tee pipeline.lua
-init = function(args)
-  wrk.init(args)
-  local r = {}
-  local depth = tonumber(args[1]) or 1
-  for i=1,depth do
-    r[i] = wrk.format()
-  end
-  req = table.concat(r)
-end
-
-request = function()
-  return req
-end
-EOF
-    """
-    
-    print("\nINSTALL: %s" % self.benchmarker.client_ssh_string)
-    p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE)
-    p.communicate(remote_script)
-    returncode = p.returncode
-    if returncode != 0:
-      self.__install_error("status code %s running subprocess '%s'." % (returncode, self.benchmarker.client_ssh_string))
-
-    print("\nINSTALL: Finished installing client software\n")
-  ############################################################
-  # End __install_client_software
   ############################################################
 
   ############################################################
