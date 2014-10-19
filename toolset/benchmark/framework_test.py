@@ -1290,8 +1290,9 @@ class FrameworkTest:
   ##########################################################################################
   # Constructor
   ##########################################################################################  
-  def __init__(self, name, directory, benchmarker, runTests, args):
+  def __init__(self, name, framework, directory, benchmarker, runTests, args):
     self.name = name
+    self.framework = framework
     self.directory = directory
     self.benchmarker = benchmarker
     self.runTests = runTests
@@ -1351,6 +1352,7 @@ def parse_config(config, directory, benchmarker):
   for test in config['tests']:
     for key, value in test.iteritems():
       test_name = config['framework']
+      test_framework = config['framework']
       
       runTests = dict()
 
@@ -1367,7 +1369,7 @@ def parse_config(config, directory, benchmarker):
         # we need to use the key in the test_name
         test_name = test_name + "-" + key
 
-      tests.append(FrameworkTest(test_name, directory, benchmarker, runTests, value))
+      tests.append(FrameworkTest(test_name, test_framework, directory, benchmarker, runTests, value))
 
   return tests
 ##############################################################
