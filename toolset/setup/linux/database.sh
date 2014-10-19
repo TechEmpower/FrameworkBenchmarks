@@ -1,4 +1,25 @@
 #!/bin/bash
+#
+# Configures the database server for TFB
+#
+# Note: This is not used for Travis-CI. See run-ci.py to see
+# how databases are configured for Travis.
+#
+# Note on Compatibility: TFB *only* supports Ubuntu 14.04 64bit
+# (e.g. trusty64). However, it's nice to retain 12.04 support 
+# where possible, as it's still heavily used. 
+#
+# Database setup is one core area where we can help ensure TFB 
+# works on 12.04 with minimal frustration. In some cases we  
+# manually install the DB version that's expected, instead of the 
+# 12.04 default. In other cases we can use a 12.04 specific 
+# configuration file. These patches are not intended to enable 
+# benchmarking (e.g. there are no guarantees that 
+# the databases will be tuned for performance correctly), but 
+# they do allow users on 12.04 to install and run most TFB tests. 
+# Some tests internally have 12.04 incompatibilities, we make no 
+# concentrated effort to address these cases, but PR's for specific 
+# problems are welcome
 
 export DB_HOST={database_host}
 
@@ -81,6 +102,8 @@ sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
 
 ##############################
 # MongoDB
+#
+# Note for 12.04: Using mongodb.org ensures 2.6 is installed
 ##############################
 echo "Setting up MongoDB database"
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
@@ -100,6 +123,7 @@ sudo service mongod start
 until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
 mongo < create.js
 rm create.js
+mongod --version
 
 ##############################
 # Apache Cassandra
