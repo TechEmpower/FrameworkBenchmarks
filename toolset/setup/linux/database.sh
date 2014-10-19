@@ -18,7 +18,10 @@ sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::=
     libpq-dev \
     libreadline6-dev \
     postgresql        `# Installs 9.1 or 9.3, based on Ubuntu version` \
-    redis-server      `# Installs 9.1 or 9.3, based on Ubuntu version`
+    redis-server      `# Installs 2.4 or 2.6, based on Ubuntu version` \
+    lsb-core          `# Ensure that lsb_release can be used`
+
+CODENAME=$(lsb_release -sc)
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
@@ -129,9 +132,34 @@ rm -rf apache-cassandra-*-bin.tar.gz cassandra
 # Redis
 ##############################
 echo "Setting up Redis database"
+if [ "$CODENAME" == "precise" ]; then
+  echo "WARNING: Downgrading Redis configuration for Ubuntu 12.04"
+
+  # On 12.04, Redis 2.4 is installed. It doesn't support 
+  # some of the 2.6 options, so we have to remove or comment
+  # those
+  sed -i 's/tcp-keepalive/# tcp-keepalive/' redis.conf
+  sed -i 's/stop-writes-on-bgsave-error/# stop-writes-on-bgsave-error/' redis.conf
+  sed -i 's/rdbchecksum/# rdbchecksum/' redis.conf
+  sed -i 's/slave-read-only/# slave-read-only/' redis.conf
+  sed -i 's/repl-disable-tcp-nodelay/# repl-disable-tcp-nodelay/' redis.conf
+  sed -i 's/slave-priority/# slave-priority/' redis.conf
+  sed -i 's/auto-aof-rewrite-percentage/# auto-aof-rewrite-percentage/' redis.conf
+  sed -i 's/auto-aof-rewrite-min-size/# auto-aof-rewrite-min-size/' redis.conf
+  
+  sed -i 's/lua-time-limit/# lua-time-limit/' redis.conf
+  sed -i 's/notify-keyspace-events/# notify-keyspace-events/' redis.conf
+  sed -i 's/hash-max-ziplist-entries/# hash-max-ziplist-entries/' redis.conf
+  sed -i 's/hash-max-ziplist-value/# hash-max-ziplist-value/' redis.conf
+  sed -i 's/zset-max-ziplist-entries/# zset-max-ziplist-entries/' redis.conf
+  sed -i 's/zset-max-ziplist-value/# zset-max-ziplist-value/' redis.conf
+  sed -i 's/client-output-buffer-limit/# client-output-buffer-limit/' redis.conf
+ 
+  sed -i 's/hz 10/# hz 10/' redis.conf
+  sed -i 's/aof-rewrite-incremental-fsync/# aof-rewrite-incremental-fsync/' redis.conf
+fi
+
 sudo service redis-server stop
-# NOTE: This conf will cause errors on Ubuntu 12.04, as apt installs 
-# an older version of redis
 sudo mv redis.conf /etc/redis/redis.conf
 sudo service redis-server start
 bash create-redis.sh
