@@ -16,10 +16,6 @@ git = "https://github.com/iron/iron.git"
 
 git = "https://github.com/iron/router.git"
 
-[dependencies.mysql]
-
-git = "https://github.com/blackbeam/rust-mysql-simple"
-
 [dependencies.urlencoded]
 
 git = "https://github.com/iron/urlencoded"
@@ -28,9 +24,12 @@ git = "https://github.com/iron/urlencoded"
 
 git = "https://github.com/iron/persistent.git"
 
-[dependencies.content_type]
-git = "https://github.com/reem/rust-http-content-type.git"
-
 [dependencies.htmlescape]
 
 git = "https://github.com/torhve/rust-htmlescape.git"
+
+[dependencies.mysql]
+
+git = "https://github.com/blackbeam/rust-mysql-simple"
+# Disable SSL for mysql as it results in linking errors
+default-features = false

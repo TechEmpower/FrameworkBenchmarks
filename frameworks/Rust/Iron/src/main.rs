@@ -10,7 +10,6 @@ extern crate urlencoded;
 extern crate persistent;
 extern crate typemap;
 extern crate time;
-extern crate content_type;
 extern crate htmlescape;
 
 use std::io::net::ip::Ipv4Addr;
