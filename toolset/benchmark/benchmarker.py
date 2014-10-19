@@ -16,6 +16,8 @@ import csv
 import sys
 import logging
 import socket
+import threading
+
 from multiprocessing import Process
 from datetime import datetime
 
@@ -766,18 +768,44 @@ class Benchmarker:
 
   ############################################################
   # __count_commits
+  #
   ############################################################
   def __count_commits(self):
-    frameworks = gather_frameworks(benchmarker=self)
+    frameworks = gather_frameworks(include=self.test,
+      exclude=self.exclude, benchmarker=self)
 
-    jsonResult = {}
-    for framework, testlist in frameworks.iteritems():
-      command = "git rev-list HEAD -- " + testlist[0].directory + " | sort -u | wc -l"
+    def count_commit(directory, jsonResult):
+      command = "git rev-list HEAD -- " + directory + " | sort -u | wc -l"
       try:
         commitCount = subprocess.check_output(command, shell=True)
         jsonResult[framework] = int(commitCount)
       except subprocess.CalledProcessError:
-        continue
+        pass
+
+    # Because git can be slow when run in large batches, this 
+    # calls git up to 4 times in parallel. Normal improvement is ~3-4x
+    # in my trials, or ~100 seconds down to ~25
+    # This is safe to parallelize as long as each thread only 
+    # accesses one key in the dictionary
+    threads = []
+    jsonResult = {}
+    t1 = datetime.now()
+    for framework, testlist in frameworks.iteritems():
+      directory = testlist[0].directory
+      t = threading.Thread(target=count_commit, args=(directory,jsonResult))
+      t.start()
+      threads.append(t)
+      # Git has internal locks, full parallel will just cause contention
+      # and slowness, so we rate-limit a bit
+      if len(threads) >= 4:
+        threads[0].join()
+        threads.remove(threads[0])
+
+    # Wait for remaining threads
+    for t in threads:
+      t.join()
+    t2 = datetime.now()
+    # print "Took %s seconds " % (t2 - t1).seconds
 
     self.results['rawData']['commitCounts'] = jsonResult
     self.commits = jsonResult
