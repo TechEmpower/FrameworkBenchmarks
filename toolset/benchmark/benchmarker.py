@@ -19,6 +19,7 @@ import socket
 import threading
 
 from multiprocessing import Process
+
 from datetime import datetime
 
 # Cross-platform colored text
@@ -332,44 +333,6 @@ class Benchmarker:
     return tests
   ############################################################
   # End __gather_tests
-  ############################################################
-
-  ############################################################
-  # Gathers all the frameworks
-  ############################################################
-  def __gather_frameworks(self):
-    frameworks = []
-    # Loop through each directory (we assume we're being run from the benchmarking root)
-    for dirname, dirnames, filenames in os.walk('.'):
-      # Look for the benchmark_config file, this will contain our framework name
-      # It's format looks like this:
-      #
-      # {
-      #   "framework": "nodejs",
-      #   "tests": [{
-      #     "default": {
-      #       "setup_file": "setup",
-      #       "json_url": "/json"
-      #     },
-      #     "mysql": {
-      #       "setup_file": "setup",
-      #       "db_url": "/mysql",
-      #       "query_url": "/mysql?queries="
-      #     },
-      #     ...
-      #   }]
-      # }
-      if 'benchmark_config' in filenames:
-        config = None
-        with open(os.path.join(dirname, 'benchmark_config'), 'r') as config_file:
-          # Load json file into config object
-          config = json.load(config_file)
-        if config == None:
-          continue
-        frameworks.append(str(config['framework']))
-    return frameworks
-  ############################################################
-  # End __gather_frameworks
   ############################################################
 
   ############################################################
