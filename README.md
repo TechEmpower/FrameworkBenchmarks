@@ -96,11 +96,19 @@ Note: environment variables can also be used for a number of the arguments.
 
 ## Installation Basics
 
-After you have a configuration file, run the following to setup your 
-various servers. We use the `--install-only` flag in our examples to 
-prevent launching tests at this stage. 
+To install TFB components onto the various servers, you must provide
+basic login details for each server (e.g. usernames, IP addresses, 
+private key files). While these details can all be passed 
+using command line flags, it's easier to use a configuration 
+file and avoid having huge flag lists in your commands. 
+The examples in this section assume you have created a configuration 
+file containing login details for the various servers. 
 
-See [here](deployment) for additional details. 
+We use the `--install-only` flag in our examples to 
+prevent launching tests at this stage. All of these commands 
+should be run from the `app server` - it will SSH into other
+hosts as needed. For more information on how TFB installation 
+works, see [here](deployment). 
 
 **Setting up the `load server`**
 
