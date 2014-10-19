@@ -11,7 +11,7 @@ fi
 IROOT=${FWROOT}/installs
 
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
-export RESIN_HOME=${IROOT}/resin-4.0.36
+export RESIN_HOME=${IROOT}/resin-4.0.41
 export GRAILS_HOME=${IROOT}/grails-2.4.2
 export VERTX_HOME=${IROOT}/vert.x-2.1.1
 export GOROOT=${IROOT}/go

@@ -14,7 +14,7 @@ $jre_installer_file       = "jdk-7u65-windows-x64.exe"
 $jdk_installer_file       = "jdk-7u65-windows-x64.exe"
 $jdk_master_hash          = "f0270817998c7408b24a2dd9ac420346" 
 # http://www.oracle.com/technetwork/java/javase/downloads/java-se-binaries-checksum-1956892.html
-$resin_version            = "resin-4.0.36"
+$resin_version            = "resin-4.0.41"
 $resin_installer_file     = "$resin_version.zip"
 $ant_version              = "apache-ant-1.9.2"
 $ant_installer_file       = "$ant_version-bin.zip"
