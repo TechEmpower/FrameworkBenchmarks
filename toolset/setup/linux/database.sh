@@ -86,13 +86,22 @@ rm create.sql
 # Postgres
 ##############################
 echo "Setting up Postgres database"
+if [ "$CODENAME" == "precise" ]; then
+  echo "WARNING: Force upgrading Postgres for Ubuntu 12.04"
+  sudo apt-get remove -y postgresql postgresql-9.1 postgresql-client-9.1
+
+  echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  sudo apt-get update
+  sudo apt-get install -y postgresql-9.3 postgresql-client-9.3
+  sudo -u postgres -H /etc/init.d/postgresql start
+fi
+
 sudo -u postgres psql template1 < create-postgres-database.sql
 sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
 rm create-postgres-database.sql create-postgres.sql
 
 sudo -u postgres -H /etc/init.d/postgresql stop
-# NOTE: This will cause errors on Ubuntu 12.04, as apt installs 
-# an older version (9.1 instead of 9.3)
 sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
 sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 
