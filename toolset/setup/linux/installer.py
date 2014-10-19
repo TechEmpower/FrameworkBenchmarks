@@ -142,24 +142,6 @@ class Installer:
   ############################################################
 
   ############################################################
-
-  ############################################################
-  # __path_exists
-  ############################################################
-  def __path_exists(self, path, cwd=None):
-    full_path = os.path.join(cwd or self.install_dir, path)
-
-    if os.path.exists(full_path):
-        print("\nEXISTS: %s " % full_path)
-        return True
-
-    print("\nNOT_EXISTS: %s" % full_path)
-    return False
-  ############################################################
-  # End __path_exists
-  ############################################################
-
-  ############################################################
   # __run_command
   ############################################################
   def __run_command(self, command, send_yes=False, cwd=None, retry=False):
@@ -206,33 +188,6 @@ class Installer:
       self.__install_error(error_message)
   ############################################################
   # End __run_command
-  ############################################################
-
-  ############################################################
-  # __bash_from_string
-  # Runs bash -c "command" in install_dir.
-  ############################################################
-  def __bash_from_string(self, command):
-    self.__run_command('bash -c "%s"' % command)
-  ############################################################
-  # End __bash_from_string
-  ############################################################
-
-  ############################################################
-  # __download
-  # Downloads a file from a URI.
-  ############################################################
-  def __download(self, uri, filename=""):
-    if filename:
-      if os.path.exists(filename):
-        return
-      filename_option = "-O %s " % filename
-    else:
-      filename_option = ""
-    command = "wget -nv --no-check-certificate --trust-server-names %s%s" % (filename_option, uri)
-    self.__run_command(command, retry=True)
-  ############################################################
-  # End __download
   ############################################################
 
   ############################################################
