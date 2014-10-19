@@ -4,6 +4,7 @@ from setup.linux import setup_util
 from benchmark import framework_test
 from utils import header
 from utils import gather_tests
+from utils import gather_frameworks
 
 import os
 import json
@@ -767,16 +768,15 @@ class Benchmarker:
   # __count_commits
   ############################################################
   def __count_commits(self):
-    all_frameworks = self.__gather_frameworks()
+    frameworks = gather_frameworks(benchmarker=self)
 
     jsonResult = {}
-
-    for framework in all_frameworks:
+    for framework, testlist in frameworks.iteritems():
+      command = "git rev-list HEAD -- " + testlist[0].directory + " | sort -u | wc -l"
       try:
-        command = "git rev-list HEAD -- " + framework + " | sort -u | wc -l"
         commitCount = subprocess.check_output(command, shell=True)
         jsonResult[framework] = int(commitCount)
-      except:
+      except subprocess.CalledProcessError:
         continue
 
     self.results['rawData']['commitCounts'] = jsonResult
