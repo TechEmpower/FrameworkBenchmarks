@@ -742,24 +742,28 @@ class Benchmarker:
 
   #############################################################
   # __count_sloc
-  # This is assumed to be run from the benchmark root directory
   #############################################################
   def __count_sloc(self):
-    all_frameworks = self.__gather_frameworks()
+    frameworks = gather_frameworks(include=self.test,
+      exclude=self.exclude, benchmarker=self)
+    
     jsonResult = {}
+    for framework, testlist in frameworks.iteritems():
+      # Unfortunately the source_code files use lines like
+      # ./cpoll_cppsp/www/fortune_old instead of 
+      # ./www/fortune_old
+      # so we have to back our working dir up one level
+      wd = os.path.dirname(testlist[0].directory)
 
-    for framework in all_frameworks:
       try:
-        command = "cloc --list-file=" + framework['directory'] + "/source_code --yaml"
-        lineCount = subprocess.check_output(command, shell=True)
+        command = "cloc --list-file=%s/source_code --yaml" % testlist[0].directory
         # Find the last instance of the word 'code' in the yaml output. This should
         # be the line count for the sum of all listed files or just the line count
         # for the last file in the case where there's only one file listed.
-        lineCount = lineCount[lineCount.rfind('code'):len(lineCount)]
-        lineCount = lineCount.strip('code: ')
-        lineCount = lineCount[0:lineCount.rfind('comment')]
-        jsonResult[framework['name']] = int(lineCount)
-      except:
+        command = command + "| grep code | tail -1 | cut -d: -f 2"
+        lineCount = subprocess.check_output(command, cwd=wd, shell=True)
+        jsonResult[framework] = int(lineCount)
+      except subprocess.CalledProcessError:
         continue
     self.results['rawData']['slocCounts'] = jsonResult
   ############################################################
