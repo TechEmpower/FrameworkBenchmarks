@@ -163,14 +163,39 @@ class CIRunnner:
 
       if not is_PR:
         log.debug('I am not testing a pull request')
-        # If more than one commit was pushed, examine everything including 
-        # all details on all merges
-        self.commit_range = "-m %s" % os.environ['TRAVIS_COMMIT_RANGE']
+        # Three main scenarios to consider
+        #  - 1 One non-merge commit pushed to master
+        #  - 2 One merge commit pushed to master (e.g. a PR was merged). 
+        #      This is an example of merging a topic branch
+        #  - 3 Multiple commits pushed to master
+        # 
+        #  1 and 2 are actually handled the same way, by showing the 
+        #  changes being brought into to master when that one commit 
+        #  was merged. Fairly simple, `git log -1 COMMIT`. To handle 
+        #  the potential merge of a topic branch you also include 
+        #  `--first-parent -m`. 
+        #
+        #  3 needs to be handled by comparing all merge children for 
+        #  the entire commit range. The best solution here would *not* 
+        #  use --first-parent because there is no guarantee that it 
+        #  reflects changes brought into master. Unfortunately we have
+        #  no good method inside Travis-CI to easily differentiate 
+        #  scenario 1/2 from scenario 3, so I cannot handle them all 
+        #  separately. 1/2 are the most common cases, 3 with a range 
+        #  of non-merge commits is the next most common, and 3 with 
+        #  a range including merge commits is the least common, so I 
+        #  am choosing to make our Travis-CI setup potential not work 
+        #  properly on the least common case by always using 
+        #  --first-parent 
         
-        # If only one commit was pushed, examine that one. If it was a 
-        # merge be sure to show all details
+        # Handle 3
+        # Note: Also handles 2 because Travis-CI sets COMMIT_RANGE for 
+        # merged PR commits
+        self.commit_range = "--first-parent -m %s" % os.environ['TRAVIS_COMMIT_RANGE']
+
+        # Handle 1
         if self.commit_range == "":
-          self.commit_range = "-m -1 %s" % os.environ['TRAVIS_COMMIT']
+          self.commit_range = "--first-parent -m -1 %s" % os.environ['TRAVIS_COMMIT']
 
     except KeyError:
       log.warning("I should only be used for automated integration tests e.g. Travis-CI")
