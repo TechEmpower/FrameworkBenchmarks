@@ -29,7 +29,7 @@ def start(args, logfile, errfile):
     # sudo mysqlcheck -v -r -A -u benchmarkdbuser -p
     os.putenv("ORM_DRIVER","mysql")
     os.putenv("ORM_OPTION","host=" + args.database_host + " user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world")
-    os.putenv("UMEMPOOL", "1583,1507,-19,45,16458,523,-27,-14,27")
+    os.putenv("UMEMPOOL","135,0,0,34,8465,129,-17,-22,41")
 
     # Run in the background, but keep stdout/stderr for easy debugging
     subprocess.Popen( "%s -c %s" % (fprg, fcfg), shell=True, stdout=logfile, stderr=errfile)
