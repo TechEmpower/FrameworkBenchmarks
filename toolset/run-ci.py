@@ -309,24 +309,27 @@ class CIRunnner:
     log.info("Setting up Travis-CI")
     
     script = '''
-    # Needed to download latest MongoDB
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Turn on command tracing
+    set -x 
+
+    # Setup Apt For MongoDB
     #   Due to TechEmpower/FrameworkBenchmarks#989 and travis-ci/travis-ci#2655, 
     #   we put this into a loop
     until timeout 15s sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10; do echo 'Waiting for apt-key' ; done
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
-    # Add Apache Cassandra repository
+    # Setup apt for Apache Cassandra
     until timeout 15s sudo apt-key adv --keyserver pgp.mit.edu --recv 4BD736A82B5C1B00; do echo 'Waiting for apt-key' ; done
     sudo apt-add-repository  'deb http://www.apache.org/dist/cassandra/debian 20x main'
 
+    # Run installation
     sudo apt-get -q update
-    
-    # MongoDB takes a good 30-45 seconds to turn on, so install it first
-    sudo apt-get -q install mongodb-org
-
-    sudo apt-get install -o Dpkg::Options::="--force-confnew" cassandra
-
-    sudo apt-get -q install openssh-server
+    sudo apt-get -q -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+      mongodb-org \
+      cassandra \
+      openssh-server
 
     # Run as travis user (who already has passwordless sudo)
     ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
@@ -338,29 +341,29 @@ class CIRunnner:
     #       It changes DB configuration files and will break everything
     # =======================================================
 
-    # Add data to mysql
-    echo "Populating MySQL DB data"
+    # Setup MySQL
+    echo "Populating MySQL database"
     mysql -uroot < config/create.sql
 
     # Setup Postgres
-    echo "Setting up Postgres database"
+    echo "Populating Postgres database"
     psql --version
     sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < config/create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
 
     # Setup Apache Cassandra
-    echo "Setting up Apache Cassandra database"
+    echo "Populating Apache Cassandra database"
     until nc -z localhost 9160 ; do echo Waiting for Cassandra; sleep 1; done
     cat config/cassandra/cleanup-keyspace.cql | sudo cqlsh
     python config/cassandra/db-data-gen.py > config/cassandra/tfb-data.cql
     sudo cqlsh -f config/cassandra/create-keyspace.cql
     sudo cqlsh -f config/cassandra/tfb-data.cql
 
-    echo "Setting up MongDB database"
-    # Setup MongoDB (see install above)
-    mongod --version
+    # Setup MongoDB
+    echo "Populating MongoDB database"
     until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
+    mongod --version
     mongo < config/create.js
     '''
 
