@@ -12,15 +12,15 @@ This is the ULib portion of a [benchmarking test suite](https://github.com/TechE
 
 ### Variable Query Test
 
-* [Variable Query test source](src/queries.usp)
+* [Variable Query test source](src/query.usp)
 
 ### Fortune Query Test
 
-* [Fortune Query test source](src/fortunes.usp)
+* [Fortune Query test source](src/fortune.usp)
 
 ### Variable Query (update) Test
 
-* [Variable Query (update) test source](src/updates.usp)
+* [Variable Query (update) test source](src/update.usp)
 
 ### Plaintext Test
 
@@ -29,7 +29,7 @@ This is the ULib portion of a [benchmarking test suite](https://github.com/TechE
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [ULib Version 1.4.1](https://github.com/stefanocasazza/ULib/archive/v1.4.1.tar.gz)
+* [ULib Version 1.4.2](https://github.com/stefanocasazza/ULib/archive/v1.4.2.tar.gz)
 
 Output
 ======
@@ -58,7 +58,7 @@ Content-Type: application/json; charset=UTF-8
 {"id":6227,"randomNumber":8489}
 ```
 
-[/queries?queries=10](http://www.techempower.com/benchmarks/#section=query)
+[/query?queries=10](http://www.techempower.com/benchmarks/#section=query)
 -------------------
 ```
 HTTP/1.1 200 OK
@@ -70,7 +70,7 @@ Content-Type: application/json; charset=UTF-8
 [{"id":6851,"randomNumber":7598},{"id":3968,"randomNumber":7325},{"id":8159,"randomNumber":348},{"id":9560,"randomNumber":7333},{"id":9938,"randomNumber":9080},{"id":1598,"randomNumber":1623},{"id":3280,"randomNumber":8707},{"id":4521,"randomNumber":6063},{"id":8173,"randomNumber":3690},{"id":3648,"randomNumber":8803}]
 ```
 
-[/fortunes](http://www.techempower.com/benchmarks/#section=fortune)
+[/fortune](http://www.techempower.com/benchmarks/#section=fortune)
 ---------
 ```
 HTTP/1.1 200 OK
@@ -82,7 +82,7 @@ Content-Length: 1227
 <!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><tr><td>11</td><td>&lt;script&gt;alert(&quot;This should not be displayed in a browser alert box.&quot;);&lt;/script&gt;</td></tr><tr><td>4</td><td>A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1</td></tr><tr><td>5</td><td>A computer program does what you tell it to do, not what you want it to do.</td></tr><tr><td>2</td><td>A computer scientist is someone who fixes things that aren&apos;t broken.</td></tr><tr><td>8</td><td>A list is only as strong as its weakest link. — Donald Knuth</td></tr><tr><td>0</td><td>Additional fortune added at request time.</td></tr><tr><td>3</td><td>After enough decimal places, nobody gives a damn.</td></tr><tr><td>7</td><td>Any program that runs right is obsolete.</td></tr><tr><td>10</td><td>Computers make very fast, very accurate mistakes.</td></tr><tr><td>6</td><td>Emacs is a nice operating system, but I prefer UNIX. — Tom Christaensen</td></tr><tr><td>9</td><td>Feature: A bug with seniority.</td></tr><tr><td>1</td><td>fortune: No such file or directory</td></tr><tr><td>12</td><td>フレームワークのベンチマーク</td></tr></table></body></html>
 ```
 
-[/updates?queries=10](http://www.techempower.com/benchmarks/#section=update)
+[/update?queries=10](http://www.techempower.com/benchmarks/#section=update)
 -------------------
 ```
 HTTP/1.1 200 OK
