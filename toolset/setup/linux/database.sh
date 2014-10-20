@@ -123,7 +123,7 @@ sudo apt-get -y install mongodb-org
 
 sudo service mongod stop
 sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
-sudo mv mongodb.conf /etc/mongodb.conf
+sudo cp mongodb.conf /etc/mongodb.conf
 sudo mv mongodb.conf /etc/mongod.conf
 sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
