@@ -15,7 +15,7 @@
 #    . $FWROOT/ULib/install.sh (cwd=$FWROOT//installs)
 # --------------------------------------------------------------------------------------------------------
 
-# Chekc if ULib is already installed
+# Check if ULib is already installed
 RETCODE=$(fw_exists ulib-${ULIB_VERSION}.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
@@ -51,7 +51,6 @@ cd ULib-$ULIB_VERSION
 # AVOID "configure: error: newly created file is older than distributed files! Check your system clock"
 find . -exec touch {} \;
 
-LIBS="-lssl -lcrypto -lz" \
 ./configure --prefix=$ULIB_ROOT \
             --disable-static \
             --with-mysql \
@@ -63,7 +62,7 @@ make install
 
 # 3. Compile usp pages for benchmark
 cd src/ulib/net/server/plugin/usp
-make db.la fortunes.la json.la plaintext.la queries.la updates.la
+make db.la fortune.la json.la plaintext.la query.la update.la
 
 # Check that compilation worked
 if [ ! -e .libs/db.so ]; then
@@ -71,7 +70,7 @@ if [ ! -e .libs/db.so ]; then
 fi
 
 mkdir -p $ULIB_DOCUMENT_ROOT
-cp .libs/db.so .libs/fortunes.so .libs/json.so .libs/plaintext.so .libs/queries.so .libs/updates.so $ULIB_DOCUMENT_ROOT
+cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so $ULIB_DOCUMENT_ROOT
 
 cd $IROOT
 touch ulib-${ULIB_VERSION}.installed 
