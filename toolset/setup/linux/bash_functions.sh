@@ -73,8 +73,12 @@ fw_depends() {
     wd=$(pwd)
     relative_wd=\$FWROOT${wd#$FWROOT}
 
-    # Turn on bash tracing before sourcing installer files to 
-    # print commands before they run
+    # Find and run the installer.sh file for this dependency
+    # Turn on some bash options before sourcing: 
+    #   - (x) errtrace : Print commands before they are run
+    # Note: A shebang is just a comment when you source a script, 
+    #       so if you need to modify the default options use  
+    #       `set -e` instead of `#!/bin/bash -e`
     if [ -f $FWROOT/toolset/setup/linux/systools/${depend}.sh ]; then
       echo Installing system tool: $depend in $relative_wd
       set -x
