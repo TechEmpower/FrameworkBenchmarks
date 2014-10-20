@@ -8,17 +8,17 @@ namespace Benchmarks.AspNet.Controllers
     {
         public ActionResult Default()
         {
-            return new JsonResult { Data = new { message = "Hello World" } };
+            return new JsonResult { Data = new { message = "Hello, World!" } };
         }
 
         public ActionResult JsonNet()
         {
-            return new JsonNetResult { Data = new { message = "Hello World" } };
+            return new JsonNetResult { Data = new { message = "Hello, World!" } };
         }
 
         public ActionResult ServiceStack()
         {
-            return new ServiceStackResult { Data = new { message = "Hello World" } };
+            return new ServiceStackResult { Data = new { message = "Hello, World!" } };
         }
     }
 

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends nginx xsp 
+fw_depends nginx xsp mono

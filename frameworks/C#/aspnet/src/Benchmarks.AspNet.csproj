@@ -91,7 +91,7 @@
     </Reference>
     <Reference Include="MySql">
       <Private>True</Private>
-      <HintPath>..\lib\MySql.Data.Entities.6.8.3\lib\net45\mysql.data.entity.EF6.dll</HintPath>
+      <HintPath>..\lib\MySql.Data.Entities.6.8.3.0\lib\net45\mysql.data.entity.EF6.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql">
       <Private>True</Private>
