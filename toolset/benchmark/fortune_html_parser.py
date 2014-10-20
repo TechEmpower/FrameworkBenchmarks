@@ -30,31 +30,32 @@ class FortuneHTMLParser(HTMLParser):
   # Another example problem: "&quot;" is valid, but so is
   # "&#34;"
   def handle_charref(self, name):
+    val = name.lower()
     # "&#34;" is a valid escaping, but we are normalizing
     # it so that our final parse can just be checked for
     # equality.
-    if name == "34" or name == "034" or name == "x22":
+    if val == "34" or val == "034" or val == "x22":
       # Append our normalized entity reference to our body.
       self.body.append("&quot;")
     # "&#39;" is a valid escaping of "-", but it is not
     # required, so we normalize for equality checking.
-    if name == "39" or name == "039" or name == "x27":
+    if val == "39" or val == "039" or val == "x27":
       self.body.append("&apos;")
     # Again, "&#43;" is a valid escaping of the "+", but
     # it is not required, so we need to normalize for out
     # final parse and equality check.
-    if name == "43" or name == "043" or name == "x2B":
+    if val == "43" or val == "043" or val == "x2b":
       self.body.append("+")
     # Again, "&#62;" is a valid escaping of ">", but we
     # need to normalize to "&gt;" for equality checking.
-    if name == "62" or name == "062" or name == "x3E":
+    if val == "62" or val == "062" or val == "x3e":
       self.body.append("&gt;")
     # Again, "&#60;" is a valid escaping of "<", but we
     # need to normalize to "&lt;" for equality checking.
-    if name == "60" or name == "060" or name == "x3C":
+    if val == "60" or val == "060" or val == "x3c":
       self.body.append("&lt;")
     # Not sure why some are escaping '/'
-    if name == "47" or name == "047" or name == "x2F":
+    if val == "47" or val == "047" or val == "x2f":
       self.body.append("/")
 
   def handle_entityref(self, name):
