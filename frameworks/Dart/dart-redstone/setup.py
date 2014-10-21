@@ -4,13 +4,13 @@ import setup_util
 import os
 
 def start(args, logfile, errfile):
-  setup_util.replace_text('dart/postgresql.yaml', 'host: .*', 'host: ' + args.database_host)
-  setup_util.replace_text('dart/mongodb.yaml', 'host: .*', 'host: ' + args.database_host)
+  setup_util.replace_text('dart-redstone/postgresql.yaml', 'host: .*', 'host: ' + args.database_host)
+  setup_util.replace_text('dart-redstone/mongodb.yaml', 'host: .*', 'host: ' + args.database_host)
   try:
     #
     # install dart dependencies
     #
-    subprocess.check_call('pub upgrade', shell=True, cwd='dart', stderr=errfile, stdout=logfile)
+    subprocess.check_call('pub upgrade', shell=True, cwd='dart-redstone', stderr=errfile, stdout=logfile)
     #
     # start dart servers
     #
