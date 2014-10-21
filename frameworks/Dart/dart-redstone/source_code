@@ -1,0 +1,5 @@
+./dart-redstone/fortunes.mustache
+./dart-redstone/server.dart
+./dart-redstone/postgresql.yaml
+./dart-redstone/mongodb.yaml
+./dart-redstone/pubspec.yaml
