@@ -14,7 +14,7 @@ def start(args, logfile, errfile):
     #
     # start dart servers
     #
-    subprocess.Popen('dart server.dart -a 0.0.0.0 -p 8080 -d ' + str(args.max_concurrency) + ' -i ' + str(args.max_threads), shell=True, cwd='dart', stderr=errfile, stdout=logfile)
+    subprocess.Popen('dart server.dart -a 0.0.0.0 -p 8080 -d ' + str(args.max_concurrency) + ' -i ' + str(args.max_threads), shell=True, cwd='dart-redstone', stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
