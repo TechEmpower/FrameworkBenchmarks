@@ -154,12 +154,10 @@ def main(argv=None):
     parser.add_argument('--database-os', choices=['linux', 'windows'], default='linux', help='The operating system of the database server.')
 
     # Benchmark options
-    parser.add_argument('--max-concurrency', default=256, help='the maximum number of HTTP connections that wrk will keep open. The query tests will run at this maximum', type=int)
-    parser.add_argument('--max-queries', default=20, help='The maximum number of queries to run during the query test', type=int)
-    parser.add_argument('--query-interval', default=5, type=int, help='Query tests will go from 1 query to max queries in increments of interval queries')
-    parser.add_argument('--max-threads', default=maxThreads, help='The max number of threads to run wrk at. This should be set to the number of cores for your client system.', type=int)
+    parser.add_argument('--concurrency-levels', default=[8, 16, 32, 64, 128, 256], help='Runs wrk benchmarker with different concurrency value (type int-sequence)', action=StoreSeqAction)
+    parser.add_argument('--query-levels', default=[5,10,15,20], help='Database queries requested per HTTP connection, used during query test (type int-sequence)', action=StoreSeqAction) 
+    parser.add_argument('--threads', default=maxThreads, help='Run wrk benchmarker with this many threads. This should probably be the number of cores for your client system', type=int)
     parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
-    parser.add_argument('--starting-concurrency', default=8, type=int)
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
 
     # Misc Options

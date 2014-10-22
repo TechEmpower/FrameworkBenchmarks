@@ -57,7 +57,7 @@ class FrameworkTest:
     echo ""
     ntpdate -s pool.ntp.org
 
-    for c in {interval}
+    for c in {levels}
     do
       echo ""
       echo "---------------------------------------------------------"
@@ -100,7 +100,7 @@ class FrameworkTest:
     echo ""
     ntpdate -s pool.ntp.org
 
-    for c in {interval}
+    for c in {levels}
     do
       echo ""
       echo "---------------------------------------------------------"
@@ -891,7 +891,7 @@ class FrameworkTest:
             # Simply opening the file in write mode should create the empty file.
             pass
         if self.plaintext_url_passed:
-          remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk", intervals=[256,1024,4096,16384], pipeline="16")
+          remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, levels=[256,1024,4096,16384], pipeline="16")
           self.__begin_logging(self.PLAINTEXT)
           self.__run_benchmark(remote_script, output_file, err)
           self.__end_logging()
@@ -1078,14 +1078,18 @@ class FrameworkTest:
   # specifically works for the variable concurrency tests (JSON
   # and DB)
   ############################################################
-  def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk", intervals=[], pipeline=""):
-    if len(intervals) == 0:
-      intervals = self.benchmarker.concurrency_levels
+  def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk", levels=[], pipeline=""):
+    if len(levels) == 0:
+      levels = self.benchmarker.concurrency_levels
     headers = self.__get_request_headers(accept_header)
-    return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
-      max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
-      interval=" ".join("{}".format(item) for item in intervals), 
-      server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command,
+    return self.concurrency_template.format(
+      max_concurrency=max(self.benchmarker.concurrency_levels), 
+      max_threads=self.benchmarker.threads, 
+      name=self.name, 
+      duration=self.benchmarker.duration, 
+      levels=" ".join(levels), 
+      server_host=self.benchmarker.server_host, 
+      port=port, url=url, headers=headers, wrk=wrk_command,
       pipeline=pipeline)
   ############################################################
   # End __generate_concurrency_script
@@ -1099,10 +1103,13 @@ class FrameworkTest:
   ############################################################
   def __generate_query_script(self, url, port, accept_header):
     headers = self.__get_request_headers(accept_header)
-    return self.query_template.format(max_concurrency=self.benchmarker.max_concurrency, 
-      max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
-      interval=" ".join("{}".format(item) for item in self.benchmarker.query_intervals), 
-      server_host=self.benchmarker.server_host, port=port, url=url, headers=headers)
+    return self.query_template.format(name=self.name, 
+      max_concurrency=max(self.benchmarker.concurrency_levels), 
+      max_threads=self.benchmarker.threads, 
+      duration=self.benchmarker.duration, 
+      levels=" ".join(self.benchmarker.query_levels), 
+      server_host=self.benchmarker.server_host, 
+      port=port, url=url, headers=headers)
   ############################################################
   # End __generate_query_script
   ############################################################
