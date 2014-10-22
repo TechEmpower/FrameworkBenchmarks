@@ -178,7 +178,7 @@ def main(argv=None):
 
     if args.verbose:
         print 'Configuration options: '
-        pprint(args)
+        pprint(vars(args))
 
     benchmarker = Benchmarker(vars(args))
 
