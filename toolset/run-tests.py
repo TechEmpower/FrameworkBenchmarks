@@ -23,20 +23,17 @@ class StoreSeqAction(argparse.Action):
   def __call__(self, parser, namespace, values, option_string=None):
     setattr(namespace, self.dest, self.parse_seq(values))
   def parse_seq(self, argument):
-    try:
-      return [int(argument)]
-    except ValueError:
-      pass
-    if ":" in argument: # 
+    result = argument.split(',')
+    sequences = [x for x in result if ":" in x]
+    for sequence in sequences:
       try:
-        (start,step,end) = argument.split(':')
+        (start,step,end) = sequence.split(':')
       except ValueError: 
-        print "Invalid: %s" % argument
-        print "Requires start:step:end, e.g. 1:2:10"
+        print "  Invalid: %s" % sequence
+        print "  Requires start:step:end, e.g. 1:2:10"
         raise
-      result = range(int(start), int(end), int(step))
-    else:  # 1,2,3,7
-      result = argument.split(',')
+      result.remove(sequence)
+      result = result + range(int(start), int(end), int(step))
     return [abs(int(item)) for item in result]
 
 
