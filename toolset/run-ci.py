@@ -33,6 +33,8 @@ class CIRunnner:
   
   Only verifies the first test in each directory 
   '''
+
+  SUPPORTED_DATABASES = "mysql postgres mongodb cassandra sqlite none".split()
   
   def __init__(self, mode, testdir=None):
     '''
@@ -192,13 +194,10 @@ class CIRunnner:
                   and (t.database_os.lower() == "linux" or t.database_os.lower() == "none")]
     
     # Our Travis-CI only has some databases supported
-    validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
-                  or t.database.lower() == "postgres"
-                  or t.database.lower() == "mongodb"
-                  or t.database.lower() == "cassandra"
-                  or t.database.lower() == "none"]
-    log.info("Found %s usable tests (%s valid for linux, %s valid for linux and {mysql,postgres,mongodb,cassandra,none}) in directory '%s'", 
-      len(dirtests), len(osvalidtests), len(validtests), '$FWROOT/frameworks/' + testdir)
+    validtests = [t for t in osvalidtests if t.database.lower() in self.SUPPORTED_DATABASES]
+    supported_databases = ','.join(self.SUPPORTED_DATABASES)
+    log.info("Found %s usable tests (%s valid for linux, %s valid for linux and {%s}) in directory '%s'",
+      len(dirtests), len(osvalidtests), len(validtests), supported_databases, '$FWROOT/frameworks/' + testdir)
     if len(validtests) == 0:
       log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
       if len(osvalidtests) != 0:

@@ -24,6 +24,7 @@ env:
     #   find . -type d -depth 2 | sed 's|./|    - "TESTDIR=|' | sed 's/$/"/g'
     #
     #  
+    - "TESTDIR=C/lwan"
     - "TESTDIR=C/duda"
     - "TESTDIR=C/onion"
     - "TESTDIR=C#/aspnet"
