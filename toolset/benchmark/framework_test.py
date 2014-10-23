@@ -1233,7 +1233,13 @@ class FrameworkTest:
   def __getattr__(self, name):
     """For backwards compatibility, we used to pass benchmarker 
     as the argument to the setup.py files"""
-    return getattr(self.benchmarker, name)
+    try:
+      x = getattr(self.benchmarker, name)
+    except AttributeError:
+      print "AttributeError: %s not a member of FrameworkTest or Benchmarker" % name
+      print "This is probably a bug"
+      raise
+    return x
 
   ##############################################################
   # Begin __calculate_average_stats
