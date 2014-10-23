@@ -1374,8 +1374,9 @@ def parse_config(config, directory, benchmarker):
       # Ensure FrameworkTest.framework is available
       if not test_keys['framework']:
         test_keys['framework'] = config['framework']
-      if test_keys['framework'] != config['framework']:
-        raise Exception("benchmark_config for test %s is invalid - test framework must match benchmark_config framework" % test_name)
+      #if test_keys['framework'].lower() != config['framework'].lower():
+      #  print Exception("benchmark_config for test %s is invalid - test framework '%s' must match benchmark_config framework '%s'" % 
+      #    (test_name, test_keys['framework'], config['framework']))
 
       # Confirm required keys are present
       # TODO have a TechEmpower person confirm this list - I don't know what the website requires....
