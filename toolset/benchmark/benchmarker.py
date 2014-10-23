@@ -2,6 +2,7 @@ from setup.linux.installer import Installer
 from setup.linux import setup_util
 
 from benchmark import framework_test
+from benchmark.test_types.framework_test_type import *
 from utils import header
 from utils import gather_tests
 from utils import gather_frameworks
@@ -17,6 +18,7 @@ import sys
 import logging
 import socket
 import threading
+from pprint import pprint
 
 from multiprocessing import Process
 
@@ -882,7 +884,25 @@ class Benchmarker:
   ############################################################
   def __init__(self, args):
     
+    # Map type strings to their objects
+    types = dict()
+    types['json'] = JsonTestType()
+    types['db'] = DBTestType()
+    types['query'] = QueryTestType()
+    types['fortune'] = FortuneTestType()
+    types['update'] = UpdateTestType()
+    types['plaintext'] = PlaintextTestType()
+
+    # Turn type into a map instead of a string
+    if args['type'] is 'all':
+        args['types'] = types
+    else:
+        args['types'] = { args['type'] : types[args['type']] }
+    del args['type']
+
     self.__dict__.update(args)
+    # pprint(self.__dict__)
+
     self.start_time = time.time()
     self.run_test_timeout_seconds = 3600
 

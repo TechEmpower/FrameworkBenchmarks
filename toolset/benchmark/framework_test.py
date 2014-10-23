@@ -1,12 +1,13 @@
 from benchmark.fortune_html_parser import FortuneHTMLParser
 from setup.linux import setup_util
+from benchmark.test_types.framework_test_type import *
 
 import importlib
 import os
 import subprocess
 import time
 import re
-import pprint
+from pprint import pprint
 import sys
 import traceback
 import json
@@ -1384,16 +1385,16 @@ def parse_config(config, directory, benchmarker):
       if not all (key in test_keys for key in required):
         raise Exception("benchmark_config for test %s is invalid - missing required keys" % test_name)      
       
-      # Map test type to either boolean False (e.g. don't run)
-      # or to a list of strings containing all the arguments 
-      # needed by this test type
+      # Map test type to a parsed FrameworkTestType object
       runTests = dict()
-      for test_type in benchmarker.types:
-        # Ensure all arguments required for this test are present
-        if all (arg in test_keys for arg in benchmarker.type_args[test_type]):
-          runTests[test_type] = [ test_keys[arg] for arg in benchmarker.type_args[test_type]]
-        else:
-          runTests[test_type] = False
+      for type_name, type_obj in benchmarker.types.iteritems():
+        try:
+          runTests[type_name] = type_obj.copy().parse(test_keys)
+        except AttributeError as ae:
+          # This is quite common - most tests don't support all types
+          # Quitely log it and move on
+          logging.debug("Missing arguments for test type %s for framework test %s", type_name, test_name)
+          pass
 
       # By passing the entire set of keys, each FrameworkTest will have a member for each key
       tests.append(FrameworkTest(test_name, directory, benchmarker, runTests, test_keys))
