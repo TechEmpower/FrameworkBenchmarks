@@ -153,6 +153,24 @@ def main(argv=None):
         print 'Configuration options: '
         pprint(args)
 
+    # Turn type into a list instead of a string
+    if args.type is 'all':
+        args.types = ['json', 'db', 'query', 'fortune', 'update', 'plaintext']
+    else:
+        args.types = [args.type]
+    
+
+    # Add mapping between types and the keys that are needed in 
+    # benchmark_config to run that test type
+    type_args = dict()
+    type_args['json'] = ['json_url']
+    type_args['db'] = ['db_url']
+    type_args['query'] = ['query_url']
+    type_args['fortune'] = ['fortune_url']
+    type_args['update'] = ['update_url']
+    type_args['plaintext'] = ['plaintext_url']
+    args.type_args = type_args
+
     benchmarker = Benchmarker(vars(args))
 
     # Run the benchmarker in the specified mode
