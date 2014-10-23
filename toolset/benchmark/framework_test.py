@@ -1318,9 +1318,8 @@ class FrameworkTest:
   ##########################################################################################
   # Constructor
   ##########################################################################################  
-  def __init__(self, name, framework, directory, benchmarker, runTests, args):
+  def __init__(self, name, directory, benchmarker, runTests, args):
     self.name = name
-    self.framework = framework
     self.directory = directory
     self.benchmarker = benchmarker
     self.runTests = runTests
@@ -1377,27 +1376,30 @@ def parse_config(config, directory, benchmarker):
 
   # The config object can specify multiple tests, we neep to loop
   # over them and parse them out
-  for test in config['tests']:
-    for key, value in test.iteritems():
-      test_name = config['framework']
-      test_framework = config['framework']
+  for testlist in config['tests']:
+    for test_name, test_keys in testlist.iteritems():
       
+      # Prefix all test names with framework except 'default' test
+      if test_name == 'default': 
+        test_name = config['framework']
+      else:
+        test_name = "%s-%s" % (config['framework'], test_name)  
+
+      # Ensure FrameworkTest.framework is available
+      if not test_keys['framework']:
+        test_keys['framework'] = config['framework']
+      
+      # Map test type to either False or a url path
       runTests = dict()
+      runTests["json"] = (benchmarker.type == "all" or benchmarker.type == "json") and test_keys.get("json_url", False)
+      runTests["db"] = (benchmarker.type == "all" or benchmarker.type == "db") and test_keys.get("db_url", False)
+      runTests["query"] = (benchmarker.type == "all" or benchmarker.type == "query") and test_keys.get("query_url", False)
+      runTests["fortune"] = (benchmarker.type == "all" or benchmarker.type == "fortune") and test_keys.get("fortune_url", False)
+      runTests["update"] = (benchmarker.type == "all" or benchmarker.type == "update") and test_keys.get("update_url", False)
+      runTests["plaintext"] = (benchmarker.type == "all" or benchmarker.type == "plaintext") and test_keys.get("plaintext_url", False)
 
-      runTests["json"] = (benchmarker.type == "all" or benchmarker.type == "json") and value.get("json_url", False)
-      runTests["db"] = (benchmarker.type == "all" or benchmarker.type == "db") and value.get("db_url", False)
-      runTests["query"] = (benchmarker.type == "all" or benchmarker.type == "query") and value.get("query_url", False)
-      runTests["fortune"] = (benchmarker.type == "all" or benchmarker.type == "fortune") and value.get("fortune_url", False)
-      runTests["update"] = (benchmarker.type == "all" or benchmarker.type == "update") and value.get("update_url", False)
-      runTests["plaintext"] = (benchmarker.type == "all" or benchmarker.type == "plaintext") and value.get("plaintext_url", False)
-
-      # if the test uses the 'defualt' keywork, then we don't 
-      # append anything to it's name. All configs should only have 1 default
-      if key != 'default':
-        # we need to use the key in the test_name
-        test_name = test_name + "-" + key
-
-      tests.append(FrameworkTest(test_name, test_framework, directory, benchmarker, runTests, value))
+      # By passing the entire set of keys, each FrameworkTest will have a member for each key
+      tests.append(FrameworkTest(test_name, directory, benchmarker, runTests, test_keys))
 
   return tests
 ##############################################################
