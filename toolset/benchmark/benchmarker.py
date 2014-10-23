@@ -506,11 +506,6 @@ class Benchmarker:
       if self.exclude != None and test.name in self.exclude:
         out.write("Test {name} has been added to the excludes list. Skipping.\n".format(name=test.name))
         return exit_with_code(0)
-      
-      # If the test does not contain an implementation of the current test-type, skip it
-      if self.type != 'all' and not test.contains_type(self.type):
-        out.write("Test type {type} does not contain an implementation of the current test-type. Skipping.\n".format(type=self.type))
-        return exit_with_code(0)
 
       out.write("test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".format(os=test.os.lower(),dbos=test.database_os.lower()))
       out.write("self.results['frameworks'] != None: {val}\n".format(val=str(self.results['frameworks'] != None)))

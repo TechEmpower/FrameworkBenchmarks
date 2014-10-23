@@ -721,33 +721,6 @@ class FrameworkTest:
   ############################################################
 
   ############################################################
-  # contains_type(type)
-  # true if this test contains an implementation of the given 
-  # test type (json, db, etc.)
-  ############################################################
-  def contains_type(self, type):
-    try:
-      if type == self.JSON and self.json_url is not None:
-        return True
-      if type == self.DB and self.db_url is not None:
-        return True
-      if type == self.QUERY and self.query_url is not None:
-        return True
-      if type == self.FORTUNE and self.fortune_url is not None:
-        return True
-      if type == self.UPDATE and self.update_url is not None:
-        return True
-      if type == self.PLAINTEXT and self.plaintext_url is not None:
-        return True
-    except AttributeError:
-      pass
-      
-    return False
-  ############################################################
-  # End stop
-  ############################################################
-
-  ############################################################
   # benchmark
   # Runs the benchmark for each type of test that it implements
   # JSON/DB/Query.
