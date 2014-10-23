@@ -1389,14 +1389,16 @@ def parse_config(config, directory, benchmarker):
       if not test_keys['framework']:
         test_keys['framework'] = config['framework']
       
-      # Map test type to either False or a url path
+      # Map test type to either boolean False (e.g. don't run)
+      # or to a list of strings containing all the arguments 
+      # needed by this test type
       runTests = dict()
-      runTests["json"] = (benchmarker.type == "all" or benchmarker.type == "json") and test_keys.get("json_url", False)
-      runTests["db"] = (benchmarker.type == "all" or benchmarker.type == "db") and test_keys.get("db_url", False)
-      runTests["query"] = (benchmarker.type == "all" or benchmarker.type == "query") and test_keys.get("query_url", False)
-      runTests["fortune"] = (benchmarker.type == "all" or benchmarker.type == "fortune") and test_keys.get("fortune_url", False)
-      runTests["update"] = (benchmarker.type == "all" or benchmarker.type == "update") and test_keys.get("update_url", False)
-      runTests["plaintext"] = (benchmarker.type == "all" or benchmarker.type == "plaintext") and test_keys.get("plaintext_url", False)
+      for test_type in benchmarker.types:
+        # Ensure all arguments required for this test are present
+        if all (arg in test_keys for arg in benchmarker.type_args[test_type]):
+          runTests[test_type] = [ test_keys[arg] for arg in benchmarker.type_args[test_type]]
+        else:
+          runTests[test_type] = False
 
       # By passing the entire set of keys, each FrameworkTest will have a member for each key
       tests.append(FrameworkTest(test_name, directory, benchmarker, runTests, test_keys))
