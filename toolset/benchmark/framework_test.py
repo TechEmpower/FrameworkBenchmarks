@@ -116,19 +116,6 @@ class FrameworkTest:
     done
   """
 
-  language = None
-  platform = None
-  webserver = None
-  classification = None
-  database = None
-  approach = None
-  orm = None
-  framework = None
-  os = None
-  database_os = None
-  display_name = None
-  notes = None
-  versus = None
 
   ############################################################
   # Test Variables
@@ -1374,11 +1361,10 @@ class FrameworkTest:
 def parse_config(config, directory, benchmarker):
   tests = []
 
-  # The config object can specify multiple tests, we neep to loop
-  # over them and parse them out
-  for testlist in config['tests']:
-    for test_name, test_keys in testlist.iteritems():
-      
+  # The config object can specify multiple tests
+  #   Loop over them and parse each into a FrameworkTest
+  for test in config['tests']:
+    for test_name, test_keys in test.iteritems():
       # Prefix all test names with framework except 'default' test
       if test_name == 'default': 
         test_name = config['framework']
@@ -1388,6 +1374,14 @@ def parse_config(config, directory, benchmarker):
       # Ensure FrameworkTest.framework is available
       if not test_keys['framework']:
         test_keys['framework'] = config['framework']
+      if test_keys['framework'] != config['framework']:
+        raise Exception("benchmark_config for test %s is invalid - test framework must match benchmark_config framework" % test_name)
+
+      # Confirm required keys are present
+      # TODO have a TechEmpower person confirm this list - I don't know what the website requires....
+      required = ['language','webserver','classification','database','approach','orm','framework','os','database_os']
+      if not all (key in test_keys for key in required):
+        raise Exception("benchmark_config for test %s is invalid - missing required keys" % test_name)      
       
       # Map test type to either boolean False (e.g. don't run)
       # or to a list of strings containing all the arguments 
