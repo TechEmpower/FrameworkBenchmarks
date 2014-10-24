@@ -723,8 +723,9 @@ def parse_config(config, directory, benchmarker):
           runTests[type_name] = type_obj.copy().parse(test_keys)
         except AttributeError as ae:
           # This is quite common - most tests don't support all types
-          # Quitely log it and move on
-          logging.debug("Missing arguments for test type %s for framework test %s", type_name, test_name)
+          # Quitely log it and move on (debug logging is on in travis and this causes 
+          # ~1500 lines of debug, so I'm totally ignoring it for now
+          # logging.debug("Missing arguments for test type %s for framework test %s", type_name, test_name)
           pass
 
       # By passing the entire set of keys, each FrameworkTest will have a member for each key
