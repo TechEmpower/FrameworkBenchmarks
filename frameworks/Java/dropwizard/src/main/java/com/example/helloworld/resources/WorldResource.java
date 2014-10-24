@@ -26,25 +26,26 @@ public class WorldResource {
 
     @GET
     @UnitOfWork
-    public Object dbStringTest(@QueryParam("queries") Optional<String> queries) {
-        return dbTest(Optional.of(1));
-    }
-
-    @GET
-    @UnitOfWork
-    public Object dbTest(@QueryParam("queries") Optional<Integer> queries) {
+    public Object dbTest(@QueryParam("queries") Optional<Object> queries) {
         if (!queries.isPresent()) {
             final long worldId = RANDOM.nextInt(10_000) + 1;
             return worldDAO.findById(worldId).orNull();
         }
 
-        int totalQueries = queries.or(1);
-        if (totalQueries > 500) {
-            totalQueries = 500;
-        } else if (totalQueries < 1) {
+        int totalQueries;
+        Object query = queries.orNull();
+        if (query instanceof Integer) {
+            totalQueries = queries.or(1);
+            if (totalQueries > 500) {
+                totalQueries = 500;
+            } else if (totalQueries < 1) {
+                totalQueries = 1;
+            }
+        } else {
             totalQueries = 1;
         }
 
+        
         final World[] worlds = new World[totalQueries];
 
         // TODO: Is parallelising this cheating?
