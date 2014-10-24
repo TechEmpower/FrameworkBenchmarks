@@ -5,3 +5,4 @@ from plaintext_type import PlaintextTestType
 from db_type import DBTestType
 from query_type import QueryTestType
 from update_type import UpdateTestType
+from fortune_type import FortuneTestType

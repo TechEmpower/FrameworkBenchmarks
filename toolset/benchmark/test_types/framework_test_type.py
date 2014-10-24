@@ -105,8 +105,4 @@ class FrameworkTestType:
     # for their URL so the base class can't know which arg is the URL
     raise NotImplementedError("Subclasses must provide verify")
 
-class FortuneTestType(FrameworkTestType):
-  def __init__(self):
-    args = ['fortune_url']
-    FrameworkTestType.__init__(self, name='fortune', requires_db=True, args=args)
 
