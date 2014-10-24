@@ -1,6 +1,6 @@
 from benchmark.fortune_html_parser import FortuneHTMLParser
 from setup.linux import setup_util
-from benchmark.test_types.framework_test_type import *
+from benchmark.test_types import *
 
 import importlib
 import os

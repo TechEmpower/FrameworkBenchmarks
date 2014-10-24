@@ -2,7 +2,7 @@ from setup.linux.installer import Installer
 from setup.linux import setup_util
 
 from benchmark import framework_test
-from benchmark.test_types.framework_test_type import *
+from benchmark.test_types import *
 from utils import header
 from utils import gather_tests
 from utils import gather_frameworks
