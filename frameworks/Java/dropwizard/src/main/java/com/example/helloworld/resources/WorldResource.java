@@ -23,7 +23,7 @@ public class WorldResource {
     public WorldResource(WorldDAO worldDAO) {
         this.worldDAO = worldDAO;
     }
-    // For committing.
+
     @GET
     @UnitOfWork
     public Object dbTest(@QueryParam("queries") Optional<Integer> queries) {
@@ -31,7 +31,14 @@ public class WorldResource {
             final long worldId = RANDOM.nextInt(10_000) + 1;
             return worldDAO.findById(worldId).orNull();
         }
-        final int totalQueries = queries.or(1); // TODO: Should be bound [1,500]
+
+        int totalQueries = queries.or(1);
+        if (totalQueries > 500) {
+            totalQueries = 500;
+        } else if (totalQueries < 1) {
+            totalQueries = 1;
+        }
+
         final World[] worlds = new World[totalQueries];
 
         // TODO: Is parallelising this cheating?
@@ -47,7 +54,13 @@ public class WorldResource {
     @Path("/update")
     @UnitOfWork
     public World[] updateTest(@QueryParam("queries") Optional<Integer> queries) {
-        final int totalQueries = queries.or(1); // TODO: Should be bound [1,500]
+        int totalQueries = queries.or(1);
+        if (totalQueries > 500) {
+            totalQueries = 500;
+        } else if (totalQueries < 1) {
+            totalQueries = 1;
+        }
+
         final World[] worlds = new World[totalQueries];
 
         // TODO: Is parallelising this cheating?
