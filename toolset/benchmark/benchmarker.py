@@ -899,7 +899,7 @@ class Benchmarker:
     types['plaintext'] = PlaintextTestType()
 
     # Turn type into a map instead of a string
-    if args['type'] is 'all':
+    if args['type'] == 'all':
         args['types'] = types
     else:
         args['types'] = { args['type'] : types[args['type']] }
