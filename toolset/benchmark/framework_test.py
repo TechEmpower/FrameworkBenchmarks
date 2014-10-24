@@ -134,25 +134,6 @@ class FrameworkTest:
 
 
   ############################################################
-  # Validates the jsonString is a JSON object with a 'message'
-  # key with the value "hello, world!" (case-insensitive).
-  ############################################################
-  def validateJson(self, jsonString, out, err):
-    err_str = ""
-    if jsonString is None or len(jsonString) == 0:
-      err_str += "Empty Response"
-      return (False, err_str)
-    try:
-      obj = {k.lower(): v for k,v in json.loads(jsonString).iteritems()}
-      if "message" not in obj:
-        err_str += "Expected key 'message' to be in JSON string "
-      if  obj["message"].lower() != "hello, world!":
-        err_str += "Message was '{message}', should have been 'Hello, World!' ".format(message=obj["message"])
-    except:
-      err_str += "Got exception when trying to validate the JSON test: {exception}".format(exception=traceback.format_exc())
-    return (True, ) if len(err_str) == 0 else (False, err_str)
-
-  ############################################################
   # Validates the jsonString is a JSON object that has an "id"
   # and a "randomNumber" key, and that both keys map to 
   # integers.
