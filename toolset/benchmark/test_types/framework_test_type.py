@@ -23,8 +23,8 @@ class FrameworkTestType:
     self.name = name
     self.requires_db = requires_db
     self.args = args
-    self.out = [sys.stdout]
-    self.err = [sys.stderr]
+    self.out = [] # You can use [sys.stdout] to tee
+    self.err = [] # [sys.stderr]
 
   def setup_out_err(self, out, err):
     '''Sets up file-like objects for logging. Used in 
@@ -52,7 +52,6 @@ class FrameworkTestType:
 
   def _curl(self, url):
     '''Downloads a URL and returns the HTTP body'''
-    print "_curl called"
     # Use -m 15 to make curl stop trying after 15sec.
     # Use -i to output response with headers
     # Don't use -f so that the HTTP response code is ignored.
@@ -62,13 +61,11 @@ class FrameworkTestType:
     [item.write(err+'\n') for item in self.err]
     [item.write(out+'\n') for item in self.out]
     if p.returncode != 0:
-      print "returning none"
       return None
     # Get response body
     p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=PIPE, stderr=PIPE)
     (out, err) = p.communicate()
     [item.write(err+'\n') for item in self.err]
-    print "Returning %s" % out
     return out
   
   def copy(self):
@@ -80,15 +77,15 @@ class FrameworkTestType:
     '''Accesses URL used by this test type and checks the return 
     values for correctness. Most test types run multiple checks,
     so this returns a list of results. Each result is a 3-tuple
-    of (String result, String message, String verifyDescription).
+    of (String result, String message, String urlTested).
 
     - Result is always 'pass','warn','fail'
     - message is a human-readable reason if the result was warn or fail
-    - verifyDescription is a short explanation of what's being tested
-    
+    - urlTested is the URL that was queried
     '''
+    # TODO make String result into an enum to enforce
     # raise NotImplementedError("Subclasses must provide verify")
-    return [('pass','', 'default check')]
+    return [('pass','', '')]
 
 class JsonTestType(FrameworkTestType):
   def __init__(self):
@@ -96,44 +93,40 @@ class JsonTestType(FrameworkTestType):
     FrameworkTestType.__init__(self, 'json', False, args)
 
   def verify(self, base_url):
-    print "Someone called json verify!"
-    body = self._curl(base_url + self.json_url)
-    if body is None:
-      return [('fail','No response', 'Default JSON check')]
-    elif len(body) == 0:
-      return [('fail','Empty Response', 'Default JSON check')]
-    return [self.validateJson(body)]
-
-  ############################################################
-  # 
-  ############################################################
-  def validateJson(self, body):
     '''Validates the response is a JSON object of 
     { 'message' : 'hello, world!' }. Case insensitive and 
     quoting style is ignored
     '''
-    desc = 'Default JSON Check'
-    print "Checking if %s is valid" % body
+
+    url = base_url + self.json_url
+    body = self._curl(url)
+    
+    # Empty response
+    if body is None:
+      return [('fail','No response', url)]
+    elif len(body) == 0:
+      return [('fail','Empty Response', url)]
+  
+    # Valid JSON? 
     try: 
       response = json.loads(body)
     except ValueError as ve:
-      return ('fail',"Invalid JSON - %s" % ve, desc)
+      return [('fail',"Invalid JSON - %s" % ve, url)]
     
     # Make everything case insensitive
     response = {k.lower(): v.lower() for k,v in response.iteritems()}
 
     if "message" not in response:
-      return ('fail',"No JSON key 'message'", desc)
+      return [('fail',"No JSON key 'message'", url)]
 
     if len(response) != 1:
-      return ('warn',"Too many JSON key/value pairs, expected 1", desc)
+      return [('warn',"Too many JSON key/value pairs, expected 1", url)]
 
     if response['message'] != 'hello, world!':
-      return ('fail',"Expected message of 'hello, world!', got '%s'"%response['message'], desc)      
+      return [('fail',"Expected message of 'hello, world!', got '%s'"%response['message'], url)]
 
-    return ('pass','',desc)
+    return [('pass','',url)]
 
-  
 class DBTestType(FrameworkTestType):
   def __init__(self):
     args = ['db_url']
