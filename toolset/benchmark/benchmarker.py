@@ -746,22 +746,29 @@ class Benchmarker:
     
     jsonResult = {}
     for framework, testlist in frameworks.iteritems():
+      if not os.path.exists(os.path.join(testlist[0].directory, "source_code")):
+        logging.warn("Cannot count lines of code for %s - no 'source_code' file", framework)
+        continue
+
       # Unfortunately the source_code files use lines like
       # ./cpoll_cppsp/www/fortune_old instead of 
       # ./www/fortune_old
       # so we have to back our working dir up one level
       wd = os.path.dirname(testlist[0].directory)
-
+      
       try:
         command = "cloc --list-file=%s/source_code --yaml" % testlist[0].directory
         # Find the last instance of the word 'code' in the yaml output. This should
         # be the line count for the sum of all listed files or just the line count
         # for the last file in the case where there's only one file listed.
         command = command + "| grep code | tail -1 | cut -d: -f 2"
+        logging.debug("Running \"%s\" (cwd=%s)", command, wd)
         lineCount = subprocess.check_output(command, cwd=wd, shell=True)
         jsonResult[framework] = int(lineCount)
       except subprocess.CalledProcessError:
         continue
+      except ValueError as ve:
+        logging.warn("Unable to get linecount for %s due to error '%s'", framework, ve)
     self.results['rawData']['slocCounts'] = jsonResult
   ############################################################
   # End __count_sloc
