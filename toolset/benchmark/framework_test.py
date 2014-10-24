@@ -128,130 +128,6 @@ class FrameworkTest:
   # Public Methods
   ##########################################################################################
 
-
-  ############################################################
-  # Validates the jsonString is an array with a length of
-  # 2, that each entry in the array is a JSON object, that
-  # each object has an "id" and a "randomNumber" key, and that
-  # both keys map to integers.
-  ############################################################
-  def validateQuery(self, jsonString, out, err):
-    err_str = ""
-    if jsonString is None or len(jsonString) == 0:
-      err_str += "Empty Response"
-      return (False, err_str)
-    try:
-      arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
-      if len(arr) != 2:
-        err_str += "Expected array of length 2. Got length {length}. ".format(length=len(arr))
-      for obj in arr:
-        id_ret_val = True
-        random_num_ret_val = True
-        if "id" not in obj or "randomnumber" not in obj:
-          err_str += "Expected keys id and randomNumber to be in JSON string. "
-          break
-        try:
-          if not isinstance(float(obj["id"]), float):
-            id_ret_val=False
-        except:
-          id_ret_val=False
-        if not id_ret_val:
-          err_str += "Expected id to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
-        try:
-          if not isinstance(float(obj["randomnumber"]), float):
-            random_num_ret_val=False
-        except:
-          random_num_ret_val=False
-        if not random_num_ret_val:
-          err_str += "Expected randomNumber to be type int or float, got '{rand}' ".format(rand=obj["randomnumber"])
-    except:
-      err_str += "Got exception when trying to validate the query test: {exception}".format(exception=traceback.format_exc())
-    return (True, ) if len(err_str) == 0 else (False, err_str)
-
-  ############################################################
-  # Validates the jsonString is an array with a length of
-  # 1, that each entry in the array is a JSON object, that
-  # each object has an "id" and a "randomNumber" key, and that
-  # both keys map to integers.
-  ############################################################
-  def validateQueryOneOrLess(self, jsonString, out, err):
-    err_str = ""
-    if jsonString is None or len(jsonString) == 0:
-      err_str += "Empty Response"
-    else:
-      try:
-        json_load = json.loads(jsonString)
-        if not isinstance(json_load, list):
-          err_str += "Expected JSON array, got {typeObj}. ".format(typeObj=type(json_load))
-        if len(json_load) != 1:
-          err_str += "Expected array of length 1. Got length {length}. ".format(length=len(json_load))
-
-        obj = {k.lower(): v for k,v in json_load[0].iteritems()}
-        id_ret_val = True
-        random_num_ret_val = True
-        if "id" not in obj or "randomnumber" not in obj:
-          err_str += "Expected keys id and randomNumber to be in JSON string. "
-        try:
-          if not isinstance(float(obj["id"]), float):
-            id_ret_val=False
-        except:
-          id_ret_val=False
-        if not id_ret_val:
-          err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
-        try:
-          if not isinstance(float(obj["randomnumber"]), float):
-            random_num_ret_val=False
-        except:
-          random_num_ret_val=False
-        if not random_num_ret_val:
-          err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
-      except:
-        err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=traceback.format_exc())
-
-    return (True, ) if len(err_str) == 0 else (False, err_str)
-
-  ############################################################
-  # Validates the jsonString is an array with a length of
-  # 500, that each entry in the array is a JSON object, that
-  # each object has an "id" and a "randomNumber" key, and that
-  # both keys map to integers.
-  ############################################################
-  def validateQueryFiveHundredOrMore(self, jsonString, out, err):
-    err_str = ""
-    if jsonString is None or len(jsonString) == 0:
-      err_str += "Empty Response"
-      return (False, err_str)
-    try:
-      arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
-
-      if len(arr) != 500:
-        err_str += "Expected array of length 500. Got length {length}. ".format(length=len(arr))
-        return (False, err_str)
-
-      for obj in arr:
-        id_ret_val = True
-        random_num_ret_val = True
-        if "id" not in obj or "randomnumber" not in obj:
-          err_str += "Expected keys id and randomNumber to be in JSON string. "
-          break
-        try:
-          if not isinstance(float(obj["id"]), float):
-            id_ret_val=False
-        except:
-          id_ret_val=False
-        if not id_ret_val:
-          err_str += "Expected id to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
-        try:
-          if not isinstance(float(obj["randomnumber"]), float):
-            random_num_ret_val=False
-        except:
-          random_num_ret_val=False
-        if not random_num_ret_val:
-          err_str += "Expected randomNumber to be type int or float, got '{rand}'. ".format(rand=obj["randomnumber"])
-    except:
-      err_str += "Got exception when trying to validate the query test: {exception} ".format(exception=traceback.format_exc())
-    return (True, ) if len(err_str) == 0 else (False, err_str)
-
   ############################################################
   # Parses the given HTML string and asks a FortuneHTMLParser
   # whether the parsed string is a valid fortune return.
@@ -429,8 +305,16 @@ class FrameworkTest:
       out.write(header("VERIFYING %s" % test_type.upper()))
       
       base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
-      results = test.verify(base_url)
       
+      try:
+        results = test.verify(base_url)
+      except Exception as e:
+        results = [('fail',"""Caused Exception in TFB
+          This almost certainly means your return value is incorrect, 
+          but also that you have found a bug. Please submit an issue
+          including this message: %s""" % e,base_url)]
+        logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+
       test.failed = any(result is 'fail' for (result, reason, url) in results)
       test.warned = any(result is 'warn' for (result, reason, url) in results)
       test.passed = all(result is 'pass' for (result, reason, url) in results)

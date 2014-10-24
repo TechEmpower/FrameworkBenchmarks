@@ -91,6 +91,10 @@ class FrameworkTestType:
         other parts of TFB will do that based upon the current logging 
         settings if this method indicates a failure happened
     - urlTested: The exact URL that was queried
+
+    Subclasses should make a best-effort attempt to report as many
+    failures and warnings as they can to help users avoid needing 
+    to run TFB repeatedly while debugging
     '''
     # TODO make String result into an enum to enforce
     raise NotImplementedError("Subclasses must provide verify")
@@ -101,19 +105,8 @@ class FrameworkTestType:
     # for their URL so the base class can't know which arg is the URL
     raise NotImplementedError("Subclasses must provide verify")
 
-class QueryTestType(FrameworkTestType):
-  def __init__(self):
-    args = ['query_url']
-    FrameworkTestType.__init__(self, name='query', requires_db=True, args=args)
-
-
 class FortuneTestType(FrameworkTestType):
   def __init__(self):
     args = ['fortune_url']
     FrameworkTestType.__init__(self, name='fortune', requires_db=True, args=args)
-
-class UpdateTestType(FrameworkTestType):
-  def __init__(self):
-    args = ['update_url']
-    FrameworkTestType.__init__(self, name='update', requires_db=True, args=args)
 

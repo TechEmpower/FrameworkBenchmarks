@@ -16,10 +16,10 @@ class DBTestType(FrameworkTestType):
     '''Ensures body is valid JSON with a key 'id' and a key 
     'randomNumber', both of which must map to integers
     '''
+
     url = base_url + self.db_url
     body = self._curl(url)
-    problems = []
-
+    
     # Empty response
     if body is None:
       return [('fail','No response', url)]
@@ -31,6 +31,8 @@ class DBTestType(FrameworkTestType):
       response = json.loads(body)
     except ValueError as ve:
       return [('fail',"Invalid JSON - %s" % ve, url)]
+
+    problems = []
 
     # We are allowing the single-object array 
     # e.g. [{'id':5, 'randomNumber':10}] for now, 
@@ -44,39 +46,58 @@ class DBTestType(FrameworkTestType):
         problems.append( ('fail', 'Response is not a JSON object or an array of JSON objects', url) ) 
         return problems
 
-    # Make keys case insensitive
-    response = {k.lower(): v for k,v in response.iteritems()}
+    problems += self._verifyObject(response, url)
 
-    if "id" not in response:
+    if len(problems) == 0:
+      return [('pass','',url)]
+    else:
+      return problems
+
+  def _verifyObject(self, db_object, url):
+    '''Ensure the passed item is a JSON object with 
+    keys 'id' and 'randomNumber' mapping to ints. 
+    Separate method allows the QueryTestType to 
+    reuse these checks'''
+
+    problems = []
+
+    if type(db_object) != dict:
+      got = str(db_object)[:20]
+      if len(str(db_object)) > 20:
+        got = str(db_object)[:17] + '...'
+      return ('fail', "Expected a JSON object, got '%s' instead" % got, url)
+
+    # Make keys case insensitive
+    db_object = {k.lower(): v for k,v in db_object.iteritems()}
+
+    if "id" not in db_object:
       problems.append( ('fail', "Response has no 'id' key", url) ) 
-    if "randomnumber" not in response:
+    if "randomnumber" not in db_object:
       problems.append( ('fail', "Response has no 'randomNumber' key", url) ) 
 
     try:
-      float(response["id"])
+      float(db_object["id"])
     except ValueError as ve:
       problems.append( ('fail', "Response key 'id' does not map to a number - %s" % ve, url) ) 
 
     try:
-      float(response["randomnumber"])
+      float(db_object["randomnumber"])
     except ValueError as ve:
       problems.append( ('fail', "Response key 'randomNumber' does not map to a number - %s" % ve, url) ) 
 
-    if type(response["id"]) != int:
+    if type(db_object["id"]) != int:
       problems.append( ('warn', '''Response key 'id' contains extra quotations or decimal points.
         This may negatively affect performance during benchmarking''', url) ) 
 
     # Tests based on the value of the numbers
     try:
-      response_id = float(response["id"])
-      response_rn = float(response["randomnumber"])
+      response_id = float(db_object["id"])
+      response_rn = float(db_object["randomnumber"])
 
       if response_id > 10000 or response_id < 1:
         problems.append( ('warn', "Response key 'id' should be between 1 and 10,000", url)) 
     except ValueError:
       pass
 
-    if len(problems) == 0:
-      return [('pass','',url)]
-    else:
-      return problems
+    return problems
+
