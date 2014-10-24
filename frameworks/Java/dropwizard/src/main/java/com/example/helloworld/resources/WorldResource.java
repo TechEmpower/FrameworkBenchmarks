@@ -23,7 +23,7 @@ public class WorldResource {
     public WorldResource(WorldDAO worldDAO) {
         this.worldDAO = worldDAO;
     }
-
+    // For committing.
     @GET
     @UnitOfWork
     public Object dbTest(@QueryParam("queries") Optional<Integer> queries) {
