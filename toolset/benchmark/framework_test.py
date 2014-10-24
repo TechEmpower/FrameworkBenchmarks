@@ -114,65 +114,6 @@ class FrameworkTest:
   """
 
   ############################################################
-  # Parses the given HTML string and asks a FortuneHTMLParser
-  # whether the parsed string is a valid fortune return.
-  ############################################################
-  def validateFortune(self, htmlString, out, err):
-    err_str = ""
-    if htmlString is None or len(htmlString) == 0:
-      err_str += "Empty Response"
-      return (False, err_str)
-    try:
-      parser = FortuneHTMLParser()
-      parser.feed(htmlString)
-
-      valid = parser.isValidFortune(out)
-      return (valid, '' if valid else 'Did not pass validation')
-
-    except:
-      print "Got exception when trying to validate the fortune test: {exception} ".format(exception=traceback.format_exc())
-    return (False, err_str)
-
-  ############################################################
-  # Validates the jsonString is an array with a length of
-  # 2, that each entry in the array is a JSON object, that
-  # each object has an "id" and a "randomNumber" key, and that
-  # both keys map to integers.
-  ############################################################
-  def validateUpdate(self, jsonString, out, err):
-    err_str = ""
-    if jsonString is None or len(jsonString) == 0:
-      err_str += "Empty Response"
-      return (False, err_str)
-    try:
-      arr = [{k.lower(): v for k,v in d.iteritems()} for d in json.loads(jsonString)]
-      if len(arr) != 2:
-        err_str += "Expected array of length 2. Got length {length}.\n".format(length=len(arr))
-      for obj in arr:
-        id_ret_val = True
-        random_num_ret_val = True
-        if "id" not in obj or "randomnumber" not in obj:
-          err_str += "Expected keys id and randomNumber to be in JSON string.\n"
-          return (False, err_str)
-        try:
-          if not isinstance(float(obj["id"]), float):
-            id_ret_val=False
-        except:
-          id_ret_val=False
-        if not id_ret_val:
-          err_str += "Expected id to be type int or float, got '{rand}'.\n".format(rand=obj["randomnumber"])
-        try:
-          if not isinstance(float(obj["randomnumber"]), float):
-            random_num_ret_val=False
-        except:
-          random_num_ret_val=False
-        if not random_num_ret_val:
-          err_str += "Expected randomNumber to be type int or float, got '{rand}'.\n".format(rand=obj["randomnumber"])
-    except:
-      err_str += "Got exception when trying to validate the update test: {exception}\n".format(exception=traceback.format_exc())
-    return (True, ) if len(err_str) == 0 else (False, err_str)
-
-  ############################################################
   # start(benchmarker)
   # Start the test using it's setup file
   ############################################################
@@ -360,9 +301,18 @@ class FrameworkTest:
           remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
         else:
           remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
+        
+        # Begin resource usage metrics collection
         self.__begin_logging(test_type)
-        self.__run_benchmark(remote_script, output_file, err)
+        
+        # Run the benchmark 
+        p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=output_file, stderr=err)
+        p.communicate(remote_script)
+        err.flush()
+
+        # End resource usage metrics collection
         self.__end_logging()
+
       results = self.__parse_test(test_type)
       print "Benchmark results:"
       pprint(results)
@@ -498,22 +448,6 @@ class FrameworkTest:
   ##########################################################################################
 
   ############################################################
-  # __run_benchmark(script, output_file)
-  # Runs a single benchmark using the script which is a bash 
-  # template that uses weighttp to run the test. All the results
-  # outputed to the output_file.
-  ############################################################
-  def __run_benchmark(self, script, output_file, err):
-    with open(output_file, 'w') as raw_file:
-	  
-      p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=err)
-      p.communicate(script)
-      err.flush()
-  ############################################################
-  # End __run_benchmark
-  ############################################################
-
-  ############################################################
   # __generate_concurrency_script(url, port)
   # Generates the string containing the bash script that will
   # be run on the client to benchmark a single test. This
@@ -523,15 +457,12 @@ class FrameworkTest:
   def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk", intervals=[], pipeline=""):
     if len(intervals) == 0:
       intervals = self.benchmarker.concurrency_levels
-    headers = self.__get_request_headers(accept_header)
+    headers = self.headers_template.format(accept=accept_header)
     return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
       interval=" ".join("{}".format(item) for item in intervals), 
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command,
       pipeline=pipeline)
-  ############################################################
-  # End __generate_concurrency_script
-  ############################################################
 
   ############################################################
   # __generate_query_script(url, port)
@@ -540,25 +471,15 @@ class FrameworkTest:
   # specifically works for the variable query tests (Query)
   ############################################################
   def __generate_query_script(self, url, port, accept_header):
-    headers = self.__get_request_headers(accept_header)
+    headers = self.headers_template.format(accept=accept_header)
     return self.query_template.format(max_concurrency=self.benchmarker.max_concurrency, 
       max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
       interval=" ".join("{}".format(item) for item in self.benchmarker.query_intervals), 
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers)
-  ############################################################
-  # End __generate_query_script
-  ############################################################
 
   ############################################################
-  # __get_request_headers(accept_header)
-  # Generates the complete HTTP header string
+  # Returns True if any test type this this framework test will use a DB
   ############################################################
-  def __get_request_headers(self, accept_header):
-    return self.headers_template.format(accept=accept_header)
-  ############################################################
-  # End __format_request_headers
-  ############################################################
-
   def requires_database(self):
     '''Returns True/False if this test requires a database'''
     return any(tobj.requires_db for (ttype,tobj) in self.runTests.iteritems())
@@ -576,9 +497,6 @@ class FrameworkTest:
     cmd = shlex.split(dstat_string)
     dev_null = open(os.devnull, "w")
     self.subprocess_handle = subprocess.Popen(cmd, stdout=dev_null)
-  ##############################################################
-  # End __begin_logging
-  ##############################################################
 
   ##############################################################
   # Begin __end_logging
@@ -587,9 +505,6 @@ class FrameworkTest:
   def __end_logging(self):
     self.subprocess_handle.terminate()
     self.subprocess_handle.communicate()
-  ##############################################################
-  # End __end_logging
-  ##############################################################
 
   ##############################################################
   # Begin __parse_stats
@@ -717,7 +632,6 @@ class FrameworkTest:
   ###########################################################################################
   # End __calculate_average_stats
   #########################################################################################
-
 
           
   ##########################################################################################
