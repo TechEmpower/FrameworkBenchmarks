@@ -26,6 +26,12 @@ public class WorldResource {
 
     @GET
     @UnitOfWork
+    public Object dbStringTest(@QueryParam("queries") Optional<String> queries) {
+        return dbTest(Optional.of(1));
+    }
+
+    @GET
+    @UnitOfWork
     public Object dbTest(@QueryParam("queries") Optional<Integer> queries) {
         if (!queries.isPresent()) {
             final long worldId = RANDOM.nextInt(10_000) + 1;
