@@ -1,5 +1,6 @@
 import "dart:core";
 import "dart:io";
+import "dart:isolate";
 import 'dart:async' show Future;
 import 'dart:math' show Random;
 import "package:redstone/server.dart" as app;
@@ -210,10 +211,33 @@ main(List<String> args) {
   parser.addOption('address', abbr: 'a', defaultsTo: '0.0.0.0');
   parser.addOption('port', abbr: 'p', defaultsTo: '8080');
   parser.addOption('dbconnections', abbr: 'd', defaultsTo: '256');
+  parser.addOption('isolates', abbr: 'i', defaultsTo: '1');
   
   var arguments = parser.parse(args);
-  var dbConnections = int.parse(arguments["dbconnections"]);
+  var isolates = int.parse(arguments['isolates']);
+  var dbConnections = int.parse(arguments['dbconnections']) ~/ isolates;
+
+  ServerSocket.bind(arguments['address'], int.parse(arguments['port']))
+      .then((server) {
+        var ref = server.reference;
+        for (int i = 1; i < isolates; i++) {
+          Isolate.spawn(startInIsolate, [ref, dbConnections]);
+        }
+        _startServer(server, dbConnections);
+      });
   
+}
+
+void startInIsolate(args) {
+  var ref = args[0];
+  var dbConnections = args[1];
+  ref.create().then((server) {
+    _startServer(server, dbConnections);
+  });
+}
+
+_startServer(serverSocket, dbConnections) {
+
   MongoDbManager mongoDbManager;
   PostgreSqlManager pgSqlManager;
   mustache.Template fortunesTemplate;
@@ -255,9 +279,11 @@ main(List<String> args) {
     app.addPlugin(getMapperPlugin());
     
     //start the server
-    app.start(address: arguments["address"], port: int.parse(arguments["port"]));
+    var server = new HttpServer.listenOn(serverSocket);
+    app.serveRequests(server);
     
   });
+
 }
 
 _parseQueriesParam(param) {
