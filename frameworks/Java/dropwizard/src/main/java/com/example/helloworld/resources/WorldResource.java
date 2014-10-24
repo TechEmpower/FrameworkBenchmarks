@@ -34,7 +34,7 @@ public class WorldResource {
         }
 
         Integer totalQueries = Ints.tryParse(queries.orNull());
-        if (query != null) {
+        if (totalQueries != null) {
             if (totalQueries > 500) {
                 totalQueries = 500;
             } else if (totalQueries < 1) {
