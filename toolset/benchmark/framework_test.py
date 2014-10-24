@@ -378,7 +378,7 @@ class FrameworkTest:
       parser = FortuneHTMLParser()
       parser.feed(htmlString)
 
-      return (parser.isValidFortune(out), )
+      return (parser.isValidFortune(out), '')
     except:
       print "Got exception when trying to validate the fortune test: {exception} ".format(exception=traceback.format_exc())
     return (False, err_str)

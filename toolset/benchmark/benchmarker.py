@@ -321,7 +321,7 @@ class Benchmarker:
     # off, rather than starting from the beginning
     if os.path.isfile('current_benchmark.txt'):
         with open('current_benchmark.txt', 'r') as interrupted_benchmark:
-            interrupt_bench = interrupted_benchmark.read()
+            interrupt_bench = interrupted_benchmark.read().strip()
             for index, atest in enumerate(tests):
                 if atest.name == interrupt_bench:
                     tests = tests[index:]
@@ -625,9 +625,13 @@ class Benchmarker:
         time.sleep(5)
 
         if self.__is_port_bound(test.port):
-          self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-          err.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
-          err.flush()
+          self.__forciblyEndPortBoundProcesses(test.port, out, err)
+          time.sleep(5)
+          if self.__is_port_bound(test.port):
+            err.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
+            err.flush()
+            self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+
           return exit_with_code(1)
 
         out.write(header("Stopped %s" % test.name))
@@ -713,6 +717,37 @@ class Benchmarker:
   ############################################################
   # End __is_port_bound
   ############################################################
+
+  def __forciblyEndPortBoundProcesses(self, test_port, out, err):
+    p = subprocess.Popen(['sudo', 'netstat', '-lnp'], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    for line in out.splitlines():
+      if 'tcp' in line:
+        splitline = line.split()
+        port = splitline[3].split(':')
+        port = int(port[len(port) - 1].strip())
+        if port == test_port:
+          try:
+            pid = splitline[6].split('/')[0].strip()
+            ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
+            # Store some info about this process
+            proc = ps.communicate()
+            os.kill(int(pid), 15)
+            # Sleep for 10 sec; kill can be finicky
+            time.sleep(10)
+            # Check that PID again
+            ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
+            dead = ps.communicate()
+            if dead in proc:
+              os.kill(int(pid), 9)
+          except OSError:
+            out.write( textwrap.dedent("""
+              -----------------------------------------------------
+                Error: Could not kill pid {pid}
+              -----------------------------------------------------
+              """.format(pid=str(pid))) )
+            # This is okay; likely we killed a parent that ended
+            # up automatically killing this before we could.
 
   ############################################################
   # __parse_results
