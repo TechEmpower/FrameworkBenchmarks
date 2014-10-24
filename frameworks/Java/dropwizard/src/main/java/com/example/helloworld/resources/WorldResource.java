@@ -35,7 +35,7 @@ public class WorldResource {
         int totalQueries;
         Object query = queries.orNull();
         if (query instanceof Integer) {
-            totalQueries = (Integer) queries;
+            totalQueries = (Integer) query;
             if (totalQueries > 500) {
                 totalQueries = 500;
             } else if (totalQueries < 1) {
