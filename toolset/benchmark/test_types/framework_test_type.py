@@ -19,12 +19,19 @@ class FrameworkTestType:
   exist a member `X.spam = 'foobar'`. 
   '''
 
-  def __init__(self, name, requires_db = False, args = []):
+  accept_json = "Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
+  accept_html = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+  accept_plaintext = "Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
+
+  def __init__(self, name, requires_db = False, accept_header = None, args = []):
     self.name = name
     self.requires_db = requires_db
     self.args = args
     self.out = [] # You can use [sys.stdout] to tee
     self.err = [] # [sys.stderr]
+    self.accept_header = accept_header
+    if accept_header is None:
+      self.accept_header = self.accept_plaintext
 
     self.passed = None
     self.failed = None
@@ -134,25 +141,25 @@ class JsonTestType(FrameworkTestType):
 class DBTestType(FrameworkTestType):
   def __init__(self):
     args = ['db_url']
-    FrameworkTestType.__init__(self, 'db', True, args)
+    FrameworkTestType.__init__(self, name='db', requires_db=True, args=args)
 
 class QueryTestType(FrameworkTestType):
   def __init__(self):
     args = ['query_url']
-    FrameworkTestType.__init__(self, 'query', True, args)
+    FrameworkTestType.__init__(self, name='query', requires_db=True, args=args)
 
 
 class FortuneTestType(FrameworkTestType):
   def __init__(self):
     args = ['fortune_url']
-    FrameworkTestType.__init__(self, 'fortune', True, args)
+    FrameworkTestType.__init__(self, name='fortune', requires_db=True, args=args)
 
 class UpdateTestType(FrameworkTestType):
   def __init__(self):
     args = ['update_url']
-    FrameworkTestType.__init__(self, 'update', True, args)
+    FrameworkTestType.__init__(self, name='update', requires_db=True, args=args)
 
 class PlaintextTestType(FrameworkTestType):
   def __init__(self):
     args = ['plaintext_url']
-    FrameworkTestType.__init__(self, 'plaintext', False, args)
+    FrameworkTestType.__init__(self, name='plaintext', requires_db=False, args=args)

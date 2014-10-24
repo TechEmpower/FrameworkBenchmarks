@@ -21,16 +21,10 @@ from threading import Event
 from utils import header
 
 class FrameworkTest:
-  ##########################################################################################
-  # Class variables
-  ##########################################################################################
   headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
-  headers_full_template = "-H 'Host: localhost' -H '{accept}' -H 'Accept-Language: en-US,en;q=0.5' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) Gecko/20130501 Firefox/30.0 AppleWebKit/600.00 Chrome/30.0.0000.0 Trident/10.0 Safari/600.00' -H 'Cookie: uid=12345678901234567890; __utma=1.1234567890.1234567890.1234567890.1234567890.12; wd=2560x1600' -H 'Connection: keep-alive'"
  
-  accept_json = "Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
-  accept_html = "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-  accept_plaintext = "Accept: text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
-
+  # Used for test types that do not require a database - 
+  # These tests are run at multiple concurrency levels
   concurrency_template = """
     
     echo ""
@@ -73,7 +67,9 @@ class FrameworkTest:
       sleep 2
     done
   """
-
+  # Used for test types that require a database - 
+  # These tests run at a static concurrency level and vary the size of
+  # the query sent with each request
   query_template = """
     
     echo ""
