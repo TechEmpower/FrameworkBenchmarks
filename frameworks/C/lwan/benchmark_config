@@ -1,0 +1,27 @@
+{
+  "framework": "lwan",
+  "tests": [{
+    "raw": {
+      "setup_file": "setup",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "SQLite",
+      "framework": "lwan",
+      "language": "C",
+      "orm": "Raw",
+      "platform": "Lwan",
+      "webserver": "Lwan",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Lwan",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

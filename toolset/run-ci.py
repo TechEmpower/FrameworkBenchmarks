@@ -33,6 +33,8 @@ class CIRunnner:
   
   Only verifies the first test in each directory 
   '''
+
+  SUPPORTED_DATABASES = "mysql postgres mongodb cassandra sqlite none".split()
   
   def __init__(self, mode, testdir=None):
     '''
@@ -163,14 +165,39 @@ class CIRunnner:
 
       if not is_PR:
         log.debug('I am not testing a pull request')
-        # If more than one commit was pushed, examine everything including 
-        # all details on all merges
-        self.commit_range = "-m %s" % os.environ['TRAVIS_COMMIT_RANGE']
+        # Three main scenarios to consider
+        #  - 1 One non-merge commit pushed to master
+        #  - 2 One merge commit pushed to master (e.g. a PR was merged). 
+        #      This is an example of merging a topic branch
+        #  - 3 Multiple commits pushed to master
+        # 
+        #  1 and 2 are actually handled the same way, by showing the 
+        #  changes being brought into to master when that one commit 
+        #  was merged. Fairly simple, `git log -1 COMMIT`. To handle 
+        #  the potential merge of a topic branch you also include 
+        #  `--first-parent -m`. 
+        #
+        #  3 needs to be handled by comparing all merge children for 
+        #  the entire commit range. The best solution here would *not* 
+        #  use --first-parent because there is no guarantee that it 
+        #  reflects changes brought into master. Unfortunately we have
+        #  no good method inside Travis-CI to easily differentiate 
+        #  scenario 1/2 from scenario 3, so I cannot handle them all 
+        #  separately. 1/2 are the most common cases, 3 with a range 
+        #  of non-merge commits is the next most common, and 3 with 
+        #  a range including merge commits is the least common, so I 
+        #  am choosing to make our Travis-CI setup potential not work 
+        #  properly on the least common case by always using 
+        #  --first-parent 
         
-        # If only one commit was pushed, examine that one. If it was a 
-        # merge be sure to show all details
+        # Handle 3
+        # Note: Also handles 2 because Travis-CI sets COMMIT_RANGE for 
+        # merged PR commits
+        self.commit_range = "--first-parent -m %s" % os.environ['TRAVIS_COMMIT_RANGE']
+
+        # Handle 1
         if self.commit_range == "":
-          self.commit_range = "-m -1 %s" % os.environ['TRAVIS_COMMIT']
+          self.commit_range = "--first-parent -m -1 %s" % os.environ['TRAVIS_COMMIT']
 
     except KeyError:
       log.warning("I should only be used for automated integration tests e.g. Travis-CI")
@@ -192,12 +219,10 @@ class CIRunnner:
                   and (t.database_os.lower() == "linux" or t.database_os.lower() == "none")]
     
     # Our Travis-CI only has some databases supported
-    validtests = [t for t in osvalidtests if t.database.lower() == "mysql"
-                  or t.database.lower() == "postgres"
-                  or t.database.lower() == "mongodb"
-                  or t.database.lower() == "none"]
-    log.info("Found %s usable tests (%s valid for linux, %s valid for linux and {mysql,postgres,mongodb,none}) in directory '%s'", 
-      len(dirtests), len(osvalidtests), len(validtests), '$FWROOT/frameworks/' + testdir)
+    validtests = [t for t in osvalidtests if t.database.lower() in self.SUPPORTED_DATABASES]
+    supported_databases = ','.join(self.SUPPORTED_DATABASES)
+    log.info("Found %s usable tests (%s valid for linux, %s valid for linux and {%s}) in directory '%s'",
+      len(dirtests), len(osvalidtests), len(validtests), supported_databases, '$FWROOT/frameworks/' + testdir)
     if len(validtests) == 0:
       log.critical("Found no test that is possible to run in Travis-CI! Aborting!")
       if len(osvalidtests) != 0:
@@ -308,18 +333,27 @@ class CIRunnner:
     log.info("Setting up Travis-CI")
     
     script = '''
-    # Needed to download latest MongoDB
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Turn on command tracing
+    set -x 
+
+    # Setup Apt For MongoDB
     #   Due to TechEmpower/FrameworkBenchmarks#989 and travis-ci/travis-ci#2655, 
     #   we put this into a loop
     until timeout 15s sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10; do echo 'Waiting for apt-key' ; done
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 
-    sudo apt-get -q update
-    
-    # MongoDB takes a good 30-45 seconds to turn on, so install it first
-    sudo apt-get -q install mongodb-org
+    # Setup apt for Apache Cassandra
+    until timeout 15s sudo apt-key adv --keyserver pgp.mit.edu --recv 4BD736A82B5C1B00; do echo 'Waiting for apt-key' ; done
+    sudo apt-add-repository  'deb http://www.apache.org/dist/cassandra/debian 20x main'
 
-    sudo apt-get -q install openssh-server
+    # Run installation
+    sudo apt-get -q update
+    sudo apt-get -q -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+      mongodb-org \
+      cassandra \
+      openssh-server
 
     # Run as travis user (who already has passwordless sudo)
     ssh-keygen -f /home/travis/.ssh/id_rsa -N '' -t rsa
@@ -331,18 +365,29 @@ class CIRunnner:
     #       It changes DB configuration files and will break everything
     # =======================================================
 
-    # Add data to mysql
+    # Setup MySQL
+    echo "Populating MySQL database"
     mysql -uroot < config/create.sql
 
     # Setup Postgres
+    echo "Populating Postgres database"
     psql --version
     sudo useradd benchmarkdbuser -p benchmarkdbpass
     sudo -u postgres psql template1 < config/create-postgres-database.sql
     sudo -u benchmarkdbuser psql hello_world < config/create-postgres.sql
 
-    # Setup MongoDB (see install above)
-    mongod --version
+    # Setup Apache Cassandra
+    echo "Populating Apache Cassandra database"
+    until nc -z localhost 9160 ; do echo Waiting for Cassandra; sleep 1; done
+    cat config/cassandra/cleanup-keyspace.cql | sudo cqlsh
+    python config/cassandra/db-data-gen.py > config/cassandra/tfb-data.cql
+    sudo cqlsh -f config/cassandra/create-keyspace.cql
+    sudo cqlsh -f config/cassandra/tfb-data.cql
+
+    # Setup MongoDB
+    echo "Populating MongoDB database"
     until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
+    mongod --version
     mongo < config/create.js
     '''
 

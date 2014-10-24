@@ -4,15 +4,15 @@ This test adds [Redstone.dart](http://redstonedart.org), a microframework for Da
 
 ## Versions
 
-* [Dart SDK version >=1.3.0](https://launchpad.net/~hachre/+archive/dart)
+* [Dart SDK version >=1.7.0](http://www.dartlang.org/)
 * [Dart args version 0.10.0+2](http://pub.dartlang.org/packages/args)
 * [Dart crypto version 0.9.0](http://pub.dartlang.org/packages/crypto)
 * [Dart mustache version 0.1.8](http://pub.dartlang.org/packages/mustache)
-* [Dart mongo_dart version 0.1.42](http://pub.dartlang.org/packages/mongo_dart)
+* [Dart mongo_dart version 0.1.44](http://pub.dartlang.org/packages/mongo_dart)
 * [Dart postgresql version 0.2.14](http://pub.dartlang.org/packages/postgresql)
-* [Dart redstone version 0.5.11](http://pub.dartlang.org/packages/redstone)
-* [Dart yaml version 0.9.0](http://pub.dartlang.org/packages/yaml)
-* [Dart redstone_mapper version 0.1.4](http://pub.dartlang.org/packages/redstone_mapper)
+* [Dart redstone version 0.5.18](http://pub.dartlang.org/packages/redstone)
+* [Dart yaml version 2.0.1+1](http://pub.dartlang.org/packages/yaml)
+* [Dart redstone_mapper version 0.1.9](http://pub.dartlang.org/packages/redstone_mapper)
 * [Dart redstone_mapper_mongo version 0.1.1+1](http://pub.dartlang.org/packages/redstone_mapper_mongo)
 * [Dart redstone_mapper_pg version 0.1.1](http://pub.dartlang.org/packages/redstone_mapper_pg)
 
