@@ -83,11 +83,14 @@ class FrameworkTestType:
     '''Accesses URL used by this test type and checks the return 
     values for correctness. Most test types run multiple checks,
     so this returns a list of results. Each result is a 3-tuple
-    of (String result, String message, String urlTested).
+    of (String result, String reason, String urlTested).
 
-    - Result is always 'pass','warn','fail'
-    - message is a human-readable reason if the result was warn or fail
-    - urlTested is the URL that was queried
+    - result : 'pass','warn','fail'
+    - reason : Short human-readable reason if result was 
+        warn or fail. Please do not print the response as part of this, 
+        other parts of TFB will do that based upon the current logging 
+        settings if this method indicates a failure happened
+    - urlTested: The exact URL that was queried
     '''
     # TODO make String result into an enum to enforce
     raise NotImplementedError("Subclasses must provide verify")
@@ -97,11 +100,6 @@ class FrameworkTestType:
     # This is a method because each test type uses a different key
     # for their URL so the base class can't know which arg is the URL
     raise NotImplementedError("Subclasses must provide verify")
-
-class DBTestType(FrameworkTestType):
-  def __init__(self):
-    args = ['db_url']
-    FrameworkTestType.__init__(self, name='db', requires_db=True, args=args)
 
 class QueryTestType(FrameworkTestType):
   def __init__(self):
