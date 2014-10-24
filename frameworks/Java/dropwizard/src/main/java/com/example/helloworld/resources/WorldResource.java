@@ -3,6 +3,7 @@ package com.example.helloworld.resources;
 import com.example.helloworld.db.WorldDAO;
 import com.example.helloworld.db.model.World;
 import com.google.common.base.Optional;
+import com.google.common.primitives.Ints;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.GET;
@@ -26,16 +27,14 @@ public class WorldResource {
 
     @GET
     @UnitOfWork
-    public Object dbTest(@QueryParam("queries") Optional<Object> queries) {
+    public Object dbTest(@QueryParam("queries") Optional<String> queries) {
         if (!queries.isPresent()) {
             final long worldId = RANDOM.nextInt(10_000) + 1;
             return worldDAO.findById(worldId).orNull();
         }
 
-        int totalQueries;
-        Object query = queries.orNull();
-        if (query instanceof Integer) {
-            totalQueries = (Integer) query;
+        Integer totalQueries = Ints.tryParse(queries.orNull());
+        if (query != null) {
             if (totalQueries > 500) {
                 totalQueries = 500;
             } else if (totalQueries < 1) {
