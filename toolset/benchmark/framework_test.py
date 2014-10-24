@@ -302,6 +302,7 @@ class FrameworkTest:
     def verify_type(test_type):
       
       test = self.runTests[test_type]
+      test.setup_out_err(out, err)
       out.write(header("VERIFYING %s" % test_type.upper()))
       
       base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
@@ -532,6 +533,7 @@ class FrameworkTest:
       out.write("BENCHMARKING %s ... " % test_type.upper())
 
       test = self.runTests[test_type]
+      test.setup_out_err(out, err)
       output_file = self.benchmarker.output_file(self.name, test_type)
       if not os.path.exists(output_file):
         # Open to create the empty file
@@ -949,8 +951,8 @@ class FrameworkTest:
   # Starts a thread to monitor the resource usage, to be synced with the client's time
   # TODO: MySQL and InnoDB are possible. Figure out how to implement them.
   ############################################################
-  def __begin_logging(self, test_name):
-    output_file = "{file_name}".format(file_name=self.benchmarker.get_stats_file(self.name, test_name))
+  def __begin_logging(self, test_type):
+    output_file = "{file_name}".format(file_name=self.benchmarker.get_stats_file(self.name, test_type))
     dstat_string = "dstat -afilmprsT --aio --fs --ipc --lock --raw --socket --tcp \
                                       --raw --socket --tcp --udp --unix --vm --disk-util \
                                       --rpc --rpcd --output {output_file}".format(output_file=output_file)

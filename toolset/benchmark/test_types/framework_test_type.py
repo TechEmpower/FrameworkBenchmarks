@@ -1,4 +1,5 @@
 import copy
+import sys
 import subprocess
 from subprocess import PIPE
 
@@ -22,8 +23,8 @@ class FrameworkTestType:
     self.name = name
     self.requires_db = requires_db
     self.args = args
-    self.out = [] # You can use [sys.stdout] to tee
-    self.err = [] # [sys.stderr]
+    self.out = sys.stdout
+    self.err = sys.stderr
     self.accept_header = accept_header
     if accept_header is None:
       self.accept_header = self.accept_plaintext
@@ -41,8 +42,8 @@ class FrameworkTestType:
     NOTE: I detest this. It would be much better to use
     logging like it's intended
     '''
-    self.out.append(out)
-    self.err.append(err)
+    self.out = out
+    self.err = err
   
   def parse(self, test_keys):
     '''Takes the dict of key/value pairs describing a FrameworkTest 
@@ -64,14 +65,15 @@ class FrameworkTestType:
     # Use -sS to hide progress bar, but show errors.
     p = subprocess.Popen(["curl", "-m", "15", "-i", "-sS", url], stderr=PIPE, stdout=PIPE)
     (out, err) = p.communicate()
-    [item.write(err+'\n') for item in self.err]
-    [item.write(out+'\n') for item in self.out]
+    self.err.write(err+'\n')
+    self.out.write(out+'\n')
     if p.returncode != 0:
       return None
     # Get response body
     p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=PIPE, stderr=PIPE)
     (out, err) = p.communicate()
-    [item.write(err+'\n') for item in self.err]
+    self.err.write(err+'\n')
+    self.out.write(out+'\n')
     return out
   
   def verify(self, base_url):
