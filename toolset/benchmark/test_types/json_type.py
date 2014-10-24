@@ -1,5 +1,7 @@
 from benchmark.test_types.framework_test_type import FrameworkTestType
 
+import json
+
 class JsonTestType(FrameworkTestType):
   def __init__(self):
     args = ['json_url']

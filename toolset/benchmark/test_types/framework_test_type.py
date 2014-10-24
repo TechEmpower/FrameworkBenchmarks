@@ -1,11 +1,6 @@
-import os
-import glob
-import json
 import copy
 import subprocess
 from subprocess import PIPE
-import sys
-import json
 
 from pprint import pprint
 
