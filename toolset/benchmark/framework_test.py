@@ -390,21 +390,6 @@ class FrameworkTest:
     return (True, ) if len(err_str) == 0 else (False, err_str)
 
   ############################################################
-  #
-  ############################################################
-  def validatePlaintext(self, jsonString, out, err):
-    err_str = ""
-    if jsonString is None or len(jsonString) == 0:
-      err_str += "Empty Response"
-      return (False, err_str)
-    try:
-      if not jsonString.lower().strip() == "hello, world!":
-        err_str += "Expected 'Hello, World!', got '{message}'.\n".format(message=jsonString.strip())
-    except:
-      err_str += "Got exception when trying to validate the plaintext test: {exception}\n".format(exception=traceback.format_exc())
-    return (True, ) if len(err_str) == 0 else (False, err_str)
-
-  ############################################################
   # start(benchmarker)
   # Start the test using it's setup file
   ############################################################

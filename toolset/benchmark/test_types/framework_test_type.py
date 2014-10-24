@@ -90,8 +90,7 @@ class FrameworkTestType:
     - urlTested is the URL that was queried
     '''
     # TODO make String result into an enum to enforce
-    # raise NotImplementedError("Subclasses must provide verify")
-    return [('pass','', '')]
+    raise NotImplementedError("Subclasses must provide verify")
 
   def get_url(self):
     '''Returns the URL for this test, like '/json'''
@@ -120,7 +119,3 @@ class UpdateTestType(FrameworkTestType):
     args = ['update_url']
     FrameworkTestType.__init__(self, name='update', requires_db=True, args=args)
 
-class PlaintextTestType(FrameworkTestType):
-  def __init__(self):
-    args = ['plaintext_url']
-    FrameworkTestType.__init__(self, name='plaintext', requires_db=False, args=args)
