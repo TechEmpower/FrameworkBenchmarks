@@ -734,6 +734,32 @@ class FrameworkTest:
   # JSON/DB/Query.
   ############################################################
   def benchmark(self, out, err):
+
+    def benchmark_type(test_type):  
+      out.write("BENCHMARKING %s ... " % test_type.upper())
+
+      test = self.runTests[test_type]
+      output_file = self.benchmarker.output_file(self.name, test_type)
+      if not os.path.exists(output_file):
+        # Open to create the empty file
+        with open(output_file, 'w'):
+          pass
+
+      if test.passed:
+        if test.requires_db:
+          remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
+        else:
+          remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
+        self.__begin_logging(test_type)
+        self.__run_benchmark(remote_script, output_file, err)
+        self.__end_logging()
+      results = self.__parse_test(test_type)
+      print "Benchmark results:"
+      pprint(results)
+
+      self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
+      out.write( "Complete\n" )
+      out.flush()
     # JSON
     if self.runTests[self.JSON]:
       try:
