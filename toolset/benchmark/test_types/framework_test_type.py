@@ -98,10 +98,20 @@ class FrameworkTestType:
     # raise NotImplementedError("Subclasses must provide verify")
     return [('pass','', '')]
 
+  def get_url(self):
+    '''Returns the URL for this test, like '/json'''
+    # This is a method because each test type uses a different key
+    # for their URL so the base class can't know which arg is the URL
+    raise NotImplementedError("Subclasses must provide verify")
+
+
 class JsonTestType(FrameworkTestType):
   def __init__(self):
     args = ['json_url']
-    FrameworkTestType.__init__(self, 'json', False, args)
+    FrameworkTestType.__init__(self, name='json', requires_db=False, accept_header=self.accept_json, args=args)
+
+  def get_url(self):
+    return self.json_url
 
   def verify(self, base_url):
     '''Validates the response is a JSON object of 
