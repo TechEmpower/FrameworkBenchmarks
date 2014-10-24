@@ -1114,11 +1114,9 @@ class FrameworkTest:
   ##############################################################
 
   def requires_database(self):
-      """Returns True/False if this test requires a database"""
-      return (self.contains_type(self.FORTUNE) or 
-              self.contains_type(self.DB) or 
-              self.contains_type(self.QUERY) or
-              self.contains_type(self.UPDATE))
+    '''Returns True/False if this test requires a database'''
+    return any(tobj.requires_db for (ttype,tobj) in self.runTests.iteritems())
+
   ############################################################
   # __begin_logging
   # Starts a thread to monitor the resource usage, to be synced with the client's time
