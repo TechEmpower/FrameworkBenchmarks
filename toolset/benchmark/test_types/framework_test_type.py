@@ -26,6 +26,10 @@ class FrameworkTestType:
     self.out = [] # You can use [sys.stdout] to tee
     self.err = [] # [sys.stderr]
 
+    self.passed = None
+    self.failed = None
+    self.warned = None
+
   def setup_out_err(self, out, err):
     '''Sets up file-like objects for logging. Used in 
     cases where it is hard just return the output. Any

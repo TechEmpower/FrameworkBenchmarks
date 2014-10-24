@@ -519,6 +519,37 @@ class FrameworkTest:
   ############################################################
   def verify_urls(self, out, err):
     result = True
+    
+    def verify_type(test_type):
+      
+      test = self.runTests[test_type]
+      out.write(header("VERIFYING %s" % test_type.upper()))
+      
+      base_url = "http://%s:%s" % (self.benchmarker.server_host, self.port)
+      results = test.verify(base_url)
+      
+      test.failed = any(result is 'fail' for (result, reason, url) in results)
+      test.warned = any(result is 'warn' for (result, reason, url) in results)
+      test.passed = all(result is 'pass' for (result, reason, url) in results)
+      
+      def output_result(result, reason, url):
+        out.write("   %s for %s\n" % (result.upper(), url))
+        print "   %s for %s" % (result.upper(), url)
+        if reason is not None and len(reason) != 0:
+          for line in reason.splitlines():
+            out.write("     " + line + '\n')
+            print "     " + line
+
+      [output_result(r1,r2,url) for (r1, r2, url) in results]
+
+      if test.failed:
+        self.benchmarker.report_verify_results(self, test_type, 'fail')
+      elif test.warned:
+        self.benchmarker.report_verify_results(self, test_type, 'warn')
+      elif test.passed:
+        self.benchmarker.report_verify_results(self, test_type, 'pass')
+      else:
+        raise Exception("What the hell")
 
     # JSON
     if self.runTests[self.JSON]:
