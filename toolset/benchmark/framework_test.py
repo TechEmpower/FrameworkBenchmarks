@@ -113,21 +113,6 @@ class FrameworkTest:
     done
   """
 
-
-  ############################################################
-  # Test Variables
-  ############################################################
-  JSON = "json"
-  DB = "db"
-  QUERY = "query"
-  FORTUNE = "fortune"
-  UPDATE = "update"
-  PLAINTEXT = "plaintext"
-
-  ##########################################################################################
-  # Public Methods
-  ##########################################################################################
-
   ############################################################
   # Parses the given HTML string and asks a FortuneHTMLParser
   # whether the parsed string is a valid fortune return.
@@ -341,182 +326,12 @@ class FrameworkTest:
       else:
         raise Exception("What the hell")
 
-    # JSON
-    if self.runTests[self.JSON]:
-      out.write(header("VERIFYING JSON (%s)" % self.json_url))
-      out.flush()
-
-      url = self.benchmarker.generate_url(self.json_url, self.port)
-      output = self.__curl_url(url, self.JSON, out, err)
-      out.write("VALIDATING JSON ... ")
-      ret_tuple = self.validateJson(output, out, err)
-      if ret_tuple[0]:
-        self.json_url_passed = True
-        out.write("PASS\n\n")
-        self.benchmarker.report_verify_results(self, self.JSON, 'pass')
-      else:
-        self.json_url_passed = False
-        out.write("\nFAIL" + ret_tuple[1] + "\n\n")
-        self.benchmarker.report_verify_results(self, self.JSON, 'fail')
+    result = True
+    for test_type in self.runTests:
+      verify_type(test_type)
+      if self.runTests[test_type].failed:
         result = False
-      out.flush()
-
-    # DB
-    if self.runTests[self.DB]:
-      out.write(header("VERIFYING DB (%s)" % self.db_url))
-      out.flush()
-
-      url = self.benchmarker.generate_url(self.db_url, self.port)
-      output = self.__curl_url(url, self.DB, out, err)
-      validate_ret_tuple = self.validateDb(output, out, err)
-      validate_strict_ret_tuple = self.validateDbStrict(output, out, err)
-      if validate_ret_tuple[0]:
-        self.db_url_passed = True
-      else:
-        self.db_url_passed = False
-      if validate_strict_ret_tuple:
-        self.db_url_warn = False
-      else:
-        self.db_url_warn = True
-      out.write("VALIDATING DB ... ")
-      if self.db_url_passed:
-        out.write("PASS")
-        self.benchmarker.report_verify_results(self, self.DB, 'pass')
-        if self.db_url_warn:
-          out.write(" (with warnings) " + validate_strict_ret_tuple[1])
-          self.benchmarker.report_verify_results(self, self.DB, 'warn')
-        out.write("\n\n")
-      else:
-        self.benchmarker.report_verify_results(self, self.DB, 'fail')
-        out.write("\nFAIL" + validate_ret_tuple[1])
-        result = False
-      out.flush()
-
-    # Query
-    if self.runTests[self.QUERY]:
-      out.write(header("VERIFYING QUERY (%s)" % self.query_url+"2"))
-      out.flush()
-
-      url = self.benchmarker.generate_url(self.query_url + "2", self.port)
-      output = self.__curl_url(url, self.QUERY, out, err)
-      ret_tuple = self.validateQuery(output, out, err)
-      if ret_tuple[0]:
-        self.query_url_passed = True
-        out.write(self.query_url + "2 - PASS\n\n")
-      else:
-        self.query_url_passed = False
-        out.write(self.query_url + "2 - FAIL " + ret_tuple[1] + "\n\n")
-      out.write("-----------------------------------------------------\n\n")
-      out.flush()
-
-      self.query_url_warn = False
-      url2 = self.benchmarker.generate_url(self.query_url + "0", self.port)
-      output2 = self.__curl_url(url2, self.QUERY, out, err)
-      ret_tuple = self.validateQueryOneOrLess(output2, out, err)
-      if not ret_tuple[0]:
-        self.query_url_warn = True
-        out.write(self.query_url + "0 - WARNING " + ret_tuple[1] + "\n\n")
-      else:
-        out.write(self.query_url + "0 - PASS\n\n")
-      out.write("-----------------------------------------------------\n\n")
-      out.flush()
-
-      url3 = self.benchmarker.generate_url(self.query_url + "foo", self.port)
-      output3 = self.__curl_url(url3, self.QUERY, out, err)
-      ret_tuple = self.validateQueryOneOrLess(output3, out, err)
-      if not ret_tuple[0]:
-        self.query_url_warn = True
-        out.write(self.query_url + "foo - WARNING " + ret_tuple[1] + "\n\n")
-      else:
-        out.write(self.query_url + "foo - PASS\n\n")
-      out.write("-----------------------------------------------------\n\n")
-      out.flush()
-
-      url4 = self.benchmarker.generate_url(self.query_url + "501", self.port)
-      output4 = self.__curl_url(url4, self.QUERY, out, err)
-      ret_tuple = self.validateQueryFiveHundredOrMore(output4, out, err)
-      if not ret_tuple[0]:
-        self.query_url_warn = True
-        out.write(self.query_url + "501 - WARNING " + ret_tuple[1] + "\n\n")
-      else:
-        out.write(self.query_url + "501 - PASS\n\n")
-      out.write("-----------------------------------------------------\n\n\n")
-      out.flush()
-
-      out.write("VALIDATING QUERY ... ")
-      if self.query_url_passed:
-        out.write("PASS")
-        self.benchmarker.report_verify_results(self, self.QUERY, 'pass')
-        if self.query_url_warn:
-          out.write(" (with warnings)")
-          self.benchmarker.report_verify_results(self, self.QUERY, 'warn')
-        out.write("\n\n")
-      else:
-        out.write("\nFAIL " + ret_tuple[1] + "\n\n")
-        self.benchmarker.report_verify_results(self, self.QUERY, 'fail')
-        result = False
-      out.flush()
-
-    # Fortune
-    if self.runTests[self.FORTUNE]:
-      out.write(header("VERIFYING FORTUNE (%s)" % self.fortune_url))
-      out.flush()
-
-      url = self.benchmarker.generate_url(self.fortune_url, self.port)
-      output = self.__curl_url(url, self.FORTUNE, out, err)
-      out.write("VALIDATING FORTUNE ... ")
-      ret_tuple = self.validateFortune(output, out, err)
-      if ret_tuple[0]:
-        self.fortune_url_passed = True
-        out.write("PASS\n\n")
-        self.benchmarker.report_verify_results(self, self.FORTUNE, 'pass')
-      else:
-        self.fortune_url_passed = False
-        out.write("\nFAIL " + ret_tuple[1] + "\n\n")
-        self.benchmarker.report_verify_results(self, self.FORTUNE, 'fail')
-        result = False
-      out.flush()
-
-    # Update
-    if self.runTests[self.UPDATE]:
-      out.write(header("VERIFYING UPDATE (%s)" % self.update_url))
-      out.flush()
-
-      url = self.benchmarker.generate_url(self.update_url + "2", self.port)
-      output = self.__curl_url(url, self.UPDATE, out, err)
-      out.write("VALIDATING UPDATE ... ")
-      ret_tuple = self.validateUpdate(output, out, err)
-      if ret_tuple[0]:
-        self.update_url_passed = True
-        out.write("PASS\n\n")
-        self.benchmarker.report_verify_results(self, self.UPDATE, 'pass')
-      else:
-        self.update_url_passed = False
-        out.write("\nFAIL " + ret_tuple[1] + "\n\n")
-        self.benchmarker.report_verify_results(self, self.UPDATE, 'fail')
-        result = False
-      out.flush()
-
-    # plaintext
-    if self.runTests[self.PLAINTEXT]:
-      out.write(header("VERIFYING PLAINTEXT (%s)" % self.plaintext_url))
-      out.flush()
-
-      url = self.benchmarker.generate_url(self.plaintext_url, self.port)
-      output = self.__curl_url(url, self.PLAINTEXT, out, err)
-      out.write("VALIDATING PLAINTEXT ... ")
-      ret_tuple = self.validatePlaintext(output, out, err)
-      if ret_tuple[0]:
-        self.plaintext_url_passed = True
-        out.write("PASS\n\n")
-        self.benchmarker.report_verify_results(self, self.PLAINTEXT, 'pass')
-      else:
-        self.plaintext_url_passed = False
-        out.write("\nFAIL\n\n" + ret_tuple[1] + "\n\n")
-        self.benchmarker.report_verify_results(self, self.PLAINTEXT, 'fail')
-        result = False
-      out.flush()
-
+    
     return result
   ############################################################
   # End verify_urls
@@ -555,146 +370,9 @@ class FrameworkTest:
       self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
       out.write( "Complete\n" )
       out.flush()
-    # JSON
-    if self.runTests[self.JSON]:
-      try:
-        out.write("BENCHMARKING JSON ... ") 
-        out.flush()
-        results = None
-        output_file = self.benchmarker.output_file(self.name, self.JSON)
-        if not os.path.exists(output_file):
-          with open(output_file, 'w'):
-            # Simply opening the file in write mode should create the empty file.
-            pass
-        if self.json_url_passed:
-          remote_script = self.__generate_concurrency_script(self.json_url, self.port, self.accept_json)
-          self.__begin_logging(self.JSON)
-          self.__run_benchmark(remote_script, output_file, err)
-          self.__end_logging()
-        results = self.__parse_test(self.JSON)
-        print results
-        self.benchmarker.report_benchmark_results(framework=self, test=self.JSON, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
-      except AttributeError:
-        pass
-
-    # DB
-    if self.runTests[self.DB]:
-      try:
-        out.write("BENCHMARKING DB ... ") 
-        out.flush()
-        results = None
-        output_file = self.benchmarker.output_file(self.name, self.DB)
-        if not os.path.exists(output_file):
-          with open(output_file, 'w'):
-            # Simply opening the file in write mode should create the empty file.
-            pass
-        if self.db_url_passed:
-          self.benchmarker.report_verify_results(self, self.DB, 'pass')
-          remote_script = self.__generate_concurrency_script(self.db_url, self.port, self.accept_json)
-          self.__begin_logging(self.DB)
-          self.__run_benchmark(remote_script, output_file, err)
-          self.__end_logging()
-        results = self.__parse_test(self.DB)
-        self.benchmarker.report_benchmark_results(framework=self, test=self.DB, results=results['results'])
-        out.write( "Complete\n" )
-      except AttributeError:
-        pass
-
-    # Query
-    if self.runTests[self.QUERY]:
-      try:
-        out.write("BENCHMARKING Query ... ")
-        out.flush()
-        results = None
-        output_file = self.benchmarker.output_file(self.name, self.QUERY)
-        if not os.path.exists(output_file):
-          with open(output_file, 'w'):
-            # Simply opening the file in write mode should create the empty file.
-            pass
-        if self.query_url_passed:
-          remote_script = self.__generate_query_script(self.query_url, self.port, self.accept_json)
-          self.__begin_logging(self.QUERY)
-          self.__run_benchmark(remote_script, output_file, err)
-          self.__end_logging()
-        results = self.__parse_test(self.QUERY)
-        self.benchmarker.report_benchmark_results(framework=self, test=self.QUERY, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
-      except AttributeError:
-        pass
-
-    # fortune
-    if self.runTests[self.FORTUNE]:
-      try:
-        out.write("BENCHMARKING Fortune ... ") 
-        out.flush()
-        results = None
-        output_file = self.benchmarker.output_file(self.name, self.FORTUNE)
-        if not os.path.exists(output_file):
-          with open(output_file, 'w'):
-            # Simply opening the file in write mode should create the empty file.
-            pass
-        if self.fortune_url_passed:
-          remote_script = self.__generate_concurrency_script(self.fortune_url, self.port, self.accept_html)
-          self.__begin_logging(self.FORTUNE)
-          self.__run_benchmark(remote_script, output_file, err)
-          self.__end_logging()
-        results = self.__parse_test(self.FORTUNE)
-        self.benchmarker.report_benchmark_results(framework=self, test=self.FORTUNE, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
-      except AttributeError:
-        pass
-
-    # update
-    if self.runTests[self.UPDATE]:
-      try:
-        out.write("BENCHMARKING Update ... ") 
-        out.flush()
-        results = None
-        output_file = self.benchmarker.output_file(self.name, self.UPDATE)
-        if not os.path.exists(output_file):
-          with open(output_file, 'w'):
-            # Simply opening the file in write mode should create the empty file.
-            pass
-        if self.update_url_passed:
-          remote_script = self.__generate_query_script(self.update_url, self.port, self.accept_json)
-          self.__begin_logging(self.UPDATE)
-          self.__run_benchmark(remote_script, output_file, err)
-          self.__end_logging()
-        results = self.__parse_test(self.UPDATE)
-        self.benchmarker.report_benchmark_results(framework=self, test=self.UPDATE, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
-      except AttributeError:
-        pass
-
-    # plaintext
-    if self.runTests[self.PLAINTEXT]:
-      try:
-        out.write("BENCHMARKING Plaintext ... ")
-        out.flush()
-        results = None
-        output_file = self.benchmarker.output_file(self.name, self.PLAINTEXT)
-        if not os.path.exists(output_file):
-          with open(output_file, 'w'):
-            # Simply opening the file in write mode should create the empty file.
-            pass
-        if self.plaintext_url_passed:
-          remote_script = self.__generate_concurrency_script(self.plaintext_url, self.port, self.accept_plaintext, wrk_command="wrk", intervals=[256,1024,4096,16384], pipeline="16")
-          self.__begin_logging(self.PLAINTEXT)
-          self.__run_benchmark(remote_script, output_file, err)
-          self.__end_logging()
-        results = self.__parse_test(self.PLAINTEXT)
-        self.benchmarker.report_benchmark_results(framework=self, test=self.PLAINTEXT, results=results['results'])
-        out.write( "Complete\n" )
-        out.flush()
-      except AttributeError:
-        traceback.print_exc()
-        pass
-
+    
+    for test_type in self.runTests:
+      benchmark_type(test_type)
   ############################################################
   # End benchmark
   ############################################################
@@ -704,38 +382,10 @@ class FrameworkTest:
   # Method meant to be run for a given timestamp
   ############################################################
   def parse_all(self):
-    # JSON
-    if os.path.exists(self.benchmarker.get_output_file(self.name, self.JSON)):
-      results = self.__parse_test(self.JSON)
-      self.benchmarker.report_benchmark_results(framework=self, test=self.JSON, results=results['results'])
-    
-    # DB
-    if os.path.exists(self.benchmarker.get_output_file(self.name, self.DB)):
-      results = self.__parse_test(self.DB)
-      self.benchmarker.report_benchmark_results(framework=self, test=self.DB, results=results['results'])
-    
-    # Query
-    if os.path.exists(self.benchmarker.get_output_file(self.name, self.QUERY)):
-      results = self.__parse_test(self.QUERY)
-      self.benchmarker.report_benchmark_results(framework=self, test=self.QUERY, results=results['results'])
-
-    # Fortune
-    if os.path.exists(self.benchmarker.get_output_file(self.name, self.FORTUNE)):
-      results = self.__parse_test(self.FORTUNE)
-      self.benchmarker.report_benchmark_results(framework=self, test=self.FORTUNE, results=results['results'])
-
-    # Update
-    if os.path.exists(self.benchmarker.get_output_file(self.name, self.UPDATE)):
-      results = self.__parse_test(self.UPDATE)
-      self.benchmarker.report_benchmark_results(framework=self, test=self.UPDATE, results=results['results'])
-
-    # Plaintext
-    if os.path.exists(self.benchmarker.get_output_file(self.name, self.PLAINTEXT)):
-      results = self.__parse_test(self.PLAINTEXT)
-      self.benchmarker.report_benchmark_results(framework=self, test=self.PLAINTEXT, results=results['results'])
-  ############################################################
-  # End parse_all
-  ############################################################
+    for test_type in self.runTests:
+      if os.path.exists(self.benchmarker.get_output_file(self.name, test_type)):
+        results = self.__parse_test(test_type)
+        self.benchmarker.report_benchmark_results(framework=self, test=test_type, results=results['results'])
 
   ############################################################
   # __parse_test(test_type)
@@ -908,39 +558,6 @@ class FrameworkTest:
   ############################################################
   # End __format_request_headers
   ############################################################
-
-  ############################################################
-  # __curl_url
-  # Dump HTTP response and headers. Throw exception if there
-  # is an HTTP error.
-  ############################################################
-  def __curl_url(self, url, testType, out, err):
-    output = None
-    try:
-      # Use -m 15 to make curl stop trying after 15sec.
-      # Use -i to output response with headers.
-      # Don't use -f so that the HTTP response code is ignored.
-      # Use --stderr - to redirect stderr to stdout so we get
-      # error output for sure in stdout.
-      # Use -sS to hide progress bar, but show errors.
-      subprocess.check_call(["curl", "-m", "15", "-i", "-sS", url], stderr=err, stdout=out)
-      # HTTP output may not end in a newline, so add that here.
-      out.write( "\n\n" )
-      out.flush()
-      err.flush()
-
-      # We need to get the respond body from the curl and return it.
-      p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=subprocess.PIPE)
-      output = p.communicate()
-    except:
-      pass
-
-    if output:
-      # We have the response body - return it
-      return output[0]
-  ##############################################################
-  # End __curl_url
-  ##############################################################
 
   def requires_database(self):
     '''Returns True/False if this test requires a database'''
