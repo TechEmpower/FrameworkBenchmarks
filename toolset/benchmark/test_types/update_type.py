@@ -9,8 +9,6 @@ class UpdateTestType(QueryTestType):
     FrameworkTestType.__init__(self, name='update', requires_db=True, 
       accept_header=self.accept_json, args=args)
 
-    pprint(self.__dict__)
-
   def get_url(self):
     return self.update_url
 

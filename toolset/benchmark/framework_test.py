@@ -239,7 +239,7 @@ class FrameworkTest:
     # Stop the progress printer
     stopFlag.set()
 
-    logging.info("Start completed, running %s", self.benchmarker.mode)
+    logging.info("Called setup.py start")
 
     return retcode
   ############################################################
@@ -312,8 +312,10 @@ class FrameworkTest:
         results = [('fail',"""Caused Exception in TFB
           This almost certainly means your return value is incorrect, 
           but also that you have found a bug. Please submit an issue
-          including this message: %s""" % e,base_url)]
+          including this message: %s\n%s""" % (e, traceback.format_exc()), 
+          base_url)]
         logging.warning("Verifying test %s for %s caused an exception: %s", test_type, self.name, e)
+        traceback.format_exc()
 
       test.failed = any(result is 'fail' for (result, reason, url) in results)
       test.warned = any(result is 'warn' for (result, reason, url) in results)

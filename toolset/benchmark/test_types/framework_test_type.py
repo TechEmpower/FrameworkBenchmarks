@@ -74,11 +74,6 @@ class FrameworkTestType:
     [item.write(err+'\n') for item in self.err]
     return out
   
-  def copy(self):
-    '''Returns a copy that can be safely modified. Use before calling 
-    parse'''
-    return copy.copy(self)
-
   def verify(self, base_url):
     '''Accesses URL used by this test type and checks the return 
     values for correctness. Most test types run multiple checks,
@@ -105,4 +100,8 @@ class FrameworkTestType:
     # for their URL so the base class can't know which arg is the URL
     raise NotImplementedError("Subclasses must provide verify")
 
+  def copy(self):
+    '''Returns a copy that can be safely modified. Use before calling 
+    parse'''
+    return copy.copy(self)
 

@@ -551,11 +551,13 @@ class Benchmarker:
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
           return exit_with_code(1)
         
+        logging.info("Sleeping %s seconds to ensure framework is ready" % self.sleep)
         time.sleep(self.sleep)
 
         ##########################
         # Verify URLs
         ##########################
+        logging.info("Verifying framework URLs")
         passed_verify = test.verify_urls(out, err)
         out.flush()
         err.flush()
@@ -564,6 +566,7 @@ class Benchmarker:
         # Benchmark this test
         ##########################
         if self.mode == "benchmark":
+          logging.info("Benchmarking")
           out.write(header("Benchmarking %s" % test.name))
           out.flush()
           test.benchmark(out, err)
