@@ -114,4 +114,4 @@ def header(message, top='-', bottom='-'):
         result = "%s" % bottomheader
       else:
         result += "\n%s" % bottomheader
-    return result
+    return result + '\n'
