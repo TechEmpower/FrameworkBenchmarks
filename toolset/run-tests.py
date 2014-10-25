@@ -153,6 +153,8 @@ def main(argv=None):
         print 'Configuration options: '
         pprint(args)
 
+
+
     benchmarker = Benchmarker(vars(args))
 
     # Run the benchmarker in the specified mode

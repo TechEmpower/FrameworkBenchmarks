@@ -2,6 +2,7 @@ from setup.linux.installer import Installer
 from setup.linux import setup_util
 
 from benchmark import framework_test
+from benchmark.test_types import *
 from utils import header
 from utils import gather_tests
 from utils import gather_frameworks
@@ -17,6 +18,7 @@ import sys
 import logging
 import socket
 import threading
+from pprint import pprint
 
 from multiprocessing import Process
 
@@ -495,26 +497,14 @@ class Benchmarker:
       pass
     with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
          open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
-      if hasattr(test, 'skip'):
-        if test.skip.lower() == "true":
-          out.write("Test {name} benchmark_config specifies to skip this test. Skipping.\n".format(name=test.name))
-          return exit_with_code(0)
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
-        # the operating system requirements of this test for the
-        # application server or the database server don't match
-        # our current environment
         out.write("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.\n")
         return exit_with_code(0)
       
       # If the test is in the excludes list, we skip it
       if self.exclude != None and test.name in self.exclude:
         out.write("Test {name} has been added to the excludes list. Skipping.\n".format(name=test.name))
-        return exit_with_code(0)
-      
-      # If the test does not contain an implementation of the current test-type, skip it
-      if self.type != 'all' and not test.contains_type(self.type):
-        out.write("Test type {type} does not contain an implementation of the current test-type. Skipping.\n".format(type=self.type))
         return exit_with_code(0)
 
       out.write("test.os.lower() = {os}  test.database_os.lower() = {dbos}\n".format(os=test.os.lower(),dbos=test.database_os.lower()))
@@ -561,11 +551,13 @@ class Benchmarker:
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
           return exit_with_code(1)
         
+        logging.info("Sleeping %s seconds to ensure framework is ready" % self.sleep)
         time.sleep(self.sleep)
 
         ##########################
         # Verify URLs
         ##########################
+        logging.info("Verifying framework URLs")
         passed_verify = test.verify_urls(out, err)
         out.flush()
         err.flush()
@@ -574,6 +566,7 @@ class Benchmarker:
         # Benchmark this test
         ##########################
         if self.mode == "benchmark":
+          logging.info("Benchmarking")
           out.write(header("Benchmarking %s" % test.name))
           out.flush()
           test.benchmark(out, err)
@@ -756,22 +749,29 @@ class Benchmarker:
     
     jsonResult = {}
     for framework, testlist in frameworks.iteritems():
+      if not os.path.exists(os.path.join(testlist[0].directory, "source_code")):
+        logging.warn("Cannot count lines of code for %s - no 'source_code' file", framework)
+        continue
+
       # Unfortunately the source_code files use lines like
       # ./cpoll_cppsp/www/fortune_old instead of 
       # ./www/fortune_old
       # so we have to back our working dir up one level
       wd = os.path.dirname(testlist[0].directory)
-
+      
       try:
         command = "cloc --list-file=%s/source_code --yaml" % testlist[0].directory
         # Find the last instance of the word 'code' in the yaml output. This should
         # be the line count for the sum of all listed files or just the line count
         # for the last file in the case where there's only one file listed.
         command = command + "| grep code | tail -1 | cut -d: -f 2"
+        logging.debug("Running \"%s\" (cwd=%s)", command, wd)
         lineCount = subprocess.check_output(command, cwd=wd, shell=True)
         jsonResult[framework] = int(lineCount)
       except subprocess.CalledProcessError:
         continue
+      except ValueError as ve:
+        logging.warn("Unable to get linecount for %s due to error '%s'", framework, ve)
     self.results['rawData']['slocCounts'] = jsonResult
   ############################################################
   # End __count_sloc
@@ -889,7 +889,25 @@ class Benchmarker:
   ############################################################
   def __init__(self, args):
     
+    # Map type strings to their objects
+    types = dict()
+    types['json'] = JsonTestType()
+    types['db'] = DBTestType()
+    types['query'] = QueryTestType()
+    types['fortune'] = FortuneTestType()
+    types['update'] = UpdateTestType()
+    types['plaintext'] = PlaintextTestType()
+
+    # Turn type into a map instead of a string
+    if args['type'] == 'all':
+        args['types'] = types
+    else:
+        args['types'] = { args['type'] : types[args['type']] }
+    del args['type']
+
     self.__dict__.update(args)
+    # pprint(self.__dict__)
+
     self.start_time = time.time()
     self.run_test_timeout_seconds = 3600
 
