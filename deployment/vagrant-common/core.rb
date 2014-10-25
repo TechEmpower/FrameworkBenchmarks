@@ -81,10 +81,13 @@ def provider_virtualbox(config, role)
   config.vm.provider :virtualbox do |vb, override|
     override.vm.hostname = "TFB-#{role}"
 
-    override.vm.box = "ubuntu/trusty64"
-    if ENV.fetch('TFB_VM_ARCH','64') == "32"
-      override.vm.box = "ubuntu/trusty32"
-    end
+    # Valid values are 32 and 64
+    arch = ENV.fetch('TFB_VB_ARCH','64')
+
+    # Value values are precise, trusty, etc
+    code = ENV.fetch('TFB_VB_CODE','trusty')
+    
+    override.vm.box = "ubuntu/" + code + arch
     
     if ENV.fetch('TFB_SHOW_VM', false)
       vb.gui = true

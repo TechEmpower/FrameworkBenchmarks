@@ -378,7 +378,9 @@ class FrameworkTest:
       parser = FortuneHTMLParser()
       parser.feed(htmlString)
 
-      return (parser.isValidFortune(out), )
+      valid = parser.isValidFortune(out)
+      return (valid, '' if valid else 'Did not pass validation')
+
     except:
       print "Got exception when trying to validate the fortune test: {exception} ".format(exception=traceback.format_exc())
     return (False, err_str)
@@ -473,7 +475,17 @@ class FrameworkTest:
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
-    retcode = self.setup_module.start(self, out, err)    
+    try:
+      retcode = self.setup_module.start(self, out, err)    
+      if retcode == None: 
+        retcode = 0
+    except Exception:
+      retcode = 1
+      st = traceback.format_exc()
+      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
+      st = "Start exception:\n%s" % st
+      logging.info(st)
+      err.write(st + '\n')
     os.chdir(previousDir)
 
     # Stop the progress printer
@@ -507,7 +519,17 @@ class FrameworkTest:
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
-    retcode = self.setup_module.stop(out, err)
+    try:
+      retcode = self.setup_module.stop(out, err)
+      if retcode == None: 
+        retcode = 0
+    except Exception:
+      retcode = 1 
+      st = traceback.format_exc()
+      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
+      st = "Stop exception:\n%s\n" % st
+      logging.info(st)
+      err.write(st + '\n')
     os.chdir(previousDir)
 
     # Give processes sent a SIGTERM a moment to shut down gracefully
@@ -1290,8 +1312,9 @@ class FrameworkTest:
   ##########################################################################################
   # Constructor
   ##########################################################################################  
-  def __init__(self, name, directory, benchmarker, runTests, args):
+  def __init__(self, name, framework, directory, benchmarker, runTests, args):
     self.name = name
+    self.framework = framework
     self.directory = directory
     self.benchmarker = benchmarker
     self.runTests = runTests
@@ -1351,6 +1374,7 @@ def parse_config(config, directory, benchmarker):
   for test in config['tests']:
     for key, value in test.iteritems():
       test_name = config['framework']
+      test_framework = config['framework']
       
       runTests = dict()
 
@@ -1367,7 +1391,7 @@ def parse_config(config, directory, benchmarker):
         # we need to use the key in the test_name
         test_name = test_name + "-" + key
 
-      tests.append(FrameworkTest(test_name, directory, benchmarker, runTests, value))
+      tests.append(FrameworkTest(test_name, test_framework, directory, benchmarker, runTests, value))
 
   return tests
 ##############################################################

@@ -1,4 +1,4 @@
-host: tfbdata
+host: localhost
 port: 5432
 user: benchmarkdbuser
 password: benchmarkdbpass

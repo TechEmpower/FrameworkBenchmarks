@@ -1,14 +1,16 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists resin-4.0.36/conf/resin.xml)
+RVER=4.0.41
+
+RETCODE=$(fw_exists resin-$RVER/conf/resin.xml)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_depends java
 sudo cp -r /usr/lib/jvm/java-1.7.0-openjdk-amd64/include /usr/lib/jvm/java-1.7.0-openjdk-amd64/jre/bin/
 
-fw_get http://www.caucho.com/download/resin-4.0.36.tar.gz
-fw_untar resin-4.0.36.tar.gz
-cd resin-4.0.36
+fw_get http://www.caucho.com/download/resin-$RVER.tar.gz
+fw_untar resin-$RVER.tar.gz
+cd resin-$RVER
 ./configure --prefix=`pwd`
 make
 make install
