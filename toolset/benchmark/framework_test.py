@@ -265,7 +265,7 @@ class FrameworkTest:
       elif test.passed:
         self.benchmarker.report_verify_results(self, test_type, 'pass')
       else:
-        raise Exception("What the hell")
+        raise Exception("Unknown error - test did not pass,warn,or fail")
 
     result = True
     for test_type in self.runTests:
