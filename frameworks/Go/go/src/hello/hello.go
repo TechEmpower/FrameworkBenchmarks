@@ -107,9 +107,8 @@ func queriesHandler(w http.ResponseWriter, r *http.Request) {
 		n, _ = strconv.Atoi(nStr)
 	}
 
-	if n <= 1 {
-		dbHandler(w, r)
-		return
+	if n > 500 {
+		n = 500
 	}
 
 	world := make([]World, n)
