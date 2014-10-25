@@ -16,7 +16,7 @@ def start(args, logfile, errfile):
   except subprocess.CalledProcessError:
     return 1
 
- def stop(logfile, errfile):
+def stop(logfile, errfile):
    try:
      subprocess.Popen("kill -TERM $(ps --ppid `cat app.pid` -o pid --no-header)", shell=True, cwd="plack", stderr=errfile, stdout=logfile)
      # TE - There was an issue on the EC2 machines where this, for reasons unknown,

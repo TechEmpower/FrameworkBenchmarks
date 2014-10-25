@@ -591,6 +591,8 @@ class Benchmarker:
         time.sleep(5)
 
         if self.__is_port_bound(test.port):
+          err.write("Port %s was not freed. Attempting to free it." % (test.port, ))
+          err.flush()
           self.__forciblyEndPortBoundProcesses(test.port, out, err)
           time.sleep(5)
           if self.__is_port_bound(test.port):
@@ -692,6 +694,13 @@ class Benchmarker:
         splitline = line.split()
         port = splitline[3].split(':')
         port = int(port[len(port) - 1].strip())
+        if port > 6000:
+          err.write(textwrap.dedent(
+        """
+        A port that shouldn't be open is open. See the following line for netstat output.
+        {splitline}
+        """.format(splitline=splitline)))
+          err.flush()
         if port == test_port:
           try:
             pid = splitline[6].split('/')[0].strip()
