@@ -18,7 +18,7 @@ class Benchmark extends lapis.Application
     num_queries = tonumber(@params.queries) or 1
     if num_queries < 2 
       w = World\find random(1, 10000)
-      return json: {id:w.id,randomNumber:w.randomnumber}
+      return json: {{id:w.id,randomNumber:w.randomnumber}}
 
     worlds = {}
     num_queries = min(500, num_queries)
@@ -64,7 +64,7 @@ class Benchmark extends lapis.Application
       world\update "randomnumber"
       insert worlds, {id:world.id,randomNumber:world.randomnumber} 
     if num_queries < 2
-      return json: worlds[1]
+      return json: {worlds[1]}
     json: worlds
 
   "/plaintext": =>
