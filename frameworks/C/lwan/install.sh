@@ -6,6 +6,8 @@ INSTALLED_FILE="${IROOT}/lwan-${REV}.installed"
 RETCODE=$(fw_exists ${INSTALLED_FILE})
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
+[ ! -e ${INSTALLED_FILE} -a -d ${IROOT}/lwan ] && rm -rf ${IROOT}/lwan
+
 # Lwan is only built during installation as a dependency sanity check.
 sudo apt-get update && \
 	sudo apt-get install libjemalloc-dev && \
