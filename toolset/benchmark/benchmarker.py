@@ -930,25 +930,6 @@ class Benchmarker:
       self.timestamp = self.parse
     else:
       self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
-
-    # Setup the concurrency levels array. This array goes from
-    # starting_concurrency to max concurrency, doubling each time
-    self.concurrency_levels = []
-    concurrency = self.starting_concurrency
-    while concurrency <= self.max_concurrency:
-      self.concurrency_levels.append(concurrency)
-      concurrency = concurrency * 2
-
-    # Setup query interval array
-    # starts at 1, and goes up to max_queries, using the query_interval
-    self.query_intervals = []
-    queries = 1
-    while queries <= self.max_queries:
-      self.query_intervals.append(queries)
-      if queries == 1:
-        queries = 0
-
-      queries = queries + self.query_interval
     
     # Load the latest data
     #self.latest = None
@@ -982,7 +963,7 @@ class Benchmarker:
       self.results = dict()
       self.results['name'] = self.name
       self.results['concurrencyLevels'] = self.concurrency_levels
-      self.results['queryIntervals'] = self.query_intervals
+      self.results['queryIntervals'] = self.query_levels
       self.results['frameworks'] = [t.name for t in self.__gather_tests]
       self.results['duration'] = self.duration
       self.results['rawData'] = dict()

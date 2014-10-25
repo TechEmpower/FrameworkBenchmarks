@@ -52,7 +52,7 @@ class FrameworkTest:
     echo ""
     ntpdate -s pool.ntp.org
 
-    for c in {interval}
+    for c in {levels}
     do
       echo ""
       echo "---------------------------------------------------------"
@@ -97,7 +97,7 @@ class FrameworkTest:
     echo ""
     ntpdate -s pool.ntp.org
 
-    for c in {interval}
+    for c in {levels}
     do
       echo ""
       echo "---------------------------------------------------------"
@@ -433,7 +433,7 @@ class FrameworkTest:
                 # rawData["averageStats"] = self.__calculate_average_stats(test_stats)
                 stats.append(test_stats)
       with open(self.benchmarker.stats_file(self.name, test_type) + ".json", "w") as stats_file:
-        json.dump(stats, stats_file)
+        json.dump(stats, stats_file, indent=2)
 
 
       return results

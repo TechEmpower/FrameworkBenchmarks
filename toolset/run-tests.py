@@ -4,6 +4,8 @@ import ConfigParser
 import sys
 import os
 import multiprocessing
+import itertools
+import copy
 import subprocess
 from pprint import pprint 
 from benchmark.benchmarker import Benchmarker
@@ -13,6 +15,27 @@ from setup.linux import setup_util
 # Enable cross-platform colored output
 from colorama import init
 init()
+
+class StoreSeqAction(argparse.Action):
+  '''Helper class for parsing a sequence from the command line'''
+  def __init__(self, option_strings, dest, nargs=None, **kwargs):
+     super(StoreSeqAction, self).__init__(option_strings, dest, type=str, **kwargs)
+  def __call__(self, parser, namespace, values, option_string=None):
+    setattr(namespace, self.dest, self.parse_seq(values))
+  def parse_seq(self, argument):
+    result = argument.split(',')
+    sequences = [x for x in result if ":" in x]
+    for sequence in sequences:
+      try:
+        (start,step,end) = sequence.split(':')
+      except ValueError: 
+        print "  Invalid: %s" % sequence
+        print "  Requires start:step:end, e.g. 1:2:10"
+        raise
+      result.remove(sequence)
+      result = result + range(int(start), int(end), int(step))
+    return [abs(int(item)) for item in result]
+
 
 ###################################################################################################
 # Main
@@ -81,9 +104,15 @@ def main(argv=None):
     ##########################################################
     # Set up argument parser
     ##########################################################
-    parser = argparse.ArgumentParser(description='Run the Framework Benchmarking test suite.',
+    parser = argparse.ArgumentParser(description="Install or run the Framework Benchmarks test suite.",
         parents=[conf_parser],
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        epilog='''If an argument includes (type int-sequence), then it accepts integer lists in multiple forms. 
+        Using a single number e.g. 5 will create a list [5]. Using commas will create a list containing those 
+        values e.g. 1,3,6 creates [1, 3, 6]. Using three colon-separated numbers of start:step:end will create a 
+        list, using the semantics of python's range function, e.g. 1:3:15 creates [1, 4, 7, 10, 13] while 
+        0:1:5 creates [0, 1, 2, 3, 4]
+        ''')
 
     # SSH options
     parser.add_argument('-s', '--server-host', default=serverHost, help='The application server.')
@@ -122,12 +151,10 @@ def main(argv=None):
     parser.add_argument('--database-os', choices=['linux', 'windows'], default='linux', help='The operating system of the database server.')
 
     # Benchmark options
-    parser.add_argument('--max-concurrency', default=256, help='the maximum number of HTTP connections that wrk will keep open. The query tests will run at this maximum', type=int)
-    parser.add_argument('--max-queries', default=20, help='The maximum number of queries to run during the query test', type=int)
-    parser.add_argument('--query-interval', default=5, type=int, help='Query tests will go from 1 query to max queries in increments of interval queries')
-    parser.add_argument('--max-threads', default=maxThreads, help='The max number of threads to run wrk at. This should be set to the number of cores for your client system.', type=int)
+    parser.add_argument('--concurrency-levels', default=[8, 16, 32, 64, 128, 256], help='Runs wrk benchmarker with different concurrency value (type int-sequence)', action=StoreSeqAction)
+    parser.add_argument('--query-levels', default=[1, 5,10,15,20], help='Database queries requested per HTTP connection, used during query test (type int-sequence)', action=StoreSeqAction) 
+    parser.add_argument('--threads', default=maxThreads, help='Run wrk benchmarker with this many threads. This should probably be the number of cores for your client system', type=int)
     parser.add_argument('--duration', default=15, help='Time in seconds that each test should run for.')
-    parser.add_argument('--starting-concurrency', default=8, type=int)
     parser.add_argument('--sleep', type=int, default=60, help='the amount of time to sleep after starting each test to allow the server to start up.')
 
     # Misc Options
@@ -151,7 +178,7 @@ def main(argv=None):
 
     if args.verbose:
         print 'Configuration options: '
-        pprint(args)
+        pprint(vars(args))
 
 
 
