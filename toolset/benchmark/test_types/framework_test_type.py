@@ -63,7 +63,7 @@ class FrameworkTestType:
     # Use -i to output response with headers
     # Don't use -f so that the HTTP response code is ignored.
     # Use -sS to hide progress bar, but show errors.
-    print "Accessing URL %s"
+    print "Accessing URL %s" % url
     p = subprocess.Popen(["curl", "-m", "15", "-i", "-sS", url], stderr=PIPE, stdout=PIPE)
     (out, err) = p.communicate()
     self.err.write(err+'\n')
