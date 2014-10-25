@@ -64,7 +64,12 @@ class QueryTestType(DBTestType):
     problems = []
 
     if type(response) != list:
-      return [('fail','Top-level JSON is an object, not an array', url)]
+      problems.append(('warn','Top-level JSON is an object, not an array', url))
+
+      # Verify the one object they gave us before returning
+      problems += self._verifyObject(response, url)
+
+      return problems
 
     if any(type(item) != dict for item in response):
       problems.append(('fail','All items JSON array must be JSON objects', url))
