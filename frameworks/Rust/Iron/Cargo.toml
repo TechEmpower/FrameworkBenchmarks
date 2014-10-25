@@ -26,7 +26,7 @@ git = "https://github.com/iron/persistent.git"
 
 [dependencies.htmlescape]
 
-git = "https://github.com/veddan/rust-htmlescape.git"
+git = "https://github.com/torhve/rust-htmlescape.git"
 
 [dependencies.mysql]
 
