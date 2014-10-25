@@ -37,8 +37,10 @@ sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::=
   libgstreamer-plugins-base0.10-0 libgstreamer0.10-0 \
   liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev \
   libjson0-dev libmcrypt-dev libicu-dev gettext \
-  libpq-dev mlton cloc dstat
+  libpq-dev mlton \
+  cloc dstat                        `# Collect resource usage statistics`
 
+# Install gcc-4.8
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt-get -y update
 sudo apt-get install -y gcc-4.8 g++-4.8
