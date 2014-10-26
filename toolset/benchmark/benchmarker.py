@@ -707,6 +707,7 @@ class Benchmarker:
           """.format(port=port, netstat=line, ps=out_6000)))
           err.flush()
         if port == test_port:
+          err.write( header("Error: Test port %s should not be open" % port, bottom='') )
           try:
             pid = splitline[6].split('/')[0].strip()
             ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
@@ -716,19 +717,21 @@ class Benchmarker:
             os.kill(int(pid), 15)
             # Sleep for 10 sec; kill can be finicky
             time.sleep(10)
+
             # Check that PID again
             ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
             (out_9, err_9) = ps.communicate()
             if len(out_9.splitlines()) != 1:  # One line for the header row
+              err.write("  Process is still alive!\n")
+              err.write("  Sending SIGKILL to this process:\n   %s\n" % out_9)
               os.kill(int(pid), 9)
+            else:
+              err.write("  Process has been terminated\n")
           except OSError:
-            out.write( textwrap.dedent("""
-              -----------------------------------------------------
-                Error: Could not kill pid {pid}
-              -----------------------------------------------------
-              """.format(pid=str(pid))) )
+            out.write( "  Error: Could not kill pid %s\n" % pid )
             # This is okay; likely we killed a parent that ended
             # up automatically killing this before we could.
+          err.write( header("Done attempting to recover port %s" % port, top='') )
 
   ############################################################
   # __parse_results
