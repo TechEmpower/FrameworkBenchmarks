@@ -694,12 +694,17 @@ class Benchmarker:
         splitline = line.split()
         port = splitline[3].split(':')
         port = int(port[len(port) - 1].strip())
+
         if port > 6000:
+          pid = splitline[6].split('/')[0].strip()
+          ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
+          (out_6000, err_6000) = ps.communicate()
           err.write(textwrap.dedent(
-        """
-        A port that shouldn't be open is open. See the following line for netstat output.
-        {splitline}
-        """.format(splitline=splitline)))
+          """
+          Port {port} should not be open. See the following lines for information
+          {netstat}
+          {ps}
+          """.format(port=port, netstat=line, ps=out_6000)))
           err.flush()
         if port == test_port:
           try:
