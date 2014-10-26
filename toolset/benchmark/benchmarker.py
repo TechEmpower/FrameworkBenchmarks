@@ -719,6 +719,7 @@ class Benchmarker:
             # Check that PID again
             ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
             (out_9, err_9) = ps.communicate()
+            if len(out_9.splitlines()) != 1:  # One line for the header row
               os.kill(int(pid), 9)
           except OSError:
             out.write( textwrap.dedent("""
