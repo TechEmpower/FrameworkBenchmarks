@@ -711,14 +711,14 @@ class Benchmarker:
             pid = splitline[6].split('/')[0].strip()
             ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
             # Store some info about this process
-            proc = ps.communicate()
+            (out_15, err_15) = ps.communicate()
+            err.write("  Sending SIGTERM to this process:\n  %s\n" % out_15)
             os.kill(int(pid), 15)
             # Sleep for 10 sec; kill can be finicky
             time.sleep(10)
             # Check that PID again
             ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
-            dead = ps.communicate()
-            if dead in proc:
+            (out_9, err_9) = ps.communicate()
               os.kill(int(pid), 9)
           except OSError:
             out.write( textwrap.dedent("""
