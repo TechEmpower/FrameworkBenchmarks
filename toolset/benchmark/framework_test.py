@@ -297,7 +297,9 @@ class FrameworkTest:
           pass
 
       if test.passed:
-        if test.requires_db:
+        if test_type == 'plaintext': # One special case
+          remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header, levels=[256,1024,4096,16384], pipeline="16")
+        elif test.requires_db:
           remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
         else:
           remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
@@ -306,9 +308,10 @@ class FrameworkTest:
         self.__begin_logging(test_type)
         
         # Run the benchmark 
-        p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=output_file, stderr=err)
-        p.communicate(remote_script)
-        err.flush()
+        with open(output_file, 'w') as raw_file:
+          p = subprocess.Popen(self.benchmarker.client_ssh_string.split(" "), stdin=subprocess.PIPE, stdout=raw_file, stderr=err)
+          p.communicate(remote_script)
+          err.flush()
 
         # End resource usage metrics collection
         self.__end_logging()
