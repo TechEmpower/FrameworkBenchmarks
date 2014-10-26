@@ -682,8 +682,8 @@ class Benchmarker:
 
   def __forciblyEndPortBoundProcesses(self, test_port, out, err):
     p = subprocess.Popen(['sudo', 'netstat', '-lnp'], stdout=subprocess.PIPE)
-    out, err = p.communicate()
-    for line in out.splitlines():
+    (ns_out, ns_err) = p.communicate()
+    for line in ns_out.splitlines():
       if 'tcp' in line:
         splitline = line.split()
         port = splitline[3].split(':')
