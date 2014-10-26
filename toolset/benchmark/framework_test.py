@@ -457,13 +457,13 @@ class FrameworkTest:
   # specifically works for the variable concurrency tests (JSON
   # and DB)
   ############################################################
-  def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk", intervals=[], pipeline=""):
-    if len(intervals) == 0:
-      intervals = self.benchmarker.concurrency_levels
+  def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk", levels=[], pipeline=""):
+    if len(levels) == 0:
+      levels = self.benchmarker.concurrency_levels
     headers = self.headers_template.format(accept=accept_header)
-    return self.concurrency_template.format(max_concurrency=self.benchmarker.max_concurrency, 
-      max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
-      interval=" ".join("{}".format(item) for item in intervals), 
+    return self.concurrency_template.format(max_concurrency=max(self.benchmarker.concurrency_levels), 
+      max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration, 
+      levels=" ".join("{}".format(item) for item in levels), 
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command,
       pipeline=pipeline)
 
@@ -475,9 +475,9 @@ class FrameworkTest:
   ############################################################
   def __generate_query_script(self, url, port, accept_header):
     headers = self.headers_template.format(accept=accept_header)
-    return self.query_template.format(max_concurrency=self.benchmarker.max_concurrency, 
-      max_threads=self.benchmarker.max_threads, name=self.name, duration=self.benchmarker.duration, 
-      interval=" ".join("{}".format(item) for item in self.benchmarker.query_intervals), 
+    return self.query_template.format(max_concurrency=max(self.benchmarker.concurrency_levels), 
+      max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration, 
+      levels=" ".join("{}".format(item) for item in self.benchmarker.query_levels), 
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers)
 
   ############################################################
