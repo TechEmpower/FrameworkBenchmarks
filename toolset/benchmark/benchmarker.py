@@ -537,10 +537,16 @@ class Benchmarker:
           time.sleep(10)
 
         if self.__is_port_bound(test.port):
-          self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-          err.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
+          err.write(header("Error: Port %s is not available, attempting to recover" % test.port))
           err.flush()
-          return exit_with_code(1)
+          print "Error: Port %s is not available, attempting to recover" % test.port
+          self.__forciblyEndPortBoundProcesses(test.port, out, err)
+          if self.__is_port_bound(test.port):
+            self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
+            err.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
+            err.flush()
+            print "Error: Unable to recover port, cannot start test"
+            return exit_with_code(1)
 
         result = test.start(out, err)
         if result != 0: 
