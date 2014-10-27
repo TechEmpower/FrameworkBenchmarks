@@ -690,7 +690,7 @@ class Benchmarker:
     p = subprocess.Popen(['sudo', 'netstat', '-lnp'], stdout=subprocess.PIPE)
     (ns_out, ns_err) = p.communicate()
     for line in ns_out.splitlines():
-      if 'tcp' in line:
+      if 'tcp' in line and not 'tcp6' in line:
         splitline = line.split()
         port = splitline[3].split(':')
         port = int(port[len(port) - 1].strip())
