@@ -1,20 +1,21 @@
 package com.example.helloworld;
 
-import com.example.helloworld.config.HelloWorldConfiguration;
-import com.example.helloworld.db.FortuneDAO;
-import com.example.helloworld.db.model.Fortune;
-import com.example.helloworld.db.model.World;
-import com.example.helloworld.db.WorldDAO;
-import com.example.helloworld.resources.FortuneResource;
-import com.example.helloworld.resources.JsonResource;
-import com.example.helloworld.resources.TextResource;
-import com.example.helloworld.resources.WorldResource;
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+
+import com.example.helloworld.config.HelloWorldConfiguration;
+import com.example.helloworld.db.FortuneDAO;
+import com.example.helloworld.db.WorldDAO;
+import com.example.helloworld.db.model.Fortune;
+import com.example.helloworld.db.model.World;
+import com.example.helloworld.resources.FortuneResource;
+import com.example.helloworld.resources.JsonResource;
+import com.example.helloworld.resources.TextResource;
+import com.example.helloworld.resources.WorldResource;
 
 public class HelloWorldService extends Application<HelloWorldConfiguration> {
 
@@ -41,5 +42,7 @@ public class HelloWorldService extends Application<HelloWorldConfiguration> {
         environment.jersey().register(new WorldResource(new WorldDAO(hibernate.getSessionFactory()))); // Test types 2, 3 & 5: Single database query, Multiple database queries & Database updates
         environment.jersey().register(new FortuneResource(new FortuneDAO(hibernate.getSessionFactory()))); // Test type 4: Fortunes
         environment.jersey().register(new TextResource()); // Test type 6: Plaintext
+//        environment.jersey().register(new TextResource2()); // Test type 6: Plaintext - added byte[] optimisation - it gives quite good result +50%
+//        environment.jersey().register(new TextResource3()); // Test type 6: Plaintext - added static string optimisation
     }
 }

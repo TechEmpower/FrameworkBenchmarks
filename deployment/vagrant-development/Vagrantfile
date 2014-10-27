@@ -19,6 +19,10 @@ Vagrant.configure("2") do |config|
   ENV['TFB_AWS_EC2_TYPE'] = ENV.fetch('TFB_AWS_EC2_TYPE', 'm1.small')
 
   provision_bootstrap(config, 'all')
+  
+  # set auto_update to false, if you do NOT want to check the correct 
+  # additions version when booting this machine
+  config.vbguest.auto_update = false
 
   provider_virtualbox(config, 'all')
 

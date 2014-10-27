@@ -7,20 +7,11 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/plaintext")
 @Produces(MediaType.TEXT_PLAIN)
-public class TextResource {
+public class TextResource3 {
 	private static final String MESSAGE = "Hello, World!";
-	private static final byte[] buffer;
-
-	static {
-		try {
-			buffer = MESSAGE.getBytes("US-ASCII");
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GET
-	public byte[] sayHello() {
-		return buffer;
-	}
+	
+    @GET
+    public String sayHello() {
+        return MESSAGE;
+    }
 }
