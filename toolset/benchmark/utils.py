@@ -33,6 +33,7 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
   
   # Setup default Benchmarker using example configuration
   if benchmarker is None:
+    print "Creating Benchmarker from benchmark.cfg.example"
     default_config = setup_util.get_fwroot() + "/benchmark.cfg.example"
     config = ConfigParser.SafeConfigParser()
     config.readfp(open(default_config))
@@ -114,4 +115,4 @@ def header(message, top='-', bottom='-'):
         result = "%s" % bottomheader
       else:
         result += "\n%s" % bottomheader
-    return result
+    return result + '\n'
