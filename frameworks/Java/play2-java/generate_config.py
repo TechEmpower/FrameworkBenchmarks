@@ -9,12 +9,13 @@ import collections, json, os, textwrap
 # Format is: (language, orm, (opsys, ...), (test, ...))
 # See the dir_name logic below to see the directory name for each test application.
 configurations = [
-  ('Java',  None,    ['Linux'],            ['json']),
-  ('Java',  'Ebean', ['Linux'],            ['db', 'query']),
-  ('Java',  'JPA',   ['Linux'],            ['db', 'query']),
-  ('Scala', None,    ['Linux'],            ['json']),
-  ('Scala', 'Anorm', ['Linux', 'Windows'], ['db', 'query', 'fortune', 'update']),
-  ('Scala', 'Slick', ['Linux'],            ['db', 'query', 'fortune', 'update']),
+  ('Java',  None,    			['Linux'],            ['json']),
+  ('Java',  'Ebean', 			['Linux'],            ['db', 'query']),
+  ('Java',  'JPA',   			['Linux'],            ['db', 'query', 'fortune', 'update', 'plaintext']),
+  ('Java',  'JPA HikariCP',   	['Linux'],            ['db', 'query', 'fortune', 'update', 'plaintext']),
+  ('Scala', None,    			['Linux'],            ['json']),
+  ('Scala', 'Anorm', 			['Linux', 'Windows'], ['db', 'query', 'fortune', 'update']),
+  ('Scala', 'Slick', 			['Linux'],            ['db', 'query', 'fortune', 'update']),
 ]
 
 # All play2 test applications must use the same URLs.
@@ -24,6 +25,7 @@ test_urls = {
   'query': '/queries?queries=',
   'fortune': '/fortunes',
   'update': '/update?queries=',
+  'plaintext': '/plaintext',
 }
 
 langs = {
@@ -41,8 +43,8 @@ for lang, _ in langs.iteritems():
   lang_test_configs[lang] = collections.OrderedDict()
 
 for lang, orm, opsyses, tests in configurations:
-  dir_name = 'play2-' + lang.lower() + (('-'+orm.lower()) if orm else '')
-  setup_name = 'setup_' + lang.lower() + (('_'+orm.lower()) if orm else '')
+  dir_name = 'play2-' + lang.lower() + (('-'+orm.replace(' ', '-').lower()) if orm else '')
+  setup_name = 'setup_' + lang.lower() + (('_'+orm.replace(' ', '_').lower()) if orm else '')
 
   setup_path = os.path.join(pathForLang(lang), setup_name+'.py')
   print 'Generating', setup_path
@@ -57,9 +59,9 @@ for lang, orm, opsyses, tests in configurations:
 
   for opsys in opsyses:
     if len(opsyses) == 1:
-      test_name = lang.lower() + (('-'+orm.lower()) if orm else '')
+      test_name = lang.lower() + (('-'+orm.replace(' ', '-').lower()) if orm else '')
     else:
-      test_name = lang.lower() + (('-'+orm.lower()) if orm else '') + '-'+opsys.lower()
+      test_name = lang.lower() + (('-'+orm.replace(' ', '-').lower()) if orm else '') + '-'+opsys.lower()
     test_config_json = collections.OrderedDict([
       ('display_name', 'play2-'+test_name),
       ('setup_file', setup_name),

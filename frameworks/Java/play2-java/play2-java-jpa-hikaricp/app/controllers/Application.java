@@ -5,15 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Fortune;
 import models.World;
-import play.Play;
+import play.*;
 import play.core.NamedThreadFactory;
 import play.libs.F;
 import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
+import play.mvc.*;
+
 import scala.concurrent.ExecutionContext;
 import utils.Predicate;
 import utils.Predicated;
+import views.html.*;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Application extends Controller {
 
+    private static final int MAX_QUERIES_PER_REQUEST = 20;
     private static final int TEST_DATABASE_ROWS = 10000;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
