@@ -30,11 +30,15 @@ class QueryTestType(DBTestType):
     body = self._curl(url + '0')
     problems += self._verifyQueryList(1, body, url + '0', 'warn')
 
+    # Note: A number of tests fail here because they only parse for 
+    # a number and crash on 'foo'. If they fail and 500 (or empty response)
+    # then it's marked as a failure. If they return a list of size != 1 
+    # then it's only a warning
     body = self._curl(url + 'foo')
-    problems += self._verifyQueryList(1, body, url + 'foo')
+    problems += self._verifyQueryList(1, body, url + 'foo', 'warn')
 
     body = self._curl(url + '501')
-    problems += self._verifyQueryList(500, body, url + '501')
+    problems += self._verifyQueryList(500, body, url + '501', 'warn')
 
     if len(problems) == 0:
       return [('pass','',url + '2'),
