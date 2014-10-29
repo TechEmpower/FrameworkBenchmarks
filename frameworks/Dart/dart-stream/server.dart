@@ -243,7 +243,7 @@ _fortunesMongoTest(HttpConnect connect) {
   
   return _fortuneCollection.find().toList().then((fortunes) {
     fortunes = fortunes.map((fortune) {
-      return new Fortune(fortune["_id"], fortune["message"]);
+      return new Fortune(fortune["_id"].toInt(), fortune["message"]);
     }).toList();
     fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
