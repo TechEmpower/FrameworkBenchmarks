@@ -6,3 +6,4 @@
 .idea
 composer.lock
 cache.properties
+phpunit.xml
