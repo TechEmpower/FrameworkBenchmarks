@@ -64,6 +64,8 @@ class FrameworkTestType:
     # Don't use -f so that the HTTP response code is ignored.
     # Use -sS to hide progress bar, but show errors.
     print "Accessing URL %s" % url
+    self.err.write("Accessing URL %s \n" % url)
+    self.out.write("Accessing URL %s \n" % url)
     p = subprocess.Popen(["curl", "-m", "15", "-i", "-sS", url], stderr=PIPE, stdout=PIPE)
     (out, err) = p.communicate()
     self.err.write(err+'\n')
@@ -73,8 +75,6 @@ class FrameworkTestType:
     # Get response body
     p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=PIPE, stderr=PIPE)
     (out, err) = p.communicate()
-    self.err.write(err+'\n')
-    self.out.write(out+'\n')
     return out
   
   def verify(self, base_url):
