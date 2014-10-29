@@ -18,6 +18,29 @@ class DbMultiControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
         $this->assertResponseResultsEquals(2, $this->getResponse()->getBody());
     }
 
+    public function testType3MultipleDatabaseQueryLessThan1DefaultsTo1()
+    {
+        $this->dispatch('/db-multi?queries=-1');
+        $this->assertResponseResultsEquals(1, $this->getResponse()->getBody());
+    }
+
+    public function testType3MultipleDatabaseQueryMoreThan500DefaultsTo500()
+    {
+        $this->dispatch('/db-multi?queries=501');
+        $this->assertResponseResultsEquals(500, $this->getResponse()->getBody());
+    }
+
+    public function testType3MultipleDatabaseQueryNotAnIntDefaultsTo1()
+    {
+        $this->dispatch('/db-multi?queries=foobar');
+        $this->assertResponseResultsEquals(1, $this->getResponse()->getBody());
+    }
+
+    public function testType3MultipleDatabaseQueryNoQueriesParamDefaultsTo1()
+    {
+        $this->dispatch('/db-multi');
+        $this->assertResponseResultsEquals(1, $this->getResponse()->getBody());
+    }
     /**
      * Helper assertion
      *

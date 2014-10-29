@@ -4,7 +4,9 @@ class DbMultiController extends Zend_Controller_Action
 {
     public function indexAction()
     {
-        $queries = $this->getParam('queries', 1);
+        $queries = (int) $this->getParam('queries', 1);
+        $queries = max(1, $queries);
+        $queries = min(500, $queries);
 
         $table = new Zend_Db_Table('World');
 
