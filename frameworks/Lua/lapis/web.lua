@@ -105,6 +105,15 @@ do
       }
     end,
     ["/db"] = function(self)
+      local w = World:find(random(1, 10000))
+      return {
+        json = {
+          id = w.id,
+          randomNumber = w.randomnumber
+        }
+      }
+    end,
+    ["/queries"] = function(self)
       local num_queries = tonumber(self.params.queries) or 1
       if num_queries < 2 then
         local w = World:find(random(1, 10000))

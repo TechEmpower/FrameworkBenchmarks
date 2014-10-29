@@ -15,6 +15,10 @@ class Benchmark extends lapis.Application
     json: {message: "Hello, World!"}
 
   "/db": =>
+      w = World\find random(1, 10000)
+      return json: {id:w.id,randomNumber:w.randomnumber}
+
+  "/queries": =>
     num_queries = tonumber(@params.queries) or 1
     if num_queries < 2 
       w = World\find random(1, 10000)
