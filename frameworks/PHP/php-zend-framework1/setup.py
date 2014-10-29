@@ -1,13 +1,10 @@
 import subprocess
 import sys
 import setup_util
-from os.path import expanduser
-
-home = expanduser("~")
 
 def start(args, logfile, errfile):
   setup_util.replace_text("php-zend-framework1/application/configs/application.ini", "host = \"localhost\"", "host = \"" + args.database_host + "\"")
-  setup_util.replace_text("php-zend-framework1/deploy/nginx.conf", "root .*\/FrameworkBenchmarks", "root " + home + "/FrameworkBenchmarks")
+  setup_util.replace_text("php-zend-framework1/deploy/nginx.conf", "root .*\/FrameworkBenchmarks/php-zend-framework1", "root " + args.troot)
 
   try:
     subprocess.check_call("composer.phar install", shell=True, cwd="php-zend-framework1", stderr=errfile, stdout=logfile)
