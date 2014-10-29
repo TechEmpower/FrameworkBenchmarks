@@ -49,7 +49,10 @@ class DbController extends AbstractActionController
     {
         /* @var $request \Zend\Http\Request */
         $request = $this->getRequest();
-        $queries = $request->getQuery('queries', 1);
+        $queries = (int) $request->getQuery('queries', 1);
+        $queries = max(1, $queries);
+        $queries = min(500, $queries);
+
         $worlds  = array();
 
         for ($i = 0; $i < $queries; $i += 1) {
