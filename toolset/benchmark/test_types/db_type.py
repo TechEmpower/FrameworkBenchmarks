@@ -73,7 +73,11 @@ class DBTestType(FrameworkTestType):
     if "id" not in db_object:
       problems.append( ('fail', "Response has no 'id' key", url) ) 
     if "randomnumber" not in db_object:
-      problems.append( ('fail', "Response has no 'randomNumber' key", url) ) 
+      problems.append( ('fail', "Response has no 'randomNumber' key", url) )
+    
+    # Ensure we can continue on to use these keys
+    if "id" not in db_object or "randomnumber" not in db_object:
+      return problems
 
     try:
       float(db_object["id"])
