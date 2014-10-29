@@ -9,8 +9,8 @@ def start(args, logfile, errfile):
   try:
     subprocess.check_call("composer.phar install", shell=True, cwd="php-zend-framework1", stderr=errfile, stdout=logfile)
     subprocess.check_call("sudo chown -R www-data:www-data php-zend-framework1", shell=True, stderr=errfile, stdout=logfile)
-    subprocess.check_call("sudo php-fpm --fpm-config config/php-fpm.conf -g " + home + "/FrameworkBenchmarks/php-zend-framework1/deploy/php-fpm.pid", shell=True, stderr=errfile, stdout=logfile)
-    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/php-zend-framework1/deploy/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("sudo $PHP_FPM --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c $TROOT/deploy/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
