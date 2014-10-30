@@ -15,3 +15,4 @@
 #
 *.sh text eol=lf
 *.py text eol=lf
+config/benchmark_profile text eol=lf
