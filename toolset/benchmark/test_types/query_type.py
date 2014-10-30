@@ -31,11 +31,14 @@ class QueryTestType(DBTestType):
     problems += self._verifyQueryList(1, body, url + '0', 'warn')
 
     # Note: A number of tests fail here because they only parse for 
-    # a number and crash on 'foo'. If they fail and 500 (or empty response)
-    # then it's marked as a failure. If they return a list of size != 1 
-    # then it's only a warning
+    # a number and crash on 'foo'. For now we only warn about this
     body = self._curl(url + 'foo')
-    problems += self._verifyQueryList(1, body, url + 'foo', 'warn')
+    if body is None:
+      problems += [('warn','No response (this will be a failure in future rounds, please fix)', url)]
+    elif len(body) == 0:
+      problems += [('warn','Empty response (this will be a failure in future rounds, please fix)', url)]
+    else:
+      problems += self._verifyQueryList(1, body, url + 'foo', 'warn')
 
     body = self._curl(url + '501')
     problems += self._verifyQueryList(500, body, url + '501', 'warn')
