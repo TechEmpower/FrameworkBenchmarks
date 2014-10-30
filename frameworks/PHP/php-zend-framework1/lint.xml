@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="lint">
+
+    <property name="src.dir" location="" />
+
+    <target name="lint" description="Run php syntax check (lint)">
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
+            <fileset dir="${src.dir}">
+
+                <include name="**/*.php" />
+                <include name="**/*.phtml" />
+
+                <!--
+
+                Zend Framework shouldn't have any syntax errors, but let's just
+                be double sure.
+
+                Excluding tests and other non-runtime stuff
+
+                -->
+                <exclude name="**/vendor/zendframework/zendframework1/bin/**" />
+                <exclude name="**/vendor/zendframework/zendframework1/demos/**" />
+                <exclude name="**/vendor/zendframework/zendframework1/documentation/**" />
+                <exclude name="**/vendor/zendframework/zendframework1/puppet/**" />
+                <exclude name="**/vendor/zendframework/zendframework1/resources/**" />
+                <exclude name="**/vendor/zendframework/zendframework1/tests/**" />
+
+                <!-- cache -->
+                <modified />
+
+            </fileset>
+        </apply>
+    </target>
+
+</project>

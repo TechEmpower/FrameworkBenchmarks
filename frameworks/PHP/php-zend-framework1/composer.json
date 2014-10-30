@@ -1,0 +1,6 @@
+{
+    "require": {
+        "php": ">=5.2.11",
+        "zendframework/zendframework1": "~1.12"
+    }
+}
