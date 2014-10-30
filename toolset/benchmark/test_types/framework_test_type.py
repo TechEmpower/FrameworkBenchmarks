@@ -69,12 +69,13 @@ class FrameworkTestType:
     p = subprocess.Popen(["curl", "-m", "15", "-i", "-sS", url], stderr=PIPE, stdout=PIPE)
     (out, err) = p.communicate()
     self.err.write(err+'\n')
-    self.out.write(out+'\n')
+    self.out.write("Response: \n\"" + out+ "\"\n")
     if p.returncode != 0:
       return None
     # Get response body
     p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=PIPE, stderr=PIPE)
     (out, err) = p.communicate()
+    print "  Response (trimmed to 40 bytes): \"%s\"" % out[:40]
     return out
   
   def verify(self, base_url):
