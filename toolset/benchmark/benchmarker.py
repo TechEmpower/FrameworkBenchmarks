@@ -713,7 +713,12 @@ class Benchmarker:
             ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
             # Store some info about this process
             (out_15, err_15) = ps.communicate()
+            children = subprocess.Popen(['ps','--ppid',pid,'-o','ppid'], stdout=subprocess.PIPE)
+            (out_children, err_children) = children.communicate()
+
             err.write("  Sending SIGTERM to this process:\n  %s\n" % out_15)
+            err.write("  Also expecting these child processes to die:]n  %s\n" % out_children)
+
             os.kill(int(pid), 15)
             # Sleep for 10 sec; kill can be finicky
             time.sleep(10)
@@ -727,10 +732,21 @@ class Benchmarker:
               os.kill(int(pid), 9)
             else:
               err.write("  Process has been terminated\n")
+
+            # Ensure all children are dead
+            c_pids = [c_pid.strip() for c_pid in out_children.splitlines()[1:]]
+            for c_pid in c_pids:
+              ps = subprocess.Popen(['ps','p',c_pid], stdout=subprocess.PIPE)
+              (out_9, err_9) = ps.communicate()
+              if len(out_9.splitlines()) != 1:  # One line for the header row
+                err.write("  Child Process %s is still alive, sending SIGKILL\n" % c_pid)
+                os.kill(int(c_pid), 9)
           except OSError:
-            out.write( "  Error: Could not kill pid %s\n" % pid )
+            out.write( "  Error: PID %s is already dead, cannot receive signal\n" % pid )
             # This is okay; likely we killed a parent that ended
             # up automatically killing this before we could.
+          except Exception as e: 
+            out.write( "  Error: Unknown exception %s\n" % e )
           err.write( header("Done attempting to recover port %s" % port, top='') )
 
   ############################################################
