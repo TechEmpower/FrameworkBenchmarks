@@ -1,0 +1,16 @@
+# Force all files to have Linux line endings upon git checkout
+#
+# While this may cause some issues for Windows users with 
+# simple editors (e.g. Notepad), it allows Windows users to use
+# vagrant up to bring up a full-featured development environment.
+# Without this, vagrant up will fail because all the bash scripts
+# have Windows line endings. Using tools like dos2unix causes 
+# the host git to believe that hundreds of bash files have been 
+# modified. This is the best of both worlds - Windows users can 
+# edit files using their native editor if it supports preserving
+# line endings, and they get the benefit of an automatic dev
+# environment
+#
+# See https://help.github.com/articles/dealing-with-line-endings/
+#
+* text eol=lf
