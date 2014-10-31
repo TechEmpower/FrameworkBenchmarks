@@ -2,7 +2,7 @@
   "framework": "play2", 
   "tests": [
     {
-      "scala": {
+      "play2-scala": {
         "display_name": "play2-scala", 
         "setup_file": "setup_scala", 
         "framework": "play2", 
@@ -20,7 +20,27 @@
         "port": "9000", 
         "json_url": "/json"
       }, 
-      "scala-anorm-linux": {
+      "play2-scala-activate-do-not-include": {
+        "display_name": "play2-scala-activate-do-not-include", 
+        "setup_file": "setup_scala_activate", 
+        "framework": "play2", 
+        "language": "Scala", 
+        "orm": "Full", 
+        "os": "Linux", 
+        "database": "MySQL", 
+        "approach": "Realistic", 
+        "classification": "Fullstack", 
+        "platform": "Netty", 
+        "webserver": "None", 
+        "database_os": "Linux", 
+        "notes": "", 
+        "versus": "netty", 
+        "port": "9000", 
+        "db_url": "/db", 
+        "fortune_url": "/fortunes", 
+        "update_url": "/update?queries="
+      }, 
+      "play2-scala-anorm-linux": {
         "display_name": "play2-scala-anorm-linux", 
         "setup_file": "setup_scala_anorm", 
         "framework": "play2", 
@@ -41,7 +61,7 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       }, 
-      "scala-anorm-windows": {
+      "play2-scala-anorm-windows": {
         "display_name": "play2-scala-anorm-windows", 
         "setup_file": "setup_scala_anorm", 
         "framework": "play2", 
@@ -62,7 +82,28 @@
         "fortune_url": "/fortunes", 
         "update_url": "/update?queries="
       }, 
-      "scala-slick": {
+      "play2-scala-reactivemongo-do-not-include": {
+        "display_name": "play2-scala-reactivemongo-do-not-include", 
+        "setup_file": "setup_scala_reactivemongo", 
+        "framework": "play2", 
+        "language": "Scala", 
+        "orm": "Full", 
+        "os": "Linux", 
+        "database": "MongoDB", 
+        "approach": "Realistic", 
+        "classification": "Fullstack", 
+        "platform": "Netty", 
+        "webserver": "None", 
+        "database_os": "Linux", 
+        "notes": "", 
+        "versus": "netty", 
+        "port": "9000", 
+        "db_url": "/db", 
+        "query_url": "/queries?queries=", 
+        "fortune_url": "/fortunes", 
+        "update_url": "/update?queries="
+      }, 
+      "play2-scala-slick": {
         "display_name": "play2-scala-slick", 
         "setup_file": "setup_scala_slick", 
         "framework": "play2", 
