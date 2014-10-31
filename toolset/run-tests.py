@@ -136,15 +136,15 @@ def main(argv=None):
     parser.add_argument('--install-strategy', choices=['unified', 'pertest'], default='unified', 
         help='''Affects `--install server`: With unified, all server software is installed into a single directory. 
         With pertest each test gets its own installs directory, but installation takes longer''')
-    parser.add_argument('--install-only', action='store_true', default=False, help='Do not run benchmark or verification, just install and exit')
+    parser.add_argument('--install-only', default=False, type=bool, help='Do not run benchmark or verification, just install and exit')
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
     parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
     parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
     parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
-    parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
-    parser.add_argument('--list-test-metadata', action='store_true', default=False, help='writes all the test metadata as a JSON file in the results directory')
+    parser.add_argument('--list-tests', default=False, type=bool, help='lists all the known tests that can run')
+    parser.add_argument('--list-test-metadata', default=False, type=bool, help='writes all the test metadata as a JSON file in the results directory')
     parser.add_argument('--name', default="ec2", help='The name to give this test. Results will be placed in a folder using this name.')
     parser.add_argument('--os', choices=['linux', 'windows'], default='linux', help='The operating system of the application/framework server (the one running' +
                         'this binary')
@@ -159,7 +159,7 @@ def main(argv=None):
 
     # Misc Options
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
-    parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
+    parser.add_argument('-v', '--verbose', default=False, type=bool, help='Causes the configuration to print before any other commands are executed.')
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
