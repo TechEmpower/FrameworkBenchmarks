@@ -963,7 +963,7 @@ class Benchmarker:
     self.result_directory = os.path.join("results", self.name)
     self.latest_results_directory = self.latest_results_directory()
   
-    if self.parse != None:
+    if hasattr(self, 'parse') and self.parse != None:
       self.timestamp = self.parse
     else:
       self.timestamp = time.strftime("%Y%m%d%H%M%S", time.localtime())
