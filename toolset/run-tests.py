@@ -180,18 +180,18 @@ def main(argv=None):
         print 'Configuration options: '
         pprint(vars(args))
 
-
-
     benchmarker = Benchmarker(vars(args))
 
     # Run the benchmarker in the specified mode
-    if benchmarker.list_tests:
+    #   Do not use benchmarker variables for these checks, 
+    #   they are either str or bool based on the python version
+    if args.list_tests:
       benchmarker.run_list_tests()
-    elif benchmarker.list_test_metadata:
+    elif args.list_test_metadata:
       benchmarker.run_list_test_metadata()
-    elif benchmarker.parse != None:
+    elif args.parse != None:
       benchmarker.parse_timestamp()
-    elif not benchmarker.install_only:
+    elif not args.install_only:
       return benchmarker.run()
 
 if __name__ == "__main__":
