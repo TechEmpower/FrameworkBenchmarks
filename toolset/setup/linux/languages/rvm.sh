@@ -16,8 +16,9 @@ RETCODE=$(fw_exists rvm.installed)
 }
 
 # Run single-user installation and source rvm
+export SHELL=/bin/bash
 gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
-\curl -sSL https://get.rvm.io | SHELL=/bin/bash bash -s stable
+\curl -sSL https://get.rvm.io | bash -s stable
 source $HOME/.rvm/scripts/rvm
 
 touch $IROOT/rvm.installed
