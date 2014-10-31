@@ -13,7 +13,6 @@ import org.mongojack.JacksonDBCollection;
 
 import com.example.helloworld.core.World;
 import com.google.common.base.Optional;
-import com.google.common.primitives.Ints;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
