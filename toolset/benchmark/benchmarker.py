@@ -690,13 +690,17 @@ class Benchmarker:
     p = subprocess.Popen(['sudo', 'netstat', '-lnp'], stdout=subprocess.PIPE)
     (ns_out, ns_err) = p.communicate()
     for line in ns_out.splitlines():
-      if 'tcp' in line and not 'tcp6' in line:
+      # Handles tcp, tcp6, udp, udp6
+      if line.startswith('tcp') or line.startswith('udp'):
         splitline = line.split()
-        port = splitline[3].split(':')
-        port = int(port[len(port) - 1].strip())
+        port = int(splitline[3].split(':')[-1])
+        pid  = splitline[-1].split('/')[0]
+
+        # Sometimes the last column is just a dash
+        if pid == '-':
+          continue
 
         if port > 6000:
-          pid = splitline[6].split('/')[0].strip()
           ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
           (out_6000, err_6000) = ps.communicate()
           err.write(textwrap.dedent(
@@ -706,10 +710,10 @@ class Benchmarker:
           {ps}
           """.format(port=port, netstat=line, ps=out_6000)))
           err.flush()
+
         if port == test_port:
           err.write( header("Error: Test port %s should not be open" % port, bottom='') )
           try:
-            pid = splitline[6].split('/')[0].strip()
             ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
             # Store some info about this process
             (out_15, err_15) = ps.communicate()
@@ -717,9 +721,9 @@ class Benchmarker:
             (out_children, err_children) = children.communicate()
 
             err.write("  Sending SIGTERM to this process:\n  %s\n" % out_15)
-            err.write("  Also expecting these child processes to die:]n  %s\n" % out_children)
+            err.write("  Also expecting these child processes to die:\n  %s\n" % out_children)
 
-            os.kill(int(pid), 15)
+            subprocess.check_output(['sudo','kill',pid])
             # Sleep for 10 sec; kill can be finicky
             time.sleep(10)
 
@@ -729,7 +733,7 @@ class Benchmarker:
             if len(out_9.splitlines()) != 1:  # One line for the header row
               err.write("  Process is still alive!\n")
               err.write("  Sending SIGKILL to this process:\n   %s\n" % out_9)
-              os.kill(int(pid), 9)
+              subprocess.check_output(['sudo','kill','-9', pid])
             else:
               err.write("  Process has been terminated\n")
 
@@ -740,14 +744,11 @@ class Benchmarker:
               (out_9, err_9) = ps.communicate()
               if len(out_9.splitlines()) != 1:  # One line for the header row
                 err.write("  Child Process %s is still alive, sending SIGKILL\n" % c_pid)
-                os.kill(int(c_pid), 9)
-          except OSError:
-            out.write( "  Error: PID %s is already dead, cannot receive signal\n" % pid )
-            # This is okay; likely we killed a parent that ended
-            # up automatically killing this before we could.
+                subprocess.check_output(['sudo','kill','-9', pid])
           except Exception as e: 
-            out.write( "  Error: Unknown exception %s\n" % e )
+            err.write( "  Error: Unknown exception %s\n" % e )
           err.write( header("Done attempting to recover port %s" % port, top='') )
+
 
   ############################################################
   # __parse_results
