@@ -3,6 +3,7 @@ package com.example.helloworld.resources;
 import com.example.helloworld.db.WorldDAO;
 import com.example.helloworld.db.model.World;
 import com.google.common.base.Optional;
+import com.google.common.primitives.Ints;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.GET;
@@ -26,8 +27,24 @@ public class WorldResource {
 
     @GET
     @UnitOfWork
-    public World[] dbTest(@QueryParam("queries") Optional<Integer> queries) {
-        final int totalQueries = queries.or(1); // TODO: Should be bound [1,500]
+    public Object dbTest(@QueryParam("queries") Optional<String> queries) {
+        if (!queries.isPresent()) {
+            final long worldId = RANDOM.nextInt(10_000) + 1;
+            return worldDAO.findById(worldId).orNull();
+        }
+
+        Integer totalQueries = Ints.tryParse(queries.orNull());
+        if (totalQueries != null) {
+            if (totalQueries > 500) {
+                totalQueries = 500;
+            } else if (totalQueries < 1) {
+                totalQueries = 1;
+            }
+        } else {
+            totalQueries = 1;
+        }
+
+        
         final World[] worlds = new World[totalQueries];
 
         // TODO: Is parallelising this cheating?
@@ -43,7 +60,13 @@ public class WorldResource {
     @Path("/update")
     @UnitOfWork
     public World[] updateTest(@QueryParam("queries") Optional<Integer> queries) {
-        final int totalQueries = queries.or(1); // TODO: Should be bound [1,500]
+        int totalQueries = queries.or(1);
+        if (totalQueries > 500) {
+            totalQueries = 500;
+        } else if (totalQueries < 1) {
+            totalQueries = 1;
+        }
+
         final World[] worlds = new World[totalQueries];
 
         // TODO: Is parallelising this cheating?
