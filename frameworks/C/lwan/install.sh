@@ -10,7 +10,7 @@ RETCODE=$(fw_exists ${INSTALLED_FILE})
 
 # Lwan is only built during installation as a dependency sanity check.
 sudo apt-get update && \
-	sudo apt-get install libjemalloc-dev libmysqlclient-dev libsqlite3-dev && \
+	sudo apt-get install -qqy libjemalloc-dev libmysqlclient-dev libsqlite3-dev && \
 	git clone git://github.com/lpereira/lwan.git && \
         cd lwan && \
         git checkout ${REV} && \
