@@ -51,7 +51,7 @@ def main(argv=None):
     # Do argv default this way, as doing it in the functional declaration sets it at compile time
     if argv is None:
         argv = sys.argv
-	
+
     # Enable unbuffered output so messages will appear in the proper order with subprocess output.
     sys.stdout=Unbuffered(sys.stdout)
 
@@ -134,17 +134,17 @@ def main(argv=None):
                         help='Runs installation script(s) before continuing on to execute the tests.')
     parser.add_argument('--install-error-action', choices=['abort', 'continue'], default='continue', help='action to take in case of error during installation')
     parser.add_argument('--install-strategy', choices=['unified', 'pertest'], default='unified', 
-        help='''Affects `--install server`: With unified, all server software is installed into a single directory. 
+        help='''Affects : With unified, all server software is installed into a single directory. 
         With pertest each test gets its own installs directory, but installation takes longer''')
-    parser.add_argument('--install-only', default=False, type=bool, help='Do not run benchmark or verification, just install and exit')
+    parser.add_argument('--install-only', action='store_true', default=False, help='Do not run benchmark or verification, just install and exit')
 
     # Test options
     parser.add_argument('--test', nargs='+', help='names of tests to run')
     parser.add_argument('--exclude', nargs='+', help='names of tests to exclude')
     parser.add_argument('--type', choices=['all', 'json', 'db', 'query', 'fortune', 'update', 'plaintext'], default='all', help='which type of test to run')
     parser.add_argument('-m', '--mode', choices=['benchmark', 'verify'], default='benchmark', help='verify mode will only start up the tests, curl the urls and shutdown')
-    parser.add_argument('--list-tests', default=False, type=bool, help='lists all the known tests that can run')
-    parser.add_argument('--list-test-metadata', default=False, type=bool, help='writes all the test metadata as a JSON file in the results directory')
+    parser.add_argument('--list-tests', action='store_true', default=False, help='lists all the known tests that can run')
+    parser.add_argument('--list-test-metadata', action='store_true', default=False, help='writes all the test metadata as a JSON file in the results directory')
     parser.add_argument('--name', default="ec2", help='The name to give this test. Results will be placed in a folder using this name.')
     parser.add_argument('--os', choices=['linux', 'windows'], default='linux', help='The operating system of the application/framework server (the one running' +
                         'this binary')
@@ -159,7 +159,7 @@ def main(argv=None):
 
     # Misc Options
     parser.add_argument('--parse', help='Parses the results of the given timestamp and merges that with the latest results')
-    parser.add_argument('-v', '--verbose', default=False, type=bool, help='Causes the configuration to print before any other commands are executed.')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False, help='Causes the configuration to print before any other commands are executed.')
     parser.set_defaults(**defaults) # Must do this after add, or each option's default will override the configuration file default
     args = parser.parse_args(remaining_argv)
 
@@ -185,13 +185,13 @@ def main(argv=None):
     # Run the benchmarker in the specified mode
     #   Do not use benchmarker variables for these checks, 
     #   they are either str or bool based on the python version
-    if args.list_tests:
+    if (type(args.list_tests) is str and args.list_tests.lower() == 'true') or (type(args.list_tests) is bool and args.list_tests):
       benchmarker.run_list_tests()
-    elif args.list_test_metadata:
+    elif (type(args.list_test_metadata) is str and args.list_test_metadata.lower() == 'true') or (type(args.list_test_metadata) is bool and args.list_test_metadata):
       benchmarker.run_list_test_metadata()
     elif args.parse != None:
       benchmarker.parse_timestamp()
-    elif not args.install_only:
+    elif not ((type(args.install_only) is str and args.install_only.lower() == 'true') or (type(args.install_only) is bool and args.install_only)):
       return benchmarker.run()
 
 if __name__ == "__main__":
