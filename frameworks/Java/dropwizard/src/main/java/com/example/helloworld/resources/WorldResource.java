@@ -59,11 +59,15 @@ public class WorldResource {
     @GET
     @Path("/update")
     @UnitOfWork
-    public World[] updateTest(@QueryParam("queries") Optional<Integer> queries) {
-        int totalQueries = queries.or(1);
-        if (totalQueries > 500) {
-            totalQueries = 500;
-        } else if (totalQueries < 1) {
+    public World[] updateTest(@QueryParam("queries") Optional<String> queries) {
+        Integer totalQueries = Ints.tryParse(queries.orNull());
+        if (totalQueries != null) {
+            if (totalQueries > 500) {
+                totalQueries = 500;
+            } else if (totalQueries < 1) {
+                totalQueries = 1;
+            }
+        } else {
             totalQueries = 1;
         }
 
