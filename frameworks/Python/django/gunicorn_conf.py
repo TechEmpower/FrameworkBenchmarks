@@ -18,4 +18,4 @@ pythonpath = 'hello'
 if _is_pypy:
     worker_class = "tornado"
 else:
-    worker_class = "minefield.gmeinfield.MeinfieldWorker"
+    worker_class = "minefield.gminefield.MinefieldWorker"
