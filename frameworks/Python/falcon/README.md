@@ -12,7 +12,7 @@ Falcon API framework (http://falconframework.org)
 
 ### Server
 
-* gunicorn+meinheld on CPython
+* gunicorn+minefield on CPython
 * Tornado on PyPy
 
 ## Test URLs

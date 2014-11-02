@@ -8,8 +8,9 @@ Flask + Flask-SQLAlchemy
 
 ### Interpreter
 
-* CPython 2.7.4
-* PyPy 2.0
+* CPython 2.7.8
+* CPython 3.4.2
+* PyPy 2.4
 
 ### Database
 
@@ -17,7 +18,7 @@ MySQL (MySQL-python on CPython, PyMySQL on PyPy)
 
 ### Server
 
-* gunicorn+meinheld on CPython
+* gunicorn+minefield on CPython
 * Tornado on PyPy
 
 
