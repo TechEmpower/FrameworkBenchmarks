@@ -1,4 +1,4 @@
-name := "play2-java-jpa"
+name := "play2-java-jpa-bonecp"
 
 version := "1.0-SNAPSHOT"
 
