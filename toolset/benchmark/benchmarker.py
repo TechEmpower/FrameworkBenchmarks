@@ -494,7 +494,7 @@ class Benchmarker:
 
     try:
       os.makedirs(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name)))
-    except:
+    except Exception:
       pass
     with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
          open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
@@ -662,7 +662,7 @@ class Benchmarker:
       s.bind(("", port))
       # If we get here, we were able to bind successfully,
       # which means the port is free.
-    except:
+    except Exception:
       # If we get an exception, it might be because the port is still bound
       # which would be bad, or maybe it is a privileged port (<1024) and we
       # are not running as root, or maybe the server is gone, but sockets are
@@ -673,7 +673,7 @@ class Benchmarker:
         # If we get here, we were able to connect to something, which means
         # that the port is still bound.
         return True
-      except:
+      except Exception:
         # An exception means that we couldn't connect, so a server probably
         # isn't still running on the port.
         pass
@@ -940,7 +940,7 @@ class Benchmarker:
     
 
     args['max_threads'] = args['threads']
-    args['max_concurrency'] = str(max(args['concurrency_levels']))
+    args['max_concurrency'] = max(args['concurrency_levels'])
 
     self.__dict__.update(args)
     # pprint(self.__dict__)

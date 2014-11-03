@@ -11,6 +11,7 @@ from pprint import pprint
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
+from ast import literal_eval
 
 # Enable cross-platform colored output
 from colorama import init
@@ -80,6 +81,12 @@ def main(argv=None):
             config = ConfigParser.SafeConfigParser()
             config.read([os.getcwd() + '/' + args.conf_file])
             defaults = dict(config.items("Defaults"))
+            # Convert strings into proper python types
+            for k,v in defaults.iteritems():
+                try:
+                    defaults[k] = literal_eval(v)
+                except Exception:
+                    pass
     except IOError:
         if args.conf_file != 'benchmark.cfg':
             print 'Configuration file not found!'
@@ -98,7 +105,7 @@ def main(argv=None):
     maxThreads = 8
     try:
         maxThreads = multiprocessing.cpu_count()
-    except:
+    except Exception:
         pass
 
     ##########################################################
@@ -185,13 +192,13 @@ def main(argv=None):
     # Run the benchmarker in the specified mode
     #   Do not use benchmarker variables for these checks, 
     #   they are either str or bool based on the python version
-    if (type(args.list_tests) is str and args.list_tests.lower() == 'true') or (type(args.list_tests) is bool and args.list_tests):
+    if args.list_tests:
       benchmarker.run_list_tests()
-    elif (type(args.list_test_metadata) is str and args.list_test_metadata.lower() == 'true') or (type(args.list_test_metadata) is bool and args.list_test_metadata):
+    elif args.list_test_metadata:
       benchmarker.run_list_test_metadata()
     elif args.parse != None:
       benchmarker.parse_timestamp()
-    elif not ((type(args.install_only) is str and args.install_only.lower() == 'true') or (type(args.install_only) is bool and args.install_only)):
+    elif not args.install_only:
       return benchmarker.run()
 
 if __name__ == "__main__":

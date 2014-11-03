@@ -28,7 +28,7 @@ def stop(logfile, errfile):
 
   try:
     subprocess.check_call("sudo m2sh stop -every", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
-  except:
+  except Exception:
     ret = 1
 
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
