@@ -24,7 +24,7 @@ def start(args, logfile, errfile):
     nb_workers = 32
   else:
     nb_workers = 256
-  subprocess.Popen("./nawak_redis " + nb_workers,
+  subprocess.Popen("./nawak_redis " + str(nb_workers),
                    shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
   return 0
 
