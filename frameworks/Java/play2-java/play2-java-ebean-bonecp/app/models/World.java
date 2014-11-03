@@ -6,7 +6,9 @@ import play.db.ebean.Model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class World extends Model {
@@ -22,7 +24,12 @@ public class World extends Model {
     );
 
     public static List<World> save(final List<World> worlds) throws Throwable {
-        Ebean.save(worlds);
+        Set<String> updateProperties = new HashSet<>();
+        updateProperties.add("randomNumber");
+
+        for (World world : worlds) {
+            Ebean.update(world, updateProperties);
+        }
 
         return worlds;
     }
