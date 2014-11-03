@@ -14,7 +14,7 @@ public class Headers extends Action.Simple {
 
     @Override
     public F.Promise<Result> call(Http.Context context) throws Throwable {
-        context.response().setHeader("Server", "play2-java-jpa");
+        context.response().setHeader("Server", "Play2");
         context.response().setHeader("Date", RFC_1123_DATE_TIME.print(new DateTime()));
         return delegate.call(context);
     }
