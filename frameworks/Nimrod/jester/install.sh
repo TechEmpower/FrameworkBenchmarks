@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends jester nimrod nginx 
+fw_depends nimrod nginx jester
