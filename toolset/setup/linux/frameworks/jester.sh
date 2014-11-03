@@ -3,6 +3,6 @@
 RETCODE=$(fw_exists jester)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
-git clone git://github.com/dom96/jester.git jester/jester
-cd jester/jester
-git checkout ad154e05dd93367ebd8fad9a5dc2016b67121763
+git clone git://github.com/dom96/jester.git jester
+cd jester
+git checkout 3e77ce753293b523004dfdaebd2fb195217f30f0

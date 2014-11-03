@@ -7,8 +7,8 @@ from os.path import expanduser
 home = expanduser("~")
 
 def start(args, logfile, errfile):
-  subprocess.check_call("nimrod c -d:release --path:../installs/jester/jester hello.nim", shell=True, cwd="jester", stderr=errfile, stdout=logfile)
-  subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c " + home + "/FrameworkBenchmarks/jester/config/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
+  subprocess.check_call("nimrod c -d:release --path:$JESTER_PATH hello.nim", shell=True, cwd="jester", stderr=errfile, stdout=logfile)
+  subprocess.check_call("sudo /usr/local/nginx/sbin/nginx -c $TROOT/config/nginx.conf", shell=True, stderr=errfile, stdout=logfile)
   
   for i in range(0, 8):
     subprocess.Popen("./hello 900" + str(i), shell=True, cwd="jester", stderr=errfile, stdout=logfile)

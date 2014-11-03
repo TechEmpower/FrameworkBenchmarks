@@ -11,7 +11,7 @@ def start(args, logfile, errfile):
                           "host=" + args.database_host + " port=5432")
   # compile the app
   subprocess.check_call(
-      "nimrod c --threads:on -d:release -d:postgre_model --path:../installs/nawak/nawak -o:nawak_postgre app.nim",
+      "nimrod c --threads:on -d:release -d:postgre_model --path:$NAWAK_PATH -o:nawak_postgre app.nim",
       shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
   # launch mongrel2
   subprocess.check_call("mkdir -p run logs tmp", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)

@@ -5,4 +5,7 @@ RETCODE=$(fw_exists nawak)
 
 git clone git://github.com/idlewan/nawak.git nawak
 cd nawak
-git checkout 5e56d718ff327c58cbdca14d44abc327f752681d
+git checkout b34b0b5077541ae9671957452a70e2578894d3a8
+
+nimble update
+nimble install

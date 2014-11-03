@@ -1,6 +1,8 @@
 import strtabs, strutils, math, algorithm
 import nawak_mongrel, jdump
-import fortunes_tmpl
+import model, fortunes_tmpl
+when not defined(postgre_model) xor defined(redis_model):
+    {.error: "please pass either -d:postgre_model or -d:redis_model to the compiler".}
 when defined(postgre_model):
     import model_postgre
 when defined(redis_model):

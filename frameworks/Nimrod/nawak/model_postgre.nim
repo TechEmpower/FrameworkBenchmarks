@@ -1,21 +1,14 @@
-import strutils
-# The following import belongs to the stdlib, but has been updated to support
-# queries with parameters (that are safer to counter SQL injections) and
-# prepared queries.
-# It will be merged eventually. For now, I included it in the repository.
-import lib/db_postgres_redone
-
+import strutils, db_postgres
 import model
-export model
 
-const qworld = "SELECT id, randomNumber FROM World WHERE id = $1"
-const qfortunes = "SELECT id, message FROM Fortune"
-const qupdates = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+const qworld = sql"SELECT id, randomNumber FROM World WHERE id = $1"
+const qfortunes = sql"SELECT id, message FROM Fortune"
+const qupdates = sql"UPDATE World SET randomNumber = $1 WHERE id = $2"
 
 var db {.threadvar.}: TDbConn
-var qworld_prepared {.threadvar.}: TPreparedId
-var qfortunes_prepared {.threadvar.}: TPreparedId
-var qupdates_prepared {.threadvar.}: TPreparedId
+var qworld_prepared {.threadvar.}: TSqlPrepared
+var qfortunes_prepared {.threadvar.}: TSqlPrepared
+var qupdates_prepared {.threadvar.}: TSqlPrepared
 
 proc init_db*() {.procvar.} =
     db = open("", "benchmarkdbuser", "benchmarkdbpass",
@@ -29,15 +22,15 @@ proc init_db*() {.procvar.} =
 proc getWorld*(n: int): TWorld =
     #let row = db.getRow(qworld, n)
     ## Yes, prepared queries are faster than unprepared ones
-    let row = db.getPRow(qworld_prepared, n)
+    let row = db.getRow(qworld_prepared, n)
     result.id = parseInt(row[0])
     result.randomNumber = parseInt(row[1])
 
 proc updateWorld*(w: TWorld) =
-    db.Exec(qupdates_prepared, $w.randomNumber, $w.id)
+    db.exec(qupdates_prepared, $w.randomNumber, $w.id)
 
 proc getAllFortunes*(): seq[TFortune] =
-    let rows = db.getAllPRows(qfortunes_prepared)
+    let rows = db.getAllRows(qfortunes_prepared)
     result.newSeq(rows.len)
     for j, row in rows.pairs:
         result[j] = (row[0].parseInt, row[1])

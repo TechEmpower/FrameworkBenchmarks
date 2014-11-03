@@ -1,5 +1,5 @@
 #! stdtmpl | standard
-#import lib/escape
+#from xmltree import escape
 #import model
 #proc fortunes_tmpl*(fortunes: openArray[TFortune]): string =
 #  result = ""
