@@ -348,9 +348,11 @@ class CIRunnner:
     until timeout 15s sudo apt-key adv --keyserver pgp.mit.edu --recv 4BD736A82B5C1B00; do echo 'Waiting for apt-key' ; done
     sudo apt-add-repository  'deb http://www.apache.org/dist/cassandra/debian 20x main'
 
-    # Run installation
+    # Run installation 
+    # DO NOT COPY --force-yes TO ANY NON-TRAVIS-CI SCRIPTS! Seriously, it can cause some 
+    # major damage and should only be used inside a VM or Linux Container
     sudo apt-get -q update
-    sudo apt-get -q -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+    sudo apt-get -q -y --force-yes install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
       mongodb-org \
       cassandra \
       openssh-server
