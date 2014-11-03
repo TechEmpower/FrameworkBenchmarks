@@ -22,7 +22,7 @@ def start(args, logfile, errfile):
     subprocess.check_call("make clean", shell=True, cwd="treefrog", stderr=errfile, stdout=logfile)
     subprocess.check_call("make -j8", shell=True, cwd="treefrog", stderr=errfile, stdout=logfile)
     subprocess.check_call("rm -f log/*.log", shell=True, cwd="treefrog", stderr=errfile, stdout=logfile)
-    subprocess.check_call("treefrog -d " + home + "/FrameworkBenchmarks/treefrog", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.check_call("treefrog -d $TROOT", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
@@ -32,7 +32,7 @@ def start(args, logfile, errfile):
 ##############
 def stop(logfile, errfile):
   try:
-    subprocess.call("treefrog -k abort " + home + "/FrameworkBenchmarks/treefrog", shell=True, stderr=errfile, stdout=logfile)
+    subprocess.call("treefrog -k abort $TROOT", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
     return 1
