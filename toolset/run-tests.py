@@ -85,7 +85,7 @@ def main(argv=None):
             for k,v in defaults.iteritems():
                 try:
                     defaults[k] = literal_eval(v)
-                except:
+                except Exception:
                     pass
     except IOError:
         if args.conf_file != 'benchmark.cfg':
@@ -105,7 +105,7 @@ def main(argv=None):
     maxThreads = 8
     try:
         maxThreads = multiprocessing.cpu_count()
-    except:
+    except Exception:
         pass
 
     ##########################################################

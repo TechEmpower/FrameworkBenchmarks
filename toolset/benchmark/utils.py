@@ -43,7 +43,7 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
     for k,v in defaults.iteritems():
       try:
         defaults[k] = literal_eval(v)
-      except:
+      except Exception:
         pass
 
     # Ensure we only run the __init__ method of Benchmarker
