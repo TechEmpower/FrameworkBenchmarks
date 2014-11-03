@@ -1,4 +1,4 @@
-import strtabs, strutils, math, algorithm
+import os, strtabs, strutils, math, algorithm
 import nawak_mongrel, jdump
 import model, fortunes_tmpl
 when not defined(postgre_model) xor defined(redis_model):
@@ -69,4 +69,13 @@ custom_page 404:
     return response(404, """Nah, I've got nothing.<br>
                             Here's a <b>404 Page Not Found</b> error for you.""")
 
-run(init=init_db, nb_threads=256)
+var nb_workers = 32
+if paramCount() > 0:
+    try:
+        nb_workers = paramStr(1).parseInt
+    except ValueError:
+        echo "Usage: app [number of workers]"
+        echo "       Will start with 32 workers by default"
+echo "Starting with " & $nb_workers & " workers"
+
+run(init=init_db, nb_threads=nb_workers)

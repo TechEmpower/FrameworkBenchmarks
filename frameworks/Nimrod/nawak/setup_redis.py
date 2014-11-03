@@ -20,7 +20,12 @@ def start(args, logfile, errfile):
   subprocess.check_call("sudo m2sh start -name test", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
   
   # launch workers
-  subprocess.Popen("./nawak_redis", shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
+  if os.environ.get("TRAVIS"):
+    nb_workers = 32
+  else:
+    nb_workers = 256
+  subprocess.Popen("./nawak_redis " + nb_workers,
+                   shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
   return 0
 
 def stop(logfile, errfile):
