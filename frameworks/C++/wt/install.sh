@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends wt
+fw_depends apache wt
