@@ -11,6 +11,6 @@
 #    . $FWROOT/toolset/setup/linux/bash_functions.sh && 
 #    . $FWROOT/ULib/install.sh (cwd=$FWROOT//installs)
 #---------------------------------------------------------------------------------------------------------
-export ULIB_VERSION=1.4.1
+export ULIB_VERSION=1.4.2
 export ULIB_ROOT=$IROOT/ULib
 export ULIB_DOCUMENT_ROOT=${ULIB_ROOT}/ULIB_DOCUMENT_ROOT
