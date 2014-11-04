@@ -29,12 +29,8 @@ def start(args, logfile, errfile):
     setup_util.replace_text(fcfg, "PREFORK_CHILD .*", "PREFORK_CHILD " + str(multiprocessing.cpu_count()))
 
     # 2. Start ULib Server (userver_tcp)
-    logfile.write("ULib: trying to start server %s -c %s\n" % (fprg, fcfg))
-
-    # Run in the background, but keep stdout/stderr for easy debugging
     subprocess.Popen( "%s -c %s" % (fprg, fcfg), shell=True, stdout=logfile, stderr=errfile, env = get_env_for_database(args))
 
-    logfile.write("ULib: server STARTED\n")
     return 0
   except subprocess.CalledProcessError:
     return 1
