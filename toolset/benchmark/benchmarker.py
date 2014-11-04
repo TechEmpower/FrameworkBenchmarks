@@ -701,6 +701,13 @@ class Benchmarker:
           continue
 
         if port > 6000:
+          try:
+            # Never try to kill pid 0; bad form old chap.
+            if int(pid) == 0:
+              continue
+          except Exception:
+            # Trying to kill a non-number? Silly.
+            continue
           ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
           (out_6000, err_6000) = ps.communicate()
           err.write(textwrap.dedent(
