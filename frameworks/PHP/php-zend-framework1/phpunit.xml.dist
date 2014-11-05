@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         beStrictAboutOutputDuringTests="false"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutTestSize="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         bootstrap="test/bootstrap.php"
+         checkForUnintentionallyCoveredCode="true"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         strict="false"
+         verbose="true"
+         >
+
+    <testsuites>
+        <testsuite name="unit">
+            <directory suffix="Test.php">test</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">application</directory>
+        </whitelist>
+    </filter>
+
+    <!-- <logging>
+        <log type="coverage-html" target="build/coverage" />
+    </logging> -->
+
+</phpunit>

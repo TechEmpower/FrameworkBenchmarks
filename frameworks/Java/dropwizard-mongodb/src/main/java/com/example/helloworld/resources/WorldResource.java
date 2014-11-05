@@ -13,6 +13,7 @@ import org.mongojack.JacksonDBCollection;
 
 import com.example.helloworld.core.World;
 import com.google.common.base.Optional;
+import com.google.common.primitives.Ints;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -29,18 +30,39 @@ public class WorldResource
   }
 
   @GET
-  public World[] dbTest(@QueryParam("queries") Optional<Integer> queries)
+  public Object dbTest(@QueryParam("queries") Optional<String> queries)
   {
-    final int totalQueries = queries.or(1);
-    final World[] worlds = new World[queries.or(1)];
     final Random random = new Random(System.currentTimeMillis());
-
+    if (!queries.isPresent()) 
+    {
+      DBObject query = new BasicDBObject();
+      query.put("_id", (random.nextInt(10000) + 1));
+      DBCursor<World> dbCursor = collection.find(query);
+      return (dbCursor.hasNext()) ? dbCursor.next() : null;
+    }
+    Integer totalQueries = Ints.tryParse(queries.orNull());
+    if (totalQueries != null) 
+    {
+      if (totalQueries > 500) 
+      {
+        totalQueries = 500;
+      }
+      else if (totalQueries < 1) 
+      {
+        totalQueries = 1;
+      }
+    } 
+    else 
+    {
+      totalQueries = 1;
+    }
+    final World[] worlds = new World[totalQueries];
     for (int i = 0; i < totalQueries; i++)
     {
-    	DBObject query = new BasicDBObject();
-    	query.put("_id", (random.nextInt(10000) + 1));
-    	DBCursor<World> dbCursor = collection.find(query);
-        worlds[i] = (dbCursor.hasNext()) ? dbCursor.next() : null;
+      DBObject query = new BasicDBObject();
+      query.put("_id", (random.nextInt(10000) + 1));
+      DBCursor<World> dbCursor = collection.find(query);
+      worlds[i] = (dbCursor.hasNext()) ? dbCursor.next() : null;
     }
     return worlds;
   }

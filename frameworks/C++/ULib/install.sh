@@ -2,7 +2,8 @@
 
 # install.sh
 # --------------------------------------------------------------------------------------------------------
-# toolset/run-tests.py --install server --test ULib --type all --verbose
+# toolset/run-tests.py --install server --test ULib-mysql  --type all --verbose
+# toolset/run-tests.py --install server --test ULib-sqlite --type all --verbose
 # --------------------------------------------------------------------------------------------------------
 # TROOT - Path of this test's directory
 # IROOT - Path of this test's install directory ($FWROOT/installs or $FWROOT/installs/pertest/<test-name>)
@@ -15,11 +16,18 @@
 #    . $FWROOT/ULib/install.sh (cwd=$FWROOT//installs)
 # --------------------------------------------------------------------------------------------------------
 
-# Chekc if ULib is already installed
-RETCODE=$(fw_exists ulib-${ULIB_VERSION}.installed)
+# Check if ULib is already installed
+ULIB_INSTALLED_FILE="${IROOT}/ULib-${ULIB_VERSION}.installed"
+RETCODE=$(fw_exists ${ULIB_INSTALLED_FILE})
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
+# ULib is only built during installation as a dependency sanity check
+#sudo apt-get update
+ sudo apt-get install libmysqlclient-dev libsqlite3-dev
+
 # Create a run directory for ULIB
+[ ! -e ${ULIB_INSTALLED_FILE} -a -d ${IROOT}/ULib ] && rm -rf ${IROOT}/ULib*
+
 if [ ! -d "$ULIB_ROOT" ]; then
   mkdir -p $ULIB_ROOT
 fi
@@ -42,7 +50,7 @@ fi
 # 1. Download ULib
 cd $IROOT
 fw_get -O ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz 
-fw_untar ULib-${ULIB_VERSION}.tar.gz
+fw_untar  ULib-${ULIB_VERSION}.tar.gz
 
 # 2. Compile application (userver_tcp)
 
@@ -51,19 +59,18 @@ cd ULib-$ULIB_VERSION
 # AVOID "configure: error: newly created file is older than distributed files! Check your system clock"
 find . -exec touch {} \;
 
-LIBS="-lssl -lcrypto -lz" \
 ./configure --prefix=$ULIB_ROOT \
             --disable-static \
-            --with-mysql \
+            --with-mysql --with-sqlite3 \
             --without-ssl --without-pcre --without-expat \
             --without-libz --without-libuuid --without-magic \
-            --enable-static-orm-driver=mysql --enable-static-server-plugin=http
+            --enable-static-orm-driver='mysql sqlite' --enable-static-server-plugin=http
 #           --enable-debug \
 make install
 
 # 3. Compile usp pages for benchmark
 cd src/ulib/net/server/plugin/usp
-make db.la fortunes.la json.la plaintext.la queries.la updates.la
+make db.la fortune.la json.la plaintext.la query.la update.la
 
 # Check that compilation worked
 if [ ! -e .libs/db.so ]; then
@@ -71,7 +78,9 @@ if [ ! -e .libs/db.so ]; then
 fi
 
 mkdir -p $ULIB_DOCUMENT_ROOT
-cp .libs/db.so .libs/fortunes.so .libs/json.so .libs/plaintext.so .libs/queries.so .libs/updates.so $ULIB_DOCUMENT_ROOT
+cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so $ULIB_DOCUMENT_ROOT
 
 cd $IROOT
-touch ulib-${ULIB_VERSION}.installed 
+cp -r ULib-1.4.2/tests/examples/benchmark/FrameworkBenchmarks/ULib/db $ULIB_ROOT
+
+touch ${ULIB_INSTALLED_FILE}

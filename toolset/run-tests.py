@@ -11,6 +11,7 @@ from pprint import pprint
 from benchmark.benchmarker import Benchmarker
 from setup.linux.unbuffered import Unbuffered
 from setup.linux import setup_util
+from ast import literal_eval
 
 # Enable cross-platform colored output
 from colorama import init
@@ -51,7 +52,7 @@ def main(argv=None):
     # Do argv default this way, as doing it in the functional declaration sets it at compile time
     if argv is None:
         argv = sys.argv
-	
+
     # Enable unbuffered output so messages will appear in the proper order with subprocess output.
     sys.stdout=Unbuffered(sys.stdout)
 
@@ -80,6 +81,12 @@ def main(argv=None):
             config = ConfigParser.SafeConfigParser()
             config.read([os.getcwd() + '/' + args.conf_file])
             defaults = dict(config.items("Defaults"))
+            # Convert strings into proper python types
+            for k,v in defaults.iteritems():
+                try:
+                    defaults[k] = literal_eval(v)
+                except Exception:
+                    pass
     except IOError:
         if args.conf_file != 'benchmark.cfg':
             print 'Configuration file not found!'
@@ -98,7 +105,7 @@ def main(argv=None):
     maxThreads = 8
     try:
         maxThreads = multiprocessing.cpu_count()
-    except:
+    except Exception:
         pass
 
     ##########################################################
@@ -134,7 +141,7 @@ def main(argv=None):
                         help='Runs installation script(s) before continuing on to execute the tests.')
     parser.add_argument('--install-error-action', choices=['abort', 'continue'], default='continue', help='action to take in case of error during installation')
     parser.add_argument('--install-strategy', choices=['unified', 'pertest'], default='unified', 
-        help='''Affects `--install server`: With unified, all server software is installed into a single directory. 
+        help='''Affects : With unified, all server software is installed into a single directory. 
         With pertest each test gets its own installs directory, but installation takes longer''')
     parser.add_argument('--install-only', action='store_true', default=False, help='Do not run benchmark or verification, just install and exit')
 
@@ -180,18 +187,18 @@ def main(argv=None):
         print 'Configuration options: '
         pprint(vars(args))
 
-
-
     benchmarker = Benchmarker(vars(args))
 
     # Run the benchmarker in the specified mode
-    if benchmarker.list_tests:
+    #   Do not use benchmarker variables for these checks, 
+    #   they are either str or bool based on the python version
+    if args.list_tests:
       benchmarker.run_list_tests()
-    elif benchmarker.list_test_metadata:
+    elif args.list_test_metadata:
       benchmarker.run_list_test_metadata()
-    elif benchmarker.parse != None:
+    elif args.parse != None:
       benchmarker.parse_timestamp()
-    elif not benchmarker.install_only:
+    elif not args.install_only:
       return benchmarker.run()
 
 if __name__ == "__main__":

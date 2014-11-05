@@ -2,7 +2,7 @@
 ./src/world.h
 ./src/json.usp
 ./src/fortune.h
-./src/queries.usp
-./src/updates.usp
-./src/fortunes.usp
+./src/query.usp
+./src/update.usp
+./src/fortune.usp
 ./src/plaintext.usp

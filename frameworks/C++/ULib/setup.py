@@ -5,50 +5,38 @@ import setup_util
 import subprocess
 import multiprocessing
 
+def get_env_for_database(args):
+  if args.database == 'MySQL':
+     driver = 'mysql'
+     dbname = 'hello_world'
+  else:
+     driver = 'sqlite'
+     dbname = os.environ['ULIB_ROOT'] + '/db/%.*s'
+  return {
+      'UMEMPOOL': '135,0,0,34,8465,129,-17,-22,41',
+      'ORM_DRIVER': driver,
+      'ORM_OPTION': "host=" + args.database_host + " user=benchmarkdbuser password=benchmarkdbpass character-set=utf8 dbname=" + dbname
+    }
+
 def start(args, logfile, errfile):
-
-  fwroot = args.fwroot
-
   try:
-    ulib_root = subprocess.check_output('printf $ULIB_ROOT', shell=True, stderr=errfile)
-
+    ulib_root = os.environ['ULIB_ROOT']
     fcfg = ulib_root + "/benchmark.cfg"
-
-    # 1. Change ULib Server configuration
-
-    # I don't understand if the two approach are different...
-    #threads = str(args.max_threads)
-    PROCS = str(multiprocessing.cpu_count())
-    setup_util.replace_text(fcfg, "PREFORK_CHILD .*", "PREFORK_CHILD " + PROCS)
-
     fprg = ulib_root + "/bin/userver_tcp"
-
+    # 1. Change ULib Server configuration
+    setup_util.replace_text(fcfg, "PREFORK_CHILD .*", "PREFORK_CHILD " + str(multiprocessing.cpu_count()))
     # 2. Start ULib Server (userver_tcp)
-    logfile.write("ULib: trying to start server %s -c %s\n" % (fprg, fcfg))
-
-    # sudo mysqlcheck -v -r -A -u benchmarkdbuser -p
-    os.putenv("ORM_DRIVER","mysql")
-    os.putenv("ORM_OPTION","host=" + args.database_host + " user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world")
-    os.putenv("UMEMPOOL", "1583,1507,-19,45,16458,523,-27,-14,27")
-
-    # Run in the background, but keep stdout/stderr for easy debugging
-    subprocess.Popen( "%s -c %s" % (fprg, fcfg), shell=True, stdout=logfile, stderr=errfile)
-    # subprocess.Popen("UTRACE=\"0 50M\" " + fprg + " -c " + fcfg, shell=True, stdout=logfile, stderr=errfile)
-
-    logfile.write("ULib: server STARTED\n")
+    subprocess.Popen( "%s -c %s" % (fprg, fcfg), shell=True, stdout=logfile, stderr=errfile, env = get_env_for_database(args))
     return 0
   except subprocess.CalledProcessError:
     return 1
 
 def stop(logfile, errfile):
   try:
-    logfile.write( "ULib: setup.py STOP\n")
-
-
     # Stop ULib Server (userver_tcp)
     subprocess.check_call("kill -TERM $( cat $ULIB_ROOT/userver_tcp.pid )", shell=True, stderr=errfile, stdout=logfile)
-    time.sleep(2);
-    p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
+    time.sleep(3);
+    p = subprocess.Popen(['pgrep', 'userver_tcp'], stdout=subprocess.PIPE)
     out, err = p.communicate()
     for line in out.splitlines():
        if 'userver_tcp' in line:

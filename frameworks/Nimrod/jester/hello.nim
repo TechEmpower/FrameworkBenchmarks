@@ -1,9 +1,11 @@
-import jester, strtabs, json, asyncio, sockets, os, strutils
+import jester, strtabs, json, asyncdispatch, os, strutils
 
-get "/json":
-  var obj = %{"message": %"Hello, World!"}
-  resp($obj, "application/json")
+let port = Port(paramStr(1).parseInt)
+let settings = newSettings(port=port, http=true)
 
-var disp = newDispatcher()
-disp.register(port = TPort(paramStr(1).parseInt), http=false)
-while disp.poll(): nil
+routes:
+  get "/json":
+    var obj = %{"message": %"Hello, World!"}
+    resp($obj, "application/json")
+
+runForever()

@@ -21,7 +21,7 @@ RETCODE=$(fw_exists wt)
 # Instead of compiling from source, just use apt to install onto 
 # host machine
 source /etc/lsb-release
-if [ "$DISTRIB_RELEASE" -eq "14.04" ]; then
+if [ "$DISTRIB_RELEASE" == "14.04" ]; then
     sudo apt-get -y install libboost1.54-all-dev
 else
     sudo apt-get -y install libboost1.48-all-dev
@@ -35,6 +35,7 @@ mkdir -p build
 cd build
 cmake .. -DWT_CPP_11_MODE=-std=c++0x -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_INSTALL_PREFIX=${IROOT}/wt -DCONFIGDIR=${IROOT}/wt/etc \
-  -DCMAKE_CXX_COMPILER=$(which g++-4.8)
+  -DCMAKE_CXX_COMPILER=$(which g++-4.8) -DDESTDIR=${IROOT}/wt \
+  -DWEBUSER=$(id -u -n) -DWEBGROUP=$(id -g -n)
 make
 make install

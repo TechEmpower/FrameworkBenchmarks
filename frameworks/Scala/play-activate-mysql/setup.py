@@ -26,7 +26,7 @@ def stop(logfile, errfile):
     with open("./play-activate-mysql/target/universal/play-activate-mysql-1.0-SNAPSHOT/RUNNING_PID") as f:
       pid = int(f.read())
       os.kill(pid,15)
-  except:
+  except Exception:
     return 1
 
   try:

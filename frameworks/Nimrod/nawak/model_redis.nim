@@ -1,6 +1,5 @@
 import strutils, redis
 import model
-export model
 
 var db {.threadvar.}: TRedis
 
