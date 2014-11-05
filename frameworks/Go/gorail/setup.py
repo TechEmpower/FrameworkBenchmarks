@@ -12,7 +12,6 @@ def start(args, logfile, errfile):
     subprocess.call("set GOPATH=C:\\FrameworkBenchmarks\\gorail&& go get ./...", shell=True, cwd="go", stderr=errfile, stdout=logfile)
     subprocess.Popen("setup.bat", shell=True, cwd="go", stderr=errfile, stdout=logfile) 
     return 0
-  os.environ["GOPATH"] = os.path.expanduser('~/FrameworkBenchmarks/gorail')
   subprocess.call("go get -u github.com/gorail/core", shell=True, cwd="gorail", stderr=errfile, stdout=logfile)
   subprocess.call("go get ./...", shell=True, cwd="go", stderr=errfile, stdout=logfile) 
   subprocess.Popen("go run src/hello/hello.go".rsplit(" "), cwd="go", stderr=errfile, stdout=logfile)
