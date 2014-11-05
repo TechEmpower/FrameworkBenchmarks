@@ -53,7 +53,7 @@ class DBTestType(FrameworkTestType):
     else:
       return problems
 
-  def _verifyObject(self, db_object, url):
+  def _verifyObject(self, db_object, url, max_infraction='fail'):
     '''Ensure the passed item is a JSON object with 
     keys 'id' and 'randomNumber' mapping to ints. 
     Separate method allows the QueryTestType to 
@@ -65,15 +65,15 @@ class DBTestType(FrameworkTestType):
       got = str(db_object)[:20]
       if len(str(db_object)) > 20:
         got = str(db_object)[:17] + '...'
-      return ('fail', "Expected a JSON object, got '%s' instead" % got, url)
+      return [(max_infraction, "Expected a JSON object, got '%s' instead" % got, url)]
 
     # Make keys case insensitive
     db_object = {k.lower(): v for k,v in db_object.iteritems()}
 
     if "id" not in db_object:
-      problems.append( ('fail', "Response has no 'id' key", url) ) 
+      problems.append( (max_infraction, "Response has no 'id' key", url) ) 
     if "randomnumber" not in db_object:
-      problems.append( ('fail', "Response has no 'randomNumber' key", url) )
+      problems.append( (max_infraction, "Response has no 'randomNumber' key", url) )
     
     # Ensure we can continue on to use these keys
     if "id" not in db_object or "randomnumber" not in db_object:
@@ -82,12 +82,12 @@ class DBTestType(FrameworkTestType):
     try:
       float(db_object["id"])
     except ValueError as ve:
-      problems.append( ('fail', "Response key 'id' does not map to a number - %s" % ve, url) ) 
+      problems.append( (max_infraction, "Response key 'id' does not map to a number - %s" % ve, url) ) 
 
     try:
       float(db_object["randomnumber"])
     except ValueError as ve:
-      problems.append( ('fail', "Response key 'randomNumber' does not map to a number - %s" % ve, url) ) 
+      problems.append( (max_infraction, "Response key 'randomNumber' does not map to a number - %s" % ve, url) ) 
 
     if type(db_object["id"]) != int:
       problems.append( ('warn', '''Response key 'id' contains extra quotations or decimal points.
