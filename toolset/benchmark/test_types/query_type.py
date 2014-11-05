@@ -74,7 +74,7 @@ class QueryTestType(DBTestType):
       problems.append(('warn','Top-level JSON is an object, not an array', url))
 
       # Verify the one object they gave us before returning
-      problems += self._verifyObject(response, url)
+      problems += self._verifyObject(response, url, max_infraction)
 
       return problems
 
@@ -90,7 +90,7 @@ class QueryTestType(DBTestType):
     # verify individual objects
     maxBadObjects = 5
     for item in response:
-      obj_ok = self._verifyObject(item, url)
+      obj_ok = self._verifyObject(item, url, max_infraction)
       if len(obj_ok) > 0:
         maxBadObjects -=  1
         problems += obj_ok
