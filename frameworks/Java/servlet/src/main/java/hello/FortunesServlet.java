@@ -31,7 +31,7 @@ public class FortunesServlet extends HttpServlet
       throws ServletException, IOException
   {
     // Set content type to JSON
-    res.setCharacterEncodring(UTF8);
+    res.setCharacterEncoding(UTF8);
     res.setContentType(CONTENT_TYPE_HTML_UTF8);
 
     final List<Fortune> fortunes = new ArrayList<>();
