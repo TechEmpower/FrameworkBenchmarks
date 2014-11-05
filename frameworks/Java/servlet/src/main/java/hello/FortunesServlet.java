@@ -19,6 +19,8 @@ public class FortunesServlet extends HttpServlet
   
   // Database details.
   private static final String DB_QUERY = "SELECT * FROM Fortune";
+  private static final String UTF8 = "UTF-8";
+  private static final String CONTENT_TYPE_HTML_UTF8 = "text/html;charset=UTF-8";
 
   // Database connection pool.
   @Resource(name="jdbc/hello_world")
@@ -29,7 +31,8 @@ public class FortunesServlet extends HttpServlet
       throws ServletException, IOException
   {
     // Set content type to JSON
-    res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_HTML);
+    res.setCharacterEncodring(UTF8);
+    res.setContentType(CONTENT_TYPE_HTML_UTF8);
 
     final List<Fortune> fortunes = new ArrayList<>();
     
