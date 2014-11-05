@@ -599,8 +599,7 @@ class Benchmarker:
             err.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
             err.flush()
             self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-
-          return exit_with_code(1)
+            return exit_with_code(1)
 
         out.write(header("Stopped %s" % test.name))
         out.flush()
