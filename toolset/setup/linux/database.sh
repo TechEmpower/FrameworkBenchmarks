@@ -42,8 +42,6 @@ sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::=
     redis-server      `# Installs 2.4 or 2.6, based on Ubuntu version` \
     lsb-core          `# Ensure that lsb_release can be used`
 
-CODENAME=$(lsb_release -sc)
-
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
 # Create a user-owned directory for our databases
@@ -88,7 +86,7 @@ rm create.sql
 # Postgres
 ##############################
 echo "Setting up Postgres database"
-if [ "$CODENAME" == "precise" ]; then
+if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   echo "WARNING: Force upgrading Postgres for Ubuntu 12.04"
   sudo apt-get remove -y postgresql postgresql-9.1 postgresql-client-9.1
 
