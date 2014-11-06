@@ -125,6 +125,8 @@ sudo service mongod stop
 sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
 sudo cp mongodb.conf /etc/mongodb.conf
 sudo mv mongodb.conf /etc/mongod.conf
+sudo rm -rf /ssd/mongodb
+sudo rm -rf /ssd/log/mongodb
 sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
 sudo service mongod start
