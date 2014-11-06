@@ -72,6 +72,8 @@ sudo mv mysql.conf /etc/init/mysql.conf
 sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
 sudo mv my.cnf /etc/mysql/my.cnf
 
+sudo rm -rf /ssd/mysql
+sudo rm -rf /ssd/log/mysql
 sudo cp -R -p /var/lib/mysql /ssd/
 sudo cp -R -p /var/log/mysql /ssd/log
 sudo cp usr.sbin.mysqld /etc/apparmor.d/
@@ -94,20 +96,23 @@ if [ "$CODENAME" == "precise" ]; then
   wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get update
   sudo apt-get install -y postgresql-9.3 postgresql-client-9.3
-  sudo -u postgres -H /etc/init.d/postgresql start
+  sudo /etc/init.d/postgresql start
 fi
+sudo /etc/init.d/postgresql stop
+sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+
+sudo rm -rf /ssd/postgresql
+sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
+sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+
+sudo /etc/init.d/postgresql start
 
 sudo -u postgres psql template1 < create-postgres-database.sql
 sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
 rm create-postgres-database.sql create-postgres.sql
 
-sudo -u postgres -H /etc/init.d/postgresql stop
-sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
-sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
-
-sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
-sudo -u postgres -H /etc/init.d/postgresql start
-sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+sudo /etc/init.d/postgresql restart
 
 ##############################
 # MongoDB
@@ -125,6 +130,8 @@ sudo service mongod stop
 sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
 sudo cp mongodb.conf /etc/mongodb.conf
 sudo mv mongodb.conf /etc/mongod.conf
+sudo rm -rf /ssd/mongodb
+sudo rm -rf /ssd/log/mongodb
 sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
 sudo service mongod start
