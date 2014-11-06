@@ -12,12 +12,12 @@ IROOT=${FWROOT}/installs
 
 # Determine which OS we are using and set the appropriate variables
 source /etc/lsb-release
-UBUNTU12=0
-UBUNTU14=0
+TFB_UBUNTU12=0
+TFB_UBUNTU14=0
 if [[ $DISTRIB_RELEASE == 14.* ]]; then
-  UBUNTU14=1
+  TFB_UBUNTU14=1
 elif [[ $DISTRIB_RELEASE == 12.* ]]; then
-  UBUNTU12=1
+  TFB_UBUNTU12=1
 fi
 
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64

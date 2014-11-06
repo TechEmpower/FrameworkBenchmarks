@@ -86,7 +86,7 @@ rm create.sql
 # Postgres
 ##############################
 echo "Setting up Postgres database"
-if [ $UBUNTU12 -eq 1 ]; then
+if [ $TFB_UBUNTU12 -eq 1 ]; then
   echo "WARNING: Force upgrading Postgres for Ubuntu 12.04"
   sudo apt-get remove -y postgresql postgresql-9.1 postgresql-client-9.1
 
