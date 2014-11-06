@@ -96,20 +96,23 @@ if [ "$CODENAME" == "precise" ]; then
   wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get update
   sudo apt-get install -y postgresql-9.3 postgresql-client-9.3
-  sudo -u postgres -H /etc/init.d/postgresql start
+  sudo /etc/init.d/postgresql start
 fi
+sudo /etc/init.d/postgresql stop
+sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+
+sudo rm -rf /ssd/postgresql
+sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
+sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+
+sudo /etc/init.d/postgresql start
 
 sudo -u postgres psql template1 < create-postgres-database.sql
 sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
 rm create-postgres-database.sql create-postgres.sql
 
-sudo -u postgres -H /etc/init.d/postgresql stop
-sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
-sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
-
-sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
-sudo -u postgres -H /etc/init.d/postgresql start
-sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+sudo /etc/init.d/postgresql restart
 
 ##############################
 # MongoDB
