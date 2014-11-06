@@ -26,6 +26,12 @@ export DB_HOST={database_host}
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
+source /etc/lsb-release
+export TFB_DISTRIB_ID=$DISTRIB_ID
+export TFB_DISTRIB_RELEASE=$DISTRIB_RELEASE
+export TFB_DISTRIB_CODENAME=$DISTRIB_CODENAME
+export TFB_DISTRIB_DESCRIPTION=$DISTRIB_DESCRIPTION
+
 ##############################
 # Prerequisites
 ##############################
@@ -170,7 +176,7 @@ rm -rf apache-cassandra-*-bin.tar.gz cassandra
 # Redis
 ##############################
 echo "Setting up Redis database"
-if [ "$CODENAME" == "precise" ]; then
+if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   echo "WARNING: Downgrading Redis configuration for Ubuntu 12.04"
 
   # On 12.04, Redis 2.4 is installed. It doesn't support 
