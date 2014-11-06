@@ -28,7 +28,7 @@ final class WorldDatabaseController {
 	}
 
 	@RequestMapping(value = "/queries", produces = "application/json")
-	List<World> multipleQueries(@RequestParam("queries") Integer rawQueryCount) {
+	List<World> multipleQueries(@RequestParam(value="queries", required=false, defaultValue="1") String rawQueryCount) {
 		Integer queryCount = boundQueryCount(rawQueryCount);
 
 		List<World> worlds = new ArrayList<World>(queryCount);
@@ -42,7 +42,7 @@ final class WorldDatabaseController {
 	}
 
 	@RequestMapping(value = "/updates", produces = "application/json")
-	List<World> updateQueries(@RequestParam(value="queries", required=false, defaultValue="1") Integer rawQueryCount) {
+	List<World> updateQueries(@RequestParam(value="queries", required=false, defaultValue="1") String rawQueryCount) {
 		Integer queryCount = boundQueryCount(rawQueryCount);
 
 		List<World> worlds = new ArrayList<World>(queryCount);
@@ -58,7 +58,13 @@ final class WorldDatabaseController {
 		return worlds;
 	}
 
-	private Integer boundQueryCount(final Integer raw) {
+	private Integer boundQueryCount(final String rawString) {
+                Integer raw;
+                try {
+                       raw = Integer.parseInt(rawString);
+                } catch (NumberFormatException e) {
+                       raw = null;
+                } 
 		if (raw == null || raw < 1) {
 			return 1;
 		} else if (raw > 500) {
