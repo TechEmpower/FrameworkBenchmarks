@@ -21,9 +21,9 @@ RETCODE=$(fw_exists wt)
 # Instead of compiling from source, just use apt to install onto 
 # host machine
 source /etc/lsb-release
-if [ "$DISTRIB_RELEASE" == "14.04" ]; then
+if [ $UBUNTU14 -eq 1 ]; then
     sudo apt-get -y install libboost1.54-all-dev
-else
+elif [ $UBUNTU12 -eq 1 ]; then
     sudo apt-get -y install libboost1.48-all-dev
 fi
 
