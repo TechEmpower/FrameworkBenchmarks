@@ -72,6 +72,8 @@ sudo mv mysql.conf /etc/init/mysql.conf
 sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
 sudo mv my.cnf /etc/mysql/my.cnf
 
+sudo rm -rf /ssd/mysql
+sudo rm -rf /ssd/log/mysql
 sudo cp -R -p /var/lib/mysql /ssd/
 sudo cp -R -p /var/log/mysql /ssd/log
 sudo cp usr.sbin.mysqld /etc/apparmor.d/
