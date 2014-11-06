@@ -20,10 +20,9 @@ RETCODE=$(fw_exists wt)
 
 # Instead of compiling from source, just use apt to install onto 
 # host machine
-source /etc/lsb-release
-if [ $TFB_UBUNTU14 -eq 1 ]; then
+if [ "$TFB_CODENAME" == "trusty" ]; then
     sudo apt-get -y install libboost1.54-all-dev
-elif [ $TFB_UBUNTU12 -eq 1 ]; then
+elif [ "$TFB_CODENAME" == "precise" ]; then
     sudo apt-get -y install libboost1.48-all-dev
 fi
 

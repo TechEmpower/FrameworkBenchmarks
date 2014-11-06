@@ -12,13 +12,11 @@ IROOT=${FWROOT}/installs
 
 # Determine which OS we are using and set the appropriate variables
 source /etc/lsb-release
-TFB_UBUNTU12=0
-TFB_UBUNTU14=0
-if [[ $DISTRIB_RELEASE == 14.* ]]; then
-  TFB_UBUNTU14=1
-elif [[ $DISTRIB_RELEASE == 12.* ]]; then
-  TFB_UBUNTU12=1
-fi
+export TFB_DISTRIB_ID=$DISTRIB_ID
+export TFB_DISTRIB_RELEASE=$DISTRIB_RELEASE
+export TFB_DISTRIB_CODENAME=$DISTRIB_CODENAME
+export TFB_DISTRIB_DESCRIPTION=$DISTRIB_DESCRIPTION
+
 
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
 export RESIN_HOME=${IROOT}/resin-4.0.41
