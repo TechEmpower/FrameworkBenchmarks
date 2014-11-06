@@ -96,13 +96,118 @@ Note: environment variables can also be used for a number of the arguments.
 
 ## Installation Basics
 
+In order for SSH to work appropriately, the user on **each machine** will need to be 
+set up to have passwordless sudo access.
+
+**Setting up the `user`**
+
+```bash
+$ sudo vim /etc/sudoers
+```
+
+You will need to change the line that reads `%sudo   ALL=(ALL:ALL) ALL` to 
+`%sudo   ALL=(ALL:ALL) NOPASSWD: ALL`. You should be able to exit your shell, ssh 
+back in and perform `sudo ls` without being prompted for a password.
+
+**NOTE** Again, you will have to do this on every machine: server, database, client.
+
+**Setting up SSH**
+
+You will need to also be able to SSH onto each of the 3 machines from any of the
+3 machines and not be prompted for a password. We use an identity file and authorized_keys
+file to accomplish this.
+
+```bash
+$ ssh-keygen -t rsa
+```
+
+This will prompt you for various inputs; leave them all blank and just hit 'enter'.
+Next, you will want to allow connections identified via that key signature, so add
+it to your authorized keys.
+
+```bash
+$ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+$ chmod 600 ~/.ssh/authorized_keys
+```
+
+Next, you will need these exact same files to exist on the other 2 machines.
+If you properly set up your user account on all 3 machines, then this will not prompt
+you for a password (if it does, go back to "Setting up the `user`" and fix it).
+
+```bash
+# Set up the database machine for SSH
+$ cat ~/.ssh/id_rsa.pub | ssh [your user]@[database ip] 'cat >> .ssh/authorized_keys'
+$ scp ~/.ssh/id_rsa [your user]@[databse ip]:~/.ssh/id_rsa
+$ scp ~/.ssh/id_rsa.pub [your user]@[database ip]:~/.ssh/id_rsa.pub
+# Set up the client machine for SSH
+$ cat ~/.ssh/id_rsa.pub | ssh [your user]@[client ip] 'cat >> .ssh/authorized_keys'
+$ scp ~/.ssh/id_rsa [your user]@[client ip]:~/.ssh/id_rsa
+$ scp ~/.ssh/id_rsa.pub [your user]@[client ip]:~/.ssh/id_rsa.pub
+```
+
+Now, test it all out, you should be able to execute all of the following without
+being prompted for a password. **NOTE** The first time you SSH to these machines
+(read: in this step) you will be prompted to accept the signature - do it.
+
+```bash
+# Test your database SSH setup
+$ ssh [database ip]
+# Accept the signature
+# You are connected to the database machine!
+$ sudo ls
+# This should NOT prompt for a password and list the directory's contents
+# If this is not true, go back to "Setting up the `user`" and fix it
+$ exit
+# Test your client SSH setup
+$ ssh [client ip]
+# Accept the signature
+# You are connected to the client machine!
+$ sudo ls
+# We also need to test that we can SSH back to the server machine
+$ ssh [server ip]
+# Accept the signature
+# You are connected to the server machine!
+$ sudo ls
+# If this works, you are golden!
+$ exit
+# Back on client
+$ exit
+# Back on initial ssh connection to server machine
+```
+
+**Setting up prerequisites**
+
+The suite requires that a few libraries and applications are installed in order to run.
+First, clone our repository.
+
+```bash
+$ git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
+$ sudo pip install -r FrameworkBenchmarks/config/python_requirements.txt
+```
+
 To install TFB components onto the various servers, you must provide
 basic login details for each server (e.g. usernames, IP addresses, 
 private key files). While these details can all be passed 
 using command line flags, it's easier to use a configuration 
 file and avoid having huge flag lists in your commands. 
-The examples in this section assume you have created a configuration 
-file containing login details for the various servers. 
+
+```bash
+$ cd FrameworkBenchmarks
+$ cp benchmark.cfg.example benchmark.cfg
+$ vim benchmark.cfg
+```
+
+You will need to change, at a minimum, the following:
+
+* `client_host` Set this to the IP address of your client machine
+* `client_identity_file` Set to `/home/[username]/.ssh/id_rsa`
+* `client_user` Set to your username
+* `database_host` Set this to the IP address of your database machine
+* `database_identity_file` Set to `/home/[username]/.ssh/id_rsa`
+* `database_user` Set to your username
+* `server_host` Set this to the IP address of your server machine
+
+At this point, you should be ready to install the suite.
 
 We use the `--install-only` flag in our examples to 
 prevent launching tests at this stage. All of these commands 
@@ -123,6 +228,19 @@ $ toolset/run-tests.py --install database --install-only
 ```
 
 **Setting up the `app server`**
+
+At this point, you should be able to run a benchmark of the entire
+suite or selectively run individual benchmarks. Additionally, you
+can test your setup by running a verification on one of the stable
+frameworks. Since we wrote it, we tend to test with `gemini`:
+
+```bash
+$ toolset/run-tests.py --mode verify --test gemini
+```
+
+You can find the results for this verification step under the directory:
+`results/ec2/latest/logs/gemini`. There should be an `err` and an `out`
+file.
 
 You can choose to selectively install components by using the 
 `--test` and `--exclude` flags. 
