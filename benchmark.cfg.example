@@ -21,7 +21,6 @@ threads=8
 mode=benchmark
 name=ec2
 os=linux
-parse=None
 password_prompt=False
 server_host=localhost
 sleep=60

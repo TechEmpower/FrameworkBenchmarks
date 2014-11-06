@@ -23,8 +23,8 @@ class PlaintextTestType(FrameworkTestType):
       return [('fail', "Could not find 'Hello, World!' in response", url)]
 
     if len("hello, world!") < len(body):
-      return [('warn', '''Server is returning more data than is required.
-        This may negatively affect benchmark performance''', url)]
+      return [('warn', """Server is returning %s more bytes than are required.
+        This may negatively affect benchmark performance""" % (len(body) - len("hello, world!")), url)]
 
     return [('pass', '', url)]
 
