@@ -25,8 +25,8 @@ cd mono-3.6.0
 ./autogen.sh --prefix=$IROOT/mono-3.6.0-install
 # make -j4 EXTERNAL_MCS=${PWD}/mcs/class/lib/monolite/basic.exe
 echo -n "Installing Mono"
-make -j4 | awk '{ if (NR%100 == 0) printf "."}'
-make install | awk '{ if (NR%100 == 0) printf "."}'
+make -j4 2>&1 | awk '{ if (NR%100 == 0) printf "."}'
+make install 2>&1 | awk '{ if (NR%100 == 0) printf "."}'
 
 echo "Installing RootCAs from Mozilla..."; 
 mozroots --import --sync;
