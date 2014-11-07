@@ -9,8 +9,8 @@ pre=$(pwd)
 cd Python-3.4.1
 ./configure --prefix=${pre}/py3 --disable-shared --quiet
 echo -n "Installing Python 3"
-make -j4 --quiet 2>&1 | awk '{ if (NR%100 == 0) printf "."}'
-make install --quiet 2>&1 | awk '{ if (NR%100 == 0) printf "."}'
+make -j4 --quiet 2>&1 | tee $IROOT/python3-install.log | awk '{ if (NR%100 == 0) printf "."}'
+make install --quiet 2>&1 | tee -a $IROOT/python3-install.log | awk '{ if (NR%100 == 0) printf "."}'
 cd ..
 
 if [ ! -f "get-pip.py" ]; then
