@@ -10,7 +10,7 @@ RETCODE=$(fw_exists mono.installed)
   sudo $IROOT/mono-3.6.0-install/bin/mozroots --import --sync;
   return 0; }
 
-sudo apt-get install -y build-essential \
+sudo apt-get install -qqy build-essential \
              autoconf \
              automake \
              libtool \
