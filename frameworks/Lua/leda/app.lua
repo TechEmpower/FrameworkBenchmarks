@@ -1,7 +1,7 @@
-local http = require('leda.http')
+local http = require('leda.server.http')
 local json = require('cjson')
 
-local server = http.Server(8080, '')
+local server = http(8080, 'localhost')
 
 server.request = function(server, request, response)
     local url = request:url() 
@@ -11,4 +11,5 @@ server.request = function(server, request, response)
     elseif url:find('/plaintext') then    
         response.body =  'Hello, World!'
     end
+    response:send()
 end

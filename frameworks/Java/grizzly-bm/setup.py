@@ -14,7 +14,7 @@ def stop(logfile, errfile):
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
   out, err = p.communicate()
   for line in out.splitlines():
-    if 'grizzly-bm' in line:
+    if 'grizzly-bm' in line and 'run-tests' not in line and 'run-ci' not in line:
       pid = int(line.split(None, 2)[1])
       os.kill(pid, 15)
   return 0
