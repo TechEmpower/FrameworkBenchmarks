@@ -8,8 +8,8 @@ fw_untar Python-2.7.8.tgz
 pre=$(pwd)
 cd Python-2.7.8
 ./configure --prefix=${pre}/py2 --disable-shared --quiet
-make -j4 --quiet
-make install --quiet
+make -j4 --quiet | grep -i "error"
+make install --quiet | grep -i "error"
 cd ..
 
 if [ ! -f "get-pip.py" ]; then
