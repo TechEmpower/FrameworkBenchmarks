@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 
-DBHOSTNAME = os.environ.get('TFB_DATABASE_HOST', 'localhost')
+DBHOSTNAME = 'database_host'
 
 def get_conn():
     return psycopg2.connect(
