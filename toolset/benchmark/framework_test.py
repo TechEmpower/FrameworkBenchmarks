@@ -341,7 +341,7 @@ class FrameworkTest:
       if not test.failed:
         if test_type == 'plaintext': # One special case
           remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
-        elif test_type == 'query':
+        elif test_type == 'query' or type_type == 'update':
           remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
         else:
           remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
@@ -513,11 +513,11 @@ class FrameworkTest:
   ############################################################
   def __generate_pipeline_script(self, url, port, accept_header, wrk_command="wrk"):
     headers = self.headers_template.format(accept=accept_header)
-    return self.pipeline_template.format(max_concurrency=max(self.benchmarker.concurrency_levels), 
+    return self.pipeline_template.format(max_concurrency=16384, 
       max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration, 
       levels=" ".join("{}".format(item) for item in [256,1024,4096,16384]), 
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command,
-      pipeline="16")
+      pipeline=16)
 
   ############################################################
   # __generate_query_script(url, port)
