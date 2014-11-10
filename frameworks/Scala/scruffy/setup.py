@@ -9,7 +9,7 @@ def start(args, logfile, errfile):
   if os.name == 'nt':
     subprocess.check_call('"..\\sbt\\sbt.bat" assembly', shell=True, cwd="scruffy", stderr=errfile, stdout=logfile)
   else:
-    subprocess.check_call("$IROOT/sbt/bin/sbt assembly", shell=True, cwd="scruffy", stderr=errfile, stdout=logfile)
+    subprocess.check_call(args.iroot + "/sbt/bin/sbt assembly", shell=True, cwd="scruffy", stderr=errfile, stdout=logfile)
     
   subprocess.Popen("java -jar target/scala-2.11/scruffy-benchmark-assembly-1.0.1.jar -Dhostname=" + args.database_host,
                     cwd="scruffy",
