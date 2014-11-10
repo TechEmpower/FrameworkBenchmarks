@@ -103,13 +103,19 @@ public class Application extends Controller {
 
     @Predicated(predicate = IsDbAvailable.class, failed = SERVICE_UNAVAILABLE)
     public static F.Promise<Result> update(final String queryCountString) {
-        return getRandomWorlds(queryCount(queryCountString)).flatMap(new F.Function<List<World>, F.Promise<Result>>() {
+        return getRandomWorlds(queryCount(queryCountString)).map(new F.Function<List<World>, Result>() {
 
             @Override
-            public F.Promise<Result> apply(List<World> worlds) throws Throwable {
-                return updateWorlds(worlds);
+            public Result apply(List<World> worlds) throws Throwable {
+                Random random = ThreadLocalRandom.current();
+                for (World world : worlds) {
+                    world.randomNumber = (long) (random.nextInt(10000) + 1);
+                }
+
+                List<World> updatedWorlds = World.save(worlds);
+                return ok(Json.toJson(updatedWorlds));
             }
-        });
+        }, dbEc);
     }
 
     private static int queryCount(String queryCountString) {
@@ -141,22 +147,6 @@ public class Application extends Controller {
                     worlds.add(world);
                 }
                 return worlds;
-            }
-        }, dbEc);
-    }
-
-    private static F.Promise<Result> updateWorlds(final List<World> worlds) {
-        return F.Promise.promise(new F.Function0<Result>() {
-
-            @Override
-            public Result apply() throws Throwable {
-                Random random = ThreadLocalRandom.current();
-                for (World world : worlds) {
-                    world.randomNumber = (long) (random.nextInt(10000) + 1);
-                }
-
-                List<World> updatedWorlds = World.save(worlds);
-                return ok(Json.toJson(updatedWorlds));
             }
         }, dbEc);
     }
