@@ -33,4 +33,3 @@ The tests were run with:
 * http://localhost/queries?queries=10
 * http://localhost/fortunes
 * http://localhost/update?queries=10
-

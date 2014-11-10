@@ -1,8 +1,6 @@
 package controllers;
 
 import akka.dispatch.ExecutionContexts;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Fortune;
 import models.World;
 import play.Play;
@@ -27,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 public class Application extends Controller {
 
     private static final int TEST_DATABASE_ROWS = 10000;
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private static final int partitionCount = Play.application().configuration().getInt("db.default.partitionCount");
     private static final int maxConnections =
@@ -41,18 +38,11 @@ public class Application extends Controller {
             new NamedThreadFactory("dbEc"));
     private static final ExecutionContext dbEc = ExecutionContexts.fromExecutorService(tpe);
 
-    public static Result json() {
-        final ObjectNode result = OBJECT_MAPPER.createObjectNode();
-        result.put("message", "Hello World!");
-        return ok(result);
-    }
-
     // If the thread-pool used by the database grows too large then our server
     // is probably struggling, and we should start dropping requests. Set
     // the max size of our queue something above the number of concurrent
     // connections that we need to handle.
     public static class IsDbAvailable implements Predicate {
-
         @Override
         public boolean condition() {
             return tpe.getQueue().size() <= 1024;
@@ -62,7 +52,6 @@ public class Application extends Controller {
     @Predicated(predicate = IsDbAvailable.class, failed = SERVICE_UNAVAILABLE)
     public static F.Promise<Result> db() {
         return getRandomWorlds(1).map(new F.Function<List<World>, Result>() {
-
             @Override
             public Result apply(List<World> worlds) {
                 return ok(Json.toJson(worlds.get(0)));
@@ -87,7 +76,7 @@ public class Application extends Controller {
 
             @Override
             public Result apply() throws Throwable {
-                List<Fortune> fortunes = Fortune.findAll();
+                List<Fortune> fortunes = Fortune.find.all();
                 fortunes.add(new Fortune("Additional fortune added at request time."));
                 Collections.sort(fortunes, new Comparator<Fortune>() {
 
@@ -139,12 +128,12 @@ public class Application extends Controller {
         return F.Promise.promise(new F.Function0<List<World>>() {
 
             @Override
-            public List<World> apply() throws Throwable {
+            public List<World> apply() {
                 Random random = ThreadLocalRandom.current();
                 List<World> worlds = new ArrayList<World>(n);
                 for (int i = 0; i < n; ++i) {
                     long randomId = random.nextInt(TEST_DATABASE_ROWS) + 1;
-                    World world = World.findById(randomId);
+                    World world = World.find.byId(randomId);
                     worlds.add(world);
                 }
                 return worlds;

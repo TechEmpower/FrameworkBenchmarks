@@ -1,4 +1,4 @@
-name := """play2-java-jpa-hikaricp"""
+name := "play2-java-ebean-hikaricp"
 
 version := "1.0-SNAPSHOT"
 
@@ -8,9 +8,8 @@ scalaVersion := "2.11.4"
 
 libraryDependencies ++= Seq(
   javaJdbc,
-  javaJpa,
+  javaEbean,
   "mysql" % "mysql-connector-java" % "5.1.33",
-  "org.hibernate" % "hibernate-entitymanager" % "4.3.6.Final",
   "com.edulify" %% "play-hikaricp" % "1.5.0"
 )
 

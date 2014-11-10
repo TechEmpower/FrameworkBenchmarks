@@ -52,7 +52,6 @@ public class Application extends Controller {
     // the max size of our queue something above the number of concurrent
     // connections that we need to handle.
     public static class IsDbAvailable implements Predicate {
-
         @Override
         public boolean condition() {
             return tpe.getQueue().size() <= 1024;
