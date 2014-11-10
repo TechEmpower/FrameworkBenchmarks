@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+@import play.exceptions.PlayException
+@args Exception exception
+<html>
+	<head>
+		<title>Application error</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=@_response_encoding"/>
+		@if(_rythmPlugin.enableCodeMarker) {
+			<script src="@_rythmPlugin.jquery"></script>
+		}
+	</head>
+	<body>
+		@{
+			boolean debug = true ;
+		}
+		@if (_play.mode.isDev() || debug) {
+			@e500(exception)
+		} else {
+			<h1>Oops, an error occured</h1>
+			@if (exception instanceof PlayException) {
+			<p>
+				This exception has been logged with id <strong>@(((PlayException)exception).getId())</strong>.
+			</p>
+			}
+		}
+	</body>
+</html>

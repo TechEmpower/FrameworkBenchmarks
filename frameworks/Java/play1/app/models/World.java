@@ -1,13 +1,9 @@
 package models;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import play.db.jpa.GenericModel;
-import play.db.jpa.Model;
-
-import com.google.gson.annotations.SerializedName;
 
 /**
  * use a generic model as we want to explicitly define the id
@@ -20,11 +16,15 @@ public class World extends GenericModel {
 
 	public World(long i, long number) {
 		id = i;
-		randomNumber = number ;
+		randomNumber = number;
+	}
+
+	public World() {
 	}
 
 	@Id
 	public Long id;
 
 	public Long randomNumber;
+
 }
