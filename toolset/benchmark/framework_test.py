@@ -296,7 +296,7 @@ class FrameworkTest:
         with open(output_file, 'w'):
           pass
 
-      if test.passed:
+      if not test.failed:
         if test_type == 'plaintext': # One special case
           remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header, levels=[256,1024,4096,16384], pipeline="16")
         elif test.requires_db:

@@ -62,7 +62,7 @@ def replace_environ(config=None, root=None, print_result=False, command='true'):
                     os.environ[key]=mini_environ[key]
                 else:
                     os.environ[key]=value    
-            except:
+            except Exception:
                 if not line: # Don't warn for empty line
                     continue 
                 print "WARN: Line '%s' from '%s' is not an environment variable" % (line, config)

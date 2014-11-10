@@ -51,22 +51,22 @@ class QueryTestType(DBTestType):
     else:
       return problems
 
-  def _verifyQueryList(self, expectedLength, body, url, incorrect_length_response='fail'):
+  def _verifyQueryList(self, expectedLength, body, url, max_infraction='fail'):
     '''Validates high-level structure (array length, object 
       types, etc) before calling into DBTestType to 
       validate a few individual JSON objects'''
 
     # Empty response
     if body is None:
-      return [('fail','No response', url)]
+      return [(max_infraction,'No response', url)]
     elif len(body) == 0:
-      return [('fail','Empty Response', url)]
+      return [(max_infraction,'Empty Response', url)]
   
     # Valid JSON? 
     try: 
       response = json.loads(body)
     except ValueError as ve:
-      return [('fail',"Invalid JSON - %s" % ve, url)]
+      return [(max_infraction,"Invalid JSON - %s" % ve, url)]
 
     problems = []
 
@@ -74,23 +74,23 @@ class QueryTestType(DBTestType):
       problems.append(('warn','Top-level JSON is an object, not an array', url))
 
       # Verify the one object they gave us before returning
-      problems += self._verifyObject(response, url)
+      problems += self._verifyObject(response, url, max_infraction)
 
       return problems
 
     if any(type(item) != dict for item in response):
-      problems.append(('fail','All items JSON array must be JSON objects', url))
+      problems.append((max_infraction,'All items JSON array must be JSON objects', url))
 
     # For some edge cases we only warn
     if len(response) != expectedLength:
-      problems.append((incorrect_length_response,
+      problems.append((max_infraction,
         "JSON array length of %s != expected length of %s" % (len(response), expectedLength), 
         url))
 
     # verify individual objects
     maxBadObjects = 5
     for item in response:
-      obj_ok = self._verifyObject(item, url)
+      obj_ok = self._verifyObject(item, url, max_infraction)
       if len(obj_ok) > 0:
         maxBadObjects -=  1
         problems += obj_ok

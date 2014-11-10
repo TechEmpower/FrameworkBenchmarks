@@ -26,6 +26,12 @@ export DB_HOST={database_host}
 set -x
 export DEBIAN_FRONTEND=noninteractive
 
+source /etc/lsb-release
+export TFB_DISTRIB_ID=$DISTRIB_ID
+export TFB_DISTRIB_RELEASE=$DISTRIB_RELEASE
+export TFB_DISTRIB_CODENAME=$DISTRIB_CODENAME
+export TFB_DISTRIB_DESCRIPTION=$DISTRIB_DESCRIPTION
+
 ##############################
 # Prerequisites
 ##############################
@@ -41,8 +47,6 @@ sudo apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::=
     postgresql        `# Installs 9.1 or 9.3, based on Ubuntu version` \
     redis-server      `# Installs 2.4 or 2.6, based on Ubuntu version` \
     lsb-core          `# Ensure that lsb_release can be used`
-
-CODENAME=$(lsb_release -sc)
 
 sudo sh -c "echo '*               -    nofile          65535' >> /etc/security/limits.conf"
 
@@ -72,6 +76,8 @@ sudo mv mysql.conf /etc/init/mysql.conf
 sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
 sudo mv my.cnf /etc/mysql/my.cnf
 
+sudo rm -rf /ssd/mysql
+sudo rm -rf /ssd/log/mysql
 sudo cp -R -p /var/lib/mysql /ssd/
 sudo cp -R -p /var/log/mysql /ssd/log
 sudo cp usr.sbin.mysqld /etc/apparmor.d/
@@ -86,7 +92,7 @@ rm create.sql
 # Postgres
 ##############################
 echo "Setting up Postgres database"
-if [ "$CODENAME" == "precise" ]; then
+if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   echo "WARNING: Force upgrading Postgres for Ubuntu 12.04"
   sudo apt-get remove -y postgresql postgresql-9.1 postgresql-client-9.1
 
@@ -94,20 +100,23 @@ if [ "$CODENAME" == "precise" ]; then
   wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo apt-get update
   sudo apt-get install -y postgresql-9.3 postgresql-client-9.3
-  sudo -u postgres -H /etc/init.d/postgresql start
+  sudo /etc/init.d/postgresql start
 fi
+sudo /etc/init.d/postgresql stop
+sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+
+sudo rm -rf /ssd/postgresql
+sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
+sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+
+sudo /etc/init.d/postgresql start
 
 sudo -u postgres psql template1 < create-postgres-database.sql
 sudo -u benchmarkdbuser psql hello_world < create-postgres.sql
 rm create-postgres-database.sql create-postgres.sql
 
-sudo -u postgres -H /etc/init.d/postgresql stop
-sudo mv postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
-sudo mv pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
-
-sudo cp -R -p /var/lib/postgresql/9.3/main /ssd/postgresql
-sudo -u postgres -H /etc/init.d/postgresql start
-sudo mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+sudo /etc/init.d/postgresql restart
 
 ##############################
 # MongoDB
@@ -125,6 +134,8 @@ sudo service mongod stop
 sudo mv /etc/mongodb.conf /etc/mongodb.conf.orig
 sudo cp mongodb.conf /etc/mongodb.conf
 sudo mv mongodb.conf /etc/mongod.conf
+sudo rm -rf /ssd/mongodb
+sudo rm -rf /ssd/log/mongodb
 sudo cp -R -p /var/lib/mongodb /ssd/
 sudo cp -R -p /var/log/mongodb /ssd/log/
 sudo service mongod start
@@ -165,7 +176,7 @@ rm -rf apache-cassandra-*-bin.tar.gz cassandra
 # Redis
 ##############################
 echo "Setting up Redis database"
-if [ "$CODENAME" == "precise" ]; then
+if [ "$TFB_DISTRIB_CODENAME" == "precise" ]; then
   echo "WARNING: Downgrading Redis configuration for Ubuntu 12.04"
 
   # On 12.04, Redis 2.4 is installed. It doesn't support 

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends nawak nimrod mongrel2
+fw_depends nimrod mongrel2 nawak

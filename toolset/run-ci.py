@@ -444,7 +444,7 @@ if __name__ == "__main__":
     log.warning("Environment key missing, are you running inside Travis-CI?")
     print traceback.format_exc()
     retcode = 1
-  except:
+  except Exception:
     log.critical("Unknown error")
     print traceback.format_exc()
     retcode = 1

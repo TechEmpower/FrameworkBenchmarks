@@ -12,7 +12,7 @@ def start(args, logfile, errfile):
                           'open(host="' + args.database_host + '")')
   # compile the app
   subprocess.check_call(
-      "nimrod c --threads:on -d:release -d:redis_model --path:../installs/nawak/nawak -o:nawak_redis app.nim",
+      "nim c --threads:on -d:release -d:redis_model --path:$NAWAK_PATH -o:nawak_redis app.nim",
       shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
   # launch mongrel2
   subprocess.check_call("mkdir -p run logs tmp", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
@@ -20,7 +20,12 @@ def start(args, logfile, errfile):
   subprocess.check_call("sudo m2sh start -name test", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
   
   # launch workers
-  subprocess.Popen("./nawak_redis", shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
+  if os.environ.get("TRAVIS"):
+    nb_workers = 32
+  else:
+    nb_workers = 256
+  subprocess.Popen("./nawak_redis " + str(nb_workers),
+                   shell=True, cwd="nawak", stderr=errfile, stdout=logfile)
   return 0
 
 def stop(logfile, errfile):
@@ -28,7 +33,7 @@ def stop(logfile, errfile):
 
   try:
     subprocess.check_call("sudo m2sh stop -every", shell=True, cwd="nawak/conf", stderr=errfile, stdout=logfile)
-  except:
+  except Exception:
     ret = 1
 
   p = subprocess.Popen(['ps', 'aux'], stdout=subprocess.PIPE)
