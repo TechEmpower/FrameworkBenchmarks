@@ -13,10 +13,8 @@ extern crate time;
 extern crate htmlescape;
 
 use std::io::net::ip::Ipv4Addr;
-use std::io::MemReader;
-use std::path::BytesContainer;
-use iron::{Iron, AfterMiddleware, Request, Response, IronResult, Plugin, Chain, ChainBuilder};
-use iron::status;
+use iron::{Iron, AfterMiddleware, Request, Response, IronResult, Plugin, Chain, ChainBuilder, Set, status};
+use iron::response::modifiers::{Status, Body, ContentType};
 
 use router::Router;
 use serialize::json;
@@ -45,56 +43,27 @@ impl Assoc<mysql::conn::pool::MyPool> for Pool {}
 struct ServerName;
 impl Assoc<String> for ServerName {}
 
-// Helper for constructing responses with content_type application/json
-pub struct JsonResponse;
-impl JsonResponse {
-    pub fn with<B: BytesContainer>(status: status::Status, body: B) -> Response {
-        let application_json = MediaType {
-            type_: "application".to_string(),
-            subtype: "json".to_string(),
-            parameters: vec![]
-        };
-        return TypeResponse::with(status, body, application_json);
-    }
-}
+pub struct Utf8ContentType(pub ContentType);
 
-// Helper for constructing responses with standard html utf8 
-pub struct HTMLResponse;
-impl HTMLResponse {
-    pub fn with<B: BytesContainer>(status: status::Status, body: B) -> Response {
-        let html = MediaType {
-            type_: "text".to_string(),
-            subtype: "html".to_string(),
-            parameters: vec![(String::from_str("charset"), String::from_str("UTF-8"))]
-        };
-        return TypeResponse::with(status, body, html);
-    }
-}
-
-
-// Helper to construct a manual response with a given content_type:MediaType
-pub struct TypeResponse;
-impl TypeResponse {
-    pub fn with<B: BytesContainer>(status: status::Status, body: B, content_type: MediaType) -> Response {
-        let mut res = Response::new();
-        res.headers.content_type = Some(content_type);
-        res.status = Some(status);
-        res.body = Some(box MemReader::new(body.container_as_bytes().to_vec()) as Box<Reader + Send>);
-        return res;
+impl Utf8ContentType {
+    /// Create a new ContentType that is hard coded to return charset UTF-8
+    #[inline]
+    pub fn new<S: StrAllocating, S1: StrAllocating>(type_: S, subtype: S1) -> ContentType {
+        ContentType(MediaType::new(type_.into_string(), subtype.into_string(), vec![(String::from_str("charset"), String::from_str("UTF-8"))]))
     }
 }
 
 // Handler responsible for adding Server and Date header
 impl AfterMiddleware for ServerName {
     fn after(&self, _: &mut Request, res: &mut Response) -> IronResult<()> {
-        res.headers.server = Some("Rust/Iron".to_string());
+        res.headers.server = Some(String::from_str("Rust/Iron"));
         res.headers.date = Some(time::now_utc());
         Ok(())
     }
 }
 // Handler for /plaintext
 fn plaintext_handler(_: &mut Request) -> IronResult<Response> {
-    Ok(Response::with(status::Ok, "Hello, world!"))
+    Ok(Response::new().set(Status(status::Ok)).set(Body("Hello, world!")))
 }
 
 // Automatically generate `Encodable` trait implementations
@@ -110,7 +79,7 @@ fn json_handler(_: &mut Request) -> IronResult<Response> {
     };
     let encoded = json::encode(&object);
 
-    Ok(JsonResponse::with(status::Ok, encoded))
+    Ok(Response::new().set(Status(status::Ok)).set(Body(encoded)))
 }
 
 // Automatically generate `Encodable` trait implementations
@@ -163,7 +132,7 @@ fn db_handler(req: &mut Request) -> IronResult<Response> {
             Ok(())
         });
     }
-    Ok(JsonResponse::with(status::Ok, json::encode(&vec)))
+    Ok(Response::new().set(ContentType::new("application", "json")).set(Status(status::Ok)).set(Body(json::encode(&vec))))
 }
 
 // Automatically generate `Encodable` trait implementations
@@ -213,7 +182,7 @@ fn fortunes_handler(req: &mut Request) -> IronResult<Response> {
             {}
             </table>
         </body></html>", rows);
-    Ok(HTMLResponse::with(status::Ok, data))
+    Ok(Response::new().set(Utf8ContentType::new("text", "html")).set(Status(status::Ok)).set(Body(data)))
 
 }
 
@@ -269,7 +238,7 @@ fn updates_handler(req: &mut Request) -> IronResult<Response> {
             stmt.execute(&[&w.randomNumber, &w.id]).and(Ok(()))
         });
     }
-    Ok(JsonResponse::with(status::Ok, json::encode(&vec)))
+    Ok(Response::new().set(ContentType::new("application", "json")).set(Status(status::Ok)).set(Body(json::encode(&vec))))
 }
 
 fn main() {
