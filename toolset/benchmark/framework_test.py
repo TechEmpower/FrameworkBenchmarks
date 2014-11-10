@@ -23,9 +23,51 @@ from utils import header
 class FrameworkTest:
   headers_template = "-H 'Host: localhost' -H '{accept}' -H 'Connection: keep-alive'"
  
-  # Used for test types that do not require a database - 
-  # These tests are run at multiple concurrency levels
+  # Used for test types that require no pipelining or query string params.
   concurrency_template = """
+    
+    echo ""
+    echo "---------------------------------------------------------"
+    echo " Running Primer {name}"
+    echo " {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 \"http://{server_host}:{port}{url}\""
+    echo "---------------------------------------------------------"
+    echo ""
+    {wrk} {headers} -d 5 -c 8 --timeout 8 -t 8 "http://{server_host}:{port}{url}"
+    sleep 5
+    
+    echo ""
+    echo "---------------------------------------------------------"
+    echo " Running Warmup {name}"
+    echo " {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} \"http://{server_host}:{port}{url}\""
+    echo "---------------------------------------------------------"
+    echo ""
+    {wrk} {headers} -d {duration} -c {max_concurrency} --timeout {max_concurrency} -t {max_threads} "http://{server_host}:{port}{url}"
+    sleep 5
+
+    echo ""
+    echo "---------------------------------------------------------"
+    echo " Synchronizing time"
+    echo "---------------------------------------------------------"
+    echo ""
+    ntpdate -s pool.ntp.org
+
+    for c in {levels}
+    do
+      echo ""
+      echo "---------------------------------------------------------"
+      echo " Concurrency: $c for {name}"
+      echo " {wrk} {headers} -d {duration} -c $c --timeout $c -t $(($c>{max_threads}?{max_threads}:$c)) \"http://{server_host}:{port}{url}\""
+      echo "---------------------------------------------------------"
+      echo ""
+      STARTTIME=$(date +"%s")
+      {wrk} {headers} -d {duration} -c $c --timeout $c -t "$(($c>{max_threads}?{max_threads}:$c))" http://{server_host}:{port}{url}
+      echo "STARTTIME $STARTTIME"
+      echo "ENDTIME $(date +"%s")"
+      sleep 2
+    done
+  """
+  # Used for test types that require pipelining.
+  pipeline_template = """
     
     echo ""
     echo "---------------------------------------------------------"
@@ -298,8 +340,8 @@ class FrameworkTest:
 
       if not test.failed:
         if test_type == 'plaintext': # One special case
-          remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header, levels=[256,1024,4096,16384], pipeline="16")
-        elif test.requires_db:
+          remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
+        elif test_type == 'query' or type_type == 'update':
           remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
         else:
           remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
@@ -457,15 +499,25 @@ class FrameworkTest:
   # specifically works for the variable concurrency tests (JSON
   # and DB)
   ############################################################
-  def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk", levels=[], pipeline=""):
-    if len(levels) == 0:
-      levels = self.benchmarker.concurrency_levels
+  def __generate_concurrency_script(self, url, port, accept_header, wrk_command="wrk"):
     headers = self.headers_template.format(accept=accept_header)
     return self.concurrency_template.format(max_concurrency=max(self.benchmarker.concurrency_levels), 
       max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration, 
-      levels=" ".join("{}".format(item) for item in levels), 
+      levels=" ".join("{}".format(item) for item in self.benchmarker.concurrency_levels), 
+      server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command)
+
+  ############################################################
+  # __generate_pipeline_script(url, port)
+  # Generates the string containing the bash script that will
+  # be run on the client to benchmark a single pipeline test.
+  ############################################################
+  def __generate_pipeline_script(self, url, port, accept_header, wrk_command="wrk"):
+    headers = self.headers_template.format(accept=accept_header)
+    return self.pipeline_template.format(max_concurrency=16384, 
+      max_threads=self.benchmarker.threads, name=self.name, duration=self.benchmarker.duration, 
+      levels=" ".join("{}".format(item) for item in [256,1024,4096,16384]), 
       server_host=self.benchmarker.server_host, port=port, url=url, headers=headers, wrk=wrk_command,
-      pipeline=pipeline)
+      pipeline=16)
 
   ############################################################
   # __generate_query_script(url, port)
