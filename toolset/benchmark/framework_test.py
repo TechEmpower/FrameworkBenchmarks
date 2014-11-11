@@ -341,7 +341,7 @@ class FrameworkTest:
       if not test.failed:
         if test_type == 'plaintext': # One special case
           remote_script = self.__generate_pipeline_script(test.get_url(), self.port, test.accept_header)
-        elif test_type == 'query' or type_type == 'update':
+        elif test_type == 'query' or test_type == 'update':
           remote_script = self.__generate_query_script(test.get_url(), self.port, test.accept_header)
         else:
           remote_script = self.__generate_concurrency_script(test.get_url(), self.port, test.accept_header)
