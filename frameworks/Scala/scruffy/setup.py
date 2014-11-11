@@ -16,7 +16,6 @@ def start(args, logfile, errfile):
                     shell=True,
                     stderr=errfile,
                     stdout=logfile)
-  time.sleep(5)
   return 0
 
 def stop(logfile, errfile):
