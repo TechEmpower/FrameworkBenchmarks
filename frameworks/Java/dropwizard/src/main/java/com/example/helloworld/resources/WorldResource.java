@@ -32,8 +32,12 @@ public class WorldResource {
             final long worldId = Helper.randomWorld();
             worlds[i] = worldDAO.findById(worldId).orNull();
         }
-
-        return worlds;
+        
+        if (totalQueries == 1) {
+        	return worlds[0];
+        } else {
+        	return worlds;
+        }
     }
 
     @GET
