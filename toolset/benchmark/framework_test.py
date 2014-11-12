@@ -15,6 +15,7 @@ import logging
 import csv
 import shlex
 import math
+from collections import OrderedDict
 from threading import Thread
 from threading import Event
 
@@ -748,6 +749,13 @@ class FrameworkTest:
 def parse_config(config, directory, benchmarker):
   tests = []
 
+  # This sort ordering is set up specifically to return the length
+  # of the test name. There were SO many problems involved with
+  # 'plaintext' being run first (rather, just not last) that we
+  # needed to ensure that it was run last for every framework.
+  def testOrder(type_name):
+    return len(type_name)
+
   # The config object can specify multiple tests
   #   Loop over them and parse each into a FrameworkTest
   for test in config['tests']:
@@ -783,8 +791,14 @@ def parse_config(config, directory, benchmarker):
           # logging.debug("Missing arguments for test type %s for framework test %s", type_name, test_name)
           pass
 
+      # We need to sort by test_type to run
+      sortedTestKeys = sorted(runTests.keys(), key=testOrder)
+      sortedRunTests = OrderedDict()
+      for sortedTestKey in sortedTestKeys:
+        sortedRunTests[sortedTestKey] = runTests[sortedTestKey]
+
       # By passing the entire set of keys, each FrameworkTest will have a member for each key
-      tests.append(FrameworkTest(test_name, directory, benchmarker, runTests, test_keys))
+      tests.append(FrameworkTest(test_name, directory, benchmarker, sortedRunTests, test_keys))
 
   return tests
 ##############################################################
