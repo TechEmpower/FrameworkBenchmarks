@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
 
 import models.World;
 import play.db.jpa.JPAPlugin;
@@ -16,9 +16,6 @@ import play.mvc.Controller;
 public class Application extends Controller {
 
 	private static final int TEST_DATABASE_ROWS = 10000;
-
-	// FIXME: should this test be consistent - ie set seed or not?
-	private static Random random = new Random();
 
 	public static void index() {
 		render();
@@ -44,7 +41,7 @@ public class Application extends Controller {
 			queries = 1;
 		final List<World> worlds = new ArrayList<World>();
 		for (int i = 0; i < queries; ++i) {
-			Long id = Long.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1);
+			Long id = Long.valueOf(ThreadLocalRandom.current().nextInt(TEST_DATABASE_ROWS) + 1);
 			World result = World.findById(id);
 			worlds.add(result);
 		}
@@ -61,7 +58,7 @@ public class Application extends Controller {
 		System.out.println("DELETED");
 		// in with the new
 		for (long i = 0; i <= TEST_DATABASE_ROWS; i++) {
-			int randomNumber = random.nextInt(TEST_DATABASE_ROWS) + 1;
+			int randomNumber = ThreadLocalRandom.current().nextInt(TEST_DATABASE_ROWS) + 1;
 			new World(i, randomNumber).save();
 			if (i % 100 == 0) {
 
@@ -86,7 +83,7 @@ public class Application extends Controller {
 		List<Promise<World>> promises = new ArrayList<Promise<World>>();
 		for (int i = 0; i < queryCount; ++i) {
 			final Long id = Long
-					.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1);
+					.valueOf(ThreadLocalRandom.current().nextInt(TEST_DATABASE_ROWS) + 1);
 			Job<World> job = new Job<World>() {
 				public World doJobWithResult() throws Exception {
 					World result = World.findById(id);
@@ -112,7 +109,7 @@ public class Application extends Controller {
 			public java.util.List<World> doJobWithResult() throws Exception {
 				for (int i = 0; i < queryCount; ++i) {
 					Long id = Long
-							.valueOf(random.nextInt(TEST_DATABASE_ROWS) + 1);
+							.valueOf(ThreadLocalRandom.current().nextInt(TEST_DATABASE_ROWS) + 1);
 					World result = World.findById(id);
 					worlds.add(result);
 				}
