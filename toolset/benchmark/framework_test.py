@@ -716,11 +716,11 @@ class FrameworkTest:
     if dir_rel_to_fwroot != ".":
       sys.path.append("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
       logging.log(0, "Adding %s to import %s.%s", dir_rel_to_fwroot, os.path.basename(directory), self.setup_file)
-      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
+      #self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
       sys.path.remove("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
     else:
       logging.log(0, "Importing %s.%s", directory, self.setup_file)
-      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
+      #self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
   ############################################################
   # End __init__
   ############################################################
