@@ -1,11 +1,11 @@
 #!/bin/bash
 
-sed -i 's|localhost|'"$DBHOST"'|g' aspnet/src/Web.config
+sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 
 # build
 rm -rf bin obj
 cd src
-xbuild /p:Configuration=Release
+$MONO_ROOT/bin/xbuild /p:Configuration=Release
 
 # nginx
 conf="upstream mono {\n"
