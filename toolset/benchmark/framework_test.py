@@ -197,8 +197,8 @@ class FrameworkTest:
     # This requires superuser privs, so `sudo` is necessary.
     #   -u [username] The username
     #   -E Preserves the current environment variables
-    print 'sudo -u %s -E ./%s' % (self.benchmarker.runner_user, self.setup_file)
-    subprocess.Popen('sudo -u %s -E ./%s' % (self.benchmarker.runner_user, self.setup_file), cwd=self.directory, shell=True, stderr=err, stdout=out)
+    print 'sudo -u %s -E ./%s.sh' % (self.benchmarker.runner_user, self.setup_file)
+    subprocess.Popen('sudo -u %s -E ./%s.sh' % (self.benchmarker.runner_user, self.setup_file), cwd=self.directory, shell=True, stderr=err, stdout=out)
 
     # Stop the progress printer
     stopFlag.set()
