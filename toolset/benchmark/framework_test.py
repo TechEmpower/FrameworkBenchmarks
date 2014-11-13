@@ -169,8 +169,8 @@ class FrameworkTest:
 
     # Setup variables for TROOT and IROOT
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=%s && export IROOT=%s' %
-              (self.directory, self.install_root))
+              command='export TROOT=%s && export IROOT=%s && export DBHOST=%s' %
+              (self.directory, self.install_root, self.database_host))
 
     # Because start can take so long, we print a dot to let the user know 
     # we are working
