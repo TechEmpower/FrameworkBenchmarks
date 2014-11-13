@@ -2,11 +2,12 @@
 # Available Keys: 
 client_host=localhost
 client_identity_file=None
-client_user=localhost
+client_user=techempower
+runner_user=testrunner
 database_host=localhost
 database_identity_file=None
 database_os=linux
-database_user=tfb
+database_user=techempower
 duration=60
 exclude=None
 install=server

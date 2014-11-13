@@ -192,25 +192,20 @@ class FrameworkTest:
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
-    try:
-      retcode = self.setup_module.start(self, out, err)    
-      if retcode == None: 
-        retcode = 0
-    except Exception:
-      retcode = 1
-      st = traceback.format_exc()
-      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
-      st = "Start exception:\n%s" % st
-      logging.info(st)
-      err.write(st + '\n')
-    os.chdir(previousDir)
+    
+    # Run the start script for the test as the "testrunner" user.
+    # This requires superuser privs, so `sudo` is necessary.
+    #   -u [username] The username
+    #   -E Preserves the current environment variables
+    print 'sudo -u %s -E ./%s' % (self.benchmarker.runner_user, self.setup_file)
+    subprocess.Popen('sudo -u %s -E ./%s' % (self.benchmarker.runner_user, self.setup_file), cwd=self.directory, shell=True, stderr=err, stdout=out)
 
     # Stop the progress printer
     stopFlag.set()
 
     logging.info("Called setup.py start")
 
-    return retcode
+    return 0
   ############################################################
   # End start
   ############################################################
@@ -236,17 +231,14 @@ class FrameworkTest:
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
+
+    # Meganuke
     try:
-      retcode = self.setup_module.stop(out, err)
-      if retcode == None: 
-        retcode = 0
+      subprocess.check_call('sudo killall -s 9 -u testrunner', shell=True, stderr=err, stdout=out)
+      retcode = 0
     except Exception:
-      retcode = 1 
-      st = traceback.format_exc()
-      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
-      st = "Stop exception:\n%s\n" % st
-      logging.info(st)
-      err.write(st + '\n')
+      retcode = 1
+
     os.chdir(previousDir)
 
     # Give processes sent a SIGTERM a moment to shut down gracefully
