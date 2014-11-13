@@ -24,7 +24,7 @@
       "versus": ""
     },
     "mysql": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
