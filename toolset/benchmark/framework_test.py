@@ -199,6 +199,8 @@ class FrameworkTest:
     #   -E Preserves the current environment variables
     subprocess.Popen('sudo -u %s -E ./%s.sh' % (self.benchmarker.runner_user, self.setup_file), cwd=self.directory, shell=True, stderr=err, stdout=out)
 
+    os.chdir(previousDir)
+
     # Stop the progress printer
     stopFlag.set()
 
@@ -233,7 +235,7 @@ class FrameworkTest:
 
     # Meganuke
     try:
-      subprocess.check_call('sudo killall -s 9 -u testrunner', shell=True, stderr=err, stdout=out)
+      subprocess.check_call('sudo killall -s 9 -u %s' % self.benchmarker.runner_user, shell=True, stderr=err, stdout=out)
       retcode = 0
     except Exception:
       retcode = 1
