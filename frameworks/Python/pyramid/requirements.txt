@@ -1,6 +1,6 @@
 psycopg2==2.5.3
-gunicorn==19.1
-meinheld==0.5.6
+gunicorn==19.1.1
+minefield==0.6
 SQLAlchemy==0.9.7
 pyramid==1.5.1
 pyramid_chameleon==0.3

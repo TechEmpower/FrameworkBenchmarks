@@ -37,24 +37,24 @@ This is one of fast and realistic way to serve Python web application.
 Use unix domain socket between nginx and uWSGI to avoid additional TCP/IP overhead.
 
 
-### Gunicorn + Meinheld
+### Gunicorn + Minefield
 
-[Meinheld](https://github.com/mopemope/meinheld) is very fast WSGI server.
+[Minefield](https://github.com/methane/minefield) is very fast WSGI server.
 
-Since Meinheld is safe against slowloris and support Keep-Alive, you can use it
+Since Minefield is safe against slowloris and support Keep-Alive, you can use it
 without buffered HTTP reverse proxy (like nginx).
 
-We use meinheld to measure bare (without DB access) performance of framework without
+We use minefield to measure bare (without DB access) performance of framework without
 overhead of reverse proxying. (plaintext, json test)
 
-Meinheld does not provide worker process management.
-[Gunicorn](http://gunicorn.org/) provide it for Meinheld.
+minefield does not provide worker process management.
+[Gunicorn](http://gunicorn.org/) provide it for minefield.
 
 
 ### Gunicorn + Tornado
 
 uWSGI + PyPy is difficult to setup.
-Meinheld doesn't so fast with PyPy because it uses Python/C API heavily.
+minefield doesn't so fast with PyPy because it uses Python/C API heavily.
 So we use Tornado as HTTP/WSGI server.
 
 It supports keep-alive. So it have nice performance about json or plaintext benchmark.
@@ -85,7 +85,7 @@ Consider Python 3 first. -- Python 3 will be mainstream for web development soon
 
 ### Server
 
-Try Gunicorn + Meinheld first. All WSGI apps in this benchmark uses it. You can compare
+Try Gunicorn + minefield first. All WSGI apps in this benchmark uses it. You can compare
 your framework performance with others.
 
 ### Files you should provide

@@ -17,10 +17,4 @@ pidfile = 'gunicorn.pid'
 if _is_pypy:
     worker_class = "tornado"
 else:
-    worker_class = "meinheld.gmeinheld.MeinheldWorker"
-
-    def post_fork(server, worker):
-        # Disalbe access log
-        import meinheld.server
-        meinheld.server.set_access_logger(None)
-
+    worker_class = "minefield.gminefield.MinefieldWorker"

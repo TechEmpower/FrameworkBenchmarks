@@ -12,7 +12,7 @@
       "framework": "wsgi",
       "language": "Python",
       "orm": "Raw",
-      "platform": "Meinheld",
+      "platform": "minefield",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",

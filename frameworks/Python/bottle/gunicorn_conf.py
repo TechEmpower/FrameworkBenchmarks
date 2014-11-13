@@ -17,10 +17,4 @@ pidfile = 'gunicorn.pid'
 if _is_pypy:
     worker_class = "tornado"
 else:
-    worker_class = "meinheld.gmeinheld.MeinheldWorker"
-
-    def post_fork(server, worker):
-        # Disable access log.
-        # (Until https://github.com/mopemope/meinheld/pull/42 is released)
-        import meinheld.server
-        meinheld.server.set_access_logger(None)
+    worker_class = "minefield.gminefield.MinefieldWorker"
