@@ -19,9 +19,9 @@ def start(args, logfile, errfile):
       subprocess.check_call('copy "{0}" "%RESIN_HOME%\\webapps\\scalatra.war"'.format(warFile), shell=True, stderr=errfile, stdout=logfile)
       subprocess.check_call('"%RESIN_HOME%\\bin\\start.bat"', shell=True, stderr=errfile, stdout=logfile)
     else:
-      subprocess.check_call("../sbt/sbt clean package", shell=True, cwd="scalatra", stderr=errfile, stdout=logfile)
+      subprocess.check_call(args.iroot + "/sbt/bin/sbt clean package", shell=True, cwd="scalatra", stderr=errfile, stdout=logfile)
       subprocess.check_call("rm -rf $RESIN_HOME/webapps/*", shell=True, stderr=errfile, stdout=logfile)
-      subprocess.check_call("cp scalatra/target/scala-2.10/scalatra*.war $RESIN_HOME/webapps/scalatra.war", shell=True, stderr=errfile, stdout=logfile)
+      subprocess.check_call("cp target/scala-2.10/scalatra*.war $RESIN_HOME/webapps/scalatra.war", shell=True, cwd="scalatra", stderr=errfile, stdout=logfile)
       subprocess.check_call("$RESIN_HOME/bin/resinctl start", shell=True, stderr=errfile, stdout=logfile)
     return 0
   except subprocess.CalledProcessError:
