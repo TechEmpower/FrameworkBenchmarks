@@ -3,7 +3,7 @@ import sys
 import setup_util
 import os
 
-root = os.getcwd() + "/nancy"
+root = os.getcwd() + "/frameworks/C#/nancy"
 app = root + "/src"
 
 def start(args, logfile, errfile):
