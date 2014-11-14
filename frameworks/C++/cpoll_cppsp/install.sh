@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists cppsp.installed)
+RETCODE=$(fw_exists ${IROOT}/cppsp.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 sudo apt-get install -y postgresql-server-dev-9.3 libpq-dev
@@ -15,4 +15,4 @@ fw_untar cppsp_0.2.3.tar.xz
 cp -R cppsp_rel0.2.3/ $IROOT/cppsp_0.2.3
 rm -rf cppsp_rel0.2.3/
 
-touch cppsp.installed
+touch $IROOT/cppsp.installed
