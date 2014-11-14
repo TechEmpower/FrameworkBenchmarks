@@ -11,4 +11,4 @@ echo $ORM_OPTION
 sed -i 's|PREFORK_CHILD .*|PREFORK_CHILD '"${MAX_THREADS}"'|g' $ULIB_ROOT/benchmark.cfg
 
 # 2. Start ULib Server (userver_tcp)
-$ULIB_ROOT/bin/userver_tcp -c $ULIB_ROOT/benchmark.cfg
+$ULIB_ROOT/bin/userver_tcp -c $ULIB_ROOT/benchmark.cfg &

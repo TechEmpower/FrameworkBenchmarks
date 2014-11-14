@@ -197,8 +197,23 @@ class FrameworkTest:
     # This requires superuser privs, so `sudo` is necessary.
     #   -u [username] The username
     #   -E Preserves the current environment variables
-    subprocess.Popen('sudo -u %s -E ./%s.sh' % (self.benchmarker.runner_user, self.setup_file), cwd=self.directory, shell=True, stderr=err, stdout=out)
-
+    # Note: check_call is a blocking call, so any startup scripts
+    # run by the framework that need to continue (read: server has
+    # started and needs to remain that way), then they should be
+    # executed in the background.
+    try:
+      retcode = subprocess.check_call('sudo -u %s -E ./%s.sh' % 
+        (self.benchmarker.runner_user, self.setup_file), 
+        cwd=self.directory, shell=True, stderr=err, stdout=out)
+      if retcode == None:
+        retcode = 0
+    except Exception:
+      retcode = 1
+      st = traceback.format_exc()
+      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
+      st = "Start exception:\n%s" % st
+      logging.info(st)
+      err.write(st + '\n')
     os.chdir(previousDir)
 
     # Stop the progress printer
@@ -206,7 +221,7 @@ class FrameworkTest:
 
     logging.info("Called setup.py start")
 
-    return 0
+    return retcode
   ############################################################
   # End start
   ############################################################
