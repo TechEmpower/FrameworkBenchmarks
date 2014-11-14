@@ -65,9 +65,19 @@ if (cluster.isMaster) {
   });
   
   app.get('/mongoose', function(req, res) {
-    var queries = req.query.queries || 1,
-        worlds  = [],
+    var queries,
+        worlds         = [],
         queryFunctions = [];
+
+    if (isNaN(req.query.queries)) {
+      queries = 1;
+    } else if (req.query.queries > 500) {
+      queries = 500;
+    } else if (req.query.queries < 1) {
+      queries = 1;
+    } else {
+      queries = req.query.queries;
+    }
 
     for (var i = 1; i <= queries; i++ ) {
       queryFunctions.push(function(callback) {
@@ -89,11 +99,19 @@ if (cluster.isMaster) {
   app.get('/mysql-orm', function(req, res) {
     if (windows) return res.send(501, 'Not supported on windows');
     
-    var queries = isNaN(req.query.queries) ? 1 : parseInt(req.query.queries, 10)
+    var queries
       , worlds  = []
       , queryFunctions = [];
 
-    queries = Math.min(Math.max(queries, 1), 500);
+    if (isNaN(req.query.queries)) {
+      queries = 1;
+    } else if (req.query.queries > 500) {
+      queries = 500;
+    } else if (req.query.queries < 1) {
+      queries = 1;
+    } else {
+      queries = req.query.queries;
+    }
 
     for (var i = 1; i <= queries; i++ ) {
       queryFunctions.push(function(callback) {
@@ -129,10 +147,18 @@ if (cluster.isMaster) {
   }
 
   app.get('/mongoose-update', function(req, res) {
-    var queries = req.query.queries || 1
+    var queries
       , selectFunctions = [];
 
-    queries = Math.min(queries, 500);
+    if (isNaN(req.query.queries)) {
+      queries = 1;
+    } else if (req.query.queries > 500) {
+      queries = 500;
+    } else if (req.query.queries < 1) {
+      queries = 1;
+    } else {
+      queries = req.query.queries;
+    }
 
     for (var i = 1; i <= queries; i++ ) {
       selectFunctions.push(function(callback) {

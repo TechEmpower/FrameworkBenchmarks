@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends resin
+fw_depends sbt resin
