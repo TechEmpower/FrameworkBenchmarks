@@ -191,7 +191,7 @@ class FrameworkTest:
     #       use subprocess's cwd argument already
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
-    logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
+    logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.directory))
     
     # Run the start script for the test as the "testrunner" user.
     # This requires superuser privs, so `sudo` is necessary.
@@ -246,7 +246,7 @@ class FrameworkTest:
     #       use subprocess's cwd argument already
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
-    logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
+    logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.directory))
 
     # Meganuke
     try:
