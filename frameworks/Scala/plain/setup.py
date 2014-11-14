@@ -12,7 +12,6 @@ def start(args, logfile, errfile):
     subprocess.check_call("./sbt assembly && rm -rf target/scala-2.10/cache", shell=True, cwd="plain", stderr=errfile, stdout=logfile)
 
   subprocess.Popen("java -jar target/scala-2.10/plain-benchmark-assembly-1.0.1.jar", cwd="plain", shell=True, stderr=errfile, stdout=logfile)
-  time.sleep(10)
   return 0
 
 def stop(logfile, errfile):

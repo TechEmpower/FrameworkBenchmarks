@@ -4,8 +4,8 @@ import com.mongodb.casbah.Imports._
 import com.sksamuel.scruffy.EndpointProvider
 
 /** @author Stephen Samuel */
-class Test2Endpoint(hostname: String) extends EndpointProvider {
-
+class Test2Endpoint() extends EndpointProvider {
+  val hostname = "database_host"
   val connection = MongoConnection(hostname, 27017)
   val collection = connection.getDB("hello_world").getCollection("world")
 
