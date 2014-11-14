@@ -111,12 +111,10 @@ class Installer:
       #   FWROOT - Path of the FwBm root
       #   IROOT  - Path of this test's install directory
       #   TROOT  - Path to this test's directory 
-      self.__run_command('''
-        export TROOT=%s && 
-        export IROOT=%s && 
-        source %s && 
-        source %s''' % 
-        (test_dir, test_install_dir, 
+      # Note: Cannot use ''' for newlines here or the script
+      # passed to `bash -c` will fail.
+      self.__run_command('sudo -u %s -E bash -c "export TROOT=%s && export IROOT=%s && source %s && source %s"' % 
+        (self.benchmarker.runner_user, test_dir, test_install_dir, 
           bash_functions_path, test_install_file),
           cwd=test_install_dir)
 
