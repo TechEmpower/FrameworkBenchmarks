@@ -3,10 +3,12 @@ import sys
 import setup_util
 import os
 
-root = os.getcwd() + "/nancy"
-app = root + "/src"
+root = ''
 
 def start(args, logfile, errfile):
+  root = args.troot
+  app = root + "/src"
+  
   if os.name == 'nt':
     return 1
   

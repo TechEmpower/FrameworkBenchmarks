@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"github.com/fitstar/falcore"
+	"github.com/fitstar/falcore/responder"
 	"html/template"
 	"io"
 	"log"
@@ -157,7 +158,7 @@ var textHtml = http.Header{"Content-Type": []string{"text/html"}}
 // Test 1: JSON serialization
 var jsonFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Response {
 	if req.HttpRequest.URL.Path == "/json" {
-		resp, _ := falcore.JSONResponse(req.HttpRequest, 200, applicationJson, &Message{helloWorldString})
+		resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, &Message{helloWorldString})
 		return resp
 	}
 	return nil
@@ -172,7 +173,7 @@ var dbFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Respons
 			log.Fatalf("Error scanning world row: %s", err.Error())
 		}
 
-		resp, _ := falcore.JSONResponse(req.HttpRequest, 200, applicationJson, &world)
+		resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, &world)
 		return resp
 	}
 	return nil
@@ -197,7 +198,7 @@ var queriesFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Re
 				log.Fatalf("Error scanning world row: %s", err.Error())
 			}
 		}
-		resp, _ := falcore.JSONResponse(req.HttpRequest, 200, applicationJson, &world)
+		resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, &world)
 		return resp
 	}
 	return nil
@@ -247,7 +248,7 @@ var updateFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Res
 			worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
 			world.RandomNumber = uint16(rand.Intn(worldRowCount) + 1)
 			updateStatement.Exec(world.RandomNumber, world.Id)
-			resp, _ := falcore.JSONResponse(req.HttpRequest, 200, applicationJson, &world)
+			resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, &world)
 			return resp
 		} else {
 			world := make([]World, n)
@@ -260,7 +261,7 @@ var updateFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Res
 					log.Fatalf("Error updating world row: %s", err.Error())
 				}
 			}
-			resp, _ := falcore.JSONResponse(req.HttpRequest, 200, applicationJson, world)
+			resp, _ := responder.JSONResponse(req.HttpRequest, 200, applicationJson, world)
 			return resp
 		}
 
