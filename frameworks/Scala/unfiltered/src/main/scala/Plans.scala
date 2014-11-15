@@ -25,7 +25,7 @@ object Plans extends cycle.Plan
   val db = DatabaseAccess.databases("db.default")
 
   def intent = {
-    case GET(Path("/json")) => JsonContent ~> ResponseString(compact(render("message" -> "Hello world")))
+    case GET(Path("/json")) => JsonContent ~> ResponseString(compact(render("message" -> "Hello, world!")))
     case GET(Path("/db") & Params(params)) =>
       val random = ThreadLocalRandom.current()
       val queries = params.get("queries").flatMap(_.headOption).getOrElse("1").toInt

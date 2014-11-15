@@ -8,7 +8,7 @@ def start(args, logfile, errfile):
   setup_util.replace_text("unfiltered/src/main/resources/application.conf", "jdbc:mysql:\/\/.*:3306", "jdbc:mysql://" + args.database_host + ":3306")
   setup_util.replace_text("unfiltered/src/main/resources/application.conf", "maxThreads = \\d+", "maxThreads = " + str(args.max_threads))
 
-  subprocess.check_call("../sbt/sbt assembly", shell=True, cwd="unfiltered", stderr=errfile, stdout=logfile)
+  subprocess.check_call(args.iroot + "/sbt/bin/sbt assembly", shell=True, cwd="unfiltered", stderr=errfile, stdout=logfile)
   subprocess.Popen("java -jar bench-assembly-1.0.0.jar", shell=True, cwd="unfiltered/target/scala-2.10", stderr=errfile, stdout=logfile)
 
   return 0
