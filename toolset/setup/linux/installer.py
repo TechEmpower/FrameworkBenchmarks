@@ -113,7 +113,7 @@ class Installer:
       #   TROOT  - Path to this test's directory 
       # Note: Cannot use ''' for newlines here or the script
       # passed to `bash -c` will fail.
-      self.__run_command('sudo -u %s -E bash -c "export TROOT=%s && export IROOT=%s && source %s && source %s"' % 
+      self.__run_command('sudo -u %s -E -H bash -c "export TROOT=%s && export IROOT=%s && source %s && source %s"' % 
         (self.benchmarker.runner_user, test_dir, test_install_dir, 
           bash_functions_path, test_install_file),
           cwd=test_install_dir)
