@@ -3,7 +3,6 @@ package controllers;
 import dao.WorldDao;
 import model.World;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import ninja.Result;
@@ -19,7 +18,6 @@ import ninja.params.Param;
 public class HelloDbController {
 
     private static final int DB_ROWS = 10000;
-    private final Random random = ThreadLocalRandom.current();
 
     @Inject
     WorldDao worldDao;
@@ -64,7 +62,7 @@ public class HelloDbController {
 
         // now update stuff:
         for (World world : worlds) {
-            world.randomNumber = random.nextInt();
+            world.randomNumber = ThreadLocalRandom.current().nextInt();
             worldDao.put(world);
         }
 
@@ -72,7 +70,7 @@ public class HelloDbController {
     }
 
     private World getRandomWorld() {
-        return worldDao.get(random.nextInt(DB_ROWS) + 1);
+        return worldDao.get(ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
     }
 
 }
