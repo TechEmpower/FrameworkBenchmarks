@@ -197,12 +197,13 @@ class FrameworkTest:
     # This requires superuser privs, so `sudo` is necessary.
     #   -u [username] The username
     #   -E Preserves the current environment variables
+    #   -H Forces the home var (~) to be reset to the user specified
     # Note: check_call is a blocking call, so any startup scripts
     # run by the framework that need to continue (read: server has
     # started and needs to remain that way), then they should be
     # executed in the background.
     try:
-      retcode = subprocess.check_call('sudo -u %s -E ./%s.sh' % 
+      retcode = subprocess.check_call('sudo -u %s -E -H ./%s.sh' % 
         (self.benchmarker.runner_user, self.setup_file), 
         cwd=self.directory, shell=True, stderr=err, stdout=out)
       if retcode == None:
