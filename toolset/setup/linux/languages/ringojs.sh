@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists ringo.installed)
+RETCODE=$(fw_exists ${IROOT}/ringojs_0.10.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_get http://www.ringojs.org/downloads/ringojs_0.10-1_all.deb
@@ -9,4 +9,4 @@ sudo dpkg -i ringojs_0.10-1_all.deb
 
 rm -f ringojs_0.10-1_all.deb
 
-touch $IROOT/ringo.installed
+touch $IROOT/ringojs_0.10.installed
