@@ -31,6 +31,7 @@ if (System.getProperty("grails.yjp")) {
 
 grails.project.dependency.resolver = "maven" // or ivy
 grails.project.dependency.resolution = {
+    cacheDir "target/ivy-cache"
     // inherit Grails' default dependencies
     inherits("global") {
         // uncomment to disable ehcache
