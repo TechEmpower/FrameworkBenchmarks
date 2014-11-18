@@ -214,7 +214,6 @@ class FrameworkTest:
           retcode = 0
       except Exception:
         retcode = 1
-        logging.info(err.read())
     with open('temp', 'r') as errout:
       # Read out temp error output in its entirety
       body = errout.read()
