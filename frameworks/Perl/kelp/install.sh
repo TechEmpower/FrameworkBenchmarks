@@ -2,7 +2,7 @@
 
 fw_depends perl nginx
 
-cpanm --notest --no-man-page \
+${PERL_HOME}/bin/cpanm --notest --no-man-page \
     Kelp \
     DBI \
     DBD::mysql \
