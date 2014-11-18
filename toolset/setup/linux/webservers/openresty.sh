@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists openresty.installed)
+RETCODE=$(fw_exists ${IROOT}/openresty-1.7.4.1.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_depends nginx lua
@@ -13,4 +13,4 @@ cd ngx_openresty-1.7.4.1
 make -j4
 sudo make install
 
-touch $IROOT/openresty.installed
+touch ${IROOT}/openresty-1.7.4.1.installed
