@@ -217,10 +217,11 @@ class FrameworkTest:
     with open('temp', 'r') as errout:
       # Read out temp error output in its entirety
       body = errout.read()
-      # Log it to the user.
-      logging.error(body)
-      # Log it to our err.txt file
-      err.write(body)
+      if len(body) > 0:
+        # Log it to the user.
+        logging.error(body)
+        # Log it to our err.txt file
+        err.write(body)
     # We are done with our temp file - delete it
     os.remove('temp')
     os.chdir(previousDir)
