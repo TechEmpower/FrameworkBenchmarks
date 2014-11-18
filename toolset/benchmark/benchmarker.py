@@ -492,12 +492,14 @@ class Benchmarker:
       else:
         sys.exit(code)
 
+    logDir = os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name))
+
     try:
-      os.makedirs(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name)))
+      os.makedirs(logDir)
     except Exception:
       pass
-    with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
-         open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
+    with open(os.path.join(logDir, 'out.txt'), 'w') as out, \
+         open(os.path.join(logDir, 'err.txt'), 'w') as err:
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         out.write("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.\n")

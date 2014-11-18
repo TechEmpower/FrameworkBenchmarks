@@ -192,29 +192,38 @@ class FrameworkTest:
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
     logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.directory))
-    
-    # Run the start script for the test as the "testrunner" user.
-    # This requires superuser privs, so `sudo` is necessary.
-    #   -u [username] The username
-    #   -E Preserves the current environment variables
-    #   -H Forces the home var (~) to be reset to the user specified
-    # Note: check_call is a blocking call, so any startup scripts
-    # run by the framework that need to continue (read: server has
-    # started and needs to remain that way), then they should be
-    # executed in the background.
-    try:
-      retcode = subprocess.check_call('sudo -u %s -E -H ./%s.sh' % 
-        (self.benchmarker.runner_user, self.setup_file), 
-        cwd=self.directory, shell=True, stderr=err, stdout=out)
-      if retcode == None:
-        retcode = 0
-    except Exception:
-      retcode = 1
-      st = traceback.format_exc()
-      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
-      st = "Start exception:\n%s" % st
-      logging.info(st)
-      err.write(st + '\n')
+      
+    # Write the stderr to our temp.txt file to be read and fed back
+    # to the user via logging later.
+    with open('temp', 'w') as errout:
+      # Run the start script for the test as the "testrunner" user.
+      # This requires superuser privs, so `sudo` is necessary.
+      #   -u [username] The username
+      #   -E Preserves the current environment variables
+      #   -H Forces the home var (~) to be reset to the user specified
+      #   -e Force bash to exit on first error
+      # Note: check_call is a blocking call, so any startup scripts
+      # run by the framework that need to continue (read: server has
+      # started and needs to remain that way), then they should be
+      # executed in the background.
+      try:
+        retcode = subprocess.check_call('sudo -u %s -E -H bash -e %s.sh' % 
+          (self.benchmarker.runner_user, self.setup_file), 
+          cwd=self.directory, shell=True, stderr=errout, stdout=out)
+        if retcode == None:
+          retcode = 0
+      except Exception:
+        retcode = 1
+        logging.info(err.read())
+    with open('temp', 'r') as errout:
+      # Read out temp error output in its entirety
+      body = errout.read()
+      # Log it to the user.
+      logging.error(body)
+      # Log it to our err.txt file
+      err.write(body)
+    # We are done with our temp file - delete it
+    os.remove('temp')
     os.chdir(previousDir)
 
     # Stop the progress printer
