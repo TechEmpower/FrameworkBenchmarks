@@ -191,7 +191,7 @@ class FrameworkTest:
     #       use subprocess's cwd argument already
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
-    logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.directory))
+    logging.info("Running setup module start (cwd=%s)", self.directory)
       
     # Write the stderr to our temp.txt file to be read and fed back
     # to the user via logging later.
@@ -255,7 +255,6 @@ class FrameworkTest:
     #       use subprocess's cwd argument already
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
-    logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.directory))
 
     # Meganuke
     try:
