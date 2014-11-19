@@ -392,6 +392,10 @@ class CIRunnner:
     # Set the default shell for testrunner to /bin/bash
     sudo sed -i 's|/home/testrunner:/bin/sh|/home/testrunner:/bin/bash|g' /etc/passwd
 
+    # TEST
+    sudo cat /etc/group | grep testrunner
+    sudo cat /etc/passwd | grep testrunner
+
     # =============Setup Databases===========================
     # NOTE: Do not run `--install database` in travis-ci! 
     #       It changes DB configuration files and will break everything
