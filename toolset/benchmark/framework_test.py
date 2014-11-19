@@ -169,8 +169,8 @@ class FrameworkTest:
 
     # Setup variables for TROOT and IROOT
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=%s && export IROOT=%s && export DBHOST=%s && export MAX_THREADS=%s' %
-              (self.directory, self.install_root, self.database_host, self.benchmarker.threads))
+              command='export TROOT=%s && export IROOT=%s && export DBHOST=%s && export MAX_THREADS=%s && export OUT=%s && export ERR=%s' %
+              (self.directory, self.install_root, self.database_host, self.benchmarker.threads, os.path.join(self.fwroot, out.name), os.path.join(self.fwroot, err.name)))
 
     # Because start can take so long, we print a dot to let the user know 
     # we are working

@@ -1,5 +1,3 @@
 #!/bin/bash
 
-export DUDAPATH=${IROOT}/dudac-0.23
-
-export PATH="$DUDAPATH:$PATH"
+export DUDA_HOME=${IROOT}/dudac-0.23
