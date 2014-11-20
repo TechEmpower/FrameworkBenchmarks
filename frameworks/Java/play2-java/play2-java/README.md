@@ -15,4 +15,8 @@ The tests were run with:
 ## Test URLs
 ### JSON Encoding Test
 
-http://localhost/json
+* http://localhost/json
+
+### Plain Text Test
+
+* http://localhost/plaintext
