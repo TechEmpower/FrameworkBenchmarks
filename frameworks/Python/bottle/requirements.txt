@@ -1,5 +1,6 @@
 bottle==0.12.7
 bottle-sqlalchemy==0.4.1
+greenlet==0.4.4
 SQLAlchemy==0.9.4
 gunicorn==19.1
 meinheld==0.5.6
