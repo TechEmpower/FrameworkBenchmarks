@@ -1,7 +1,5 @@
 package com.example.helloworld.resources;
 
-import java.util.Random;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -32,11 +30,10 @@ public class WorldResource
   @GET
   public Object dbTest(@QueryParam("queries") Optional<String> queries)
   {
-    final Random random = new Random(System.currentTimeMillis());
     if (!queries.isPresent()) 
     {
       DBObject query = new BasicDBObject();
-      query.put("_id", (random.nextInt(10000) + 1));
+      query.put("_id", Helper.randomWorld());
       DBCursor<World> dbCursor = collection.find(query);
       return (dbCursor.hasNext()) ? dbCursor.next() : null;
     }
@@ -60,7 +57,7 @@ public class WorldResource
     for (int i = 0; i < totalQueries; i++)
     {
       DBObject query = new BasicDBObject();
-      query.put("_id", (random.nextInt(10000) + 1));
+      query.put("_id", Helper.randomWorld());
       DBCursor<World> dbCursor = collection.find(query);
       worlds[i] = (dbCursor.hasNext()) ? dbCursor.next() : null;
     }

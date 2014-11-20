@@ -9,10 +9,11 @@ import collections, json, os, textwrap
 # Format is: (language, orm, (opsys, ...), (test, ...))
 # See the dir_name logic below to see the directory name for each test application.
 configurations = [
-  ('Java',  None,    			['Linux'],            ['json']),
-  ('Java',  'Ebean', 			['Linux'],            ['db', 'query']),
-  ('Java',  'JPA',   			['Linux'],            ['db', 'query', 'fortune', 'update', 'plaintext']),
-  ('Java',  'JPA HikariCP',   	['Linux'],            ['db', 'query', 'fortune', 'update', 'plaintext']),
+  ('Java',  None,    			['Linux'],            ['json', 'plaintext']),
+  ('Java',  'Ebean BoneCP', 	['Linux'],            ['db', 'query', 'fortune', 'update']),
+  ('Java',  'Ebean HikariCP', 	['Linux'],            ['db', 'query', 'fortune', 'update']),
+  ('Java',  'JPA BoneCP',		['Linux'],            ['db', 'query', 'fortune', 'update']),
+  ('Java',  'JPA HikariCP',		['Linux'],            ['db', 'query', 'fortune', 'update']),
   ('Scala', None,    			['Linux'],            ['json']),
   ('Scala', 'Anorm', 			['Linux', 'Windows'], ['db', 'query', 'fortune', 'update']),
   ('Scala', 'Slick', 			['Linux'],            ['db', 'query', 'fortune', 'update']),
