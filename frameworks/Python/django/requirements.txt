@@ -5,4 +5,5 @@ psycopg2==2.5.3
 ujson==1.33
 
 gunicorn==19.1
+greenlet==0.4.4
 meinheld==0.5.6
