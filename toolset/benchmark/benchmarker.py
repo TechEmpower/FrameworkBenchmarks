@@ -492,12 +492,14 @@ class Benchmarker:
       else:
         sys.exit(code)
 
+    logDir = os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name))
+
     try:
-      os.makedirs(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name)))
+      os.makedirs(logDir)
     except Exception:
       pass
-    with open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'out.txt'), 'w') as out, \
-         open(os.path.join(self.latest_results_directory, 'logs', "{name}".format(name=test.name), 'err.txt'), 'w') as err:
+    with open(os.path.join(logDir, 'out.txt'), 'w') as out, \
+         open(os.path.join(logDir, 'err.txt'), 'w') as err:
 
       if test.os.lower() != self.os.lower() or test.database_os.lower() != self.database_os.lower():
         out.write("OS or Database OS specified in benchmark_config does not match the current environment. Skipping.\n")
@@ -537,23 +539,17 @@ class Benchmarker:
           time.sleep(10)
 
         if self.__is_port_bound(test.port):
-          err.write(header("Error: Port %s is not available, attempting to recover" % test.port))
+          self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
+          err.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
           err.flush()
-          print "Error: Port %s is not available, attempting to recover" % test.port
-          self.__forciblyEndPortBoundProcesses(test.port, out, err)
-          if self.__is_port_bound(test.port):
-            self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-            err.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
-            err.flush()
-            print "Error: Unable to recover port, cannot start test"
-            return exit_with_code(1)
+          print "Error: Unable to recover port, cannot start test"
+          return exit_with_code(1)
 
         result = test.start(out, err)
         if result != 0: 
           test.stop(out, err)
           time.sleep(5)
           err.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
-          err.write(header("Stopped %s" % test.name))
           err.flush()
           self.__write_intermediate_results(test.name,"<setup.py>#start() returned non-zero")
           return exit_with_code(1)
@@ -591,15 +587,10 @@ class Benchmarker:
         time.sleep(5)
 
         if self.__is_port_bound(test.port):
-          err.write("Port %s was not freed. Attempting to free it." % (test.port, ))
+          err.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
           err.flush()
-          self.__forciblyEndPortBoundProcesses(test.port, out, err)
-          time.sleep(5)
-          if self.__is_port_bound(test.port):
-            err.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
-            err.flush()
-            self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-            return exit_with_code(1)
+          self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+          return exit_with_code(1)
 
         out.write(header("Stopped %s" % test.name))
         out.flush()
@@ -684,77 +675,6 @@ class Benchmarker:
   ############################################################
   # End __is_port_bound
   ############################################################
-
-  def __forciblyEndPortBoundProcesses(self, test_port, out, err):
-    p = subprocess.Popen(['sudo', 'netstat', '-lnp'], stdout=subprocess.PIPE)
-    (ns_out, ns_err) = p.communicate()
-    for line in ns_out.splitlines():
-      # Handles tcp, tcp6, udp, udp6
-      if line.startswith('tcp') or line.startswith('udp'):
-        splitline = line.split()
-        port = int(splitline[3].split(':')[-1])
-        pid  = splitline[-1].split('/')[0]
-
-        # Sometimes the last column is just a dash
-        if pid == '-':
-          continue
-
-        if port > 6000:
-          try:
-            # Never try to kill pid 0; bad form old chap.
-            if int(pid) == 0:
-              continue
-          except Exception:
-            # Trying to kill a non-number? Silly.
-            continue
-          ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
-          (out_6000, err_6000) = ps.communicate()
-          err.write(textwrap.dedent(
-          """
-          Port {port} should not be open. See the following lines for information
-          {netstat}
-          {ps}
-          """.format(port=port, netstat=line, ps=out_6000)))
-          err.flush()
-
-        if port == test_port:
-          err.write( header("Error: Test port %s should not be open" % port, bottom='') )
-          try:
-            ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
-            # Store some info about this process
-            (out_15, err_15) = ps.communicate()
-            children = subprocess.Popen(['ps','--ppid',pid,'-o','ppid'], stdout=subprocess.PIPE)
-            (out_children, err_children) = children.communicate()
-
-            err.write("  Sending SIGTERM to this process:\n  %s\n" % out_15)
-            err.write("  Also expecting these child processes to die:\n  %s\n" % out_children)
-
-            subprocess.check_output(['sudo','kill',pid])
-            # Sleep for 10 sec; kill can be finicky
-            time.sleep(10)
-
-            # Check that PID again
-            ps = subprocess.Popen(['ps','p',pid], stdout=subprocess.PIPE)
-            (out_9, err_9) = ps.communicate()
-            if len(out_9.splitlines()) != 1:  # One line for the header row
-              err.write("  Process is still alive!\n")
-              err.write("  Sending SIGKILL to this process:\n   %s\n" % out_9)
-              subprocess.check_output(['sudo','kill','-9', pid])
-            else:
-              err.write("  Process has been terminated\n")
-
-            # Ensure all children are dead
-            c_pids = [c_pid.strip() for c_pid in out_children.splitlines()[1:]]
-            for c_pid in c_pids:
-              ps = subprocess.Popen(['ps','p',c_pid], stdout=subprocess.PIPE)
-              (out_9, err_9) = ps.communicate()
-              if len(out_9.splitlines()) != 1:  # One line for the header row
-                err.write("  Child Process %s is still alive, sending SIGKILL\n" % c_pid)
-                subprocess.check_output(['sudo','kill','-9', pid])
-          except Exception as e: 
-            err.write( "  Error: Unknown exception %s\n" % e )
-          err.write( header("Done attempting to recover port %s" % port, top='') )
-
 
   ############################################################
   # __parse_results

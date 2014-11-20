@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists lua.installed)
+RETCODE=$(fw_exists ${IROOT}/lua5.1.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 # Eventually, we should also install lua5.2 and luajit
@@ -11,4 +11,4 @@ RETCODE=$(fw_exists lua.installed)
 # left them out
 sudo apt-get install -y lua5.1 luarocks
 
-touch lua.installed
+touch ${IROOT}/lua5.1.installed

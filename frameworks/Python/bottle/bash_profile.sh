@@ -12,3 +12,5 @@ export PY3_ROOT=$TROOT/py3
 export PY3=$PY3_ROOT/bin/python
 export PY3_PIP=$PY3_ROOT/bin/pip
 export PY3_GUNICORN=$PY3_ROOT/bin/gunicorn
+
+export NGINX_HOME=$IROOT/nginx

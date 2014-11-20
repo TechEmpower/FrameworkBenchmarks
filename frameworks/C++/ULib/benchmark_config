@@ -24,7 +24,7 @@
       "versus": ""
     },
     "mysql": {
-      "setup_file": "setup",
+      "setup_file": "setup-mysql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/query?queries=",

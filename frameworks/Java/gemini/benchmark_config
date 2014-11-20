@@ -2,7 +2,7 @@
   "framework": "gemini",
   "tests": [{
     "default": {
-      "setup_file": "setup",
+      "setup_file": "start",
       "json_url": "/",
       "db_url": "/db",
       "query_url": "/query?queries=",

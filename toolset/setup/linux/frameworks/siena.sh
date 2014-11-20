@@ -1,7 +1,9 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists play-1.2.5/modules/siena-2.0.6)
+RETCODE=$(fw_exists ${IROOT}/siena-2.0.6.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_depends play1
-yes | play-1.2.5/play1 install siena-2.0.6
+yes | ${IROOT}/play-1.2.5/play install siena-2.0.6
+
+touch ${IROOT}/siena-2.0.6.installed
