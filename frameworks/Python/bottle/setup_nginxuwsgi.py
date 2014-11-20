@@ -1,15 +1,16 @@
 import subprocess
 import multiprocessing
 import os
+import setup_util
 
 
-CWD = os.path.abspath(os.path.dirname(__file__))
-bin_dir = os.path.expandvars('$PY2_ROOT/bin')
+bin_dir = os.path.expandvars('$TROOT/py2/bin')
 NCPU = multiprocessing.cpu_count()
-NGINX_COMMAND = 'sudo /usr/local/nginx/sbin/nginx -c ' + CWD + '/nginx.conf'
+NGINX_COMMAND = 'sudo /usr/local/nginx/sbin/nginx -c $TROOT/nginx.conf'
 
 
 def start(args, logfile, errfile):
+    setup_util.replace_text('bottle/app.py', 'database_host', args.database_host)
     try:
         subprocess.call(
             NGINX_COMMAND,
@@ -17,9 +18,9 @@ def start(args, logfile, errfile):
 
         # Run in the background, but keep stdout/stderr for easy debugging
         subprocess.Popen(
-            "{0}/uwsgi --ini uwsgi.ini --processes {1} --wsgi app:app".format(
+            "{0}/uwsgi --socket /tmp/uwsgi.sock --ini uwsgi.ini --processes {1} --wsgi app:app --listen 100".format(
                 bin_dir, NCPU*3),
-            shell=True, cwd=CWD, stderr=errfile, stdout=logfile)
+            shell=True, cwd=args.troot, stderr=errfile, stdout=logfile)
         return 0
     except subprocess.CalledProcessError:
         return 1
