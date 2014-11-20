@@ -7,4 +7,4 @@ export MYSQL_HOST=$DBHOST
 export MYSQL_DB=hello_world
 
 cd $LWAN_ROOT/techempower
-$LWAN_BUILD/techempower/techempower
+$LWAN_BUILD/techempower/techempower &

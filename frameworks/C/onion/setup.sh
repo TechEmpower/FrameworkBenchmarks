@@ -1,7 +1,7 @@
 #!/bin/bash
 
 rm -f *.o
-cp -R $IROOT/onion onion/onion
-rm CMakeCache.txt
+ln -s $IROOT/onion onion
+rm -f onion/build/CMakeCache.txt
 make
 ./hello &
