@@ -2,7 +2,7 @@
 
 sed -i 's|host=.* port=5432|host='"${DBHOST}"' port=5432|g' model_postgre.nim
 
-export PATH=$NIMROD_HOME/bin:$NAWAK_HOME/bin:$ZEROMQ_HOME/include:$PATH
+export PATH=$NIMROD_HOME/bin:$NAWAK_HOME/bin:$ZEROMQ_HOME/include:$NAWAK_PATH:$PATH
 
 nim c --threads:on -d:release -d:postgre_model --path:$NAWAK_PATH -o:nawak_postgre app.nim
 
