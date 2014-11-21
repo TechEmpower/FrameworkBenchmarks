@@ -12,7 +12,10 @@ fw_untar cppsp_0.2.3.tar.xz
 # causes oddball issues when mv'ed around inside a folder mounted 
 # inside of VirtualBox (may have something to do with case-sensitive 
 # filesystems)
-cp -R cppsp_rel0.2.3/ $IROOT/cppsp_0.2.3
+cp -R cppsp_rel0.2.3/ ${IROOT}/cppsp_0.2.3
 rm -rf cppsp_rel0.2.3/
 
-touch $IROOT/cppsp.installed
+sed -i 's|CXX := .*|CXX := g++-4.8|g' ${IROOT}/cppsp_0.2.3/makefile
+sed -i 's|-Wall|-w|g' ${IROOT}/cppsp_0.2.3/makefile
+
+touch ${IROOT}/cppsp.installed

@@ -6,6 +6,4 @@ clean:
 	$(MAKE) -C $(IROOT)/cppsp_0.2.3 clean
 
 cppsp_0.2.3:
-	$(MAKE) CXX=g++-4.8 -C $(IROOT)/cppsp_0.2.3 all
-
-
+	$(MAKE) -C $(IROOT)/cppsp_0.2.3 all
