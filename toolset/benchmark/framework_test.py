@@ -229,7 +229,7 @@ class FrameworkTest:
     # Stop the progress printer
     stopFlag.set()
 
-    logging.info("Called setup.py start")
+    logging.info("Executed %s.sh", self.setup_file)
 
     return retcode
   ############################################################
