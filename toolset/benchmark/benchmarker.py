@@ -532,9 +532,9 @@ class Benchmarker:
           p = subprocess.Popen(self.database_ssh_string, stdin=subprocess.PIPE, stdout=out, stderr=err, shell=True)
           p.communicate("""
             sudo restart mysql
-            sudo restart mongodb
+            sudo restart mongod
             sudo service redis-server restart
-            sudo /etc/init.d/postgresql restart
+            sudo service postgresql restart
           """)
           time.sleep(10)
 
