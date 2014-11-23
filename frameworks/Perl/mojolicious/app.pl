@@ -6,7 +6,7 @@ use Scalar::Util 'looks_like_number';
 
 # configuration
 
-plugin JSONConfig => {
+plugin Config => {
   file => 'app.conf',
   default => {
     database_host => 'localhost',
