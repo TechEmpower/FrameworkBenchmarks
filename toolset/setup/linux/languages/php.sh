@@ -4,7 +4,7 @@
 # Two path checks would both always run in php. In this code the check 
 # for apc.so only happens if the check for php fails. Is that ok? 
 
-RETCODE=$(fw_exists php.installed)
+RETCODE=$(fw_exists ${IROOT}/php.installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Moving PHP config files into place"; 
   sudo cp $FWROOT/config/php.ini /usr/local/lib/php.ini

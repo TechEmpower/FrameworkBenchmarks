@@ -3,7 +3,7 @@
   "tests":
     [{
         "raw": {
-              "setup_file"     : "setup",
+              "setup_file"     : "setup_hhvm",
               "json_url"       : "/json",
               "db_url"         : "/db",
               "query_url"      : "/queries?queries=",
