@@ -1,0 +1,4 @@
+./db.rb
+./fortune.rb
+./queries.rb
+./updates.rb
