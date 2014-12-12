@@ -539,15 +539,22 @@ class Benchmarker:
           time.sleep(10)
 
         if self.__is_port_bound(test.port):
-          self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
-          err.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
+          # This can happen sometimes - let's try again
+          self.__stop_test(out, err)
+          out.flush()
           err.flush()
-          print "Error: Unable to recover port, cannot start test"
-          return exit_with_code(1)
+          time.sleep(15)
+          if self.__is_port_bound(test.port):
+            # We gave it our all
+            self.__write_intermediate_results(test.name, "port " + str(test.port) + " is not available before start")
+            err.write(header("Error: Port %s is not available, cannot start %s" % (test.port, test.name)))
+            err.flush()
+            print "Error: Unable to recover port, cannot start test"
+            return exit_with_code(1)
 
         result = test.start(out, err)
         if result != 0: 
-          test.stop(out, err)
+          self.__stop_test(out, err)
           time.sleep(5)
           err.write( "ERROR: Problem starting {name}\n".format(name=test.name) )
           err.flush()
@@ -581,16 +588,23 @@ class Benchmarker:
         ##########################
         out.write(header("Stopping %s" % test.name))
         out.flush()
-        test.stop(out, err)
+        self.__stop_test(out, err)
         out.flush()
         err.flush()
-        time.sleep(5)
+        time.sleep(15)
 
         if self.__is_port_bound(test.port):
-          err.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
+          # This can happen sometimes - let's try again
+          self.__stop_test(out, err)
+          out.flush()
           err.flush()
-          self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
-          return exit_with_code(1)
+          time.sleep(15)
+          if self.__is_port_bound(test.port):
+            # We gave it our all
+            self.__write_intermediate_results(test.name, "port " + str(test.port) + " was not released by stop")
+            err.write(header("Error: Port %s was not released by stop %s" % (test.port, test.name)))
+            err.flush()
+            return exit_with_code(1)
 
         out.write(header("Stopped %s" % test.name))
         out.flush()
@@ -613,7 +627,7 @@ class Benchmarker:
         traceback.print_exc(file=err)
         err.flush()
         try:
-          test.stop(out, err)
+          self.__stop_test(out, err)
         except (subprocess.CalledProcessError) as e:
           self.__write_intermediate_results(test.name,"<setup.py>#stop() raised an error")
           err.write(header("Subprocess Error: Test .stop() raised exception %s" % test.name))
@@ -625,7 +639,7 @@ class Benchmarker:
       # TODO - subprocess should not catch this exception!
       # Parent process should catch it and cleanup/exit
       except (KeyboardInterrupt) as e:
-        test.stop(out, err)
+        self.__stop_test(out, err)
         out.write(header("Cleaning up..."))
         out.flush()
         self.__finish()
@@ -637,6 +651,24 @@ class Benchmarker:
 
   ############################################################
   # End __run_tests
+  ############################################################
+
+  ############################################################
+  # __stop_test(benchmarker)
+  # Stops a running test
+  ############################################################
+  def __stop_test(self, out, err):
+
+    # Meganuke
+    try:
+      subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=err, stdout=out)
+      retcode = 0
+    except Exception:
+      retcode = 1
+
+    return retcode
+  ############################################################
+  # End __stop_test
   ############################################################
 
   ############################################################

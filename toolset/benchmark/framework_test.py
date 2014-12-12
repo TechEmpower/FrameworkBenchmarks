@@ -237,44 +237,6 @@ class FrameworkTest:
   ############################################################
 
   ############################################################
-  # stop(benchmarker)
-  # Stops the test using it's setup file
-  ############################################################
-  def stop(self, out, err):
-    # Load profile for this installation
-    profile="%s/bash_profile.sh" % self.directory
-    if not os.path.exists(profile):
-      logging.warning("Directory %s does not have a bash_profile.sh" % self.directory)
-      profile="$FWROOT/config/benchmark_profile"
-    
-    setup_util.replace_environ(config=profile, 
-              command='export TROOT=%s && export IROOT=%s' %
-              (self.directory, self.install_root))
-
-    # Run the module stop (inside parent of TROOT)
-    #     - we use the parent as a historical accident - a lot of tests
-    #       use subprocess's cwd argument already
-    previousDir = os.getcwd()
-    os.chdir(os.path.dirname(self.troot))
-
-    # Meganuke
-    try:
-      subprocess.check_call('sudo killall -s 9 -u %s' % self.benchmarker.runner_user, shell=True, stderr=err, stdout=out)
-      retcode = 0
-    except Exception:
-      retcode = 1
-
-    os.chdir(previousDir)
-
-    # Give processes sent a SIGTERM a moment to shut down gracefully
-    time.sleep(5)
-
-    return retcode
-  ############################################################
-  # End stop
-  ############################################################
-
-  ############################################################
   # verify_urls
   # Verifys each of the URLs for this test. THis will sinply 
   # curl the URL and check for it's return status. 
