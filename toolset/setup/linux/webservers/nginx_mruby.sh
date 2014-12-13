@@ -1,10 +1,13 @@
 #!/bin/bash
 
-PREFIX=/src/local/nginx_mruby
+PREFIX=/usr/local/nginx_mruby
 
-RETCODE=$(fw_exists ${PREFIX})
-[ "$RETCODE" != 0 ] || { return 0; }
+RETCODE=$(fw_exists nginx_mruby.installed)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
+fw_depends rvm
+rvm install ruby-2.0.0-p0
+rvm use ruby-2.0.0-p0
 #fw_depends nginx lua
 
 #fw_get http://openresty.org/download/ngx_openresty-1.7.4.1.tar.gz
@@ -23,3 +26,5 @@ if [ "$RETCODE" != 0 ] ; then
 fi
 
 NGINX_CONFIG_OPT_ENV="--prefix=${PREFIX} --with-http_stub_status_module" sh build.sh
+
+touch $IROOT/nginx_mruby.installed
