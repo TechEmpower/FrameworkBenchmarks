@@ -5,6 +5,7 @@ PREFIX=/usr/local/nginx_mruby
 RETCODE=$(fw_exists nginx_mruby.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
+sudo apt-get install -y libhiredis-dev
 fw_depends rvm
 rvm install ruby-2.0.0-p0
 rvm use ruby-2.0.0-p0
