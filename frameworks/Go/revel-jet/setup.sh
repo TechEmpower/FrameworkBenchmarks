@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sed -i 's|tcp(.*:3306)|tcp('"${DBHOST}"':3306)|g' src/benchmark/conf/app.conf
+
 # here te find the go executable
 export PATH="$GOROOT/bin:$PATH"
 
