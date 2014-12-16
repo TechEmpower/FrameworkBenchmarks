@@ -76,6 +76,8 @@ if [ ! -e "~/.firstboot" ]; then
 
   # Add other users:
   sudo useradd -m testrunner
+  # WARN: testrunner will NOT have sudo access by round 11
+  #       please begin migrating scripts to not rely on sudo.
   sudo bash -c "echo 'testrunner ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-tfb-testrunner"
 
   # Update hostname to reflect our current role
