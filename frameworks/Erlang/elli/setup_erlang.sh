@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sed -i 's|"benchmarkdbpass", ".*", 3306"|"benchmarkdbpass", "'"${DBHOST}"'", 3306"|g' src/elli_bench_sup.erl
+sed -i 's|"benchmarkdbpass", ".*", 3306|"benchmarkdbpass", "'"${DBHOST}"'", 3306|g' src/elli_bench_sup.erl
 
 rm -rf deps/*
 $REBAR_HOME/rebar get-deps
