@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/bin/bash 
 
-RETCODE=$(fw_exists /usr/bin/haskell-compiler)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+export LANG=en_US.UTF-8
 
-sudo apt-get install -y ghc cabal-install
+sudo add-apt-repository -y ppa:hvr/ghc
+sudo apt-get update
+sudo apt-get install -y ghc-7.8.3 cabal-install-1.20 libpcre3-dev

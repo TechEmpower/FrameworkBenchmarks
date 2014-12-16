@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	Jet    jet.Db
+	Jet    *jet.Db
 	Driver string
 	Spec   string
 )

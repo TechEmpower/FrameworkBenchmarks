@@ -74,6 +74,10 @@ if [ ! -e "~/.firstboot" ]; then
   echo $CLIENT_IP TFB-client   | sudo tee --append /etc/hosts
   echo $SERVER_IP TFB-server   | sudo tee --append /etc/hosts
 
+  # Add other users:
+  sudo useradd -m testrunner
+  sudo bash -c "echo 'testrunner ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/90-tfb-testrunner"
+
   # Update hostname to reflect our current role
   if [ "$ROLE" != "all" ]; then
     echo "Updating hostname"
@@ -112,8 +116,12 @@ if [ ! -e "~/.firstboot" ]; then
   echo "Setting up SSH access to localhost"
   ssh-keygen -t rsa -N '' -f ~/.ssh/id_rsa
   cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+  sudo -u testrunner mkdir -p /home/testrunner/.ssh
+  sudo -u testrunner ssh-keygen -t rsa -N '' -f /home/testrunner/.ssh/id_rsa
+  sudo -u testrunner bash -c "cat /home/testrunner/.ssh/id_rsa.pub >> /home/testrunner/.ssh/authorized_keys"
+  sudo -u testrunner bash -c "cat /home/vagrant/.ssh/authorized_keys >> /home/testrunner/.ssh/authorized_keys"
   chmod 600 ~/.ssh/authorized_keys
-
+  sudo -u testrunner chmod 600 /home/testrunner/.ssh/authorized_keys
   # Enable remote SSH access if we are running production environment
   # Note : this are always copied from the local working copy using a
   #        file provisioner. While they exist in the git clone we just 

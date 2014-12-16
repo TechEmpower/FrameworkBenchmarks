@@ -169,8 +169,8 @@ class FrameworkTest:
 
     # Setup variables for TROOT and IROOT
     setup_util.replace_environ(config=profile, 
-              command='export TROOT=%s && export IROOT=%s' %
-              (self.directory, self.install_root))
+              command='export TROOT=%s && export IROOT=%s && export DBHOST=%s && export MAX_THREADS=%s && export OUT=%s && export ERR=%s' %
+              (self.directory, self.install_root, self.database_host, self.benchmarker.threads, os.path.join(self.fwroot, out.name), os.path.join(self.fwroot, err.name)))
 
     # Because start can take so long, we print a dot to let the user know 
     # we are working
@@ -191,70 +191,49 @@ class FrameworkTest:
     #       use subprocess's cwd argument already
     previousDir = os.getcwd()
     os.chdir(os.path.dirname(self.troot))
-    logging.info("Running setup module start (cwd=%s)", os.path.dirname(self.troot))
-    try:
-      retcode = self.setup_module.start(self, out, err)    
-      if retcode == None: 
-        retcode = 0
-    except Exception:
-      retcode = 1
-      st = traceback.format_exc()
-      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
-      st = "Start exception:\n%s" % st
-      logging.info(st)
-      err.write(st + '\n')
+    logging.info("Running setup module start (cwd=%s)", self.directory)
+      
+    # Write the stderr to our temp.txt file to be read and fed back
+    # to the user via logging later.
+    with open('temp', 'w') as errout:
+      # Run the start script for the test as the "testrunner" user.
+      # This requires superuser privs, so `sudo` is necessary.
+      #   -u [username] The username
+      #   -E Preserves the current environment variables
+      #   -H Forces the home var (~) to be reset to the user specified
+      #   -e Force bash to exit on first error
+      # Note: check_call is a blocking call, so any startup scripts
+      # run by the framework that need to continue (read: server has
+      # started and needs to remain that way), then they should be
+      # executed in the background.
+      try:
+        retcode = subprocess.check_call('sudo -u %s -E -H bash -e %s.sh' % 
+          (self.benchmarker.runner_user, self.setup_file), 
+          cwd=self.directory, shell=True, stderr=errout, stdout=out)
+        if retcode == None:
+          retcode = 0
+      except Exception:
+        retcode = 1
+    with open('temp', 'r') as errout:
+      # Read out temp error output in its entirety
+      body = errout.read()
+      if len(body) > 0:
+        # Log it to the user.
+        logging.error(body)
+        # Log it to our err.txt file
+        err.write(body)
+    # We are done with our temp file - delete it
+    os.remove('temp')
     os.chdir(previousDir)
 
     # Stop the progress printer
     stopFlag.set()
 
-    logging.info("Called setup.py start")
+    logging.info("Executed %s.sh", self.setup_file)
 
     return retcode
   ############################################################
   # End start
-  ############################################################
-
-  ############################################################
-  # stop(benchmarker)
-  # Stops the test using it's setup file
-  ############################################################
-  def stop(self, out, err):
-    # Load profile for this installation
-    profile="%s/bash_profile.sh" % self.directory
-    if not os.path.exists(profile):
-      logging.warning("Directory %s does not have a bash_profile.sh" % self.directory)
-      profile="$FWROOT/config/benchmark_profile"
-    
-    setup_util.replace_environ(config=profile, 
-              command='export TROOT=%s && export IROOT=%s' %
-              (self.directory, self.install_root))
-
-    # Run the module stop (inside parent of TROOT)
-    #     - we use the parent as a historical accident - a lot of tests
-    #       use subprocess's cwd argument already
-    previousDir = os.getcwd()
-    os.chdir(os.path.dirname(self.troot))
-    logging.info("Running setup module stop (cwd=%s)", os.path.dirname(self.troot))
-    try:
-      retcode = self.setup_module.stop(out, err)
-      if retcode == None: 
-        retcode = 0
-    except Exception:
-      retcode = 1 
-      st = traceback.format_exc()
-      st = '\n'.join((4 * ' ') + x for x in st.splitlines())
-      st = "Stop exception:\n%s\n" % st
-      logging.info(st)
-      err.write(st + '\n')
-    os.chdir(previousDir)
-
-    # Give processes sent a SIGTERM a moment to shut down gracefully
-    time.sleep(5)
-
-    return retcode
-  ############################################################
-  # End stop
   ############################################################
 
   ############################################################
@@ -725,11 +704,11 @@ class FrameworkTest:
     if dir_rel_to_fwroot != ".":
       sys.path.append("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
       logging.log(0, "Adding %s to import %s.%s", dir_rel_to_fwroot, os.path.basename(directory), self.setup_file)
-      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
+      #self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
       sys.path.remove("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
     else:
       logging.log(0, "Importing %s.%s", directory, self.setup_file)
-      self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
+      #self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
   ############################################################
   # End __init__
   ############################################################

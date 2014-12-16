@@ -1,0 +1,6 @@
+./falcore/src/
+./falcore/src/framework_benchmarks
+./falcore/src/framework_benchmarks/falcore.go
+./falcore/templates/
+./falcore/templates/fortune.html
+./falcore/templates/layout.html

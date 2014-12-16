@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends haskell78
+fw_depends haskell

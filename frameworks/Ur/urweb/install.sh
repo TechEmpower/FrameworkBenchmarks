@@ -1,11 +1,13 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists /usr/local/bin/urweb)
+RETCODE=$(fw_exists ${IROOT}/urweb.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_get http://www.impredicative.com/ur/urweb-20140830.tgz
 fw_untar urweb-20140830.tgz
 cd urweb-20140830
-./configure
+./configure --prefix=${IROOT}/urweb
 make
-sudo make install
+make install
+
+touch ${IROOT}/urweb.installed
