@@ -6,4 +6,4 @@ export PHP_FPM=$PHP_HOME/sbin/php-fpm
 
 export COMPOSER_HOME=${IROOT}/php-composer
 
-export PATH="$COMPOSER_HOME:$PHP_HOME/bin:$PHP_HOME/sbin:$PATH"
+export NGINX_HOME=${IROOT}/nginx
