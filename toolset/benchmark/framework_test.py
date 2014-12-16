@@ -678,6 +678,19 @@ class FrameworkTest:
     self.benchmarker = benchmarker
     self.runTests = runTests
     self.fwroot = benchmarker.fwroot
+    self.approach = ""
+    self.classification = ""
+    self.database = ""
+    self.framework = ""
+    self.language = ""
+    self.orm = ""
+    self.platform = ""
+    self.webserver = ""
+    self.os = ""
+    self.database_os = ""
+    self.display_name = ""
+    self.notes = ""
+    self.versus = ""
     
     # setup logging
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
