@@ -102,7 +102,7 @@ set up to have passwordless sudo access.
 **Setting up the `user`**
 
 ```bash
-$ sudo vim /etc/sudoers
+sudo vim /etc/sudoers
 ```
 
 You will need to change the line that reads `%sudo   ALL=(ALL:ALL) ALL` to 
@@ -118,7 +118,7 @@ You will need to also be able to SSH onto each of the 3 machines from any of the
 file to accomplish this.
 
 ```bash
-$ ssh-keygen -t rsa
+ssh-keygen -t rsa
 ```
 
 This will prompt you for various inputs; leave them all blank and just hit 'enter'.
@@ -126,8 +126,8 @@ Next, you will want to allow connections identified via that key signature, so a
 it to your authorized keys.
 
 ```bash
-$ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-$ chmod 600 ~/.ssh/authorized_keys
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
 ```
 
 Next, you will need these exact same files to exist on the other 2 machines.
@@ -136,13 +136,13 @@ you for a password (if it does, go back to "Setting up the `user`" and fix it).
 
 ```bash
 # Set up the database machine for SSH
-$ cat ~/.ssh/id_rsa.pub | ssh [your user]@[database ip] 'cat >> .ssh/authorized_keys'
-$ scp ~/.ssh/id_rsa [your user]@[databse ip]:~/.ssh/id_rsa
-$ scp ~/.ssh/id_rsa.pub [your user]@[database ip]:~/.ssh/id_rsa.pub
+cat ~/.ssh/id_rsa.pub | ssh [your user]@[database ip] 'cat >> .ssh/authorized_keys'
+scp ~/.ssh/id_rsa [your user]@[databse ip]:~/.ssh/id_rsa
+scp ~/.ssh/id_rsa.pub [your user]@[database ip]:~/.ssh/id_rsa.pub
 # Set up the client machine for SSH
-$ cat ~/.ssh/id_rsa.pub | ssh [your user]@[client ip] 'cat >> .ssh/authorized_keys'
-$ scp ~/.ssh/id_rsa [your user]@[client ip]:~/.ssh/id_rsa
-$ scp ~/.ssh/id_rsa.pub [your user]@[client ip]:~/.ssh/id_rsa.pub
+cat ~/.ssh/id_rsa.pub | ssh [your user]@[client ip] 'cat >> .ssh/authorized_keys'
+scp ~/.ssh/id_rsa [your user]@[client ip]:~/.ssh/id_rsa
+scp ~/.ssh/id_rsa.pub [your user]@[client ip]:~/.ssh/id_rsa.pub
 ```
 
 Now, test it all out, you should be able to execute all of the following without
@@ -151,28 +151,54 @@ being prompted for a password. **NOTE** The first time you SSH to these machines
 
 ```bash
 # Test your database SSH setup
-$ ssh [database ip]
+ssh [database ip]
 # Accept the signature
 # You are connected to the database machine!
-$ sudo ls
+sudo ls
 # This should NOT prompt for a password and list the directory's contents
 # If this is not true, go back to "Setting up the `user`" and fix it
-$ exit
+exit
 # Test your client SSH setup
-$ ssh [client ip]
+ssh [client ip]
 # Accept the signature
 # You are connected to the client machine!
-$ sudo ls
+sudo ls
 # We also need to test that we can SSH back to the server machine
-$ ssh [server ip]
+ssh [server ip]
 # Accept the signature
 # You are connected to the server machine!
-$ sudo ls
+sudo ls
 # If this works, you are golden!
-$ exit
+exit
 # Back on client
-$ exit
+exit
 # Back on initial ssh connection to server machine
+```
+
+Last, the benchmarks require that every framework test be run under a different
+user than the one who executes the `run-tests.py` script. Creating a `runner_user` named "testrunner" is simple:
+
+```bash
+# Change this value to whatever username you want
+export RUNNER=testrunner
+# Get your primary user
+export ME=$(id -u -n)
+# Create the new testrunner user
+sudo useradd $RUNNER
+# Give him a home dir
+sudo mkdir /home/$RUNNER
+# Make testrunner the owner of his home dir
+sudo chown $RUNNER:$RUNNER /home/$RUNNER
+# Add the testrunner user to every group that the travis user is in
+sudo sed -i 's|:'"$ME"'|:'"$ME"','"$RUNNER"'|g' /etc/group
+# Add the testrunner user to the travis group specifically
+sudo sed -i 's|'"$ME"':x:\(.*\):|'"$ME"':x:\1:'"$RUNNER"'|g' /etc/group
+# Add the travis user to the testrunner group
+sudo sed -i 's|'"$RUNNER"':x:\(.*\):|'"$RUNNER"':x:\1:'"$ME"'|g' /etc/group
+# Add testrunner to the sudoers group
+echo "$RUNNER ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers
+# Set the default shell for testrunner to /bin/bash
+sudo sed -i 's|/home/'"$RUNNER"':.*|/home/'"$RUNNER"':/bin/bash|g' /etc/passwd
 ```
 
 **Setting up prerequisites**
@@ -181,8 +207,8 @@ The suite requires that a few libraries and applications are installed in order 
 First, clone our repository.
 
 ```bash
-$ git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
-$ sudo pip install -r FrameworkBenchmarks/config/python_requirements.txt
+git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
+sudo pip install -r FrameworkBenchmarks/config/python_requirements.txt
 ```
 
 To install TFB components onto the various servers, you must provide
@@ -192,9 +218,9 @@ using command line flags, it's easier to use a configuration
 file and avoid having huge flag lists in your commands. 
 
 ```bash
-$ cd FrameworkBenchmarks
-$ cp benchmark.cfg.example benchmark.cfg
-$ vim benchmark.cfg
+cd FrameworkBenchmarks
+cp benchmark.cfg.example benchmark.cfg
+vim benchmark.cfg
 ```
 
 You will need to change, at a minimum, the following:
@@ -202,6 +228,7 @@ You will need to change, at a minimum, the following:
 * `client_host` Set this to the IP address of your client machine
 * `client_identity_file` Set to `/home/[username]/.ssh/id_rsa`
 * `client_user` Set to your username
+* `runner_user` Set to your runner's username
 * `database_host` Set this to the IP address of your database machine
 * `database_identity_file` Set to `/home/[username]/.ssh/id_rsa`
 * `database_user` Set to your username
@@ -218,13 +245,13 @@ works, see [here](deployment).
 **Setting up the `load server`**
 
 ```bash
-$ toolset/run-tests.py --install client --install-only
+toolset/run-tests.py --install client --install-only
 ```
 
 **Setting up the `database server`**
 
 ```bash
-$ toolset/run-tests.py --install database --install-only
+toolset/run-tests.py --install database --install-only
 ```
 
 **Setting up the `app server`**
@@ -235,7 +262,7 @@ can test your setup by running a verification on one of the stable
 frameworks. Since we wrote it, we tend to test with `gemini`:
 
 ```bash
-$ toolset/run-tests.py --mode verify --test gemini
+toolset/run-tests.py --mode verify --test gemini
 ```
 
 You can find the results for this verification step under the directory:
@@ -247,10 +274,10 @@ You can choose to selectively install components by using the
 
 ```bash
 # Install just the software for beego (as an example)
-$ toolset/run-tests.py --install server --test beego --verbose --install-only
+toolset/run-tests.py --install server --test beego --verbose --install-only
 
 # Install all php software but php-fuel (as another example)
-$ toolset/run-tests.py --install server --test php* --exclude php-fuel --verbose --install-only
+toolset/run-tests.py --install server --test php* --exclude php-fuel --verbose install-only
 
 # Install *all* framework software. Expect this to take hours!
 # If running on a remote server, use `screen` or `tmux` or `nohup` to 

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-fw_depends nimrod mongrel2 nawak
+fw_depends nimrod zeromq mongrel2 nawak

@@ -14,7 +14,7 @@ from sqlalchemy import create_engine
 if sys.version_info[0] == 3:
     xrange = range
 
-DBHOST = os.environ.get('TFB_DATABASE_HOST', 'localhost')
+DBHOST = os.environ.get('DBHOST', 'localhost')
 
 try:
     import MySQLdb

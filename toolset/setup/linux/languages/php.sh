@@ -4,7 +4,7 @@
 # Two path checks would both always run in php. In this code the check 
 # for apc.so only happens if the check for php fails. Is that ok? 
 
-RETCODE=$(fw_exists php.installed)
+RETCODE=$(fw_exists ${IROOT}/php.installed)
 [ ! "$RETCODE" == 0 ] || { \
   echo "Moving PHP config files into place"; 
   sudo cp $FWROOT/config/php.ini /usr/local/lib/php.ini
@@ -45,15 +45,15 @@ printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f yaf
 # phalcon.so
 #   The configure seems broken, does not respect prefix. If you 
 #   update the value of PATH then it finds the prefix from `which php`
-export PATH=$IROOT/php-5.5.17/bin:$IROOT/php-5.5.17/sbin:$PATH
-git clone git://github.com/phalcon/cphalcon.git
-cd cphalcon
-git checkout phalcon-v1.3.2
-cd build/64bits 
-$IROOT/php-5.5.17/bin/phpize
-./configure --prefix=$IROOT/php-5.5.17 --enable-phalcon
-make
-make install
+#export PATH=$IROOT/php-5.5.17/bin:$IROOT/php-5.5.17/sbin:$PATH
+#git clone git://github.com/phalcon/cphalcon.git
+#cd cphalcon
+#git checkout phalcon-v1.3.2
+#cd build/64bits 
+#$IROOT/php-5.5.17/bin/phpize
+#./configure --prefix=$IROOT/php-5.5.17 --enable-phalcon
+#make
+#make install
 
 # Clean up a bit
 rm -rf $IROOT/php

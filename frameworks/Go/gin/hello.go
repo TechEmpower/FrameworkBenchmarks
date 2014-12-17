@@ -149,10 +149,7 @@ func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	dsn := "benchmarkdbuser:benchmarkdbpass@tcp(%s:3306)/hello_world"
-	dbhost := os.Getenv("TFB_DATABASE_HOST")
-	if dbhost == "" {
-		dbhost = "localhost"
-	}
+	dbhost := os.Getenv("DBHOST")
 
 	db, err := sql.Open("mysql", fmt.Sprintf(dsn, dbhost))
 	if err != nil {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists php-composer.installed)
+RETCODE=$(fw_exists ${IROOT}/php-composer.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 fw_depends php
@@ -12,5 +12,4 @@ mkdir -p php-composer
 PHP_HOME=${IROOT}/php-5.5.17
 ${PHP_HOME}/bin/php composer-installer.php --install-dir=$IROOT/php-composer
 
-touch php-composer.installed
-
+touch ${IROOT}/php-composer.installed

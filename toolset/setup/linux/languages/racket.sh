@@ -1,14 +1,16 @@
 #!/bin/bash
 
-RET1=$(fw_exists racket/bin/racket)
-RET2=$(fw_exists racket/collects/racket)
-if [ "$RET1" == 0 ] && [ "$RET2" == 0 ]; then 
+RET=$(fw_exists ${IROOT}/racket.installed)
+if [ "$RET" == 0 ]; then 
   return 0;
 fi
 
 fw_get http://mirror.racket-lang.org/installers/recent/racket-src.tgz -O racket-src.tar.gz
 fw_untar racket-src.tar.gz
-cd racket/src 
-./configure --prefix=/usr/local
+mv racket racket-install
+cd racket-install/src 
+./configure --prefix=${IROOT}/racket
 make
-sudo make install
+make install
+
+touch ${IROOT}/racket.installed

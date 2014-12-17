@@ -96,7 +96,8 @@ def provider_virtualbox(config, role)
     vb.memory = ENV.fetch('TFB_VB_MEM', 2048)
     vb.cpus = ENV.fetch('TFB_VB_CPU', 2)
 
-    override.vm.synced_folder "../..", "/FrameworkBenchmarks"
+    # mount_options addresses issue mitchellh/vagrant#4997
+    override.vm.synced_folder "../..", "/FrameworkBenchmarks", mount_options: ['fmode=777', 'dmode=777']
 
     if role.eql? "all" or role.eql? "app"
       override.vm.network :forwarded_port, guest: 8080, host: 28080

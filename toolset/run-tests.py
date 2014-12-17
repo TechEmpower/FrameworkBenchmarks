@@ -99,6 +99,7 @@ def main(argv=None):
     clientHost = os.environ.get('TFB_CLIENT_HOST')
     clientUser = os.environ.get('TFB_CLIENT_USER')
     clientIden = os.environ.get('TFB_CLIENT_IDENTITY_FILE')
+    runnerUser = os.environ.get('TFB_RUNNER_USER')
     databaHost = os.getenv('TFB_DATABASE_HOST', clientHost)
     databaUser = os.getenv('TFB_DATABASE_USER', clientUser)
     dbIdenFile = os.getenv('TFB_DATABASE_IDENTITY_FILE', clientIden)
@@ -125,6 +126,7 @@ def main(argv=None):
     parser.add_argument('-s', '--server-host', default=serverHost, help='The application server.')
     parser.add_argument('-c', '--client-host', default=clientHost, help='The client / load generation server.')
     parser.add_argument('-u', '--client-user', default=clientUser, help='The username to use for SSH to the client instance.')
+    parser.add_argument('-r', '--runner-user', default=runnerUser, help='The user to run each test as.')
     parser.add_argument('-i', '--client-identity-file', dest='client_identity_file', default=clientIden,
                         help='The key to use for SSH to the client instance.')
     parser.add_argument('-d', '--database-host', default=databaHost,
@@ -172,10 +174,16 @@ def main(argv=None):
 
     # Verify and massage options
     if args.client_user is None:
-      print 'Usernames (e.g. --client-user and --database-user) are required!'
+      print 'Usernames (e.g. --client-user, --runner-user, and --database-user) are required!'
       print 'The system will SSH into the client and the database for the install stage'
       print 'Aborting'
       exit(1)
+
+    if args.runner_user is None:
+      print 'Usernames (e.g. --client-user, --runner-user, and --database-user) are required!'
+      print 'The system will run each test as the runner-user'
+      print 'Aborting'
+      exit(1)        
 
     if args.database_user is None:
       args.database_user = args.client_user
