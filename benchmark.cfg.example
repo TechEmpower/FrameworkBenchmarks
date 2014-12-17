@@ -1,10 +1,10 @@
 [Defaults]
 # Available Keys: 
-client_host=localhost
+client_host=127.0.0.1
 client_identity_file=None
 client_user=techempower
 runner_user=testrunner
-database_host=localhost
+database_host=127.0.0.1
 database_identity_file=None
 database_os=linux
 database_user=techempower
@@ -23,7 +23,7 @@ mode=benchmark
 name=ec2
 os=linux
 password_prompt=False
-server_host=localhost
+server_host=127.0.0.1
 sleep=60
 test=None
 type=all
