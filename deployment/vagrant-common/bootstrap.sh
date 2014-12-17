@@ -59,6 +59,7 @@ if [ ! -e "~/.firstboot" ]; then
   echo "export TFB_DATABASE_HOST=$DATABA_IP" >> ~/.bash_profile
   echo "export TFB_CLIENT_USER=$USER" >> ~/.bash_profile
   echo "export TFB_DATABASE_USER=$USER" >> ~/.bash_profile
+  echo "export TFB_RUNNER_USER=testrunner" >> ~/.bash_profile
   echo "export FWROOT=$HOME/FrameworkBenchmarks" >> ~/.bash_profile 
   source ~/.bash_profile
 
