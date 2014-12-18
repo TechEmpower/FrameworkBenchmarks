@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PREFIX=/usr/local/nginx_mruby
+PREFIX=${IROOT}/nginx_mruby
 
 RETCODE=$(fw_exists ${IROOT}/nginx_mruby.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
@@ -27,5 +27,6 @@ git submodule update
 # fi
 
 NGINX_CONFIG_OPT_ENV="--prefix=${PREFIX} --with-http_stub_status_module" sh build.sh
+sudo make install
 
 touch ${IROOT}/nginx_mruby.installed
