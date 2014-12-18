@@ -66,7 +66,11 @@ After using `vagrant ssh`, you will find the project at `~/FrameworkBenchmarks`.
 You can use `run-tests.py` without specifying any information about hosts, 
 usernames, or private key files, as so: 
 
+    $ ssh-copy-id vagrant@127.0.0.1
+     # password: vagrant
     $ cd ~/FrameworkBenchmarks
+    $ sed 's/_user=.*/_user=vagrant/g' benchmark.cfg.example > benchmark.cfg
+    $ toolset/run-tests.py --install all --install-only --test go
     $ toolset/run-tests.py --mode verify --install server --test go
     <log for installing software needed for go test>
     <log for launching go framework>
