@@ -11,7 +11,8 @@ return config("production", function()
   return postgres({
     backend = "pgmoon",
     database = "hello_world",
-    user = "postgres",
-    host = "DBHOSTNAME"
+    host = "127.0.0.1",
+    user = "benchmarkdbuser",
+    password = "benchmarkdbpass",
   })
 end)
