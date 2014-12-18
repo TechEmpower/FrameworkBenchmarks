@@ -2,7 +2,7 @@
 
 PREFIX=/usr/local/nginx_mruby
 
-RETCODE=$(fw_exists nginx_mruby.installed)
+RETCODE=$(fw_exists ${IROOT}/nginx_mruby.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 sudo apt-get install -y libhiredis-dev
@@ -18,14 +18,14 @@ cd ngx_mruby
 git submodule init
 git submodule update
 
-RETCODE=$(fw_exists mruby/mrbgems/mruby-mysql)
-if [ "$RETCODE" != 0 ] ; then
-  git clone git@github.com:mattn/mruby-mysql.git mruby/mrbgems/mruby-mysql
-  # cd mruby/mrbgems
-  # git clone git@github.com:mattn/mruby-mysql.git mruby/mrbgems/m
-  # cd ../..
-fi
+# RETCODE=$(fw_exists mruby/mrbgems/mruby-mysql)
+# if [ "$RETCODE" != 0 ] ; then
+#   git clone git@github.com:mattn/mruby-mysql.git mruby/mrbgems/mruby-mysql
+#   # cd mruby/mrbgems
+#   # git clone git@github.com:mattn/mruby-mysql.git mruby/mrbgems/m
+#   # cd ../..
+# fi
 
 NGINX_CONFIG_OPT_ENV="--prefix=${PREFIX} --with-http_stub_status_module" sh build.sh
 
-touch $IROOT/nginx_mruby.installed
+touch ${IROOT}/nginx_mruby.installed

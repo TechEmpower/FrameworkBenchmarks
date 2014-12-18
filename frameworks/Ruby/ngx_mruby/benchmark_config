@@ -1,5 +1,5 @@
 {
-  "framework": "nginx_mruby",
+  "framework": "ngx_mruby",
   "tests": [{
     "default": {
       "setup_file": "setup",
@@ -11,16 +11,16 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
-      "framework": "nginx_mruby",
+      "framework": "ngx_mruby",
       "language": "Ruby",
       "orm": "Raw",
-      "platform": "nginx_mruby",
+      "platform": "ngx_mruby",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "nginx_mruby",
+      "display_name": "ngx_mruby",
       "notes": "",
-      "versus": "nginx_mruby"
+      "versus": "ngx_mruby"
     }
   }]
 }

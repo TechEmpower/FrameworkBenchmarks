@@ -1,8 +1,8 @@
 # [nginx + mruby](https://github.com/matsumoto-r/ngx_mruby) Benchmark Test
 
-The nginx app is inside [app.rb](app.rb)
+The nginx app is distributes across a few files. most of it is in [nginx.conf](nginx.conf)
 The nginx conf is inside [nginx.conf](nginx.conf)
-Requires a nginx compiled with ngx_mruby module
+Requires a nginx compiled with ngx_mruby module. It has been called nginx_mruby for lack of a better name
 
 
 ## Test URLs

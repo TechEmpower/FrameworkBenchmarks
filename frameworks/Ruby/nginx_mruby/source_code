@@ -1,4 +1,0 @@
-./nginx_mruby/db.rb
-./nginx_mruby/fortune.rb
-./nginx_mruby/queries.rb
-./nginx_mruby/updates.rb
