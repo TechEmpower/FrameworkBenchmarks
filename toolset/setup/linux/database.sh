@@ -157,8 +157,9 @@ export CASS_V=2.0.7
 wget -nv http://archive.apache.org/dist/cassandra/$CASS_V/apache-cassandra-$CASS_V-bin.tar.gz
 tar xzf apache-cassandra-$CASS_V-bin.tar.gz
 
-rm -rf /ssd/cassandra /ssd/log/cassandra
-mkdir -p /ssd/cassandra /ssd/log/cassandra
+sudo rm -rf /ssd/cassandra /ssd/log/cassandra
+sudo mkdir -p /ssd/cassandra /ssd/log/cassandra
+sudo chown $USER:$USER /ssd/cassandra /ssd/log/cassandra
 
 sed -i "s/^.*seeds:.*/          - seeds: \"$DB_HOST\"/" cassandra/cassandra.yaml
 sed -i "s/^listen_address:.*/listen_address: $DB_HOST/" cassandra/cassandra.yaml
