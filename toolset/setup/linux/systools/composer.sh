@@ -10,6 +10,6 @@ mkdir -p php-composer
 
 # Use the PHP from our IROOT directory
 PHP_HOME=${IROOT}/php-5.5.17
-${PHP_HOME}/bin/php composer-installer.php --install-dir=$IROOT/php-composer
+${PHP_HOME}/bin/php composer-installer.php --install-dir=$IROOT
 
 touch ${IROOT}/php-composer.installed
