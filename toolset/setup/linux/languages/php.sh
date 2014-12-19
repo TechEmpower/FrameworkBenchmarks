@@ -11,20 +11,25 @@ RETCODE=$(fw_exists ${IROOT}/php.installed)
   sudo cp $FWROOT/config/php-fpm.conf /usr/local/lib/php-fpm.conf
   return 0; }
 
-fw_get http://php.net/distributions/php-5.5.17.tar.gz -O php-5.5.17.tar.gz
-fw_untar php-5.5.17.tar.gz
+VERSION="5.5.17"
+
+fw_get http://php.net/distributions/php-${VERSION}.tar.gz -O php-${VERSION}.tar.gz
+fw_untar php-${VERSION}.tar.gz
 ls
-mv php-5.5.17 php
+mv php-${VERSION} php
 ls
 cd php
 
-./configure --prefix=$IROOT/php-5.5.17 --with-pdo-mysql --with-mysql --with-mcrypt --enable-intl --enable-mbstring --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --with-openssl --enable-opcache
+./configure --prefix=$IROOT/php-${VERSION} --with-pdo-mysql \
+  --with-mysql --with-mcrypt --enable-intl --enable-mbstring \
+  --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data \
+  --with-openssl --enable-opcache
 make
 make install
 cd ..
 
-cp $FWROOT/config/php.ini $IROOT/php-5.5.17/lib/php.ini
-cp $FWROOT/config/php-fpm.conf $IROOT/php-5.5.17/lib/php-fpm.conf
+cp $FWROOT/config/php.ini $IROOT/php-${VERSION}/lib/php.ini
+cp $FWROOT/config/php-fpm.conf $IROOT/php-${VERSION}/lib/php-fpm.conf
 
 # =======================
 #
@@ -35,12 +40,12 @@ cp $FWROOT/config/php-fpm.conf $IROOT/php-5.5.17/lib/php-fpm.conf
 echo PHP compilation finished, building modules
 
 # Apc.so
-$IROOT/php-5.5.17/bin/pecl config-set php_ini $IROOT/php-5.5.17/lib/php.ini
+$IROOT/php-${VERSION}/bin/pecl config-set php_ini $IROOT/php-${VERSION}/lib/php.ini
 #printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f apc-beta
-printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f redis
+printf "\n" | $IROOT/php-${VERSION}/bin/pecl install -f redis
 
 # yaf.so
-printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f yaf
+printf "\n" | $IROOT/php-${VERSION}/bin/pecl install -f yaf
 
 # phalcon.so
 #   The configure seems broken, does not respect prefix. If you 
