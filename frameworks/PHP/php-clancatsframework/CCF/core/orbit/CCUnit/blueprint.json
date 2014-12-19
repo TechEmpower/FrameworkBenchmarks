@@ -1,0 +1,17 @@
+{
+	"name": "CCUnit",
+	"version": "1.0.0",
+	"description": "",
+	"homepage": "http:\/\/clancats.com",
+	"keywords": [
+		"clancats"
+	],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Mario D\u00f6ring",
+			"email": "mario@clancats.com"
+		}
+	],
+	"namespace": "CCUnit"
+}

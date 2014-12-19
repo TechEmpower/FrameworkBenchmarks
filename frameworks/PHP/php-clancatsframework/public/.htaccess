@@ -1,0 +1,9 @@
+RewriteEngine On
+# RewriteBase /subdir/
+
+# Only Rewrite URL if file not exits
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Default
+RewriteRule ^(.*)$ index.php?/$1 [QSA,L]

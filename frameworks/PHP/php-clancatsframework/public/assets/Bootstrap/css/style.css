@@ -1,0 +1,442 @@
+body {
+	margin: 0px auto;
+	width: 100%;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	position: relative;
+	background-color: #f5f5f5;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-size: 14px;
+	color: #222;
+	font-weight: 300;
+}
+
+strong, b {
+	font-weight: 400;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 200;
+	color: #535353;
+	padding-bottom: 10px;
+	padding-top: 20px;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+pre, pre.prettyprint {
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	border: 0;
+	background-color: #333;
+	color: #fff;
+	padding: 10px;
+	padding-left: 30px;
+	line-height: 18px !important;
+	margin-bottom: 20px;
+}
+
+pre code, pre.prettyprint code {
+	display: block;
+	padding: 0.5em;
+	font-size: 12px;
+	font-family: Menlo, Consolas, Monaco, "Lucida Console", monospace;
+}
+
+code {
+	background-color: #fff3d6;
+	color: #333;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	padding: 1px 2px;
+	font-family: Consolas, Monaco, "Lucida Console", monospace;
+}
+
+em {
+	color: #666;
+}
+
+.label {
+	text-transform: uppercase;
+	font-weight: 200;
+	font-size: 10px;
+}
+
+.fcode {
+	font-family: Menlo, Consolas, Monaco, "Lucida Console", monospace;
+}
+
+.font-sm {
+	font-size: 11px;
+}
+
+.font-xs {
+	font-size: 10px;
+}
+
+.box-shadow-light {
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.pdn5 {
+	padding: 5px;
+}
+
+.pdn10 {
+	padding: 10px;
+}
+
+.pdn15 {
+	padding: 15px;
+}
+
+.pdn20 {
+	padding: 20px;
+}
+
+.pdn25 {
+	padding: 25px;
+}
+
+.pdnh5 {
+	padding: 5px 0;
+}
+
+.pdnh10 {
+	padding: 10px 0;
+}
+
+.pdnh20 {
+	padding: 20px 0;
+}
+
+.pdnh25 {
+	padding: 25px 0;
+}
+
+.pdnv5 {
+	padding: 0 5px;
+}
+
+.pdnv10 {
+	padding: 0 10px;
+}
+
+.pdnv20 {
+	padding: 0 20px;
+}
+
+.pdnv25 {
+	padding: 0 25px;
+}
+
+.pdnt5 {
+	padding-top: 5px;
+}
+
+.pdnt10 {
+	padding-top: 10px;
+}
+
+.pdnt20 {
+	padding-top: 20px;
+}
+
+.pdnt25 {
+	padding-top: 25px;
+}
+
+.mr5 {
+	margin: 5px;
+}
+
+.mr10 {
+	margin: 10px;
+}
+
+.mr20 {
+	margin: 20px;
+}
+
+.mr25 {
+	margin: 25px;
+}
+
+.mr50 {
+	margin: 50px;
+}
+
+.mrt5 {
+	margin-top: 5px;
+}
+
+.mrt10 {
+	margin-top: 10px;
+}
+
+.mrt20 {
+	margin-top: 20px;
+}
+
+.mrt25 {
+	margin-top: 25px;
+}
+
+.mrt50 {
+	margin-top: 50px;
+}
+
+.mrr5 {
+	margin-right: 5px;
+}
+
+.mrr10 {
+	margin-right: 10px;
+}
+
+.mrr20 {
+	margin-right: 20px;
+}
+
+.mrr25 {
+	margin-right: 25px;
+}
+
+.mrl5 {
+	margin-left: 5px;
+}
+
+.mrl10 {
+	margin-left: 10px;
+}
+
+.mrl20 {
+	margin-left: 20px;
+}
+
+.mrl25 {
+	margin-left: 25px;
+}
+
+input[type="text"], input[type="email"], input[type="search"],
+input[type="password"] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
+.btn, .form-control {
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	border: 0;
+	font-weight: 300;
+}
+
+.control-label {
+	font-weight: 300;
+	padding-bottom: 10px;
+}
+
+.form-control {
+	height: 39px;
+	font-size: 15px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #dbdbdb;
+}
+
+.form-control:focus {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.btn {
+	border: 2px solid;
+	padding: 7px 11px;
+	opacity: 0.8;
+}
+
+.btn:hover {
+	opacity: 1;
+}
+
+.btn.btn-lg {
+	padding: 7px 15px;
+	font-size: 16px;
+}
+
+.btn.btn-sm {
+	padding: 4px 9px;
+}
+
+.btn.btn-xs {
+	padding: 0px 4px;
+}
+
+.btn.btn-primary {
+	background-color: #3b92d4;
+	border-color: #3b92d4;
+	opacity: 1;
+}
+
+.btn.btn-primary:hover, .btn.btn-primary.active {
+	background-color: transparent;
+	color: #3b92d4;
+}
+
+.btn.btn-dark {
+	background-color: #333;
+	border-color: #333;
+	color: #fff;
+}
+
+.btn.btn-dark:hover, .btn.btn-dark.active {
+	background-color: transparent;
+	color: #333;
+}
+
+.btn.btn-danger {
+	background-color: #cc3d3d;
+	border-color: #cc3d3d;
+}
+
+.btn.btn-danger:hover, .btn.btn-danger.active {
+	background-color: transparent;
+	color: #cc3d3d;
+}
+
+.btn.btn-info {
+	background-color: #39b3d7;
+	border-color: #39b3d7;
+}
+
+.btn.btn-info:hover, .btn.btn-info.active {
+	background-color: transparent;
+	color: #39b3d7;
+}
+
+.btn.btn-warning {
+	background-color: #f0ad4e;
+	border-color: #f0ad4e;
+}
+
+.btn.btn-warning:hover, .btn.btn-warning.active {
+	background-color: transparent;
+	color: #f0ad4e;
+}
+
+.btn.btn-default {
+	background-color: transparent;
+	border-color: #dbdbdb;
+	color: #3e3e3e;
+}
+
+.btn.btn-default:hover, .btn.btn-default.active {
+	background-color: #dbdbdb;
+	color: #3e3e3e;
+}
+
+.btn.btn-transparent {
+	background-color: transparent;
+	border-color: #3b92d4;
+	color: #3b92d4;
+}
+
+.btn.btn-transparent:hover, .btn.btn-transparent.active {
+	background-color: #3b92d4;
+	color: #fff;
+}
+
+.btn.btn-white {
+	background-color: transparent;
+	border-color: #fff;
+	color: #fff;
+	text-shadow: 0 0 7px #000;
+}
+
+.btn.btn-white:hover, .btn.btn-white.active {
+	background-color: #fff;
+	color: #3e3e3e;
+	text-shadow: none;
+}
+
+.btn.btn-white-invert {
+	background-color: #fff;
+	color: #3e3e3e;
+	text-shadow: none;
+	border-color: #fff;
+}
+
+.btn.btn-white-invert:hover, .btn.btn-white-invert.active {
+	background-color: transparent;
+	border-color: #fff;
+	color: #fff;
+	text-shadow: 0 0 7px #000;
+}
+
+.form-group {
+	margin-bottom: 10px;
+}
+
+.form-group.large {
+	margin-top: 20px;
+}
+
+.dropdown-menu {
+	margin: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	border: 0;
+	font-size: 14px;
+	font-weight: 300;
+}
+
+.dropdown-menu a {
+	font-size: 14px;
+	font-weight: 300;
+}
+
+.alert {
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	opacity: 0.8;
+}
+
+.navbar-inverse {
+	background-color: #3e3e3e;
+}
+
+.navbar-inverse .navbar-brand {
+	font-weight: 200;
+}
+
+.navbar-inverse ul.navbar-nav > li.active > a {
+	border-top: 2px solid #3b92d4;
+	-webkit-box-shadow: inset 0 10px 10px -10px rgba(53, 145, 215, 0.8) inset;
+	box-shadow: inset 0 10px 10px -10px rgba(53, 145, 215, 0.8) inset;
+	color: #fff;
+}
+
+.navbar-inverse ul.navbar-nav > li > a {
+	color: #ccc;
+	font-size: 11px;
+	text-transform: uppercase;
+	border-top: 2px solid transparent;
+}
+
+.navbar-inverse ul.navbar-nav > li > a:hover {
+	color: #fff;
+	text-decoration: none;
+}

@@ -1,0 +1,17 @@
+{
+	"name": "Dev",
+	"version": "2.0.0",
+	"description": "For fast and reliable web applications with a twist!",
+	"homepage": "http://clancats.com",
+	"keywords": [
+		
+	],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Mario Döring",
+			"email": "mario@clancats.com"
+		}
+	],
+	"namespace": "Dev"
+}
