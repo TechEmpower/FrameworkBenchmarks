@@ -57,7 +57,7 @@ to your framework's folder. Use these steps
     # This will manually prompt you for your Github credentials 
     # to avoid the Github rate limit, and when this command
     # finishes running you will have a new file composer.lock
-    ${IROOT}/php-5.5.17/bin/php $IROOT/composer.phar install \s
+    ${IROOT}/php-5.5.17/bin/php $IROOT/composer.phar install \
       --working-dir $TROOT
     
     # Add the lock file to this repository so it's used for all 
