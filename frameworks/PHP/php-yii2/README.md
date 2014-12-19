@@ -2,6 +2,11 @@
 
 This is the Yii2 portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
+This uses PHP's composer for dependency resolution. Note 
+that [issue 5083](https://github.com/yiisoft/yii2/issues/5083)
+affects the `composer.json` file defined here (also see 
+[this](https://github.com/francoispluchino/composer-asset-plugin/issues/29) and [this](https://stackoverflow.com/questions/25882271/cannot-update-yii2-via-composer-bower-asset-jquery-could-not-be-found))
+
 ### JSON Encoding Test
 Uses the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-encode.php).
 
