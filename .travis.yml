@@ -120,7 +120,7 @@ env:
     - "TESTDIR=PHP/php-symfony2"
     - "TESTDIR=PHP/php-symfony2-stripped"
     - "TESTDIR=PHP/php-yaf"
-    - "TESTDIR=PHP/php-yii2"
+    - "TESTDIR=PHP/Yii2"
     - "TESTDIR=PHP/php-zend-framework"
     - "TESTDIR=PHP/php-zend-framework1"
     - "TESTDIR=PHP/phreeze"
