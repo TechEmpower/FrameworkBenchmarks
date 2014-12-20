@@ -3,15 +3,6 @@ python:
   - "2.7"
 
 env:
-  global:
-    - TFB_SERVER_HOST=127.0.0.1
-    - TFB_CLIENT_HOST=127.0.0.1
-    - TFB_DATABASE_HOST=127.0.0.1
-    - TFB_CLIENT_USER=travis
-    - TFB_DATABASE_USER=travis
-    - TFB_CLIENT_IDENTITY_FILE=/home/travis/.ssh/id_rsa
-    - TFB_DATABASE_IDENTITY_FILE=/home/travis/.ssh/id_rsa
-
   matrix:
 
     # Group tests by directory to logically break up travis-CI build. Otherwise

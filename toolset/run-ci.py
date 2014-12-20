@@ -362,20 +362,18 @@ class CIRunnner:
     cat /home/travis/.ssh/id_rsa.pub > /home/travis/.ssh/authorized_keys
     chmod 600 /home/travis/.ssh/authorized_keys
 
-    # Set up the benchmark.cfg to use (as the travis user)
-    cp benchmark.cfg.example benchmark.cfg
-    # These MAY not be necessary since we set the environment vars in .travis.yml, but
-    # the benchmark.cfg might trump those, so I duplicated them here.
-    sed -i 's|client_identity_file=None|client_identity_file=/home/travis/.ssh/id_rsa|g' benchmark.cfg
-    sed -i 's|database_identity_file=None|database_identity_file=/home/travis/.ssh/id_rsa|g' benchmark.cfg
-    sed -i 's|client_host=localhost|client_host=127.0.0.1|g' benchmark.cfg
-    sed -i 's|database_host=localhost|database_host=127.0.0.1|g' benchmark.cfg
-    sed -i 's|server_host=localhost|server_host=127.0.0.1|g' benchmark.cfg
-    sed -i 's|client_user=techempower|client_user=travis|g' benchmark.cfg
-    sed -i 's|database_user=techempower|database_user=travis|g' benchmark.cfg
-    # I realize the following line is redundant, but in case we decide/need to
-    # change the user in the future in the cfg but not in the example, it's here.
-    sed -i 's|runner_user=testrunner|runner_user=testrunner|g' benchmark.cfg
+    # Set up the benchmark.cfg for travis user
+    # NOTE: Please don't just copy the example config - it causes unexpected
+    #       issues when those example variables change
+    echo "[Defaults]"                                       > benchmark.cfg
+    echo "client_identity_file=/home/travis/.ssh/id_rsa"   >> benchmark.cfg
+    echo "database_identity_file=/home/travis/.ssh/id_rsa" >> benchmark.cfg
+    echo "client_host=127.0.0.1"                           >> benchmark.cfg
+    echo "database_host=127.0.0.1"                         >> benchmark.cfg
+    echo "server_host=127.0.0.1"                           >> benchmark.cfg
+    echo "client_user=travis"                              >> benchmark.cfg
+    echo "database_user=travis"                            >> benchmark.cfg
+    echo "runner_user=testrunner"                          >> benchmark.cfg
 
     # Create the new testrunner user
     sudo useradd testrunner
