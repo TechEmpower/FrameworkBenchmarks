@@ -1,7 +1,11 @@
 <?php
 /** @package    HELLO WORLD */
 
-set_include_path('libs/');
+set_include_path(
+		'./libs/' . PATH_SEPARATOR .
+		'./vendor/phreeze/phreeze/libs/' . PATH_SEPARATOR .
+		get_include_path()
+);
 
 /* require framework libs */
 require_once 'verysimple/Phreeze/Dispatcher.php';

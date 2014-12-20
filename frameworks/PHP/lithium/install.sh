@@ -11,3 +11,4 @@ fw_depends php nginx composer
 ${PHP_HOME}/bin/php $IROOT/composer.phar install \
   --no-interaction --working-dir $TROOT \
   --no-progress --optimize-autoloader 
+
