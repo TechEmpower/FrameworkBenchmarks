@@ -164,7 +164,6 @@ class FrameworkTest:
     # Load profile for this installation
     profile="%s/bash_profile.sh" % self.directory
     if not os.path.exists(profile):
-      logging.warning("Directory %s does not have a bash_profile.sh" % self.directory)
       profile="$FWROOT/config/benchmark_profile"
 
     # Setup variables for TROOT and IROOT
