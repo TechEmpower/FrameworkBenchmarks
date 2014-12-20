@@ -405,6 +405,10 @@ class CIRunnner:
     mysql -uroot < config/create.sql
 
     # Setup Postgres
+    echo "Removing Postgres 9.1 from Travis-CI"
+    sudo apt-get remove -qy postgresql postgresql-9.1 postgresql-client-9.1
+    sudo apt-get install -qy postgresql-9.3 postgresql-client-9.3
+
     echo "Populating Postgres database"
     psql --version
     sudo useradd benchmarkdbuser -p benchmarkdbpass
