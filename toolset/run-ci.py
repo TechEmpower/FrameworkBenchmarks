@@ -305,7 +305,7 @@ class CIRunnner:
     names = ' '.join(self.names)
     command = 'toolset/run-tests.py '
     if self.mode == 'prereq':
-      command = command + "--install server --install-only --test ''"
+      command = command + "--install server --install-only --test '' --verbose"
     elif self.mode == 'install':
       command = command + "--install server --install-only --test %s" % names
     elif self.mode == 'verify':

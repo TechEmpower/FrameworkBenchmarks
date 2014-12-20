@@ -121,7 +121,7 @@ class Installer:
       # Move back to previous directory
       os.chdir(previousDir)
 
-    self.__run_command("sudo apt-get -y autoremove");    
+    self.__run_command("sudo apt-get -yq autoremove");    
 
     print("\nINSTALL: Finished installing server software\n")
   ############################################################
