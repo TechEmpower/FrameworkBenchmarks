@@ -2,7 +2,7 @@
   "framework": "hhvm",
   "tests":
     [{
-      "raw": {
+      "default": {
         "setup_file"     : "setup_hhvm",
         "json_url"       : "/json",
         "db_url"         : "/db",
