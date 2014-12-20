@@ -7,3 +7,6 @@
 .DS_Store
 /tags
 .idea
+vendor
+modules
+deploy/php-fpm.pid

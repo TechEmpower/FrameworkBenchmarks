@@ -39,7 +39,8 @@ used by subsequent composer commands to avoid Github's
 rate limits. More on this [here](https://getcomposer.org/doc/03-cli.md#install) and [here](https://circleci.com/docs/composer-api-rate-limit)
 
 You need to generate `composer.lock` manually, and then add it 
-to your framework's folder. Use these steps
+to your framework's folder. This must be done manually because
+it will require you to provide input. Use these steps
 
     # Run one installation to ensure PHP is installed
     cd FrameworkBenchmarks
@@ -66,14 +67,14 @@ to your framework's folder. Use these steps
 
 **NOTE:** You should run this process manually once to generate the `composer.lock` file
 
+## Updating Composer setup
 
+If you update `composer.json`, you need to re-run the above 
+process to generate a new `composer.lock` file. If you forget
+to do this, you will see this error message when running the 
+framework:
 
-php), and then add `$IROOT/php-composer` to the `PATH` in your `bash_profile.sh`. 
-For example: 
-
-    export COMPOSER_HOME=${IROOT}/php-composer
-    export PATH="$COMPOSER_HOME:$PATH"
-
+    Warning: The lock file is not up to date with the latest changes in composer.json. You may be getting outdated dependencies. Run update to update them.
 
 # Debugging PHP Frameworks
 
