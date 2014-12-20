@@ -71,13 +71,20 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
     # Find all tests in the config file
     config_tests = framework_test.parse_config(config, 
       os.path.dirname(config_file_name), benchmarker)
-    
+        
     # Filter
     for test in config_tests:
-      if test.name in exclude:
-        continue
-      elif len(include) is 0 or test.name in include:
+      if len(include) is 0 and len(exclude) is 0:
+        # No filters, we are running everything
         tests.append(test)
+      elif test.name in exclude:
+        continue
+      elif test.name in include:
+        tests.append(test)
+      else: 
+        # An include list exists, but this test is 
+        # not listed there, so we ignore it
+        pass
 
   tests.sort(key=lambda x: x.name)
   return tests
