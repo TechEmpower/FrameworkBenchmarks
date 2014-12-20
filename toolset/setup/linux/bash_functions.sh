@@ -8,7 +8,10 @@
 # export http_proxy=http://10.0.1.0:3128
 
 fw_get () {
-  wget --no-check-certificate --trust-server-names "$@"
+  # Use dot-based progress bar as it's more friendly 
+  # towards non-TTY systems like travis-ci
+  wget --progress=dot --no-check-certificate \
+    --trust-server-names "$@"
 }
 
 fw_untar() {
