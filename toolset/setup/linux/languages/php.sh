@@ -18,13 +18,15 @@ fw_untar php-${VERSION}.tar.gz
 mv php-${VERSION} php
 cd php
 
+echo "Configuring PHP quietly..."
 ./configure --prefix=$IROOT/php-${VERSION} --with-pdo-mysql \
   --with-mysql --with-mcrypt --enable-intl --enable-mbstring \
-  --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data \
-  --with-openssl --enable-opcache
+  --enable-fpm --with-fpm-user=testrunner --with-fpm-group=testrunner \
+  --with-openssl --enable-opcache --quiet
 echo "Making PHP quietly..."
-make --silent
-make install
+make --quiet
+echo "Installing PHP quietly"
+make --quiet install
 cd ..
 
 cp $FWROOT/config/php.ini $IROOT/php-${VERSION}/lib/php.ini
@@ -36,30 +38,32 @@ cp $FWROOT/config/php-fpm.conf $IROOT/php-${VERSION}/lib/php-fpm.conf
 #    Install all of them here becuase our config file references 
 #    all of these *.so
 # ========================
-echo PHP compilation finished, building modules
+echo PHP compilation finished, installing extensions
 
 # Apc.so
 $IROOT/php-${VERSION}/bin/pecl config-set php_ini $IROOT/php-${VERSION}/lib/php.ini
 #printf "\n" | $IROOT/php-5.5.17/bin/pecl install -f apc-beta
-printf "\n" | $IROOT/php-${VERSION}/bin/pecl install -f redis
+printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f redis
 
 # yaf.so
-printf "\n" | $IROOT/php-${VERSION}/bin/pecl install -f yaf
+printf "\n" | $IROOT/php-${VERSION}/bin/pecl -q install -f yaf
 
 # phalcon.so
 #   The configure seems broken, does not respect prefix. If you 
 #   update the value of PATH then it finds the prefix from `which php`
-#export PATH=$IROOT/php-5.5.17/bin:$IROOT/php-5.5.17/sbin:$PATH
-#git clone git://github.com/phalcon/cphalcon.git
-#cd cphalcon
-#git checkout phalcon-v1.3.2
-#cd build/64bits 
-#$IROOT/php-5.5.17/bin/phpize
-#./configure --prefix=$IROOT/php-5.5.17 --enable-phalcon
-#make
-#make install
+git clone --depth=1 --branch=phalcon-v1.3.2 --single-branch \
+  --quiet git://github.com/phalcon/cphalcon.git
+cd cphalcon/build/64bits 
+$IROOT/php-5.5.17/bin/phpize
+# For some reason we have to point to php-config 
+# explicitly, it's not found by the prefix settings
+./configure --prefix=$IROOT/php-${VERSION} --exec-prefix=$IROOT/php-${VERSION} \
+  --with-php-config=$IROOT/php-${VERSION}/bin/php-config \
+  --enable-phalcon --quiet
+make --quiet
+make install
 
 # Clean up a bit
-# rm -rf $IROOT/php
+rm -rf $IROOT/php
 
 touch $IROOT/php.installed
