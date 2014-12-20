@@ -15,16 +15,15 @@ VERSION="5.5.17"
 
 fw_get http://php.net/distributions/php-${VERSION}.tar.gz -O php-${VERSION}.tar.gz
 fw_untar php-${VERSION}.tar.gz
-ls
 mv php-${VERSION} php
-ls
 cd php
 
 ./configure --prefix=$IROOT/php-${VERSION} --with-pdo-mysql \
   --with-mysql --with-mcrypt --enable-intl --enable-mbstring \
   --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data \
   --with-openssl --enable-opcache
-make
+echo "Making PHP quietly..."
+make --silent
 make install
 cd ..
 
@@ -61,6 +60,6 @@ printf "\n" | $IROOT/php-${VERSION}/bin/pecl install -f yaf
 #make install
 
 # Clean up a bit
-rm -rf $IROOT/php
+# rm -rf $IROOT/php
 
 touch $IROOT/php.installed
