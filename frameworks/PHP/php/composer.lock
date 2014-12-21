@@ -1,0 +1,53 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "29f9d390a88d12067cd7e982e14e8cff",
+    "packages": [
+        {
+            "name": "php-activerecord/php-activerecord",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jpfuentes2/php-activerecord.git",
+                "reference": "5a957483801ecc41d95381e9868de7bb08f9be3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jpfuentes2/php-activerecord/zipball/5a957483801ecc41d95381e9868de7bb08f9be3a",
+                "reference": "5a957483801ecc41d95381e9868de7bb08f9be3a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "ActiveRecord.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "php-activerecord is an open source ORM library based on the ActiveRecord pattern.",
+            "homepage": "http://www.phpactiverecord.org/",
+            "keywords": [
+                "activerecord",
+                "orm"
+            ],
+            "time": "2013-04-26 21:01:08"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

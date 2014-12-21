@@ -1,0 +1,5 @@
+{
+	"require": {
+    "php-activerecord/php-activerecord": "1.1.2"
+	}
+}
