@@ -1,7 +1,5 @@
-/app/tmp
-/lib/Cake/Console/Templates/skel/tmp/
+app/tmp
 /plugins
-/vendors
 /build
 /dist
 .DS_Store
