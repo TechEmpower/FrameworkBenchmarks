@@ -7,7 +7,7 @@
       "db_url": "/bench/rawdb",
       "query_url": "/bench/rawdb?queries=",
       "fortune_url": "/bench/rawfortunes",
-      "port": 80,
+      "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
