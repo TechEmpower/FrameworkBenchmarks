@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export PHP_HOME=${IROOT}/php-5.5.17
+export PHP_FPM=$PHP_HOME/sbin/php-fpm
+export NGINX_HOME=${IROOT}/nginx
 
 $PHP_FPM --fpm-config $FWROOT/config/php-fpm.conf -g $TROOT/deploy/php-fpm.pid
 sed -i "s|'host' => '.*'|'host' => '${DBHOST}'|g" app/Config/database.php

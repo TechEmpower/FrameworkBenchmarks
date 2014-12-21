@@ -1,0 +1,10 @@
+{
+    "require": {
+        "cakephp/cakephp": "2.4.5"
+    },
+    "config": {
+        "vendor-dir": "app/Vendor"
+    }
+
+}
+
