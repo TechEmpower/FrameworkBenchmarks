@@ -1,8 +1,11 @@
-app/tmp
-/plugins
+/app/cache
+/app/logs
+/bin
+/vendors
 /build
 /dist
 .DS_Store
 /tags
-app/Vendor
+.idea
+vendor
 deploy/php-fpm.pid

@@ -6,10 +6,9 @@ export PHP_FPM=$PHP_HOME/sbin/php-fpm
 
 export NGINX_HOME=${IROOT}/nginx
 
-sed -i 's|localhost:3306|'"${DBHOST}"':3306|g' index.php
-sed -i 's|.*/FrameworkBenchmarks/phreeze|"'"${TROOT}"'|g' deploy/phreeze
-sed -i 's|Directory .*/FrameworkBenchmarks/phreeze|Directory '"${TROOT}"'|g' deploy/phreeze
-sed -i 's|root .*/FrameworkBenchmarks/phreeze|root '"${TROOT}"'|g' deploy/nginx.conf
+
+sed -i 's|192.168.100.102|'"${DBHOST}"'|g' app/config/bootstrap/connections.php
+sed -i 's|root .*/FrameworkBenchmarks/php-lithium|root '"${TROOT}"'|g' deploy/nginx.conf
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 export PATH="$PHP_HOME/bin:$PHP_HOME/sbin:$PATH"

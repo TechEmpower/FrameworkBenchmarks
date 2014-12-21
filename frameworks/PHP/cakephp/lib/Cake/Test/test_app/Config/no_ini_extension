@@ -1,3 +1,0 @@
-; Test file for testing config file without .ini extension.
-some_key = some_value
-bool_key = 1
