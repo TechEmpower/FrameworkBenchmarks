@@ -8,9 +8,9 @@
 # export http_proxy=http://10.0.1.0:3128
 
 fw_get () {
-  # Use dot-based progress bar as it's more friendly 
-  # towards non-TTY systems like travis-ci
-  wget --progress=dot --no-check-certificate \
+  # -no-verbose disables the big progress bars but keeps
+  # other basic info
+  wget --no-verbose --no-check-certificate \
     --trust-server-names "$@"
 }
 
