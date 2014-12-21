@@ -7,3 +7,9 @@
 .DS_Store
 /tags
 .idea
+docs
+vendor
+fuel/core
+fuel/vendor
+fuel/packages
+deploy/php-fpm.pid

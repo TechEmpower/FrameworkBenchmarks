@@ -1,0 +1,146 @@
+{
+  "repositories": [
+      {
+          "type": "package",
+          "package": {
+              "name": "fuel/auth",
+              "type": "fuel-package",
+              "version": "1.7.2",
+              "dist": {
+                  "url": "https://github.com/fuel/auth/archive/1.7/master.zip",
+                  "type": "zip"
+              },
+              "source": {
+                  "url": "https://github.com/fuel/auth.git",
+                  "type": "git",
+                  "reference": "1.8/develop"
+              }
+          }
+      },
+      {
+          "type": "package",
+          "package": {
+              "name": "fuel/email",
+              "type": "fuel-package",
+              "version": "1.7.2",
+              "dist": {
+                  "url": "https://github.com/fuel/email/archive/1.7/master.zip",
+                  "type": "zip"
+              },
+              "source": {
+                  "url": "https://github.com/fuel/email.git",
+                  "type": "git",
+                  "reference": "1.8/develop"
+              }
+          }
+      },
+      {
+          "type": "package",
+          "package": {
+              "name": "fuel/oil",
+              "type": "fuel-package",
+              "version": "1.7.2",
+              "dist": {
+                  "url": "https://github.com/fuel/oil/archive/1.7/master.zip",
+                  "type": "zip"
+              },
+              "source": {
+                  "url": "https://github.com/fuel/oil.git",
+                  "type": "git",
+                  "reference": "1.8/develop"
+              }
+          }
+      },
+      {
+          "type": "package",
+          "package": {
+              "name": "fuel/orm",
+              "type": "fuel-package",
+              "version": "1.7.2",
+              "dist": {
+                  "url": "https://github.com/fuel/orm/archive/1.7/master.zip",
+                  "type": "zip"
+              },
+              "source": {
+                  "url": "https://github.com/fuel/orm.git",
+                  "type": "git",
+                  "reference": "1.8/develop"
+              }
+          }
+      },
+      {
+          "type": "package",
+          "package": {
+              "name": "fuel/parser",
+              "type": "fuel-package",
+              "version": "1.7.2",
+              "dist": {
+                  "url": "https://github.com/fuel/parser/archive/1.7/master.zip",
+                  "type": "zip"
+              },
+              "source": {
+                  "url": "https://github.com/fuel/parser.git",
+                  "type": "git",
+                  "reference": "1.8/develop"
+              }
+          }
+      },
+      {
+          "type": "package",
+          "package": {
+              "name": "fuel/core",
+              "type": "fuel-package",
+              "version": "1.7.2",
+              "dist": {
+                  "url": "https://github.com/fuel/core/archive/1.7/master.zip",
+                  "type": "zip"
+              },
+              "source": {
+                  "url": "https://github.com/fuel/core.git",
+                  "type": "git",
+                  "reference": "1.8/develop"
+              }
+          }
+      },
+      {
+          "type": "package",
+          "package": {
+              "name": "fuel/docs",
+              "type": "fuel-package",
+              "version": "1.7.2",
+              "dist": {
+                  "url": "https://github.com/fuel/docs/archive/1.7/master.zip",
+                  "type": "zip"
+              },
+              "source": {
+                  "url": "https://github.com/fuel/docs.git",
+                  "type": "git",
+                  "reference": "1.8/develop"
+              }
+          }
+      }
+  ],
+  "_README_": [
+    "If you want to download everything",
+    "documentation,examples,etc, then require fuel/fuel",
+    "instead of just fuel/core",
+    "WARN: fuel/log"
+  ]
+  ,
+  "require": {
+    "composer/installers": "~1.0",
+    "fuel/core": "1.7.2",
+    "fuel/auth": "1.7.2",
+    "fuel/parser": "1.7.2",
+    "fuel/oil": "1.7.2",
+    "fuel/orm": "1.7.2"
+  },
+  "config": {
+    "vendor-dir": "fuel/vendor"
+  },
+  "extra": {
+      "installer-paths": {
+          "fuel/{$name}": ["fuel/core"]
+      }
+  }
+}
