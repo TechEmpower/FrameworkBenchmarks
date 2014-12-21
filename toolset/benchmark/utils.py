@@ -30,7 +30,14 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
     include = []
   if exclude is None:
     exclude = []
-  
+
+  # Old, hacky method to exclude all tests was to 
+  # request a test known to not exist, such as ''. 
+  # If test '' was requested, short-circuit and return 
+  # nothing immediately
+  if len(include) == 1 and '' in include:
+    return []
+    
   # Setup default Benchmarker using example configuration
   if benchmarker is None:
     print "Creating Benchmarker from benchmark.cfg.example"
@@ -88,10 +95,11 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
 
   # Ensure we were able to locate everything that was 
   # explicitly included 
-  names = {test.name for test in tests}
-  if 0 != len(set(include) - set(names)):
-    missing = list(set(include) - set(names))
-    raise Exception("Unable to locate tests %s" % missing)
+  if 0 != len(include):
+    names = {test.name for test in tests}
+    if 0 != len(set(include) - set(names)):
+      missing = list(set(include) - set(names))
+      raise Exception("Unable to locate tests %s" % missing)
 
   tests.sort(key=lambda x: x.name)
   return tests
