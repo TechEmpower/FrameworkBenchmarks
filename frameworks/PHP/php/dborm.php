@@ -11,7 +11,7 @@ header("Content-type: application/json");
 // $pdo = new PDO('mysql:host=localhost;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
 
 # inclue the ActiveRecord library
-require_once 'php-activerecord/ActiveRecord.php';
+require_once 'vendor/php-activerecord/php-activerecord/ActiveRecord.php';
 
 ActiveRecord\Config::initialize(function($cfg)
 {
