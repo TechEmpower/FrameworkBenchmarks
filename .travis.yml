@@ -101,7 +101,7 @@ env:
     - "TESTDIR=PHP/cakephp"
     - "TESTDIR=PHP/hhvm"
     - "TESTDIR=PHP/php"
-    - "TESTDIR=PHP/php-codeigniter"
+    - "TESTDIR=PHP/codeigniter"
     - "TESTDIR=PHP/php-fatfree"
     - "TESTDIR=PHP/php-fuel"
     - "TESTDIR=PHP/kohana"
