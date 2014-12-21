@@ -86,6 +86,13 @@ def gather_tests(include = [], exclude=[], benchmarker=None):
         # not listed there, so we ignore it
         pass
 
+  # Ensure we were able to locate everything that was 
+  # explicitly included 
+  names = {test.name for test in tests}
+  if 0 != len(set(include) - set(names)):
+    missing = list(set(include) - set(names))
+    raise Exception("Unable to locate tests %s" % missing)
+
   tests.sort(key=lambda x: x.name)
   return tests
 
