@@ -733,6 +733,11 @@ def parse_config(config, directory, benchmarker):
   # The config object can specify multiple tests
   #   Loop over them and parse each into a FrameworkTest
   for test in config['tests']:
+
+    names = [name for (name,keys) in test.iteritems()]
+    if "default" not in names:
+      logging.warn("Framework %s does not define a default test in benchmark_config", config['framework'])
+    
     for test_name, test_keys in test.iteritems():
       # Prefix all test names with framework except 'default' test
       if test_name == 'default': 
