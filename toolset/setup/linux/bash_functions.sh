@@ -8,7 +8,10 @@
 # export http_proxy=http://10.0.1.0:3128
 
 fw_get () {
-  wget --no-check-certificate --trust-server-names "$@"
+  # -no-verbose disables the big progress bars but keeps
+  # other basic info
+  wget --no-verbose --no-check-certificate \
+    --trust-server-names "$@"
 }
 
 fw_untar() {
