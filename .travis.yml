@@ -94,7 +94,7 @@ env:
     - "TESTDIR=PHP/php"
     - "TESTDIR=PHP/codeigniter"
     - "TESTDIR=PHP/php-fatfree"
-    - "TESTDIR=PHP/php-fuel"
+    - "TESTDIR=PHP/fuel"
     - "TESTDIR=PHP/kohana"
     - "TESTDIR=PHP/php-laravel"
     - "TESTDIR=PHP/lithium"
