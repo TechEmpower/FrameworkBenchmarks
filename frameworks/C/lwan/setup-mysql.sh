@@ -6,6 +6,9 @@ export MYSQL_PASS=benchmarkdbpass
 export MYSQL_HOST=$DBHOST
 export MYSQL_DB=hello_world
 
+export LWAN_ROOT=${IROOT}/lwan
+export LWAN_BUILD=${LWAN_ROOT}/build
+
 rm -rf ${LWAN_BUILD}
 mkdir -p ${LWAN_BUILD}
 cd ${LWAN_BUILD}
