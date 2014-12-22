@@ -1,9 +1,18 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists $IROOT/xsp.installed)
+RETCODE=$(fw_exists ${IROOT}/xsp.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
-echo "Installing XSP"
-sudo apt-get -y install mono-xsp4 mono-fastcgi-server4
+fw_depends mono
 
-touch $IROOT/xsp.installed
+. mono-snapshot mono/20141222114925
+
+git clone git://github.com/mono/xsp
+cd xsp
+git checkout e272a2c006211b6b03be2ef5bbb9e3f8fefd0768
+
+./autogen.sh --prefix=${MONO_PREFIX}
+make
+sudo make install
+
+touch ${IROOT}/xsp.installed

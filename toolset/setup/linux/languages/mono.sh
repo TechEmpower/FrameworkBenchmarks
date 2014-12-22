@@ -1,9 +1,11 @@
 #!/bin/bash
 
 post_install () {
+  . mono-snapshot mono/20141222114925
+  
   echo "Installing SSL certificates"
-  sudo mozroots --import --sync --machine
-  echo -e 'y\ny\ny\n' | sudo certmgr -ssl -m https://nuget.org
+  sudo env "PATH=$PATH" mozroots --import --sync --machine
+  echo -e 'y\ny\ny\n' | sudo env "PATH=$PATH" certmgr -ssl -m https://nuget.org
 
   # For apps that need write access to the registry
   sudo mkdir -p /etc/mono/registry
@@ -16,11 +18,11 @@ RETCODE=$(fw_exists $IROOT/mono.installed)
   return 0
 }
 
-echo "Installing mono from official Xamarin packages for Debian"
-curl -s http://download.mono-project.com/repo/xamarin.gpg | sudo apt-key add -
-echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/xamarin.list
+echo "Installing mono from CI packages"
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+echo "deb http://jenkins.mono-project.com/repo/debian sid main" | sudo tee /etc/apt/sources.list.d/mono-jenkins.list
 sudo apt-get update
-sudo apt-get -y install mono-complete
+sudo apt-get install -y mono-snapshot-20141222114925
 
 post_install
 
