@@ -18,7 +18,7 @@
 **Platforms**
 
 * .NET Framework 4.5 (Windows)
-* Mono 3.10.0 (Linux)
+* Mono 3.99.0 (Linux)
 
 **Web Servers**
 
@@ -29,7 +29,8 @@
 **Web Stack**
 
 * ASP.NET 4.5
-* ASP.NET MVC Framework 4
+* ASP.NET MVC Framework 5.2.2
+* ASP.NET Razor 3.2.2
 
 **Databases**
 
