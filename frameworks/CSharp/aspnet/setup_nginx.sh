@@ -2,8 +2,9 @@
 
 sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 
+export PATH=$MONO_HOME/bin:$PATH
+
 # build
-. mono-snapshot mono/20141222114925
 cd src
 rm -rf bin obj
 xbuild Benchmarks.sln /p:Configuration=Release
@@ -27,6 +28,6 @@ $NGINX_HOME/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes ${MAX_THREADS};
 current=9001
 end=$(($current+$MAX_THREADS))
 while [ $current -lt $end ]; do
-  fastcgi-mono-server4 --applications=/:${pwd}/src --socket=tcp:127.0.0.1:$current &
+  fastcgi-mono-server4 --applications=/:${TROOT}/src --socket=tcp:127.0.0.1:$current &
   let current=current+1
 done
