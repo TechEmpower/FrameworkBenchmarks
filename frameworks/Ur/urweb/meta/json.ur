@@ -39,22 +39,20 @@ fun fromJson [a] (j : json a) (s : string) : a =
 
 fun escape s =
     let
-        val len = String.length s
-
-        fun esc i =
-            if i >= len then
-                "\""
-            else
+        fun esc s =
+            case s of
+                "" => "\""
+              | _ =>
                 let
-                    val ch = String.sub s i
+                    val ch = String.sub s 0
                 in
                     (if ch = #"\"" || ch = #"\\" then
                          "\\" ^ String.str ch
                      else
-                         String.str ch) ^ esc (i+1)
+                         String.str ch) ^ esc (String.suffix s 1)
                 end
     in
-        "\"" ^ esc 0
+        "\"" ^ esc s
     end
 
 fun unescape s =
@@ -210,7 +208,7 @@ fun json_record [ts ::: {Type}] (fl : folder ts) (jss : $(map json ts)) (names :
                              (fn [nm ::_] [t ::_] [r ::_] [[nm] ~ r] (j : json t) name v acc =>
                                  escape name ^ ":" ^ j.ToJson v ^ (case acc of
                                                                        "" => ""
-                                                                     | _ => "," ^ acc))
+                                                                     | acc => "," ^ acc))
                              "" fl jss names r ^ "}",
      FromJson = fn s =>
                    let
