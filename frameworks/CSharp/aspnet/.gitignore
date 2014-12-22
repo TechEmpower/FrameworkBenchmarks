@@ -4,3 +4,6 @@
 */obj/*
 lib/*
 !lib/.nuget
+lib/.nuget/NuGet.exe
+!lib/packages.config
+nginx.upstream.conf
