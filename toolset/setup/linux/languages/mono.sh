@@ -12,7 +12,7 @@ post_install () {
   sudo chmod 777 /etc/mono/registry
 }
 
-RETCODE=$(fw_exists $IROOT/mono.installed)
+RETCODE=$(fw_exists $IROOT/monosnap.installed)
 [ ! "$RETCODE" == 0 ] || { 
   post_install
   return 0
@@ -26,4 +26,4 @@ sudo apt-get install -y mono-snapshot-20141222114925
 
 post_install
 
-touch $IROOT/mono.installed
+touch $IROOT/monosnap.installed

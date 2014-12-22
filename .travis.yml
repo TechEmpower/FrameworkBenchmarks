@@ -167,7 +167,6 @@ script:
 
 cache:
   directories:
-    - installs/mono-3.2.8
     - installs/py2
     - installs/py3
     - installs/perl-5.18
