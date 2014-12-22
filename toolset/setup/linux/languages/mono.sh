@@ -1,30 +1,27 @@
 #!/bin/bash
 
-set -x
+post_install () {
+  echo "Installing SSL certificates"
+  sudo mozroots --import --sync --machine
+  echo -e 'y\ny\ny\n' | sudo certmgr -ssl -m https://nuget.org
 
-RETCODE=$(fw_exists ${IROOT}/mono.installed)
-[ ! "$RETCODE" == 0 ] || { \
-  echo "Installing RootCAs from Mozilla..."; 
-  sudo $IROOT/mono-3.6.0-install/bin/mozroots --import --sync;
-  return 0; }
+  # For apps that need write access to the registry
+  sudo mkdir -p /etc/mono/registry
+  sudo chmod 777 /etc/mono/registry
+}
 
-sudo apt-get install -y build-essential \
-             autoconf \
-             automake \
-             libtool \
-             zlib1g-dev \
-             pkg-config \
-             gettext
+RETCODE=$(fw_exists $IROOT/mono.installed)
+[ ! "$RETCODE" == 0 ] || { 
+  post_install
+  return 0
+}
 
-fw_get http://download.mono-project.com/sources/mono/mono-3.6.0.tar.bz2 -O mono-3.6.0.tar.bz2
-fw_untar mono-3.6.0.tar.bz2
+echo "Installing mono from official Xamarin packages for Debian"
+curl -s http://download.mono-project.com/repo/xamarin.gpg | sudo apt-key add -
+echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/xamarin.list
+sudo apt-get update
+sudo apt-get -y install mono-complete
 
-cd mono-3.6.0
-./autogen.sh --prefix=${IROOT}/mono-3.6.0-install
-make -j4 EXTERNAL_MCS=${IROOT}/mono-3.6.0/mcs/class/lib/monolite/basic.exe
-make install
+post_install
 
-echo "Installing RootCAs from Mozilla..."; 
-sudo ${IROOT}/mono-3.6.0-install/bin/mozroots --import --sync;
-
-touch ${IROOT}/mono.installed
+touch $IROOT/mono.installed
