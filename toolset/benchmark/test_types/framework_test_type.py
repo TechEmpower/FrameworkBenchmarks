@@ -75,8 +75,7 @@ class FrameworkTestType:
     # Get response body
     p = subprocess.Popen(["curl", "-m", "15", "-s", url], stdout=PIPE, stderr=PIPE)
     (out, err) = p.communicate()
-    #print "  Response (trimmed to 40 bytes): \"%s\"" % out[:40]
-    print "  Response: \"%s\"" % out
+    print "  Response (trimmed to 40 bytes): \"%s\"" % out[:40]
     return out
   
   def verify(self, base_url):
