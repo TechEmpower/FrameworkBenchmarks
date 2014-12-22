@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RETCODE=$(fw_exists onion)
+RETCODE=$(fw_exists $IROOT/onion.installed)
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
 git clone https://github.com/davidmoreno/onion.git
@@ -14,3 +14,5 @@ mkdir -p build
 cd build
 cmake ..
 make
+
+touch $IROOT/onion.installed

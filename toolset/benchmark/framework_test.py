@@ -206,7 +206,7 @@ class FrameworkTest:
       # started and needs to remain that way), then they should be
       # executed in the background.
       try:
-        retcode = subprocess.check_call('sudo -u %s -E -H bash -e %s.sh' % 
+        retcode = subprocess.check_call('sudo -u %s -E -H bash %s.sh' % 
           (self.benchmarker.runner_user, self.setup_file), 
           cwd=self.directory, shell=True, stderr=errout, stdout=out)
         if retcode == None:
