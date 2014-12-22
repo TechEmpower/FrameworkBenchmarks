@@ -40,6 +40,7 @@ sudo apt-get -yq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::
   liborc-0.4-0 libwxbase2.8-0 libwxgtk2.8-0 libgnutls-dev \
   libjson0-dev libmcrypt-dev libicu-dev gettext \
   libpq-dev mlton \
+  libjemalloc-dev                   `# Needed by lwan at least` \
   cloc dstat                        `# Collect resource usage statistics`
 
 # Install gcc-4.8
