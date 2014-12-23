@@ -8,11 +8,11 @@ export PATH=$MONO_HOME/bin:$PATH
 
 sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 
-# build
-cd src
-rm -rf bin obj
-xbuild Benchmarks.sln /p:Configuration=Release
-cd ..
+# extra cleaning
+sudo rm -rf src/bin src/obj /tmp/nuget
+
+xbuild src/Benchmarks.build.proj /t:Clean
+xbuild src/Benchmarks.build.proj /t:Build
 
 # nginx
 conf="upstream mono {\n"

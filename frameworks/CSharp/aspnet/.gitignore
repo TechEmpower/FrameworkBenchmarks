@@ -2,8 +2,5 @@
 *.suo
 */bin/*
 */obj/*
-lib/*
-!lib/.nuget
-lib/.nuget/NuGet.exe
-!lib/packages.config
+*/packages/*
 nginx.upstream.conf
