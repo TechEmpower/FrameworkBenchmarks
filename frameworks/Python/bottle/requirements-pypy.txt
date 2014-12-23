@@ -4,4 +4,3 @@ SQLAlchemy==0.9.7
 gunicorn==19.1
 PyMySQL==0.6.2
 tornado==3.2.2
-greenlet==0.4.4
