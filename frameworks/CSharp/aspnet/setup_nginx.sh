@@ -1,8 +1,12 @@
 #!/bin/bash
 
-sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
+set -e
 
+export NGINX_HOME=${IROOT}/nginx
+export MONO_HOME=/opt/mono-20141222114925
 export PATH=$MONO_HOME/bin:$PATH
+
+sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 
 # build
 cd src
