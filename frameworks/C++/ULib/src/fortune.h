@@ -15,19 +15,22 @@ public:
    U_MEMORY_ALLOCATOR
    U_MEMORY_DEALLOCATOR
 
-   int id;
+   uint32_t id;
    UString message;
-
-   // CONSTRUCTOR
 
    Fortune()
       {
       U_TRACE_REGISTER_OBJECT(5, Fortune, "")
+
+      // coverity[uninit_ctor]
+#  ifdef U_COVERITY_FALSE_POSITIVE
+      id = 0;
+#  endif
       }
 
-   Fortune(int _id, const UString& _message) : id(_id), message(_message)
+   Fortune(uint32_t _id, const UString& _message) : id(_id), message(_message)
       {
-      U_TRACE_REGISTER_OBJECT(5, Fortune, "%d,%.*S", _id, U_STRING_TO_TRACE(_message))
+      U_TRACE_REGISTER_OBJECT(5, Fortune, "%u,%.*S", _id, U_STRING_TO_TRACE(_message))
       }
 
    Fortune(const Fortune& f) : id(f.id), message((void*)U_STRING_TO_PARAM(f.message))
@@ -84,7 +87,7 @@ public:
       {
       U_TRACE(0, "UOrmTypeHandler<Fortune>::bindParam(%p)", stmt)
 
-      stmt->bindParam(U_ORM_TYPE_HANDLER(Fortune, id,      int));
+      stmt->bindParam(U_ORM_TYPE_HANDLER(Fortune, id,      unsigned int));
       stmt->bindParam(U_ORM_TYPE_HANDLER(Fortune, message, UString));
       }
 
@@ -92,7 +95,7 @@ public:
       {
       U_TRACE(0, "UOrmTypeHandler<Fortune>::bindResult(%p)", stmt)
 
-      stmt->bindResult(U_ORM_TYPE_HANDLER(Fortune, id,      int));
+      stmt->bindResult(U_ORM_TYPE_HANDLER(Fortune, id,      unsigned int));
       stmt->bindResult(U_ORM_TYPE_HANDLER(Fortune, message, UString));
       }
 };
@@ -107,7 +110,7 @@ public:
       {
       U_TRACE(0, "UJsonTypeHandler<Fortune>::toJSON(%p)", &json)
 
-      json.toJSON(U_JSON_TYPE_HANDLER(Fortune, id,      int));
+      json.toJSON(U_JSON_TYPE_HANDLER(Fortune, id,      unsigned int));
       json.toJSON(U_JSON_TYPE_HANDLER(Fortune, message, UString));
       }
 
@@ -115,7 +118,7 @@ public:
       {
       U_TRACE(0, "UJsonTypeHandler<Fortune>::fromJSON(%p)", &json)
 
-      json.fromJSON(U_JSON_TYPE_HANDLER(Fortune, id,      int));
+      json.fromJSON(U_JSON_TYPE_HANDLER(Fortune, id,      unsigned int));
       json.fromJSON(U_JSON_TYPE_HANDLER(Fortune, message, UString));
       }
 };

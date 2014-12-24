@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export UMEMPOOL="135,0,0,34,8465,129,-17,-22,41"
+export UMEMPOOL="545,0,0,37,8465,0,-17,-22,34"
 export ORM_DRIVER="mysql"
 export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass character-set=utf8 dbname=hello_world"
 
