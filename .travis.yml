@@ -103,7 +103,6 @@ env:
     - "TESTDIR=PHP/php-phalcon-micro"
     - "TESTDIR=PHP/php-phpixie"
     - "TESTDIR=PHP/php-pimf"
-    - "TESTDIR=PHP/php-senthot"
     - "TESTDIR=PHP/php-silex"
     - "TESTDIR=PHP/php-silex-orm"
     - "TESTDIR=PHP/php-silica"
