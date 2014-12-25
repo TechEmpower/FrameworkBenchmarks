@@ -8,3 +8,5 @@
 .DS_Store
 /tags
 .idea
+app/bootstrap.php.cache
+deploy/php-fpm.pid
