@@ -10,4 +10,7 @@ cd Python-3.4.2
 make -j4 --quiet
 make install --quiet
 
+${IROOT}/py3/bin/python3 -m ensurepip -U
+${IROOT}/py3/bin/pip3 install -U setuptools pip
+
 touch ${IROOT}/py3.installed
