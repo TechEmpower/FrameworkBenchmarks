@@ -51,8 +51,12 @@ class FortuneTestType(FrameworkTestType):
             current_neg.append(line[1:])
           elif line[0] == '-':
             current_pos.append(line[1:])
-          elif line[0] == '@' or line == diff[:-1]:
+          elif line[0] == '@':
             failures.append( ('fail', 
+              "`%s` should be `%s`" % (''.join(current_neg), ''.join(current_pos)),
+              url) )
+        if len(current_pos) != 0:
+          failures.append( ('fail', 
               "`%s` should be `%s`" % (''.join(current_neg), ''.join(current_pos)),
               url) )
       except: 
