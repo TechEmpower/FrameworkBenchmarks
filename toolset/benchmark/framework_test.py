@@ -205,13 +205,34 @@ class FrameworkTest:
       # run by the framework that need to continue (read: server has
       # started and needs to remain that way), then they should be
       # executed in the background.
+      command = 'sudo -u %s -E -H bash -e %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+      
+      debug_command = '''\
+        export FWROOT=%s && \\
+        export TROOT=%s && \\
+        export IROOT=%s && \\
+        export DBHOST=%s && \\
+        export MAX_THREADS=%s && \\
+        export OUT=%s && \\
+        export ERR=%s && \\
+        cd %s && \\
+        %s''' % (self.fwroot, 
+          self.directory, 
+          self.install_root, 
+          self.database_host, 
+          self.benchmarker.threads, 
+          os.path.join(self.fwroot, out.name), 
+          os.path.join(self.fwroot, err.name),
+          self.directory,
+          command)
+      logging.info("To run framework manually, copy/paste this:\n%s", debug_command)
+
       try:
-        retcode = subprocess.check_call('sudo -u %s -E -H bash -e %s.sh' % 
-          (self.benchmarker.runner_user, self.setup_file), 
-          cwd=self.directory, shell=True, stderr=errout, stdout=out)
-        if retcode == None:
-          retcode = 0
+        subprocess.check_call(command, cwd=self.directory, 
+          shell=True, stderr=errout, stdout=out)
+        retcode = 0
       except Exception:
+        logging.exception("Failure running setup.sh")
         retcode = 1
     with open('temp', 'r') as errout:
       # Read out temp error output in its entirety
