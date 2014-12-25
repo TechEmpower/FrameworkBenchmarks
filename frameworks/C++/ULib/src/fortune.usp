@@ -23,7 +23,7 @@ static void usp_fork_fortune()
    psql_fortune  = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
    pstmt_fortune = U_NEW(UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
 
-   if (pstmt_fortune == 0) U_ERROR("usp_fork_fortune(): we cound't connect to db, exiting...");
+   if (pstmt_fortune == 0) U_ERROR("usp_fork_fortune(): we cound't connect to db");
 
    pstmt_fortune->into(*pfortune);
 }
@@ -54,14 +54,12 @@ for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
    {
    elem = (*pvfortune)[i];
 
-   (void) u_xml_encode((const unsigned char*)U_STRING_TO_PARAM(elem->message), encoded);
-
    USP_PRINTF_ADD(
       "<tr>"
-      "<td>%d</td>"
-      "<td>%s</td>"
+      "<td>%u</td>"
+      "<td>%.*s</td>"
       "</tr>",
-      elem->id, encoded);
+      elem->id, u_xml_encode((const unsigned char*)U_STRING_TO_PARAM(elem->message), encoded), encoded);
    }
 
 pvfortune->clear();

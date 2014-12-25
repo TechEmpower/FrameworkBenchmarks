@@ -36,7 +36,7 @@ static void usp_fork_update()
    if (pstmt1 == 0 ||
        pstmt2 == 0)
       {
-      U_ERROR("usp_fork_update(): we cound't connect to db, exiting...");
+      U_ERROR("usp_fork_update(): we cound't connect to db");
       }
 
    pstmt1->use( pworld_update->id);
@@ -80,14 +80,14 @@ while (true)
 
    pstmt1->execute();
 
-   U_INTERNAL_DUMP("pworld_update->randomNumber = %d", pworld_update->randomNumber)
+   U_INTERNAL_DUMP("pworld_update->randomNumber = %u", pworld_update->randomNumber)
 
    pworld_update->randomNumber = u_get_num_random(10000);
 
    pstmt2->execute();
 
 #ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%d,\"randomNumber\":%d}", pworld_update->id, pworld_update->randomNumber);
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_update->id, pworld_update->randomNumber);
 #endif
 
    pvworld_update->push_back(U_NEW(World(*pworld_update)));

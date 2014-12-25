@@ -23,7 +23,7 @@ RETCODE=$(fw_exists ${ULIB_INSTALLED_FILE})
 
 # ULib is only built during installation as a dependency sanity check
 #sudo apt-get update
- sudo apt-get install libmysqlclient-dev libsqlite3-dev
+ sudo apt-get install -y libmysqlclient-dev libsqlite3-dev postgresql-server-dev-9.3 libpq-dev
 
 # Create a run directory for ULIB
 [ ! -e ${ULIB_INSTALLED_FILE} -a -d ${IROOT}/ULib ] && rm -rf ${IROOT}/ULib*
@@ -41,6 +41,7 @@ userver {
  PREFORK_CHILD 8
  LISTEN_BACKLOG 8192
  MAX_KEEP_ALIVE 8192
+ ORM_DRIVER "mysql pgsql sqlite"
  DOCUMENT_ROOT $ULIB_DOCUMENT_ROOT
  PID_FILE ${ULIB_ROOT}/userver_tcp.pid
 }
@@ -56,17 +57,36 @@ fw_untar  ULib-${ULIB_VERSION}.tar.gz
 
 cd ULib-$ULIB_VERSION
 
+# Check for the compiler support (We want at least g++ 4.8)
+
+CC=gcc  # C   compiler command
+CXX=g++ # C++ compiler command
+
+gcc_version=`g++ -dumpversion`
+
+case "$gcc_version" in
+  3*|4.0*|4.1*|4.2*|4.3*|4.4*|4.5*|4.6*|4.7*)
+	  CC='gcc-4.8'
+	 CXX='g++-4.8'
+  ;;
+esac
+
+export CC CXX
+
 # AVOID "configure: error: newly created file is older than distributed files! Check your system clock"
 find . -exec touch {} \;
 
 ./configure --prefix=$ULIB_ROOT \
-            --disable-static \
-            --with-mysql --with-sqlite3 \
-            --without-ssl --without-pcre --without-expat \
-            --without-libz --without-libuuid --without-magic \
-            --enable-static-orm-driver='mysql sqlite' --enable-static-server-plugin=http
-#           --enable-debug \
+   --disable-static \
+   --with-mysql --with-pgsql --with-sqlite3 \
+   --without-ssl --without-pcre --without-expat \
+   --without-libz --without-libuuid --without-magic \
+   --enable-static-orm-driver='mysql pgsql sqlite' --enable-static-server-plugin=http
+#  --enable-debug \
+
 make install
+
+cp -r tests/examples/benchmark/FrameworkBenchmarks/ULib/db $ULIB_ROOT
 
 # 3. Compile usp pages for benchmark
 cd src/ulib/net/server/plugin/usp
@@ -80,7 +100,5 @@ fi
 mkdir -p $ULIB_DOCUMENT_ROOT
 cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so $ULIB_DOCUMENT_ROOT
 
-cd $IROOT
-cp -r ULib-1.4.2/tests/examples/benchmark/FrameworkBenchmarks/ULib/db $ULIB_ROOT
 
 touch ${ULIB_INSTALLED_FILE}
