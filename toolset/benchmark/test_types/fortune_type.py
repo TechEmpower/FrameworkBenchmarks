@@ -28,8 +28,34 @@ class FortuneTestType(FrameworkTestType):
 
     parser = FortuneHTMLParser()
     parser.feed(body)
-    if parser.isValidFortune(self.out):
+    (valid, diff) = parser.isValidFortune(self.out)
+    if valid:
       return [('pass','',url)]
     else:
-      return [('fail','Invalid according to FortuneHTMLParser',url)]
+      failures = [('fail','Invalid according to FortuneHTMLParser',url)]
+      # Catch exceptions because we are relying on internal code
+      try:
+        # Parsing this: 
+        # --- Valid
+        # +++ Response
+        # @@ -1 +1 @@
+        #
+        # -<!doctype html><html><head><title>Fortunes</title></head><body><table>
+        # +<!doctype html><html><head><meta></meta><title>Fortunes</title></head><body><div><table>
+        # @@ -16 +16 @@
+        
+        current_neg = []
+        current_pos = []
+        for line in diff[3:]:
+          if line[0] == '+':
+            current_neg.append(line[1:])
+          elif line[0] == '-':
+            current_pos.append(line[1:])
+          elif line[0] == '@' or line == diff[:-1]:
+            failures.append( ('fail', 
+              "`%s` should be `%s`" % (''.join(current_neg), ''.join(current_pos)),
+              url) )
+      except: 
+        pass
+      return failures 
 
