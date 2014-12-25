@@ -8,14 +8,14 @@ imports:
 framework:
     router:
         strict_requirements: null
-    #validation:
+    # validation:
     #    cache: apc
 
 doctrine:
     orm:
-        metadata_cache_driver: redis
-        #result_cache_driver: apc
-        query_cache_driver: redis
+        # metadata_cache_driver: redis
+        # result_cache_driver: apc
+        # query_cache_driver: redis
 
 monolog:
     handlers:
