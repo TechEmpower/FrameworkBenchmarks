@@ -9,7 +9,7 @@ export PHP_FPM=$PHP_HOME/sbin/php-fpm
 export NGINX_HOME=${IROOT}/nginx
 
 ${PHP_HOME}/bin/php app/console cache:clear \
-  --env=prod --no-debug
+  --env=prod --no-debug --no-warmup
 ${PHP_HOME}/bin/php app/console cache:warmup \
   --env=prod --no-debug
 
