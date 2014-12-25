@@ -107,8 +107,8 @@ env:
     - "TESTDIR=PHP/php-silex-orm"
     - "TESTDIR=PHP/php-silica"
     - "TESTDIR=PHP/php-slim"
-    - "TESTDIR=PHP/php-symfony2"
-    - "TESTDIR=PHP/php-symfony2-stripped"
+    - "TESTDIR=PHP/symfony2"
+    - "TESTDIR=PHP/symfony2-stripped"
     - "TESTDIR=PHP/php-yaf"
     - "TESTDIR=PHP/Yii2"
     - "TESTDIR=PHP/php-zend-framework"
@@ -163,10 +163,4 @@ install:
 script: 
   # Pick one test in this directory and verify
   - time ./toolset/run-ci.py verify "$TESTDIR"
-
-cache:
-  directories:
-    - installs/mono-3.2.8
-    - installs/py2
-    - installs/py3
-    - installs/perl-5.18
+  

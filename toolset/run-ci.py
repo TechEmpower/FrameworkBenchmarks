@@ -426,6 +426,13 @@ class CIRunnner:
     until nc -z localhost 27017 ; do echo Waiting for MongoDB; sleep 1; done
     mongod --version
     mongo < config/create.js
+
+    # =============Modify Configurations===========================
+    # It can be useful to enable debug features for verification 
+    # inside Travis-CI
+    # =======================================================
+
+    sed -i 's|display_errors\] = off|display_errors\] = on|' config/php-fpm.conf
     '''
 
     def sh(command):
