@@ -46,11 +46,11 @@ rm -rf $TEMP
 file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g"
 sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
 
-# debug
-find ~/.config
-
 # import SSL certificates
 mozroots --import --sync
 echo -e 'y\ny\ny\n' | certmgr -ssl https://nuget.org
+
+# debug
+find ~/.config
 
 touch $IROOT/mono.installed
