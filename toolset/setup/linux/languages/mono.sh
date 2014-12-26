@@ -48,9 +48,6 @@ sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_
 
 # import SSL certificates
 mozroots --import --sync
-echo -e 'y\ny\ny\n' | certmgr -ssl https://nuget.org
-
-# debug
-find ~/.config
+#echo -e 'y\ny\ny\n' | certmgr -ssl https://nuget.org
 
 touch $IROOT/mono.installed

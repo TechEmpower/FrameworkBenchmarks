@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# debug
-find ~/.config
-
 set -e
 
 # mono environment variables
