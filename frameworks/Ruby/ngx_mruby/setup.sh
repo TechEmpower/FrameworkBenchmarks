@@ -3,4 +3,4 @@
 sed -i 's|CWD|'"${TROOT}"'|g' nginx.conf
 sed -i 's|DBHOSTNAME|'"${DBHOST}"'|g' nginx.conf
 
-${IROOT}/nginx_mruby/sbin/nginx -c $TROOT/nginx.conf -g "worker_processes '"${MAX_THREADS}"';" &
+${IROOT}/nginx_mruby/sbin/nginx -c $TROOT/nginx.conf &
