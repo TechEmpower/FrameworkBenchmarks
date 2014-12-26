@@ -1,32 +1,51 @@
 #!/bin/bash
 
-set -e
+RETCODE=$(fw_exists $IROOT/mono.installed)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
-post_install () {
-  . mono-snapshot mono/20141222114925
-  
-  echo "Installing SSL certificates"
-  sudo env "PATH=$PATH" mozroots --import --sync --machine
-  echo -e 'y\ny\ny\n' | sudo env "PATH=$PATH" certmgr -ssl -m https://nuget.org
+# what do we want? latest mono
+# how do we want it? already compiled from packages but without sudo
 
-  # For apps that need write access to the registry
-  sudo mkdir -p /etc/mono/registry
-  sudo chmod 777 /etc/mono/registry
-}
+# save environment
+cat > $IROOT/mono.installed <<'END'
+export SNAPDATE=20141220092712
+export MONO_HOME=$IROOT/mono-snapshot-$SNAPDATE
+export MONO_PATH=$MONO_HOME/lib/mono/4.5
+export MONO_CFG_DIR=$MONO_HOME/etc
+export PATH=$MONO_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$MONO_HOME/lib:$LD_LIBRARY_PATH
+export PKG_CONFIG_PATH=$MONO_HOME/lib/pkgconfig:$PKG_CONFIG_PATH
+END
 
-RETCODE=$(fw_exists $IROOT/monosnap.installed)
-[ ! "$RETCODE" == 0 ] || { 
-  post_install
-  return 0
-}
+# load environment
+. $IROOT/mono.installed
 
-echo "Installing mono from packages"
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list
-echo "deb http://jenkins.mono-project.com/repo/debian sid main" | sudo tee /etc/apt/sources.list.d/mono-jenkins.list
-sudo apt-get update
-sudo apt-get install -y -f cli-common mono-snapshot-20141222114925
+# temp dir for extracting archives
+TEMP=$IROOT/mono-snapshot-${SNAPDATE}-temp
 
-post_install
+# start fresh
+rm -rf $TEMP && mkdir -p $TEMP
+rm -rf $MONO_HOME && mkdir -p $MONO_HOME
 
-touch $IROOT/monosnap.installed
+# download .debs and extract them into $TEMP dir
+fw_get http://jenkins.mono-project.com/repo/debian/pool/main/m/mono-snapshot-${SNAPDATE}/mono-snapshot-${SNAPDATE}_${SNAPDATE}-1_amd64.deb
+fw_get http://jenkins.mono-project.com/repo/debian/pool/main/m/mono-snapshot-${SNAPDATE}/mono-snapshot-${SNAPDATE}-assemblies_${SNAPDATE}-1_all.deb
+dpkg-deb -x mono-*amd64.deb $TEMP
+dpkg-deb -x mono-*assemblies*.deb $TEMP
+
+# move /opt/mono-$SNAPDATE to /installs
+mv $TEMP/opt/mono-*/* $MONO_HOME
+
+# cleanup
+rm mono-*.deb
+rm -rf $TEMP
+
+# replace /opt/mono-$SNAPDATE path
+file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g"
+sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
+
+# import SSL certificates
+#mozroots --import --sync
+echo -e 'y\ny\ny\n' | certmgr -ssl https://nuget.org
+
+touch $IROOT/mono.installed
