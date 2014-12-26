@@ -41,7 +41,7 @@ sudo apt-get -yq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::
   libjson0-dev libmcrypt-dev libicu-dev gettext \
   libpq-dev mlton \
   libjemalloc-dev                   `# Needed by lwan at least` \
-  libhiredis-dev                    `# used for compiling ngx_mruby`
+  libhiredis-dev                    `# Redis client - Needed by ngx_mruby at least` \
   cloc dstat                        `# Collect resource usage statistics`
 
 # Install gcc-4.8
