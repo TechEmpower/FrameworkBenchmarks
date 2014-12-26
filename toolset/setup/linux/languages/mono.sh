@@ -1,7 +1,16 @@
 #!/bin/bash
 
+post_install() {
+  # load environment
+  . $IROOT/mono.installed
+
+  # import SSL certificates
+  #mozroots --import --sync
+  echo -e 'y\ny\ny\n' | certmgr -ssl https://nuget.org
+}
+
 RETCODE=$(fw_exists $IROOT/mono.installed)
-[ ! "$RETCODE" == 0 ] || { return 0; }
+[ ! "$RETCODE" == 0 ] || { post_install; return 0; }
 
 # what do we want? latest mono
 # how do we want it? already compiled from packages but without sudo
@@ -44,8 +53,6 @@ rm -rf $TEMP
 file $MONO_HOME/bin/* | grep "POSIX shell script" | awk -F: '{print $1}' | xargs sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g"
 sed -i "s|/opt/mono-$SNAPDATE|$MONO_HOME|g" $MONO_HOME/lib/pkgconfig/*.pc $MONO_HOME/etc/mono/config
 
-# import SSL certificates
-#mozroots --import --sync
-echo -e 'y\ny\ny\n' | certmgr -ssl https://nuget.org
+post_install
 
 touch $IROOT/mono.installed
