@@ -19,7 +19,7 @@ end
 r = Nginx::Request.new
 
 num_queries = r.var.arg_queries.to_i
-num_queries = 1 if num_queries < 0
+num_queries = 1 if num_queries < 1
 num_queries = 500 if num_queries > 500
 
 world = World.new
