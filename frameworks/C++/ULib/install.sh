@@ -28,6 +28,9 @@ if [ ! -d "$ULIB_ROOT" ]; then
   mkdir -p $ULIB_ROOT
 fi
 
+# AVOID "fatal error: postgres_fe.h: No such file or directory"
+sudo apt-get install -y postgresql-server-dev-all
+
 # Add a simple configuration file to it
 cd $ULIB_ROOT
 if [ ! -f "benchmark.cfg" ]; then
