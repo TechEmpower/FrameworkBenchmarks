@@ -12,7 +12,7 @@ git clone git://github.com/matsumoto-r/ngx_mruby.git
 cd ngx_mruby
 git submodule init
 git submodule update
-[ -d mruby/mrbgems/mruby-mysql ] || git clone git@github.com:mattn/mruby-mysql.git mruby/mrbgems/mruby-mysql
+[ -d mruby/mrbgems/mruby-mysql ] || git clone git://github.com/mattn/mruby-mysql.git mruby/mrbgems/mruby-mysql
 
 NGINX_CONFIG_OPT_ENV="--prefix=${PREFIX} --with-http_stub_status_module" sh build.sh
 make install
