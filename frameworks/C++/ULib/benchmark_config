@@ -1,6 +1,29 @@
 {
   "framework": "ULib",
   "tests": [{
+    "default": {
+      "setup_file": "setup_mysql",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/query?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "ULib",
+      "language": "C++",
+      "orm": "Micro",
+      "platform": "ULib",
+      "webserver": "userver_tcp",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ULib-mysql",
+      "notes": "",
+      "versus": ""
+    },
     "mysql": {
       "setup_file": "setup_mysql",
       "json_url": "/json",

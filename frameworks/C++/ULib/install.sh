@@ -21,10 +21,6 @@ ULIB_INSTALLED_FILE="${IROOT}/ULib-${ULIB_VERSION}.installed"
 RETCODE=$(fw_exists ${ULIB_INSTALLED_FILE})
 [ ! "$RETCODE" == 0 ] || { return 0; }
 
-# ULib is only built during installation as a dependency sanity check
-#sudo apt-get update
- sudo apt-get install -y libmysqlclient-dev libsqlite3-dev postgresql-server-dev-9.3 libpq-dev
-
 # Create a run directory for ULIB
 [ ! -e ${ULIB_INSTALLED_FILE} -a -d ${IROOT}/ULib ] && rm -rf ${IROOT}/ULib*
 
