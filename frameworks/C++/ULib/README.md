@@ -40,10 +40,10 @@ Output
 HTTP/1.1 200 OK
 Date: Thu, 03 Jul 2014 10:11:10 GMT
 Server: ULib 
-Content-Length: 27
+Content-Length: 30
 Content-Type: application/json; charset=UTF-8
 
-{"message":"Hello, World!"}
+{ "message": "Hello, World!" }
 ```
 
 [/db](http://www.techempower.com/benchmarks/#section=db)
