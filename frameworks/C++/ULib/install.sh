@@ -75,6 +75,7 @@ export CC CXX
 # AVOID "configure: error: newly created file is older than distributed files! Check your system clock"
 find . -exec touch {} \;
 
+USP_LIBS="-ljson" \
 ./configure --prefix=$ULIB_ROOT \
    --disable-static \
    --with-mysql --with-pgsql --with-sqlite3 \
