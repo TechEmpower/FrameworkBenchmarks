@@ -42,7 +42,7 @@ userver {
  MAX_KEEP_ALIVE 8192
  ORM_DRIVER "mysql pgsql sqlite"
  DOCUMENT_ROOT $ULIB_DOCUMENT_ROOT
- PID_FILE ${ULIB_ROOT}/userver_tcp.pid
+#PID_FILE ${ULIB_ROOT}/userver_tcp.pid
 }
 EOF
 fi
@@ -75,7 +75,6 @@ export CC CXX
 # AVOID "configure: error: newly created file is older than distributed files! Check your system clock"
 find . -exec touch {} \;
 
-USP_LIBS="-ljson" \
 USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 ./configure --prefix=$ULIB_ROOT \
    --disable-static \
@@ -84,6 +83,7 @@ USP_FLAGS="-DAS_cpoll_cppsp_DO" \
    --without-libz --without-libuuid --without-magic \
    --enable-static-orm-driver='mysql pgsql sqlite' --enable-static-server-plugin=http
 #  --enable-debug \
+#USP_LIBS="-ljson" \
 
 make install
 
@@ -100,6 +100,5 @@ fi
 
 mkdir -p $ULIB_DOCUMENT_ROOT
 cp .libs/db.so .libs/fortune.so .libs/json.so .libs/plaintext.so .libs/query.so .libs/update.so $ULIB_DOCUMENT_ROOT
-
 
 touch ${ULIB_INSTALLED_FILE}
