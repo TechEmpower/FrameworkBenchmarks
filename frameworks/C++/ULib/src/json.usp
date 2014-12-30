@@ -1,6 +1,4 @@
 <!--#declaration
-#define AS_cpoll_cppsp_DO
-
 #ifdef AS_cpoll_cppsp_DO
 #  include <json/json.h>
 #else

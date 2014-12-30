@@ -76,6 +76,7 @@ export CC CXX
 find . -exec touch {} \;
 
 USP_LIBS="-ljson" \
+USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 ./configure --prefix=$ULIB_ROOT \
    --disable-static \
    --with-mysql --with-pgsql --with-sqlite3 \

@@ -1,8 +1,6 @@
 <!--#declaration
 #include "world.h"
 
-#define AS_cpoll_cppsp_DO
-
 #ifndef AS_cpoll_cppsp_DO
 static UValue* pvalue;
 #endif
