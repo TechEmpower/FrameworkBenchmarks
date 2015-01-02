@@ -1,0 +1,2 @@
+uwsgi_params
+*.pid

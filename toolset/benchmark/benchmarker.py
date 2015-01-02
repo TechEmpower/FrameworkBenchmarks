@@ -655,11 +655,9 @@ class Benchmarker:
 
   ############################################################
   # __stop_test(benchmarker)
-  # Stops a running test
+  # Stops all running tests
   ############################################################
   def __stop_test(self, out, err):
-
-    # Meganuke
     try:
       subprocess.check_call('sudo killall -s 9 -u %s' % self.runner_user, shell=True, stderr=err, stdout=out)
       retcode = 0

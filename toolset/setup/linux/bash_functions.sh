@@ -8,7 +8,17 @@
 # export http_proxy=http://10.0.1.0:3128
 
 fw_get () {
-  wget --no-check-certificate --trust-server-names "$@"
+  # Start a background process to print a dot every
+  # 30 seconds (avoids travis-ci 10min timeout)
+  while :;do sleep 30; echo -n .;done &
+
+  # -no-verbose disables the big progress bars but keeps
+  # other basic info
+  wget --no-verbose --no-check-certificate \
+    --trust-server-names "$@"
+
+  # Ensure the background job is killed if we are
+  kill $!; trap 'kill $!' SIGTERM
 }
 
 fw_untar() {

@@ -164,7 +164,6 @@ class FrameworkTest:
     # Load profile for this installation
     profile="%s/bash_profile.sh" % self.directory
     if not os.path.exists(profile):
-      logging.warning("Directory %s does not have a bash_profile.sh" % self.directory)
       profile="$FWROOT/config/benchmark_profile"
 
     # Setup variables for TROOT and IROOT
@@ -206,13 +205,34 @@ class FrameworkTest:
       # run by the framework that need to continue (read: server has
       # started and needs to remain that way), then they should be
       # executed in the background.
+      command = 'sudo -u %s -E -H bash -e %s.sh' % (self.benchmarker.runner_user, self.setup_file)
+      
+      debug_command = '''\
+        export FWROOT=%s && \\
+        export TROOT=%s && \\
+        export IROOT=%s && \\
+        export DBHOST=%s && \\
+        export MAX_THREADS=%s && \\
+        export OUT=%s && \\
+        export ERR=%s && \\
+        cd %s && \\
+        %s''' % (self.fwroot, 
+          self.directory, 
+          self.install_root, 
+          self.database_host, 
+          self.benchmarker.threads, 
+          os.path.join(self.fwroot, out.name), 
+          os.path.join(self.fwroot, err.name),
+          self.directory,
+          command)
+      logging.info("To run framework manually, copy/paste this:\n%s", debug_command)
+
       try:
-        retcode = subprocess.check_call('sudo -u %s -E -H bash -e %s.sh' % 
-          (self.benchmarker.runner_user, self.setup_file), 
-          cwd=self.directory, shell=True, stderr=errout, stdout=out)
-        if retcode == None:
-          retcode = 0
+        subprocess.check_call(command, cwd=self.directory, 
+          shell=True, stderr=errout, stdout=out)
+        retcode = 0
       except Exception:
+        logging.exception("Failure running setup.sh")
         retcode = 1
     with open('temp', 'r') as errout:
       # Read out temp error output in its entirety
@@ -587,7 +607,7 @@ class FrameworkTest:
 
   def __getattr__(self, name):
     """For backwards compatibility, we used to pass benchmarker 
-    as the argument to the setup.py files"""
+    as the argument to the setup.sh files"""
     try:
       x = getattr(self.benchmarker, name)
     except AttributeError:
@@ -699,29 +719,12 @@ class FrameworkTest:
     if benchmarker.install_strategy is 'pertest':
       self.install_root="%s/pertest/%s" % (self.install_root, name)
 
-    # Used in setup.py scripts for consistency with 
+    # Used in setup.sh scripts for consistency with 
     # the bash environment variables
     self.troot = self.directory
     self.iroot = self.install_root
 
     self.__dict__.update(args)
-
-    # ensure directory has __init__.py file so that we can use it as a Python package
-    if not os.path.exists(os.path.join(directory, "__init__.py")):
-      logging.warning("Please add an empty __init__.py file to directory %s", directory)
-      open(os.path.join(directory, "__init__.py"), 'w').close()
-
-    # Import the module (TODO - consider using sys.meta_path)
-    # Note: You can see the log output if you really want to, but it's a *ton*
-    dir_rel_to_fwroot = os.path.relpath(os.path.dirname(directory), self.fwroot)
-    if dir_rel_to_fwroot != ".":
-      sys.path.append("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
-      logging.log(0, "Adding %s to import %s.%s", dir_rel_to_fwroot, os.path.basename(directory), self.setup_file)
-      #self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
-      sys.path.remove("%s/%s" % (self.fwroot, dir_rel_to_fwroot))
-    else:
-      logging.log(0, "Importing %s.%s", directory, self.setup_file)
-      #self.setup_module = setup_module = importlib.import_module(os.path.basename(directory) + '.' + self.setup_file)
   ############################################################
   # End __init__
   ############################################################
@@ -751,6 +754,11 @@ def parse_config(config, directory, benchmarker):
   # The config object can specify multiple tests
   #   Loop over them and parse each into a FrameworkTest
   for test in config['tests']:
+
+    names = [name for (name,keys) in test.iteritems()]
+    if "default" not in names:
+      logging.warn("Framework %s does not define a default test in benchmark_config", config['framework'])
+    
     for test_name, test_keys in test.iteritems():
       # Prefix all test names with framework except 'default' test
       if test_name == 'default': 

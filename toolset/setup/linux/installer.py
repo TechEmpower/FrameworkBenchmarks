@@ -55,10 +55,12 @@ class Installer:
   ############################################################
   def __install_server_software(self):
     print("\nINSTALL: Installing server software (strategy=%s)\n"%self.strategy)
-    # Install global prerequisites
+    # Install global prerequisites (requires sudo)
     bash_functions_path='$FWROOT/toolset/setup/linux/bash_functions.sh'
     prereq_path='$FWROOT/toolset/setup/linux/prerequisites.sh'
     self.__run_command(". %s && . %s" % (bash_functions_path, prereq_path))
+    self.__run_command("sudo chown -R %s:%s %s" % (self.benchmarker.runner_user,
+      self.benchmarker.runner_user, os.path.join(self.fwroot, self.install_dir)))
 
     tests = gather_tests(include=self.benchmarker.test, 
       exclude=self.benchmarker.exclude,
@@ -99,7 +101,6 @@ class Installer:
       # Load profile for this installation
       profile="%s/bash_profile.sh" % test_dir
       if not os.path.exists(profile):
-        logging.warning("Directory %s does not have a bash_profile"%test_dir)
         profile="$FWROOT/config/benchmark_profile"
       else:
         logging.info("Loading environment from %s (cwd=%s)", profile, test_dir)
@@ -121,7 +122,7 @@ class Installer:
       # Move back to previous directory
       os.chdir(previousDir)
 
-    self.__run_command("sudo apt-get -y autoremove");    
+    self.__run_command("sudo apt-get -yq autoremove");    
 
     print("\nINSTALL: Finished installing server software\n")
   ############################################################

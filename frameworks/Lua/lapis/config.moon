@@ -9,6 +9,7 @@ config "production", ->
   postgres {
     backend: "pgmoon"
     database: "hello_world"
-    user: "postgres"
+    user: "benchmarkdbuser"
+    password: "benchmarkdbpass"
     host: "DBHOSTNAME"
   }

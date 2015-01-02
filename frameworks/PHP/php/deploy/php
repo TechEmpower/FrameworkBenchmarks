@@ -1,6 +1,6 @@
 <VirtualHost *:8080>
-  Alias /php/ "/home/ubuntu/FrameworkBenchmarks/frameworks/PHP/php/"
-  <Directory /home/ubuntu/FrameworkBenchmarks/frameworks/PHP/php/>
+  Alias /php/ "TEST_ROOT/"
+  <Directory TEST_ROOT/>
           Options Indexes FollowSymLinks MultiViews
           #AllowOverride None
           Order allow,deny

@@ -208,7 +208,9 @@ First, clone our repository.
 
 ```bash
 git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
-sudo pip install -r FrameworkBenchmarks/config/python_requirements.txt
+cd FrameworkBenchmarks
+source toolset/setup/linux/prerequisites.sh
+sudo pip install -r config/python_requirements.txt
 ```
 
 To install TFB components onto the various servers, you must provide

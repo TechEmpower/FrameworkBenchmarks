@@ -5,7 +5,7 @@ SQLAlchemy==0.9.7
 Flask-SQLAlchemy==1.0
 mysqlclient==1.3.1
 gunicorn==19.1
-meinheld==0.5.6
+meinheld==0.5.7
 uwsgi
 
-greenlet==0.4.4
+greenlet==0.4.5
