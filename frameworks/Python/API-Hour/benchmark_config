@@ -1,16 +1,16 @@
 {
-  "framework": "API-Hour",
+  "framework": "aiohttp.web",
   "tests": [{
     "default": {
       "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "port": 8000,
+      "port": 8008,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Micro",
       "database": "Postgres",
-      "framework": "API-Hour",
+      "framework": "aiohttp.web",
       "language": "Python",
       "orm": "Raw",
       "platform": "API-Hour",
