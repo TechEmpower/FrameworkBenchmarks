@@ -1,12 +1,12 @@
 import logging
 import asyncio
+import os
 
 import aiopg
-import os
 import psycopg2.extras
+import aiohttp.web
 
 import api_hour
-import api_hour.aiorest
 
 from . import endpoints
 
@@ -18,21 +18,20 @@ class Container(api_hour.Container):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Servers
-        self.servers['http'] = api_hour.aiorest.Application(*args, **kwargs)
+        self.servers['http'] = aiohttp.web.Application(loop=kwargs['loop'])
         self.servers['http'].ah_container = self # keep a reference to Container
         # routes
-        self.servers['http'].add_url('GET', '/json', endpoints.world.json)
-        self.servers['http'].add_url('GET', '/db', endpoints.world.db)
-        self.servers['http'].add_url('GET', '/queries', endpoints.world.queries)
+        self.servers['http'].router.add_route('GET', '/json', endpoints.world.json)
+        self.servers['http'].router.add_route('GET', '/db', endpoints.world.db)
+        self.servers['http'].router.add_route('GET', '/queries', endpoints.world.queries)
 
     def make_servers(self):
-        return [self.servers['http'].make_handler]
+        return [self.servers['http'].make_handler()]
 
     @asyncio.coroutine
     def start(self):
         yield from super().start()
         LOG.info('Starting engines...')
-        # Add your custom engine here, example with PostgreSQL:
         self.engines['pg'] = self.loop.create_task(aiopg.create_pool(host=os.environ.get('DBHOST', '127.0.0.1'),
                                                                      sslmode='disable',
                                                                      port=int(self.config['engines']['pg']['port']),
@@ -50,7 +49,6 @@ class Container(api_hour.Container):
     @asyncio.coroutine
     def stop(self):
         LOG.info('Stopping engines...')
-        # Add your custom end here, example with PostgreSQL:
         if 'pg' in self.engines:
             if self.engines['pg'].done():
                 self.engines['pg'].result().terminate()
