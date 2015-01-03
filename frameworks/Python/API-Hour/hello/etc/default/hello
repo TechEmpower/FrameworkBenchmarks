@@ -1,0 +1,3 @@
+# Start the daemon by default, let the user disable it.
+START_DAEMON=yes
+DAEMON_ARGS="--config_dir=/etc/hello"

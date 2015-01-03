@@ -1,0 +1,24 @@
+{
+  "framework": "API-Hour",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "API-Hour",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "API-Hour",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "API-Hour",
+      "notes": "Python 3.4 + AsyncIO"
+    }
+  }]
+}
