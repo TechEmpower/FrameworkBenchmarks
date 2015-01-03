@@ -1,9 +1,11 @@
 import logging
 import asyncio
 
+from aiohttp.web import Response
+
 from ..utils import JSON
 from ..services import queries_number
-from ..services.world import get_random_record, get_random_records
+from ..services.world import get_random_record, get_random_records, update_random_records
 
 LOG = logging.getLogger(__name__)
 
@@ -26,3 +28,16 @@ def queries(request):
     limit = queries_number(request.GET.get('queries', 1))
 
     return JSON((yield from get_random_records(container, limit)))
+
+@asyncio.coroutine
+def updates(request):
+    """Test type 5: Database updates"""
+    container = request.app.ah_container
+    limit = queries_number(request.GET.get('queries', 1))
+
+    return JSON((yield from update_random_records(container, limit)))
+
+@asyncio.coroutine
+def plaintext(request):
+    """Test type 6: Plaintext"""
+    return Response(text='Hello, World!')

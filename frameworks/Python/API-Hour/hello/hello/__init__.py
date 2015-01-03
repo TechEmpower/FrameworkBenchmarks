@@ -24,6 +24,8 @@ class Container(api_hour.Container):
         self.servers['http'].router.add_route('GET', '/json', endpoints.world.json)
         self.servers['http'].router.add_route('GET', '/db', endpoints.world.db)
         self.servers['http'].router.add_route('GET', '/queries', endpoints.world.queries)
+        self.servers['http'].router.add_route('GET', '/updates', endpoints.world.updates)
+        self.servers['http'].router.add_route('GET', '/plaintext', endpoints.world.plaintext)
 
     def make_servers(self):
         return [self.servers['http'].make_handler()]
