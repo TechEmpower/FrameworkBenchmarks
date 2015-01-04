@@ -2,8 +2,8 @@ import logging
 import asyncio
 
 from aiohttp.web import Response
+from api_hour.plugins.aiohttp import JSON
 
-from ..utils import JSON
 from ..services import queries_number
 from ..services.world import get_random_record, get_random_records, update_random_records
 
