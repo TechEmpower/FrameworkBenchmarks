@@ -1,3 +1,3 @@
 #!/bin/bash
 
-$PY3_API_HOUR -k api_hour.Worker hello:Container -c api_hour_conf.py &
+$PY3_API_HOUR -c api_hour_conf.py --chdir=hello/ --config_dir=hello/etc/hello/ hello:Container &
