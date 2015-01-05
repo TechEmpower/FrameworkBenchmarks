@@ -1,0 +1,9 @@
+engines:
+  pg:
+    host: 127.0.0.1
+    port: 5432
+    dbname: hello_world
+    user: benchmarkdbuser
+    password: benchmarkdbpass
+    minsize: 20
+    maxsize: 20
