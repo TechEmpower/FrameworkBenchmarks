@@ -5,5 +5,5 @@ engines:
     dbname: hello_world
     user: benchmarkdbuser
     password: benchmarkdbpass
-    minsize: 20
-    maxsize: 20
+    minsize: 40
+    maxsize: 40

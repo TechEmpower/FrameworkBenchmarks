@@ -3,7 +3,7 @@ import os
 
 _is_travis = os.environ.get('TRAVIS') == 'true'
 
-workers = multiprocessing.cpu_count() * 3
+workers = multiprocessing.cpu_count() * 1
 if _is_travis:
     workers = 2
 
@@ -12,3 +12,4 @@ keepalive = 120
 errorlog = '-'
 pidfile = 'api_hour.pid'
 pythonpath = 'hello'
+backlog = 10240000
