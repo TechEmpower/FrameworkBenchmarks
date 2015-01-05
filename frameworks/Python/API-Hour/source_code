@@ -1,5 +1,6 @@
-./API-Hour/etc/hello/main.conf
-./API-Hour/etc/hello/logging.ini
+./API-Hour/etc/hello/main/main.yaml
+./API-Hour/etc/hello/api_hour/logging.ini
+./API-Hour/etc/hello/api_hour/gunicorn_conf.py
 ./API-Hour/hello/__init__.py
 ./API-Hour/hello/hello/endpoints/__init__.py
 ./API-Hour/hello/hello/endpoints/world.py
