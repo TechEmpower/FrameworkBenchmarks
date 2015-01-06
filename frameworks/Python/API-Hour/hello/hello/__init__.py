@@ -40,8 +40,8 @@ class Container(api_hour.Container):
         yield from super().start()
         LOG.info('Starting engines...')
         self.engines['pg'] = self.loop.create_task(aiopg.create_pool(host=os.environ.get('DBHOST', self.config['engines']['pg']['host']),
-                                                                     sslmode='disable',
                                                                      port=int(self.config['engines']['pg']['port']),
+                                                                     sslmode='disable',
                                                                      dbname=self.config['engines']['pg']['dbname'],
                                                                      user=self.config['engines']['pg']['user'],
                                                                      password=self.config['engines']['pg']['password'],
