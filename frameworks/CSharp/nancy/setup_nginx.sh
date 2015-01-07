@@ -1,17 +1,13 @@
 #!/bin/bash
+. ${IROOT}/mono.installed
 
 sed -i 's|localhost|'"$DBHOST"'|g' src/Web.config
 sed -i 's|include /usr/local/nginx/conf/fastcgi_params;|include '"${NGINX_HOME}"'/conf/fastcgi_params;|g' nginx.conf
 
-export PATH="$MONO_ROOT/bin:$PATH"
-
-# Needed to find Mono's shared libraries
-export LD_LIBRARY_PATH="$MONO_ROOT/lib"
-
 # build
 cd src
 rm -rf bin obj
-$MONO_ROOT/bin/xbuild /p:Configuration=Release
+xbuild /p:Configuration=Release
 
 # nginx
 conf="upstream mono {\n"
