@@ -43,3 +43,13 @@ def update_random_records(container, limit):
     for task in tasks:
         results.append(task.result())
     return results
+
+@asyncio.coroutine
+def get_fortunes(container):
+    pg = yield from container.engines['pg']
+
+    with (yield from pg.cursor()) as cur:
+        yield from cur.execute('SELECT * FROM fortune')
+        fortunes = yield from cur.fetchall()
+
+    return fortunes

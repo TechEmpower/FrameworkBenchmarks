@@ -3,9 +3,10 @@ import asyncio
 
 from aiohttp.web import Response
 from api_hour.plugins.aiohttp import JSON
+import aiohttp_jinja2
 
 from ..services import queries_number
-from ..services.world import get_random_record, get_random_records, update_random_records
+from ..services.world import get_random_record, get_random_records, update_random_records, get_fortunes
 
 LOG = logging.getLogger(__name__)
 
@@ -28,6 +29,15 @@ def queries(request):
     limit = queries_number(request.GET.get('queries', 1))
 
     return JSON((yield from get_random_records(container, limit)))
+
+@asyncio.coroutine
+def fortunes(request):
+    """Test type 4: Fortunes"""
+    container = request.app.ah_container
+
+    return aiohttp_jinja2.render_template('fortunes.html.j2',
+                                          request,
+                                          {'fortunes': (yield from get_fortunes(container))})
 
 @asyncio.coroutine
 def updates(request):
