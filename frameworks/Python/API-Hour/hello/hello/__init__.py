@@ -3,9 +3,10 @@ import asyncio
 import os
 
 import aiopg
+import jinja2
 import psycopg2.extras
 import aiohttp.web
-
+import aiohttp_jinja2
 import api_hour
 
 from . import endpoints
@@ -19,11 +20,13 @@ class Container(api_hour.Container):
         super().__init__(*args, **kwargs)
         # Servers
         self.servers['http'] = aiohttp.web.Application(loop=kwargs['loop'])
+        aiohttp_jinja2.setup(self.servers['http'], loader=jinja2.PackageLoader('hello'))
         self.servers['http'].ah_container = self # keep a reference to Container
         # routes
         self.servers['http'].router.add_route('GET', '/json', endpoints.world.json)
         self.servers['http'].router.add_route('GET', '/db', endpoints.world.db)
         self.servers['http'].router.add_route('GET', '/queries', endpoints.world.queries)
+        self.servers['http'].router.add_route('GET', '/fortunes', endpoints.world.fortunes)
         self.servers['http'].router.add_route('GET', '/updates', endpoints.world.updates)
         self.servers['http'].router.add_route('GET', '/plaintext', endpoints.world.plaintext)
 
