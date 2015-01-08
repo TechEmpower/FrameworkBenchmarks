@@ -135,14 +135,21 @@ If you properly set up your user account on all 3 machines, then this will not p
 you for a password (if it does, go back to "Setting up the `user`" and fix it).
 
 ```bash
+# Export some variables so you can copy/paste the rest.
+export TFB_SERVER_USER=[your server user]
+export TFB_SERVER_HOST=[your server ip]
+export TFB_DATABASE_USER=[your database user]
+export TFB_DATABASE_HOST=[database ip]
+export TFB_CLIENT_USER=[your client user]
+export TFB_CLIENT_HOST=[client ip]
 # Set up the database machine for SSH
-cat ~/.ssh/id_rsa.pub | ssh [your user]@[database ip] 'cat >> .ssh/authorized_keys'
-scp ~/.ssh/id_rsa [your user]@[databse ip]:~/.ssh/id_rsa
-scp ~/.ssh/id_rsa.pub [your user]@[database ip]:~/.ssh/id_rsa.pub
+cat ~/.ssh/id_rsa.pub | ssh $TFB_DATABASE_USER@$TFB_DATABASE_HOST 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
+scp ~/.ssh/id_rsa $TFB_DATABASE_USER@$TFB_DATABASE_HOST:~/.ssh/id_rsa
+scp ~/.ssh/id_rsa.pub $TFB_DATABASE_USER@$TFB_DATABASE_HOST:~/.ssh/id_rsa.pub
 # Set up the client machine for SSH
-cat ~/.ssh/id_rsa.pub | ssh [your user]@[client ip] 'cat >> .ssh/authorized_keys'
-scp ~/.ssh/id_rsa [your user]@[client ip]:~/.ssh/id_rsa
-scp ~/.ssh/id_rsa.pub [your user]@[client ip]:~/.ssh/id_rsa.pub
+cat ~/.ssh/id_rsa.pub | ssh $TFB_CLIENT_USER@$TFB_CLIENT_HOST 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'
+scp ~/.ssh/id_rsa $TFB_CLIENT_USER@$TFB_CLIENT_HOST:~/.ssh/id_rsa
+scp ~/.ssh/id_rsa.pub $TFB_CLIENT_USER@$TFB_CLIENT_HOST:~/.ssh/id_rsa.pub
 ```
 
 Now, test it all out, you should be able to execute all of the following without
@@ -151,7 +158,7 @@ being prompted for a password. **NOTE** The first time you SSH to these machines
 
 ```bash
 # Test your database SSH setup
-ssh [database ip]
+ssh $TFB_DATABASE_HOST
 # Accept the signature
 # You are connected to the database machine!
 sudo ls
@@ -159,12 +166,12 @@ sudo ls
 # If this is not true, go back to "Setting up the `user`" and fix it
 exit
 # Test your client SSH setup
-ssh [client ip]
+ssh $TFB_CLIENT_HOST
 # Accept the signature
 # You are connected to the client machine!
 sudo ls
 # We also need to test that we can SSH back to the server machine
-ssh [server ip]
+ssh [enter your server ip again]
 # Accept the signature
 # You are connected to the server machine!
 sudo ls
@@ -210,6 +217,7 @@ First, clone our repository.
 git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
 cd FrameworkBenchmarks
 source toolset/setup/linux/prerequisites.sh
+sudo apt-get install -y python-pip
 sudo pip install -r config/python_requirements.txt
 ```
 
@@ -220,7 +228,6 @@ using command line flags, it's easier to use a configuration
 file and avoid having huge flag lists in your commands. 
 
 ```bash
-cd FrameworkBenchmarks
 cp benchmark.cfg.example benchmark.cfg
 vim benchmark.cfg
 ```
