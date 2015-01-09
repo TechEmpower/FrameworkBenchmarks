@@ -22,14 +22,14 @@ void main(List<String> args) {
   var arguments = parser.parse(args);
   var isolates = int.parse(arguments['isolates']);
   var dbConnections = int.parse(arguments['dbconnections']) ~/ isolates;
-  ServerSocket.bind(arguments['address'], int.parse(arguments['port']))
-      .then((server) {
-        var ref = server.reference;
-        for (int i = 1; i < isolates; i++) {
-          Isolate.spawn(startInIsolate, [ref, dbConnections]);
-        }
-        _startServer(server, dbConnections);
-      });
+  ServerSocket.bind(arguments['address'], int.parse(arguments['port'])).then(
+      (server) {
+    var ref = server.reference;
+    for (int i = 1; i < isolates; i++) {
+      Isolate.spawn(startInIsolate, [ref, dbConnections]);
+    }
+    _startServer(server, dbConnections);
+  });
 }
 
 void startInIsolate(List args) {
@@ -48,7 +48,7 @@ class World {
 
   World(this.id, this.randomnumber);
 
-  toJson() => { 'id': id, 'randomNumber': randomnumber };
+  toJson() => {'id': id, 'randomNumber': randomnumber};
 }
 
 /// The entity used in the fortunes test.
@@ -82,8 +82,7 @@ void _startServer(serverSocket, dbConnections) {
     new File('postgresql.yaml').readAsString().then((config) {
       _connectionPool = new pgpool.Pool(
           new pg.Settings.fromMap(yaml.loadYaml(config)).toUri(),
-          min: dbConnections,
-          max: dbConnections);
+          min: dbConnections, max: dbConnections);
       return _connectionPool.start();
     }),
     new File('fortunes.mustache').readAsString().then((template) {
@@ -129,7 +128,7 @@ int _parseInt(String text) =>
 
 /// Completes the given [request] by writing the [response] with the given
 /// [statusCode] and [type].
-void _sendResponse(HttpRequest request, int statusCode, [ type, response ]) {
+void _sendResponse(HttpRequest request, int statusCode, [type, response]) {
   request.response.statusCode = statusCode;
   request.response.headers.date = new DateTime.now();
   if (type != null) {
@@ -163,22 +162,22 @@ void _sendText(HttpRequest request, String response) {
 
 /// Responds with the JSON test to the [request].
 void _jsonTest(HttpRequest request) {
-  _sendJson(request, { 'message': 'Hello, World!' });
+  _sendJson(request, {'message': 'Hello, World!'});
 }
 
 Future<World> _queryRandom() {
-  return _connectionPool.connect()
-      .then((connection) {
-        return connection.query(
-            'SELECT id, randomnumber FROM world WHERE id = @id;',
-            { 'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1 })
-            //
-            // The benchmark's constraints tell us there is exactly one row.
-            //
-            .single
-            .then((row) => new World(row[0], row[1]))
-            .whenComplete(() { connection.close(); });
-      });
+  return _connectionPool.connect().then((connection) {
+    return connection.query(
+        'SELECT id, randomnumber FROM world WHERE id = @id;', {
+      'id': _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1
+    })
+        //
+        // The benchmark's constraints tell us there is exactly one row.
+        //
+        .single.then((row) => new World(row[0], row[1])).whenComplete(() {
+      connection.close();
+    });
+  });
 }
 
 /// Responds with the database query test to the [request].
@@ -189,26 +188,28 @@ void _dbTest(HttpRequest request) {
 /// Responds with the database queries test to the [request].
 void _queriesTest(HttpRequest request) {
   var queries = _parseInt(request.uri.queryParameters['queries']).clamp(1, 500);
-  Future.wait(new List.generate(queries,
-                                (_) => _queryRandom(),
-                                growable: false))
+  Future
+      .wait(new List.generate(queries, (_) => _queryRandom(), growable: false))
       .then((response) => _sendJson(request, response));
 }
 
 /// Responds with the fortunes test to the [request].
 void _fortunesTest(HttpRequest request) {
   _connectionPool.connect().then((connection) {
-    return connection.query('SELECT id, message FROM fortune;')
+    return connection
+        .query('SELECT id, message FROM fortune;')
         .map((row) => new Fortune(row[0], row[1]))
         .toList()
-        .whenComplete(() { connection.close(); });
+        .whenComplete(() {
+      connection.close();
+    });
   }).then((fortunes) {
     fortunes.add(new Fortune(0, 'Additional fortune added at request time.'));
     fortunes.sort();
     _sendHtml(request, _fortunesTemplate.renderString({
-      'fortunes': fortunes.map((fortune) => {
-              'id': fortune.id, 'message': fortune.message
-          }).toList()
+      'fortunes': fortunes
+          .map((fortune) => {'id': fortune.id, 'message': fortune.message})
+          .toList()
     }));
   });
 }
@@ -217,18 +218,19 @@ void _fortunesTest(HttpRequest request) {
 void _updatesTest(HttpRequest request) {
   var queries = _parseInt(request.uri.queryParameters['queries']).clamp(1, 500);
   Future.wait(new List.generate(queries, (_) {
-    return _queryRandom()
-        .then((world) {
-          world.randomnumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
-          return _connectionPool.connect().then((connection) {
-            return connection.execute(
+    return _queryRandom().then((world) {
+      world.randomnumber = _RANDOM.nextInt(_WORLD_TABLE_SIZE) + 1;
+      return _connectionPool.connect().then((connection) {
+        return connection
+            .execute(
                 'UPDATE world SET randomnumber = @randomnumber WHERE id = @id;',
-                { 'randomnumber': world.randomnumber, 'id': world.id })
-                .whenComplete(() { connection.close(); });
-          }).then((_) => world);
+                {'randomnumber': world.randomnumber, 'id': world.id})
+            .whenComplete(() {
+          connection.close();
         });
-  }, growable: false))
-      .then((worlds) => _sendJson(request, worlds));
+      }).then((_) => world);
+    });
+  }, growable: false)).then((worlds) => _sendJson(request, worlds));
 }
 
 /// Responds with the plaintext test to the [request].
