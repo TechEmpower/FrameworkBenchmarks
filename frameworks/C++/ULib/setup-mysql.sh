@@ -1,5 +1,9 @@
 #!/bin/bash
 
+export ULIB_VERSION=1.4.2
+export ULIB_ROOT=$IROOT/ULib
+export ULIB_DOCUMENT_ROOT=${ULIB_ROOT}/ULIB_DOCUMENT_ROOT
+
 export UMEMPOOL="135,0,0,34,8465,129,-17,-22,41"
 export ORM_DRIVER="mysql"
 export ORM_OPTION="host=${DBHOST} user=benchmarkdbuser password=benchmarkdbpass character-set=utf8 dbname=hello_world"
