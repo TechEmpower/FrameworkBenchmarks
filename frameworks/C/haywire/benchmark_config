@@ -1,0 +1,22 @@
+{
+  "framework": "haywire",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "plaintext_url": "/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "haywire",
+      "language": "C",
+      "orm": "None",
+      "platform": "haywire",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
