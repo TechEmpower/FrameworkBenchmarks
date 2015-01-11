@@ -3,10 +3,10 @@
   "tests": [{
     "default": {
       "setup_file": "setup",
-      "plaintext_url": "/",
-      "port": 8080,
+      "plaintext_url": "/plaintext",
+      "port": 8000,
       "approach": "Realistic",
-      "classification": "Fullstack",
+      "classification": "Micro",
       "database": "None",
       "framework": "haywire",
       "language": "C",
