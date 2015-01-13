@@ -11,8 +11,8 @@
     </tr>
     {% for fortune in fortunes %}
         <tr>
-            <td>{{ fortune['id'] }}</td>
-            <td>{{ fortune['message'] }}</td>
+            <td>{{ fortune['id']|e }}</td>
+            <td>{{ fortune['message']|e }}</td>
         </tr>
     {% endfor %}
 </table>
