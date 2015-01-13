@@ -1,5 +1,6 @@
 import asyncio
 from random import randint
+from operator import itemgetter
 
 @asyncio.coroutine
 def get_random_record(container):
@@ -51,5 +52,9 @@ def get_fortunes(container):
     with (yield from pg.cursor()) as cur:
         yield from cur.execute('SELECT * FROM fortune')
         fortunes = yield from cur.fetchall()
+
+    fortunes.append({'id': 0, 'message': 'Additional fortune added at request time.'})
+
+    fortunes.sort(key=itemgetter('message'))
 
     return fortunes
