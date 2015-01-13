@@ -91,6 +91,11 @@
         </dependency>
         <dependency>
             <groupId>org.javalite</groupId>
+            <artifactId>activejdbc</artifactId>
+            <version>1.4.10-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javalite</groupId>
             <artifactId>activeweb-testing</artifactId>
             <version>${activeweb.version}</version>
             <scope>test</scope>

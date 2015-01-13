@@ -17,8 +17,6 @@ package app.config;
 
 import org.javalite.activeweb.AppContext;
 import org.javalite.activeweb.Bootstrap;
-
-import org.javalite.activeweb.Configuration;
 import org.javalite.templator.TemplatorConfig;
 
 /**
@@ -26,7 +24,6 @@ import org.javalite.templator.TemplatorConfig;
  */
 public class AppBootstrap extends Bootstrap {
     public void init(AppContext context) {
-        Configuration.setUseDefaultLayoutForErrors(true);
         TemplatorConfig.instance().cacheTemplates(true);
     }
 }

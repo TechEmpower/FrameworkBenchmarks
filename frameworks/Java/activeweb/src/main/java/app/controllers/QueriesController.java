@@ -25,7 +25,6 @@ import org.javalite.activeweb.AppController;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -46,7 +45,7 @@ public class QueriesController extends AppController {
         return worlds;
     }
 
-    public int getQueries() {
+    protected int getQueries() {
         int queries;
         try {
             queries = Integer.parseInt(param("queries"));
@@ -64,8 +63,7 @@ public class QueriesController extends AppController {
         return ThreadLocalRandom.current().nextInt(10000) + 1;
     }
 
-    @Override
-    protected String getLayout() {
+    @Override protected String getLayout() {
         return null;
     }
 }

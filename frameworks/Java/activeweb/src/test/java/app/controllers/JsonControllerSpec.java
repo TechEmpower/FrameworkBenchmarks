@@ -20,11 +20,11 @@ limitations under the License.
 
 package app.controllers;
 
-import org.javalite.activeweb.Configuration;
 import org.javalite.activeweb.ControllerSpec;
 import org.junit.Test;
 
 import java.util.Map;
+import org.junit.Ignore;
 
 public class JsonControllerSpec extends ControllerSpec {
 
@@ -36,7 +36,17 @@ public class JsonControllerSpec extends ControllerSpec {
         Map result = JsonHelper.toMap(responseContent());
 
         //test result
+        the(result.size()).shouldBeEqual(1);
         a(result.get("message")).shouldBeEqual("Hello, World!");
         a(contentType()).shouldBeEqual("application/json");
+    }
+
+    @Ignore
+    public void shouldRenderMessageOneMinute() {
+        long endMillis = System.currentTimeMillis() + 60*1000;
+        do {
+            request().integrateViews().get("index");
+            responseContent();
+        } while (System.currentTimeMillis() < endMillis);
     }
 }

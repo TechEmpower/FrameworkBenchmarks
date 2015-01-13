@@ -21,13 +21,11 @@ limitations under the License.
 package app.controllers;
 
 import app.models.World;
-import org.javalite.activeweb.AppController;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class UpdatesController extends QueriesController {
-    public void index() {
+    @Override public void index() {
         List<World> worlds = getWorlds();
         for (World world : worlds) {
             world.set("randomNumber", randomNumber()).saveIt();

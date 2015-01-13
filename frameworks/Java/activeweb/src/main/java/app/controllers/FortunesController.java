@@ -25,7 +25,6 @@ import org.javalite.activeweb.AppController;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class FortunesController extends AppController {
