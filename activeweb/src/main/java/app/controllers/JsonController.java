@@ -20,7 +20,6 @@ limitations under the License.
 
 package app.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javalite.activeweb.AppController;
 
 import java.io.IOException;
@@ -28,11 +27,9 @@ import java.util.Date;
 
 public class JsonController extends AppController {
     public void index() throws IOException {
-        String json = new ObjectMapper().writeValueAsString(new Message("Hello, World!"));
-        respond(json)
-                .contentType("application/json")
-                .header("Content-Length", String.valueOf(json.length()))
-                .header("Date", new Date().toString());
+        view("message", new Message("Hello, World!"));
+        header("Date", new Date().toString());
+        render().noLayout().contentType("application/json");
     }
 
     public static final class Message {

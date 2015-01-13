@@ -30,10 +30,7 @@ public class JsonControllerSpec extends ControllerSpec {
 
     @Test
     public void shouldRenderMessage() {
-
-        System.out.println("ACTIVE_ENV value ============>>>>" + Configuration.getEnv());
-        //execute controller
-        request().get("index");
+        request().integrateViews().get("index");
 
         //process result
         Map result = JsonHelper.toMap(responseContent());
