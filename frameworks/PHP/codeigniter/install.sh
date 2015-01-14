@@ -1,13 +1,19 @@
 #!/bin/bash
 
-export PHP_HOME=${IROOT}/php-5.5.17
+RETCODE=$(fw_exists ${IROOT}/php-composer.installed)
+[ ! "$RETCODE" == 0 ] || { return 0; }
 
-export PHP_FPM=$PHP_HOME/sbin/php-fpm
+fw_depends php
 
-export NGINX_HOME=${IROOT}/nginx
+mkdir -p php-composer
+cd php-composer
 
-fw_depends php nginx composer
+fw_get https://getcomposer.org/installer -O composer-installer.php
 
-${PHP_HOME}/bin/php $IROOT/composer.phar install \
-  --no-interaction --working-dir $TROOT \
-  --no-progress --optimize-autoloader 
+# Use the PHP and composer from our PHP_HOME directory and 
+# COMPOSER_HOME directories (should be specified in frameworks 
+# install.sh file)
+${PHP_HOME}/bin/php composer-installer.php --install-dir=${COMPOSER_HOME}
+
+cd ..
+touch ${IROOT}/php-composer.installed
