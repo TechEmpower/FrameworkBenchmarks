@@ -53,11 +53,9 @@ fw_get -O ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/arc
 fw_untar  ULib-${ULIB_VERSION}.tar.gz
 
 # 2. Compile application (userver_tcp)
-
 cd ULib-$ULIB_VERSION
 
 # Check for the compiler support (We want at least g++ 4.8)
-
 CC=gcc  # C   compiler command
 CXX=g++ # C++ compiler command
 
@@ -77,20 +75,22 @@ find . -exec touch {} \;
 
 USP_FLAGS="-DAS_cpoll_cppsp_DO" \
 ./configure --prefix=$ULIB_ROOT \
-   --disable-static \
+   --disable-static --disable-examples \
    --with-mysql --with-pgsql --with-sqlite3 \
    --without-ssl --without-pcre --without-expat \
-   --without-libz --without-libuuid --without-magic \
+   --without-libz --without-libuuid --without-magic --without-libares \
    --enable-static-orm-driver='mysql pgsql sqlite' --enable-static-server-plugin=http
 #  --enable-debug \
 #USP_LIBS="-ljson" \
 
 make install
+cp -r tests/examples/benchmark/FrameworkBenchmarks/ULib/db ${ULIB_ROOT}
 
-cp -r tests/examples/benchmark/FrameworkBenchmarks/ULib/db $ULIB_ROOT
+cd examples/userver
+make install
 
 # 3. Compile usp pages for benchmark
-cd src/ulib/net/server/plugin/usp
+cd ../../src/ulib/net/server/plugin/usp
 make db.la fortune.la json.la plaintext.la query.la update.la
 
 # Check that compilation worked
