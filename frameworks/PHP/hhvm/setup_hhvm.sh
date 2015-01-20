@@ -7,3 +7,4 @@ sed -i 's|PidFile = .*/hhvm.pid|PidFile = '"${TROOT}"'/hhvm.pid|g' deploy/config
 sed -i 's|File = .*/error.log|File = '"${TROOT}"'/error.log|g' deploy/config.hdf
 
 hhvm --config $TROOT/deploy/config.hdf -m daemon
+$NGINX_HOME/sbin/nginx -c $TROOT/deploy/nginx.conf

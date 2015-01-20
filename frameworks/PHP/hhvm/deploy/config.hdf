@@ -1,12 +1,13 @@
 # main configuration file
 
 # Application PID File
-PidFile = /tmp/FrameworkBenchmarks/hhvm/hhvm.pid
+PidFile = /FrameworkBenchmarks/frameworks/PHP/hhvm/hhvm.pid
 
 # Server settings
 Server {
-  Port = 8080
-  SourceRoot = /tmp/FrameworkBenchmarks/hhvm
+  Port = 9001
+  Type = fastcgi
+  SourceRoot = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/hhvm
   DefaultDocument = index.php
 }
 
@@ -15,7 +16,7 @@ Log {
   UseLogFile = false
   UseSyslog = false
   Level = Error
-  #File = /tmp/FrameworkBenchmarks/hhvm/error.log
+  #File = /FrameworkBenchmarks/frameworks/PHP/hhvm/error.log
 }
 
 # Enable jit for production mode
@@ -27,7 +28,7 @@ Eval {
 # Repo file
 Repo {
   Central {
-    Path = /tmp/FrameworkBenchmarks/hhvm/.hhvm.hhbc
+    Path = /home/vagrant/FrameworkBenchmarks/frameworks/PHP/hhvm/.hhvm.bbhc
   }
 }
 
