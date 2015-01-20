@@ -1,4 +1,5 @@
 #!/bin/bash
+export SBT_HOME=${IROOT}/sbt
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' src/main/resources/application.conf
 
