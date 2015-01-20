@@ -1,4 +1,5 @@
 #!/bin/bash
+export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|host: .*|host: '"${DBHOST}"'|g' config/database.yml
 sed -i 's|/usr/local/nginx/|'"${IROOT}"'/nginx/|g' config/nginx.conf
