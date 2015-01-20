@@ -1,4 +1,5 @@
 #!/bin/bash
+export SBT_HOME=${IROOT}/sbt
 
 sed -i 's|jdbc:mysql://.*:3306|jdbc:mysql://'"${DBHOST}"':3306|g' src/main/resources/application.conf
 sed -i 's|maxThreads = .*|maxThreads = '"${MAX_THREADS}"'|g' src/main/resources/application.conf
