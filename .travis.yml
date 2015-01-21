@@ -17,6 +17,7 @@ env:
     #  
     - "TESTDIR=C/lwan"
     - "TESTDIR=C/duda"
+    - "TESTDIR=C/haywire"
     - "TESTDIR=C/onion"
     - "TESTDIR=CSharp/aspnet"
     # - "TESTDIR=CSharp/aspnet-stripped"
