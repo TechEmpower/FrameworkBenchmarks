@@ -1,8 +1,7 @@
 #!/bin/bash
 
-sed -i "s|jdbc:mysql:\/\/.*:3306|jdbc:mysql://${DBHOST}:3306|g" play2-scala/conf/application.conf
-
 cd play2-scala
+sed -i "s|jdbc:mysql:\/\/.*:3306|jdbc:mysql://${DBHOST}:3306|g" conf/application.conf
 
 # If application is running, clear old running app.
 if [ -f ${TROOT}/play2-scala/target/universal/stage/RUNNING_PID ]
