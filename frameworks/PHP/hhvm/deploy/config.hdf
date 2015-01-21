@@ -5,7 +5,8 @@ PidFile = /tmp/FrameworkBenchmarks/hhvm/hhvm.pid
 
 # Server settings
 Server {
-  Port = 8080
+  Port = 9001
+  Type = fastcgi
   SourceRoot = /tmp/FrameworkBenchmarks/hhvm
   DefaultDocument = index.php
 }
