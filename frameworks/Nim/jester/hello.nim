@@ -1,7 +1,7 @@
 import jester, strtabs, json, asyncdispatch, os, strutils
 
 let port = Port(paramStr(1).parseInt)
-let settings = newSettings(port=port, http=true)
+let settings = newSettings(port=port)
 
 routes:
   get "/json":
