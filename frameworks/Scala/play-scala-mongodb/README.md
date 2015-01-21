@@ -16,5 +16,5 @@ The tests were run with:
 ## Test URLs
 ### Single Database Query test
 http://localhost:9000/db
-### Single Database Query test
+### Multiple Database Query test
 http://localhost:9000/queries?queries=5
