@@ -4,15 +4,15 @@ This is the [HHVM](http://github.com/facebook/hhvm) portion of a [benchmarking t
 
 Supports the Following Benmarking URLs
 
-* http://localhost:8080/json
-* http://localhost:8080/db
-* http://localhost:8080/db?queries=10
-* http://localhost:8080/queries
-* http://localhost:8080/queries?queries=10
-* http://localhost:8080/fortunes
-* http://localhost:8080/updates
-* http://localhost:8080/updates?queries=10
-* http://localhost:8080/plaintext
+* http://localhost:8080/json.php
+* http://localhost:8080/db.php
+* http://localhost:8080/db.php?queries=10
+* http://localhost:8080/queries.php
+* http://localhost:8080/queries.php?queries=10
+* http://localhost:8080/fortunes.php
+* http://localhost:8080/updates.php
+* http://localhost:8080/updates.php?queries=10
+* http://localhost:8080/plaintext.php
 
 ### 1. Plaintext Test
 
