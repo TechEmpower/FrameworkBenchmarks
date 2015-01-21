@@ -10,10 +10,11 @@ This is the Play portion of a [benchmarking test suite](../) comparing a variety
 The tests were run with:
 
 * [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Play 2.1.0](http://http://www.playframework.com/)
-* [Reactivemongo 0.9-SNAPSHOT](https://github.com/zenexity/Play-ReactiveMongo)
+* [Play 2.2.0](http://http://www.playframework.com/)
+* [Reactivemongo 0.10.5.0.akka22](https://github.com/zenexity/Play-ReactiveMongo)
 
 ## Test URLs
-### Data-Store/Database Mapping Test
-
-http://localhost/db?queries=5
+### Single Database Query test
+http://localhost:9000/db
+### Single Database Query test
+http://localhost:9000/queries?queries=5
