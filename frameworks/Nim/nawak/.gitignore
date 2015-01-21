@@ -1,0 +1,6 @@
+/nawak_postgres
+/nawak_redis
+/conf/logs
+/conf/run
+/conf/tmp
+/conf/config.sqlite
