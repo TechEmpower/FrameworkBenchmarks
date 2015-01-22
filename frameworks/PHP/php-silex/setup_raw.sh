@@ -4,7 +4,7 @@ export PHP_FPM=$PHP_HOME/sbin/php-fpm
 export COMPOSER_HOME=${IROOT}/php-composer
 export NGINX_HOME=${IROOT}/nginx
 
-sed -i 's|192.168.100.102|'"${DBHOST}"'|g' web/index_raw.php
+sed -i 's|172.16.98.120|'"${DBHOST}"'|g' web/index_raw.php
 sed -i 's|".*\FrameworkBenchmarks/php-silex|"'"${TROOT}"'|g' deploy/php-silex
 sed -i 's|Directory .*/FrameworkBenchmarks/php-silex|Directory '"${TROOT}"'|g' deploy/php-silex
 sed -i 's|root .*/FrameworkBenchmarks/php-silex|root '"${TROOT}"'|g' deploy/nginx_raw.conf
