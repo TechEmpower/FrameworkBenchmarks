@@ -162,9 +162,7 @@ class FrameworkTest:
   ############################################################
   def start(self, out, err):
     # Load profile for this installation
-    profile="%s/bash_profile.sh" % self.directory
-    if not os.path.exists(profile):
-      profile="$FWROOT/config/benchmark_profile"
+    profile="$FWROOT/config/benchmark_profile"
 
     # Setup variables for TROOT and IROOT
     setup_util.replace_environ(config=profile, 
