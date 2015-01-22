@@ -1,0 +1,26 @@
+{
+  "framework": "ngx_mruby",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "ngx_mruby",
+      "language": "Ruby",
+      "orm": "Raw",
+      "platform": "ngx_mruby",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ngx_mruby",
+      "notes": "",
+      "versus": "ngx_mruby"
+    }
+  }]
+}
