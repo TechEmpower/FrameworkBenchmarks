@@ -12,7 +12,7 @@ var qupdates_prepared {.threadvar.}: TSqlPrepared
 
 proc init_db*() {.procvar.} =
     db = open("", "benchmarkdbuser", "benchmarkdbpass",
-              "host=localhost port=5432 dbname=hello_world")
+              "host=127.0.0.1 port=5432 dbname=hello_world")
     # prepare queries
     qworld_prepared = db.prepare("world", qworld, 1)
     qfortunes_prepared = db.prepare("fortunes", qfortunes, 0)

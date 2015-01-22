@@ -4,7 +4,7 @@ import model
 var db {.threadvar.}: TRedis
 
 proc init_db*() {.procvar.} =
-    db = open(host="localhost")
+    db = open(host="foobar")
 
 proc getWorld*(id: int): TWorld =
     let s = redis.get(db, "world:" & $id)

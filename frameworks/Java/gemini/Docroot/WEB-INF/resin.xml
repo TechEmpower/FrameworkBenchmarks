@@ -14,7 +14,7 @@
     </server>
 
     <host>
-      <web-app id="/" root-directory="/home/tfb/FrameworkBenchmarks/gemini/Docroot" />
+      <web-app id="/" root-directory="/home/tfb/FrameworkBenchmarks/frameworks/Java/gemini/Docroot" />
     </host>
 
   </cluster>

@@ -13,7 +13,6 @@ sudo ldconfig -v
 
 fw_get https://github.com/zedshaw/mongrel2/tarball/v1.8.1 -O mongrel2.tar.gz
 fw_untar mongrel2.tar.gz
-mv mongrel2 mongrel2-install
 
 # mongrel2 untars into this folder 
 mv zedshaw-mongrel2-aa2ecf8 mongrel2-install
@@ -23,7 +22,14 @@ fw_get https://raw.github.com/zedshaw/mongrel2/9b565eeea003783c47502c2d350b99c96
 mv -f zmq_compat.h mongrel2-install/src/
 
 cd mongrel2-install
-PREFIX=${IROOT}/mongrel2 make clean all
-PREFIX=${IROOT}/mongrel2 make install
+
+# Do this in a subshell to avoid leaking env variables
+(
+  export PREFIX=${IROOT}/mongrel2
+  export OPTFLAGS="-I$IROOT/zeromq-4.0.3/include"
+  export OPTLIBS="-Wl,-rpath,$IROOT/zeromq-4.0.3/lib -L$IROOT/zeromq-4.0.3/lib"
+  make clean all
+  make install
+)
 
 touch ${IROOT}/mongrel2.installed

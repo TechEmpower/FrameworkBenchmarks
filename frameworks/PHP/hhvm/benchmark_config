@@ -4,12 +4,12 @@
     [{
       "default": {
         "setup_file"     : "setup_hhvm",
-        "json_url"       : "/json",
-        "db_url"         : "/db",
-        "query_url"      : "/queries?queries=",
-        "fortune_url"    : "/fortunes",
-        "update_url"     : "/updates?queries=",
-        "plaintext_url"  : "/plaintext",
+        "json_url"       : "/json.php",
+        "db_url"         : "/db.php",
+        "query_url"      : "/queries.php?queries=",
+        "fortune_url"    : "/fortunes.php",
+        "update_url"     : "/updates.php?queries=",
+        "plaintext_url"  : "/plaintext.php",
         "port"           : 8080,
         "approach"       : "Realistic",
         "classification" : "Platform",
