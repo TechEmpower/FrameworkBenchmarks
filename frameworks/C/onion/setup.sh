@@ -1,6 +1,8 @@
 #!/bin/bash
 
-rm -f *.o
+export ONION_LOG=noinfo
+
+make clean
 ln -s $IROOT/onion onion
 rm -f onion/build/CMakeCache.txt
 make

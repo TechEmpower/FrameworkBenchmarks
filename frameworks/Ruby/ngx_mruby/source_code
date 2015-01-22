@@ -1,0 +1,4 @@
+./ngx_mruby/db.rb
+./ngx_mruby/fortune.rb
+./ngx_mruby/queries.rb
+./ngx_mruby/updates.rb
