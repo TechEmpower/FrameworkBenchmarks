@@ -107,16 +107,6 @@ class Installer:
       previousDir = os.getcwd()
       os.chdir(test_dir)
 
-      # Load profile for this installation
-      profile="%s/bash_profile.sh" % test_dir
-      if not os.path.exists(profile):
-        profile="$FWROOT/config/benchmark_profile"
-      else:
-        logging.info("Loading environment from %s (cwd=%s)", profile, test_dir)
-      setup_util.replace_environ(config=profile, 
-        command='export TROOT=%s && export IROOT=%s' %
-        (test_dir, test_install_dir))
-
       # Run test installation script
       #   FWROOT - Path of the FwBm root
       #   IROOT  - Path of this test's install directory
