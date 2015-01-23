@@ -22,9 +22,9 @@ Uses Laravels template engine 'blade'
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Laravel Version 3.2.14](http://laravel.com/)
+* [Laravel Version 4.2](http://laravel.com/)
 * [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
-* [nginx 1.4.0](http://nginx.org/)
+* [nginx 1.4.1](http://nginx.org/)
 * [MySQL 5.5.29](https://dev.mysql.com/)
 
 ## Test URLs
