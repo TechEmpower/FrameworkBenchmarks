@@ -21,5 +21,5 @@ echo "RPUSH fortunes \"Any program that runs right is obsolete.\"" | redis-cli
 echo "RPUSH fortunes \"A list is only as strong as its weakest link. — Donald Knuth\"" | redis-cli
 echo "RPUSH fortunes \"Feature: A bug with seniority.\"" | redis-cli
 echo "RPUSH fortunes \"Computers make very fast, very accurate mistakes.\"" | redis-cli
-echo "RPUSH fortunes \"<script>alert(\\"This should not be displayed in a browser alert box.\\");</script>\"" | redis-cli
+echo "RPUSH fortunes \"<script>alert(\\\"This should not be displayed in a browser alert box.\\\");</script>\"" | redis-cli
 echo "RPUSH fortunes \"フレームワークのベンチマーク\"" | redis-cli
