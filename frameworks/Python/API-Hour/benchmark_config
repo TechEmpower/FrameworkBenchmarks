@@ -1,0 +1,27 @@
+{
+  "framework": "aiohttp.web",
+  "tests": [{
+    "default": {
+      "setup_file": "setup",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8008,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "aiohttp.web",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "API-Hour",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "API-Hour",
+      "notes": "Python 3.4 + AsyncIO"
+    }
+  }]
+}

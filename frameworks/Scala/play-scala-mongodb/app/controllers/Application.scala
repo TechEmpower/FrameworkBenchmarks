@@ -32,21 +32,46 @@ object Application extends Controller {
 
   private def collection: JSONCollection = database.collection[JSONCollection]("world")
   private val projection = Json.obj("_id" -> 0)
+  /**
+   * Returns the closest number to <code>toRestrict</code> that is within the
+   * specified bounds, inclusive on both ends.
+   */
+  private def restrictWithin(toRestrict: String, lowerBound: Int, upperBound: Int): Option[Int] = {
+    try {
+      Some(math.min(upperBound, math.max(toRestrict.toInt, lowerBound)))
+    } catch {
+      case e: Exception => None
+    }
+  }
 
-  def db(queries: Int) = Action.async {
+  def dbqueries(requestedQueries: String) = Action.async {
     import scala.concurrent.ExecutionContext.Implicits.global
 
     val random = ThreadLocalRandom.current()
+    val queries = restrictWithin(requestedQueries, 1, 500).getOrElse(1)
     val futureWorlds = Future.sequence((for {
       _ <- 1 to queries
     } yield { collection
       .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
       .one[JsValue]
     }))
-
     futureWorlds.map { worlds =>
-      Ok(Json.toJson(worlds))
+      Ok(Json.toJson(worlds.map {maybeWorld =>
+        maybeWorld.map {world =>
+          world.as[Map[String, Int]]
+        }
+      }))
     }
   }
+  def singledb() = Action.async {
+    import scala.concurrent.ExecutionContext.Implicits.global
 
+    val random = ThreadLocalRandom.current()
+    val futureWorld = collection
+      .find(Json.obj("id" -> (random.nextInt(TestDatabaseRows) + 1)), projection)
+      .one[JsValue]
+    futureWorld.map { world =>
+      Ok(Json.toJson(world.head.as[Map[String, Int]]))
+    }
+  }
 }
