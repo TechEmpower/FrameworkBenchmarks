@@ -5,7 +5,7 @@ export PHP_FPM=${PHP_HOME}/sbin/php-fpm
 export NGINX_HOME=${IROOT}/nginx
 
 sed -i 's|127.0.0.1|'"${DBHOST}"'|g' app/config/database.php
-sed -i 's|root .*/FrameworkBenchmarks/php-laravel|root '"${TROOT}"'|g' deploy/nginx.conf 
+sed -i 's|root .*/FrameworkBenchmarks/frameworks/PHP/php-laravel|root '"${TROOT}"'|g' deploy/nginx.conf 
 sed -i 's|/home/vagrant/FrameworkBenchmarks/installs/nginx/|'"${IROOT}"'/nginx/|g' deploy/nginx.conf
 
 export PATH="${PHP_HOME}/bin:${PHP_HOME}/sbin:$PATH"
