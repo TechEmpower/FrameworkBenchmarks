@@ -1,0 +1,11 @@
+api_hour==0.6.0
+aiopg==0.5.2
+gunicorn==19.1.1
+psycopg2==2.5.4
+setproctitle==1.1.8
+six==1.8.0
+ujson==1.33
+aiohttp==0.13.1
+PyYAML==3.11
+aiohttp-jinja2==0.0.2
+MarkupSafe==0.23
