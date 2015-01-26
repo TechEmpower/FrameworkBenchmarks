@@ -21,7 +21,7 @@ def test_2(request):
     """
     Test type 2: Single database query
     """
-    num = randint(1, 10001)
+    num = randint(1, 10000)
     result = DBSession.query(World).filter(World.id == num).one()
     return result
 
@@ -43,7 +43,7 @@ def test_3(request):
             queries = 500
     result = [
         DBSession.query(World).filter(World.id == num).one()
-        for num in [randint(1, 10001) for _ in range(1, queries + 1)]
+        for num in [randint(1, 10000) for _ in range(1, queries + 1)]
     ]
     return result
 
@@ -77,10 +77,10 @@ def test_5(request):
             queries = 500
     objset = [
         DBSession.query(World).filter(World.id == num).one()
-        for num in [randint(1, 10001) for _ in range(1, queries + 1)]
+        for num in [randint(1, 10000) for _ in range(1, queries + 1)]
     ]
     for obj in objset:
-        obj.randomNumber = randint(1, 10001)
+        obj.randomNumber = randint(1, 10000)
     resultset = [obj.__json__() for obj in objset]
     DBSession.commit()
     return resultset
