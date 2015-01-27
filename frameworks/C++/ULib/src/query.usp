@@ -1,8 +1,6 @@
 <!--#declaration
 #include "world.h"
 
-#define AS_cpoll_cppsp_DO
-
 #ifndef AS_cpoll_cppsp_DO
 static UValue* pvalue;
 #endif
@@ -30,7 +28,7 @@ static void usp_fork_query()
    psql_query  = U_NEW(UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
    pstmt_query = U_NEW(UOrmStatement(*psql_query, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
 
-   if (pstmt_queries == 0) U_ERROR("usp_fork_query(): we cound't connect to db, exiting...");
+   if (pstmt_query == 0) U_ERROR("usp_fork_query(): we cound't connect to db");
 
    pstmt_query->use( pworld_query->id);
    pstmt_query->into(pworld_query->randomNumber);
@@ -72,12 +70,12 @@ while (true)
    pstmt_query->execute();
 
 #ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%d,\"randomNumber\":%d}", pworld_query->id, pworld_query->randomNumber);
+   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_query->id, pworld_query->randomNumber);
 #endif
 
    pvworld_query->push_back(U_NEW(World(*pworld_query)));
 
-   if (++i == num_query) break;
+   if (++i == num_queries) break;
 
 #ifdef AS_cpoll_cppsp_DO
    USP_PUTS_CHAR(',');

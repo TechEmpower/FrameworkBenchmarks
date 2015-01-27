@@ -15,13 +15,16 @@ public:
    U_MEMORY_ALLOCATOR
    U_MEMORY_DEALLOCATOR
 
-   int id, randomNumber;
-
-   // CONSTRUCTOR
+   uint32_t id, randomNumber;
 
    World()
       {
       U_TRACE_REGISTER_OBJECT(5, World, "")
+
+      // coverity[uninit_ctor]
+#  ifdef U_COVERITY_FALSE_POSITIVE
+      id = randomNumber = 0;
+#  endif
       }
 
    World(const World& w) : id(w.id), randomNumber(w.randomNumber)
@@ -67,16 +70,16 @@ public:
       {
       U_TRACE(0, "UOrmTypeHandler<World>::bindParam(%p)", stmt)
 
-      stmt->bindParam(U_ORM_TYPE_HANDLER(World, id,            int));
-      stmt->bindParam(U_ORM_TYPE_HANDLER(World, randomNumber,  int));
+      stmt->bindParam(U_ORM_TYPE_HANDLER(World, id,            unsigned int));
+      stmt->bindParam(U_ORM_TYPE_HANDLER(World, randomNumber,  unsigned int));
       }
 
    void bindResult(UOrmStatement* stmt)
       {
       U_TRACE(0, "UOrmTypeHandler<World>::bindResult(%p)", stmt)
 
-      stmt->bindResult(U_ORM_TYPE_HANDLER(World, id,           int));
-      stmt->bindResult(U_ORM_TYPE_HANDLER(World, randomNumber, int));
+      stmt->bindResult(U_ORM_TYPE_HANDLER(World, id,           unsigned int));
+      stmt->bindResult(U_ORM_TYPE_HANDLER(World, randomNumber, unsigned int));
       }
 };
 
@@ -90,16 +93,16 @@ public:
       {
       U_TRACE(0, "UJsonTypeHandler<World>::toJSON(%p)", &json)
 
-      json.toJSON(U_JSON_TYPE_HANDLER(World, id,            int));
-      json.toJSON(U_JSON_TYPE_HANDLER(World, randomNumber,  int));
+      json.toJSON(U_JSON_TYPE_HANDLER(World, id,            unsigned int));
+      json.toJSON(U_JSON_TYPE_HANDLER(World, randomNumber,  unsigned int));
       }
 
    void fromJSON(UValue& json)
       {
       U_TRACE(0, "UJsonTypeHandler<World>::fromJSON(%p)", &json)
 
-      json.fromJSON(U_JSON_TYPE_HANDLER(World, id,           int));
-      json.fromJSON(U_JSON_TYPE_HANDLER(World, randomNumber, int));
+      json.fromJSON(U_JSON_TYPE_HANDLER(World, id,           unsigned int));
+      json.fromJSON(U_JSON_TYPE_HANDLER(World, randomNumber, unsigned int));
       }
 };
 
