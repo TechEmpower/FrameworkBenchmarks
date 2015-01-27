@@ -99,8 +99,6 @@ You can see Flask's files to know how to write new test.
 virtualenv is installed on Python 2 and PyPy.  Use `$IROOT/py3/bin/python3 -m venv $TROOT/py3`
 for Python 3.
 
-`bash_profile.sh` is evaluated when running test.  You can set environment variables here.
-
 `bechmark_config` is json file to define test.
 See [here](https://github.com/TechEmpower/FrameworkBenchmarks#the-benchmark_config-file)
 
