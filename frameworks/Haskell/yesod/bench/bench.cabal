@@ -19,7 +19,7 @@ executable         bench
                 CPP
 
     build-depends: base                          >= 4.7        && < 5
-                 , yesod-core                    >= 1.4.2      && < 1.5
+                 , yesod-core                    >= 1.4.2      && < 1.4.6
                  , text                          >= 0.11       && < 1.3
                  , persistent                    >= 2.1        && < 2.2
                  , persistent-mysql              >= 2.1        && < 2.2

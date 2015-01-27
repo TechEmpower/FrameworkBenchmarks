@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export HASKELL_HOME=/opt/ghc/7.8.3
+export CABAL_HOME=/opt/cabal/1.20
 export PATH=${HASKELL_HOME}/bin:$PATH
 
 cd bench
